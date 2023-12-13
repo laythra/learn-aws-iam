@@ -1,11 +1,7 @@
 import { Position, Handle, NodeProps } from 'reactflow';
-import { AntdIconProps } from '@ant-design/icons/lib/components/AntdIcon';
 import { Flex, Text } from '@chakra-ui/react';
-
-export interface IAMNodeProps {
-  label: string,
-  icon: React.FC<AntdIconProps>
-}
+import { AntdIconProps } from '@ant-design/icons/lib/components/AntdIcon';
+import { IAMNodeProps } from 'types';
 
 /**
  * `IAMNode` renders a generic square node with a label and an icon.
