@@ -1,6 +1,6 @@
 import { Position, Handle, NodeProps } from 'reactflow';
 import { Flex, Text } from '@chakra-ui/react';
-import { IAMNodeProps } from 'types';
+import { IAMNodeProps, IAMSidePanelNodeProps } from 'types';
 
 
 /**
@@ -10,7 +10,12 @@ import { IAMNodeProps } from 'types';
  * - `label`: The label to display in the node.
  * - `Icon`: The Ant Design icon to display in the node.
  */
-const IAMSidePanelNode: React.FC<IAMNodeProps> = ({ label, icon: Icon }) => {
+const IAMSidePanelNode: React.FC<IAMSidePanelNodeProps> = ({ label, icon: Icon, iconName }) => {
+  const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
+    event.dataTransfer.setData('text/plain', label);
+    event.dataTransfer.setData('application/icon-name', iconName);
+  }
+
   return (
     <Flex
       direction='column'
@@ -18,7 +23,11 @@ const IAMSidePanelNode: React.FC<IAMNodeProps> = ({ label, icon: Icon }) => {
       align='center'
       width='80px'
       height='80px'
-      backgroundColor='#CBD5E0'
+      color="black"
+      border='2px solid #CBD5E0'
+      cursor='pointer'
+      draggable
+      onDragStart={handleDragStart}
     >
       <Text>{label}</Text>
       <Icon height={100} />
