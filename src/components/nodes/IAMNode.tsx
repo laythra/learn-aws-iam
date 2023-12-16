@@ -1,6 +1,5 @@
 import { Position, Handle, NodeProps } from 'reactflow';
 import { Flex, Text } from '@chakra-ui/react';
-import { AntdIconProps } from '@ant-design/icons/lib/components/AntdIcon';
 import { IAMNodeProps } from 'types';
 
 /**

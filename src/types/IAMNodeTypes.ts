@@ -4,5 +4,9 @@ export type AntdIconType = React.ForwardRefExoticComponent<AntdIconProps & React
 
 export interface IAMNodeProps {
     label: string,
-    icon: AntdIconType
+    icon: AntdIconType,
+}
+
+export interface IAMSidePanelNodeProps extends IAMNodeProps {
+    iconName: string,
 }
