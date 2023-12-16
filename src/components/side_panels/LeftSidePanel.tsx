@@ -5,7 +5,7 @@ import { Grid } from '@chakra-ui/react';
 
 export default function LeftSidePanel() {
   return (
-    <SidePanel>
+    <SidePanel alignment='left'>
       <Grid templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(2, 1fr)" }} gap={6}>
         <IAMSidePanelNode label='I dont want to be the one' icon={UserOutlined} iconName='UserOutlined' />
         <IAMSidePanelNode label='The battles always choose' icon={UserOutlined} iconName='UserOutlined' />
