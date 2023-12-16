@@ -1,15 +1,11 @@
-import React from 'react';
-import { ChakraProvider, Flex, Text } from '@chakra-ui/react';
-import './App.css';
+import { ChakraProvider } from '@chakra-ui/react';
+import Home from 'pages/home';
+import 'App.css';
 
 function App() {
   return (
     <ChakraProvider>
-      <Flex justifyContent="center" alignItems="center" height="100vh">
-        <Text>
-          I hope this project kicks off 🤞🏻
-        </Text>
-      </Flex>
+      <Home />
     </ChakraProvider>
   );
 }
