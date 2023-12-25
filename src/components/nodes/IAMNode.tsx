@@ -22,10 +22,10 @@ export default function IAMNode({ data }: NodeProps) {
       height='80px'
       border='2px solid #CBD5E0'
     >
-      <Handle type="target" position={Position.Top} />
+      <Handle type='target' position={Position.Top} />
       <Text>{label}</Text>
       <Icon height={100} />
-      <Handle type="source" position={Position.Bottom} />
+      <Handle type='source' position={Position.Bottom} />
     </Flex>
   );
-};
+}

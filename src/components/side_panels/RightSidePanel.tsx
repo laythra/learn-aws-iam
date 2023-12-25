@@ -8,9 +8,7 @@ export default function LeftSidePanel() {
 
   return (
     <SidePanel alignment='right'>
-      <Text>
-        { selectedNode.description }
-      </Text>
+      <Text>{selectedNode.description}</Text>
     </SidePanel>
   );
 }

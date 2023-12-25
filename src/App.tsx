@@ -7,10 +7,10 @@ const theme = extendTheme({
   components: {
     Text: {
       baseStyle: {
-        color: 'black'
-      }
-    }
-  }
+        color: 'black',
+      },
+    },
+  },
 });
 
 function App() {

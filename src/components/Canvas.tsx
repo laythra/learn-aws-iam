@@ -20,18 +20,29 @@ type IconName = 'UserOutlined' | 'HomeOutlined';
 
 const nodeTypes = {
   userNode: IAMNode,
-  circularNode: IAMNode
+  circularNode: IAMNode,
 };
 
 const iconMap: Record<IconName, AntdIconType> = {
   UserOutlined: UserOutlined,
-  HomeOutlined: HomeOutlined
+  HomeOutlined: HomeOutlined,
 };
 
 const Canvas: React.FC = () => {
   const initialNodes = [
-    { id: '1', position: { x: 0, y: 0 }, data: { label: 'Test Node1', icon: UserOutlined }, type: 'userNode' },
-    { id: '2', position: { x: 0, y: 100 }, data: { label: 'Test Node2', icon: UserOutlined }, type: 'circularNode', draggable: false },
+    {
+      id: '1',
+      position: { x: 0, y: 0 },
+      data: { label: 'Test Node1', icon: UserOutlined },
+      type: 'userNode',
+    },
+    {
+      id: '2',
+      position: { x: 0, y: 100 },
+      data: { label: 'Test Node2', icon: UserOutlined },
+      type: 'circularNode',
+      draggable: false,
+    },
   ];
 
   const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
@@ -46,13 +57,14 @@ const Canvas: React.FC = () => {
     event.preventDefault();
 
     const label = event.dataTransfer.getData('text/plain');
-    const iconName = event.dataTransfer.getData('application/icon-name') as IconName;
+    const iconName = event.dataTransfer.getData(
+      'application/icon-name'
+    ) as IconName;
     const canvasRect = (event.target as Element).getBoundingClientRect();
 
     // TODO: Handle when canvas is zoomed in/out, or simply render node in the center?
     const canvasX = event.clientX - canvasRect.left;
     const canvasY = event.clientY - canvasRect.top;
-
 
     const newNode = {
       id: Date.now().toString(),
@@ -61,15 +73,14 @@ const Canvas: React.FC = () => {
       data: {
         label: label,
         icon: iconMap[iconName],
-      }
+      },
     };
 
-    setNodes((nodes) => [...nodes, newNode]);
+    setNodes(nodes => [...nodes, newNode]);
   };
 
-
   const onConnect = useCallback(
-    (params: any) => setEdges((es) => addEdge(params, es)),
+    (params: any) => setEdges(es => addEdge(params, es)),
     []
   );
 
@@ -84,7 +95,7 @@ const Canvas: React.FC = () => {
         nodeTypes={nodeTypes}
       />
     </CavnasWrapper>
-  )
-}
+  );
+};
 
 export default Canvas;

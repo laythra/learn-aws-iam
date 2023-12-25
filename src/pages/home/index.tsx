@@ -7,12 +7,12 @@ import Canvas from 'components/Canvas';
 
 const Home: React.FC = () => {
   return (
-    <Flex h="100vh" color="blue.100">
+    <Flex h='100vh' color='blue.100'>
       <LeftSidePanel />
       <Canvas />
       <RightSidePanel />
-    </Flex >
-  )
-}
+    </Flex>
+  );
+};
 
 export default Home;

@@ -3,7 +3,6 @@ import { Flex, Text } from '@chakra-ui/react';
 import { IAMSidePanelNodeProps } from 'types';
 import { NodeContext } from 'components/nodes/NodeProvider';
 
-
 /**
  * `IAMNode` renders a generic node to be used inside the side panel
  *
@@ -11,17 +10,24 @@ import { NodeContext } from 'components/nodes/NodeProvider';
  * - `label`: The label to display in the node.
  * - `Icon`: The Ant Design icon to display in the node.
  */
-const IAMSidePanelNode: React.FC<IAMSidePanelNodeProps> = ({ id, type, description, label, icon: Icon, iconName }) => {
+const IAMSidePanelNode: React.FC<IAMSidePanelNodeProps> = ({
+  id,
+  type,
+  description,
+  label,
+  icon: Icon,
+  iconName,
+}) => {
   const { setSelectedNode } = useContext(NodeContext);
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
     event.dataTransfer.setData('text/plain', label);
     event.dataTransfer.setData('application/icon-name', iconName);
-  }
+  };
 
   const handleClick = (_event: React.MouseEvent<HTMLDivElement>) => {
-    setSelectedNode({ id, type, description })
-  }
+    setSelectedNode({ id, type, description });
+  };
 
   return (
     <Flex
