@@ -13,7 +13,9 @@ export default function SidePanel({ children, alignment }: SidePanelProps) {
   return (
     <Flex h="100vh" direction={alignment === 'left' ? 'row' : 'row-reverse'}>
       <Collapse in={true} style={{ width: showPanel ? '200px' : '0px', overflow: 'hidden' }}>
-        {children}
+        <Box p={4}>
+          {children}
+        </Box>
       </Collapse>
       <Flex align='center' flex="1">
         <Button colorScheme='gray' variant='ghost' onClick={setShowPanel.toggle}>
