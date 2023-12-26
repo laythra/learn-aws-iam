@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+
 import { Text } from '@chakra-ui/react';
 import { NodeContext } from 'components/nodes/NodeProvider';
 import SidePanel from 'components/side_panels/SidePanel';

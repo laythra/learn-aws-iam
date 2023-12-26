@@ -1,7 +1,7 @@
 import { UserOutlined } from '@ant-design/icons';
-import SidePanel from 'components/side_panels/SidePanel';
-import IAMSidePanelNode from 'components/nodes/IAMSidePanelNode';
 import { Grid } from '@chakra-ui/react';
+import IAMSidePanelNode from 'components/nodes/IAMSidePanelNode';
+import SidePanel from 'components/side_panels/SidePanel';
 
 export default function LeftSidePanel() {
   return (

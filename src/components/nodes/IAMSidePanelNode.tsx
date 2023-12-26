@@ -1,7 +1,8 @@
 import { useContext } from 'react';
+
 import { Flex, Text } from '@chakra-ui/react';
-import { IAMSidePanelNodeProps } from 'types';
 import { NodeContext } from 'components/nodes/NodeProvider';
+import { IAMSidePanelNodeProps } from 'types';
 
 /**
  * `IAMNode` renders a generic node to be used inside the side panel

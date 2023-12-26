@@ -1,5 +1,5 @@
-import { Position, Handle, NodeProps } from 'reactflow';
 import { Flex, Text } from '@chakra-ui/react';
+import { Position, Handle, NodeProps } from 'reactflow';
 import { IAMNodeProps } from 'types';
 
 /**

@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react';
-import styled from 'styled-components';
-import ReactFlow, { useNodesState, useEdgesState, addEdge } from 'reactflow';
+
 import { UserOutlined, HomeOutlined } from '@ant-design/icons';
 import { Box } from '@chakra-ui/react';
 import DotsPattern from 'assets/images/dots_pattern.svg';
 import IAMNode from 'components/nodes/IAMNode';
+import ReactFlow, { useNodesState, useEdgesState, addEdge } from 'reactflow';
+import styled from 'styled-components';
 import { AntdIconType } from 'types';
 
 const CavnasWrapper = styled(Box)`
