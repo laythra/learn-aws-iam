@@ -53,6 +53,10 @@
           "caseInsensitive": true
         }
       }
+    ],
+    "react/function-component-definition": [
+      "error",
+      { "namedComponents": "arrow-function" }
     ]
   },
   "settings": {
