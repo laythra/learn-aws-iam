@@ -3,7 +3,7 @@ import { Grid } from '@chakra-ui/react';
 import IAMSidePanelNode from 'components/nodes/IAMSidePanelNode';
 import SidePanel from 'components/side_panels/SidePanel';
 
-export default function LeftSidePanel() {
+const LeftSidePanel: React.FC = () => {
   return (
     <SidePanel alignment='left'>
       <Grid
@@ -13,6 +13,7 @@ export default function LeftSidePanel() {
         {new Array(10).fill(0).map((_, i) => {
           return (
             <IAMSidePanelNode
+              key={i}
               label={`test${i}`}
               icon={UserOutlined}
               iconName='UserOutlined'
@@ -25,4 +26,6 @@ export default function LeftSidePanel() {
       </Grid>
     </SidePanel>
   );
-}
+};
+
+export default LeftSidePanel;

@@ -4,7 +4,13 @@ import { UserOutlined, HomeOutlined } from '@ant-design/icons';
 import { Box } from '@chakra-ui/react';
 import DotsPattern from 'assets/images/dots_pattern.svg';
 import IAMNode from 'components/nodes/IAMNode';
-import ReactFlow, { useNodesState, useEdgesState, addEdge } from 'reactflow';
+import ReactFlow, {
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  Edge,
+  Connection,
+} from 'reactflow';
 import styled from 'styled-components';
 import { AntdIconType } from 'types';
 
@@ -50,11 +56,11 @@ const Canvas: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const handleDragOver = (event: React.DragEvent) => {
+  const handleDragOver = (event: React.DragEvent): void => {
     event.preventDefault();
   };
 
-  const handleDrop = (event: React.DragEvent) => {
+  const handleDrop = (event: React.DragEvent): void => {
     event.preventDefault();
 
     const label = event.dataTransfer.getData('text/plain');
@@ -77,11 +83,11 @@ const Canvas: React.FC = () => {
       },
     };
 
-    setNodes(nodes => [...nodes, newNode]);
+    setNodes(oldNodes => [...oldNodes, newNode]);
   };
 
   const onConnect = useCallback(
-    (params: any) => setEdges(es => addEdge(params, es)),
+    (params: Edge | Connection) => setEdges(es => addEdge(params, es)),
     []
   );
 

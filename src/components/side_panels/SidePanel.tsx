@@ -7,7 +7,7 @@ interface SidePanelProps {
   alignment: 'left' | 'right';
 }
 
-export default function SidePanel({ children, alignment }: SidePanelProps) {
+const SidePanel: React.FC<SidePanelProps> = ({ children, alignment }) => {
   const [showPanel, setShowPanel] = useBoolean(true);
 
   return (
@@ -39,4 +39,6 @@ export default function SidePanel({ children, alignment }: SidePanelProps) {
       </Flex>
     </Flex>
   );
-}
+};
+
+export default SidePanel;

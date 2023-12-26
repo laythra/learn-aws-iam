@@ -10,7 +10,7 @@ import { IAMNodeProps } from 'types';
  * - `label`: The label to display in the node.
  * - `Icon`: The Ant Design icon to display in the node.
  */
-export default function IAMNode({ data }: NodeProps) {
+const IAMNode: React.FC<NodeProps> = ({ data }) => {
   const { label, icon: Icon } = data as IAMNodeProps;
 
   return (
@@ -28,4 +28,6 @@ export default function IAMNode({ data }: NodeProps) {
       <Handle type='source' position={Position.Bottom} />
     </Flex>
   );
-}
+};
+
+export default IAMNode;

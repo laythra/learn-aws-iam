@@ -21,12 +21,12 @@ const IAMSidePanelNode: React.FC<IAMSidePanelNodeProps> = ({
 }) => {
   const { setSelectedNode } = useContext(NodeContext);
 
-  const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
     event.dataTransfer.setData('text/plain', label);
     event.dataTransfer.setData('application/icon-name', iconName);
   };
 
-  const handleClick = (_event: React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = (): void => {
     setSelectedNode({ id, type, description });
   };
 
