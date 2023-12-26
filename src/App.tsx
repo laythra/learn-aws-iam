@@ -7,13 +7,13 @@ const theme = extendTheme({
   components: {
     Text: {
       baseStyle: {
-        color: 'black'
-      }
-    }
-  }
+        color: 'black',
+      },
+    },
+  },
 });
 
-function App() {
+const App: React.FC = () => {
   return (
     <ChakraProvider theme={theme}>
       <NodeProvider>
@@ -21,6 +21,6 @@ function App() {
       </NodeProvider>
     </ChakraProvider>
   );
-}
+};
 
 export default App;

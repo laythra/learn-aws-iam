@@ -1,4 +1,5 @@
 import React, { createContext } from 'react';
+
 import { IAMNode } from 'types';
 
 interface NodeContextProps {
@@ -14,7 +15,7 @@ const defaultNode: IAMNode = {
   id: '',
   type: 'dummyNode',
   description: 'Click on a node to view its details',
-}
+};
 
 export const NodeContext = createContext<NodeContextState>({
   selectedNode: defaultNode,
