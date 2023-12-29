@@ -36,7 +36,7 @@
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "react/react-in-jsx-scope": "off",
     "import/order": [
-      "error",
+      "warn",
       {
         "groups": ["builtin", "external", "internal"],
         "pathGroups": [
@@ -57,7 +57,10 @@
     "react/function-component-definition": [
       "error",
       { "namedComponents": "arrow-function" }
-    ]
+    ],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["warn"]
+
   },
   "settings": {
     "react": {
