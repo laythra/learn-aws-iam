@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { UserOutlined, HomeOutlined } from '@ant-design/icons';
 import { Box } from '@chakra-ui/react';
 import DotsPattern from 'assets/images/dots_pattern.svg';
-import IAMNode from 'components/nodes/IAMNode';
+import IAMCanvasNode from 'components/nodes/IAMCanvasNode';
 import ReactFlow, { useNodesState, useEdgesState, addEdge, Edge, Connection } from 'reactflow';
 import styled from 'styled-components';
 import { AntdIconType } from 'types';
@@ -23,8 +23,8 @@ const CavnasWrapper = styled(Box)`
 type IconName = 'UserOutlined' | 'HomeOutlined';
 
 const nodeTypes = {
-  userNode: IAMNode,
-  circularNode: IAMNode,
+  userNode: IAMCanvasNode,
+  circularNode: IAMCanvasNode,
 };
 
 const iconMap: Record<IconName, AntdIconType> = {
