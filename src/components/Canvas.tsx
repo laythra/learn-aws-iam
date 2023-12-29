@@ -4,17 +4,14 @@ import { UserOutlined, HomeOutlined } from '@ant-design/icons';
 import { Box } from '@chakra-ui/react';
 import DotsPattern from 'assets/images/dots_pattern.svg';
 import IAMNode from 'components/nodes/IAMNode';
-import ReactFlow, {
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  Edge,
-  Connection,
-} from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, addEdge, Edge, Connection } from 'reactflow';
 import styled from 'styled-components';
 import { AntdIconType } from 'types';
 
+import Logo from './Logo';
+
 const CavnasWrapper = styled(Box)`
+  position: relative;
   width: 100vw;
   height: 100vh;
   background-color: #000;
@@ -64,9 +61,7 @@ const Canvas: React.FC = () => {
     event.preventDefault();
 
     const label = event.dataTransfer.getData('text/plain');
-    const iconName = event.dataTransfer.getData(
-      'application/icon-name'
-    ) as IconName;
+    const iconName = event.dataTransfer.getData('application/icon-name') as IconName;
     const canvasRect = (event.target as Element).getBoundingClientRect();
 
     // TODO: Handle when canvas is zoomed in/out, or simply render node in the center?
@@ -101,6 +96,7 @@ const Canvas: React.FC = () => {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
       />
+      <Logo />
     </CavnasWrapper>
   );
 };
