@@ -1,35 +1,48 @@
+import { useContext } from 'react';
+
 import { Flex, Text } from '@chakra-ui/react';
-import styled from '@emotion/styled';
+import { NodeContext } from 'components/nodes/NodeProvider';
 import { Position, Handle, NodeProps } from 'reactflow';
 import { IAMNodeProps } from 'types';
 
-const NodeWrapper = styled(Flex)`
-  direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 80px;
-  height: 80px;
-  border: 2px solid #cbd5e0;
-`;
-
 /**
- * `IAMNode` renders a generic square node with a label and an icon.
+ * `IAMCanvasNode` renders a generic square node with a label and an icon.
  * It uses Chakra UI for styling and Ant Design icons for the icon.
  *
  * Props:
- * - `label`: The label to display in the node.
- * - `Icon`: The Ant Design icon to display in the node.
+ * - `data`: The node data passed from React Flow.
  */
 const IAMCanvasNode: React.FC<NodeProps> = ({ data }) => {
-  const { label, icon: Icon } = data as IAMNodeProps;
+  const { id, type, description, label, icon: Icon } = data as IAMNodeProps;
+  const { setSelectedNode, selectedNode } = useContext(NodeContext);
+
+  const handleClick = (): void => {
+    setSelectedNode({ id, type, description });
+  };
+
+  const isSelected = selectedNode?.id === id;
 
   return (
-    <NodeWrapper>
+    <Flex
+      direction='column'
+      justifyContent='center'
+      alignItems='center'
+      p={4}
+      bg='white'
+      boxShadow='md'
+      borderRadius='lg'
+      width='80px'
+      height='80px'
+      textAlign='center'
+      borderWidth={isSelected ? '2px' : '1px'}
+      borderColor={isSelected ? 'blue.500' : 'gray.200'}
+      onClick={handleClick}
+    >
       <Handle type='target' position={Position.Top} />
       <Text>{label}</Text>
       <Icon height={100} />
       <Handle type='source' position={Position.Bottom} />
-    </NodeWrapper>
+    </Flex>
   );
 };
 

@@ -35,17 +35,16 @@ const iconMap: Record<IconName, AntdIconType> = {
 const Canvas: React.FC = () => {
   const initialNodes = [
     {
-      id: '1',
+      id: '100',
       position: { x: 0, y: 0 },
-      data: { label: 'Test Node1', icon: UserOutlined },
+      data: { label: 'Test Node1', icon: UserOutlined, id: '100' },
       type: 'userNode',
     },
     {
-      id: '2',
+      id: '200',
       position: { x: 0, y: 100 },
-      data: { label: 'Test Node2', icon: UserOutlined },
+      data: { label: 'Test Node2', icon: UserOutlined, id: '200' },
       type: 'circularNode',
-      draggable: false,
     },
   ];
 
@@ -60,8 +59,9 @@ const Canvas: React.FC = () => {
   const handleDrop = (event: React.DragEvent): void => {
     event.preventDefault();
 
-    const label = event.dataTransfer.getData('text/plain');
-    const iconName = event.dataTransfer.getData('application/icon-name') as IconName;
+    const { id, type, description, label, iconName } = JSON.parse(
+      event.dataTransfer.getData('application/json')
+    );
     const canvasRect = (event.target as Element).getBoundingClientRect();
 
     // TODO: Handle when canvas is zoomed in/out, or simply render node in the center?
@@ -69,12 +69,15 @@ const Canvas: React.FC = () => {
     const canvasY = event.clientY - canvasRect.top;
 
     const newNode = {
-      id: Date.now().toString(),
+      id: id,
       type: 'userNode',
       position: { x: canvasX, y: canvasY },
       data: {
         label: label,
-        icon: iconMap[iconName],
+        icon: iconMap[iconName as IconName],
+        id: id,
+        type: type,
+        description: description,
       },
     };
 
