@@ -33,7 +33,7 @@ const IAMSidePanelNode: React.FC<IAMNodeProps> = ({
   };
 
   const handleClick = (): void => {
-    setSelectedNode({ id, type, description });
+    setSelectedNode({ id, label, description });
   };
 
   const isSelected = selectedNode?.id === id;

@@ -13,11 +13,11 @@ import { IAMNodeProps } from 'types';
  * - `data`: The node data passed from React Flow.
  */
 const IAMCanvasNode: React.FC<NodeProps> = ({ data }) => {
-  const { id, type, description, label, icon: Icon } = data as IAMNodeProps;
+  const { id, description, label, icon: Icon } = data as IAMNodeProps;
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
 
   const handleClick = (): void => {
-    setSelectedNode({ id, type, description });
+    setSelectedNode({ id, label, description });
   };
 
   const isSelected = selectedNode?.id === id;

@@ -6,7 +6,7 @@ interface IAMNodeContextProps {
   children: React.ReactNode;
 }
 
-type SelectedNodeProps = Pick<IAMNodeProps, 'id' | 'type' | 'description'>;
+type SelectedNodeProps = Pick<IAMNodeProps, 'id' | 'label' | 'description'>;
 
 interface IAMNodeContextState {
   selectedNode: SelectedNodeProps;
@@ -15,7 +15,7 @@ interface IAMNodeContextState {
 
 const defaultNode: SelectedNodeProps = {
   id: '',
-  type: 'dummyNode',
+  label: '',
   description: 'Click on a node to view its details',
 };
 
