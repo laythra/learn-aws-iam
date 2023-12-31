@@ -6,9 +6,9 @@ import SidePanel from 'components/side_panels/SidePanel';
 const LeftSidePanel: React.FC = () => {
   return (
     <SidePanel alignment='left'>
-      <Box display='flex' justifyContent='center' mb={4}>
+      <Box display='flex' justifyContent='left' m={4}>
         <Text fontSize='xl' fontWeight='bold'>
-          IAM
+          LEVEL 4/10
         </Text>
       </Box>
       <Grid templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)' }} gap={6} padding={4}>
