@@ -1,26 +1,29 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Grid } from '@chakra-ui/react';
+import { Grid, Box, Text, GridItem } from '@chakra-ui/react';
 import IAMSidePanelNode from 'components/nodes/IAMSidePanelNode';
 import SidePanel from 'components/side_panels/SidePanel';
 
 const LeftSidePanel: React.FC = () => {
   return (
     <SidePanel alignment='left'>
-      <Grid
-        templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)' }}
-        gap={6}
-      >
+      <Box display='flex' justifyContent='center' mb={4}>
+        <Text fontSize='xl' fontWeight='bold'>
+          IAM
+        </Text>
+      </Box>
+      <Grid templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)' }} gap={6} padding={4}>
         {new Array(10).fill(0).map((_, i) => {
           return (
-            <IAMSidePanelNode
-              key={i}
-              label={`test${i}`}
-              icon={UserOutlined}
-              iconName='UserOutlined'
-              id='1'
-              type='userNode'
-              description={`A sample description for Test node ${i}`}
-            />
+            <GridItem key={i}>
+              <IAMSidePanelNode
+                id={i.toString()}
+                label={`test${i}`}
+                icon={UserOutlined}
+                iconName='UserOutlined'
+                type='userNode'
+                description={`A sample description for Test node ${i}`}
+              />
+            </GridItem>
           );
         })}
       </Grid>
