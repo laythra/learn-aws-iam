@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import { Text, Box } from '@chakra-ui/react';
-import { NodeContext } from 'components/nodes/NodeProvider';
+import { IAMNodeContext } from 'components/nodes/IAMNodeProvider';
 import { IAMNodeProps } from 'types';
 
 /**
@@ -23,7 +23,7 @@ const IAMSidePanelNode: React.FC<IAMNodeProps> = ({
   icon: Icon,
   iconName,
 }) => {
-  const { setSelectedNode, selectedNode } = useContext(NodeContext);
+  const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
     event.dataTransfer.setData(

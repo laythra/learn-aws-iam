@@ -2,13 +2,13 @@ import React, { createContext } from 'react';
 
 import { IAMNodeProps } from 'types';
 
-interface NodeContextProps {
+interface IAMNodeContextProps {
   children: React.ReactNode;
 }
 
 type SelectedNodeProps = Pick<IAMNodeProps, 'id' | 'type' | 'description'>;
 
-interface NodeContextState {
+interface IAMNodeContextState {
   selectedNode: SelectedNodeProps;
   setSelectedNode: React.Dispatch<React.SetStateAction<SelectedNodeProps>>;
 }
@@ -19,19 +19,22 @@ const defaultNode: SelectedNodeProps = {
   description: 'Click on a node to view its details',
 };
 
-export const NodeContext = createContext<NodeContextState>({
+export const IAMNodeContext = createContext<IAMNodeContextState>({
   selectedNode: defaultNode,
   setSelectedNode: () => {},
 });
 
-const NodeProvider: React.FC<NodeContextProps> = ({ children }) => {
+/*
+ * `IAMNodeProvider` provides the selectedNode state and its setter to its children.
+ */
+const IAMNodeProvider: React.FC<IAMNodeContextProps> = ({ children }) => {
   const [selectedNode, setSelectedNode] = React.useState(defaultNode);
 
   return (
-    <NodeContext.Provider value={{ selectedNode, setSelectedNode }}>
+    <IAMNodeContext.Provider value={{ selectedNode, setSelectedNode }}>
       {children}
-    </NodeContext.Provider>
+    </IAMNodeContext.Provider>
   );
 };
 
-export default NodeProvider;
+export default IAMNodeProvider;

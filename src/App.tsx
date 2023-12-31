@@ -1,5 +1,5 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import NodeProvider from 'components/nodes/NodeProvider';
+import IAMNodeProvider from 'components/nodes/IAMNodeProvider';
 import Home from 'pages/home';
 import 'App.css';
 
@@ -16,9 +16,9 @@ const theme = extendTheme({
 const App: React.FC = () => {
   return (
     <ChakraProvider theme={theme}>
-      <NodeProvider>
+      <IAMNodeProvider>
         <Home />
-      </NodeProvider>
+      </IAMNodeProvider>
     </ChakraProvider>
   );
 };

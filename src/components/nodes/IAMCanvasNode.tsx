@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import { Flex, Text } from '@chakra-ui/react';
-import { NodeContext } from 'components/nodes/NodeProvider';
+import { IAMNodeContext } from 'components/nodes/IAMNodeProvider';
 import { Position, Handle, NodeProps } from 'reactflow';
 import { IAMNodeProps } from 'types';
 
@@ -14,7 +14,7 @@ import { IAMNodeProps } from 'types';
  */
 const IAMCanvasNode: React.FC<NodeProps> = ({ data }) => {
   const { id, type, description, label, icon: Icon } = data as IAMNodeProps;
-  const { setSelectedNode, selectedNode } = useContext(NodeContext);
+  const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
 
   const handleClick = (): void => {
     setSelectedNode({ id, type, description });
