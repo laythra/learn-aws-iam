@@ -60,7 +60,7 @@ const Canvas: React.FC = () => {
     event.preventDefault();
 
     const { id, type, description, label, iconName } = JSON.parse(
-      event.dataTransfer.getData('application/json')
+      event.dataTransfer.getData('json-node-data')
     );
     const canvasRect = (event.target as Element).getBoundingClientRect();
 

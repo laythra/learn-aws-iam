@@ -27,7 +27,7 @@ const IAMSidePanelNode: React.FC<IAMNodeProps> = ({
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
     event.dataTransfer.setData(
-      'application/json',
+      'json-node-data',
       JSON.stringify({ id, type, description, label, iconName })
     );
   };
