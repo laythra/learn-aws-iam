@@ -1,17 +1,21 @@
 import { useContext } from 'react';
 
-import { Flex, Text } from '@chakra-ui/react';
-import { NodeContext } from 'components/nodes/NodeProvider';
-import { IAMSidePanelNodeProps } from 'types';
+import { Text, Box } from '@chakra-ui/react';
+import { IAMNodeContext } from 'components/nodes/IAMNodeProvider';
+import { IAMNodeProps } from 'types';
 
 /**
- * `IAMNode` renders a generic node to be used inside the side panel
+ * `IAMSidePanelNode` renders a generic node to be used inside the side panel
  *
  * Props:
+ * - `id`: Node ID
+ * - `type`: Node type that controls the node's backbone style
+ * - `description`: Node description to display in the right side panel
  * - `label`: The label to display in the node.
  * - `Icon`: The Ant Design icon to display in the node.
+ * - `iconName`: The name of the Ant Design icon to display in the node.
  */
-const IAMSidePanelNode: React.FC<IAMSidePanelNodeProps> = ({
+const IAMSidePanelNode: React.FC<IAMNodeProps> = ({
   id,
   type,
   description,
@@ -19,34 +23,40 @@ const IAMSidePanelNode: React.FC<IAMSidePanelNodeProps> = ({
   icon: Icon,
   iconName,
 }) => {
-  const { setSelectedNode } = useContext(NodeContext);
+  const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
-    event.dataTransfer.setData('text/plain', label);
-    event.dataTransfer.setData('application/icon-name', iconName);
+    event.dataTransfer.setData(
+      'json-node-data',
+      JSON.stringify({ id, type, description, label, iconName })
+    );
   };
 
   const handleClick = (): void => {
-    setSelectedNode({ id, type, description });
+    setSelectedNode({ id, label, description });
   };
 
+  const isSelected = selectedNode?.id === id;
+
   return (
-    <Flex
-      direction='column'
-      justify='center'
-      align='center'
-      width='80px'
+    <Box
+      p={4}
+      bg='white'
+      shadow='sm'
       height='80px'
-      border='2px solid #CBD5E0'
-      cursor='pointer'
-      draggable
-      onDragStart={handleDragStart}
-      onClick={handleClick}
       textAlign='center'
+      borderRadius='md'
+      cursor='pointer'
+      borderWidth={isSelected ? '2px' : '1px'}
+      borderColor={isSelected ? 'blue.500' : 'gray.200'}
+      onClick={handleClick}
+      onDragStart={handleDragStart}
+      _hover={{ shadow: 'md' }}
+      draggable
     >
+      <Icon />
       <Text>{label}</Text>
-      <Icon height={100} />
-    </Flex>
+    </Box>
   );
 };
 

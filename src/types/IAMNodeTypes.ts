@@ -10,10 +10,5 @@ export interface IAMNodeProps {
   label: string;
   icon: AntdIconType;
   description: string;
-}
-
-export interface IAMSidePanelNodeProps extends IAMNodeProps {
   iconName: string;
 }
-
-export interface IAMNode extends Omit<IAMNodeProps, 'icon' | 'label'> {}

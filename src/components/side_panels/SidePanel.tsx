@@ -1,6 +1,8 @@
-import { CaretRightOutlined, CaretLeftOutlined } from '@ant-design/icons';
-import { Flex, Box, Button, Collapse } from '@chakra-ui/react';
-import { useBoolean } from '@chakra-ui/react';
+import { useContext } from 'react';
+
+import { Flex, Box, Collapse } from '@chakra-ui/react';
+
+import { SidePanelsContext } from './SidePanelsProvider';
 
 interface SidePanelProps {
   children: React.ReactNode;
@@ -8,35 +10,15 @@ interface SidePanelProps {
 }
 
 const SidePanel: React.FC<SidePanelProps> = ({ children, alignment }) => {
-  const [showPanel, setShowPanel] = useBoolean(true);
+  const { leftPanelOpen, rightPanelOpen } = useContext(SidePanelsContext);
+  const isOpen = alignment === 'left' ? leftPanelOpen : rightPanelOpen;
+  const panelWidth = isOpen ? '300px' : '0px';
 
   return (
     <Flex h='100vh' direction={alignment === 'left' ? 'row' : 'row-reverse'}>
-      <Collapse
-        in={true}
-        style={{ width: showPanel ? '200px' : '0px', overflow: 'hidden' }}
-      >
+      <Collapse in={true} style={{ width: panelWidth, overflow: 'hidden' }}>
         <Box p={4}>{children}</Box>
       </Collapse>
-      <Flex align='center' flex='1'>
-        <Button
-          colorScheme='gray'
-          variant='ghost'
-          onClick={setShowPanel.toggle}
-        >
-          {showPanel ? (
-            alignment === 'left' ? (
-              <CaretLeftOutlined />
-            ) : (
-              <CaretRightOutlined />
-            )
-          ) : alignment === 'left' ? (
-            <CaretRightOutlined />
-          ) : (
-            <CaretLeftOutlined />
-          )}
-        </Button>
-      </Flex>
     </Flex>
   );
 };

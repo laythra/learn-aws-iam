@@ -1,15 +1,23 @@
 import { useContext } from 'react';
 
-import { Text } from '@chakra-ui/react';
-import { NodeContext } from 'components/nodes/NodeProvider';
+import { Text, Flex, Divider, Code, Box } from '@chakra-ui/react';
+import { IAMNodeContext } from 'components/nodes/IAMNodeProvider';
 import SidePanel from 'components/side_panels/SidePanel';
 
 const LeftSidePanel: React.FC = () => {
-  const { selectedNode } = useContext(NodeContext);
+  const { selectedNode } = useContext(IAMNodeContext);
 
   return (
     <SidePanel alignment='right'>
-      <Text>{selectedNode.description}</Text>
+      <Flex direction='column' alignItems='center'>
+        <Code fontSize='lg' fontWeight='bold' p={1}>
+          {selectedNode.label}
+        </Code>
+        <Divider my={2} />
+        <Box marginTop={2}>
+          <Text>{selectedNode.description}</Text>
+        </Box>
+      </Flex>
     </SidePanel>
   );
 };
