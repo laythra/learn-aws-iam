@@ -29,24 +29,30 @@ const IAMSidePanelNode: React.FC<IAMNodeProps> = ({ id, label, iamNodeClass, des
   const isSelected = selectedNode?.id === id;
 
   return (
-    <Box
-      p={4}
-      bg='white'
-      shadow='sm'
-      height='80px'
-      textAlign='center'
-      borderRadius='md'
-      cursor='pointer'
-      borderWidth={isSelected ? '2px' : '1px'}
-      borderColor={isSelected ? 'blue.500' : 'gray.200'}
-      onClick={handleClick}
-      onDragStart={handleDragStart}
-      _hover={{ shadow: 'md' }}
-      draggable
-    >
-      <Icon />
-      <Text>{label}</Text>
-    </Box>
+    <Tooltip label={iamNodeClass} aria-label={iamNodeClass}>
+      <Flex
+        direction='column'
+        justifyContent='center'
+        alignItems='center'
+        p={2}
+        bg='white'
+        shadow='sm'
+        height='80px'
+        borderRadius='md'
+        cursor='pointer'
+        borderWidth={isSelected ? '2px' : '1px'}
+        borderColor={isSelected ? 'blue.500' : 'gray.200'}
+        onClick={handleClick}
+        onDragStart={handleDragStart}
+        _hover={{ shadow: 'md' }}
+        draggable
+      >
+        <IAMNodeIcon nodeLabel='User' />
+        <Box marginTop={1}>
+          <Text fontWeight='700'>{label}</Text>
+        </Box>
+      </Flex>
+    </Tooltip>
   );
 };
 
