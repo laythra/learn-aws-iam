@@ -1,35 +1,25 @@
 import { useContext } from 'react';
 
-import { Text, Box } from '@chakra-ui/react';
+import { Text, Box, Flex, Tooltip } from '@chakra-ui/react';
 import { IAMNodeContext } from 'components/nodes/IAMNodeProvider';
 import { IAMNodeProps } from 'types';
+
+import IAMNodeIcon from './IAMNodeIcon';
 
 /**
  * `IAMSidePanelNode` renders a generic node to be used inside the side panel
  *
  * Props:
  * - `id`: Node ID
- * - `type`: Node type that controls the node's backbone style
+ * - `iamNodeClass`: The IAM node class to render, e.g. User, Group, Role, etc.
  * - `description`: Node description to display in the right side panel
  * - `label`: The label to display in the node.
- * - `Icon`: The Ant Design icon to display in the node.
- * - `iconName`: The name of the Ant Design icon to display in the node.
  */
-const IAMSidePanelNode: React.FC<IAMNodeProps> = ({
-  id,
-  type,
-  description,
-  label,
-  icon: Icon,
-  iconName,
-}) => {
+const IAMSidePanelNode: React.FC<IAMNodeProps> = ({ id, label, iamNodeClass, description }) => {
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
-    event.dataTransfer.setData(
-      'json-node-data',
-      JSON.stringify({ id, type, description, label, iconName })
-    );
+    event.dataTransfer.setData('json-node-data', JSON.stringify({ id, description, label }));
   };
 
   const handleClick = (): void => {

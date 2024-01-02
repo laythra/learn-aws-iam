@@ -2,6 +2,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { Grid, Box, Text, GridItem } from '@chakra-ui/react';
 import IAMSidePanelNode from 'components/nodes/IAMSidePanelNode';
 import SidePanel from 'components/side_panels/SidePanel';
+import { IAMNodeClass } from 'types';
 
 const LeftSidePanel: React.FC = () => {
   return (
@@ -17,10 +18,8 @@ const LeftSidePanel: React.FC = () => {
             <GridItem key={i}>
               <IAMSidePanelNode
                 id={i.toString()}
+                iamNodeClass={IAMNodeClass.User}
                 label={`test${i}`}
-                icon={UserOutlined}
-                iconName='UserOutlined'
-                type='userNode'
                 description={`A sample description for Test node ${i}`}
               />
             </GridItem>
