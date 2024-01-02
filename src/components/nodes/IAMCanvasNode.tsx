@@ -1,9 +1,11 @@
 import { useContext } from 'react';
 
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, Text, Box } from '@chakra-ui/react';
 import { IAMNodeContext } from 'components/nodes/IAMNodeProvider';
 import { Position, Handle, NodeProps } from 'reactflow';
 import { IAMNodeProps } from 'types';
+
+import IAMNodeIcon from './IAMNodeIcon';
 
 /**
  * `IAMCanvasNode` renders a generic square node with a label and an icon.
@@ -13,7 +15,7 @@ import { IAMNodeProps } from 'types';
  * - `data`: The node data passed from React Flow.
  */
 const IAMCanvasNode: React.FC<NodeProps> = ({ data }) => {
-  const { id, description, label, icon: Icon } = data as IAMNodeProps;
+  const { id, description, label } = data as IAMNodeProps;
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
 
   const handleClick = (): void => {
@@ -31,16 +33,18 @@ const IAMCanvasNode: React.FC<NodeProps> = ({ data }) => {
       bg='white'
       boxShadow='md'
       borderRadius='lg'
-      width='80px'
-      height='80px'
+      width='100px'
+      height='100px'
       textAlign='center'
       borderWidth={isSelected ? '2px' : '1px'}
       borderColor={isSelected ? 'blue.500' : 'gray.200'}
       onClick={handleClick}
     >
       <Handle type='target' position={Position.Top} />
-      <Text>{label}</Text>
-      <Icon height={100} />
+      <IAMNodeIcon nodeLabel='User' />
+      <Box marginTop={1}>
+        <Text fontWeight='700'>{label}</Text>
+      </Box>
       <Handle type='source' position={Position.Bottom} />
     </Flex>
   );
