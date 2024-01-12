@@ -14,13 +14,12 @@ import { json } from '@codemirror/lang-json';
 import { Diagnostic, linter } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import CodeMirror from '@uiw/react-codemirror';
+import useCodeEditor from 'hooks/useCodeEditor';
 import useModal from 'hooks/useModal';
 import _ from 'lodash';
 import { lint } from 'utils/iam-policy-linter';
 
 import CodeEditorErrorsBox from './CodeEditorErrorsBox';
-
-interface CodeEditorProps {}
 
 const defaultPolicy = JSON.stringify(
   {
@@ -31,9 +30,13 @@ const defaultPolicy = JSON.stringify(
   2
 );
 
-const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
+interface CodeEditorProps {
+  entity: 'policy' | 'role';
+}
+
+const CodeEditor: React.FC<CodeEditorProps> = ({ entity }) => {
   const [errors, setErrors] = useState<Diagnostic[]>([]);
-  const { toggleModal, modalOpen } = useModal();
+  const { toggleModal, modalOpen } = useCodeEditor(entity);
   const editorRef = useRef<EditorView | undefined>();
 
   const checkForErrors = _.debounce((): void => {
