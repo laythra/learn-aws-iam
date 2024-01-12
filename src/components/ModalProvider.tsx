@@ -1,13 +1,7 @@
 import { createContext } from 'react';
 
 import { useBoolean } from '@chakra-ui/react';
-
-export interface ModalContextState {
-  modalOpen: boolean;
-  toggleModal: () => void;
-  openModal: () => void;
-  closeModal: () => void;
-}
+import { ModalContextState } from 'types';
 
 interface ModalProviderProps {
   children: React.ReactNode;

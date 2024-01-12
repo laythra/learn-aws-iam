@@ -1,5 +1,5 @@
-import { ModalContextState } from 'components/ModalProvider';
 import useModal from 'hooks/useModal';
+import { ModalContextState } from 'types';
 
 type entityType = 'policy' | 'role';
 interface CodeEditorContextState extends ModalContextState {
