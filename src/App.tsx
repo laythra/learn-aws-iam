@@ -5,9 +5,9 @@ import Home from 'pages/home';
 import 'App.css';
 
 const theme = extendTheme({
-  components: {
-    Text: {
-      baseStyle: {
+  styles: {
+    global: {
+      '*': {
         color: 'black',
       },
     },
