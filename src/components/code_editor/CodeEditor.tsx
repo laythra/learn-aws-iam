@@ -14,9 +14,11 @@ import {
   Select,
 } from '@chakra-ui/react';
 import useCodeEditor from 'hooks/useCodeEditor';
+import _ from 'lodash';
 
 import CodeEditorErrorsBox from './CodeEditorErrorsBox';
 import PolicyCodeEditor from './PolicyCodeEditor';
+import RoleCodeEditor from './RoleCodeEditor';
 
 type iamEntityType = 'policy' | 'role';
 
@@ -33,7 +35,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
       <ModalContent>
         <ModalHeader>
           <Flex justifyContent='space-between'>
-            <Text>New {iamEntity}</Text>
+            <Text>New {_.upperFirst(iamEntity)}</Text>
             <Select
               value={iamEntity}
               onChange={e => setIamEntity(e.target.value as iamEntityType)}
@@ -49,7 +51,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
           {iamEntity == 'policy' ? (
             <PolicyCodeEditor setErrors={errorsProps.setPolicyErrors} />
           ) : (
-            <Text> ROLE CODE EDITOR GOES HERE </Text>
+            <RoleCodeEditor setErrors={errorsProps.setRoleErrors} />
           )}
           <CodeEditorErrorsBox errors={errorsToView} />
         </ModalBody>
