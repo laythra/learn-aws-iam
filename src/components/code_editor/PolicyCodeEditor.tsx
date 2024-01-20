@@ -6,7 +6,7 @@ import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import CodeMirror from '@uiw/react-codemirror';
 import _ from 'lodash';
-import { lint } from 'utils/iam-policy-linter';
+import { lint } from 'utils/iam-code-linter';
 
 const defaultPolicy = JSON.stringify(
   {

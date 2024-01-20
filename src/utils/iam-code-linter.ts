@@ -1,27 +1,32 @@
 import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@uiw/react-codemirror';
 import Ajv from 'ajv';
+import roleSchema from 'schemas/aws-iam-role-schema.json';
 import sampleSchema from 'schemas/sample-schema.json';
 
 const ajv = new Ajv();
-const validate = ajv.compile(sampleSchema);
+const policyValidate = ajv.compile(sampleSchema);
+const roleValidate = ajv.compile(roleSchema);
 
-export function lint(view: EditorView): Diagnostic[] {
+interface LintConfig {
+  iamEntity: 'policy' | 'role';
+}
+
+export function lint(view: EditorView, config: LintConfig): Diagnostic[] {
   const doc = view.state.doc.toString();
   const diagnostics: Diagnostic[] = [];
 
   try {
     const parsedDoc = JSON.parse(doc);
+    const validate = config.iamEntity === 'policy' ? policyValidate : roleValidate;
 
     if (!validate(parsedDoc)) {
       validate.errors?.forEach(error => {
-        console.log(error);
-        console.log(error.instancePath.split('/').length);
         diagnostics.push({
           from: view.state.doc.line(error.instancePath.split('/').length).from,
           to: view.state.doc.line(error.instancePath.split('/').length).to,
           severity: 'error',
-          message: error.message || 'sabri',
+          message: error.message || '',
         });
       });
     }
