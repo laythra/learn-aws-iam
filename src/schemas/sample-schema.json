@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Version"],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": ["2008-10-17", "2012-10-17"]
+    }
+  }
+}
