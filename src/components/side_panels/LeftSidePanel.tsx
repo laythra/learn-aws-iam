@@ -1,17 +1,23 @@
-import { UserOutlined } from '@ant-design/icons';
-import { Grid, Box, Text, GridItem } from '@chakra-ui/react';
+import { Grid, Flex, Text, GridItem } from '@chakra-ui/react';
+import NewEntityButton from 'components/NewEntityButton';
 import IAMSidePanelNode from 'components/nodes/IAMSidePanelNode';
 import SidePanel from 'components/side_panels/SidePanel';
 import { IAMNodeClass } from 'types';
 
-const LeftSidePanel: React.FC = () => {
+interface LeftSidePanelProps {}
+
+const LeftSidePanel: React.FC<LeftSidePanelProps> = () => {
   return (
     <SidePanel alignment='left'>
-      <Box display='flex' justifyContent='left' m={4}>
-        <Text fontSize='xl' fontWeight='bold'>
-          LEVEL 4/10
-        </Text>
-      </Box>
+      <Flex flexDirection='column' justifyContent='left' m={2}>
+        <Flex justifyContent='space-between' alignItems='center'>
+          <Text fontSize='xl' fontWeight='bold'>
+            LEVEL 4/10
+          </Text>
+          <NewEntityButton />
+        </Flex>
+        <Text> PADDING TEXT </Text>
+      </Flex>
       <Grid templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)' }} gap={6} padding={4}>
         {new Array(10).fill(0).map((_, i) => {
           return (
