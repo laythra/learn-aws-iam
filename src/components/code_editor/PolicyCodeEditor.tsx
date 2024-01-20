@@ -5,9 +5,17 @@ import { linter } from '@codemirror/lint';
 import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import CodeMirror from '@uiw/react-codemirror';
-import { defaultPolicy } from 'components/code_editor/code-editor-constants';
 import _ from 'lodash';
 import { lint } from 'utils/iam-policy-linter';
+
+const defaultPolicy = JSON.stringify(
+  {
+    Version: '2012-10-17',
+    Statement: [{ Effect: 'Allow', Action: '*', Resource: '*' }],
+  },
+  null,
+  2
+);
 
 interface CodeEditorProps {
   setErrors: React.Dispatch<React.SetStateAction<Diagnostic[]>>;

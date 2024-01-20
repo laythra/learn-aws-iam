@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import {
   Modal,
@@ -9,63 +9,60 @@ import {
   ModalFooter,
   ModalCloseButton,
   Button,
+  Text,
+  Flex,
+  Select,
 } from '@chakra-ui/react';
-import { json } from '@codemirror/lang-json';
-import { Diagnostic, linter } from '@codemirror/lint';
-import { EditorView } from '@codemirror/view';
-import CodeMirror from '@uiw/react-codemirror';
 import useCodeEditor from 'hooks/useCodeEditor';
-import useModal from 'hooks/useModal';
-import _ from 'lodash';
-import { lint } from 'utils/iam-policy-linter';
 
 import CodeEditorErrorsBox from './CodeEditorErrorsBox';
+import PolicyCodeEditor from './PolicyCodeEditor';
 
-const defaultPolicy = JSON.stringify(
-  {
-    Version: '2012-10-17',
-    Statement: [{ Effect: 'Allow', Action: '*', Resource: '*' }],
-  },
-  null,
-  2
-);
+type iamEntityType = 'policy' | 'role';
 
-interface CodeEditorProps {
-  entity: 'policy' | 'role';
-}
+interface CodeEditorProps {}
 
-const CodeEditor: React.FC<CodeEditorProps> = ({ entity }) => {
-  const [errors, setErrors] = useState<Diagnostic[]>([]);
-  const { toggleModal, modalOpen } = useCodeEditor(entity);
-  const editorRef = useRef<EditorView | undefined>();
-
-  const checkForErrors = _.debounce((): void => {
-    if (!editorRef.current) return;
-
-    setErrors(lint(editorRef.current));
-  }, 500);
+const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
+  const { closeModal, modalOpen, ...errorsProps } = useCodeEditor();
+  const [iamEntity, setIamEntity] = useState<iamEntityType>('policy');
+  const errorsToView = iamEntity == 'policy' ? errorsProps.policyErrors : errorsProps.roleErrors;
 
   return (
-    <Modal isOpen={modalOpen} onClose={toggleModal}>
+    <Modal isOpen={modalOpen} onClose={closeModal}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>New Policy</ModalHeader>
+        <ModalHeader>
+          <Flex justifyContent='space-between'>
+            <Text>New {iamEntity}</Text>
+            <Select
+              value={iamEntity}
+              onChange={e => setIamEntity(e.target.value as iamEntityType)}
+              width={['100%', '50%']}
+            >
+              <option value='policy'>Policy</option>
+              <option value='role'>Role</option>
+            </Select>
+          </Flex>
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <CodeMirror
-            value={defaultPolicy}
-            onChange={checkForErrors}
-            height='200px'
-            extensions={[json(), linter(lint)]}
-            onCreateEditor={editor => (editorRef.current = editor)}
-          />
-          <CodeEditorErrorsBox errors={errors} />
+          {iamEntity == 'policy' ? (
+            <PolicyCodeEditor setErrors={errorsProps.setPolicyErrors} />
+          ) : (
+            <Text> ROLE CODE EDITOR GOES HERE </Text>
+          )}
+          <CodeEditorErrorsBox errors={errorsToView} />
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme='blue' mr={3} onClick={toggleModal} isDisabled={errors.length > 0}>
+          <Button
+            colorScheme='blue'
+            mr={3}
+            onClick={closeModal}
+            isDisabled={errorsToView.length > 0}
+          >
             Submit
           </Button>
-          <Button variant='ghost' onClick={toggleModal}>
+          <Button variant='ghost' onClick={closeModal}>
             Cancel
           </Button>
         </ModalFooter>
