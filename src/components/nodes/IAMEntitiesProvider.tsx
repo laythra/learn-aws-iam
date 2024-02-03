@@ -44,16 +44,8 @@ const IAMEntitiesProvider: React.FC<IAMEntitiesContextProps> = ({ children }) =>
     setCreatedNodes(nodes);
   }, []);
 
-  const createNode = (nodeClass: IAMNodeEntity): void => {
-    const timestmap = Date.now();
-    const node: IAMNodeProps = {
-      id: timestmap.toString(),
-      label: `${nodeClass} ${createdNodes.length + 1}`,
-      iamNodeClass: nodeClass,
-      description: '',
-    };
-
-    setCreatedNodes(prevNodes => [...prevNodes, node]);
+  const createNode = (nodeProps: IAMNodeProps): void => {
+    setCreatedNodes(prevNodes => [...prevNodes, nodeProps]);
   };
 
   const removeNode = (nodeId: string): void => {

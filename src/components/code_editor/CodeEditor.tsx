@@ -14,7 +14,9 @@ import {
   Select,
 } from '@chakra-ui/react';
 import useCodeEditor from 'hooks/useCodeEditor';
+import useIAMEntities from 'hooks/useIAMEntities';
 import _ from 'lodash';
+import { IAMNodeEntity } from 'types';
 
 import CodeEditorErrorsBox from './CodeEditorErrorsBox';
 import PolicyCodeEditor from './PolicyCodeEditor';
@@ -26,8 +28,22 @@ interface CodeEditorProps {}
 
 const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
   const { closeModal, modalOpen, ...errorsProps } = useCodeEditor();
-  const [iamEntity, setIamEntity] = useState<iamEntityType>('policy');
-  const errorsToView = iamEntity == 'policy' ? errorsProps.policyErrors : errorsProps.roleErrors;
+  const { createNode } = useIAMEntities();
+  const [iamEntity, setIamEntity] = useState<IAMNodeEntity>(IAMNodeEntity.Policy);
+  const errorsToView =
+    iamEntity == IAMNodeEntity.Policy ? errorsProps.policyErrors : errorsProps.roleErrors;
+
+  const submit = (event: React.MouseEvent): void => {
+    const node = {
+      id: Date.now().toString(),
+      entity: iamEntity,
+      label: 'New ' + _.upperFirst(iamEntity),
+      description: 'New ' + _.upperFirst(iamEntity),
+    };
+
+    createNode(node);
+    closeModal();
+  };
 
   return (
     <Modal isOpen={modalOpen} onClose={closeModal}>
@@ -56,12 +72,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
           <CodeEditorErrorsBox errors={errorsToView} />
         </ModalBody>
         <ModalFooter>
-          <Button
-            colorScheme='blue'
-            mr={3}
-            onClick={closeModal}
-            isDisabled={errorsToView.length > 0}
-          >
+          <Button colorScheme='blue' mr={3} onClick={submit} isDisabled={errorsToView.length > 0}>
             Submit
           </Button>
           <Button variant='ghost' onClick={closeModal}>
