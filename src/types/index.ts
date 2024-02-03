@@ -1,2 +1,3 @@
 export * from './IAMNodeTypes';
-export * from './modal-types';
+export * from 'types/modal-types';
+export * from 'types/iam-entities-types';
