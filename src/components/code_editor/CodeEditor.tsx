@@ -38,7 +38,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
             <Text>New {_.upperFirst(iamEntity)}</Text>
             <Select
               value={iamEntity}
-              onChange={e => setIamEntity(e.target.value as iamEntityType)}
+              onChange={e => setIamEntity(e.target.value as IAMNodeEntity)}
               width={['100%', '50%']}
             >
               <option value='policy'>Policy</option>
@@ -48,7 +48,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {iamEntity == 'policy' ? (
+          {iamEntity == IAMNodeEntity.Policy ? (
             <PolicyCodeEditor setErrors={errorsProps.setPolicyErrors} />
           ) : (
             <RoleCodeEditor setErrors={errorsProps.setRoleErrors} />

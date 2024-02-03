@@ -14,6 +14,6 @@ export enum IAMNodeEntity {
 export interface IAMNodeProps {
   id: string;
   label: string;
-  iamNodeClass: IAMNodeEntity;
+  entity: IAMNodeEntity;
   description: string;
 }

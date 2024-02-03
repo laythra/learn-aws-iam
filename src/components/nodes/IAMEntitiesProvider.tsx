@@ -36,7 +36,7 @@ const IAMEntitiesProvider: React.FC<IAMEntitiesContextProps> = ({ children }) =>
       return {
         id: id.toString(),
         label: `Node ${id}`,
-        iamNodeClass: IAMNodeEntity.User,
+        entity: IAMNodeEntity.User,
         description: `Test description for node ${id}`,
       };
     });
