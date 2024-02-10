@@ -15,11 +15,11 @@ import IAMNodeIcon from './IAMNodeIcon';
  * - `data`: The node data passed from React Flow.
  */
 const IAMCanvasNode: React.FC<NodeProps> = ({ data }) => {
-  const { id, description, label } = data as IAMNodeProps;
+  const { id, description, entity, label } = data as IAMNodeProps;
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
 
   const handleClick = (): void => {
-    setSelectedNode({ id, label, description });
+    setSelectedNode({ id, label, entity, description });
   };
 
   const isSelected = selectedNode?.id === id;

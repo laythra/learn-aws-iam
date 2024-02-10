@@ -26,14 +26,15 @@ const LeftSidePanel: React.FC<LeftSidePanelProps> = () => {
           gap={6}
           padding={4}
         >
-          {createdNodes.map(node => {
+          {createdNodes.map(({ id, entity, label, description, content }) => {
             return (
-              <GridItem key={node.id}>
+              <GridItem key={id}>
                 <IAMSidePanelNode
-                  id={node.id}
-                  entity={node.entity}
-                  label={node.label}
-                  description={node.description}
+                  id={id}
+                  entity={entity}
+                  label={label}
+                  description={description}
+                  content={content}
                 />
               </GridItem>
             );

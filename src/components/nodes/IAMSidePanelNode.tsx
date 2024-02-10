@@ -15,7 +15,7 @@ import IAMNodeIcon from './IAMNodeIcon';
  * - `description`: Node description to display in the right side panel
  * - `label`: The label to display in the node.
  */
-const IAMSidePanelNode: React.FC<IAMNodeProps> = ({ id, label, entity, description }) => {
+const IAMSidePanelNode: React.FC<IAMNodeProps> = ({ id, label, entity, description, content }) => {
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
@@ -23,7 +23,7 @@ const IAMSidePanelNode: React.FC<IAMNodeProps> = ({ id, label, entity, descripti
   };
 
   const handleClick = (): void => {
-    setSelectedNode({ id, label, description });
+    setSelectedNode({ id, label, entity, description, content });
   };
 
   const isSelected = selectedNode?.id === id;

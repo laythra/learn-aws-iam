@@ -16,6 +16,7 @@ const LeftSidePanel: React.FC = () => {
         <Divider my={2} />
         <Box marginTop={2}>
           <Text>{selectedNode.description}</Text>
+          <pre>{JSON.stringify(selectedNode.content, null, 2)}</pre>
         </Box>
       </Flex>
     </SidePanel>

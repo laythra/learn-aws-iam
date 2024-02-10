@@ -1,22 +1,21 @@
 import React, { createContext } from 'react';
 
-import { IAMNodeProps } from 'types';
+import { IAMNodeEntity, IAMNodeProps } from 'types';
 
 interface IAMNodeContextProps {
   children: React.ReactNode;
 }
 
-type SelectedNodeProps = Pick<IAMNodeProps, 'id' | 'label' | 'description'>;
-
 interface IAMNodeContextState {
-  selectedNode: SelectedNodeProps;
-  setSelectedNode: React.Dispatch<React.SetStateAction<SelectedNodeProps>>;
+  selectedNode: IAMNodeProps;
+  setSelectedNode: React.Dispatch<React.SetStateAction<IAMNodeProps>>;
 }
 
-const defaultNode: SelectedNodeProps = {
+const defaultNode: IAMNodeProps = {
   id: '',
   label: '',
   description: 'Click on a node to view its details',
+  entity: IAMNodeEntity.User,
 };
 
 export const IAMNodeContext = createContext<IAMNodeContextState>({

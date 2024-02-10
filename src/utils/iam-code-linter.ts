@@ -3,13 +3,14 @@ import { EditorView } from '@uiw/react-codemirror';
 import Ajv from 'ajv';
 import roleSchema from 'schemas/aws-iam-role-schema.json';
 import sampleSchema from 'schemas/sample-schema.json';
+import { IAMScriptableEntity, IAMNodeEntity } from 'types';
 
 const ajv = new Ajv();
 const policyValidate = ajv.compile(sampleSchema);
 const roleValidate = ajv.compile(roleSchema);
 
 interface LintConfig {
-  iamEntity: 'policy' | 'role';
+  iamEntity: IAMScriptableEntity;
 }
 
 export function lint(view: EditorView, config: LintConfig): Diagnostic[] {
@@ -18,7 +19,7 @@ export function lint(view: EditorView, config: LintConfig): Diagnostic[] {
 
   try {
     const parsedDoc = JSON.parse(doc);
-    const validate = config.iamEntity === 'policy' ? policyValidate : roleValidate;
+    const validate = config.iamEntity === IAMNodeEntity.Policy ? policyValidate : roleValidate;
 
     if (!validate(parsedDoc)) {
       validate.errors?.forEach(error => {

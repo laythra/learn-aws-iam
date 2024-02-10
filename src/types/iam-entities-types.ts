@@ -1,4 +1,4 @@
-import { IAMNodeProps } from 'types';
+import { IAMNodeProps, IAMNodeEntity } from 'types';
 
 export interface IAMEntitiesContextState {
   createdNodes: IAMNodeProps[];
@@ -6,3 +6,5 @@ export interface IAMEntitiesContextState {
   removeNode: (nodeId: string) => void;
   maxNodesToCreated?: number;
 }
+
+export type IAMScriptableEntity = IAMNodeEntity.Policy | IAMNodeEntity.Role;

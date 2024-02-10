@@ -16,4 +16,5 @@ export interface IAMNodeProps {
   label: string;
   entity: IAMNodeEntity;
   description: string;
+  content?: string;
 }
