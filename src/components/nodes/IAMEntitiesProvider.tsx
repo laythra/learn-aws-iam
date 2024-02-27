@@ -1,7 +1,7 @@
-import React, { createContext, useEffect } from 'react';
+import React, { createContext } from 'react';
 
 import _ from 'lodash';
-import { IAMEntitiesContextState, IAMNodeEntity, IAMNodeProps } from 'types';
+import { IAMEntitiesContextState, IAMNodeProps } from 'types';
 
 export const IAMEntitiesContext = createContext<IAMEntitiesContextState>({
   createdNodes: [],
