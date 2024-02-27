@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Stack, Checkbox, Text, Box } from '@chakra-ui/react';
+import { FormControl, FormLabel, Stack, Checkbox, Text } from '@chakra-ui/react';
 import useIAMEntities from 'hooks/useIAMEntities';
 import _ from 'lodash';
 import { IAMNodeEntity } from 'types';

@@ -1,6 +1,5 @@
 import React, { createContext } from 'react';
 
-import _ from 'lodash';
 import { IAMEntitiesContextState, IAMNodeProps } from 'types';
 
 export const IAMEntitiesContext = createContext<IAMEntitiesContextState>({

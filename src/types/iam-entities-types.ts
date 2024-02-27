@@ -8,3 +8,4 @@ export interface IAMEntitiesContextState {
 }
 
 export type IAMScriptableEntity = IAMNodeEntity.Policy | IAMNodeEntity.Role;
+export type IAMIdentityEntity = IAMNodeEntity.User | IAMNodeEntity.Group;
