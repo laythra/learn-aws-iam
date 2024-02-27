@@ -9,15 +9,31 @@ const LeftSidePanel: React.FC = () => {
 
   return (
     <SidePanel alignment='right'>
-      <Flex direction='column' alignItems='center'>
-        <Code fontSize='lg' fontWeight='bold' p={1}>
-          {selectedNode.label}
-        </Code>
-        <Divider my={2} />
-        <Box marginTop={2}>
-          <Text>{selectedNode.description}</Text>
-          <pre>{JSON.stringify(selectedNode.content, null, 2)}</pre>
-        </Box>
+      <Flex direction='column' alignItems='center' justifyContent='center' height='100vh'>
+        <Flex direction='column' alignItems='center' width='100%' height='50vh'>
+          <Code fontSize='lg' fontWeight='bold' p={1}>
+            Level Objective
+          </Code>
+
+          <Divider my={2} />
+          <Box marginTop={2} overflowY='auto'>
+            <Text>
+              This levels objective is to create a simple IAM user and attach a policy to it.
+            </Text>
+          </Box>
+        </Flex>
+
+        <Flex direction='column' alignItems='center' width='100%' height='50vh' marginTop={4}>
+          <Code fontSize='lg' fontWeight='bold' p={1}>
+            {selectedNode.label}
+          </Code>
+
+          <Divider my={2} />
+          <Box marginTop={2} overflowY='auto'>
+            <Text>{selectedNode.description}</Text>
+            <Code>{selectedNode.content}</Code>
+          </Box>
+        </Flex>
       </Flex>
     </SidePanel>
   );
