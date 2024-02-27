@@ -1,6 +1,5 @@
-import { createContext } from 'react';
+import { createContext, useState } from 'react';
 
-import { useBoolean } from '@chakra-ui/react';
 import { ModalContextState } from 'types';
 
 interface ModalProviderProps {
@@ -10,14 +9,22 @@ interface ModalProviderProps {
 export const ModalContext = createContext<ModalContextState | undefined>(undefined);
 
 const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
-  const [modalOpen, setModalOpen] = useBoolean(false);
+  const [isModalOpen, setIsModalOpen] = useState<{ [key: string]: boolean }>({});
 
-  const toggleModal = (): void => setModalOpen.toggle();
-  const openModal = (): void => setModalOpen.on();
-  const closeModal = (): void => setModalOpen.off();
+  const toggleModal = (id: string): void => {
+    setIsModalOpen(prevState => ({ ...prevState, [id]: true }));
+  };
+
+  const openModal = (id: string): void => {
+    setIsModalOpen(prevStat => ({ ...prevStat, [id]: true }));
+  };
+
+  const closeModal = (id: string): void => {
+    setIsModalOpen(prevStat => ({ ...prevStat, [id]: false }));
+  };
 
   return (
-    <ModalContext.Provider value={{ modalOpen, toggleModal, openModal, closeModal }}>
+    <ModalContext.Provider value={{ isModalOpen, toggleModal, openModal, closeModal }}>
       {children}
     </ModalContext.Provider>
   );

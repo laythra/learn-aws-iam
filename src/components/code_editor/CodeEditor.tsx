@@ -23,7 +23,8 @@ import { IAMScriptableEntity, IAMNodeEntity } from 'types';
 interface CodeEditorProps {}
 
 const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
-  const { closeModal, modalOpen, content, setContent, errors, setErrors } = useCodeEditor();
+  const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
+    useCodeEditor();
   const { createNode } = useIAMEntities();
   const [iamEntity, setIamEntity] = useState<IAMScriptableEntity>(IAMNodeEntity.Policy);
 
@@ -40,11 +41,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
     };
 
     createNode(node);
-    closeModal();
+    closeCodeEditor();
   };
 
   return (
-    <Modal isOpen={modalOpen} onClose={closeModal}>
+    <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -79,7 +80,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
           >
             Submit
           </Button>
-          <Button variant='ghost' onClick={closeModal}>
+          <Button variant='ghost' onClick={closeCodeEditor}>
             Cancel
           </Button>
         </ModalFooter>

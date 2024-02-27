@@ -31,6 +31,8 @@ const defaultPolicy = JSON.stringify(
   2
 );
 
+const MODAL_ID = 'code-editor';
+
 interface Errors {
   policy: Diagnostic[];
   role: Diagnostic[];
@@ -46,6 +48,9 @@ interface CodeEditorContextState extends ModalContextState {
   content: Content;
   setErrors: (entity: IAMScriptableEntity, newErrors: Diagnostic[]) => void;
   setContent: (entity: IAMScriptableEntity, newContent: string) => void;
+  closeCodeEditor: () => void;
+  openCodeEditor: () => void;
+  isCodeEditorOpen: boolean;
 }
 
 type ErrorsAction =
@@ -92,7 +97,6 @@ const useCodeEditor = (): CodeEditorContextState => {
   });
 
   const setErrors = (entity: IAMScriptableEntity, newErrors: Diagnostic[]): void => {
-    console.log('entity', entity);
     const action = entity === IAMNodeEntity.Policy ? 'SET_POLICY_ERROR' : 'SET_ROLE_ERROR';
     dispatchErrors({ type: action, payload: newErrors });
   };
@@ -102,12 +106,19 @@ const useCodeEditor = (): CodeEditorContextState => {
     dispatchContent({ type: action, payload: newContent });
   };
 
+  const closeCodeEditor = (): void => context.closeModal(MODAL_ID);
+  const openCodeEditor = (): void => context.openModal(MODAL_ID);
+  const isCodeEditorOpen = context.isModalOpen[MODAL_ID];
+
   return {
     ...context,
     errors,
     content,
     setErrors,
     setContent,
+    closeCodeEditor,
+    openCodeEditor,
+    isCodeEditorOpen,
   };
 };
 
