@@ -3,6 +3,7 @@ import NewEntityButton from 'components/NewEntityButton';
 import IAMSidePanelNode from 'components/nodes/IAMSidePanelNode';
 import SidePanel from 'components/side_panels/SidePanel';
 import useIAMEntities from 'hooks/useIAMEntities';
+import _ from 'lodash';
 
 interface LeftSidePanelProps {}
 
@@ -21,6 +22,14 @@ const LeftSidePanel: React.FC<LeftSidePanelProps> = () => {
           </Flex>
           <Text> PADDING TEXT </Text>
         </Flex>
+        {_.isEmpty(createdNodes) && (
+          <Flex justifyContent='center' alignItems='center' height='100%'>
+            <Text fontSize='lg' fontWeight='bold'>
+              No nodes created yet.
+            </Text>
+          </Flex>
+        )}
+
         <Grid
           templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)' }}
           gap={6}
