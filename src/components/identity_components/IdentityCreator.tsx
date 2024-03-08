@@ -31,7 +31,6 @@ const IdentityCreator: React.FC<IdentityCreator> = () => {
   const [iamIdentityEntity, setIamIdentityEntity] = useState<IAMIdentityEntity>(IAMNodeEntity.User);
 
   const submit = (): void => {
-    console.log('submit');
     closeIdentityCreator();
   };
 
