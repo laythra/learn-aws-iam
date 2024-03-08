@@ -13,24 +13,39 @@ import {
   Flex,
   Select,
 } from '@chakra-ui/react';
+import CodeEditorErrorsBox from 'components/code_editor/CodeEditorErrorsBox';
+import CodeEditorWindow from 'components/code_editor/CodeEditorWindow';
 import useCodeEditor from 'hooks/useCodeEditor';
+import useIAMEntities from 'hooks/useIAMEntities';
 import _ from 'lodash';
-
-import CodeEditorErrorsBox from './CodeEditorErrorsBox';
-import PolicyCodeEditor from './PolicyCodeEditor';
-import RoleCodeEditor from './RoleCodeEditor';
-
-type iamEntityType = 'policy' | 'role';
+import { IAMScriptableEntity, IAMNodeEntity } from 'types';
 
 interface CodeEditorProps {}
 
 const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
-  const { closeModal, modalOpen, ...errorsProps } = useCodeEditor();
-  const [iamEntity, setIamEntity] = useState<iamEntityType>('policy');
-  const errorsToView = iamEntity == 'policy' ? errorsProps.policyErrors : errorsProps.roleErrors;
+  const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
+    useCodeEditor();
+  const { createNode } = useIAMEntities();
+  const [iamEntity, setIamEntity] = useState<IAMScriptableEntity>(IAMNodeEntity.Policy);
+
+  const renderedErrors = errors[iamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
+  const renderedContent = content[iamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
+
+  const submit = (): void => {
+    const node = {
+      id: Date.now().toString(),
+      entity: iamEntity,
+      label: 'New ' + _.upperFirst(iamEntity),
+      description: 'New ' + _.upperFirst(iamEntity),
+      content: renderedContent,
+    };
+
+    createNode(node);
+    closeCodeEditor();
+  };
 
   return (
-    <Modal isOpen={modalOpen} onClose={closeModal}>
+    <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -38,33 +53,34 @@ const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
             <Text>New {_.upperFirst(iamEntity)}</Text>
             <Select
               value={iamEntity}
-              onChange={e => setIamEntity(e.target.value as iamEntityType)}
+              onChange={e => setIamEntity(e.target.value as IAMScriptableEntity)}
               width={['100%', '50%']}
             >
-              <option value='policy'>Policy</option>
-              <option value='role'>Role</option>
+              <option value={IAMNodeEntity.Policy}>Policy</option>
+              <option value={IAMNodeEntity.Role}>Role</option>
             </Select>
           </Flex>
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {iamEntity == 'policy' ? (
-            <PolicyCodeEditor setErrors={errorsProps.setPolicyErrors} />
-          ) : (
-            <RoleCodeEditor setErrors={errorsProps.setRoleErrors} />
-          )}
-          <CodeEditorErrorsBox errors={errorsToView} />
+          <CodeEditorWindow
+            entity={iamEntity}
+            setErrors={_.partial(setErrors, iamEntity)}
+            setContent={_.partial(setContent, iamEntity)}
+            content={renderedContent}
+          />
+          <CodeEditorErrorsBox errors={renderedErrors} />
         </ModalBody>
         <ModalFooter>
           <Button
             colorScheme='blue'
             mr={3}
-            onClick={closeModal}
-            isDisabled={errorsToView.length > 0}
+            onClick={submit}
+            isDisabled={!_.isEmpty(renderedErrors)}
           >
             Submit
           </Button>
-          <Button variant='ghost' onClick={closeModal}>
+          <Button variant='ghost' onClick={closeCodeEditor}>
             Cancel
           </Button>
         </ModalFooter>

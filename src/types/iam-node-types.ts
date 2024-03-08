@@ -4,7 +4,7 @@ export type AntdIconType = React.ForwardRefExoticComponent<
   AntdIconProps & React.RefAttributes<HTMLSpanElement>
 >;
 
-export enum IAMNodeClass {
+export enum IAMNodeEntity {
   User = 'User',
   Group = 'Group',
   Role = 'Role',
@@ -14,6 +14,7 @@ export enum IAMNodeClass {
 export interface IAMNodeProps {
   id: string;
   label: string;
-  iamNodeClass: IAMNodeClass;
+  entity: IAMNodeEntity;
   description: string;
+  content?: string;
 }

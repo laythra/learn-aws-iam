@@ -3,6 +3,7 @@ import React from 'react';
 import { Flex } from '@chakra-ui/react';
 import 'reactflow/dist/style.css';
 import Canvas from 'components/Canvas';
+import IAMEntitiesProvider from 'components/nodes/IAMEntitiesProvider';
 import LeftSidePanel from 'components/side_panels/LeftSidePanel';
 import LeftSidePanelToggleButton from 'components/side_panels/LeftSidePanelToggleButton';
 import RightSidePanel from 'components/side_panels/RightSidePanel';
@@ -13,7 +14,9 @@ const Home: React.FC = () => {
   return (
     <Flex h='100vh' color='blue.100'>
       <SidePanelProvider>
-        <LeftSidePanel />
+        <IAMEntitiesProvider>
+          <LeftSidePanel />
+        </IAMEntitiesProvider>
         <LeftSidePanelToggleButton />
         <Canvas />
         <RightSidePanel />

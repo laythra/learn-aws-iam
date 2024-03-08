@@ -1,6 +1,6 @@
 export interface ModalContextState {
-  modalOpen: boolean;
-  toggleModal: () => void;
-  openModal: () => void;
-  closeModal: () => void;
+  isModalOpen: { [key: string]: boolean };
+  toggleModal: (id: string) => void;
+  openModal: (id: string) => void;
+  closeModal: (id: string) => void;
 }

@@ -5,7 +5,7 @@ import DotsPattern from 'assets/images/dots_pattern.svg';
 import IAMCanvasNode from 'components/nodes/IAMCanvasNode';
 import ReactFlow, { useNodesState, useEdgesState, addEdge, Edge, Connection } from 'reactflow';
 import styled from 'styled-components';
-import { IAMNodeClass } from 'types';
+import { IAMNodeEntity } from 'types';
 
 import Logo from './Logo';
 
@@ -28,13 +28,13 @@ const Canvas: React.FC = () => {
     {
       id: '100',
       position: { x: 0, y: 0 },
-      data: { id: '100', label: 'Test Node1', iamNodeClass: IAMNodeClass.User },
+      data: { id: '100', label: 'Test Node1', entity: IAMNodeEntity.User },
       type: 'iam_default',
     },
     {
       id: '200',
       position: { x: 0, y: 100 },
-      data: { id: '200', label: 'Test Node2', iamNodeClass: IAMNodeClass.User },
+      data: { id: '200', label: 'Test Node2', entity: IAMNodeEntity.User },
       type: 'iam_default',
     },
   ];
