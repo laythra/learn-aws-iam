@@ -28,21 +28,6 @@ interface IAMEntitiesContextProps {
 const IAMEntitiesProvider: React.FC<IAMEntitiesContextProps> = ({ children }) => {
   const [createdNodes, setCreatedNodes] = React.useState<IAMNodeProps[]>([]);
 
-  useEffect(() => {
-    // Default testing nodes
-    const nodes: IAMNodeProps[] = _.times(10, idx => {
-      const id = idx + 1;
-      return {
-        id: id.toString(),
-        label: `Node ${id}`,
-        entity: IAMNodeEntity.User,
-        description: `Test description for node ${id}`,
-      };
-    });
-
-    setCreatedNodes(nodes);
-  }, []);
-
   const createNode = (nodeProps: IAMNodeProps): void => {
     setCreatedNodes(prevNodes => [...prevNodes, nodeProps]);
   };

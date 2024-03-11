@@ -1,4 +1,5 @@
 import { Grid, Flex, Text, GridItem, Box } from '@chakra-ui/react';
+import { LevelsProgressionContext } from 'components/levels_progression/LevelsProgressionProvider';
 import NewEntityButton from 'components/NewEntityButton';
 import IAMSidePanelNode from 'components/nodes/IAMSidePanelNode';
 import SidePanel from 'components/side_panels/SidePanel';
@@ -9,6 +10,7 @@ interface LeftSidePanelProps {}
 
 const LeftSidePanel: React.FC<LeftSidePanelProps> = () => {
   const { createdNodes } = useIAMEntities();
+  const stateContext = LevelsProgressionContext.useSelector(state => state);
 
   return (
     <SidePanel alignment='left'>
@@ -16,7 +18,7 @@ const LeftSidePanel: React.FC<LeftSidePanelProps> = () => {
         <Flex flexDirection='column' justifyContent='left' m={2}>
           <Flex justifyContent='space-between' alignItems='center'>
             <Text fontSize='xl' fontWeight='bold'>
-              LEVEL 4/10
+              LEVEL {stateContext.context.level_number} / {stateContext.context.total_levels}
             </Text>
             <NewEntityButton />
           </Flex>
