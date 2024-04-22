@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "baseUrl": "src",
+    "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "strictNullChecks": true,
@@ -19,5 +18,6 @@
     "jsx": "react-jsx"
   },
   "include": ["src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "extends": "./tsconfig.paths.json"
 }
