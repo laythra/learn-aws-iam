@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 
-import { useSidePanels } from 'hooks/useSidePanels';
+import { useSidePanels } from '@/hooks/useSidePanels';
 
 interface SidePanelsProviderProps {
   children: React.ReactNode;

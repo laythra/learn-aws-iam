@@ -1,5 +1,6 @@
 import { Diagnostic } from '@codemirror/lint';
-import { ModalContextState, IAMNodeEntity } from 'types';
+
+import { ModalContextState, IAMNodeEntity } from '@/types';
 
 type IAMScriptableEntity = IAMNodeEntity.Policy | IAMNodeEntity.Role;
 

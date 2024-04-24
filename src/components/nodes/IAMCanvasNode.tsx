@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 
 import { Flex, Text, Box } from '@chakra-ui/react';
-import { IAMNodeContext } from 'components/nodes/IAMNodeProvider';
 import { Position, Handle, NodeProps } from 'reactflow';
-import { IAMNodeProps } from 'types';
 
 import IAMNodeIcon from './IAMNodeIcon';
+import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
+import { IAMNodeProps } from '@/types';
 
 /**
  * `IAMCanvasNode` renders a generic square node with a label and an icon.

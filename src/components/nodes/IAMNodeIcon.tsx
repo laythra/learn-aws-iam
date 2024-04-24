@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { Icon } from '@chakra-ui/react';
-import { resolveIcon } from 'utils/icon-resolver';
+
+import { resolveIcon } from '@/utils/icon-resolver';
 
 interface IAMNodeIconProps {
   nodeLabel: string;

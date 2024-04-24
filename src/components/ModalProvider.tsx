@@ -1,6 +1,6 @@
 import { createContext, useState } from 'react';
 
-import { ModalContextState } from 'types';
+import { ModalContextState } from '@/types';
 
 interface ModalProviderProps {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ interface ModalProviderProps {
 
 export const ModalContext = createContext<ModalContextState | undefined>(undefined);
 
-const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
+export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState<{ [key: string]: boolean }>({});
 
   const toggleModal = (id: string): void => {

@@ -1,5 +1,6 @@
 import { UserOutlined } from '@ant-design/icons';
-import { AntdIconType } from 'types';
+
+import { AntdIconType } from '@/types';
 
 export function resolveIcon(label: string): AntdIconType {
   switch (label) {

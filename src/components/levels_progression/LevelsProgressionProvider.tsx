@@ -1,5 +1,6 @@
 import { createActorContext } from '@xstate/react';
-import levelProgressionMachine from 'machines/levels-progression-machine';
+
+import levelProgressionMachine from '@/machines/levels-progression-machine';
 
 export const LevelsProgressionContext = createActorContext(levelProgressionMachine);
 interface LevelsProgressionProviderProps {

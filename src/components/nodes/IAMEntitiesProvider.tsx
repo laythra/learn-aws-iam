@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 
-import { IAMEntitiesContextState, IAMNodeProps } from 'types';
+import { IAMEntitiesContextState, IAMNodeProps } from '@/types';
 
 export const IAMEntitiesContext = createContext<IAMEntitiesContextState>({
   createdNodes: [],

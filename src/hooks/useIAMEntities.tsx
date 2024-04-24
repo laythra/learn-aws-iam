@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
-import { IAMEntitiesContext } from 'components/nodes/IAMEntitiesProvider';
-import { IAMEntitiesContextState } from 'types';
+import { IAMEntitiesContext } from '@/components/nodes/IAMEntitiesProvider';
+import { IAMEntitiesContextState } from '@/types';
 
 const useIAMEntities = (): IAMEntitiesContextState => {
   const context = useContext(IAMEntitiesContext);

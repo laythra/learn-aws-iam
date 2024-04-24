@@ -1,9 +1,10 @@
 import { useReducer } from 'react';
 
 import { Diagnostic } from '@codemirror/lint';
-import useModal from 'hooks/useModal';
-import { ModalContextState } from 'types';
-import { IAMNodeEntity, IAMScriptableEntity } from 'types';
+
+import useModal from '@/hooks/useModal';
+import { ModalContextState } from '@/types';
+import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 
 export const defaultRole = JSON.stringify(
   {

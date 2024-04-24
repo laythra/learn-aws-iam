@@ -1,4 +1,4 @@
-import { IAMNodeProps, IAMNodeEntity } from 'types';
+import { IAMNodeProps, IAMNodeEntity } from '@/types';
 
 export interface IAMEntitiesContextState {
   createdNodes: IAMNodeProps[];

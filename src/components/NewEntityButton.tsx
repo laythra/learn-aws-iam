@@ -1,9 +1,10 @@
 import { PlusSquareOutlined } from '@ant-design/icons';
 import { IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
-import CodeEditor from 'components/code_editor/CodeEditor';
-import IdentityCreator from 'components/identity_components/IdentityCreator';
-import useCodeEditor from 'hooks/useCodeEditor';
-import useIdentityCreator from 'hooks/useIdentityCreator';
+
+import IdentityCreator from '@/components/identity_components/IdentityCreator';
+import { CodeEditor } from '@/features/code_editor';
+import useCodeEditor from '@/hooks/useCodeEditor';
+import useIdentityCreator from '@/hooks/useIdentityCreator';
 
 interface NewEntityButton {}
 
