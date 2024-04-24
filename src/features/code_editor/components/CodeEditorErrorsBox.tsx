@@ -5,7 +5,7 @@ interface CodeEditorErrorsBoxProps {
   errors: Diagnostic[];
 }
 
-const CodeEditorErrorsBox: React.FC<CodeEditorErrorsBoxProps> = ({ errors }) => {
+export const CodeEditorErrorsBox: React.FC<CodeEditorErrorsBoxProps> = ({ errors }) => {
   if (errors.length === 0) {
     return null;
   } else {
@@ -21,5 +21,3 @@ const CodeEditorErrorsBox: React.FC<CodeEditorErrorsBoxProps> = ({ errors }) => 
     );
   }
 };
-
-export default CodeEditorErrorsBox;

@@ -1,0 +1,49 @@
+import { Diagnostic } from '@codemirror/lint';
+import { EditorView } from '@uiw/react-codemirror';
+import Ajv from 'ajv';
+
+import roleSchema from '../config/aws-iam-role-schema.json';
+import sampleSchema from '../config/sample-schema.json';
+import { IAMScriptableEntity, IAMNodeEntity } from '@/types';
+
+const ajv = new Ajv();
+const policyValidate = ajv.compile(sampleSchema);
+const roleValidate = ajv.compile(roleSchema);
+
+interface LintConfig {
+  iamEntity: IAMScriptableEntity;
+}
+
+export function lint(view: EditorView, config: LintConfig): Diagnostic[] {
+  const doc = view.state.doc.toString();
+  const diagnostics: Diagnostic[] = [];
+
+  try {
+    const parsedDoc = JSON.parse(doc);
+    const validate = config.iamEntity === IAMNodeEntity.Policy ? policyValidate : roleValidate;
+
+    if (!validate(parsedDoc)) {
+      validate.errors?.forEach(error => {
+        diagnostics.push({
+          from: view.state.doc.line(error.instancePath.split('/').length).from,
+          to: view.state.doc.line(error.instancePath.split('/').length).to,
+          severity: 'error',
+          message: error.message || '',
+        });
+      });
+    }
+  } catch (e) {
+    if (e instanceof SyntaxError) {
+      const line = e.message.match(/line (\d+)/)?.[1];
+      const lineNumber = line ? parseInt(line) - 1 : 0;
+      diagnostics.push({
+        from: view.state.doc.line(lineNumber + 1).from,
+        to: view.state.doc.line(lineNumber + 1).to,
+        severity: 'error',
+        message: e.message,
+      });
+    }
+  }
+
+  return diagnostics;
+}

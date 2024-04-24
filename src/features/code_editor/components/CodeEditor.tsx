@@ -13,16 +13,17 @@ import {
   Flex,
   Select,
 } from '@chakra-ui/react';
-import CodeEditorErrorsBox from 'components/code_editor/CodeEditorErrorsBox';
-import CodeEditorWindow from 'components/code_editor/CodeEditorWindow';
-import useCodeEditor from 'hooks/useCodeEditor';
-import useIAMEntities from 'hooks/useIAMEntities';
 import _ from 'lodash';
-import { IAMScriptableEntity, IAMNodeEntity } from 'types';
+
+import { useCodeEditor } from '@/features/code_editor';
+import { CodeEditorErrorsBox } from '@/features/code_editor';
+import { CodeEditorWindow } from '@/features/code_editor';
+import useIAMEntities from '@/hooks/useIAMEntities';
+import { IAMScriptableEntity, IAMNodeEntity } from '@/types';
 
 interface CodeEditorProps {}
 
-const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
+export const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
   const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
     useCodeEditor();
   const { createNode } = useIAMEntities();
@@ -88,5 +89,3 @@ const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
     </Modal>
   );
 };
-
-export default CodeEditor;
