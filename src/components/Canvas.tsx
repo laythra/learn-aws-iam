@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 
 import { Box } from '@chakra-ui/react';
-import DotsPattern from 'assets/images/dots_pattern.svg';
 import ReactFlow, { useNodesState, useEdgesState, addEdge, Edge, Connection } from 'reactflow';
 import styled from 'styled-components';
 
 import Logo from './Logo';
+import DotsPattern from '@/assets/images/dots_pattern.svg';
 import IAMCanvasNode from '@/components/nodes/IAMCanvasNode';
 import { IAMNodeEntity } from '@/types';
 
