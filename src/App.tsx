@@ -1,6 +1,6 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import ModalProvider from 'components/ModalProvider';
 
+import ModalProvider from '@/components/ModalProvider';
 import IAMNodeProvider from '@/components/nodes/IAMNodeProvider';
 import Home from '@/pages/home';
 
