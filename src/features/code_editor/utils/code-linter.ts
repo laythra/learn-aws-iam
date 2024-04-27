@@ -2,8 +2,8 @@ import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@uiw/react-codemirror';
 import Ajv from 'ajv';
 
-import roleSchema from '@/schemas/aws-iam-role-schema.json';
-import sampleSchema from '@/schemas/sample-schema.json';
+import roleSchema from '../config/aws-iam-role-schema.json';
+import sampleSchema from '../config/sample-schema.json';
 import { IAMScriptableEntity, IAMNodeEntity } from '@/types';
 
 const ajv = new Ajv();

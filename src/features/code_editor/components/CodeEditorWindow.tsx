@@ -6,8 +6,9 @@ import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import CodeMirror from '@uiw/react-codemirror';
 import _ from 'lodash';
-import { IAMNodeEntity } from 'types';
-import { lint } from 'utils/iam-code-linter';
+
+import { IAMNodeEntity } from '@/types';
+import { lint } from '@/utils/iam-code-linter';
 
 interface CodeEditorWindowProps {
   entity: IAMNodeEntity.Policy | IAMNodeEntity.Role;
@@ -16,7 +17,7 @@ interface CodeEditorWindowProps {
   content: string;
 }
 
-const CodeEditorWindow: React.FC<CodeEditorWindowProps> = ({
+export const CodeEditorWindow: React.FC<CodeEditorWindowProps> = ({
   entity,
   setContent,
   setErrors,
@@ -42,5 +43,3 @@ const CodeEditorWindow: React.FC<CodeEditorWindowProps> = ({
     />
   );
 };
-
-export default CodeEditorWindow;

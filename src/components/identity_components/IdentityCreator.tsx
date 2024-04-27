@@ -18,10 +18,11 @@ import {
   FormHelperText,
   Box,
 } from '@chakra-ui/react';
-import PoliciesList from 'components/identity_components/PoliciesList';
-import useIAMIdentityCreator from 'hooks/useIdentityCreator';
 import _ from 'lodash';
-import { IAMIdentityEntity, IAMNodeEntity } from 'types';
+
+import PoliciesList from '@/components/identity_components/PoliciesList';
+import useIAMIdentityCreator from '@/hooks/useIdentityCreator';
+import { IAMIdentityEntity, IAMNodeEntity } from '@/types';
 
 interface IdentityCreator {}
 

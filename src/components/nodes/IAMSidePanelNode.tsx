@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 
 import { Text, Box, Flex, Tooltip } from '@chakra-ui/react';
-import { IAMNodeContext } from 'components/nodes/IAMNodeProvider';
-import { IAMNodeProps } from 'types';
 
 import IAMNodeIcon from './IAMNodeIcon';
+import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
+import { IAMNodeProps } from '@/types';
 
 /**
  * `IAMSidePanelNode` renders a generic node to be used inside the side panel

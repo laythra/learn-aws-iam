@@ -1,13 +1,13 @@
 import React, { useCallback } from 'react';
 
 import { Box } from '@chakra-ui/react';
-import DotsPattern from 'assets/images/dots_pattern.svg';
-import IAMCanvasNode from 'components/nodes/IAMCanvasNode';
 import ReactFlow, { useNodesState, useEdgesState, addEdge, Edge, Connection } from 'reactflow';
 import styled from 'styled-components';
-import { IAMNodeEntity } from 'types';
 
 import Logo from './Logo';
+import DotsPattern from '@/assets/images/dots_pattern.svg';
+import IAMCanvasNode from '@/components/nodes/IAMCanvasNode';
+import { IAMNodeEntity } from '@/types';
 
 const CavnasWrapper = styled(Box)`
   position: relative;

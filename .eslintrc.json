@@ -54,13 +54,15 @@
         }
       }
     ],
-    "react/function-component-definition": [
-      "error",
-      { "namedComponents": "arrow-function" }
-    ],
+    "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }],
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": ["warn"]
-
+    "@typescript-eslint/no-unused-vars": ["warn"],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["@/features/*/*"]
+      }
+    ]
   },
   "settings": {
     "react": {

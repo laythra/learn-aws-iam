@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 
-import { IAMNodeEntity, IAMNodeProps } from 'types';
+import { IAMNodeEntity, IAMNodeProps } from '@/types';
 
 interface IAMNodeContextProps {
   children: React.ReactNode;

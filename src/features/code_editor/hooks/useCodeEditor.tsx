@@ -84,7 +84,7 @@ const contentReducer = (state: Content, action: ContentAction): Content => {
   }
 };
 
-const useCodeEditor = (): CodeEditorContextState => {
+export const useCodeEditor = (): CodeEditorContextState => {
   const context = useModal();
 
   if (!context) {
@@ -122,5 +122,3 @@ const useCodeEditor = (): CodeEditorContextState => {
     isCodeEditorOpen,
   };
 };
-
-export default useCodeEditor;
