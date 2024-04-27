@@ -1,7 +1,7 @@
 import { Grid, Flex, Text, GridItem, Box } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import NewEntityButton from '@/components/NewEntityButton';
 import IAMSidePanelNode from '@/components/nodes/IAMSidePanelNode';
 import SidePanel from '@/components/side_panels/SidePanel';

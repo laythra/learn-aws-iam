@@ -2,13 +2,11 @@ import { useContext } from 'react';
 
 import { Text, Flex, Divider, Code, Box } from '@chakra-ui/react';
 
-import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider';
 import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
 import SidePanel from '@/components/side_panels/SidePanel';
 
 const LeftSidePanel: React.FC = () => {
   const { selectedNode } = useContext(IAMNodeContext);
-  const levelDetails = LevelsProgressionContext.useSelector(state => state.context);
 
   return (
     <SidePanel alignment='right'>
