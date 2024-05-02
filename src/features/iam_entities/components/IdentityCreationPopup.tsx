@@ -14,23 +14,35 @@ import {
   Select,
   FormControl,
   FormLabel,
-  Input,
   FormHelperText,
-  Box,
+  Input,
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import PoliciesList from '@/components/identity_components/PoliciesList';
-import useIAMIdentityCreator from '@/hooks/useIdentityCreator';
+import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { IAMIdentityEntity, IAMNodeEntity } from '@/types';
 
-interface IdentityCreator {}
+interface IdentityCreationPopupProps {}
 
-const IdentityCreator: React.FC<IdentityCreator> = () => {
-  const { closeIdentityCreator, isIdentityCreatorOpen } = useIAMIdentityCreator();
+export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () => {
+  const { closeIdentityCreator, isIdentityCreatorOpen } = useIdentityCreator();
   const [userName, setUserName] = useState('');
+  const [groupName, setGroupName] = useState('');
   const [iamIdentityEntity, setIamIdentityEntity] = useState<IAMIdentityEntity>(IAMNodeEntity.User);
 
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (iamIdentityEntity === IAMNodeEntity.User) {
+      setUserName(e.target.value);
+    } else {
+      setGroupName(e.target.value);
+    }
+  };
+
+  const getNameFieldVal = (): string => {
+    return iamIdentityEntity === IAMNodeEntity.User ? userName : groupName;
+  };
+
+  // TODO: Dispatch action to create new identity
   const submit = (): void => {
     closeIdentityCreator();
   };
@@ -55,14 +67,12 @@ const IdentityCreator: React.FC<IdentityCreator> = () => {
         <ModalCloseButton />
         <ModalBody>
           <FormControl>
-            <FormLabel>User Name</FormLabel>
-            <Input value={userName} onChange={e => setUserName(e.target.value)} />
-            <FormHelperText>This could be any username you like</FormHelperText>
+            <FormLabel>
+              {iamIdentityEntity === IAMNodeEntity.User ? 'User Name' : 'Group Name'}
+            </FormLabel>
+            <Input value={getNameFieldVal()} onChange={handleNameChange} />
+            <FormHelperText>This could be any name you like</FormHelperText>
           </FormControl>
-
-          <Box pt={8}>
-            <PoliciesList />
-          </Box>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme='blue' mr={3} onClick={submit}>
@@ -76,5 +86,3 @@ const IdentityCreator: React.FC<IdentityCreator> = () => {
     </Modal>
   );
 };
-
-export default IdentityCreator;
