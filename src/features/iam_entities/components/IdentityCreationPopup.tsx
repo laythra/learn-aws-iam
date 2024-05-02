@@ -20,12 +20,14 @@ import {
 import _ from 'lodash';
 
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
+import { useIAMNodesManager } from '@/hooks/useIAMNodesManager';
 import { IAMIdentityEntity, IAMNodeEntity } from '@/types';
 
 interface IdentityCreationPopupProps {}
 
 export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () => {
   const { closeIdentityCreator, isIdentityCreatorOpen } = useIdentityCreator();
+  const { createNode } = useIAMNodesManager();
   const [userName, setUserName] = useState('');
   const [groupName, setGroupName] = useState('');
   const [iamIdentityEntity, setIamIdentityEntity] = useState<IAMIdentityEntity>(IAMNodeEntity.User);
@@ -42,8 +44,15 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
     return iamIdentityEntity === IAMNodeEntity.User ? userName : groupName;
   };
 
-  // TODO: Dispatch action to create new identity
   const submit = (): void => {
+    const node = {
+      id: Date.now().toString(),
+      entity: iamIdentityEntity,
+      label: getNameFieldVal(),
+      description: 'New ' + _.upperFirst(iamIdentityEntity),
+    };
+
+    createNode(node);
     closeIdentityCreator();
   };
 
