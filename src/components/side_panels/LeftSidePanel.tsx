@@ -5,12 +5,12 @@ import { LevelsProgressionContext } from '@/components/levels_progression/Levels
 import IAMSidePanelNode from '@/components/nodes/IAMSidePanelNode';
 import SidePanel from '@/components/side_panels/SidePanel';
 import { NewEntityButton } from '@/features/iam_entities';
-import useIAMEntities from '@/hooks/useIAMEntities';
+import { useIAMNodesManager } from '@/hooks/useIAMNodesManager';
 
 interface LeftSidePanelProps {}
 
 const LeftSidePanel: React.FC<LeftSidePanelProps> = () => {
-  const { createdNodes } = useIAMEntities();
+  const { createdNodes } = useIAMNodesManager();
   const stateContext = LevelsProgressionContext.useSelector(state => state);
 
   return (

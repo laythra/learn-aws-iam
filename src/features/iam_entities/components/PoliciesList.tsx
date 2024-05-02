@@ -1,13 +1,13 @@
 import { FormControl, FormLabel, Stack, Checkbox, Text } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import useIAMEntities from '@/hooks/useIAMEntities';
+import { useIAMNodesManager } from '@/hooks/useIAMNodesManager';
 import { IAMNodeEntity } from '@/types';
 
 interface PoliciesList {}
 
 const PoliciesList: React.FC<PoliciesList> = () => {
-  const { createdNodes } = useIAMEntities();
+  const { createdNodes } = useIAMNodesManager();
   const policies = createdNodes.filter(node => node.entity === IAMNodeEntity.Policy);
 
   return (

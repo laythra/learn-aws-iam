@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
 import { CodeEditorWindow } from './CodeEditorWindow';
 import { useCodeEditor } from '../hooks/useCodeEditor';
-import useIAMEntities from '@/hooks/useIAMEntities';
+import { useIAMNodesManager } from '@/hooks/useIAMNodesManager';
 import { IAMScriptableEntity, IAMNodeEntity } from '@/types';
 
 interface CodeEditorProps {}
@@ -26,7 +26,7 @@ interface CodeEditorProps {}
 export const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
   const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
     useCodeEditor();
-  const { createNode } = useIAMEntities();
+  const { createNode } = useIAMNodesManager();
   const [iamEntity, setIamEntity] = useState<IAMScriptableEntity>(IAMNodeEntity.Policy);
 
   const renderedErrors = errors[iamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
