@@ -15,9 +15,9 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import { useCodeEditor } from '@/features/code_editor';
-import { CodeEditorErrorsBox } from '@/features/code_editor';
-import { CodeEditorWindow } from '@/features/code_editor';
+import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
+import { CodeEditorWindow } from './CodeEditorWindow';
+import { useCodeEditor } from '../hooks/useCodeEditor';
 import useIAMEntities from '@/hooks/useIAMEntities';
 import { IAMScriptableEntity, IAMNodeEntity } from '@/types';
 
