@@ -2,15 +2,15 @@ import { Grid, Flex, Text, GridItem, Box } from '@chakra-ui/react';
 import _ from 'lodash';
 
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
-import NewEntityButton from '@/components/NewEntityButton';
 import IAMSidePanelNode from '@/components/nodes/IAMSidePanelNode';
 import SidePanel from '@/components/side_panels/SidePanel';
-import useIAMEntities from '@/hooks/useIAMEntities';
+import { NewEntityButton } from '@/features/iam_entities';
+import { useIAMNodesManager } from '@/hooks/useIAMNodesManager';
 
 interface LeftSidePanelProps {}
 
 const LeftSidePanel: React.FC<LeftSidePanelProps> = () => {
-  const { createdNodes } = useIAMEntities();
+  const { createdNodes } = useIAMNodesManager();
   const stateContext = LevelsProgressionContext.useSelector(state => state);
 
   return (

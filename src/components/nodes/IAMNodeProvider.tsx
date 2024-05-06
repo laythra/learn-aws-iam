@@ -1,14 +1,16 @@
 import React, { createContext } from 'react';
 
-import { IAMNodeEntity, IAMNodeProps } from '@/types';
+import { IAMNodeEntity, IAMNodeProps, IAMUserNodeProps, IAMGroupNodeProps } from '@/types';
 
 interface IAMNodeContextProps {
   children: React.ReactNode;
 }
 
 interface IAMNodeContextState {
-  selectedNode: IAMNodeProps;
-  setSelectedNode: React.Dispatch<React.SetStateAction<IAMNodeProps>>;
+  selectedNode: IAMNodeProps | IAMUserNodeProps | IAMGroupNodeProps;
+  setSelectedNode: React.Dispatch<
+    React.SetStateAction<IAMNodeProps | IAMUserNodeProps | IAMGroupNodeProps>
+  >;
 }
 
 const defaultNode: IAMNodeProps = {

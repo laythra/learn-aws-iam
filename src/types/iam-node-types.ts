@@ -18,3 +18,13 @@ export interface IAMNodeProps {
   description: string;
   content?: string;
 }
+
+export interface IAMUserNodeProps extends IAMNodeProps {
+  associatedPolicies: IAMNodeProps[];
+}
+
+export interface IAMGroupNodeProps extends IAMNodeProps {
+  users: IAMUserNodeProps[];
+}
+
+export interface IAMPolicyNodeProps extends IAMNodeProps {}

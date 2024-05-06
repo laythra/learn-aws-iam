@@ -1,21 +1,21 @@
 import { PlusSquareOutlined } from '@ant-design/icons';
 import { IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 
-import IdentityCreator from '@/components/identity_components/IdentityCreator';
+import { IdentityCreationPopup } from './IdentityCreationPopup';
+import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { CodeEditor } from '@/features/code_editor';
 import useCodeEditor from '@/hooks/useCodeEditor';
-import useIdentityCreator from '@/hooks/useIdentityCreator';
 
-interface NewEntityButton {}
+interface NewEntityButtonProps {}
 
-const NewEntityButton: React.FC<NewEntityButton> = () => {
+export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   const { openCodeEditor } = useCodeEditor();
   const { openIdentityCreator } = useIdentityCreator();
 
   return (
     <>
       <CodeEditor />
-      <IdentityCreator />
+      <IdentityCreationPopup />
       <Menu>
         <MenuButton as={IconButton} aria-label='New' icon={<PlusSquareOutlined />} />
         <MenuList>
@@ -26,5 +26,3 @@ const NewEntityButton: React.FC<NewEntityButton> = () => {
     </>
   );
 };
-
-export default NewEntityButton;

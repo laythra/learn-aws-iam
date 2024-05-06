@@ -8,7 +8,7 @@ interface IAMIdentityCreatorContextState {
 
 const MODAL_ID = 'iam-identity-manager';
 
-const useIdentityCreator = (): IAMIdentityCreatorContextState => {
+export const useIdentityCreator = (): IAMIdentityCreatorContextState => {
   const context = useModal();
 
   const closeIdentityCreator = (): void => context.closeModal(MODAL_ID);
@@ -21,5 +21,3 @@ const useIdentityCreator = (): IAMIdentityCreatorContextState => {
     isIdentityCreatorOpen,
   };
 };
-
-export default useIdentityCreator;

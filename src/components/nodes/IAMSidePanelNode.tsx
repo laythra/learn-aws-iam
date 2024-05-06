@@ -49,7 +49,9 @@ const IAMSidePanelNode: React.FC<IAMNodeProps> = ({ id, label, entity, descripti
       >
         <IAMNodeIcon nodeLabel='User' />
         <Box marginTop={1}>
-          <Text fontWeight='700'>{label}</Text>
+          <Text fontWeight='700' align='center'>
+            {label}
+          </Text>
         </Box>
       </Flex>
     </Tooltip>
