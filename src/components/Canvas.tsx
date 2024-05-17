@@ -10,7 +10,7 @@ import { LevelsProgressionContext } from './levels_progression/LevelsProgression
 import Logo from './Logo';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import IAMCanvasNode from '@/components/nodes/IAMCanvasNode';
-import { InsideLevelMetadata } from '@/machines/types';
+import { EventData, InsideLevelMetadata } from '@/machines/types';
 
 const CanvasBackground = styled(Box)`
   position: relative;
@@ -69,19 +69,21 @@ const Canvas: React.FC = () => {
       _.forOwn(levelState.getMeta(), (value, statePath) => {
         const levelMetadata = value as InsideLevelMetadata;
 
-        _.forEach(levelMetadata.connection_targets, connectionTarget => {
+        const finishedTargets = _.map(levelMetadata.connection_targets, connectionTarget => {
           if (_.differenceBy(connectionTarget.required_edges, newEdges, 'id').length === 0) {
-            // const action = levelState.context.metadata_keys[statePath];
-            // levelActor.send({ type: action } as EventData);
-
             _.forEach(connectionTarget.locked_edges, edge => {
               // We unlock all locked edges
               newEdges = addEdge(edge, newEdges);
             });
 
-            // TODO: Progress to next state if necessary
+            return connectionTarget;
           }
         });
+
+        if (_.compact(finishedTargets).length === levelMetadata.connection_targets?.length) {
+          const actionName = levelState.context.metadata_keys[statePath];
+          levelActor.send({ type: actionName } as EventData);
+        }
       });
 
       setEdges(newEdges);
