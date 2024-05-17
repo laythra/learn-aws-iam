@@ -1,15 +1,18 @@
 import React, { useCallback } from 'react';
 
 import { Box } from '@chakra-ui/react';
+import { useTheme } from '@chakra-ui/react';
+import _ from 'lodash';
 import ReactFlow, { useNodesState, useEdgesState, addEdge, Edge, Connection } from 'reactflow';
 import styled from 'styled-components';
 
+import { LevelsProgressionContext } from './levels_progression/LevelsProgressionProvider';
 import Logo from './Logo';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import IAMCanvasNode from '@/components/nodes/IAMCanvasNode';
-import { IAMNodeEntity } from '@/types';
+import { InsideLevelMetadata } from '@/machines/types';
 
-const CavnasWrapper = styled(Box)`
+const CanvasBackground = styled(Box)`
   position: relative;
   width: 100vw;
   height: 100vh;
@@ -24,23 +27,12 @@ const nodeTypes = {
 };
 
 const Canvas: React.FC = () => {
-  const initialNodes = [
-    {
-      id: '100',
-      position: { x: 0, y: 0 },
-      data: { id: '100', label: 'Test Node1', entity: IAMNodeEntity.User },
-      type: 'iam_default',
-    },
-    {
-      id: '200',
-      position: { x: 0, y: 100 },
-      data: { id: '200', label: 'Test Node2', entity: IAMNodeEntity.User },
-      type: 'iam_default',
-    },
-  ];
+  const theme = useTheme();
+  const levelState = LevelsProgressionContext.useSelector(state => state);
+  const levelActor = LevelsProgressionContext.useActorRef();
+  const initialEdges = [] as Edge[];
 
-  const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState(levelState.context.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const handleDragOver = (event: React.DragEvent): void => {
@@ -68,22 +60,49 @@ const Canvas: React.FC = () => {
   };
 
   const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges(es => addEdge(params, es)),
-    []
+    (params: Connection) => {
+      if (levelState.context.inside_tutorial) {
+        return;
+      }
+
+      let newEdges = addEdge({ ...params, id: `e-${params.source}-${params.target}` }, edges);
+      _.forOwn(levelState.getMeta(), (value, statePath) => {
+        const levelMetadata = value as InsideLevelMetadata;
+
+        _.forEach(levelMetadata.connection_targets, connectionTarget => {
+          if (_.differenceBy(connectionTarget.required_edges, newEdges, 'id').length === 0) {
+            // const action = levelState.context.metadata_keys[statePath];
+            // levelActor.send({ type: action } as EventData);
+
+            _.forEach(connectionTarget.locked_edges, edge => {
+              // We unlock all locked edges
+              newEdges = addEdge(edge, newEdges);
+            });
+
+            // TODO: Progress to next state if necessary
+          }
+        });
+      });
+
+      setEdges(newEdges);
+    },
+    [levelState]
   );
 
   return (
-    <CavnasWrapper onDragOver={handleDragOver} onDrop={handleDrop}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        nodeTypes={nodeTypes}
-      />
+    <CanvasBackground onDragOver={handleDragOver} onDrop={handleDrop}>
+      <Box position='relative' height='100%' width='100%' zIndex={theme.zIndices.popover}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+        />
+      </Box>
       <Logo />
-    </CavnasWrapper>
+    </CanvasBackground>
   );
 };
 

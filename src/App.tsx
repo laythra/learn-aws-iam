@@ -1,5 +1,6 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 
+import LevelsProgressionProvider from './components/levels_progression/LevelsProgressionProvider';
 import ModalProvider from '@/components/ModalProvider';
 import IAMNodeProvider from '@/components/nodes/IAMNodeProvider';
 import Home from '@/pages/home';
@@ -19,7 +20,9 @@ const App: React.FC = () => {
     <ChakraProvider theme={theme}>
       <IAMNodeProvider>
         <ModalProvider>
-          <Home />
+          <LevelsProgressionProvider>
+            <Home />
+          </LevelsProgressionProvider>
         </ModalProvider>
       </IAMNodeProvider>
     </ChakraProvider>

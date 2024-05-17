@@ -1,4 +1,5 @@
 import { AntdIconProps } from '@ant-design/icons/lib/components/AntdIcon';
+import { HandleProps } from 'reactflow';
 
 export type AntdIconType = React.ForwardRefExoticComponent<
   AntdIconProps & React.RefAttributes<HTMLSpanElement>
@@ -9,6 +10,11 @@ export enum IAMNodeEntity {
   Group = 'Group',
   Role = 'Role',
   Policy = 'Policy',
+  Resource = 'Resource',
+}
+
+export enum IAMResourceEntity {
+  S3 = 'S3',
 }
 
 export interface IAMNodeProps {
@@ -17,6 +23,10 @@ export interface IAMNodeProps {
   entity: IAMNodeEntity;
   description: string;
   content?: string;
+}
+
+export interface IAMCanvasNodeProps extends IAMNodeProps {
+  handles: HandleProps[];
 }
 
 export interface IAMUserNodeProps extends IAMNodeProps {

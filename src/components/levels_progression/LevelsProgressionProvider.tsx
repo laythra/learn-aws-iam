@@ -1,8 +1,9 @@
 import { createActorContext } from '@xstate/react';
 
-import levelProgressionMachine from '@/machines/levels-progression-machine';
+import { stateMachine } from '@/machines/level1/state-machine';
 
-export const LevelsProgressionContext = createActorContext(levelProgressionMachine);
+// TODO: Fetch progressed to level number from local storage and set it as initial state
+export const LevelsProgressionContext = createActorContext(stateMachine);
 interface LevelsProgressionProviderProps {
   children: React.ReactNode;
 }
