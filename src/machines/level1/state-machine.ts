@@ -1,4 +1,3 @@
-import { Edge } from 'reactflow';
 import { setup, assign } from 'xstate';
 
 import { TUTORIAL_MESSAGES } from './config';
