@@ -19,7 +19,7 @@ const LeftSidePanel: React.FC<LeftSidePanelProps> = () => {
         <Flex flexDirection='column' justifyContent='left' m={2}>
           <Flex justifyContent='space-between' alignItems='center'>
             <Text fontSize='xl' fontWeight='bold'>
-              LEVEL {stateContext.context.level_number} / {stateContext.context.total_levels}
+              LEVEL {stateContext.context.level_number} / {10}
             </Text>
             <NewEntityButton />
           </Flex>
