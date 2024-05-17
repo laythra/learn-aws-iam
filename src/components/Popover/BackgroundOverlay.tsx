@@ -1,4 +1,4 @@
-import { Box, Flex, useTheme } from '@chakra-ui/react';
+import { Box, useTheme } from '@chakra-ui/react';
 interface BackgroundOverlayProps {
   isOpen: boolean;
 }
