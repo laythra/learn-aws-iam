@@ -1,21 +1,23 @@
 import { useContext } from 'react';
 
 import { Flex, Text, Box } from '@chakra-ui/react';
-import { Position, Handle, NodeProps } from 'reactflow';
+import { Handle, NodeProps } from 'reactflow';
 
 import IAMNodeIcon from './IAMNodeIcon';
 import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
-import { IAMNodeProps } from '@/types';
+import { withPopover } from '@/decorators/withPopover';
+import { IAMCanvasNodeProps } from '@/types';
 
 /**
  * `IAMCanvasNode` renders a generic square node with a label and an icon.
  * It uses Chakra UI for styling and Ant Design icons for the icon.
  *
  * Props:
- * - `data`: The node data passed from React Flow.
+ * @param `id`: The unique identifier of the node.
+ * @param `data`: The node data passed from React Flow.
  */
-const IAMCanvasNode: React.FC<NodeProps> = ({ data }) => {
-  const { id, description, entity, label } = data as IAMNodeProps;
+const IAMCanvasNode: React.FC<NodeProps> = ({ data, id }) => {
+  const { description, entity, label, handles } = data as IAMCanvasNodeProps;
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
 
   const handleClick = (): void => {
@@ -30,8 +32,10 @@ const IAMCanvasNode: React.FC<NodeProps> = ({ data }) => {
       justifyContent='center'
       alignItems='center'
       p={4}
+      zIndex={100}
       bg='white'
       boxShadow='md'
+      position='relative'
       borderRadius='lg'
       width='100px'
       height='100px'
@@ -40,14 +44,15 @@ const IAMCanvasNode: React.FC<NodeProps> = ({ data }) => {
       borderColor={isSelected ? 'blue.500' : 'gray.200'}
       onClick={handleClick}
     >
-      <Handle type='target' position={Position.Top} />
+      {handles.map(handle => (
+        <Handle key={handle.id} {...handle} />
+      ))}
       <IAMNodeIcon nodeLabel='User' />
       <Box marginTop={1}>
         <Text fontWeight='700'>{label}</Text>
       </Box>
-      <Handle type='source' position={Position.Bottom} />
     </Flex>
   );
 };
 
-export default IAMCanvasNode;
+export default withPopover(IAMCanvasNode);
