@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { Flex } from '@chakra-ui/react';
+import { Flex, Box } from '@chakra-ui/react';
+
+import { Navbar } from '@/components/Navbar';
 
 import 'reactflow/dist/style.css';
 import Canvas from '@/components/Canvas';
@@ -19,17 +21,22 @@ const Home: React.FC = () => {
   );
 
   return (
-    <Flex h='100vh' color='blue.100'>
-      <BackgroundOverlay isOpen={isTutorialActive} />
-      <SidePanelProvider>
-        <IAMEntitiesProvider>
-          <LeftSidePanel />
-        </IAMEntitiesProvider>
-        <LeftSidePanelToggleButton />
+    <Flex direction='row' h='100vh'>
+      <Box width='80%'>
+        <Navbar />
+        <BackgroundOverlay isOpen={isTutorialActive} />
+        {/* <SidePanelProvider> */}
+        {/* <IAMEntitiesProvider> */}
+        {/* <LeftSidePanel /> */}
+        {/* </IAMEntitiesProvider> */}
+        {/* <LeftSidePanelToggleButton /> */}
         <Canvas />
+        {/* <RightSidePanelToggleButton /> */}
+        {/* </SidePanelProvider> */}
+      </Box>
+      <Box width='20%'>
         <RightSidePanel />
-        <RightSidePanelToggleButton />
-      </SidePanelProvider>
+      </Box>
     </Flex>
   );
 };

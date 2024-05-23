@@ -12,7 +12,7 @@ interface SidePanelProps {
 const SidePanel: React.FC<SidePanelProps> = ({ children, alignment }) => {
   const { leftPanelOpen, rightPanelOpen } = useContext(SidePanelsContext);
   const isOpen = alignment === 'left' ? leftPanelOpen : rightPanelOpen;
-  const panelWidth = isOpen ? '300px' : '0px';
+  const panelWidth = isOpen ? '100%' : '0%';
 
   return (
     <Flex h='100vh' direction={alignment === 'left' ? 'row' : 'row-reverse'}>

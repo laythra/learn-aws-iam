@@ -18,7 +18,7 @@ export const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ isOpen }) 
         height: '100%',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         pointerEvents: 'none',
-        zIndex: theme.zIndices.popover - 1, // * Make sure the overlay is behind the popover
+        zIndex: theme.zIndices.docked - 1, // * Make sure the overlay is behind the popover
       }}
     />
   );

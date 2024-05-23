@@ -10,7 +10,7 @@ const LeftSidePanel: React.FC = () => {
 
   return (
     <SidePanel alignment='right'>
-      <Flex direction='column' alignItems='center' justifyContent='center' height='100vh'>
+      <Flex direction='column' alignItems='center' justifyContent='center' height='100vh' w='100%'>
         <Flex direction='column' alignItems='center' width='100%' height='50vh'>
           <Code fontSize='lg' fontWeight='bold' p={1}>
             Level Objective

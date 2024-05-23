@@ -7,14 +7,12 @@ import ReactFlow, { useNodesState, useEdgesState, addEdge, Edge, Connection } fr
 import styled from 'styled-components';
 
 import { LevelsProgressionContext } from './levels_progression/LevelsProgressionProvider';
-import Logo from './Logo';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import IAMCanvasNode from '@/components/nodes/IAMCanvasNode';
 import { EventData, InsideLevelMetadata } from '@/machines/types';
 
 const CanvasBackground = styled(Box)`
   position: relative;
-  width: 100vw;
   height: 100vh;
   background-color: #000;
   background-image: url(${DotsPattern});
@@ -93,7 +91,7 @@ const Canvas: React.FC = () => {
 
   return (
     <CanvasBackground onDragOver={handleDragOver} onDrop={handleDrop}>
-      <Box position='relative' height='100%' width='100%' zIndex={theme.zIndices.popover}>
+      <Box position='relative' height='100%' width='100%' zIndex={theme.zIndices.docked}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -103,7 +101,6 @@ const Canvas: React.FC = () => {
           nodeTypes={nodeTypes}
         />
       </Box>
-      <Logo />
     </CanvasBackground>
   );
 };
