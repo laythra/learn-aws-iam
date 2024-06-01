@@ -1,8 +1,9 @@
 import { PlusSquareOutlined } from '@ant-design/icons';
-import { IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import { IconButton, Menu, MenuButton, MenuList, MenuItem, Box } from '@chakra-ui/react';
 
 import { IdentityCreationPopup } from './IdentityCreationPopup';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
+import { withPopover } from '@/decorators/withPopover';
 import { CodeEditor } from '@/features/code_editor';
 import useCodeEditor from '@/hooks/useCodeEditor';
 
@@ -26,3 +27,5 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
     </>
   );
 };
+
+export const NewEntityButtonWithPopover = withPopover(NewEntityButton);
