@@ -1,31 +1,20 @@
 import React, { useCallback } from 'react';
 
 import { Box } from '@chakra-ui/react';
-import { useTheme } from '@chakra-ui/react';
 import _ from 'lodash';
 import ReactFlow, { useNodesState, useEdgesState, addEdge, Edge, Connection } from 'reactflow';
-import styled from 'styled-components';
 
 import { LevelsProgressionContext } from './levels_progression/LevelsProgressionProvider';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import IAMCanvasNode from '@/components/nodes/IAMCanvasNode';
 import { EventData, InsideLevelMetadata } from '@/machines/types';
-
-const CanvasBackground = styled(Box)`
-  position: relative;
-  height: 100vh;
-  background-color: #000;
-  background-image: url(${DotsPattern});
-  background-repeat: repeat;
-  background-color: transparent;
-`;
+import 'reactflow/dist/style.css';
 
 const nodeTypes = {
   iam_default: IAMCanvasNode,
 };
 
 const Canvas: React.FC = () => {
-  const theme = useTheme();
   const levelState = LevelsProgressionContext.useSelector(state => state);
   const levelActor = LevelsProgressionContext.useActorRef();
   const initialEdges = [] as Edge[];
@@ -90,18 +79,25 @@ const Canvas: React.FC = () => {
   );
 
   return (
-    <CanvasBackground onDragOver={handleDragOver} onDrop={handleDrop}>
-      <Box position='relative' height='100%' width='100%' zIndex={theme.zIndices.docked}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-        />
-      </Box>
-    </CanvasBackground>
+    <Box
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      backgroundColor='white'
+      backgroundImage={DotsPattern}
+      backgroundRepeat='repeat'
+      position='relative'
+      height='100vh'
+      zIndex='auto'
+    >
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        nodeTypes={nodeTypes}
+      />
+    </Box>
   );
 };
 
