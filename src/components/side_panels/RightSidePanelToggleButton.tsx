@@ -21,7 +21,6 @@ const SidePanelToggleButton: React.FC<SidePanelToggleButtonProps> = () => {
       colorScheme='gray'
       variant='ghost'
       onClick={setRightPanelOpen.toggle}
-      zIndex={1}
     >
       {icon}
     </Button>

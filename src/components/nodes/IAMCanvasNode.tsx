@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 
 import { Flex, Text, Box } from '@chakra-ui/react';
+import { useTheme } from '@chakra-ui/react';
 import { Handle, NodeProps } from 'reactflow';
 
 import IAMNodeIcon from './IAMNodeIcon';
@@ -32,11 +33,10 @@ const IAMCanvasNode: React.FC<NodeProps> = ({ data, id }) => {
       justifyContent='center'
       alignItems='center'
       p={4}
-      zIndex={100}
       bg='white'
       boxShadow='md'
-      position='relative'
       borderRadius='lg'
+      position='relative'
       width='100px'
       height='100px'
       textAlign='center'

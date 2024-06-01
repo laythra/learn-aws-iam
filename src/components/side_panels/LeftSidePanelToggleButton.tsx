@@ -11,7 +11,6 @@ interface SidePanelToggleButtonProps {}
 const SidePanelToggleButton: React.FC<SidePanelToggleButtonProps> = () => {
   const { leftPanelOpen, setLeftPanelOpen } = useContext(SidePanelsContext);
   const theme = useTheme();
-  // debugger;
 
   const icon = leftPanelOpen ? <CaretLeftOutlined /> : <CaretRightOutlined />;
 
