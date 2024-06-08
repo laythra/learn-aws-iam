@@ -2,12 +2,13 @@ import React, { useCallback } from 'react';
 
 import { Box } from '@chakra-ui/react';
 import _ from 'lodash';
-import ReactFlow, { useNodesState, useEdgesState, addEdge, Edge, Connection } from 'reactflow';
+import ReactFlow, { Edge, Connection, Node } from 'reactflow';
 
 import { LevelsProgressionContext } from './levels_progression/LevelsProgressionProvider';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import IAMCanvasNode from '@/components/nodes/IAMCanvasNode';
 import { EventData, InsideLevelMetadata } from '@/machines/types';
+
 import 'reactflow/dist/style.css';
 
 const nodeTypes = {
@@ -17,13 +18,21 @@ const nodeTypes = {
 const Canvas: React.FC = () => {
   const levelState = LevelsProgressionContext.useSelector(state => state);
   const levelActor = LevelsProgressionContext.useActorRef();
-  const initialEdges = [] as Edge[];
-
-  const [nodes, setNodes, onNodesChange] = useNodesState(levelState.context.nodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const handleDragOver = (event: React.DragEvent): void => {
     event.preventDefault();
+  };
+
+  const addEdge = (edge: Edge): void => {
+    levelActor.send({ type: 'ADD_EDGE', edge: edge });
+  };
+
+  const setEdges = (edges: Edge[]): void => {
+    levelActor.send({ type: 'SET_EDGES', edges: edges });
+  };
+
+  const addNode = (node: Node): void => {
+    levelActor.send({ type: 'ADD_IAM_NODE', node: node });
   };
 
   const handleDrop = (event: React.DragEvent): void => {
@@ -43,7 +52,7 @@ const Canvas: React.FC = () => {
       data: nodeData,
     };
 
-    setNodes(oldNodes => [...oldNodes, newNode]);
+    levelActor.send({ type: 'ADD_IAM_NODE', node: newNode });
   };
 
   const onConnect = useCallback(
@@ -52,7 +61,10 @@ const Canvas: React.FC = () => {
         return;
       }
 
-      let newEdges = addEdge({ ...params, id: `e-${params.source}-${params.target}` }, edges);
+      const newEdge = { ...params, id: `e-${params.source}-${params.target}` } as Edge;
+      let newEdges = [...levelState.context.edges, newEdge];
+      setEdges(newEdges);
+
       _.forOwn(levelState.getMeta(), (value, statePath) => {
         const levelMetadata = value as InsideLevelMetadata;
 
@@ -60,9 +72,10 @@ const Canvas: React.FC = () => {
           if (_.differenceBy(connectionTarget.required_edges, newEdges, 'id').length === 0) {
             _.forEach(connectionTarget.locked_edges, edge => {
               // We unlock all locked edges
-              newEdges = addEdge(edge, newEdges);
+              newEdges = [...newEdges, edge];
             });
 
+            setEdges(newEdges);
             return connectionTarget;
           }
         });
@@ -72,8 +85,6 @@ const Canvas: React.FC = () => {
           levelActor.send({ type: actionName } as EventData);
         }
       });
-
-      setEdges(newEdges);
     },
     [levelState]
   );
@@ -90,10 +101,8 @@ const Canvas: React.FC = () => {
       zIndex='auto'
     >
       <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
+        nodes={levelState.context.nodes}
+        edges={levelState.context.edges}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
       />
