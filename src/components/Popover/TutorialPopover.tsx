@@ -4,12 +4,11 @@ import {
   PopoverTrigger,
   PopoverContent,
   PopoverArrow,
-  PopoverCloseButton,
   PopoverHeader,
   PopoverBody,
-  Box,
-  ButtonGroup,
   Button,
+  ButtonGroup,
+  Box,
 } from '@chakra-ui/react';
 
 interface TutorialPopoverProps {
@@ -17,6 +16,7 @@ interface TutorialPopoverProps {
   children: React.ReactNode;
   label: string;
   description: string;
+  showNextButton: boolean;
   onNextClick: () => void;
 }
 
@@ -25,24 +25,27 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
   children,
   label,
   description,
+  showNextButton,
   onNextClick,
 }) => {
   return (
-    <Popover isOpen={isOpen} placement='auto' closeOnBlur={false} isLazy={true}>
+    <Popover isOpen={isOpen} placement='auto' closeOnBlur={true} isLazy={true} closeDelay={0}>
       <PopoverTrigger>
         <Box>{children}</Box>
       </PopoverTrigger>
       <PopoverContent>
         <PopoverArrow />
-        <PopoverCloseButton />
         <PopoverHeader>{label}</PopoverHeader>
-        <PopoverBody>
-          <Text>{description}</Text>
-        </PopoverBody>
-
-        <ButtonGroup alignContent='flex-end'>
-          <Button onClick={onNextClick}>Next</Button>
-        </ButtonGroup>
+        {description && (
+          <PopoverBody>
+            <Text>{description}</Text>
+          </PopoverBody>
+        )}
+        {showNextButton && (
+          <ButtonGroup alignContent='flex-end'>
+            <Button onClick={onNextClick}>Next</Button>
+          </ButtonGroup>
+        )}
       </PopoverContent>
     </Popover>
   );
