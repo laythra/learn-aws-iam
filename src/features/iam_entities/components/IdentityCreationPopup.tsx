@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormHelperText,
   Divider,
+  position,
 } from '@chakra-ui/react';
 import _ from 'lodash';
 import { Node } from 'reactflow';
@@ -31,6 +32,9 @@ interface IdentityCreationPopupProps {}
 
 export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () => {
   const levelActor = LevelsProgressionContext.useActorRef();
+  const nextNodePosition = LevelsProgressionContext.useSelector(
+    state => state.context.next_node_position
+  );
   const iamNodeTemplate = LevelsProgressionContext.useSelector(
     state => state.context.iam_user_template
   );
@@ -61,9 +65,10 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
     const node = _.merge(iamNodeTemplate, {
       id: `iam_user${nextIamUserId}`,
       description: `New ${_.upperFirst(iamIdentityEntity)}`,
+      position: nextNodePosition,
       data: {
         label: getNameFieldVal(),
-      },
+      } as IAMNodeProps,
     }) as Node;
 
     levelActor.send({ type: 'ADD_IAM_NODE', node: node } as EventData);

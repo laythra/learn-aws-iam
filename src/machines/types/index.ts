@@ -15,6 +15,7 @@ export type Context = {
   edges: Edge[];
   show_popovers: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
+  next_node_position: { x: number; y: number };
   // target_edges: Edge[];
 };
 

@@ -17,8 +17,12 @@ export const stateMachine = setup({
         (context.active_popover_index + 1) % context.popovers_sequence_ids.length,
       show_popovers: true,
     }),
-    increment_next_iam_user_id: assign({
+    iam_user_creation_side_effects: assign({
       next_iam_user_id: ({ context }) => context.next_iam_user_id + 1,
+      next_node_position: ({ context }) => ({
+        x: context.next_node_position.x + 20,
+        y: context.next_node_position.y + 20,
+      }),
     }),
   },
 }).createMachine({
@@ -31,6 +35,7 @@ export const stateMachine = setup({
     level_description: 'Learn about Identity and Access Management',
     level_number: 1,
     next_iam_user_id: 1,
+    next_node_position: { x: 100, y: 100 },
     // This is not ideal as it couples the machine to the nodes
     popovers_sequence_ids: [
       'new_entity_btn',
@@ -100,7 +105,7 @@ export const stateMachine = setup({
           meta: TUTORIAL_MESSAGES[1],
           on: {
             IAM_USER_CREATED: {
-              actions: ['increment_next_iam_user_id', 'next_popover'],
+              actions: ['iam_user_creation_side_effects', 'next_popover'],
               target: 'iam_user_popover',
             },
           },
