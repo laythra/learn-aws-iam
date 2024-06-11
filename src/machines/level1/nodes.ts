@@ -11,7 +11,6 @@ export const template_nodes: { [key: string]: Node<IAMCanvasNodeProps> } = {
     data: {
       label: 'IAM User',
       entity: IAMNodeEntity.User,
-      with_popover: true,
       handles: [
         { id: 'a', type: 'source', position: Position.Top },
         { id: 'b', type: 'target', position: Position.Right },
