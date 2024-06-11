@@ -32,7 +32,7 @@ export const withPopover = <T extends { id: string }>(
       machineActor.send({ type: 'NEXT_POPOVER' });
     };
 
-    const isPopoverOpen = activePopoverElementId === props.id && context.inside_tutorial;
+    const isPopoverOpen = activePopoverElementId === props.id && context.show_popovers;
 
     return (
       <TutorialPopover
