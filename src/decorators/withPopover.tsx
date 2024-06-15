@@ -32,6 +32,7 @@ export const withPopover = <T extends { id: string }>(
         label={popoverContent?.popover_title as string}
         description={popoverContent?.popover_content as string}
         showNextButton={popoverContent?.show_next_button as boolean}
+        placement={popoverContent?.popover_placement}
       >
         <WrappedComponent {...props} />
       </TutorialPopover>

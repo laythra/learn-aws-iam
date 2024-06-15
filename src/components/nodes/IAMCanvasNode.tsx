@@ -1,13 +1,16 @@
 import { useContext } from 'react';
 
-import { Flex, Text, Box } from '@chakra-ui/react';
-import { useTheme } from '@chakra-ui/react';
+import { Flex, Text, Box, Button, Icon } from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
 import { Handle, NodeProps } from 'reactflow';
 
 import IAMNodeIcon from './IAMNodeIcon';
+import { IconButtonWithPopover } from '@/components/Element/Button/IconButtonWithPopover';
+import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider';
 import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
 import { withPopover } from '@/decorators/withPopover';
-import { IAMCanvasNodeProps } from '@/types';
+import type { TutorialMessage } from '@/machines/types';
+import type { IAMCanvasNodeProps } from '@/types';
 
 /**
  * `IAMCanvasNode` renders a generic square node with a label and an icon.
@@ -20,9 +23,25 @@ import { IAMCanvasNodeProps } from '@/types';
 const IAMCanvasNode: React.FC<NodeProps> = ({ data, id }) => {
   const { description, entity, label, handles } = data as IAMCanvasNodeProps;
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
+  const levelState = LevelsProgressionContext.useSelector(state => state);
+  const levelActor = LevelsProgressionContext.useActorRef();
 
   const handleClick = (): void => {
     setSelectedNode({ id, label, entity, description });
+  };
+
+  const popoverContent = (): TutorialMessage => {
+    return {
+      element_id: id,
+      popover_title: label,
+      popover_content: 'This is some dummy content',
+      show_next_button: false,
+      popover_placement: 'top-end',
+    };
+  };
+
+  const showInfoPopover = (): void => {
+    levelActor.send({ type: 'SHOW_POPOVER', popover_content: popoverContent() });
   };
 
   const isSelected = selectedNode?.id === id;
@@ -51,6 +70,17 @@ const IAMCanvasNode: React.FC<NodeProps> = ({ data, id }) => {
       <Box marginTop={1}>
         <Text fontWeight='700'>{label}</Text>
       </Box>
+      <IconButton
+        aria-label='info'
+        icon={<IAMNodeIcon nodeLabel='User' boxSize='12px' />}
+        size='sm'
+        position='absolute'
+        top={0}
+        right={0}
+        onClick={showInfoPopover}
+        variant='ghost'
+        _hover={{ bg: 'gray.200' }}
+      />
     </Flex>
   );
 };

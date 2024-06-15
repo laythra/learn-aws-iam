@@ -1,3 +1,4 @@
+import type { PlacementWithLogical } from '@chakra-ui/react';
 import type { Edge, Node } from 'reactflow';
 
 import { IAMCanvasNodeProps, IAMNodeEntity } from '@/types';
@@ -62,4 +63,5 @@ export type TutorialMessage = {
   popover_title: string;
   popover_content: string;
   show_next_button: boolean;
+  popover_placement?: PlacementWithLogical;
 };

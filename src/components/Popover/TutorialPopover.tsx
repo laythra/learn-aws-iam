@@ -10,6 +10,7 @@ import {
   ButtonGroup,
   Box,
   PopoverCloseButton,
+  type PlacementWithLogical,
 } from '@chakra-ui/react';
 
 interface TutorialPopoverProps {
@@ -19,6 +20,7 @@ interface TutorialPopoverProps {
   description: string;
   showNextButton?: boolean;
   showCloseButton?: boolean;
+  placement?: PlacementWithLogical;
   onNextClick: () => void;
 }
 
@@ -29,10 +31,11 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
   description,
   showNextButton = false,
   showCloseButton = false,
+  placement = 'auto',
   onNextClick,
 }) => {
   return (
-    <Popover isOpen={isOpen} placement='auto' closeOnBlur={true} isLazy={true} closeDelay={0}>
+    <Popover isOpen={isOpen} placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0}>
       <PopoverTrigger>
         <Box>{children}</Box>
       </PopoverTrigger>
