@@ -25,14 +25,20 @@ export const withPopover = <T extends { id: string }>(
       machineActor.send({ type: 'NEXT_POPOVER' });
     };
 
+    const closePopover = (): void => {
+      machineActor.send({ type: 'HIDE_POPOVERS' });
+    };
+
     return (
       <TutorialPopover
-        onNextClick={goToNextPopOver}
         isOpen={popoverOpen}
         label={popoverContent?.popover_title as string}
         description={popoverContent?.popover_content as string}
         showNextButton={popoverContent?.show_next_button as boolean}
         placement={popoverContent?.popover_placement}
+        showCloseButton={popoverContent?.show_close_button}
+        onNextClick={goToNextPopOver}
+        onCloseClick={closePopover}
       >
         <WrappedComponent {...props} />
       </TutorialPopover>

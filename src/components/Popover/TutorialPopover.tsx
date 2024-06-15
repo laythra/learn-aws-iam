@@ -22,6 +22,7 @@ interface TutorialPopoverProps {
   showCloseButton?: boolean;
   placement?: PlacementWithLogical;
   onNextClick: () => void;
+  onCloseClick: () => void;
 }
 
 export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
@@ -33,6 +34,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
   showCloseButton = false,
   placement = 'auto',
   onNextClick,
+  onCloseClick,
 }) => {
   return (
     <Popover isOpen={isOpen} placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0}>
@@ -42,7 +44,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
       <PopoverContent>
         <PopoverArrow />
         <PopoverHeader>{label}</PopoverHeader>
-        {showCloseButton && <PopoverCloseButton />}
+        {showCloseButton && <PopoverCloseButton onClick={onCloseClick} />}
         {description && (
           <PopoverBody>
             <Text>{description}</Text>

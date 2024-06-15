@@ -63,5 +63,6 @@ export type TutorialMessage = {
   popover_title: string;
   popover_content: string;
   show_next_button: boolean;
+  show_close_button: boolean;
   popover_placement?: PlacementWithLogical;
 };

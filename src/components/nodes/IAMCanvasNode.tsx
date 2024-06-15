@@ -35,6 +35,7 @@ const IAMCanvasNode: React.FC<NodeProps> = ({ data, id }) => {
       popover_content: 'This is some dummy content',
       show_next_button: false,
       popover_placement: 'top-end',
+      show_close_button: true,
     };
   };
 
