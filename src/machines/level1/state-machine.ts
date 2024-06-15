@@ -75,17 +75,17 @@ export const stateMachine = setup({
         show_popovers: true,
       }),
     },
+    HIDE_POPOVERS: {
+      actions: assign({
+        show_popovers: false,
+      }),
+    },
   },
   entry: assign({
     nodes: initial_nodes,
   }),
   states: {
     inside_tutorial: {
-      on: {
-        HIDE_POPOVERS: {
-          actions: assign({ show_popovers: false }),
-        },
-      },
       initial: 'create_user_popover',
       entry: assign({
         state_name: 'inside_tutorial',
