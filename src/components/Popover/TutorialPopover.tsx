@@ -9,6 +9,7 @@ import {
   Button,
   ButtonGroup,
   Box,
+  PopoverCloseButton,
 } from '@chakra-ui/react';
 
 interface TutorialPopoverProps {
@@ -16,7 +17,8 @@ interface TutorialPopoverProps {
   children: React.ReactNode;
   label: string;
   description: string;
-  showNextButton: boolean;
+  showNextButton?: boolean;
+  showCloseButton?: boolean;
   onNextClick: () => void;
 }
 
@@ -25,7 +27,8 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
   children,
   label,
   description,
-  showNextButton,
+  showNextButton = false,
+  showCloseButton = false,
   onNextClick,
 }) => {
   return (
@@ -36,6 +39,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
       <PopoverContent>
         <PopoverArrow />
         <PopoverHeader>{label}</PopoverHeader>
+        {showCloseButton && <PopoverCloseButton />}
         {description && (
           <PopoverBody>
             <Text>{description}</Text>
