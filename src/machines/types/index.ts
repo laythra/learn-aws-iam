@@ -7,8 +7,7 @@ export type Context = {
   level_title: string;
   level_description: string;
   level_number: number;
-  active_popover_index: number;
-  popovers_sequence_ids: string[];
+  next_popover_index: number;
   state_name: string;
   next_iam_user_id: number;
   nodes: Node[];
@@ -16,6 +15,7 @@ export type Context = {
   show_popovers: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
   next_node_position: { x: number; y: number };
+  popover_content?: TutorialMessage;
   // target_edges: Edge[];
 };
 
@@ -34,14 +34,15 @@ export type EventData =
   | { type: 'ADD_IAM_NODE'; node: Node }
   | { type: 'ADD_EDGE'; edge: Edge }
   | { type: 'SET_EDGES'; edges: Edge[] }
-  | { type: 'SET_NODES'; nodes: Node[] };
+  | { type: 'SET_NODES'; nodes: Node[] }
+  | { type: 'SHOW_POPOVER'; popover_content: TutorialMessage };
 
-export type InsideTutorialMetadata = {
-  popover_id: number;
-  popover_title: string;
-  popover_content: string;
-  show_next_button: boolean;
-};
+// export type InsideTutorialMetadata = {
+//   popover_id: number;
+//   popover_title: string;
+//   popover_content: string;
+//   show_next_button: boolean;
+// };
 
 export type MiniEdge = Pick<Edge, 'source' | 'target' | 'id'>;
 
@@ -56,3 +57,9 @@ export type InsideLevelMetadata = {
 };
 
 export type InsideTutorial = 'inside_tutorial';
+export type TutorialMessage = {
+  element_id: string;
+  popover_title: string;
+  popover_content: string;
+  show_next_button: boolean;
+};

@@ -2,19 +2,19 @@ import { setup, assign } from 'xstate';
 
 import { TUTORIAL_MESSAGES } from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
-import type { Context, InsideLevelMetadata, InsideTutorialMetadata, EventData } from '../types';
+import type { Context, InsideLevelMetadata, EventData, TutorialMessage } from '../types';
 import { IAMNodeEntity } from '@/types';
 
 export const stateMachine = setup({
   types: {} as {
     context: Context;
     events: EventData;
-    meta: InsideLevelMetadata | InsideTutorialMetadata;
+    meta: InsideLevelMetadata;
   },
   actions: {
     next_popover: assign({
-      active_popover_index: ({ context }) =>
-        (context.active_popover_index + 1) % context.popovers_sequence_ids.length,
+      popover_content: ({ context }) => TUTORIAL_MESSAGES[context.next_popover_index],
+      next_popover_index: ({ context }) => context.next_popover_index + 1,
       show_popovers: true,
     }),
     iam_user_creation_side_effects: assign({
@@ -23,6 +23,10 @@ export const stateMachine = setup({
         x: context.next_node_position.x + 20,
         y: context.next_node_position.y + 20,
       }),
+    }),
+    set_popover_content: assign({
+      popover_content: TUTORIAL_MESSAGES[1],
+      show_popovers: true,
     }),
   },
 }).createMachine({
@@ -36,17 +40,10 @@ export const stateMachine = setup({
     level_number: 1,
     next_iam_user_id: 1,
     next_node_position: { x: 100, y: 100 },
-    // This is not ideal as it couples the machine to the nodes
-    popovers_sequence_ids: [
-      'new_entity_btn',
-      'username',
-      'iam_user1',
-      'iam_policy1',
-      'iam_resource1',
-    ],
-    active_popover_index: 0,
+    next_popover_index: 0,
     state_name: 'inside_tutorial',
     show_popovers: true,
+    popover_content: TUTORIAL_MESSAGES[0],
     nodes: [],
     metadata_keys: {},
     edges: [],
@@ -72,6 +69,12 @@ export const stateMachine = setup({
         edges: ({ event }) => event.edges,
       }),
     },
+    SHOW_POPOVER: {
+      actions: assign({
+        popover_content: ({ event }) => event.popover_content,
+        show_popovers: true,
+      }),
+    },
   },
   entry: assign({
     nodes: initial_nodes,
@@ -87,31 +90,36 @@ export const stateMachine = setup({
       entry: assign({
         state_name: 'inside_tutorial',
       }),
-      onDone: {
-        actions: assign({ state_name: 'in_game' }),
-        target: 'inside_level',
-      },
+      onDone: 'inside_level',
       states: {
         create_user_popover: {
-          meta: TUTORIAL_MESSAGES[0],
+          entry: assign({
+            popover_content: TUTORIAL_MESSAGES[0],
+            show_popovers: true,
+          }),
           on: {
             CREATE_USER_POPUP_OPENED: {
               target: 'add_your_name_popover',
-              actions: 'next_popover',
             },
           },
         },
         add_your_name_popover: {
-          meta: TUTORIAL_MESSAGES[1],
+          entry: assign({
+            popover_content: TUTORIAL_MESSAGES[1],
+            show_popovers: true,
+          }),
           on: {
             IAM_USER_CREATED: {
-              actions: ['iam_user_creation_side_effects', 'next_popover'],
+              actions: 'iam_user_creation_side_effects',
               target: 'iam_user_popover',
             },
           },
         },
         iam_user_popover: {
-          meta: TUTORIAL_MESSAGES[2],
+          entry: assign({
+            popover_content: TUTORIAL_MESSAGES[2],
+            show_popovers: true,
+          }),
           on: {
             NEXT_POPOVER: {
               target: 'iam_policy_popover',
@@ -120,7 +128,10 @@ export const stateMachine = setup({
           },
         },
         iam_policy_popover: {
-          meta: TUTORIAL_MESSAGES[3],
+          entry: assign({
+            popover_content: TUTORIAL_MESSAGES[3],
+            show_popovers: true,
+          }),
           on: {
             NEXT_POPOVER: {
               target: 'tutorial_completed',
@@ -176,6 +187,9 @@ export const stateMachine = setup({
       },
     },
     finished_level: {
+      entry: assign({
+        state_name: 'finished_level',
+      }),
       type: 'final',
     },
   },
