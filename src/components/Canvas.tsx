@@ -56,7 +56,12 @@ const Canvas: React.FC = () => {
 
   const onConnect = useCallback(
     (params: Connection) => {
-      const newEdge = { ...params, id: `e-${params.source}-${params.target}` } as Edge;
+      const newEdge = {
+        ...params,
+        id: `e-${params.source}-${params.target}`,
+        label: 'Attached to', // TODO: Make this dynamic
+        labelStyle: { fill: 'black', fontWeight: 700 },
+      } as Edge;
       let newEdges = [...levelState.context.edges, newEdge];
       setEdges(newEdges);
 

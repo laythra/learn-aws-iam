@@ -1,4 +1,5 @@
-import { HandleProps, Node, Position, Edge } from 'reactflow';
+import { HandleProps, Node, Position, Edge, MarkerType } from 'reactflow';
+import type { EdgeMarkerType } from 'reactflow';
 
 import { IAMNodeEntity, IAMCanvasNodeProps } from '@/types';
 
@@ -63,11 +64,19 @@ export const edges: { [key in (typeof edgesNames)[number]]: Edge } = {
     id: 'e-iam_policy1-iam_user1',
     source: 'iam_policy1',
     target: 'iam_user1',
+    label: 'Attached to',
   },
   'e-iam_user1-iam_resource1': {
     id: 'e-iam_user1-iam_resource1',
     source: 'iam_user1',
     target: 'iam_resource1',
     type: 'smoothstep',
+    animated: true,
+    style: { stroke: 'red' },
+    label: 'Has access to',
+    labelBgPadding: [8, 4],
+    labelBgBorderRadius: 4,
+    labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 1 },
+    markerEnd: { type: MarkerType.Arrow, width: 20, height: 20, strokeWidth: 4 },
   },
 };
