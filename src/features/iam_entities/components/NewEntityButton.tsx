@@ -1,5 +1,5 @@
-import { PlusSquareOutlined } from '@ant-design/icons';
 import { IconButton, Menu, MenuButton, MenuList, MenuItem, Box } from '@chakra-ui/react';
+import { PlusCircleIcon } from '@heroicons/react/24/solid';
 
 import { IdentityCreationPopup } from './IdentityCreationPopup';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
@@ -26,9 +26,11 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
       <Menu>
         <MenuButton
           as={IconButton}
+          size='sm'
           aria-label='New'
-          icon={<PlusSquareOutlined />}
+          icon={<PlusCircleIcon />}
           onClick={hidePopovers}
+          bg='transparent'
         />
         <MenuList>
           <MenuItem onClick={openIdentityCreator}>Users & Groups</MenuItem>

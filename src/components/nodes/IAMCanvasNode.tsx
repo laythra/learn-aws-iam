@@ -2,10 +2,9 @@ import { useContext } from 'react';
 
 import { Flex, Text, Box, Button, Icon } from '@chakra-ui/react';
 import { IconButton } from '@chakra-ui/react';
+import { CodeBracketIcon } from '@heroicons/react/16/solid';
 import { Handle, NodeProps } from 'reactflow';
 
-import IAMNodeIcon from './IAMNodeIcon';
-import { IconButtonWithPopover } from '@/components/Element/Button/IconButtonWithPopover';
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider';
 import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
 import { withPopover } from '@/decorators/withPopover';
@@ -23,7 +22,6 @@ import type { IAMCanvasNodeProps } from '@/types';
 const IAMCanvasNode: React.FC<NodeProps> = ({ data, id }) => {
   const { description, entity, label, handles } = data as IAMCanvasNodeProps;
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
-  const levelState = LevelsProgressionContext.useSelector(state => state);
   const levelActor = LevelsProgressionContext.useActorRef();
 
   const handleClick = (): void => {
@@ -66,19 +64,19 @@ const IAMCanvasNode: React.FC<NodeProps> = ({ data, id }) => {
       {handles.map(handle => (
         <Handle key={handle.id} {...handle} />
       ))}
-      <IAMNodeIcon nodeLabel='User' />
       <Box marginTop={1}>
         <Text fontWeight='700'>{label}</Text>
       </Box>
       <IconButton
         aria-label='info'
-        icon={<IAMNodeIcon nodeLabel='User' boxSize='12px' />}
-        size='sm'
+        icon={<CodeBracketIcon />}
         position='absolute'
-        top={0}
-        right={0}
+        size='xs'
+        top={1}
+        right={1}
         onClick={showInfoPopover}
         variant='ghost'
+        bg='transparent'
         _hover={{ bg: 'gray.200' }}
       />
     </Flex>
