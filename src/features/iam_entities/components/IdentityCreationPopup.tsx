@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   Modal,
@@ -15,21 +15,35 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
-  Input,
   Divider,
+  position,
 } from '@chakra-ui/react';
 import _ from 'lodash';
+import { Node } from 'reactflow';
 
 import { PoliciesList } from './PoliciesList';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
-import { useIAMNodesManager } from '@/hooks/useIAMNodesManager';
+import { InputWithPopover } from '@/components/Form/InputWithPopover';
+import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider';
+import { EventData } from '@/machines/types';
 import { IAMIdentityEntity, IAMNodeEntity, IAMNodeProps } from '@/types';
 
 interface IdentityCreationPopupProps {}
 
 export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () => {
+  const levelActor = LevelsProgressionContext.useActorRef();
+  const nextNodePosition = LevelsProgressionContext.useSelector(
+    state => state.context.next_node_position
+  );
+  const iamNodeTemplate = LevelsProgressionContext.useSelector(
+    state => state.context.iam_user_template
+  );
+
+  const nextIamUserId = LevelsProgressionContext.useSelector(
+    state => state.context.next_iam_user_id
+  );
+
   const { closeIdentityCreator, isIdentityCreatorOpen } = useIdentityCreator();
-  const { createNode } = useIAMNodesManager();
   const [userName, setUserName] = useState('');
   const [groupName, setGroupName] = useState('');
   const [iamIdentityEntity, setIamIdentityEntity] = useState<IAMIdentityEntity>(IAMNodeEntity.User);
@@ -48,17 +62,26 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
   };
 
   const submit = (): void => {
-    const node = {
-      id: Date.now().toString(),
-      entity: iamIdentityEntity,
-      label: getNameFieldVal(),
-      description: 'New ' + _.upperFirst(iamIdentityEntity),
-      associatedPolicies: [],
-    };
+    const node = _.merge(iamNodeTemplate, {
+      id: `iam_user${nextIamUserId}`,
+      description: `New ${_.upperFirst(iamIdentityEntity)}`,
+      position: nextNodePosition,
+      data: {
+        label: getNameFieldVal(),
+      } as IAMNodeProps,
+    }) as Node;
 
-    createNode(node);
+    levelActor.send({ type: 'ADD_IAM_NODE', node: node } as EventData);
+    levelActor.send({ type: 'IAM_USER_CREATED' });
+
     closeIdentityCreator();
   };
+
+  useEffect(() => {
+    if (isIdentityCreatorOpen) {
+      levelActor.send({ type: 'CREATE_USER_POPUP_OPENED' } as EventData);
+    }
+  }, [isIdentityCreatorOpen]);
 
   return (
     <Modal isOpen={isIdentityCreatorOpen} onClose={closeIdentityCreator}>
@@ -83,8 +106,8 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
             <FormLabel>
               {iamIdentityEntity === IAMNodeEntity.User ? 'User Name' : 'Group Name'}
             </FormLabel>
-            <Input value={getNameFieldVal()} onChange={handleNameChange} />
-            <FormHelperText>This could be any name you like</FormHelperText>
+            <InputWithPopover id='username' value={getNameFieldVal()} onChange={handleNameChange} />
+            <FormHelperText>This could be any name you like...</FormHelperText>
           </FormControl>
 
           <Divider my={4} />

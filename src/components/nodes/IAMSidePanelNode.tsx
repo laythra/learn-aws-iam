@@ -2,7 +2,6 @@ import { useContext } from 'react';
 
 import { Text, Box, Flex, Tooltip } from '@chakra-ui/react';
 
-import IAMNodeIcon from './IAMNodeIcon';
 import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
 import { IAMNodeProps } from '@/types';
 
@@ -47,7 +46,6 @@ const IAMSidePanelNode: React.FC<IAMNodeProps> = ({ id, label, entity, descripti
         _hover={{ shadow: 'md' }}
         draggable
       >
-        <IAMNodeIcon nodeLabel='User' />
         <Box marginTop={1}>
           <Text fontWeight='700' align='center'>
             {label}

@@ -5,13 +5,13 @@ import { Text, Flex, Divider, Code, Box } from '@chakra-ui/react';
 import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
 import SidePanel from '@/components/side_panels/SidePanel';
 
-const LeftSidePanel: React.FC = () => {
+const RightSidePanel: React.FC = () => {
   const { selectedNode } = useContext(IAMNodeContext);
 
   return (
     <SidePanel alignment='right'>
       <Flex direction='column' alignItems='center' justifyContent='center' height='100vh'>
-        <Flex direction='column' alignItems='center' width='100%' height='50vh'>
+        <Flex direction='column' alignItems='center' height='50vh'>
           <Code fontSize='lg' fontWeight='bold' p={1}>
             Level Objective
           </Code>
@@ -24,7 +24,7 @@ const LeftSidePanel: React.FC = () => {
           </Box>
         </Flex>
 
-        <Flex direction='column' alignItems='center' width='100%' height='50vh' marginTop={4}>
+        <Flex direction='column' alignItems='center' height='50vh' marginTop={4} width='100%'>
           <Code fontSize='lg' fontWeight='bold' p={1}>
             {selectedNode.label}
           </Code>
@@ -40,4 +40,4 @@ const LeftSidePanel: React.FC = () => {
   );
 };
 
-export default LeftSidePanel;
+export default RightSidePanel;

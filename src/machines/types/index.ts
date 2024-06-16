@@ -1,33 +1,49 @@
+import type { PlacementWithLogical } from '@chakra-ui/react';
 import type { Edge, Node } from 'reactflow';
 
+import { IAMCanvasNodeProps, IAMNodeEntity } from '@/types';
+
 export type Context = {
+  iam_user_template: Node<IAMCanvasNodeProps>;
   level_title: string;
   level_description: string;
   level_number: number;
-  active_popover_index: number;
-  popovers_sequence_ids: string[];
+  next_popover_index: number;
   state_name: string;
+  next_iam_user_id: number;
   nodes: Node[];
-  inside_tutorial: boolean;
-  metadata_keys: { [key: string]: string };
+  edges: Edge[];
+  show_popovers: boolean;
+  metadata_keys: { [key: string]: string }; // Make it stricter
+  next_node_position: { x: number; y: number };
+  popover_content?: TutorialMessage;
   // target_edges: Edge[];
 };
 
-export type EventData = {
-  type:
-    | 'NEXT'
-    | 'NEXT_POPOVER'
-    | 'IAM_POLICY_CONNECTED'
-    | 'IAM_USER_CREATED'
-    | 'BEGIN'
-    | 'COMPLETE';
-};
+export type EventData =
+  | {
+      type:
+        | 'NEXT'
+        | 'NEXT_POPOVER'
+        | 'IAM_POLICY_CONNECTED'
+        | 'IAM_USER_CREATED'
+        | 'BEGIN'
+        | 'COMPLETE'
+        | 'CREATE_USER_POPUP_OPENED'
+        | 'HIDE_POPOVERS';
+    }
+  | { type: 'ADD_IAM_NODE'; node: Node }
+  | { type: 'ADD_EDGE'; edge: Edge }
+  | { type: 'SET_EDGES'; edges: Edge[] }
+  | { type: 'SET_NODES'; nodes: Node[] }
+  | { type: 'SHOW_POPOVER'; popover_content: TutorialMessage };
 
-export type InsideTutorialMetadata = {
-  popover_id: number;
-  popover_title: string;
-  popover_content: string;
-};
+// export type InsideTutorialMetadata = {
+//   popover_id: number;
+//   popover_title: string;
+//   popover_content: string;
+//   show_next_button: boolean;
+// };
 
 export type MiniEdge = Pick<Edge, 'source' | 'target' | 'id'>;
 
@@ -37,6 +53,16 @@ export type InsideLevelMetadata = {
     required_edges: Edge[];
     locked_edges: Edge[];
   }[];
+  // What this basically means, is that the user must create all entity_targets to this stage, very simple
+  entity_targets?: IAMNodeEntity[];
 };
 
 export type InsideTutorial = 'inside_tutorial';
+export type TutorialMessage = {
+  element_id: string;
+  popover_title: string;
+  popover_content: string;
+  show_next_button: boolean;
+  show_close_button: boolean;
+  popover_placement?: PlacementWithLogical;
+};

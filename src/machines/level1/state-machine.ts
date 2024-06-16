@@ -1,75 +1,141 @@
 import { setup, assign } from 'xstate';
 
 import { TUTORIAL_MESSAGES } from './config';
-import { nodes, edges } from './nodes';
-import type { Context, InsideLevelMetadata, InsideTutorialMetadata, EventData } from '../types';
+import { initial_nodes, template_nodes, edges } from './nodes';
+import type { Context, InsideLevelMetadata, EventData, TutorialMessage } from '../types';
+import { IAMNodeEntity } from '@/types';
 
 export const stateMachine = setup({
   types: {} as {
     context: Context;
     events: EventData;
-    meta: InsideLevelMetadata | InsideTutorialMetadata;
+    meta: InsideLevelMetadata;
   },
   actions: {
     next_popover: assign({
-      active_popover_index: ({ context }) =>
-        (context.active_popover_index + 1) % context.popovers_sequence_ids.length,
+      popover_content: ({ context }) => TUTORIAL_MESSAGES[context.next_popover_index],
+      next_popover_index: ({ context }) => context.next_popover_index + 1,
+      show_popovers: true,
+    }),
+    iam_user_creation_side_effects: assign({
+      next_iam_user_id: ({ context }) => context.next_iam_user_id + 1,
+      next_node_position: ({ context }) => ({
+        x: context.next_node_position.x + 20,
+        y: context.next_node_position.y + 20,
+      }),
+    }),
+    set_popover_content: assign({
+      popover_content: TUTORIAL_MESSAGES[1],
+      show_popovers: true,
     }),
   },
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QBswDczIIwH1YBcBDfMHAW0IGMALASwDswA6B2WiU-AV3wHsAnWoWQBiCL0ZMCxZqgzY8REuSp1Jrdpx4ChyANoAGALqJQAB15t8tCaZAAPRFgBMAFgNMAnADYsBgOwArP5uAMwAHFihADQgAJ6IoVhYTM7+oa6BBs6hnqEGnp7+AL7FsXKYuNLKFDQMzBocONx8gsJMFhYY-FgiAHIAogAaACo4AAoA8lMAagMASoYmSCAWVjb0do4IWHlMyf67Bgbh7rlusQkIoYHOTLcZ3oGh3oWRWKXl6JWKMip16nobCaLR07U6vG6zn6wzGU1mCyWdjWtGsthW21cRSY-gMoWcx2O4U8xM8rkuiVu9xyrieLzeyU+IAqCmqpFqagaQM0zW0bWQHV4XTA-FCMNGE2mkzmi2MyMsqI2W0Q4WyONcOQM7nSePCFOuVIetOerxJjLKzO+rKU7NU9RY3KaLLEEmYbKYLKqNv+nIdwNILKRKxRaM2GMQBIi1JugVc-n8rxj+tCGVSWQMWG8+OcObSoSZnt+NTtgP9OBZTEoEkYlHwOCEZBwFmQtEocWavBwXFgIodTf4vCg-DgsBEAEkAIIAWUlABkxwBhACaOAXkz6gwXIwGABEg+YFaHlTtArGmOFnBfvJeMv48jF4oksIFUliSZ5nJmsJEcgWrV6-g5e1GgDK1K2HP4Gy7Ht+D7MwByHEdx2nHAAFUAGUFlXeYBgnbc9zlYNDyVcMTzPC8rxvON731OMX0KBiCW8J571cUoLXoXgOHgFZCzZH16nldZ0VAbYAFoLkfBAxI1P95AA4sAS5MtQX5ITFREhwI3JKTP3CJhsgyQJv0iF5wlCEoLT470gNLHlVN0QVhR6dSj1IkJkwTAzCQKW4jjJOSfn42zlPsvlHIhKFXJI0TEn8VwmDjZjjmSLEMmcTzvG8wlPD8zwCjYqz-yLW0lL9MLWgioVIRFUJos07ZvDvAzr18Y5cnCU49Skiysp854IgifxzMsr55JKgS7JBcL2gc4QcCrMgzFQEgIHqsNYoQEkEr8LBDlcPxcnxTxPISoJ2uSJJIwMbxAutQCS1Cp0rXW48ol2Jhr2MzMCXcSJ9Q-e5CSiVxOt8NJAjuhTSt9EDyzAqt6BrOsoObVt2z4aCRVe0ioiaz7nG+68tROLB9RzfxsuOLJaTcQ6oYmkLyue+RK2rMBa3rQhGzRtsOyx2CGH7Qdh1gHiD2EjatJ2A6Xy+5Jib+smeufdU3g-L8f3zIrxuCx7mdA1nEeRrmed4Fs+cx7te0W5awFWnHNu-ZJ9m1QISW8PFhv8ZMsAS9MMxOQm4yxBm9bKuGK0oCDlCg63+Ed6W8cp+WfpJ-6evCSnzuOYafDpKIw5s-XI4RmPSDjmC4IQ0XxdWYiGqcWWCaJ37Sdory30KJiWJTQqxqC4uI8dQ3MHAsBIO5gW2aWlbIET7Y9u8fSKMJzr3BObwdKuOi0xSl4gk60bLV1offRZBbeFn+356IyXj2CfU70pgO-Hi3Eng+digA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QBswDczIIwH1YBcBDfMHAW0IGMALASwDswA6B2WiU-AV3wHsAnWoWQBiCL0ZMCxZqgzY8REuSp1Jrdpx4ChyANoAGALqJQAB15t8tCaZAAPRFgBMAFgNMAnADYDntwZYAKwAzJ6eADQgAJ6IziEeAOyJIa6uWAYAHJ6JnpkhAL4FUXKYuNLKFDQMzBocONx8gsJMFhYY-FgiAHIAogAaACo4AAoA8uMAar0ASoYmSCAWVjb0do4IWJ4hTFhYiVi+wbnxrplRsQjOic5MBqeuiZlBngb3hcUgpQoVpFVqtXobHqjR0LTavA6zh6A2G4yms3mdmWtGstkWG1cOSYiQMCSwISebyCWHyFziNzuDyeLze8SKJXQZUUMhU1XUQM0DW0zWQrV47TA-BCMKGowmY2mc2MyMsqNW60QmXuONczmC2zCzlekRiFNu7zSNNe7wZXyZPyUf1UNRYnPq3zEEmYvyY33KVrZALtwNI3yRixRaLWGLieO8TCC8XV3j2L28j3JV1COKCbzeqW8uVcqTN7pZlRtHN9OG+TEoEkYlHwOCEZBwFmQtEo0QavBwXFgQrtDf4vCg-DgsBEAEkAIIAWXFABkRwBhACaODnY26fTng16ABEA+Y5cHFZsgkFXExMtdttlo2qQkmQocmM404FvGncXssK4ip96LwOPBFnzX4vRqWUVnRUANgAWjcJMoLVPMLQ9Vl-ltOotCaXQwPlCCHDiVwkwJRJI1OeJvBCElPD2L9PiAz1UOLLlQV5flBU6bCD1DBAbiTbUgkjdMDAODU8hoxl5GQwt2UBEtmN0VjISFZwOIVLjCVPR4EyeEIswMI1eM8fjnzeYSXlExCJILa1pJ9JieXkiEOhCFTcI2LNPDubwAk8dxMmVQkDKMwTTPCTIxPNSzgIYmS7Mwlo5OEHAKzIMxUBICAXJDSDEFE3ZAmPLFvGVNVEgM08nzpMLcW1AwTws5koqLGKHQtTLDwJLYmC8rEQkJe5nFq5wk38JgsVC48CXCII-Pqy0UKa2yWvkctKzAata0IetG2bVs+A7Lt+DariCSzLq3E1aqBqjXjnAjcJwgOe5cioxJvFmyTrO9dDSwtFb6CrGs6wbXgmxbNt9u7Bhe37QdYAAvdwKyvDNnSfjuou-rBrvYJU3TBNtiCRIb3eqyQMYpbMD+gGNq2kGdvBztu2S1KwHSo7ss2ZUPM-PEfLCUJQlvPUEHvU9jKyLE+Jm2ikNJ6K3QtJLeBStLIHZ5HCaTciI2MlxaUyFxvwKIA */
   id: 'level1_state_machine',
-  initial: 'inside_level',
+  initial: 'inside_tutorial',
   context: {
+    iam_user_template: template_nodes.iam_user,
     level_title: 'IAM Basics',
     level_description: 'Learn about Identity and Access Management',
     level_number: 1,
-    popovers_sequence_ids: ['iam_policy1', 'iam_user1', 'iam_resource1'],
-    active_popover_index: 0,
+    next_iam_user_id: 1,
+    next_node_position: { x: 100, y: 100 },
+    next_popover_index: 0,
     state_name: 'inside_tutorial',
-    inside_tutorial: true,
-    nodes: nodes,
+    show_popovers: true,
+    popover_content: TUTORIAL_MESSAGES[0],
+    nodes: [],
     metadata_keys: {},
-    // target_meta_keys: {}
+    edges: [],
+  },
+  on: {
+    ADD_IAM_NODE: {
+      actions: assign({
+        nodes: ({ context, event }) => [...context.nodes, event.node],
+      }),
+    },
+    ADD_EDGE: {
+      actions: assign({
+        edges: ({ context, event }) => [...context.edges, event.edge],
+      }),
+    },
+    SET_NODES: {
+      actions: assign({
+        nodes: ({ event }) => event.nodes,
+      }),
+    },
+    SET_EDGES: {
+      actions: assign({
+        edges: ({ event }) => event.edges,
+      }),
+    },
+    SHOW_POPOVER: {
+      actions: assign({
+        popover_content: ({ event }) => event.popover_content,
+        show_popovers: true,
+      }),
+    },
+    HIDE_POPOVERS: {
+      actions: assign({
+        show_popovers: false,
+      }),
+    },
   },
   entry: assign({
-    nodes: nodes,
+    nodes: initial_nodes,
   }),
   states: {
     inside_tutorial: {
-      initial: 'popover1',
+      initial: 'create_user_popover',
       entry: assign({
         state_name: 'inside_tutorial',
       }),
-      onDone: {
-        actions: assign({ state_name: 'in_game' }),
-        target: 'inside_level',
-      },
+      onDone: 'inside_level',
       states: {
-        popover1: {
-          meta: TUTORIAL_MESSAGES[0],
+        create_user_popover: {
+          entry: assign({
+            popover_content: TUTORIAL_MESSAGES[0],
+            show_popovers: true,
+          }),
+          on: {
+            CREATE_USER_POPUP_OPENED: {
+              target: 'add_your_name_popover',
+            },
+          },
+        },
+        add_your_name_popover: {
+          entry: assign({
+            popover_content: TUTORIAL_MESSAGES[1],
+            show_popovers: true,
+          }),
+          on: {
+            IAM_USER_CREATED: {
+              actions: 'iam_user_creation_side_effects',
+              target: 'iam_user_popover',
+            },
+          },
+        },
+        iam_user_popover: {
+          entry: assign({
+            popover_content: TUTORIAL_MESSAGES[2],
+            show_popovers: true,
+          }),
           on: {
             NEXT_POPOVER: {
-              target: 'popover2',
+              target: 'iam_policy_popover',
               actions: 'next_popover',
             },
           },
         },
-        popover2: {
-          meta: TUTORIAL_MESSAGES[1],
+        iam_policy_popover: {
+          entry: assign({
+            popover_content: TUTORIAL_MESSAGES[3],
+            show_popovers: true,
+          }),
           on: {
             NEXT_POPOVER: {
-              target: 'popover3',
-              actions: 'next_popover',
-            },
-          },
-        },
-        popover3: {
-          meta: TUTORIAL_MESSAGES[2],
-          on: {
-            NEXT_POPOVER: {
-              actions: 'next_popover',
               target: 'tutorial_completed',
+              actions: 'next_popover',
             },
           },
         },
@@ -79,66 +145,51 @@ export const stateMachine = setup({
       },
     },
     inside_level: {
-      type: 'parallel',
-      onDone: 'level_completed',
+      onDone: 'finished_level',
+      initial: 'connect_iam_policy_to_user',
       entry: assign({
-        inside_tutorial: false,
+        show_popovers: false,
         state_name: 'inside_level',
         metadata_keys: {
-          'level1_state_machine.inside_level.connect_iam_policy_to_user.in_progress':
-            'IAM_POLICY_CONNECTED',
+          'level1_state_machine.inside_level.connect_iam_policy_to_user': 'IAM_POLICY_CONNECTED',
+          'level1_state_machine.inside_level.create_iam_user': 'IAM_USER_CREATED',
         },
       }),
       states: {
-        connect_iam_policy_to_user: {
-          initial: 'in_progress',
-          states: {
-            in_progress: {
-              meta: {
-                connection_targets: [
-                  {
-                    required_edges: [edges['e-iam_policy1-iam_user1']],
-                    locked_edges: [edges['e-iam_user1-iam_resource1']],
-                  },
-                ],
-              },
-              on: {
-                IAM_POLICY_CONNECTED: {
-                  target: 'completed',
-                },
-              },
-            },
-            completed: {
-              type: 'final',
+        create_iam_user: {
+          meta: {
+            entity_targets: [IAMNodeEntity.User],
+          },
+          on: {
+            IAM_USER_CREATED: {
+              target: 'connect_iam_policy_to_user',
             },
           },
         },
-        // create_iam_user: {
-        //   initial: 'in_progress',
-        //   meta: {
-        //     connection_targets: [
-        //       {
-        //         required_edges: [edges['e-iam_policy1-iam_user1']],
-        //         locked_edges: [edges['e-iam_user1-iam_resource1']],
-        //       },
-        //     ],
-        //   },
-        //   states: {
-        //     in_progress: {
-        //       on: {
-        //         IAM_USER_CREATED: {
-        //           target: 'completed',
-        //         },
-        //       },
-        //     },
-        //     completed: {
-        //       type: 'final',
-        //     },
-        //   },
-        // },
+        connect_iam_policy_to_user: {
+          meta: {
+            connection_targets: [
+              {
+                required_edges: [edges['e-iam_policy1-iam_user1']],
+                locked_edges: [edges['e-iam_user1-iam_resource1']],
+              },
+            ],
+          },
+          on: {
+            IAM_POLICY_CONNECTED: {
+              target: 'completed',
+            },
+          },
+        },
+        completed: {
+          type: 'final',
+        },
       },
     },
-    level_completed: {
+    finished_level: {
+      entry: assign({
+        state_name: 'finished_level',
+      }),
       type: 'final',
     },
   },

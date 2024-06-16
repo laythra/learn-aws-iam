@@ -1,12 +1,15 @@
 import { useContext } from 'react';
 
-import { Flex, Text, Box } from '@chakra-ui/react';
+import { Flex, Text, Box, Button, Icon } from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
+import { CodeBracketIcon } from '@heroicons/react/16/solid';
 import { Handle, NodeProps } from 'reactflow';
 
-import IAMNodeIcon from './IAMNodeIcon';
+import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider';
 import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
 import { withPopover } from '@/decorators/withPopover';
-import { IAMCanvasNodeProps } from '@/types';
+import type { TutorialMessage } from '@/machines/types';
+import type { IAMCanvasNodeProps } from '@/types';
 
 /**
  * `IAMCanvasNode` renders a generic square node with a label and an icon.
@@ -19,9 +22,25 @@ import { IAMCanvasNodeProps } from '@/types';
 const IAMCanvasNode: React.FC<NodeProps> = ({ data, id }) => {
   const { description, entity, label, handles } = data as IAMCanvasNodeProps;
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
+  const levelActor = LevelsProgressionContext.useActorRef();
 
   const handleClick = (): void => {
     setSelectedNode({ id, label, entity, description });
+  };
+
+  const popoverContent = (): TutorialMessage => {
+    return {
+      element_id: id,
+      popover_title: label,
+      popover_content: 'This is some dummy content',
+      show_next_button: false,
+      popover_placement: 'top-end',
+      show_close_button: true,
+    };
+  };
+
+  const showInfoPopover = (): void => {
+    levelActor.send({ type: 'SHOW_POPOVER', popover_content: popoverContent() });
   };
 
   const isSelected = selectedNode?.id === id;
@@ -32,11 +51,10 @@ const IAMCanvasNode: React.FC<NodeProps> = ({ data, id }) => {
       justifyContent='center'
       alignItems='center'
       p={4}
-      zIndex={100}
       bg='white'
       boxShadow='md'
-      position='relative'
       borderRadius='lg'
+      position='relative'
       width='100px'
       height='100px'
       textAlign='center'
@@ -47,10 +65,21 @@ const IAMCanvasNode: React.FC<NodeProps> = ({ data, id }) => {
       {handles.map(handle => (
         <Handle key={handle.id} {...handle} />
       ))}
-      <IAMNodeIcon nodeLabel='User' />
       <Box marginTop={1}>
         <Text fontWeight='700'>{label}</Text>
       </Box>
+      <IconButton
+        aria-label='info'
+        icon={<CodeBracketIcon />}
+        position='absolute'
+        size='xs'
+        top={1}
+        right={1}
+        onClick={showInfoPopover}
+        variant='ghost'
+        bg='transparent'
+        _hover={{ bg: 'gray.200' }}
+      />
     </Flex>
   );
 };

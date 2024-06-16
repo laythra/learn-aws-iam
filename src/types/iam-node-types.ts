@@ -1,9 +1,4 @@
-import { AntdIconProps } from '@ant-design/icons/lib/components/AntdIcon';
 import { HandleProps } from 'reactflow';
-
-export type AntdIconType = React.ForwardRefExoticComponent<
-  AntdIconProps & React.RefAttributes<HTMLSpanElement>
->;
 
 export enum IAMNodeEntity {
   User = 'User',

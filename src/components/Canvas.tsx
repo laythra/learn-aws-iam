@@ -1,108 +1,111 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import { Box } from '@chakra-ui/react';
-import { useTheme } from '@chakra-ui/react';
 import _ from 'lodash';
-import ReactFlow, { useNodesState, useEdgesState, addEdge, Edge, Connection } from 'reactflow';
-import styled from 'styled-components';
+import ReactFlow, { Edge, Connection, useNodesState, useEdgesState } from 'reactflow';
 
 import { LevelsProgressionContext } from './levels_progression/LevelsProgressionProvider';
-import Logo from './Logo';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import IAMCanvasNode from '@/components/nodes/IAMCanvasNode';
-import { InsideLevelMetadata } from '@/machines/types';
+import { EventData, InsideLevelMetadata } from '@/machines/types';
 
-const CanvasBackground = styled(Box)`
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  background-color: #000;
-  background-image: url(${DotsPattern});
-  background-repeat: repeat;
-  background-color: transparent;
-`;
+import 'reactflow/dist/style.css';
 
 const nodeTypes = {
   iam_default: IAMCanvasNode,
 };
 
 const Canvas: React.FC = () => {
-  const theme = useTheme();
   const levelState = LevelsProgressionContext.useSelector(state => state);
   const levelActor = LevelsProgressionContext.useActorRef();
-  const initialEdges = [] as Edge[];
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(levelState.context.nodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodesState, setNodesState, onNodesChange] = useNodesState(levelState.context.nodes);
+  const [edgesState, setEdgesState, onEdgesChange] = useEdgesState(levelState.context.edges);
 
-  const handleDragOver = (event: React.DragEvent): void => {
-    event.preventDefault();
+  const setEdges = (edges: Edge[]): void => {
+    levelActor.send({ type: 'SET_EDGES', edges: edges });
   };
 
-  const handleDrop = (event: React.DragEvent): void => {
-    event.preventDefault();
+  useEffect(() => {
+    setEdgesState(levelState.context.edges);
+  }, [levelState.context.edges]);
 
-    const nodeData = JSON.parse(event.dataTransfer.getData('json-node-data'));
-    const canvasRect = (event.target as Element).getBoundingClientRect();
+  useEffect(() => {
+    setNodesState(levelState.context.nodes);
+  }, [levelState.context.nodes]);
 
-    // TODO: Handle when canvas is zoomed in/out, or simply render node in the center?
-    const canvasX = event.clientX - canvasRect.left;
-    const canvasY = event.clientY - canvasRect.top;
+  // const handleDrop = (event: React.DragEvent): void => {
+  //   event.preventDefault();
 
-    const newNode = {
-      id: nodeData['id'],
-      type: 'iam-default',
-      position: { x: canvasX, y: canvasY },
-      data: nodeData,
-    };
+  //   const nodeData = JSON.parse(event.dataTransfer.getData('json-node-data'));
+  //   const canvasRect = (event.target as Element).getBoundingClientRect();
 
-    setNodes(oldNodes => [...oldNodes, newNode]);
-  };
+  //   // TODO: Handle when canvas is zoomed in/out, or simply render node in the center?
+  //   const canvasX = event.clientX - canvasRect.left;
+  //   const canvasY = event.clientY - canvasRect.top;
+
+  //   const newNode = {
+  //     id: nodeData['id'],
+  //     type: 'iam-default',
+  //     position: { x: canvasX, y: canvasY },
+  //     data: nodeData,
+  //   };
+
+  //   levelActor.send({ type: 'ADD_IAM_NODE', node: newNode });
+  // };
 
   const onConnect = useCallback(
     (params: Connection) => {
-      if (levelState.context.inside_tutorial) {
-        return;
-      }
+      const newEdge = {
+        ...params,
+        id: `e-${params.source}-${params.target}`,
+        label: 'Attached to', // TODO: Make this dynamic
+        labelStyle: { fill: 'black', fontWeight: 700 },
+      } as Edge;
+      let newEdges = [...levelState.context.edges, newEdge];
+      setEdges(newEdges);
 
-      let newEdges = addEdge({ ...params, id: `e-${params.source}-${params.target}` }, edges);
       _.forOwn(levelState.getMeta(), (value, statePath) => {
         const levelMetadata = value as InsideLevelMetadata;
 
-        _.forEach(levelMetadata.connection_targets, connectionTarget => {
+        const finishedTargets = _.map(levelMetadata.connection_targets, connectionTarget => {
           if (_.differenceBy(connectionTarget.required_edges, newEdges, 'id').length === 0) {
-            // const action = levelState.context.metadata_keys[statePath];
-            // levelActor.send({ type: action } as EventData);
-
+            // We unlock all locked edges
             _.forEach(connectionTarget.locked_edges, edge => {
-              // We unlock all locked edges
-              newEdges = addEdge(edge, newEdges);
+              newEdges = [...newEdges, edge];
             });
 
-            // TODO: Progress to next state if necessary
+            setEdges(newEdges);
+            return connectionTarget;
           }
         });
-      });
 
-      setEdges(newEdges);
+        if (_.compact(finishedTargets).length === levelMetadata.connection_targets?.length) {
+          const actionName = levelState.context.metadata_keys[statePath];
+          levelActor.send({ type: actionName } as EventData);
+        }
+      });
     },
     [levelState]
   );
 
   return (
-    <CanvasBackground onDragOver={handleDragOver} onDrop={handleDrop}>
-      <Box position='relative' height='100%' width='100%' zIndex={theme.zIndices.popover}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-        />
-      </Box>
-      <Logo />
-    </CanvasBackground>
+    <Box
+      backgroundColor='white'
+      backgroundImage={DotsPattern}
+      backgroundRepeat='repeat'
+      position='relative'
+      height='100vh'
+    >
+      <ReactFlow
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        nodes={nodesState}
+        edges={edgesState}
+        onConnect={onConnect}
+        nodeTypes={nodeTypes}
+      />
+    </Box>
   );
 };
 

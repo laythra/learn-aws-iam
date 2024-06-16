@@ -1,11 +1,11 @@
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, type ThemeConfig } from '@chakra-ui/react';
 
 import LevelsProgressionProvider from './components/levels_progression/LevelsProgressionProvider';
 import ModalProvider from '@/components/ModalProvider';
 import IAMNodeProvider from '@/components/nodes/IAMNodeProvider';
 import Home from '@/pages/home';
 
-const theme = extendTheme({
+const theme: ThemeConfig = extendTheme({
   styles: {
     global: {
       '*': {

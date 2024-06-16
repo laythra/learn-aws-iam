@@ -12,12 +12,18 @@ interface SidePanelProps {
 const SidePanel: React.FC<SidePanelProps> = ({ children, alignment }) => {
   const { leftPanelOpen, rightPanelOpen } = useContext(SidePanelsContext);
   const isOpen = alignment === 'left' ? leftPanelOpen : rightPanelOpen;
-  const panelWidth = isOpen ? '300px' : '0px';
+  const flexBasis = isOpen ? '20%' : '0%';
 
   return (
-    <Flex h='100vh' direction={alignment === 'left' ? 'row' : 'row-reverse'}>
-      <Collapse in={true} style={{ width: panelWidth, overflow: 'hidden' }}>
-        <Box p={4}>{children}</Box>
+    <Flex
+      h='100vh'
+      direction={alignment === 'left' ? 'row' : 'row-reverse'}
+      flexGrow={0}
+      flexShrink={1}
+      flexBasis={flexBasis}
+    >
+      <Collapse in={true} style={{ overflow: 'hidden' }}>
+        {isOpen && <Box p={4}>{children}</Box>}
       </Collapse>
     </Flex>
   );

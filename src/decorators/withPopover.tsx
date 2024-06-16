@@ -4,7 +4,6 @@ import _ from 'lodash';
 
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
-import { InsideTutorialMetadata } from '@/machines/types';
 
 /**
  * `withPopover` is a decorator that wraps a component with a popover.
@@ -17,29 +16,29 @@ export const withPopover = <T extends { id: string }>(
 ): React.FC<T> => {
   const WithPopover: React.FC<T> = props => {
     const machineActor = LevelsProgressionContext.useActorRef();
-    const context = LevelsProgressionContext.useSelector(state => state.context);
-    const levelMetadata = LevelsProgressionContext.useSelector(state => state.getMeta());
+    const { popover_content: popoverContent, show_popovers: showPopovers } =
+      LevelsProgressionContext.useSelector(state => state.context);
 
-    const activePopoverElementId = context.popovers_sequence_ids[context.active_popover_index];
-    // This assumes that there is only one metadata object
-    // TODO: handle multiple metadata objects
-    const popoverMetadata = _.chain(levelMetadata)
-      .values()
-      .first()
-      .value() as InsideTutorialMetadata;
+    const popoverOpen = showPopovers && popoverContent?.element_id === props.id;
 
     const goToNextPopOver = (): void => {
       machineActor.send({ type: 'NEXT_POPOVER' });
     };
 
-    const isPopoverOpen = activePopoverElementId === props.id && context.inside_tutorial;
+    const closePopover = (): void => {
+      machineActor.send({ type: 'HIDE_POPOVERS' });
+    };
 
     return (
       <TutorialPopover
+        isOpen={popoverOpen}
+        label={popoverContent?.popover_title as string}
+        description={popoverContent?.popover_content as string}
+        showNextButton={popoverContent?.show_next_button as boolean}
+        placement={popoverContent?.popover_placement}
+        showCloseButton={popoverContent?.show_close_button}
         onNextClick={goToNextPopOver}
-        isOpen={isPopoverOpen}
-        label={popoverMetadata?.popover_title as string}
-        description={popoverMetadata?.popover_content as string}
+        onCloseClick={closePopover}
       >
         <WrappedComponent {...props} />
       </TutorialPopover>

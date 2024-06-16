@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 
-import { CaretRightOutlined, CaretLeftOutlined } from '@ant-design/icons';
+import { useTheme } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
 import { SidePanelsContext } from './SidePanelsProvider';
 
@@ -9,8 +10,9 @@ interface SidePanelToggleButtonProps {}
 
 const SidePanelToggleButton: React.FC<SidePanelToggleButtonProps> = () => {
   const { leftPanelOpen, setLeftPanelOpen } = useContext(SidePanelsContext);
+  const theme = useTheme();
 
-  const icon = leftPanelOpen ? <CaretLeftOutlined /> : <CaretRightOutlined />;
+  const icon = leftPanelOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />;
 
   return (
     <Button
@@ -21,7 +23,7 @@ const SidePanelToggleButton: React.FC<SidePanelToggleButtonProps> = () => {
       colorScheme='gray'
       variant='ghost'
       onClick={setLeftPanelOpen.toggle}
-      zIndex={1}
+      zIndex={theme.zIndices.toast}
     >
       {icon}
     </Button>
