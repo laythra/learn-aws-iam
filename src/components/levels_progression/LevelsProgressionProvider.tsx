@@ -1,10 +1,20 @@
 import { createActorContext } from '@xstate/react';
 
-import { stateMachine } from '@/machines/level1/state-machine';
+import { stateMachine as level1StateMachine } from '@/machines/level1/state-machine';
+import storage from '@/utils/storage';
 
-// TODO: Fetch progressed to level number from local storage and set it as initial state
-// Should we use xstate stores for providing the level's global state instead?
-export const LevelsProgressionContext = createActorContext(stateMachine);
+const LEVELS_STATE_MACHINES = {
+  1: level1StateMachine,
+};
+
+const currentLevelNumber = parseInt(
+  storage.getKey('current_level_number', '1')
+) as keyof typeof LEVELS_STATE_MACHINES;
+
+const currentLevelStateMachine = LEVELS_STATE_MACHINES[currentLevelNumber];
+
+export const LevelsProgressionContext = createActorContext(currentLevelStateMachine);
+
 interface LevelsProgressionProviderProps {
   children: React.ReactNode;
 }
