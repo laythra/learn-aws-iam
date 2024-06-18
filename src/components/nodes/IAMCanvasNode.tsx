@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 
-import { Flex, Text, Box, Button, Icon } from '@chakra-ui/react';
+import { Flex, Text, Box } from '@chakra-ui/react';
 import { IconButton } from '@chakra-ui/react';
 import { CodeBracketIcon } from '@heroicons/react/16/solid';
 import { Handle, NodeProps } from 'reactflow';
 
-import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
 import { withPopover } from '@/decorators/withPopover';
 import type { TutorialMessage } from '@/machines/types';

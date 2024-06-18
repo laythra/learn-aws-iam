@@ -16,7 +16,6 @@ import {
   FormLabel,
   FormHelperText,
   Divider,
-  position,
 } from '@chakra-ui/react';
 import _ from 'lodash';
 import { Node } from 'reactflow';
@@ -24,7 +23,7 @@ import { Node } from 'reactflow';
 import { PoliciesList } from './PoliciesList';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { InputWithPopover } from '@/components/Form/InputWithPopover';
-import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { EventData } from '@/machines/types';
 import { IAMIdentityEntity, IAMNodeEntity, IAMNodeProps } from '@/types';
 
