@@ -1,5 +1,4 @@
 import { HandleProps, Node, Position, Edge, MarkerType } from 'reactflow';
-import type { EdgeMarkerType } from 'reactflow';
 
 import { IAMNodeEntity, IAMCanvasNodeProps } from '@/types';
 

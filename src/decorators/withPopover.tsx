@@ -1,7 +1,5 @@
 import React from 'react';
 
-import _ from 'lodash';
-
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 
