@@ -6,31 +6,23 @@ import useModal from '@/hooks/useModal';
 import { ModalContextState } from '@/types';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 
-export const defaultRole = JSON.stringify(
-  {
-    Version: '2012-10-17',
-    Statement: [
-      {
-        Effect: 'Allow',
-        Principal: {
-          Service: 'ec2.amazonaws.com',
-        },
-        Action: 'sts:AssumeRole',
+export const defaultRole = {
+  Version: '2012-10-17',
+  Statement: [
+    {
+      Effect: 'Allow',
+      Principal: {
+        Service: 'ec2.amazonaws.com',
       },
-    ],
-  },
-  null,
-  2
-);
+      Action: 'sts:AssumeRole',
+    },
+  ],
+};
 
-const defaultPolicy = JSON.stringify(
-  {
-    Version: '2012-10-17',
-    Statement: [{ Effect: 'Allow', Action: '*', Resource: '*' }],
-  },
-  null,
-  2
-);
+const defaultPolicy = {
+  Version: '2012-10-17',
+  Statement: [{ Effect: 'Allow', Action: '*', Resource: '*' }],
+};
 
 const MODAL_ID = 'code-editor';
 
@@ -84,7 +76,10 @@ const contentReducer = (state: Content, action: ContentAction): Content => {
   }
 };
 
-export const useCodeEditor = (): CodeEditorContextState => {
+export const useCodeEditor = (
+  initialPolicyContent?: string,
+  initialRoleContent?: string
+): CodeEditorContextState => {
   const context = useModal();
 
   if (!context) {
@@ -93,8 +88,8 @@ export const useCodeEditor = (): CodeEditorContextState => {
 
   const [errors, dispatchErrors] = useReducer(errorsReducer, { policy: [], role: [] });
   const [content, dispatchContent] = useReducer(contentReducer, {
-    policy: defaultPolicy,
-    role: defaultRole,
+    policy: JSON.stringify(initialPolicyContent ?? defaultPolicy, null, 2),
+    role: JSON.stringify(initialRoleContent ?? defaultRole, null, 2),
   });
 
   const setErrors = (entity: IAMScriptableEntity, newErrors: Diagnostic[]): void => {

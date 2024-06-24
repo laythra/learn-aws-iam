@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Box } from '@chakra-ui/react';
+
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 
@@ -9,10 +11,11 @@ import { TutorialPopover } from '@/components/Popover/TutorialPopover';
  * @param {React.FC<T>} WrappedComponent The component to wrap with a popover.
  * @returns The wrapped component with a popover.
  */
-export const withPopover = <T extends { id: string }>(
+export const withPopover = <T extends { id: string; container_ref?: React.RefObject<HTMLElement> }>(
   WrappedComponent: React.FC<T>
 ): React.FC<T> => {
   const WithPopover: React.FC<T> = props => {
+    const boxRef = React.useRef<HTMLDivElement>(null);
     const machineActor = LevelsProgressionContext.useActorRef();
     const { popover_content: popoverContent, show_popovers: showPopovers } =
       LevelsProgressionContext.useSelector(state => state.context);
@@ -28,18 +31,21 @@ export const withPopover = <T extends { id: string }>(
     };
 
     return (
-      <TutorialPopover
-        isOpen={popoverOpen}
-        label={popoverContent?.popover_title as string}
-        description={popoverContent?.popover_content as string}
-        showNextButton={popoverContent?.show_next_button as boolean}
-        placement={popoverContent?.popover_placement}
-        showCloseButton={popoverContent?.show_close_button}
-        onNextClick={goToNextPopOver}
-        onCloseClick={closePopover}
-      >
-        <WrappedComponent {...props} />
-      </TutorialPopover>
+      <Box ref={boxRef}>
+        <TutorialPopover
+          isOpen={popoverOpen}
+          label={popoverContent?.popover_title as string}
+          description={popoverContent?.popover_content as string}
+          showNextButton={popoverContent?.show_next_button as boolean}
+          placement={popoverContent?.popover_placement}
+          showCloseButton={popoverContent?.show_close_button}
+          onNextClick={goToNextPopOver}
+          onCloseClick={closePopover}
+          containerRef={props.container_ref ?? boxRef}
+        >
+          <WrappedComponent {...props} />
+        </TutorialPopover>
+      </Box>
     );
   };
 

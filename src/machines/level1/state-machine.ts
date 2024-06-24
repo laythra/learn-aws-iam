@@ -2,7 +2,7 @@ import { setup, assign } from 'xstate';
 
 import { TUTORIAL_MESSAGES } from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
-import type { Context, InsideLevelMetadata, EventData } from '../types';
+import type { Context, InsideLevelMetadata, EventData } from './types';
 import { IAMNodeEntity } from '@/types';
 
 export const stateMachine = setup({
