@@ -11,6 +11,7 @@ import {
   Box,
   PopoverCloseButton,
   type PlacementWithLogical,
+  Portal,
 } from '@chakra-ui/react';
 
 interface TutorialPopoverProps {
@@ -23,6 +24,7 @@ interface TutorialPopoverProps {
   placement?: PlacementWithLogical;
   onNextClick: () => void;
   onCloseClick: () => void;
+  containerRef?: React.RefObject<HTMLElement>;
 }
 
 export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
@@ -35,27 +37,31 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
   placement = 'auto',
   onNextClick,
   onCloseClick,
+  containerRef,
 }) => {
   return (
     <Popover isOpen={isOpen} placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0}>
       <PopoverTrigger>
         <Box>{children}</Box>
       </PopoverTrigger>
-      <PopoverContent>
-        <PopoverArrow />
-        <PopoverHeader>{label}</PopoverHeader>
-        {showCloseButton && <PopoverCloseButton onClick={onCloseClick} />}
-        {description && (
-          <PopoverBody>
-            <Text>{description}</Text>
-          </PopoverBody>
-        )}
-        {showNextButton && (
-          <ButtonGroup alignContent='flex-end'>
-            <Button onClick={onNextClick}>Next</Button>
-          </ButtonGroup>
-        )}
-      </PopoverContent>
+
+      <Portal containerRef={containerRef}>
+        <PopoverContent>
+          <PopoverArrow />
+          <PopoverHeader>{label}</PopoverHeader>
+          {showCloseButton && <PopoverCloseButton onClick={onCloseClick} />}
+          {description && (
+            <PopoverBody>
+              <Text>{description}</Text>
+            </PopoverBody>
+          )}
+          {showNextButton && (
+            <ButtonGroup alignContent='flex-end'>
+              <Button onClick={onNextClick}>Next</Button>
+            </ButtonGroup>
+          )}
+        </PopoverContent>
+      </Portal>
     </Popover>
   );
 };
