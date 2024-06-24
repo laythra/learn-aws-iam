@@ -19,12 +19,12 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 import { Node } from 'reactflow';
+import { EventFrom, EventFromLogic } from 'xstate';
 
 import { PoliciesList } from './PoliciesList';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { InputWithPopover } from '@/components/Form/InputWithPopover';
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
-import { EventData } from '@/machines/types';
 import { IAMIdentityEntity, IAMNodeEntity, IAMNodeProps } from '@/types';
 
 interface IdentityCreationPopupProps {}
@@ -70,7 +70,9 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
       } as IAMNodeProps,
     }) as Node;
 
-    levelActor.send({ type: 'ADD_IAM_NODE', node: node } as EventData);
+    levelActor.send({ type: 'ADD_IAM_NODE', node: node } as EventFromLogic<
+      typeof levelActor.logic
+    >);
     levelActor.send({ type: 'IAM_USER_CREATED' });
 
     closeIdentityCreator();
@@ -78,7 +80,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
 
   useEffect(() => {
     if (isIdentityCreatorOpen) {
-      levelActor.send({ type: 'CREATE_USER_POPUP_OPENED' } as EventData);
+      levelActor.send({ type: 'CREATE_USER_POPUP_OPENED' } as EventFrom<typeof levelActor.logic>);
     }
   }, [isIdentityCreatorOpen]);
 

@@ -30,7 +30,8 @@ export type GenericEventData =
         | 'BEGIN'
         | 'COMPLETE'
         | 'CREATE_USER_POPUP_OPENED'
-        | 'HIDE_POPOVERS';
+        | 'HIDE_POPOVERS'
+        | 'CREATE_POLICY_POPUP_OPENED';
     }
   | { type: 'ADD_IAM_NODE'; node: Node }
   | { type: 'ADD_EDGE'; edge: Edge }

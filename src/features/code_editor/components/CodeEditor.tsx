@@ -1,10 +1,11 @@
+import React from 'react';
 import { useState } from 'react';
 
 import {
   Modal,
+  ModalContent,
   ModalOverlay,
   ModalHeader,
-  ModalContent,
   ModalBody,
   ModalFooter,
   ModalCloseButton,
@@ -18,15 +19,19 @@ import _ from 'lodash';
 import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
 import { CodeEditorWindow } from './CodeEditorWindow';
 import { useCodeEditor } from '../hooks/useCodeEditor';
+import { WithPopoverButton } from '@/components/Decorated';
 import { useIAMNodesManager } from '@/hooks/useIAMNodesManager';
 import { IAMScriptableEntity, IAMNodeEntity } from '@/types';
 
-interface CodeEditorProps {}
+interface CodeEditorProps {
+  initialPolicy?: string;
+}
 
-export const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
+export const CodeEditor: React.FC<CodeEditorProps> = ({ initialPolicy }) => {
   const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
-    useCodeEditor();
+    useCodeEditor(initialPolicy);
   const { createNode } = useIAMNodesManager();
+  const editorContentRef = React.useRef<HTMLDivElement>(null);
   const [iamEntity, setIamEntity] = useState<IAMScriptableEntity>(IAMNodeEntity.Policy);
 
   const renderedErrors = errors[iamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
@@ -46,7 +51,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
   };
 
   return (
-    <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor}>
+    <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor} id='modal_content'>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -63,7 +68,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
           </Flex>
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody ref={editorContentRef}>
           <CodeEditorWindow
             entity={iamEntity}
             setErrors={_.partial(setErrors, iamEntity)}
@@ -73,14 +78,16 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({}) => {
           <CodeEditorErrorsBox errors={renderedErrors} />
         </ModalBody>
         <ModalFooter>
-          <Button
+          <WithPopoverButton
             colorScheme='blue'
             mr={3}
             onClick={submit}
             isDisabled={!_.isEmpty(renderedErrors)}
+            id='modal_content'
+            container_ref={editorContentRef}
           >
             Submit
-          </Button>
+          </WithPopoverButton>
           <Button variant='ghost' onClick={closeCodeEditor}>
             Cancel
           </Button>
