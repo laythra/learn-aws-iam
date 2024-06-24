@@ -3,7 +3,7 @@ import type { Edge, Node } from 'reactflow';
 
 import { IAMCanvasNodeProps, IAMNodeEntity } from '@/types';
 
-export type Context = {
+export interface GenericContext {
   iam_user_template: Node<IAMCanvasNodeProps>;
   level_title: string;
   level_description: string;
@@ -17,10 +17,10 @@ export type Context = {
   metadata_keys: { [key: string]: string }; // Make it stricter
   next_node_position: { x: number; y: number };
   popover_content?: TutorialMessage;
-  // target_edges: Edge[];
-};
+  default_policy?: string;
+}
 
-export type EventData =
+export type GenericEventData =
   | {
       type:
         | 'NEXT'
@@ -38,16 +38,7 @@ export type EventData =
   | { type: 'SET_NODES'; nodes: Node[] }
   | { type: 'SHOW_POPOVER'; popover_content: TutorialMessage };
 
-// export type InsideTutorialMetadata = {
-//   popover_id: number;
-//   popover_title: string;
-//   popover_content: string;
-//   show_next_button: boolean;
-// };
-
-export type MiniEdge = Pick<Edge, 'source' | 'target' | 'id'>;
-
-export type InsideLevelMetadata = {
+export type GenericInsideLevelMetadata = {
   connection_targets?: {
     // What this basically means, is that achieving all required_edges will unlock all locked_edges
     required_edges: Edge[];
@@ -65,4 +56,5 @@ export type TutorialMessage = {
   show_next_button: boolean;
   show_close_button: boolean;
   popover_placement?: PlacementWithLogical;
+  container_ref?: React.RefObject<HTMLElement>; // Defines a ref to the container in which the popover should be rendered
 };

@@ -3,11 +3,12 @@ import React, { useCallback, useEffect } from 'react';
 import { Box } from '@chakra-ui/react';
 import _ from 'lodash';
 import ReactFlow, { Edge, Connection, useNodesState, useEdgesState } from 'reactflow';
+import { EventFromLogic } from 'xstate';
 
 import { LevelsProgressionContext } from './levels_progression/LevelsProgressionProvider';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import IAMCanvasNode from '@/components/nodes/IAMCanvasNode';
-import { EventData, InsideLevelMetadata } from '@/machines/types';
+import { GenericInsideLevelMetadata } from '@/machines/types';
 
 import 'reactflow/dist/style.css';
 
@@ -66,7 +67,7 @@ const Canvas: React.FC = () => {
       setEdges(newEdges);
 
       _.forOwn(levelState.getMeta(), (value, statePath) => {
-        const levelMetadata = value as InsideLevelMetadata;
+        const levelMetadata = value as GenericInsideLevelMetadata;
 
         const finishedTargets = _.map(levelMetadata.connection_targets, connectionTarget => {
           if (_.differenceBy(connectionTarget.required_edges, newEdges, 'id').length === 0) {
@@ -79,10 +80,9 @@ const Canvas: React.FC = () => {
             return connectionTarget;
           }
         });
-
         if (_.compact(finishedTargets).length === levelMetadata.connection_targets?.length) {
           const actionName = levelState.context.metadata_keys[statePath];
-          levelActor.send({ type: actionName } as EventData);
+          levelActor.send({ type: actionName } as EventFromLogic<typeof levelState.machine>);
         }
       });
     },
