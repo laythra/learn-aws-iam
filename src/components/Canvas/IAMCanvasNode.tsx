@@ -5,8 +5,8 @@ import { IconButton } from '@chakra-ui/react';
 import { CodeBracketIcon } from '@heroicons/react/16/solid';
 import { Handle, NodeProps } from 'reactflow';
 
+import { IAMNodeContext } from '@/components/Canvas/IAMNodeProvider';
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
-import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
 import { withPopover } from '@/decorators/withPopover';
 import type { TutorialMessage } from '@/machines/types';
 import type { IAMCanvasNodeProps } from '@/types';

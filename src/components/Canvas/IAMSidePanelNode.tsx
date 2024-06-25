@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { Text, Box, Flex, Tooltip } from '@chakra-ui/react';
 
-import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
+import { IAMNodeContext } from '@/components/Canvas/IAMNodeProvider';
 import { IAMNodeProps } from '@/types';
 
 /**

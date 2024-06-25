@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Flex, Box } from '@chakra-ui/react';
 
-import Canvas from '@/components/Canvas';
+import Canvas from '@/components/Canvas/Canvas';
 import { Navbar } from '@/components/Navbar';
 import RightSidePanel from '@/components/side_panels/RightSidePanel';
 import RightSidePanelToggleButton from '@/components/side_panels/RightSidePanelToggleButton';

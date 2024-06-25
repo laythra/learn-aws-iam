@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { Text, Flex, Divider, Code, Box } from '@chakra-ui/react';
 
-import { IAMNodeContext } from '@/components/nodes/IAMNodeProvider';
+import { IAMNodeContext } from '@/components/Canvas/IAMNodeProvider';
 import SidePanel from '@/components/side_panels/SidePanel';
 
 const RightSidePanel: React.FC = () => {

@@ -5,9 +5,9 @@ import _ from 'lodash';
 import ReactFlow, { Edge, Connection, useNodesState, useEdgesState } from 'reactflow';
 import { EventFromLogic } from 'xstate';
 
-import { LevelsProgressionContext } from './levels_progression/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '../levels_progression/LevelsProgressionProvider';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
-import IAMCanvasNode from '@/components/nodes/IAMCanvasNode';
+import IAMCanvasNode from '@/components/Canvas/IAMCanvasNode';
 import { GenericInsideLevelMetadata } from '@/machines/types';
 
 import 'reactflow/dist/style.css';
