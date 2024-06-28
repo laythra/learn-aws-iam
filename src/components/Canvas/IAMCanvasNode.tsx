@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 
-import { Flex, Text, Box, Image, Badge, Tooltip, Icon } from '@chakra-ui/react';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
+import { Flex, Text, Box, Image, Badge, Tooltip } from '@chakra-ui/react';
 import { Handle, NodeProps } from 'reactflow';
 
 import userImage from '@/assets/images/user.png';
@@ -26,7 +25,7 @@ export interface IAMCanvasNodeProps extends NodeProps {
  * @param `data`: The node data passed from React Flow.
  */
 const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
-  const { description, entity, label, handles } = data;
+  const { description, entity, label, handles, image } = data;
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
   const levelActor = LevelsProgressionContext.useActorRef();
 
@@ -72,7 +71,12 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
         <Handle key={handle.id} {...handle} />
       ))}
       <Flex width='100%' alignItems='center'>
-        <Image src={userImage} width='25%' objectFit='cover' marginRight='8%' />
+        <Image
+          src={require(`@/assets/images/${image}.png`)}
+          width='25%'
+          objectFit='cover'
+          marginRight='8%'
+        />
         <Box width='65%' textAlign='left'>
           <Text fontWeight='700' fontSize='12px'>
             Laith

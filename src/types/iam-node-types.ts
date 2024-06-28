@@ -8,8 +8,11 @@ export enum IAMNodeEntity {
   Resource = 'Resource',
 }
 
-export enum IAMResourceEntity {
-  S3 = 'S3',
+export enum IAMNodeImage {
+  User = 'user',
+  S3Bucket = 'bucket',
+  Policy = 'policy',
+  Group = 'group',
 }
 
 export interface IAMNodeProps {
@@ -22,6 +25,7 @@ export interface IAMNodeProps {
 
 export interface IAMCanvasNodeProps extends IAMNodeProps {
   handles: HandleProps[];
+  image: IAMNodeImage;
 }
 
 export interface IAMUserNodeProps extends IAMNodeProps {
