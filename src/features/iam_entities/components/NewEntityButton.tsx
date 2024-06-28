@@ -6,8 +6,7 @@ import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverMenuItem } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { withPopover } from '@/decorators/withPopover';
-import { CodeEditor } from '@/features/code_editor';
-import useCodeEditor from '@/hooks/useCodeEditor';
+import { CodeEditor, useCodeEditor } from '@/features/code_editor';
 
 interface NewEntityButtonProps {}
 
