@@ -33,3 +33,10 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_close_button: false,
   },
 ];
+
+export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
+  {
+    title: 'IAM Project',
+    content: `This is a project that will guide you through the basics of IAM`,
+  },
+];

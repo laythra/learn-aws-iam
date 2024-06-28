@@ -15,6 +15,7 @@ export interface GenericContext {
   edges: Edge[];
   final_edges: Edge[];
   show_popovers: boolean;
+  show_popups: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
   next_node_position: { x: number; y: number };
   popover_content?: PopoverTutorialMessage;
@@ -27,6 +28,7 @@ export type GenericEventData =
       type:
         | 'NEXT'
         | 'NEXT_POPOVER'
+        | 'NEXT_POPUP'
         | 'IAM_POLICY_CONNECTED'
         | 'IAM_USER_CREATED'
         | 'BEGIN'
@@ -60,4 +62,9 @@ export type PopoverTutorialMessage = {
   show_close_button: boolean;
   popover_placement?: PlacementWithLogical;
   container_ref?: React.RefObject<HTMLElement>; // Defines a ref to the container in which the popover should be rendered
+};
+
+export type PopupTutorialMessage = {
+  title: string;
+  content: string;
 };

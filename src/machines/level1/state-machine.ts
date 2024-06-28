@@ -27,10 +27,7 @@ export const stateMachine = setup({
         y: context.next_node_position.y + 20,
       }),
     }),
-    set_popover_content: assign({
-      popover_content: TUTORIAL_MESSAGES[1],
-      show_popovers: true,
-    }),
+    hide_popups: assign({ show_popups: false }),
   },
 }).createMachine({
   /** @xstate-layout N4IgpgJg5mDOIC5QBswDczIIwH1YBcBDfMHAW0IGMALASwDswA6B2WiU-AV3wHsAnWoWQBiCL0ZMCxZqgzY8REuSp1Jrdpx4ChyANoAGALqJQAB15t8tCaZAAPRFgBMAFgNMAnADYDntwZYAKwAzJ6eADQgAJ6IziEeAOyJIa6uWAYAHJ6JnpkhAL4FUXKYuNLKFDQMzBocONx8gsJMFhYY-FgiAHIAogAaACo4AAoA8uMAar0ASoYmSCAWVjb0do4IWJ4hTFhYiVi+wbnxrplRsQjOic5MBqeuiZlBngb3hcUgpQoVpFVqtXobHqjR0LTavA6zh6A2G4yms3mdmWtGstkWG1cOSYiQMCSwISebyCWHyFziNzuDyeLze8SKJXQZUUMhU1XUQM0DW0zWQrV47TA-BCMKGowmY2mc2MyMsqNW60QmXuONczmC2zCzlekRiFNu7zSNNe7wZXyZPyUf1UNRYnPq3zEEmYvyY33KVrZALtwNI3yRixRaLWGLieO8TCC8XV3j2L28j3JV1COKCbzeqW8uVcqTN7pZlRtHN9OG+TEoEkYlHwOCEZBwFmQtEo0QavBwXFgQrtDf4vCg-DgsBEAEkAIIAWXFABkRwBhACaODnY26fTng16ABEA+Y5cHFZsgkFXExMtdttlo2qQkmQocmM404FvGncXssK4ip96LwOPBFnzX4vRqWUVnRUANgAWjcJMoLVPMLQ9Vl-ltOotCaXQwPlCCHDiVwkwJRJI1OeJvBCElPD2L9PiAz1UOLLlQV5flBU6bCD1DBAbiTbUgkjdMDAODU8hoxl5GQwt2UBEtmN0VjISFZwOIVLjCVPR4EyeEIswMI1eM8fjnzeYSXlExCJILa1pJ9JieXkiEOhCFTcI2LNPDubwAk8dxMmVQkDKMwTTPCTIxPNSzgIYmS7Mwlo5OEHAKzIMxUBICAXJDSDEFE3ZAmPLFvGVNVEgM08nzpMLcW1AwTws5koqLGKHQtTLDwJLYmC8rEQkJe5nFq5wk38JgsVC48CXCII-Pqy0UKa2yWvkctKzAata0IetG2bVs+A7Lt+DariCSzLq3E1aqBqjXjnAjcJwgOe5cioxJvFmyTrO9dDSwtFb6CrGs6wbXgmxbNt9u7Bhe37QdYAAvdwKyvDNnSfjuou-rBrvYJU3TBNtiCRIb3eqyQMYpbMD+gGNq2kGdvBztu2S1KwHSo7ss2ZUPM-PEfLCUJQlvPUEHvU9jKyLE+Jm2ikNJ6K3QtJLeBStLIHZ5HCaTciI2MlxaUyFxvwKIA */
@@ -45,8 +42,8 @@ export const stateMachine = setup({
     next_node_position: { x: 100, y: 100 },
     next_popover_index: 0,
     state_name: 'inside_tutorial',
-    show_popovers: true,
-    popover_content: TUTORIAL_MESSAGES[0],
+    show_popovers: false,
+    show_popups: false,
     nodes: [],
     metadata_keys: {},
     edges: [],
@@ -90,12 +87,24 @@ export const stateMachine = setup({
   }),
   states: {
     inside_tutorial: {
-      initial: 'create_user_popover',
+      initial: 'welcoming_message',
       entry: assign({
         state_name: 'inside_tutorial',
       }),
       onDone: 'inside_level',
       states: {
+        welcoming_message: {
+          entry: assign({
+            show_popups: true,
+            popup_content: POPUP_TUTORIAL_MESSAGES[0],
+          }),
+          on: {
+            NEXT_POPUP: {
+              actions: 'hide_popups',
+              target: 'create_user_popover',
+            },
+          },
+        },
         create_user_popover: {
           entry: assign({
             popover_content: POPOVER_TUTORIAL_MESSAGES[0],
