@@ -2,7 +2,7 @@ import _ from 'lodash';
 import type { Edge } from 'reactflow';
 import { setup, assign } from 'xstate';
 
-import { TUTORIAL_MESSAGES } from './config';
+import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES } from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
 import type { Context, InsideLevelMetadata, EventData } from './types';
 import { IAMNodeEntity } from '@/types';
@@ -16,7 +16,7 @@ export const stateMachine = setup({
   },
   actions: {
     next_popover: assign({
-      popover_content: ({ context }) => TUTORIAL_MESSAGES[context.next_popover_index],
+      popover_content: ({ context }) => POPOVER_TUTORIAL_MESSAGES[context.next_popover_index ?? 0],
       next_popover_index: ({ context }) => context.next_popover_index + 1,
       show_popovers: true,
     }),
@@ -98,7 +98,7 @@ export const stateMachine = setup({
       states: {
         create_user_popover: {
           entry: assign({
-            popover_content: TUTORIAL_MESSAGES[0],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[0],
             show_popovers: true,
           }),
           on: {
@@ -109,7 +109,7 @@ export const stateMachine = setup({
         },
         add_your_name_popover: {
           entry: assign({
-            popover_content: TUTORIAL_MESSAGES[1],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[1],
             show_popovers: true,
           }),
           on: {
@@ -121,7 +121,7 @@ export const stateMachine = setup({
         },
         iam_user_popover: {
           entry: assign({
-            popover_content: TUTORIAL_MESSAGES[2],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[2],
             show_popovers: true,
           }),
           on: {
@@ -133,7 +133,7 @@ export const stateMachine = setup({
         },
         iam_policy_popover: {
           entry: assign({
-            popover_content: TUTORIAL_MESSAGES[3],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[3],
             show_popovers: true,
           }),
           on: {

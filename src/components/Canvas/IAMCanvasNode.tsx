@@ -8,7 +8,7 @@ import userImage from '@/assets/images/user.png';
 import { IAMNodeContext } from '@/components/Canvas/IAMNodeProvider';
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { withPopover } from '@/decorators/withPopover';
-import type { TutorialMessage } from '@/machines/types';
+import type { PopoverTutorialMessage } from '@/machines/types';
 import type { IAMCanvasNodeProps as CanvasNodeProps } from '@/types';
 
 // TODO: Not the most ideal naming, fix this
@@ -34,7 +34,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
     setSelectedNode({ id, label, entity, description });
   };
 
-  const popoverContent = (): TutorialMessage => {
+  const popoverContent = (): PopoverTutorialMessage => {
     return {
       element_id: id,
       popover_title: label,

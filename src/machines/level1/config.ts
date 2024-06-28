@@ -1,6 +1,6 @@
-import type { TutorialMessage } from '../types';
+import type { PopoverTutorialMessage, PopupTutorialMessage } from '../types';
 
-export const TUTORIAL_MESSAGES: TutorialMessage[] = [
+export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: 'new_entity_btn',
     popover_title: 'IAM users',

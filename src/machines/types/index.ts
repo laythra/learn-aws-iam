@@ -17,7 +17,8 @@ export interface GenericContext {
   show_popovers: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
   next_node_position: { x: number; y: number };
-  popover_content?: TutorialMessage;
+  popover_content?: PopoverTutorialMessage;
+  popup_content?: PopupTutorialMessage;
   default_policy?: string;
 }
 
@@ -38,7 +39,7 @@ export type GenericEventData =
   | { type: 'ADD_EDGE'; edge: Edge }
   | { type: 'SET_EDGES'; edges: Edge[] }
   | { type: 'SET_NODES'; nodes: Node[] }
-  | { type: 'SHOW_POPOVER'; popover_content: TutorialMessage };
+  | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage };
 
 export type GenericInsideLevelMetadata = {
   connection_targets?: {
@@ -51,7 +52,7 @@ export type GenericInsideLevelMetadata = {
 };
 
 export type InsideTutorial = 'inside_tutorial';
-export type TutorialMessage = {
+export type PopoverTutorialMessage = {
   element_id: string;
   popover_title: string;
   popover_content: string;
