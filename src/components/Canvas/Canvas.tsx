@@ -11,6 +11,7 @@ import IAMCanvasNode from '@/components/Canvas/IAMCanvasNode';
 import { GenericInsideLevelMetadata } from '@/machines/types';
 
 import 'reactflow/dist/style.css';
+import { getEdgeName } from '@/utils/names';
 
 const nodeTypes = {
   iam_default: IAMCanvasNode,
@@ -57,12 +58,26 @@ const Canvas: React.FC = () => {
 
   const onConnect = useCallback(
     (params: Connection) => {
-      const newEdge = {
-        ...params,
-        id: `e-${params.source}-${params.target}`,
-        label: 'Attached to', // TODO: Make this dynamic
-        labelStyle: { fill: 'black', fontWeight: 700 },
-      } as Edge;
+      if (params.source === params.target) {
+        return;
+      }
+
+      const edgeName = getEdgeName(params.source as string, params.target as string);
+      const templateEdge = _.find(levelState.context.final_edges, { id: edgeName });
+
+      let newEdge;
+      if (templateEdge) {
+        newEdge = templateEdge;
+      } else {
+        // Create a generic edge
+        newEdge = {
+          ...params,
+          id: edgeName,
+          label: 'Attached to',
+          labelStyle: { fill: 'black', fontWeight: 700 },
+        } as Edge;
+      }
+
       let newEdges = [...levelState.context.edges, newEdge];
       setEdges(newEdges);
 

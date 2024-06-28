@@ -1,9 +1,12 @@
+import _ from 'lodash';
+import type { Edge } from 'reactflow';
 import { setup, assign } from 'xstate';
 
 import { TUTORIAL_MESSAGES } from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
 import type { Context, InsideLevelMetadata, EventData } from './types';
 import { IAMNodeEntity } from '@/types';
+import { getEdgeName } from '@/utils/names';
 
 export const stateMachine = setup({
   types: {} as {
@@ -47,6 +50,7 @@ export const stateMachine = setup({
     nodes: [],
     metadata_keys: {},
     edges: [],
+    final_edges: edges,
   },
   on: {
     ADD_IAM_NODE: {
@@ -170,8 +174,12 @@ export const stateMachine = setup({
           meta: {
             connection_targets: [
               {
-                required_edges: [edges['e-iam_policy1-iam_user1']],
-                locked_edges: [edges['e-iam_user1-iam_resource1']],
+                required_edges: [
+                  _.find(edges, { id: getEdgeName('iam_policy_1', 'iam_user_1') }) as Edge,
+                ],
+                locked_edges: [
+                  _.find(edges, { id: getEdgeName('iam_user_1', 'iam_resource_1') }) as Edge,
+                ],
               },
             ],
           },

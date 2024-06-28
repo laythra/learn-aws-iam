@@ -13,6 +13,7 @@ export interface GenericContext {
   next_iam_user_id: number;
   nodes: Node[];
   edges: Edge[];
+  final_edges: Edge[];
   show_popovers: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
   next_node_position: { x: number; y: number };
