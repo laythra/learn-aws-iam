@@ -1,5 +1,4 @@
 import {
-  Text,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -7,11 +6,12 @@ import {
   PopoverHeader,
   PopoverBody,
   Button,
-  ButtonGroup,
   Box,
   PopoverCloseButton,
   type PlacementWithLogical,
   Portal,
+  PopoverFooter,
+  Text,
 } from '@chakra-ui/react';
 
 interface TutorialPopoverProps {
@@ -48,7 +48,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
       <Portal containerRef={containerRef}>
         <PopoverContent>
           <PopoverArrow />
-          <PopoverHeader>{label}</PopoverHeader>
+          <PopoverHeader fontWeight='semibold'>{label}</PopoverHeader>
           {showCloseButton && <PopoverCloseButton onClick={onCloseClick} />}
           {description && (
             <PopoverBody>
@@ -56,9 +56,9 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
             </PopoverBody>
           )}
           {showNextButton && (
-            <ButtonGroup alignContent='flex-end'>
-              <Button onClick={onNextClick}>Next</Button>
-            </ButtonGroup>
+            <PopoverFooter display='flex' justifyContent='flex-end'>
+              <Button onClick={onNextClick}> Next </Button>
+            </PopoverFooter>
           )}
         </PopoverContent>
       </Portal>
