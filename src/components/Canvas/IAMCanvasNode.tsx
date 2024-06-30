@@ -3,11 +3,9 @@ import { useContext } from 'react';
 import { Flex, Text, Box, Image, Badge, Tooltip } from '@chakra-ui/react';
 import { Handle, NodeProps } from 'reactflow';
 
-import userImage from '@/assets/images/user.png';
+import { IAMNodeInfoButton } from './IAMNodeInfoButton';
 import { IAMNodeContext } from '@/components/Canvas/IAMNodeProvider';
-import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { withPopover } from '@/decorators/withPopover';
-import type { PopoverTutorialMessage } from '@/machines/types';
 import type { IAMCanvasNodeProps as CanvasNodeProps } from '@/types';
 
 // TODO: Not the most ideal naming, fix this
@@ -25,27 +23,11 @@ export interface IAMCanvasNodeProps extends NodeProps {
  * @param `data`: The node data passed from React Flow.
  */
 const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
-  const { description, entity, label, handles, image } = data;
+  const { description, entity, label, handles, image, code } = data;
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
-  const levelActor = LevelsProgressionContext.useActorRef();
 
   const handleClick = (): void => {
     setSelectedNode({ id, label, entity, description });
-  };
-
-  const popoverContent = (): PopoverTutorialMessage => {
-    return {
-      element_id: id,
-      popover_title: label,
-      popover_content: 'This is some dummy content',
-      show_next_button: false,
-      popover_placement: 'bottom-end',
-      show_close_button: true,
-    };
-  };
-
-  const showInfoPopover = (): void => {
-    levelActor.send({ type: 'SHOW_POPOVER', popover_content: popoverContent() });
   };
 
   const isSelected = selectedNode?.id === id;
@@ -88,35 +70,10 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
           </Text>
           <Text fontSize='12px'>{label}</Text>
         </Box>
-        {/* <IconButton
-          aria-label='info'
-          icon={<CodeBracketIcon />}
-          position='absolute'
-          size='xs'
-          top={1}
-          right={1}
-          onClick={showInfoPopover}
-          variant='ghost'
-          bg='transparent'
-          _hover={{ bg: 'gray.200' }}
-        /> */}
+        <Box flex='none'>
+          <IAMNodeInfoButton label={label} codeDescription={code} placement='top-end' />
+        </Box>
       </Flex>
-
-      {/* <Box marginTop={1}>
-        <Text fontWeight='700'>{label}</Text>
-      </Box>
-      <IconButton
-        aria-label='info'
-        icon={<CodeBracketIcon />}
-        position='absolute'
-        size='xs'
-        top={1}
-        right={1}
-        onClick={showInfoPopover}
-        variant='ghost'
-        bg='transparent'
-        _hover={{ bg: 'gray.200' }}
-      /> */}
     </Flex>
   );
 };
