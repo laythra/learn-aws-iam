@@ -14,6 +14,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_content: ``,
     show_next_button: false,
     show_close_button: false,
+    popover_placement: 'start',
   },
   {
     element_id: 'iam_user1',
@@ -40,3 +41,12 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: `This is a project that will guide you through the basics of IAM`,
   },
 ];
+
+export const POLICY_CONTENT = JSON.stringify(
+  {
+    Version: '2012-10-17',
+    Statement: [{ Effect: 'Allow', Action: '*', Resource: '*' }],
+  },
+  null,
+  2
+);

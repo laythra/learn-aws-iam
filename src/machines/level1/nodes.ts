@@ -1,5 +1,6 @@
 import { HandleProps, Node, Position, Edge, MarkerType } from 'reactflow';
 
+import { POLICY_CONTENT } from './config';
 import { IAMNodeEntity, IAMCanvasNodeProps, IAMNodeImage } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
@@ -34,6 +35,7 @@ export const initial_nodes: Node[] = [
         { id: Position.Bottom, type: 'target', position: Position.Bottom },
       ] as HandleProps[],
       image: IAMNodeImage.Policy,
+      code: POLICY_CONTENT,
     } as IAMCanvasNodeProps,
     type: 'iam_default',
     zIndex: 12,

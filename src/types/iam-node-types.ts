@@ -26,6 +26,7 @@ export interface IAMNodeProps {
 export interface IAMCanvasNodeProps extends IAMNodeProps {
   handles: HandleProps[];
   image: IAMNodeImage;
+  code?: string;
 }
 
 export interface IAMUserNodeProps extends IAMNodeProps {
