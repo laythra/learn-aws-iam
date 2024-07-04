@@ -21,6 +21,7 @@ export interface GenericContext {
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
   default_policy?: string;
+  level_objectives: { [key: string]: LevelObjective };
 }
 
 export type GenericEventData =
@@ -67,4 +68,9 @@ export type PopoverTutorialMessage = {
 export type PopupTutorialMessage = {
   title: string;
   content: string;
+};
+
+export type LevelObjective = {
+  label: string;
+  finished: boolean;
 };

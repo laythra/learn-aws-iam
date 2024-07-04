@@ -2,7 +2,7 @@ import _ from 'lodash';
 import type { Edge } from 'reactflow';
 import { setup, assign } from 'xstate';
 
-import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES } from './config';
+import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
 import type { Context, InsideLevelMetadata, EventData } from './types';
 import { IAMNodeEntity } from '@/types';
@@ -28,6 +28,11 @@ export const stateMachine = setup({
       }),
     }),
     hide_popups: assign({ show_popups: false }),
+    change_objective_progress: assign({
+      level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) => ({
+        ..._.update(context.level_objectives, [id, 'finished'], _.constant(finished)), // cloning is a must since update returns the same reference
+      }),
+    }),
   },
 }).createMachine({
   /** @xstate-layout N4IgpgJg5mDOIC5QBswDczIIwH1YBcBDfMHAW0IGMALASwDswA6B2WiU-AV3wHsAnWoWQBiCL0ZMCxZqgzY8REuSp1Jrdpx4ChyANoAGALqJQAB15t8tCaZAAPRFgBMAFgNMAnADYDntwZYAKwAzJ6eADQgAJ6IziEeAOyJIa6uWAYAHJ6JnpkhAL4FUXKYuNLKFDQMzBocONx8gsJMFhYY-FgiAHIAogAaACo4AAoA8uMAar0ASoYmSCAWVjb0do4IWJ4hTFhYiVi+wbnxrplRsQjOic5MBqeuiZlBngb3hcUgpQoVpFVqtXobHqjR0LTavA6zh6A2G4yms3mdmWtGstkWG1cOSYiQMCSwISebyCWHyFziNzuDyeLze8SKJXQZUUMhU1XUQM0DW0zWQrV47TA-BCMKGowmY2mc2MyMsqNW60QmXuONczmC2zCzlekRiFNu7zSNNe7wZXyZPyUf1UNRYnPq3zEEmYvyY33KVrZALtwNI3yRixRaLWGLieO8TCC8XV3j2L28j3JV1COKCbzeqW8uVcqTN7pZlRtHN9OG+TEoEkYlHwOCEZBwFmQtEo0QavBwXFgQrtDf4vCg-DgsBEAEkAIIAWXFABkRwBhACaODnY26fTng16ABEA+Y5cHFZsgkFXExMtdttlo2qQkmQocmM404FvGncXssK4ip96LwOPBFnzX4vRqWUVnRUANgAWjcJMoLVPMLQ9Vl-ltOotCaXQwPlCCHDiVwkwJRJI1OeJvBCElPD2L9PiAz1UOLLlQV5flBU6bCD1DBAbiTbUgkjdMDAODU8hoxl5GQwt2UBEtmN0VjISFZwOIVLjCVPR4EyeEIswMI1eM8fjnzeYSXlExCJILa1pJ9JieXkiEOhCFTcI2LNPDubwAk8dxMmVQkDKMwTTPCTIxPNSzgIYmS7Mwlo5OEHAKzIMxUBICAXJDSDEFE3ZAmPLFvGVNVEgM08nzpMLcW1AwTws5koqLGKHQtTLDwJLYmC8rEQkJe5nFq5wk38JgsVC48CXCII-Pqy0UKa2yWvkctKzAata0IetG2bVs+A7Lt+DariCSzLq3E1aqBqjXjnAjcJwgOe5cioxJvFmyTrO9dDSwtFb6CrGs6wbXgmxbNt9u7Bhe37QdYAAvdwKyvDNnSfjuou-rBrvYJU3TBNtiCRIb3eqyQMYpbMD+gGNq2kGdvBztu2S1KwHSo7ss2ZUPM-PEfLCUJQlvPUEHvU9jKyLE+Jm2ikNJ6K3QtJLeBStLIHZ5HCaTciI2MlxaUyFxvwKIA */
@@ -48,6 +53,7 @@ export const stateMachine = setup({
     metadata_keys: {},
     edges: [],
     final_edges: edges,
+    level_objectives: LEVEL_OBJECTIVES,
   },
   on: {
     ADD_IAM_NODE: {
@@ -123,7 +129,13 @@ export const stateMachine = setup({
           }),
           on: {
             IAM_USER_CREATED: {
-              actions: 'iam_user_creation_side_effects',
+              actions: [
+                { type: 'iam_user_creation_side_effects', params: {} },
+                {
+                  type: 'change_objective_progress',
+                  params: { id: 'create_iam_user', finished: true },
+                },
+              ],
               target: 'iam_user_popover',
             },
           },
@@ -159,7 +171,7 @@ export const stateMachine = setup({
     },
     inside_level: {
       onDone: 'finished_level',
-      initial: 'connect_iam_policy_to_user',
+      initial: 'create_iam_user',
       entry: assign({
         show_popovers: false,
         state_name: 'inside_level',
@@ -176,6 +188,12 @@ export const stateMachine = setup({
           on: {
             IAM_USER_CREATED: {
               target: 'connect_iam_policy_to_user',
+              actions: [
+                {
+                  type: 'change_objective_progress',
+                  params: { id: 'create_iam_user', finished: true },
+                },
+              ],
             },
           },
         },

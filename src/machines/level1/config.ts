@@ -1,4 +1,4 @@
-import type { PopoverTutorialMessage, PopupTutorialMessage } from '../types';
+import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
@@ -50,3 +50,10 @@ export const POLICY_CONTENT = JSON.stringify(
   null,
   2
 );
+
+export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
+  create_iam_user: {
+    finished: false,
+    label: 'Create an IAM user',
+  },
+};
