@@ -22,7 +22,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ children, alignment }) => {
       flexShrink={1}
       flexBasis={flexBasis}
     >
-      <Collapse in={true} style={{ overflow: 'hidden' }}>
+      <Collapse in style={{ overflow: 'hidden' }}>
         {isOpen && <Box p={4}>{children}</Box>}
       </Collapse>
     </Flex>
