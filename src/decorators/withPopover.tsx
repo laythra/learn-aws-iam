@@ -31,21 +31,18 @@ export const withPopover = <T extends { id: string; container_ref?: React.RefObj
     };
 
     return (
-      <Box ref={boxRef}>
-        <TutorialPopover
-          isOpen={popoverOpen}
-          label={popoverContent?.popover_title as string}
-          description={popoverContent?.popover_content as string}
-          showNextButton={popoverContent?.show_next_button as boolean}
-          placement={popoverContent?.popover_placement}
-          showCloseButton={popoverContent?.show_close_button}
-          onNextClick={goToNextPopOver}
-          onCloseClick={closePopover}
-          containerRef={props.container_ref ?? boxRef}
-        >
-          <WrappedComponent {...props} />
-        </TutorialPopover>
-      </Box>
+      <TutorialPopover
+        isOpen={popoverOpen}
+        label={popoverContent?.popover_title as string}
+        description={popoverContent?.popover_content as string}
+        showNextButton={popoverContent?.show_next_button as boolean}
+        placement={popoverContent?.popover_placement}
+        showCloseButton={popoverContent?.show_close_button}
+        onNextClick={goToNextPopOver}
+        onCloseClick={closePopover}
+      >
+        <WrappedComponent {...props} />
+      </TutorialPopover>
     );
   };
 

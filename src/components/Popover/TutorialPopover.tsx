@@ -38,7 +38,6 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
   placement = 'auto',
   onNextClick,
   onCloseClick,
-  containerRef,
 }) => {
   return (
     <Popover isOpen={isOpen} placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0}>
@@ -46,32 +45,29 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
         <Box>{children}</Box>
       </PopoverTrigger>
 
-      <Portal containerRef={containerRef}>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverHeader fontWeight='semibold' borderBottomWidth={0}>
-            {label}
-          </PopoverHeader>
-          {showCloseButton && <PopoverCloseButton onClick={onCloseClick} />}
-          {description && (
-            <PopoverBody>
-              <Text>{description}</Text>
-            </PopoverBody>
-          )}
-          {showNextButton && (
-            <Box display='flex' justifyContent='flex-end' pt={3} pr={1} pb={1}>
-              <Button
-                rightIcon={<Icon as={ArrowRightIcon} verticalAlign='middle' />}
-                variant='outline'
-                colorScheme='blue'
-                onAbort={onNextClick}
-              >
-                Next
-              </Button>
-            </Box>
-          )}
-        </PopoverContent>
-      </Portal>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverHeader fontWeight='semibold' borderBottomWidth={description ? 1 : 0}>
+          {label}
+        </PopoverHeader>
+        {showCloseButton && <PopoverCloseButton onClick={onCloseClick} />}
+        {description && (
+          <PopoverBody>
+            <Text>{description}</Text>
+          </PopoverBody>
+        )}
+        {showNextButton && (
+          <Box display='flex' justifyContent='flex-end' pt={3} pr={1} pb={1}>
+            <Button
+              rightIcon={<Icon as={ArrowRightIcon} verticalAlign='middle' />}
+              variant='solid'
+              onClick={onNextClick}
+            >
+              Next
+            </Button>
+          </Box>
+        )}
+      </PopoverContent>
     </Popover>
   );
 };
