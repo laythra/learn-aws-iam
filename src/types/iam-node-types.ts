@@ -1,11 +1,12 @@
 import { HandleProps } from 'reactflow';
 
 export enum IAMNodeEntity {
-  User = 'User',
-  Group = 'Group',
-  Role = 'Role',
-  Policy = 'Policy',
-  Resource = 'Resource',
+  User = 'IAM User',
+  Group = 'IAM Group',
+  Role = 'IAM Role',
+  Policy = 'IAM Policy',
+  Resource = 'AWS Resource',
+  S3Bucket = 'S3 Bucket',
 }
 
 export enum IAMNodeImage {
