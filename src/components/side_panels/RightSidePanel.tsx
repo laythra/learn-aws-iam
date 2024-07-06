@@ -1,6 +1,5 @@
 import { Text, Flex, Divider, Box, List, ListItem, ListIcon } from '@chakra-ui/react';
-import { CheckBadgeIcon } from '@heroicons/react/20/solid';
-import _ from 'lodash';
+import { CheckBadgeIcon, XCircleIcon } from '@heroicons/react/20/solid';
 
 import { LevelsProgressionContext } from '../levels_progression/LevelsProgressionProvider';
 import SidePanel from '@/components/side_panels/SidePanel';
@@ -36,7 +35,12 @@ const RightSidePanel: React.FC = () => {
               {Object.values(levelObjectives).map((objective, index) => {
                 return (
                   <ListItem key={index}>
-                    <ListIcon as={CheckBadgeIcon} color='green.500' />
+                    <ListIcon
+                      w={5}
+                      h={5}
+                      as={objective.finished ? CheckBadgeIcon : XCircleIcon}
+                      color={objective.finished ? 'green.500' : 'black'}
+                    />
                     <Text as={objective.finished ? 's' : 'abbr'}>{objective.label}</Text>
                   </ListItem>
                 );
