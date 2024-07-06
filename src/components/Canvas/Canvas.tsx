@@ -36,26 +36,6 @@ const Canvas: React.FC = () => {
     setNodesState(levelState.context.nodes);
   }, [levelState.context.nodes]);
 
-  // const handleDrop = (event: React.DragEvent): void => {
-  //   event.preventDefault();
-
-  //   const nodeData = JSON.parse(event.dataTransfer.getData('json-node-data'));
-  //   const canvasRect = (event.target as Element).getBoundingClientRect();
-
-  //   // TODO: Handle when canvas is zoomed in/out, or simply render node in the center?
-  //   const canvasX = event.clientX - canvasRect.left;
-  //   const canvasY = event.clientY - canvasRect.top;
-
-  //   const newNode = {
-  //     id: nodeData['id'],
-  //     type: 'iam-default',
-  //     position: { x: canvasX, y: canvasY },
-  //     data: nodeData,
-  //   };
-
-  //   levelActor.send({ type: 'ADD_IAM_NODE', node: newNode });
-  // };
-
   const onConnect = useCallback(
     (params: Connection) => {
       if (params.source === params.target) {

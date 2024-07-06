@@ -1,6 +1,6 @@
-import { useContext } from 'react';
+import { useContext, useRef, useEffect } from 'react';
 
-import { Flex, Text, Box, Image, Badge, Tooltip } from '@chakra-ui/react';
+import { Flex, Text, Box, Image, Badge, Tooltip, HStack, Icon } from '@chakra-ui/react';
 import { Handle, NodeProps } from 'reactflow';
 
 import { IAMNodeInfoButton } from './IAMNodeInfoButton';
@@ -42,8 +42,8 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
       boxShadow='sm'
       borderRadius='md'
       position='relative'
-      width='180px'
-      height='60px'
+      width='225px'
+      height='75px'
       textAlign='center'
       borderWidth='2px'
       borderColor={isSelected ? 'blue.500' : 'gray.200'}
@@ -60,19 +60,39 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
           marginRight='8%'
         />
         <Box width='65%' textAlign='left'>
-          <Text fontWeight='700' fontSize='12px'>
-            Laith
-            <Tooltip label='There is an error' aria-label='A tooltip' cursor='help'>
-              <Badge colorScheme='red' ml={1} fontSize='12px' fontWeight='700'>
-                !
-              </Badge>
+          <HStack spacing={0}>
+            <Tooltip label={label}>
+              <Text
+                fontWeight='700'
+                fontSize='14px'
+                whiteSpace='nowrap'
+                textOverflow='ellipsis'
+                overflow='hidden'
+                fontFamily='monospace'
+              >
+                {label}
+              </Text>
             </Tooltip>
-          </Text>
-          <Text fontSize='12px'>{label}</Text>
+            {false && ( // Hiding badge for now
+              <Tooltip
+                label={`This ${entity} does not serve any purpose`}
+                aria-label='A tooltip'
+                cursor='help'
+                placement='top'
+              >
+                <Badge colorScheme='red' fontSize='12px' fontWeight='700' ml={1}>
+                  !
+                </Badge>
+              </Tooltip>
+            )}
+          </HStack>
+          <Text fontSize='14px'>{entity}</Text>
         </Box>
-        <Box flex='none'>
-          <IAMNodeInfoButton label={label} codeDescription={code} placement='top-end' />
-        </Box>
+        {code && (
+          <Box flex='none'>
+            <IAMNodeInfoButton label={label} codeDescription={code} placement='top-end' />
+          </Box>
+        )}
       </Flex>
     </Flex>
   );
