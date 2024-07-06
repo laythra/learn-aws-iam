@@ -5,14 +5,15 @@ import {
   PopoverArrow,
   PopoverHeader,
   PopoverBody,
+  Icon,
   Button,
   Box,
   PopoverCloseButton,
   type PlacementWithLogical,
   Portal,
-  PopoverFooter,
   Text,
 } from '@chakra-ui/react';
+import { ArrowRightIcon } from '@heroicons/react/16/solid';
 
 interface TutorialPopoverProps {
   isOpen: boolean;
@@ -48,7 +49,9 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
       <Portal containerRef={containerRef}>
         <PopoverContent>
           <PopoverArrow />
-          <PopoverHeader fontWeight='semibold'>{label}</PopoverHeader>
+          <PopoverHeader fontWeight='semibold' borderBottomWidth={0}>
+            {label}
+          </PopoverHeader>
           {showCloseButton && <PopoverCloseButton onClick={onCloseClick} />}
           {description && (
             <PopoverBody>
@@ -56,9 +59,16 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
             </PopoverBody>
           )}
           {showNextButton && (
-            <PopoverFooter display='flex' justifyContent='flex-end'>
-              <Button onClick={onNextClick}> Next </Button>
-            </PopoverFooter>
+            <Box display='flex' justifyContent='flex-end' pt={3} pr={1} pb={1}>
+              <Button
+                rightIcon={<Icon as={ArrowRightIcon} verticalAlign='middle' />}
+                variant='outline'
+                colorScheme='blue'
+                onAbort={onNextClick}
+              >
+                Next
+              </Button>
+            </Box>
           )}
         </PopoverContent>
       </Portal>
