@@ -24,10 +24,25 @@ export const template_nodes: { [key: string]: Node<IAMCanvasNodeProps> } = {
 
 export const initial_nodes: Node[] = [
   {
+    id: 'iam_resource_1',
+    position: { x: 500, y: 250 },
+    data: {
+      label: 'public-images',
+      entity: IAMNodeEntity.S3Bucket,
+      handles: [
+        { id: Position.Top, type: 'source', position: Position.Top },
+        { id: Position.Bottom, type: 'target', position: Position.Bottom },
+      ] as HandleProps[],
+      image: IAMNodeImage.S3Bucket,
+    } as IAMCanvasNodeProps,
+    type: 'iam_default',
+    draggable: true,
+  },
+  {
     id: 'iam_policy_1',
     position: { x: 250, y: 250 },
     data: {
-      label: 'IAM Policy',
+      label: 's3-read-access',
       entity: IAMNodeEntity.Policy,
       description: 'A customer managed policy that allows access to S3 buckets',
       handles: [
@@ -36,22 +51,6 @@ export const initial_nodes: Node[] = [
       ] as HandleProps[],
       image: IAMNodeImage.Policy,
       code: POLICY_CONTENT,
-    } as IAMCanvasNodeProps,
-    type: 'iam_default',
-    zIndex: 12,
-    draggable: true,
-  },
-  {
-    id: 'iam_resource_1',
-    position: { x: 500, y: 250 },
-    data: {
-      label: 'S3 Bucket',
-      entity: IAMNodeEntity.Resource,
-      handles: [
-        { id: Position.Top, type: 'source', position: Position.Top },
-        { id: Position.Bottom, type: 'target', position: Position.Bottom },
-      ] as HandleProps[],
-      image: IAMNodeImage.S3Bucket,
     } as IAMCanvasNodeProps,
     type: 'iam_default',
     draggable: true,
@@ -71,11 +70,12 @@ export const edges: Edge[] = [
     target: edgesInfo[0][1],
     sourceHandle: Position.Bottom,
     targetHandle: Position.Top,
-    label: 'Attached toooo',
+    label: 'Invalid attach policies to resources',
     labelBgPadding: [8, 4],
     labelBgBorderRadius: 4,
     labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 1 },
-    markerEnd: { type: MarkerType.Arrow, width: 20, height: 20, strokeWidth: 4 },
+    markerEnd: { type: MarkerType.Arrow, width: 12, height: 12, strokeWidth: 4 },
+    animated: true,
   },
   {
     id: getEdgeName(...edgesInfo[1]),
@@ -83,11 +83,12 @@ export const edges: Edge[] = [
     target: edgesInfo[1][1],
     sourceHandle: Position.Bottom,
     targetHandle: Position.Top,
-    label: 'Attached toooo',
+    label: 'Policy attached to',
     labelBgPadding: [8, 4],
     labelBgBorderRadius: 4,
     labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 1 },
-    markerEnd: { type: MarkerType.Arrow, width: 20, height: 20, strokeWidth: 4 },
+    markerEnd: { type: MarkerType.Arrow, width: 12, height: 12, strokeWidth: 4 },
+    animated: true,
   },
   {
     id: getEdgeName(...edgesInfo[2]),
@@ -102,6 +103,6 @@ export const edges: Edge[] = [
     labelBgPadding: [8, 4],
     labelBgBorderRadius: 4,
     labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 1 },
-    markerEnd: { type: MarkerType.Arrow, width: 20, height: 20, strokeWidth: 4 },
+    markerEnd: { type: MarkerType.Arrow, width: 12, height: 12, strokeWidth: 4 },
   },
 ];

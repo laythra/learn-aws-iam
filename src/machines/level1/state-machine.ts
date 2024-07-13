@@ -5,7 +5,6 @@ import { setup, assign } from 'xstate';
 import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
 import type { Context, InsideLevelMetadata, EventData } from './types';
-import { IAMNodeEntity } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
 export const stateMachine = setup({
@@ -87,6 +86,9 @@ export const stateMachine = setup({
         show_popovers: false,
       }),
     },
+    IAM_USER_CREATED: {
+      actions: 'iam_user_creation_side_effects',
+    },
   },
   entry: assign({
     nodes: initial_nodes,
@@ -107,13 +109,35 @@ export const stateMachine = setup({
           on: {
             NEXT_POPUP: {
               actions: 'hide_popups',
+              target: 'iam_policy_onboarding_popover',
+            },
+          },
+        },
+        iam_policy_onboarding_popover: {
+          entry: assign({
+            popover_content: POPOVER_TUTORIAL_MESSAGES[0],
+            show_popovers: true,
+          }),
+          on: {
+            NEXT_POPOVER: {
+              target: 's3_bucket_onboarding_popover',
+            },
+          },
+        },
+        s3_bucket_onboarding_popover: {
+          entry: assign({
+            popover_content: POPOVER_TUTORIAL_MESSAGES[1],
+            show_popovers: true,
+          }),
+          on: {
+            NEXT_POPOVER: {
               target: 'create_user_popover',
             },
           },
         },
         create_user_popover: {
           entry: assign({
-            popover_content: POPOVER_TUTORIAL_MESSAGES[0],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[2],
             show_popovers: true,
           }),
           on: {
@@ -124,7 +148,7 @@ export const stateMachine = setup({
         },
         add_your_name_popover: {
           entry: assign({
-            popover_content: POPOVER_TUTORIAL_MESSAGES[1],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[3],
             show_popovers: true,
           }),
           on: {
@@ -142,7 +166,7 @@ export const stateMachine = setup({
         },
         iam_user_popover: {
           entry: assign({
-            popover_content: POPOVER_TUTORIAL_MESSAGES[2],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[4],
             show_popovers: true,
           }),
           on: {
@@ -154,7 +178,7 @@ export const stateMachine = setup({
         },
         iam_policy_popover: {
           entry: assign({
-            popover_content: POPOVER_TUTORIAL_MESSAGES[3],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[5],
             show_popovers: true,
           }),
           on: {
@@ -171,7 +195,7 @@ export const stateMachine = setup({
     },
     inside_level: {
       onDone: 'finished_level',
-      initial: 'create_iam_user',
+      initial: 'connect_iam_policy_to_user',
       entry: assign({
         show_popovers: false,
         state_name: 'inside_level',
@@ -181,22 +205,6 @@ export const stateMachine = setup({
         },
       }),
       states: {
-        create_iam_user: {
-          meta: {
-            entity_targets: [IAMNodeEntity.User],
-          },
-          on: {
-            IAM_USER_CREATED: {
-              target: 'connect_iam_policy_to_user',
-              actions: [
-                {
-                  type: 'change_objective_progress',
-                  params: { id: 'create_iam_user', finished: true },
-                },
-              ],
-            },
-          },
-        },
         connect_iam_policy_to_user: {
           meta: {
             connection_targets: [
@@ -212,8 +220,23 @@ export const stateMachine = setup({
           },
           on: {
             IAM_POLICY_CONNECTED: {
-              target: 'completed',
+              target: 'policy_attached',
+              actions: [
+                {
+                  type: 'change_objective_progress',
+                  params: { id: 'enable_reading_from_bucket', finished: true },
+                },
+              ],
             },
+          },
+        },
+        policy_attached: {
+          entry: assign({
+            show_popovers: true,
+            popover_content: POPOVER_TUTORIAL_MESSAGES[6],
+          }),
+          on: {
+            NEXT_POPOVER: 'completed',
           },
         },
         completed: {

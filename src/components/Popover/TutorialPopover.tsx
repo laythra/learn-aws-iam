@@ -10,7 +10,6 @@ import {
   Box,
   PopoverCloseButton,
   type PlacementWithLogical,
-  Portal,
   Text,
 } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@heroicons/react/16/solid';

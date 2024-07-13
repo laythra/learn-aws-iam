@@ -1,6 +1,6 @@
-import { useContext, useRef, useEffect } from 'react';
+import { useContext } from 'react';
 
-import { Flex, Text, Box, Image, Badge, Tooltip, HStack, Icon } from '@chakra-ui/react';
+import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { Handle, NodeProps } from 'reactflow';
 
 import { IAMNodeInfoButton } from './IAMNodeInfoButton';

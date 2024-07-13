@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { Box } from '@chakra-ui/react';
-
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 
@@ -15,7 +13,6 @@ export const withPopover = <T extends { id: string; container_ref?: React.RefObj
   WrappedComponent: React.FC<T>
 ): React.FC<T> => {
   const WithPopover: React.FC<T> = props => {
-    const boxRef = React.useRef<HTMLDivElement>(null);
     const machineActor = LevelsProgressionContext.useActorRef();
     const { popover_content: popoverContent, show_popovers: showPopovers } =
       LevelsProgressionContext.useSelector(state => state.context);

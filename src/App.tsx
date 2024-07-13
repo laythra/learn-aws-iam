@@ -1,4 +1,4 @@
-import { ChakraProvider, extendTheme, ThemeOverride, type ThemeConfig } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 
 import LevelsProgressionProvider from './components/levels_progression/LevelsProgressionProvider';
 import { theme } from './theme';
