@@ -12,7 +12,7 @@ const RightSidePanel: React.FC = () => {
   return (
     <SidePanel alignment='right'>
       <Flex direction='column' alignItems='center' justifyContent='center' height='100vh'>
-        <Flex direction='column' alignItems='center' height='25vh'>
+        <Flex direction='column' alignItems='center' height='25%'>
           <Text fontSize='lg' fontWeight='bold' p={1}>
             Level Objective
           </Text>
@@ -25,7 +25,7 @@ const RightSidePanel: React.FC = () => {
           </Box>
         </Flex>
 
-        <Flex direction='column' alignItems='center' height='75vh' marginTop={4} width='100%'>
+        <Flex direction='column' alignItems='center' height='75%' marginTop={4} width='100%'>
           <Text fontSize='lg' fontWeight='bold' p={1}>
             Level Progress
           </Text>
