@@ -1,15 +1,19 @@
 import { HandleProps } from 'reactflow';
 
 export enum IAMNodeEntity {
-  User = 'User',
-  Group = 'Group',
-  Role = 'Role',
-  Policy = 'Policy',
-  Resource = 'Resource',
+  User = 'IAM User',
+  Group = 'IAM Group',
+  Role = 'IAM Role',
+  Policy = 'IAM Policy',
+  Resource = 'AWS Resource',
+  S3Bucket = 'S3 Bucket',
 }
 
-export enum IAMResourceEntity {
-  S3 = 'S3',
+export enum IAMNodeImage {
+  User = 'user',
+  S3Bucket = 'bucket',
+  Policy = 'policy',
+  Group = 'group',
 }
 
 export interface IAMNodeProps {
@@ -22,6 +26,8 @@ export interface IAMNodeProps {
 
 export interface IAMCanvasNodeProps extends IAMNodeProps {
   handles: HandleProps[];
+  image: IAMNodeImage;
+  code?: string;
 }
 
 export interface IAMUserNodeProps extends IAMNodeProps {

@@ -13,11 +13,16 @@ export interface GenericContext {
   next_iam_user_id: number;
   nodes: Node[];
   edges: Edge[];
+  final_edges: Edge[];
   show_popovers: boolean;
+  show_popups: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
   next_node_position: { x: number; y: number };
-  popover_content?: TutorialMessage;
+  popover_content?: PopoverTutorialMessage;
+  popup_content?: PopupTutorialMessage;
   default_policy?: string;
+  level_objectives: { [key: string]: LevelObjective };
+  level_finished?: boolean;
 }
 
 export type GenericEventData =
@@ -25,6 +30,7 @@ export type GenericEventData =
       type:
         | 'NEXT'
         | 'NEXT_POPOVER'
+        | 'NEXT_POPUP'
         | 'IAM_POLICY_CONNECTED'
         | 'IAM_USER_CREATED'
         | 'BEGIN'
@@ -37,7 +43,7 @@ export type GenericEventData =
   | { type: 'ADD_EDGE'; edge: Edge }
   | { type: 'SET_EDGES'; edges: Edge[] }
   | { type: 'SET_NODES'; nodes: Node[] }
-  | { type: 'SHOW_POPOVER'; popover_content: TutorialMessage };
+  | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage };
 
 export type GenericInsideLevelMetadata = {
   connection_targets?: {
@@ -50,7 +56,7 @@ export type GenericInsideLevelMetadata = {
 };
 
 export type InsideTutorial = 'inside_tutorial';
-export type TutorialMessage = {
+export type PopoverTutorialMessage = {
   element_id: string;
   popover_title: string;
   popover_content: string;
@@ -58,4 +64,14 @@ export type TutorialMessage = {
   show_close_button: boolean;
   popover_placement?: PlacementWithLogical;
   container_ref?: React.RefObject<HTMLElement>; // Defines a ref to the container in which the popover should be rendered
+};
+
+export type PopupTutorialMessage = {
+  title: string;
+  content: string;
+};
+
+export type LevelObjective = {
+  label: string;
+  finished: boolean;
 };

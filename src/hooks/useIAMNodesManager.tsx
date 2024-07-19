@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { IAMEntitiesContext } from '@/components/nodes/IAMEntitiesProvider';
+import { IAMEntitiesContext } from '@/components/Canvas/IAMEntitiesProvider';
 import { IAMEntitiesContextState } from '@/types';
 
 /**

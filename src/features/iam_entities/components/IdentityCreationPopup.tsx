@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 import { Node } from 'reactflow';
-import { EventFrom, EventFromLogic } from 'xstate';
+import { EventFrom } from 'xstate';
 
 import { PoliciesList } from './PoliciesList';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
@@ -61,18 +61,18 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
   };
 
   const submit = (): void => {
-    const node = _.merge(iamNodeTemplate, {
-      id: `iam_user${nextIamUserId}`,
+    // Passing an empty object as the first argument to _.merge to produce a new object reference.
+    const node = _.merge({}, iamNodeTemplate, {
+      id: `iam_user_${nextIamUserId}`,
       description: `New ${_.upperFirst(iamIdentityEntity)}`,
       position: nextNodePosition,
       data: {
         label: getNameFieldVal(),
+        entity: iamIdentityEntity,
       } as IAMNodeProps,
     }) as Node;
 
-    levelActor.send({ type: 'ADD_IAM_NODE', node: node } as EventFromLogic<
-      typeof levelActor.logic
-    >);
+    levelActor.send({ type: 'ADD_IAM_NODE', node: node });
     levelActor.send({ type: 'IAM_USER_CREATED' });
 
     closeIdentityCreator();

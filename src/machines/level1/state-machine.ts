@@ -1,9 +1,11 @@
+import _ from 'lodash';
+import type { Edge } from 'reactflow';
 import { setup, assign } from 'xstate';
 
-import { TUTORIAL_MESSAGES } from './config';
+import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
 import type { Context, InsideLevelMetadata, EventData } from './types';
-import { IAMNodeEntity } from '@/types';
+import { getEdgeName } from '@/utils/names';
 
 export const stateMachine = setup({
   types: {} as {
@@ -13,7 +15,7 @@ export const stateMachine = setup({
   },
   actions: {
     next_popover: assign({
-      popover_content: ({ context }) => TUTORIAL_MESSAGES[context.next_popover_index],
+      popover_content: ({ context }) => POPOVER_TUTORIAL_MESSAGES[context.next_popover_index ?? 0],
       next_popover_index: ({ context }) => context.next_popover_index + 1,
       show_popovers: true,
     }),
@@ -24,9 +26,11 @@ export const stateMachine = setup({
         y: context.next_node_position.y + 20,
       }),
     }),
-    set_popover_content: assign({
-      popover_content: TUTORIAL_MESSAGES[1],
-      show_popovers: true,
+    hide_popups: assign({ show_popups: false }),
+    change_objective_progress: assign({
+      level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) => ({
+        ..._.update(context.level_objectives, [id, 'finished'], _.constant(finished)), // cloning is a must since update returns the same reference
+      }),
     }),
   },
 }).createMachine({
@@ -42,11 +46,13 @@ export const stateMachine = setup({
     next_node_position: { x: 100, y: 100 },
     next_popover_index: 0,
     state_name: 'inside_tutorial',
-    show_popovers: true,
-    popover_content: TUTORIAL_MESSAGES[0],
+    show_popovers: false,
+    show_popups: false,
     nodes: [],
     metadata_keys: {},
     edges: [],
+    final_edges: edges,
+    level_objectives: LEVEL_OBJECTIVES,
   },
   on: {
     ADD_IAM_NODE: {
@@ -80,21 +86,58 @@ export const stateMachine = setup({
         show_popovers: false,
       }),
     },
+    IAM_USER_CREATED: {
+      actions: 'iam_user_creation_side_effects',
+    },
   },
   entry: assign({
     nodes: initial_nodes,
   }),
   states: {
     inside_tutorial: {
-      initial: 'create_user_popover',
+      initial: 'welcoming_message',
       entry: assign({
         state_name: 'inside_tutorial',
       }),
       onDone: 'inside_level',
       states: {
+        welcoming_message: {
+          entry: assign({
+            show_popups: true,
+            popup_content: POPUP_TUTORIAL_MESSAGES[0],
+          }),
+          on: {
+            NEXT_POPUP: {
+              actions: 'hide_popups',
+              target: 'iam_policy_onboarding_popover',
+            },
+          },
+        },
+        iam_policy_onboarding_popover: {
+          entry: assign({
+            popover_content: POPOVER_TUTORIAL_MESSAGES[0],
+            show_popovers: true,
+          }),
+          on: {
+            NEXT_POPOVER: {
+              target: 's3_bucket_onboarding_popover',
+            },
+          },
+        },
+        s3_bucket_onboarding_popover: {
+          entry: assign({
+            popover_content: POPOVER_TUTORIAL_MESSAGES[1],
+            show_popovers: true,
+          }),
+          on: {
+            NEXT_POPOVER: {
+              target: 'create_user_popover',
+            },
+          },
+        },
         create_user_popover: {
           entry: assign({
-            popover_content: TUTORIAL_MESSAGES[0],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[2],
             show_popovers: true,
           }),
           on: {
@@ -105,19 +148,25 @@ export const stateMachine = setup({
         },
         add_your_name_popover: {
           entry: assign({
-            popover_content: TUTORIAL_MESSAGES[1],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[3],
             show_popovers: true,
           }),
           on: {
             IAM_USER_CREATED: {
-              actions: 'iam_user_creation_side_effects',
+              actions: [
+                { type: 'iam_user_creation_side_effects', params: {} },
+                {
+                  type: 'change_objective_progress',
+                  params: { id: 'create_iam_user', finished: true },
+                },
+              ],
               target: 'iam_user_popover',
             },
           },
         },
         iam_user_popover: {
           entry: assign({
-            popover_content: TUTORIAL_MESSAGES[2],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[4],
             show_popovers: true,
           }),
           on: {
@@ -129,7 +178,7 @@ export const stateMachine = setup({
         },
         iam_policy_popover: {
           entry: assign({
-            popover_content: TUTORIAL_MESSAGES[3],
+            popover_content: POPOVER_TUTORIAL_MESSAGES[5],
             show_popovers: true,
           }),
           on: {
@@ -156,29 +205,38 @@ export const stateMachine = setup({
         },
       }),
       states: {
-        create_iam_user: {
-          meta: {
-            entity_targets: [IAMNodeEntity.User],
-          },
-          on: {
-            IAM_USER_CREATED: {
-              target: 'connect_iam_policy_to_user',
-            },
-          },
-        },
         connect_iam_policy_to_user: {
           meta: {
             connection_targets: [
               {
-                required_edges: [edges['e-iam_policy1-iam_user1']],
-                locked_edges: [edges['e-iam_user1-iam_resource1']],
+                required_edges: [
+                  _.find(edges, { id: getEdgeName('iam_policy_1', 'iam_user_1') }) as Edge,
+                ],
+                locked_edges: [
+                  _.find(edges, { id: getEdgeName('iam_user_1', 'iam_resource_1') }) as Edge,
+                ],
               },
             ],
           },
           on: {
             IAM_POLICY_CONNECTED: {
-              target: 'completed',
+              target: 'policy_attached',
+              actions: [
+                {
+                  type: 'change_objective_progress',
+                  params: { id: 'enable_reading_from_bucket', finished: true },
+                },
+              ],
             },
+          },
+        },
+        policy_attached: {
+          entry: assign({
+            show_popovers: true,
+            popover_content: POPOVER_TUTORIAL_MESSAGES[6],
+          }),
+          on: {
+            NEXT_POPOVER: 'completed',
           },
         },
         completed: {
@@ -189,6 +247,7 @@ export const stateMachine = setup({
     finished_level: {
       entry: assign({
         state_name: 'finished_level',
+        level_finished: true,
       }),
       type: 'final',
     },

@@ -1,19 +1,10 @@
-import { ChakraProvider, extendTheme, type ThemeConfig } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 
 import LevelsProgressionProvider from './components/levels_progression/LevelsProgressionProvider';
+import { theme } from './theme';
+import IAMNodeProvider from '@/components/Canvas/IAMNodeProvider';
 import ModalProvider from '@/components/ModalProvider';
-import IAMNodeProvider from '@/components/nodes/IAMNodeProvider';
 import Home from '@/pages/home';
-
-const theme: ThemeConfig = extendTheme({
-  styles: {
-    global: {
-      '*': {
-        color: 'black',
-      },
-    },
-  },
-});
 
 const App: React.FC = () => {
   return (
