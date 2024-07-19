@@ -7,6 +7,7 @@ import { IAMNodeInfoButton } from './IAMNodeInfoButton';
 import { IAMNodeContext } from '@/components/Canvas/IAMNodeProvider';
 import { withPopover } from '@/decorators/withPopover';
 import type { IAMCanvasNodeProps as CanvasNodeProps } from '@/types';
+import { loadLocalImage } from '@/utils/image-loader';
 
 // TODO: Not the most ideal naming, fix this
 export interface IAMCanvasNodeProps extends NodeProps {
@@ -53,12 +54,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
         <Handle key={handle.id} {...handle} />
       ))}
       <Flex width='100%' alignItems='center'>
-        <Image
-          src={require(`@/assets/images/${image}.png`)}
-          width='25%'
-          objectFit='cover'
-          marginRight='8%'
-        />
+        <Image src={loadLocalImage(image)} width='25%' objectFit='cover' marginRight='8%' />
         <Box width='65%' textAlign='left'>
           <HStack spacing={0}>
             <Tooltip label={label}>
