@@ -13,7 +13,7 @@ const Home: React.FC = () => {
   return (
     <Flex direction='row' h='100vh' w='100vw'>
       <TutorialPopup />
-      <Box flex='1 0 80%' transition='flex 0.5s ease'>
+      <Box flex='1 0 80%'>
         <Navbar />
         <Canvas />
       </Box>

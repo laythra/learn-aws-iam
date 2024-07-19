@@ -22,6 +22,7 @@ export interface GenericContext {
   popup_content?: PopupTutorialMessage;
   default_policy?: string;
   level_objectives: { [key: string]: LevelObjective };
+  level_finished?: boolean;
 }
 
 export type GenericEventData =

@@ -247,6 +247,7 @@ export const stateMachine = setup({
     finished_level: {
       entry: assign({
         state_name: 'finished_level',
+        level_finished: true,
       }),
       type: 'final',
     },

@@ -1,8 +1,14 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Box } from '@chakra-ui/react';
 import _ from 'lodash';
-import ReactFlow, { Edge, Connection, useNodesState, useEdgesState } from 'reactflow';
+import ReactFlow, {
+  Edge,
+  Connection,
+  useNodesState,
+  useEdgesState,
+  ReactFlowInstance,
+} from 'reactflow';
 import { EventFromLogic } from 'xstate';
 
 import { LevelsProgressionContext } from '../levels_progression/LevelsProgressionProvider';
@@ -10,6 +16,7 @@ import DotsPattern from '@/assets/images/dots_pattern.svg';
 import IAMCanvasNode from '@/components/Canvas/IAMCanvasNode';
 import { GenericInsideLevelMetadata } from '@/machines/types';
 import { getEdgeName } from '@/utils/names';
+import storage from '@/utils/storage';
 
 import 'reactflow/dist/style.css';
 
@@ -24,6 +31,8 @@ const Canvas: React.FC = () => {
   const [nodesState, setNodesState, onNodesChange] = useNodesState(levelState.context.nodes);
   const [edgesState, setEdgesState, onEdgesChange] = useEdgesState(levelState.context.edges);
 
+  const [rfInstance, setRfInstance] = useState<ReactFlowInstance>();
+
   const setEdges = (edges: Edge[]): void => {
     levelActor.send({ type: 'SET_EDGES', edges: edges });
   };
@@ -35,6 +44,13 @@ const Canvas: React.FC = () => {
   useEffect(() => {
     setNodesState(levelState.context.nodes);
   }, [levelState.context.nodes]);
+
+  useEffect(() => {
+    if (rfInstance && levelState.context.level_finished) {
+      const flowState = rfInstance.toObject();
+      storage.setKey('flow_state', JSON.stringify(flowState));
+    }
+  }, [levelState.context.level_finished]);
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -84,6 +100,22 @@ const Canvas: React.FC = () => {
     [levelState]
   );
 
+  const handleInit = useCallback((instance: ReactFlowInstance) => {
+    if (!rfInstance) {
+      setRfInstance(instance);
+    }
+
+    const rawFlowState = storage.getKey('flow_state');
+    if (!rawFlowState) {
+      return;
+    }
+
+    const flowState = JSON.parse(rawFlowState);
+
+    setNodesState(flowState.nodes);
+    setEdgesState(flowState.edges);
+  }, []);
+
   return (
     <Box
       backgroundColor='white'
@@ -99,6 +131,7 @@ const Canvas: React.FC = () => {
         edges={edgesState}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
+        onInit={handleInit}
       />
     </Box>
   );

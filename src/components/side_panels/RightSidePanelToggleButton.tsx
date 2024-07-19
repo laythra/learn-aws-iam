@@ -10,7 +10,7 @@ interface SidePanelToggleButtonProps {}
 const SidePanelToggleButton: React.FC<SidePanelToggleButtonProps> = () => {
   const { rightPanelOpen, setRightPanelOpen } = useContext(SidePanelsContext);
 
-  const icon = rightPanelOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />;
+  const icon = rightPanelOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />;
 
   return (
     <IconButton
