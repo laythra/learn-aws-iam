@@ -39,13 +39,16 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
           bg='transparent'
         />
         <MenuList>
-          <WithPopoverMenuItem onClick={openIdentityCreator} id='create_entities_menu_item'>
+          <WithPopoverMenuItem
+            onClick={openIdentityCreatorAndSendEvent}
+            elementid='create_entities_menu_item'
+          >
             Users & Groups
           </WithPopoverMenuItem>
           <WithPopoverMenuItem /* TODO: Each button should be wrapped in a decorator that emits an event automatically on click.
                                   This is a good example of a place where we can use a decorated MenuItem variant to reduce boilerplate. */
             onClick={openCodeEditorAndSendEvent}
-            id='create_roles_and_policies_menu_item'
+            elementid='create_roles_and_policies_menu_item'
           >
             Roles & Policies
           </WithPopoverMenuItem>

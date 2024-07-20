@@ -83,8 +83,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ initialPolicy }) => {
             mr={3}
             onClick={submit}
             isDisabled={!_.isEmpty(renderedErrors)}
-            id='modal_content'
-            container_ref={editorContentRef}
+            elementid='modal_content'
           >
             Submit
           </WithPopoverButton>

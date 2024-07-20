@@ -7,15 +7,16 @@ import {
   ModalContent,
   ModalBody,
   ModalFooter,
-  ModalCloseButton,
   Button,
   Text,
   Flex,
-  Select,
   FormControl,
   FormLabel,
   FormHelperText,
   Divider,
+  TabList,
+  Tabs,
+  Tab,
 } from '@chakra-ui/react';
 import _ from 'lodash';
 import { Node } from 'reactflow';
@@ -23,7 +24,7 @@ import { EventFrom } from 'xstate';
 
 import { PoliciesList } from './PoliciesList';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
-import { WithPopoverInput, WithPopoverSelect } from '@/components/Decorated';
+import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { IAMIdentityEntity, IAMNodeEntity, IAMNodeData } from '@/types';
 
@@ -101,13 +102,16 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
             </Select>
           </Flex>
         </ModalHeader>
-        <ModalCloseButton />
         <ModalBody>
           <FormControl>
             <FormLabel>
               {iamIdentityEntity === IAMNodeEntity.User ? 'User Name' : 'Group Name'}
             </FormLabel>
-            <InputWithPopover id='username' value={getNameFieldVal()} onChange={handleNameChange} />
+            <WithPopoverInput
+              elementid='iam_identity_name'
+              value={getNameFieldVal()}
+              onChange={handleNameChange}
+            />
             <FormHelperText>This could be any name you like...</FormHelperText>
           </FormControl>
 

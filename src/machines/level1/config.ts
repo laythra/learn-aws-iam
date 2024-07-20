@@ -27,7 +27,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_close_button: false,
   },
   {
-    element_id: 'username',
+    element_id: 'iam_identity_name',
     popover_title: `Let's put your name here, shall we?`,
     popover_content: ``,
     show_next_button: false,
