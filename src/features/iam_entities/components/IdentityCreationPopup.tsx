@@ -32,16 +32,19 @@ interface IdentityCreationPopupProps {}
 
 export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () => {
   const levelActor = LevelsProgressionContext.useActorRef();
-  const nextNodePosition = LevelsProgressionContext.useSelector(
-    state => state.context.next_node_position
-  );
-  const iamNodeTemplate = LevelsProgressionContext.useSelector(
-    state => state.context.iam_user_template
-  );
-
-  const nextIamUserId = LevelsProgressionContext.useSelector(
-    state => state.context.next_iam_user_id
-  );
+  const {
+    next_node_position: nextNodePosition,
+    iam_user_template: iamUserNodeTemplate,
+    iam_group_template: iamGroupNodeTemplate,
+    next_iam_node_id: nextIamNodeId,
+  } = LevelsProgressionContext.useSelector(state => {
+    return _.pick(state.context, [
+      'next_node_position',
+      'iam_user_template',
+      'iam_group_template',
+      'next_iam_node_id',
+    ]);
+  });
 
   const { closeIdentityCreator, isIdentityCreatorOpen } = useIdentityCreator();
   const [userName, setUserName] = useState('');
@@ -57,14 +60,26 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
     }
   };
 
+  const handleTabChange = (index: number): void => {
+    const newEntity = index === 0 ? IAMNodeEntity.User : IAMNodeEntity.Group;
+    levelActor.send({ type: 'CREATE_IAM_IDENTITY_TAB_CHANGED' });
+
+    setIamIdentityEntity(newEntity);
+  };
+
   const getNameFieldVal = (): string => {
     return iamIdentityEntity === IAMNodeEntity.User ? userName : groupName;
   };
 
   const submit = (): void => {
+    const nodeTemplate =
+      iamIdentityEntity === IAMNodeEntity.User ? iamUserNodeTemplate : iamGroupNodeTemplate;
+
     // Passing an empty object as the first argument to _.merge to produce a new object reference.
-    const node = _.merge({}, iamNodeTemplate, {
-      id: `iam_user_${nextIamUserId}`,
+    const nodeId = `iam_${iamIdentityEntity.toUpperCase()}_${nextIamNodeId}`;
+    console.log(nodeId);
+    const node = _.merge({}, nodeTemplate, {
+      id: `iam_${iamIdentityEntity.toUpperCase()}_${nextIamNodeId}`,
       description: `New ${_.upperFirst(iamIdentityEntity)}`,
       position: nextNodePosition,
       data: {
@@ -73,15 +88,20 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
       } as IAMNodeData,
     }) as Node;
 
+    const creationEvent =
+      iamIdentityEntity === IAMNodeEntity.User ? 'IAM_USER_CREATED' : 'IAM_GROUP_CREATED';
+
     levelActor.send({ type: 'ADD_IAM_NODE', node: node });
-    levelActor.send({ type: 'IAM_USER_CREATED' });
+    levelActor.send({ type: creationEvent });
 
     closeIdentityCreator();
   };
 
   useEffect(() => {
     if (isIdentityCreatorOpen) {
-      levelActor.send({ type: 'CREATE_USER_POPUP_OPENED' } as EventFrom<typeof levelActor.logic>);
+      levelActor.send({ type: 'CREATE_IAM_IDENTITY_POPUP_OPENED' } as EventFrom<
+        typeof levelActor.logic
+      >);
     }
   }, [isIdentityCreatorOpen]);
 
@@ -92,14 +112,14 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
         <ModalHeader>
           <Flex justifyContent='space-between'>
             <Text>New {_.upperFirst(iamIdentityEntity)}</Text>
-            <Select
-              value={iamIdentityEntity}
-              onChange={e => setIamIdentityEntity(e.target.value as IAMIdentityEntity)}
-              width={['100%', '50%']}
-            >
-              <option value={IAMNodeEntity.User}>User</option>
-              <option value={IAMNodeEntity.Group}>Group</option>
-            </Select>
+            <WithPopoverBox elementid='identity_creation_select' fontSize='8px'>
+              <Tabs onChange={handleTabChange} variant='soft-rounded' size='sm'>
+                <TabList>
+                  <Tab>User</Tab>
+                  <Tab>Group</Tab>
+                </TabList>
+              </Tabs>
+            </WithPopoverBox>
           </Flex>
         </ModalHeader>
         <ModalBody>
