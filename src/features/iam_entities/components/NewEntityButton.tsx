@@ -20,6 +20,11 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
     levelActor.send({ type: 'HIDE_POPOVERS' });
   };
 
+  const openIdentityCreatorAndSendEvent = (): void => {
+    openIdentityCreator();
+    levelActor.send({ type: 'CREATE_IAM_IDENTITY_POPUP_OPENED' });
+  };
+
   const openCodeEditorAndSendEvent = (): void => {
     openCodeEditor();
     levelActor.send({ type: 'CREATE_POLICY_POPUP_OPENED' });
