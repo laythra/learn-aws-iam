@@ -23,9 +23,9 @@ import { EventFrom } from 'xstate';
 
 import { PoliciesList } from './PoliciesList';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
-import { InputWithPopover } from '@/components/Form/InputWithPopover';
+import { WithPopoverInput, WithPopoverSelect } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
-import { IAMIdentityEntity, IAMNodeEntity, IAMNodeProps } from '@/types';
+import { IAMIdentityEntity, IAMNodeEntity, IAMNodeData } from '@/types';
 
 interface IdentityCreationPopupProps {}
 
@@ -46,7 +46,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
   const [userName, setUserName] = useState('');
   const [groupName, setGroupName] = useState('');
   const [iamIdentityEntity, setIamIdentityEntity] = useState<IAMIdentityEntity>(IAMNodeEntity.User);
-  const [attachedPolicies, setAttachedPolicies] = useState<IAMNodeProps[]>([]);
+  const [attachedPolicies, setAttachedPolicies] = useState<IAMNodeData[]>([]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (iamIdentityEntity === IAMNodeEntity.User) {
@@ -69,7 +69,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
       data: {
         label: getNameFieldVal(),
         entity: iamIdentityEntity,
-      } as IAMNodeProps,
+      } as IAMNodeData,
     }) as Node;
 
     levelActor.send({ type: 'ADD_IAM_NODE', node: node });

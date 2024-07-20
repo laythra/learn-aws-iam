@@ -2,11 +2,11 @@ import { FormControl, FormLabel, Stack, Checkbox, Text } from '@chakra-ui/react'
 import _ from 'lodash';
 
 import { useIAMNodesManager } from '@/hooks/useIAMNodesManager';
-import { IAMNodeEntity, IAMPolicyNodeProps } from '@/types';
+import { IAMNodeEntity, IAMPolicyNodeData } from '@/types';
 
 interface PoliciesListProps {
-  attachedPolicies: IAMPolicyNodeProps[];
-  setAttachedPolicies: (policies: IAMPolicyNodeProps[]) => void;
+  attachedPolicies: IAMPolicyNodeData[];
+  setAttachedPolicies: (policies: IAMPolicyNodeData[]) => void;
 }
 
 export const PoliciesList: React.FC<PoliciesListProps> = ({

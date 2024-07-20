@@ -1,19 +1,19 @@
 import React, { createContext } from 'react';
 
-import { IAMNodeEntity, IAMNodeProps, IAMUserNodeProps, IAMGroupNodeProps } from '@/types';
+import { IAMNodeEntity, IAMNodeData, IAMUserNodeData, IAMGroupNodeData } from '@/types';
 
 interface IAMNodeContextProps {
   children: React.ReactNode;
 }
 
 interface IAMNodeContextState {
-  selectedNode: IAMNodeProps | IAMUserNodeProps | IAMGroupNodeProps;
+  selectedNode: IAMNodeData | IAMUserNodeData | IAMGroupNodeData;
   setSelectedNode: React.Dispatch<
-    React.SetStateAction<IAMNodeProps | IAMUserNodeProps | IAMGroupNodeProps>
+    React.SetStateAction<IAMNodeData | IAMUserNodeData | IAMGroupNodeData>
   >;
 }
 
-const defaultNode: IAMNodeProps = {
+const defaultNode: IAMNodeData = {
   id: '',
   label: '',
   description: 'Click on a node to view its details',

@@ -1,10 +1,10 @@
 import { HandleProps, Node, Position, Edge, MarkerType } from 'reactflow';
 
 import { POLICY_CONTENT } from './config';
-import { IAMNodeEntity, IAMCanvasNodeProps, IAMNodeImage } from '@/types';
+import { IAMNodeEntity, IAMCanvasNodeData, IAMNodeImage } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
-export const template_nodes: { [key: string]: Node<IAMCanvasNodeProps> } = {
+export const template_nodes: { [key: string]: Node<IAMCanvasNodeData> } = {
   iam_user: {
     id: 'iam_user',
     position: { x: 500, y: 250 },
@@ -18,7 +18,7 @@ export const template_nodes: { [key: string]: Node<IAMCanvasNodeProps> } = {
         { id: Position.Bottom, type: 'target', position: Position.Bottom },
       ] as HandleProps[],
       image: IAMNodeImage.User,
-    } as IAMCanvasNodeProps,
+    } as IAMCanvasNodeData,
   },
 };
 
@@ -34,7 +34,7 @@ export const initial_nodes: Node[] = [
         { id: Position.Bottom, type: 'target', position: Position.Bottom },
       ] as HandleProps[],
       image: IAMNodeImage.S3Bucket,
-    } as IAMCanvasNodeProps,
+    } as IAMCanvasNodeData,
     type: 'iam_default',
     draggable: true,
   },
@@ -51,7 +51,7 @@ export const initial_nodes: Node[] = [
       ] as HandleProps[],
       image: IAMNodeImage.Policy,
       code: POLICY_CONTENT,
-    } as IAMCanvasNodeProps,
+    } as IAMCanvasNodeData,
     type: 'iam_default',
     draggable: true,
   },

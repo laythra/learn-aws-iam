@@ -1,17 +1,16 @@
 import { useContext } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
-import { Handle, NodeProps } from 'reactflow';
+import { Handle } from 'reactflow';
 
 import { IAMNodeInfoButton } from './IAMNodeInfoButton';
 import { IAMNodeContext } from '@/components/Canvas/IAMNodeProvider';
 import { withPopover } from '@/decorators/withPopover';
-import type { IAMCanvasNodeProps as CanvasNodeProps } from '@/types';
+import type { IAMCanvasNodeData } from '@/types';
 import { loadLocalImage } from '@/utils/image-loader';
 
-// TODO: Not the most ideal naming, fix this
-export interface IAMCanvasNodeProps extends NodeProps {
-  data: CanvasNodeProps;
+export interface IAMCanvasNodeProps {
+  data: IAMCanvasNodeData;
   id: string;
 }
 

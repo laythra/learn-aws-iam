@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 
-import { IAMEntitiesContextState, IAMNodeProps } from '@/types';
+import { IAMEntitiesContextState, IAMNodeData } from '@/types';
 
 export const IAMEntitiesContext = createContext<IAMEntitiesContextState>({
   createdNodes: [],
@@ -26,9 +26,9 @@ interface IAMEntitiesContextProps {
  * </IAMEntitiesProvider>
  */
 const IAMEntitiesProvider: React.FC<IAMEntitiesContextProps> = ({ children }) => {
-  const [createdNodes, setCreatedNodes] = React.useState<IAMNodeProps[]>([]);
+  const [createdNodes, setCreatedNodes] = React.useState<IAMNodeData[]>([]);
 
-  const createNode = (nodeProps: IAMNodeProps): void => {
+  const createNode = (nodeProps: IAMNodeData): void => {
     setCreatedNodes(prevNodes => [...prevNodes, nodeProps]);
   };
 

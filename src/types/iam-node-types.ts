@@ -16,7 +16,7 @@ export enum IAMNodeImage {
   Group = 'group',
 }
 
-export interface IAMNodeProps {
+export interface IAMNodeData {
   id: string;
   label: string;
   entity: IAMNodeEntity;
@@ -24,18 +24,18 @@ export interface IAMNodeProps {
   content?: string;
 }
 
-export interface IAMCanvasNodeProps extends IAMNodeProps {
+export interface IAMCanvasNodeData extends IAMNodeData {
   handles: HandleProps[];
   image: IAMNodeImage;
   code?: string;
 }
 
-export interface IAMUserNodeProps extends IAMNodeProps {
-  associatedPolicies: IAMNodeProps[];
+export interface IAMUserNodeData extends IAMNodeData {
+  associatedPolicies: IAMNodeData[];
 }
 
-export interface IAMGroupNodeProps extends IAMNodeProps {
-  users: IAMUserNodeProps[];
+export interface IAMGroupNodeData extends IAMNodeData {
+  users: IAMUserNodeData[];
 }
 
-export interface IAMPolicyNodeProps extends IAMNodeProps {}
+export interface IAMPolicyNodeData extends IAMNodeData {}
