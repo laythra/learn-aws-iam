@@ -1,16 +1,18 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
 import type { Edge, Node } from 'reactflow';
 
-import { IAMCanvasNodeProps, IAMNodeEntity } from '@/types';
+import { IAMCanvasNodeData, IAMNodeEntity } from '@/types';
 
 export interface GenericContext {
-  iam_user_template: Node<IAMCanvasNodeProps>;
+  iam_user_template: Node<IAMCanvasNodeData>;
+  iam_group_template?: Node<IAMCanvasNodeData>;
   level_title: string;
   level_description: string;
   level_number: number;
   next_popover_index: number;
+  next_popup_index: number;
   state_name: string;
-  next_iam_user_id: number;
+  next_iam_node_id: number;
   nodes: Node[];
   edges: Edge[];
   final_edges: Edge[];
@@ -25,6 +27,7 @@ export interface GenericContext {
   level_finished?: boolean;
 }
 
+// Serves as a list of all events that the UI elements can send to the state machine
 export type GenericEventData =
   | {
       type:
@@ -33,11 +36,14 @@ export type GenericEventData =
         | 'NEXT_POPUP'
         | 'IAM_POLICY_CONNECTED'
         | 'IAM_USER_CREATED'
+        | 'IAM_GROUP_CREATED'
         | 'BEGIN'
         | 'COMPLETE'
         | 'CREATE_USER_POPUP_OPENED'
         | 'HIDE_POPOVERS'
-        | 'CREATE_POLICY_POPUP_OPENED';
+        | 'CREATE_POLICY_POPUP_OPENED'
+        | 'CREATE_IAM_IDENTITY_POPUP_OPENED'
+        | 'CREATE_IAM_IDENTITY_TAB_CHANGED';
     }
   | { type: 'ADD_IAM_NODE'; node: Node }
   | { type: 'ADD_EDGE'; edge: Edge }
@@ -63,7 +69,6 @@ export type PopoverTutorialMessage = {
   show_next_button: boolean;
   show_close_button: boolean;
   popover_placement?: PlacementWithLogical;
-  container_ref?: React.RefObject<HTMLElement>; // Defines a ref to the container in which the popover should be rendered
 };
 
 export type PopupTutorialMessage = {

@@ -20,7 +20,7 @@ export const stateMachine = setup({
       show_popovers: true,
     }),
     iam_user_creation_side_effects: assign({
-      next_iam_user_id: ({ context }) => context.next_iam_user_id + 1,
+      next_iam_node_id: ({ context }) => context.next_iam_node_id + 1,
       next_node_position: ({ context }) => ({
         x: context.next_node_position.x + 20,
         y: context.next_node_position.y + 20,
@@ -42,9 +42,10 @@ export const stateMachine = setup({
     level_title: 'IAM Basics',
     level_description: 'Learn about Identity and Access Management',
     level_number: 1,
-    next_iam_user_id: 1,
+    next_iam_node_id: 1,
     next_node_position: { x: 100, y: 100 },
     next_popover_index: 0,
+    next_popup_index: 0,
     state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
@@ -141,7 +142,7 @@ export const stateMachine = setup({
             show_popovers: true,
           }),
           on: {
-            CREATE_USER_POPUP_OPENED: {
+            CREATE_IAM_IDENTITY_POPUP_OPENED: {
               target: 'add_your_name_popover',
             },
           },
