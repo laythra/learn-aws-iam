@@ -42,7 +42,9 @@ const Canvas: React.FC = () => {
   }, [levelState.context.edges]);
 
   useEffect(() => {
-    setNodesState(levelState.context.nodes);
+    // Doing this to retain old nodes state that's not stored in state machine; ie. position state
+    const newNodes = _.differenceBy(levelState.context.nodes, nodesState, 'id');
+    setNodesState([...nodesState, ...newNodes]);
   }, [levelState.context.nodes]);
 
   useEffect(() => {
