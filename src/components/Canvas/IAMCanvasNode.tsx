@@ -4,8 +4,8 @@ import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react
 import { Handle } from 'reactflow';
 
 import { IAMNodeInfoButton } from './IAMNodeInfoButton';
+import { WithPopoverBox } from '../Decorated';
 import { IAMNodeContext } from '@/components/Canvas/IAMNodeProvider';
-import { withPopover } from '@/decorators/withPopover';
 import type { IAMCanvasNodeData } from '@/types';
 import { loadLocalImage } from '@/utils/image-loader';
 
@@ -22,7 +22,7 @@ export interface IAMCanvasNodeProps {
  * @param `id`: The unique identifier of the node.
  * @param `data`: The node data passed from React Flow.
  */
-const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
+const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const { description, entity, label, handles, image, code } = data;
   const { setSelectedNode, selectedNode } = useContext(IAMNodeContext);
 
@@ -93,4 +93,12 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   );
 };
 
-export default withPopover(IAMCanvasNode);
+const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
+  return (
+    <WithPopoverBox elementid={id}>
+      <WithElementidIAMCanvasNode data={data} id={id} />
+    </WithPopoverBox>
+  );
+};
+
+export default IAMCanvasNode;
