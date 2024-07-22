@@ -1,7 +1,7 @@
 import { Text, Flex, Divider, Box, List, ListItem, ListIcon } from '@chakra-ui/react';
 import { CheckBadgeIcon, XCircleIcon } from '@heroicons/react/20/solid';
 
-import { LevelsProgressionContext } from '../levels_progression/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import SidePanel from '@/components/side_panels/SidePanel';
 
 const RightSidePanel: React.FC = () => {

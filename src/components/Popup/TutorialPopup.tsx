@@ -8,7 +8,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 
-import { LevelsProgressionContext } from '../levels_progression/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 
 interface TutorialPopupProps {}
 

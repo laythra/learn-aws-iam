@@ -1,7 +1,8 @@
 import { FormControl, FormLabel, Stack, Checkbox, Text } from '@chakra-ui/react';
 import _ from 'lodash';
+import { Node } from 'reactflow';
 
-import { useIAMNodesManager } from '@/hooks/useIAMNodesManager';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { IAMNodeEntity, IAMPolicyNodeData } from '@/types';
 
 interface PoliciesListProps {
@@ -13,17 +14,19 @@ export const PoliciesList: React.FC<PoliciesListProps> = ({
   attachedPolicies,
   setAttachedPolicies,
 }) => {
-  const { createdNodes } = useIAMNodesManager();
-  const policies = createdNodes.filter(node => node.entity === IAMNodeEntity.Policy);
+  const createdNodes = LevelsProgressionContext.useSelector(state => state.context.nodes);
+  const policies = createdNodes.filter(
+    node => node.data.entity === IAMNodeEntity.Policy
+  ) as Node<IAMPolicyNodeData>[];
 
   const handlePolicyChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const policyId = e.target.value;
-    const targetPolicy = policies.find(p => p.id === policyId);
+    const targetPolicy = policies.find(p => p.id === policyId) as Node<IAMPolicyNodeData>;
 
     if (!e.target.checked) {
       setAttachedPolicies(attachedPolicies.filter(p => p.id !== policyId));
     } else if (targetPolicy) {
-      setAttachedPolicies([...attachedPolicies, targetPolicy]);
+      // setAttachedPolicies([...attachedPolicies, targetPolicy]);
     }
   };
 
@@ -45,7 +48,7 @@ export const PoliciesList: React.FC<PoliciesListProps> = ({
               checked={isPolicyAttached}
               onChange={handlePolicyChange}
             >
-              {node.label}
+              {node.className}
             </Checkbox>
           );
         })}

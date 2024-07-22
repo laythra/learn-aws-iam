@@ -4,7 +4,7 @@ import { PlusCircleIcon } from '@heroicons/react/24/solid';
 import { IdentityCreationPopup } from './IdentityCreationPopup';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverMenuItem } from '@/components/Decorated';
-import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { withPopover } from '@/decorators/withPopover';
 import { CodeEditor, useCodeEditor } from '@/features/code_editor';
 

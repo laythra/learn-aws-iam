@@ -1,9 +1,9 @@
 import { ChakraProvider } from '@chakra-ui/react';
 
-import LevelsProgressionProvider from './components/levels_progression/LevelsProgressionProvider';
+import IAMNodeProvider from './features/canvas/components/IAMNodeProvider';
 import { theme } from './theme';
-import IAMNodeProvider from '@/components/Canvas/IAMNodeProvider';
 import ModalProvider from '@/components/ModalProvider';
+import LevelsProgressionProvider from '@/components/providers/LevelsProgressionProvider';
 import Home from '@/pages/home';
 
 const App: React.FC = () => {

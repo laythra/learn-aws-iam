@@ -1,7 +1,7 @@
 import React, { forwardRef, ForwardRefExoticComponent, PropsWithoutRef } from 'react';
 
-import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 
 /**
  * `withPopover` is a decorator that wraps a component with a popover.

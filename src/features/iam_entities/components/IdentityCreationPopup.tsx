@@ -22,11 +22,10 @@ import _ from 'lodash';
 import { Node } from 'reactflow';
 import { EventFrom } from 'xstate';
 
-import { PoliciesList } from './PoliciesList';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
-import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
-import { IAMIdentityEntity, IAMNodeEntity, IAMNodeData } from '@/types';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { IAMIdentityEntity, IAMNodeEntity, IAMNodeData, IAMPolicyNodeData } from '@/types';
 
 interface IdentityCreationPopupProps {}
 
@@ -50,7 +49,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
   const [userName, setUserName] = useState('');
   const [groupName, setGroupName] = useState('');
   const [iamIdentityEntity, setIamIdentityEntity] = useState<IAMIdentityEntity>(IAMNodeEntity.User);
-  const [attachedPolicies, setAttachedPolicies] = useState<IAMNodeData[]>([]);
+  const [attachedPolicies, setAttachedPolicies] = useState<IAMPolicyNodeData[]>([]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (iamIdentityEntity === IAMNodeEntity.User) {
@@ -76,10 +75,11 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
       iamIdentityEntity === IAMNodeEntity.User ? iamUserNodeTemplate : iamGroupNodeTemplate;
 
     // Passing an empty object as the first argument to _.merge to produce a new object reference.
-    const nodeId = `iam_${iamIdentityEntity.toUpperCase()}_${nextIamNodeId}`;
+    const nodeId = `${nodeTemplate?.id}_${nextIamNodeId}`;
+
     console.log(nodeId);
     const node = _.merge({}, nodeTemplate, {
-      id: `iam_${iamIdentityEntity.toUpperCase()}_${nextIamNodeId}`,
+      id: nodeId,
       description: `New ${_.upperFirst(iamIdentityEntity)}`,
       position: nextNodePosition,
       data: {
@@ -137,10 +137,10 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
 
           <Divider my={4} />
 
-          <PoliciesList
+          {/* <PoliciesList
             attachedPolicies={attachedPolicies}
             setAttachedPolicies={setAttachedPolicies}
-          />
+          /> */}
         </ModalBody>
         <ModalFooter>
           <Button colorScheme='blue' mr={3} onClick={submit}>
