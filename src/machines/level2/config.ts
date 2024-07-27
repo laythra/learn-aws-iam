@@ -1,5 +1,11 @@
 import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
-import { IAMNodeImage } from '@/types';
+import {
+  IAMNodeEntity,
+  IAMNodeImage,
+  IAMPolicyNodeData,
+  IAMResourceNodeData,
+  IAMUserNodeData,
+} from '@/types';
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
@@ -124,50 +130,65 @@ const EC2_READ_POLICY_CONTENT = JSON.stringify(
   2
 );
 
-export const INITIAL_RESOURCES_INFO = [
+export const INITIAL_RESOURCES_INFO: Pick<
+  IAMResourceNodeData,
+  'id' | 'label' | 'entity' | 'image'
+>[] = [
   {
     id: 's3_bucket_1',
-    name: 'public-images',
-    entity: 'S3 Bucket',
+    label: 'public-images',
+    entity: IAMNodeEntity.S3Bucket,
     image: IAMNodeImage.S3Bucket,
   },
   {
     id: 'dynamo_table_1',
-    name: 'dynamo-table',
-    entity: 'Dynamo Table',
+    label: 'prod_Users',
+    entity: IAMNodeEntity.DynamoDBTable,
     image: IAMNodeImage.Database,
   },
-  {
-    id: 'ec2_instance_1',
-    name: 'ec2-instance',
-    entity: 'EC2 Instance',
-    image: IAMNodeImage.Server,
-  },
+  // {
+  //   id: 'ec2_instance_1',
+  //   label: 'ec2-instance',
+  //   entity: IAMNodeEntity.EC2Instance,
+  //   image: IAMNodeImage.Server,
+  // },
 ];
 
-export const INITIAL_POLICIES_INFO = [
+export const INITIAL_POLICIES_INFO: Pick<
+  IAMPolicyNodeData,
+  'id' | 'label' | 'code' | 'resources_affected'
+>[] = [
   {
     id: 's3_read_policy_1',
-    name: 's3-read-access',
-    entity: 'IAM Policy',
-    image: 'IAMPolicy',
+    label: 's3-read-access',
     code: S3_READ_POLICY_CONTENT,
-    affected_resources: INITIAL_RESOURCES_INFO[0].id,
+    resources_affected: [INITIAL_RESOURCES_INFO[0].id],
   },
   {
     id: 'dynamo_read_policy_1',
-    name: 'dynamo-read-access',
-    entity: 'IAM Policy',
-    image: 'IAMPolicy',
+    label: 'dynamo-read-access',
     code: DYNAMODB_READ_POLICY_CONTENT,
-    affected_resources: INITIAL_RESOURCES_INFO[1].id,
+    resources_affected: [INITIAL_RESOURCES_INFO[1].id],
+  },
+  // {
+  //   id: 'ec2_read_policy_1',
+  //   label: 'ec2-read-access',
+  //   code: EC2_READ_POLICY_CONTENT,
+  //   resources_affected: [INITIAL_RESOURCES_INFO[2].id],
+  // },
+];
+
+export const INITIAL_USERS_INFO: Pick<IAMUserNodeData, 'id' | 'label'>[] = [
+  {
+    id: 'iam_user_1',
+    label: 'IAM User 1',
   },
   {
-    id: 'ec2_read_policy_1',
-    name: 'ec2-read-access',
-    entity: 'IAM Policy',
-    image: 'IAMPolicy',
-    code: EC2_READ_POLICY_CONTENT,
-    affected_resources: INITIAL_RESOURCES_INFO[1].id,
+    id: 'iam_user_2',
+    label: 'IAM User 2',
+  },
+  {
+    id: 'iam_user_3',
+    label: 'IAM User 3',
   },
 ];

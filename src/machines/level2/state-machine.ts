@@ -5,13 +5,7 @@ import { setup, assign } from 'xstate';
 import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
 import type { Context, InsideLevelMetadata, EventData } from './types';
-import type {
-  IAMEdgeData,
-  IAMGroupNodeData,
-  IAMNodeEntity,
-  IAMPolicyNodeData,
-  IAMUserNodeData,
-} from '@/types';
+import type { IAMGroupNodeData, IAMUserNodeData } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
 export const stateMachine = setup({

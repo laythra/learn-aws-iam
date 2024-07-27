@@ -1,6 +1,8 @@
 import { HandleProps, Node, Position, Edge } from 'reactflow';
 
 import { POLICY_NODES } from './nodes/policy-nodes';
+import { RESOURCE_NODES } from './nodes/resource-nodes';
+import { USER_NODES } from './nodes/user-nodes';
 import {
   IAMNodeEntity,
   IAMNodeImage,
@@ -51,79 +53,9 @@ export const template_nodes: { [K in keyof IAMNodeDataMapping]: Node<IAMNodeData
 };
 
 export const initial_nodes: Node<IAMAnyNodeData>[] = [
-  ...Array(3)
-    .fill(0)
-    .map(
-      (_, i) =>
-        ({
-          id: `iam_user_${i + 1}`,
-          position: { x: 200 + i * 200, y: 400 },
-          data: {
-            id: `iam_user_${i + 1}`,
-            label: `user-${i}`,
-            entity: IAMNodeEntity.User,
-            handles: [
-              { id: Position.Top, type: 'source', position: Position.Top },
-              { id: Position.Bottom, type: 'target', position: Position.Bottom },
-            ] as HandleProps[],
-            image: IAMNodeImage.User,
-          },
-          type: 'iam_default',
-          draggable: true,
-        }) as Node<IAMUserNodeData>
-    ),
+  ...USER_NODES,
   ...POLICY_NODES,
-  {
-    id: 'iam_resource_1',
-    position: { x: 250, y: 100 },
-    data: {
-      id: 'iam_resource_1',
-      description: '',
-      label: 'public-images',
-      entity: IAMNodeEntity.S3Bucket,
-      handles: [
-        { id: Position.Top, type: 'source', position: Position.Top },
-        { id: Position.Bottom, type: 'target', position: Position.Bottom },
-      ] as HandleProps[],
-      image: IAMNodeImage.S3Bucket,
-    },
-    type: 'iam_default',
-    draggable: true,
-  },
-  {
-    id: 'users_table',
-    position: { x: 550, y: 100 },
-    data: {
-      label: 'prod_Users',
-      id: 'users_table',
-      description: 'Production Tablee',
-      entity: IAMNodeEntity.DynamoDBTable,
-      handles: [
-        { id: Position.Top, type: 'source', position: Position.Top },
-        { id: Position.Bottom, type: 'target', position: Position.Bottom },
-      ] as HandleProps[],
-      image: IAMNodeImage.Database,
-    },
-    type: 'iam_default',
-    draggable: true,
-  },
-  {
-    id: 'users_table',
-    position: { x: 550, y: 100 },
-    data: {
-      label: 'prod_Users',
-      id: 'users_table',
-      description: 'Production Tablee',
-      entity: IAMNodeEntity.DynamoDBTable,
-      handles: [
-        { id: Position.Top, type: 'source', position: Position.Top },
-        { id: Position.Bottom, type: 'target', position: Position.Bottom },
-      ] as HandleProps[],
-      image: IAMNodeImage.Database,
-    },
-    type: 'iam_default',
-    draggable: true,
-  },
+  ...RESOURCE_NODES,
 ];
 
 const edgesInfo: [string, string][] = [

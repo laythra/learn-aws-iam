@@ -8,6 +8,7 @@ export enum IAMNodeEntity {
   Resource = 'AWS Resource',
   S3Bucket = 'S3 Bucket',
   DynamoDBTable = 'DynamoDB Table',
+  EC2Instance = 'EC2 Instance',
 }
 
 export enum IAMNodeImage {
@@ -19,6 +20,8 @@ export enum IAMNodeImage {
   Server = 'server',
 }
 
+// Serves as a base interface for all node data types
+// Should not be used directly
 interface IAMNodeData {
   id: string;
   label: string;
