@@ -1,16 +1,25 @@
 import { HandleProps, Node, Position, Edge, MarkerType } from 'reactflow';
 
 import { POLICY_CONTENT } from './config';
-import { IAMNodeEntity, IAMCanvasNodeData, IAMNodeImage } from '@/types';
+import {
+  IAMNodeEntity,
+  IAMAnyNodeData,
+  IAMNodeImage,
+  IAMGroupNodeData,
+  IAMPolicyNodeData,
+  IAMNodeDataMapping,
+} from '@/types';
 import { getEdgeName } from '@/utils/names';
 
-export const template_nodes: { [key: string]: Node<IAMCanvasNodeData> } = {
+export const template_nodes: { [K in keyof IAMNodeDataMapping]: Node<IAMNodeDataMapping[K]> } = {
   iam_user: {
     id: 'iam_user',
     position: { x: 500, y: 250 },
     type: 'iam_default',
     draggable: true,
     data: {
+      id: 'iam_user',
+      description: '',
       label: 'IAM User',
       entity: IAMNodeEntity.User,
       handles: [
@@ -18,11 +27,31 @@ export const template_nodes: { [key: string]: Node<IAMCanvasNodeData> } = {
         { id: Position.Bottom, type: 'target', position: Position.Bottom },
       ] as HandleProps[],
       image: IAMNodeImage.User,
-    } as IAMCanvasNodeData,
+      associated_policies: [],
+    },
+  },
+  iam_group: {
+    id: 'iam_group',
+    position: { x: 500, y: 250 },
+    type: 'iam_default',
+    draggable: true,
+    data: {
+      id: 'iam_group',
+      description: '',
+      label: 'IAM Group',
+      entity: IAMNodeEntity.Group,
+      handles: [
+        { id: Position.Top, type: 'source', position: Position.Top },
+        { id: Position.Bottom, type: 'target', position: Position.Bottom },
+      ] as HandleProps[],
+      image: IAMNodeImage.Group,
+      attached_users: [],
+      attached_policies: [],
+    },
   },
 };
 
-export const initial_nodes: Node[] = [
+export const initial_nodes: Node<IAMAnyNodeData>[] = [
   {
     id: 'iam_resource_1',
     position: { x: 500, y: 250 },
@@ -34,7 +63,7 @@ export const initial_nodes: Node[] = [
         { id: Position.Bottom, type: 'target', position: Position.Bottom },
       ] as HandleProps[],
       image: IAMNodeImage.S3Bucket,
-    } as IAMCanvasNodeData,
+    } as IAMGroupNodeData,
     type: 'iam_default',
     draggable: true,
   },
@@ -51,7 +80,7 @@ export const initial_nodes: Node[] = [
       ] as HandleProps[],
       image: IAMNodeImage.Policy,
       code: POLICY_CONTENT,
-    } as IAMCanvasNodeData,
+    } as IAMPolicyNodeData,
     type: 'iam_default',
     draggable: true,
   },

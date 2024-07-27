@@ -1,10 +1,11 @@
 import _ from 'lodash';
-import type { Edge } from 'reactflow';
+import type { Edge, Node } from 'reactflow';
 import { setup, assign } from 'xstate';
 
 import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
 import type { Context, InsideLevelMetadata, EventData } from './types';
+import { IAMGroupNodeData, IAMUserNodeData } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
 export const stateMachine = setup({
@@ -38,7 +39,8 @@ export const stateMachine = setup({
   id: 'level1_state_machine',
   initial: 'inside_tutorial',
   context: {
-    iam_user_template: template_nodes.iam_user,
+    iam_user_template: template_nodes.iam_user as Node<IAMUserNodeData>,
+    iam_group_template: template_nodes.iam_group as Node<IAMGroupNodeData>,
     level_title: 'IAM Basics',
     level_description: 'Learn about Identity and Access Management',
     level_number: 1,
@@ -72,9 +74,11 @@ export const stateMachine = setup({
       }),
     },
     SET_EDGES: {
-      actions: assign({
-        edges: ({ event }) => event.edges,
-      }),
+      actions: [
+        assign({
+          edges: ({ event }) => event.edges,
+        }),
+      ],
     },
     SHOW_POPOVER: {
       actions: assign({

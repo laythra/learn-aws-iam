@@ -25,7 +25,7 @@ import { EventFrom } from 'xstate';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { IAMIdentityEntity, IAMNodeEntity, IAMNodeData, IAMPolicyNodeData } from '@/types';
+import { IAMIdentityEntity, IAMNodeEntity, IAMPolicyNodeData, IAMAnyNodeData } from '@/types';
 
 interface IdentityCreationPopupProps {}
 
@@ -78,15 +78,15 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
     const nodeId = `${nodeTemplate?.id}_${nextIamNodeId}`;
 
     console.log(nodeId);
-    const node = _.merge({}, nodeTemplate, {
+    const node: Node<IAMAnyNodeData> = _.merge({}, nodeTemplate, {
       id: nodeId,
       description: `New ${_.upperFirst(iamIdentityEntity)}`,
       position: nextNodePosition,
       data: {
         label: getNameFieldVal(),
         entity: iamIdentityEntity,
-      } as IAMNodeData,
-    }) as Node;
+      },
+    });
 
     const creationEvent =
       iamIdentityEntity === IAMNodeEntity.User ? 'IAM_USER_CREATED' : 'IAM_GROUP_CREATED';

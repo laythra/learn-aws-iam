@@ -1,4 +1,5 @@
 import _ from 'lodash';
+
 export function formatNodeName(name: string): string {
   return _.snakeCase(name);
 }

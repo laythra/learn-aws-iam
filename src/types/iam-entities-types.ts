@@ -1,8 +1,8 @@
-import { IAMNodeData, IAMNodeEntity } from '@/types';
+import { IAMAnyNodeData, IAMNodeEntity } from '@/types';
 
 export interface IAMEntitiesContextState {
-  createdNodes: IAMNodeData[];
-  createNode: (nodeProps: IAMNodeData) => void;
+  createdNodes: IAMAnyNodeData[];
+  createNode: (nodeProps: IAMAnyNodeData) => void;
   removeNode: (nodeId: string) => void;
   maxNodesToCreated?: number;
 }

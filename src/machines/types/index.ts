@@ -1,11 +1,17 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
 import type { Edge, Node } from 'reactflow';
 
-import { IAMCanvasNodeData, IAMNodeEntity } from '@/types';
+import {
+  IAMAnyNodeData,
+  IAMEdgeData,
+  IAMGroupNodeData,
+  IAMNodeEntity,
+  IAMUserNodeData,
+} from '@/types';
 
 export interface GenericContext {
-  iam_user_template: Node<IAMCanvasNodeData>;
-  iam_group_template?: Node<IAMCanvasNodeData>;
+  iam_user_template: Node<IAMUserNodeData>;
+  iam_group_template: Node<IAMGroupNodeData>;
   level_title: string;
   level_description: string;
   level_number: number;
@@ -13,7 +19,7 @@ export interface GenericContext {
   next_popup_index: number;
   state_name: string;
   next_iam_node_id: number;
-  nodes: Node[];
+  nodes: Node<IAMAnyNodeData>[];
   edges: Edge[];
   final_edges: Edge[];
   show_popovers: boolean;
@@ -43,11 +49,15 @@ export type GenericEventData =
         | 'HIDE_POPOVERS'
         | 'CREATE_POLICY_POPUP_OPENED'
         | 'CREATE_IAM_IDENTITY_POPUP_OPENED'
-        | 'CREATE_IAM_IDENTITY_TAB_CHANGED';
+        | 'CREATE_IAM_IDENTITY_TAB_CHANGED'
+        | 'IAM_USER_ATTACHED_TO_GROUP'
+        | 'IAM_POLICY_ATTACHED_TO_GROUP';
     }
   | { type: 'ADD_IAM_NODE'; node: Node }
-  | { type: 'ADD_EDGE'; edge: Edge }
-  | { type: 'SET_EDGES'; edges: Edge[] }
+  | { type: 'UPDATE_IAM_NODE'; node: Node }
+  | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }
+  | { type: 'DELETE_EDGE'; edge: Edge<IAMEdgeData> }
+  | { type: 'SET_EDGES'; edges: Edge<IAMEdgeData>[] }
   | { type: 'SET_NODES'; nodes: Node[] }
   | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage };
 
