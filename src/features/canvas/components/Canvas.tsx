@@ -106,27 +106,6 @@ const Canvas: React.FC = () => {
 
       let newEdges = [...levelState.context.edges, newEdge];
 
-      _.forOwn(levelState.getMeta(), (value, statePath) => {
-        const levelMetadata = value as GenericInsideLevelMetadata;
-
-        const finishedTargets = _.map(levelMetadata.connection_targets, connectionTarget => {
-          if (_.differenceBy(connectionTarget.required_edges, newEdges, 'id').length === 0) {
-            // We unlock all locked edges
-            _.forEach(connectionTarget.locked_edges, edge => {
-              newEdges = [...newEdges, edge];
-            });
-
-            // setEdges(newEdges);
-            return connectionTarget;
-          }
-        });
-
-        if (_.compact(finishedTargets).length === levelMetadata.connection_targets?.length) {
-          const actionName = levelState.context.metadata_keys[statePath];
-          levelActor.send({ type: actionName } as EventFromLogic<typeof levelState.machine>);
-        }
-      });
-
       if (targetNode?.data.entity !== IAMNodeEntity.Group) {
         return;
       }
@@ -150,8 +129,30 @@ const Canvas: React.FC = () => {
         levelState.context.nodes
       );
 
-      setEdges([...newEdges, ...usersToResourceEdges]);
+      newEdges = [...newEdges, ...usersToResourceEdges];
+      setEdges(newEdges);
       updateNode(newGroupNode);
+
+      _.forOwn(levelState.getMeta(), (value, statePath) => {
+        const levelMetadata = value as GenericInsideLevelMetadata;
+
+        const finishedTargets = _.map(levelMetadata.connection_targets, connectionTarget => {
+          if (_.differenceBy(connectionTarget.required_edges, newEdges, 'id').length === 0) {
+            // We unlock all locked edges
+            _.forEach(connectionTarget.locked_edges, edge => {
+              newEdges = [...newEdges, edge];
+            });
+
+            // setEdges(newEdges);
+            return connectionTarget;
+          }
+        });
+
+        if (_.compact(finishedTargets).length === levelMetadata.connection_targets?.length) {
+          const actionName = levelState.context.metadata_keys[statePath];
+          levelActor.send({ type: actionName } as EventFromLogic<typeof levelState.machine>);
+        }
+      });
     },
 
     [levelState]

@@ -32,6 +32,16 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_close_button: false,
     popover_placement: 'start',
   },
+  {
+    element_id: 'iam_group_1',
+    popover_title: `Attaching Policies/Users`,
+    popover_content: `
+      Remember, you can attach policies and users to your IAM group.
+    `,
+    show_next_button: false,
+    show_close_button: true,
+    popover_placement: 'start',
+  },
 ];
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
@@ -73,7 +83,7 @@ export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
     finished: false,
     label: 'Create an IAM Group',
   },
-  enable_reading_from_bucket: {
+  attach_nodes_to_group: {
     finished: false,
     label: 'Make things easier to scale using the newly created group',
   },
@@ -159,13 +169,13 @@ export const INITIAL_POLICIES_INFO: Pick<
   'id' | 'label' | 'code' | 'resources_affected'
 >[] = [
   {
-    id: 's3_read_policy_1',
+    id: 'iam_policy_1',
     label: 's3-read-access',
     code: S3_READ_POLICY_CONTENT,
     resources_affected: [INITIAL_RESOURCES_INFO[0].id],
   },
   {
-    id: 'dynamo_read_policy_1',
+    id: 'iam_policy_2',
     label: 'dynamo-read-access',
     code: DYNAMODB_READ_POLICY_CONTENT,
     resources_affected: [INITIAL_RESOURCES_INFO[1].id],

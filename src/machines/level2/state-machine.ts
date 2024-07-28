@@ -212,12 +212,28 @@ export const stateMachine = setup({
               params: { id: 'create_iam_group', finished: true },
             },
           ],
-          target: 'attach_nodes_to_group',
+          target: 'attach_nodes_to_group_tip',
         },
       },
     },
+    attach_nodes_to_group_tip: {
+      entry: assign({
+        popover_content: POPOVER_TUTORIAL_MESSAGES[3],
+        show_popovers: true,
+      }),
+      always: 'attach_nodes_to_group',
+    },
     attach_nodes_to_group: {
       type: 'parallel',
+      onDone: {
+        actions: [
+          {
+            type: 'change_objective_progress',
+            params: { id: 'attach_nodes_to_group', finished: true },
+          },
+        ],
+        target: 'finished_level',
+      },
       entry: assign({
         metadata_keys: {
           'level2_state_machine.attach_nodes_to_group.attach_users.in_progress':
@@ -237,7 +253,7 @@ export const stateMachine = setup({
                     required_edges: [
                       _.find(edges, { id: getEdgeName('iam_user_1', 'iam_group_1') }) as Edge,
                       _.find(edges, { id: getEdgeName('iam_user_2', 'iam_group_1') }) as Edge,
-                      _.find(edges, { id: getEdgeName('iam_user_3', 'iam_group_1') }) as Edge,
+                      // _.find(edges, { id: getEdgeName('iam_user_3', 'iam_group_1') }) as Edge,
                     ],
                     locked_edges: [],
                   },
@@ -262,7 +278,7 @@ export const stateMachine = setup({
                     required_edges: [
                       _.find(edges, { id: getEdgeName('iam_policy_1', 'iam_group_1') }) as Edge,
                       _.find(edges, { id: getEdgeName('iam_policy_2', 'iam_group_1') }) as Edge,
-                      _.find(edges, { id: getEdgeName('iam_policy_3', 'iam_group_1') }) as Edge,
+                      // _.find(edges, { id: getEdgeName('iam_policy_3', 'iam_group_1') }) as Edge,
                     ],
                     locked_edges: [],
                   },

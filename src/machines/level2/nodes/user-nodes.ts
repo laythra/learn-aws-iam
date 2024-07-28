@@ -18,6 +18,7 @@ export const USER_NODES: Node<IAMUserNodeData>[] = INITIAL_USERS_INFO.map(
       handles: [
         { id: Position.Top, type: 'source', position: Position.Top },
         { id: Position.Bottom, type: 'target', position: Position.Bottom },
+        { id: Position.Left, type: 'source', position: Position.Left },
       ] as HandleProps[],
     },
     type: 'iam_default',
