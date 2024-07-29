@@ -2,9 +2,14 @@ import _ from 'lodash';
 import type { Node, Edge } from 'reactflow';
 import { setup, assign } from 'xstate';
 
-import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
+import {
+  POPOVER_TUTORIAL_MESSAGES,
+  POPUP_TUTORIAL_MESSAGES,
+  LEVEL_OBJECTIVES,
+  HIDDEN_LEVEL_OBJECTIVES,
+} from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
-import type { Context, InsideLevelMetadata, EventData } from './types';
+import type { Context, InsideLevelMetadata, EventData, LevelObjective } from './types';
 import type { IAMGroupNodeData, IAMUserNodeData } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
@@ -35,10 +40,20 @@ export const stateMachine = setup({
     }),
     hide_popups: assign({ show_popups: false }),
     change_objective_progress: assign({
-      level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) => ({
-        // cloning is a must since update returns the same reference
-        ..._.update(context.level_objectives, [id, 'finished'], _.constant(finished)),
+      level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) =>
+        _.update({ ...context.level_objectives }, [id, 'finished'], _.constant(finished)),
+    }),
+    add_new_level_objective: assign({
+      level_objectives: (
+        { context },
+        { id, objective }: { id: string; objective: LevelObjective }
+      ) => ({
+        ...context.level_objectives,
+        [id]: objective,
       }),
+    }),
+    add_new_node: assign({
+      nodes: ({ context }, { node }: { node: Node }) => [...context.nodes, node],
     }),
   },
 }).createMachine({
@@ -232,7 +247,7 @@ export const stateMachine = setup({
             params: { id: 'attach_nodes_to_group', finished: true },
           },
         ],
-        target: 'finished_level',
+        target: 'attach_your_user_to_group',
       },
       entry: assign({
         metadata_keys: {
@@ -252,8 +267,6 @@ export const stateMachine = setup({
                   {
                     required_edges: [
                       _.find(edges, { id: getEdgeName('iam_user_1', 'iam_group_1') }) as Edge,
-                      _.find(edges, { id: getEdgeName('iam_user_2', 'iam_group_1') }) as Edge,
-                      // _.find(edges, { id: getEdgeName('iam_user_3', 'iam_group_1') }) as Edge,
                     ],
                     locked_edges: [],
                   },
@@ -292,6 +305,63 @@ export const stateMachine = setup({
               type: 'final',
             },
           },
+        },
+      },
+    },
+    attach_your_user_to_group: {
+      entry: [
+        {
+          type: 'add_new_level_objective',
+          params: {
+            id: 'attach_your_user_to_group',
+            objective: HIDDEN_LEVEL_OBJECTIVES['attach_your_user_to_group'],
+          },
+        },
+        {
+          type: 'add_new_node',
+          params: {
+            node: template_nodes.iam_user,
+          },
+        },
+        assign({
+          metadata_keys: {
+            'level2_state_machine.attach_your_user_to_group': 'NEW_USER_ATTACHED_TO_GROUP',
+          },
+          popover_content: POPOVER_TUTORIAL_MESSAGES[4],
+          show_popovers: true,
+        }),
+      ],
+      meta: {
+        connection_targets: [
+          {
+            required_edges: [
+              _.find(edges, { id: getEdgeName(template_nodes.iam_user.id, 'iam_group_1') }) as Edge,
+            ],
+            locked_edges: [],
+          },
+        ],
+      },
+      on: {
+        NEW_USER_ATTACHED_TO_GROUP: {
+          actions: [
+            {
+              type: 'change_objective_progress',
+              params: { id: 'attach_your_user_to_group', finished: true },
+            },
+          ],
+          target: 'final_groups_popover',
+        },
+      },
+    },
+    final_groups_popover: {
+      on: {
+        NEXT_POPOVER: {
+          actions: [
+            assign({
+              show_popovers: false,
+            }),
+          ],
+          target: 'finished_level',
         },
       },
     },

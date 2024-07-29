@@ -42,6 +42,28 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_close_button: true,
     popover_placement: 'start',
   },
+  {
+    element_id: 'iam_user',
+    popover_title: `Scaling things up!`,
+    popover_content: `
+      Let's allow your user to access all resources in one go
+    `,
+    show_next_button: true,
+    show_close_button: true,
+    popover_placement: 'start',
+  },
+  {
+    element_id: 'iam_user',
+    popover_title: `There you have it! 🔥`,
+    popover_content: `
+      Notice how attaching your user to the IAM group allows them to
+      inherit all policies attached to the group. Think of how useful this can
+      be in a real-world scenario!
+    `,
+    show_next_button: false,
+    show_close_button: true,
+    popover_placement: 'start',
+  },
 ];
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
@@ -86,6 +108,13 @@ export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
   attach_nodes_to_group: {
     finished: false,
     label: 'Make things easier to scale using the newly created group',
+  },
+};
+
+export const HIDDEN_LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
+  attach_your_user_to_group: {
+    finished: false,
+    label: 'Give your user access to all resources in one go',
   },
 };
 
@@ -156,12 +185,12 @@ export const INITIAL_RESOURCES_INFO: Pick<
     entity: IAMNodeEntity.DynamoDBTable,
     image: IAMNodeImage.Database,
   },
-  // {
-  //   id: 'ec2_instance_1',
-  //   label: 'ec2-instance',
-  //   entity: IAMNodeEntity.EC2Instance,
-  //   image: IAMNodeImage.Server,
-  // },
+  {
+    id: 'ec2_instance_1',
+    label: 'ec2-instance',
+    entity: IAMNodeEntity.EC2Instance,
+    image: IAMNodeImage.Server,
+  },
 ];
 
 export const INITIAL_POLICIES_INFO: Pick<
@@ -180,25 +209,17 @@ export const INITIAL_POLICIES_INFO: Pick<
     code: DYNAMODB_READ_POLICY_CONTENT,
     resources_affected: [INITIAL_RESOURCES_INFO[1].id],
   },
-  // {
-  //   id: 'ec2_read_policy_1',
-  //   label: 'ec2-read-access',
-  //   code: EC2_READ_POLICY_CONTENT,
-  //   resources_affected: [INITIAL_RESOURCES_INFO[2].id],
-  // },
+  {
+    id: 'ec2_read_policy_1',
+    label: 'ec2-read-access',
+    code: EC2_READ_POLICY_CONTENT,
+    resources_affected: [INITIAL_RESOURCES_INFO[2].id],
+  },
 ];
 
 export const INITIAL_USERS_INFO: Pick<IAMUserNodeData, 'id' | 'label'>[] = [
   {
     id: 'iam_user_1',
     label: 'IAM User 1',
-  },
-  {
-    id: 'iam_user_2',
-    label: 'IAM User 2',
-  },
-  {
-    id: 'iam_user_3',
-    label: 'IAM User 3',
   },
 ];
