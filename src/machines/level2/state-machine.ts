@@ -8,9 +8,11 @@ import {
   LEVEL_OBJECTIVES,
   HIDDEN_LEVEL_OBJECTIVES,
 } from './config';
-import { initial_nodes, template_nodes, edges } from './nodes';
+import { initial_nodes, edges } from './nodes';
+import { TEMPLATE_GROUP_NODE } from './nodes/group-nodes';
+import { TEMPLATE_USER_NODE } from './nodes/user-nodes';
 import type { Context, InsideLevelMetadata, EventData, LevelObjective } from './types';
-import type { IAMGroupNodeData, IAMUserNodeData } from '@/types';
+import { theme } from '@/theme';
 import { getEdgeName } from '@/utils/names';
 
 export const stateMachine = setup({
@@ -320,7 +322,7 @@ export const stateMachine = setup({
         {
           type: 'add_new_node',
           params: {
-            node: template_nodes.iam_user,
+            node: TEMPLATE_USER_NODE,
           },
         },
         assign({
@@ -335,7 +337,7 @@ export const stateMachine = setup({
         connection_targets: [
           {
             required_edges: [
-              _.find(edges, { id: getEdgeName(template_nodes.iam_user.id, 'iam_group_1') }) as Edge,
+              _.find(edges, { id: getEdgeName(TEMPLATE_USER_NODE.id, 'iam_group_1') }) as Edge,
             ],
             locked_edges: [],
           },

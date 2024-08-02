@@ -1,26 +1,26 @@
 import { type Node, HandleProps, Position } from 'reactflow';
 
 import { INITIAL_RESOURCES_INFO } from '../config';
+import { theme } from '@/theme';
 import type { IAMResourceNodeData } from '@/types';
 import { IAMNodeEntity } from '@/types';
 
-export const RESOURCE_NODES: Node<IAMResourceNodeData>[] = INITIAL_RESOURCES_INFO.map(
+export const X_OFFSET = theme.sizes.iamNodeWidthInPixels;
+export const Y_OFFSET = 100;
+
+export const INITIAL_RESOURCE_NODES: Node<IAMResourceNodeData>[] = INITIAL_RESOURCES_INFO.map(
   ({ id, label, image }, index) => ({
     id,
-    position: { x: 200 + index * 200, y: 100 },
+    position: { x: X_OFFSET + index * X_OFFSET, y: Y_OFFSET },
     data: {
       id,
       label,
       entity: IAMNodeEntity.Resource,
       image,
-      resources_affected: ['jaja'],
       description: '',
-      handles: [
-        { id: Position.Top, type: 'source', position: Position.Top },
-        { id: Position.Bottom, type: 'target', position: Position.Bottom },
-      ] as HandleProps[],
+      handles: [{ id: Position.Top, type: 'target', position: Position.Bottom }] as HandleProps[],
     },
     type: 'iam_default',
-    draggable: true,
+    draggable: false,
   })
 );
