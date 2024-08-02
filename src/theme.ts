@@ -1,9 +1,22 @@
 import '@fontsource/lato';
-import { extendTheme, ThemeConfig } from '@chakra-ui/react';
+import { extendTheme, type ThemeOverride, type Theme } from '@chakra-ui/react';
 
-export const theme: ThemeConfig = extendTheme({
+interface CustomTheme extends Theme {
+  sizes: Theme['sizes'] & {
+    iamNodeWidthInPixels: number;
+  };
+  fonts: Theme['fonts'] & {
+    heading: string;
+    body: string;
+  };
+}
+
+export const theme: CustomTheme = extendTheme({
   fonts: {
     heading: `Lato, sans-serif`,
     body: `Lato, sans-serif`,
   },
-});
+  sizes: {
+    iamNodeWidthInPixels: 225,
+  },
+}) as CustomTheme;
