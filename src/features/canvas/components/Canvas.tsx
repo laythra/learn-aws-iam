@@ -130,20 +130,20 @@ const Canvas: React.FC = () => {
       );
 
       newEdges = [...newEdges, ...usersToResourceEdges];
+      newEdges = _.uniqBy(newEdges, 'id');
       setEdges(newEdges);
       updateNode(newGroupNode);
 
       _.forOwn(levelState.getMeta(), (value, statePath) => {
         const levelMetadata = value as GenericInsideLevelMetadata;
 
-        const finishedTargets = _.map(levelMetadata.connection_targets, connectionTarget => {
+        const finishedTargets = levelMetadata.connection_targets?.map(connectionTarget => {
           if (_.differenceBy(connectionTarget.required_edges, newEdges, 'id').length === 0) {
             // We unlock all locked edges
             _.forEach(connectionTarget.locked_edges, edge => {
               newEdges = [...newEdges, edge];
             });
 
-            // setEdges(newEdges);
             return connectionTarget;
           }
         });
