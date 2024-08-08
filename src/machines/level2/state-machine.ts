@@ -55,16 +55,16 @@ export const stateMachine = setup({
         [id]: objective,
       }),
     }),
-    iam_node_creation_side_effects: assign({
-      next_iam_node_id: ({ context }, { node }: { node: IAMAnyNodeData }) => {
-        console.log('HEREEEEEEE');
+    add_iam_node: assign({
+      nodes: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => [...context.nodes, node],
+      next_iam_node_id: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => {
         return _.update(
           { ...context.next_iam_node_id },
-          [node.entity],
-          _.constant(context.next_iam_node_id[node.entity as CreatableIAMNodeEntity] + 1)
+          [node.data.entity],
+          _.constant(context.next_iam_node_id[node.data.entity as CreatableIAMNodeEntity] + 1)
         );
       },
-      next_iam_node_default_position: ({ context }, { node }: { node: IAMAnyNodeData }) => {
+      next_iam_node_default_position: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => {
         if (node.id in context.fixed_iam_nodes_positions) {
           return context.next_iam_node_default_position;
         } else {
@@ -75,18 +75,15 @@ export const stateMachine = setup({
         }
       },
     }),
-    add_new_node: assign({
-      nodes: ({ context }, { node }: { node: Node }) => [...context.nodes, node],
-    }),
   },
 }).createMachine({
   id: 'level2_state_machine',
-  initial: 'create_group_popover',
+  initial: 'tutorial_popup1',
   context: {
     iam_user_template: TEMPLATE_USER_NODE,
     iam_group_template: TEMPLATE_GROUP_NODE,
     level_title: 'IAM Groups',
-    level_description: 'Learn about Identity and Access Management',
+    level_description: 'Scaling your IAM setup with groups',
     level_number: 1,
     next_popover_index: 0,
     next_popup_index: 0,
@@ -122,12 +119,9 @@ export const stateMachine = setup({
   on: {
     ADD_IAM_USER_NODE: {
       actions: [
-        assign({
-          nodes: ({ context, event }) => [...context.nodes, event.node],
-        }),
         {
-          type: 'iam_node_creation_side_effects',
-          params: ({ event }) => ({ node: event.node.data }),
+          type: 'add_iam_node',
+          params: ({ event }) => ({ node: event.node }),
         },
       ],
     },
@@ -136,10 +130,6 @@ export const stateMachine = setup({
         assign({
           nodes: ({ context, event }) => [...context.nodes, event.node],
         }),
-        {
-          type: 'iam_node_creation_side_effects',
-          params: ({ event }) => ({ node: event.node.data }),
-        },
       ],
     },
     UPDATE_IAM_NODE: {
@@ -275,12 +265,9 @@ export const stateMachine = setup({
       on: {
         ADD_IAM_GROUP_NODE: {
           actions: [
-            assign({
-              nodes: ({ context, event }) => [...context.nodes, event.node],
-            }),
             {
-              type: 'iam_node_creation_side_effects',
-              params: ({ event }) => ({ node: event.node.data }),
+              type: 'add_iam_node',
+              params: ({ event }) => ({ node: event.node }),
             },
             {
               type: 'change_objective_progress',
@@ -369,6 +356,8 @@ export const stateMachine = setup({
       },
     },
     attach_your_user_to_group: {
+      initial: 'create_your_user',
+      onDone: 'finished_level',
       entry: [
         {
           type: 'add_new_level_objective',
@@ -377,51 +366,56 @@ export const stateMachine = setup({
             objective: HIDDEN_LEVEL_OBJECTIVES['attach_your_user_to_group'],
           },
         },
-        {
-          type: 'add_new_node',
-          params: {
-            node: TEMPLATE_USER_NODE,
-          },
-        },
         assign({
-          metadata_keys: {
-            'level2_state_machine.attach_your_user_to_group': 'NEW_USER_ATTACHED_TO_GROUP',
-          },
           popover_content: POPOVER_TUTORIAL_MESSAGES[4],
           show_popovers: true,
         }),
       ],
-      meta: {
-        connection_targets: [
-          {
-            required_edges: [
-              _.find(edges, { id: getEdgeName(TEMPLATE_USER_NODE.id, 'iam_group_1') }) as Edge,
-            ],
-            locked_edges: [],
-          },
-        ],
-      },
-      on: {
-        NEW_USER_ATTACHED_TO_GROUP: {
-          actions: [
-            {
-              type: 'change_objective_progress',
-              params: { id: 'attach_your_user_to_group', finished: true },
+      states: {
+        create_your_user: {
+          on: {
+            ADD_IAM_USER_NODE: {
+              actions: [
+                {
+                  type: 'add_iam_node',
+                  params: ({ event }) => ({ node: event.node }),
+                },
+              ],
+              target: 'attach_to_group',
             },
-          ],
-          target: 'final_groups_popover',
+          },
         },
-      },
-    },
-    final_groups_popover: {
-      on: {
-        NEXT_POPOVER: {
-          actions: [
-            assign({
-              show_popovers: false,
-            }),
-          ],
-          target: 'finished_level',
+        attach_to_group: {
+          entry: assign({
+            metadata_keys: {
+              'level2_state_machine.attach_your_user_to_group.attach_to_group':
+                'NEW_USER_ATTACHED_TO_GROUP',
+            },
+          }),
+          meta: {
+            connection_targets: [
+              {
+                required_edges: [
+                  _.find(edges, { id: getEdgeName('iam_user_2', 'iam_group_1') }) as Edge,
+                ],
+                locked_edges: [],
+              },
+            ],
+          },
+          on: {
+            NEW_USER_ATTACHED_TO_GROUP: {
+              actions: [
+                {
+                  type: 'change_objective_progress',
+                  params: { id: 'attach_your_user_to_group', finished: true },
+                },
+              ],
+              target: 'completed',
+            },
+          },
+        },
+        completed: {
+          type: 'final',
         },
       },
     },
@@ -429,6 +423,8 @@ export const stateMachine = setup({
       entry: assign({
         state_name: 'finished_level',
         level_finished: true,
+        popover_content: POPOVER_TUTORIAL_MESSAGES[5],
+        show_popovers: true,
       }),
       type: 'final',
     },

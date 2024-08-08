@@ -43,32 +43,21 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'start',
   },
   {
-    element_id: 'iam_user',
+    element_id: 'iam_user_1',
     popover_title: `Nice! 🔥`,
     popover_content: `
       Notice how the IAM user inherited the policies attached to the group.
     `,
-    show_next_button: true,
+    show_next_button: false,
     show_close_button: true,
     popover_placement: 'start',
   },
   {
-    element_id: 'iam_user',
-    popover_title: `Nice! 🔥`,
+    element_id: 'iam_user_2',
+    popover_title: `There you have it!`,
     popover_content: `
-      Create your own user and have them inherit the policies attached to the group as well.
-    `,
-    show_next_button: true,
-    show_close_button: true,
-    popover_placement: 'start',
-  },
-  {
-    element_id: 'iam_user',
-    popover_title: `There you have it! 🔥`,
-    popover_content: `
-      Notice how attaching your user to the IAM group allows them to
-      inherit all policies attached to the group. Think of how useful this can
-      be in a real-world scenario!
+      Your new user directly inherited the policies attached to the group in one go.
+      Adding team members is now a breeze!
     `,
     show_next_button: false,
     show_close_button: true,

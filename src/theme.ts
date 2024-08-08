@@ -1,5 +1,5 @@
 import '@fontsource/lato';
-import { extendTheme, type ThemeOverride, type Theme } from '@chakra-ui/react';
+import { extendTheme, type Theme } from '@chakra-ui/react';
 
 interface CustomTheme extends Theme {
   sizes: Theme['sizes'] & {

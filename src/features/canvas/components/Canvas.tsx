@@ -39,7 +39,7 @@ const Canvas: React.FC = () => {
   const [nodesState, setNodesState, onNodesChange] = useNodesState(levelState.context.nodes);
   const [edgesState, setEdgesState, onEdgesChange] = useEdgesState(levelState.context.edges);
 
-  const [rfInstance, setRfInstance] = useState<ReactFlowInstance>();
+  const [rfInstance] = useState<ReactFlowInstance>();
 
   const setEdges = (edges: Edge<IAMEdgeData>[]): void => {
     levelActor.send({ type: 'SET_EDGES', edges: edges });
@@ -47,10 +47,6 @@ const Canvas: React.FC = () => {
 
   const updateNode = (node: Node<IAMAnyNodeData>): void => {
     levelActor.send({ type: 'UPDATE_IAM_NODE', node: node });
-  };
-
-  const addEdge = (edge: Edge<IAMEdgeData>): void => {
-    levelActor.send({ type: 'ADD_EDGE', edge: edge });
   };
 
   useEffect(() => {

@@ -20,12 +20,12 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 import { Node } from 'reactflow';
-import { EventFrom, EventFromLogic } from 'xstate';
+import { EventFrom } from 'xstate';
 
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { IAMIdentityEntity, IAMNodeEntity, IAMPolicyNodeData, IAMAnyNodeData } from '@/types';
+import { IAMIdentityEntity, IAMNodeEntity, IAMAnyNodeData } from '@/types';
 import { getNodeName } from '@/utils/names';
 
 interface IdentityCreationPopupProps {}
@@ -94,6 +94,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
       description: `New ${_.upperFirst(iamIdentityEntity)}`,
       position,
       data: {
+        id: nodeId,
         label: getNameFieldVal(),
         entity: iamIdentityEntity,
       },
