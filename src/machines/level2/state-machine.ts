@@ -9,11 +9,19 @@ import {
   HIDDEN_LEVEL_OBJECTIVES,
 } from './config';
 import { initial_nodes, edges } from './nodes';
-import { TEMPLATE_GROUP_NODE } from './nodes/group-nodes';
-import { TEMPLATE_USER_NODE } from './nodes/user-nodes';
+import { TEMPLATE_GROUP_NODE, GROUP_NODE_Y_OFFSET } from './nodes/group-nodes';
+import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
+import { INITIAL_POLICY_NODES } from './nodes/policy-nodes';
+import { INITIAL_USER_NODES, TEMPLATE_USER_NODE, USER_NODE_Y_OFFSET } from './nodes/user-nodes';
 import type { Context, InsideLevelMetadata, EventData, LevelObjective } from './types';
 import { theme } from '@/theme';
-import { getEdgeName } from '@/utils/names';
+import { CreatableIAMNodeEntity, IAMAnyNodeData, IAMNodeEntity } from '@/types';
+import { getEdgeName, getNodeName } from '@/utils/names';
+
+const IAM_NODE_WIDTH = theme.sizes.iamNodeWidthInPixels;
+const FIRST_CUSTOM_GROUP_ID = INITIAL_GROUP_NODES.length + 1;
+const FIRST_CUSTOM_USER_ID = INITIAL_USER_NODES.length + 1;
+const FIRST_CUSTOM_POLICY_ID = INITIAL_POLICY_NODES.length + 1;
 
 export const stateMachine = setup({
   types: {} as {
@@ -33,13 +41,6 @@ export const stateMachine = setup({
       next_popup_index: ({ context }) => context.next_popup_index + 1,
       show_popups: ({ context }) => context.next_popup_index + 1 < POPUP_TUTORIAL_MESSAGES.length,
     }),
-    iam_node_creation_side_effects: assign({
-      next_iam_node_id: ({ context }) => context.next_iam_node_id + 1,
-      next_node_position: ({ context }) => ({
-        x: context.next_node_position.x + 20,
-        y: context.next_node_position.y + 20,
-      }),
-    }),
     hide_popups: assign({ show_popups: false }),
     change_objective_progress: assign({
       level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) =>
@@ -54,22 +55,39 @@ export const stateMachine = setup({
         [id]: objective,
       }),
     }),
+    iam_node_creation_side_effects: assign({
+      next_iam_node_id: ({ context }, { node }: { node: IAMAnyNodeData }) => {
+        console.log('HEREEEEEEE');
+        return _.update(
+          { ...context.next_iam_node_id },
+          [node.entity],
+          _.constant(context.next_iam_node_id[node.entity as CreatableIAMNodeEntity] + 1)
+        );
+      },
+      next_iam_node_default_position: ({ context }, { node }: { node: IAMAnyNodeData }) => {
+        if (node.id in context.fixed_iam_nodes_positions) {
+          return context.next_iam_node_default_position;
+        } else {
+          return {
+            x: context.next_iam_node_default_position.x + 20,
+            y: context.next_iam_node_default_position.y + 20,
+          };
+        }
+      },
+    }),
     add_new_node: assign({
       nodes: ({ context }, { node }: { node: Node }) => [...context.nodes, node],
     }),
   },
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QBswDczIIwH1YBcBDfMHAW0IGMALASwDswA6B2WiU-AV3wHsAnWoWQBiCL0ZMCxZqgzY8REuSp1Jrdpx4ChyANoAGALqJQAB15t8tCaZAAPRFgBMAFgNMAnADYDntwZYAKwAzJ6eADQgAJ6IziEeAOyJIa6uWAYAHJ6JnpkhAL4FUXKYuNLKFDQMzBocONx8gsJMFhYY-FgiAHIAogAaACo4AAoA8uMAar0ASoYmSCAWVjb0do4IWJ4hTFhYiVi+wbnxrplRsQjOic5MBqeuiZlBngb3hcUgpQoVpFVqtXobHqjR0LTavA6zh6A2G4yms3mdmWtGstkWG1cOSYiQMCSwISebyCWHyFziNzuDyeLze8SKJXQZUUMhU1XUQM0DW0zWQrV47TA-BCMKGowmY2mc2MyMsqNW60QmXuONczmC2zCzlekRiFNu7zSNNe7wZXyZPyUf1UNRYnPq3zEEmYvyY33KVrZALtwNI3yRixRaLWGLieO8TCC8XV3j2L28j3JV1COKCbzeqW8uVcqTN7pZlRtHN9OG+TEoEkYlHwOCEZBwFmQtEo0QavBwXFgQrtDf4vCg-DgsBEAEkAIIAWXFABkRwBhACaODnY26fTng16ABEA+Y5cHFZsgkFXExMtdttlo2qQkmQocmM404FvGncXssK4ip96LwOPBFnzX4vRqWUVnRUANgAWjcJMoLVPMLQ9Vl-ltOotCaXQwPlCCHDiVwkwJRJI1OeJvBCElPD2L9PiAz1UOLLlQV5flBU6bCD1DBAbiTbUgkjdMDAODU8hoxl5GQwt2UBEtmN0VjISFZwOIVLjCVPR4EyeEIswMI1eM8fjnzeYSXlExCJILa1pJ9JieXkiEOhCFTcI2LNPDubwAk8dxMmVQkDKMwTTPCTIxPNSzgIYmS7Mwlo5OEHAKzIMxUBICAXJDSDEFE3ZAmPLFvGVNVEgM08nzpMLcW1AwTws5koqLGKHQtTLDwJLYmC8rEQkJe5nFq5wk38JgsVC48CXCII-Pqy0UKa2yWvkctKzAata0IetG2bVs+A7Lt+DariCSzLq3E1aqBqjXjnAjcJwgOe5cioxJvFmyTrO9dDSwtFb6CrGs6wbXgmxbNt9u7Bhe37QdYAAvdwKyvDNnSfjuou-rBrvYJU3TBNtiCRIb3eqyQMYpbMD+gGNq2kGdvBztu2S1KwHSo7ss2ZUPM-PEfLCUJQlvPUEHvU9jKyLE+Jm2ikNJ6K3QtJLeBStLIHZ5HCaTciI2MlxaUyFxvwKIA */
   id: 'level2_state_machine',
   initial: 'create_group_popover',
   context: {
-    iam_user_template: template_nodes.iam_user as Node<IAMUserNodeData>,
-    iam_group_template: template_nodes.iam_group as Node<IAMGroupNodeData>,
+    iam_user_template: TEMPLATE_USER_NODE,
+    iam_group_template: TEMPLATE_GROUP_NODE,
     level_title: 'IAM Groups',
     level_description: 'Learn about Identity and Access Management',
     level_number: 1,
-    next_iam_node_id: 1,
-    next_node_position: { x: 100, y: 100 },
     next_popover_index: 0,
     next_popup_index: 0,
     state_name: 'inside_tutorial',
@@ -80,15 +98,48 @@ export const stateMachine = setup({
     edges: [],
     final_edges: edges,
     level_objectives: LEVEL_OBJECTIVES,
-    temp: 'temp',
+    next_iam_node_id: {
+      [IAMNodeEntity.Group]: FIRST_CUSTOM_GROUP_ID,
+      [IAMNodeEntity.User]: FIRST_CUSTOM_USER_ID,
+      [IAMNodeEntity.Policy]: FIRST_CUSTOM_POLICY_ID,
+      [IAMNodeEntity.Role]: 1,
+    },
+    next_iam_node_default_position: {
+      x: theme.sizes.iamNodeWidthInPixels / 2,
+      y: theme.sizes.iamNodeWidthInPixels / 2,
+    },
+    fixed_iam_nodes_positions: {
+      [getNodeName(IAMNodeEntity.Group, FIRST_CUSTOM_GROUP_ID)]: {
+        x: IAM_NODE_WIDTH * 2,
+        y: GROUP_NODE_Y_OFFSET,
+      },
+      [getNodeName(IAMNodeEntity.User, FIRST_CUSTOM_USER_ID)]: {
+        x: IAM_NODE_WIDTH * 3.5, // TODO: Find a better way to represent those magic numbers
+        y: USER_NODE_Y_OFFSET,
+      },
+    },
   },
   on: {
-    ADD_IAM_NODE: {
+    ADD_IAM_USER_NODE: {
       actions: [
         assign({
           nodes: ({ context, event }) => [...context.nodes, event.node],
         }),
-        'iam_node_creation_side_effects',
+        {
+          type: 'iam_node_creation_side_effects',
+          params: ({ event }) => ({ node: event.node.data }),
+        },
+      ],
+    },
+    ADD_IAM_GROUP_NODE: {
+      actions: [
+        assign({
+          nodes: ({ context, event }) => [...context.nodes, event.node],
+        }),
+        {
+          type: 'iam_node_creation_side_effects',
+          params: ({ event }) => ({ node: event.node.data }),
+        },
       ],
     },
     UPDATE_IAM_NODE: {
@@ -222,8 +273,15 @@ export const stateMachine = setup({
         show_popovers: true,
       }),
       on: {
-        IAM_GROUP_CREATED: {
+        ADD_IAM_GROUP_NODE: {
           actions: [
+            assign({
+              nodes: ({ context, event }) => [...context.nodes, event.node],
+            }),
+            {
+              type: 'iam_node_creation_side_effects',
+              params: ({ event }) => ({ node: event.node.data }),
+            },
             {
               type: 'change_objective_progress',
               params: { id: 'create_iam_group', finished: true },
@@ -293,7 +351,7 @@ export const stateMachine = setup({
                     required_edges: [
                       _.find(edges, { id: getEdgeName('iam_policy_1', 'iam_group_1') }) as Edge,
                       _.find(edges, { id: getEdgeName('iam_policy_2', 'iam_group_1') }) as Edge,
-                      // _.find(edges, { id: getEdgeName('iam_policy_3', 'iam_group_1') }) as Edge,
+                      _.find(edges, { id: getEdgeName('iam_policy_3', 'iam_group_1') }) as Edge,
                     ],
                     locked_edges: [],
                   },

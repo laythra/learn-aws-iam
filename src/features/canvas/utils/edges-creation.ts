@@ -69,7 +69,6 @@ export function getUserToResourceEdgesForGroupAccess(
           id: getEdgeName(user.id, resourceId),
           source: user.id,
           target: resourceId,
-          sourceHandle: 'left',
           style: { stroke: '#03346E' },
           label: 'Has access to',
           animated: true,

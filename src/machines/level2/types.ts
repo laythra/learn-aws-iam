@@ -5,7 +5,8 @@ import type {
   LevelObjective,
 } from '@/machines/types';
 
-export type Context = GenericContext & { temp: string };
+export type Context = GenericContext;
+
 export type EventData =
   | GenericEventData
   | { type: 'CREATE_GROUP_POPUP_OPENED' }

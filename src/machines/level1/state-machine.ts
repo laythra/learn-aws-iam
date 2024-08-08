@@ -5,6 +5,7 @@ import { setup, assign } from 'xstate';
 import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
 import type { Context, InsideLevelMetadata, EventData } from './types';
+import { CreatableIAMNodeEntity, IAMNodeEntity, type IAMAnyNodeData } from '@/types';
 import { IAMGroupNodeData, IAMUserNodeData } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
@@ -20,18 +21,29 @@ export const stateMachine = setup({
       next_popover_index: ({ context }) => context.next_popover_index + 1,
       show_popovers: true,
     }),
-    iam_user_creation_side_effects: assign({
-      next_iam_node_id: ({ context }) => context.next_iam_node_id + 1,
-      next_node_position: ({ context }) => ({
-        x: context.next_node_position.x + 20,
-        y: context.next_node_position.y + 20,
-      }),
-    }),
     hide_popups: assign({ show_popups: false }),
     change_objective_progress: assign({
       level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) => ({
         ..._.update(context.level_objectives, [id, 'finished'], _.constant(finished)), // cloning is a must since update returns the same reference
       }),
+    }),
+    iam_node_creation_side_effects: assign({
+      next_iam_node_id: ({ context }, { node }: { node: IAMAnyNodeData }) =>
+        _.update(
+          { ...context.next_iam_node_id },
+          [node.entity],
+          _.constant(context.next_iam_node_id[node.entity as CreatableIAMNodeEntity] + 1)
+        ),
+      next_iam_node_default_position: ({ context }, { node }: { node: IAMAnyNodeData }) => {
+        if (node.id in context.fixed_iam_nodes_positions) {
+          return context.next_iam_node_default_position;
+        } else {
+          return {
+            x: context.next_iam_node_default_position.x + 20,
+            y: context.next_iam_node_default_position.y + 20,
+          };
+        }
+      },
     }),
   },
 }).createMachine({
@@ -44,8 +56,6 @@ export const stateMachine = setup({
     level_title: 'IAM Basics',
     level_description: 'Learn about Identity and Access Management',
     level_number: 1,
-    next_iam_node_id: 1,
-    next_node_position: { x: 100, y: 100 },
     next_popover_index: 0,
     next_popup_index: 0,
     state_name: 'inside_tutorial',
@@ -56,12 +66,35 @@ export const stateMachine = setup({
     edges: [],
     final_edges: edges,
     level_objectives: LEVEL_OBJECTIVES,
+    next_iam_node_id: Object.values(IAMNodeEntity).reduce(
+      (acc, entity) => ({ ...acc, [entity]: 1 }),
+      {}
+    ) as { [k in IAMNodeEntity]: number },
+    next_iam_node_default_position: { x: 500, y: 500 },
+    fixed_iam_nodes_positions: {},
   },
   on: {
-    ADD_IAM_NODE: {
-      actions: assign({
-        nodes: ({ context, event }) => [...context.nodes, event.node],
-      }),
+    ADD_IAM_USER_NODE: {
+      actions: [
+        assign({
+          nodes: ({ context, event }) => [...context.nodes, event.node],
+        }),
+        {
+          type: 'iam_node_creation_side_effects',
+          params: ({ event }) => ({ node: event.node.data }),
+        },
+      ],
+    },
+    ADD_IAM_GROUP_NODE: {
+      actions: [
+        assign({
+          nodes: ({ context, event }) => [...context.nodes, event.node],
+        }),
+        {
+          type: 'iam_node_creation_side_effects',
+          params: ({ event }) => ({ node: event.node.data }),
+        },
+      ],
     },
     ADD_EDGE: {
       actions: assign({
@@ -90,9 +123,6 @@ export const stateMachine = setup({
       actions: assign({
         show_popovers: false,
       }),
-    },
-    IAM_USER_CREATED: {
-      actions: 'iam_user_creation_side_effects',
     },
   },
   entry: assign({
@@ -157,9 +187,8 @@ export const stateMachine = setup({
             show_popovers: true,
           }),
           on: {
-            IAM_USER_CREATED: {
+            ADD_IAM_USER_NODE: {
               actions: [
-                { type: 'iam_user_creation_side_effects', params: {} },
                 {
                   type: 'change_objective_progress',
                   params: { id: 'create_iam_user', finished: true },

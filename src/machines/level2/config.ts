@@ -44,9 +44,19 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: 'iam_user',
-    popover_title: `Scaling things up!`,
+    popover_title: `Nice! 🔥`,
     popover_content: `
-      Let's allow your user to access all resources in one go
+      Notice how the IAM user inherited the policies attached to the group.
+    `,
+    show_next_button: true,
+    show_close_button: true,
+    popover_placement: 'start',
+  },
+  {
+    element_id: 'iam_user',
+    popover_title: `Nice! 🔥`,
+    popover_content: `
+      Create your own user and have them inherit the policies attached to the group as well.
     `,
     show_next_button: true,
     show_close_button: true,
@@ -210,7 +220,7 @@ export const INITIAL_POLICIES_INFO: Pick<
     resources_affected: [INITIAL_RESOURCES_INFO[1].id],
   },
   {
-    id: 'ec2_read_policy_1',
+    id: 'iam_policy_3',
     label: 'ec2-read-access',
     code: EC2_READ_POLICY_CONTENT,
     resources_affected: [INITIAL_RESOURCES_INFO[2].id],

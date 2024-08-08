@@ -12,20 +12,45 @@ export const initial_nodes: Node<IAMAnyNodeData>[] = [
   ...INITIAL_RESOURCE_NODES,
 ];
 
-const edgesInfo: [string, string][] = [
-  ['iam_policy_1', 'iam_group_1'],
-  ['iam_policy_2', 'iam_group_1'],
-  ['iam_policy_3', 'iam_group_1'],
-  ['iam_user_1', 'iam_group_1'],
-  ['iam_user_2', 'iam_group_1'],
-  ['iam_user_3', 'iam_group_1'],
-  ['iam_user', 'iam_group_1'],
+const edgesInfo = [
+  {
+    source: 'iam_user_1',
+    source_handle: 'right',
+    target: 'iam_group_1',
+    target_handle: 'left',
+  },
+  {
+    source: 'iam_user_2',
+    source_handle: 'left',
+    target: 'iam_group_1',
+    target_handle: 'right',
+  },
+  {
+    source: 'iam_policy_1',
+    source_handle: 'top',
+    target: 'iam_group_1',
+    target_handle: 'bottom',
+  },
+  {
+    source: 'iam_policy_2',
+    source_handle: 'top',
+    target: 'iam_group_1',
+    target_handle: 'bottom',
+  },
+  {
+    source: 'iam_policy_3',
+    source_handle: 'top',
+    target: 'iam_group_1',
+    target_handle: 'bottom',
+  },
 ];
 
-export const edges: Edge[] = edgesInfo.map(([source, target]) => ({
+export const edges: Edge[] = edgesInfo.map(({ source, target, source_handle, target_handle }) => ({
   id: getEdgeName(source, target),
   source,
   target,
+  sourceHandle: source_handle,
+  targetHandle: target_handle,
   animated: true,
   arrowHeadType: 'arrowclosed',
   type: source.includes('user') ? 'smoothstep' : 'straight',

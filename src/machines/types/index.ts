@@ -1,6 +1,7 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
-import type { Edge, Node } from 'reactflow';
+import type { Edge, Node, XYPosition } from 'reactflow';
 
+import type { CreatableIAMNodeEntity } from '@/types';
 import {
   IAMAnyNodeData,
   IAMEdgeData,
@@ -18,14 +19,15 @@ export interface GenericContext {
   next_popover_index: number;
   next_popup_index: number;
   state_name: string;
-  next_iam_node_id: number;
+  next_iam_node_id: { [k in CreatableIAMNodeEntity]: number };
   nodes: Node<IAMAnyNodeData>[];
   edges: Edge[];
   final_edges: Edge[];
   show_popovers: boolean;
   show_popups: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
-  next_node_position: { x: number; y: number };
+  next_iam_node_default_position: XYPosition;
+  fixed_iam_nodes_positions: { [key: string]: XYPosition };
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
   default_policy?: string;
@@ -54,6 +56,8 @@ export type GenericEventData =
         | 'IAM_POLICY_ATTACHED_TO_GROUP';
     }
   | { type: 'ADD_IAM_NODE'; node: Node }
+  | { type: 'ADD_IAM_USER_NODE'; node: Node }
+  | { type: 'ADD_IAM_GROUP_NODE'; node: Node }
   | { type: 'UPDATE_IAM_NODE'; node: Node }
   | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }
   | { type: 'DELETE_EDGE'; edge: Edge<IAMEdgeData> }

@@ -99,7 +99,7 @@ export const edges: Edge[] = [
     target: edgesInfo[0][1],
     sourceHandle: Position.Bottom,
     targetHandle: Position.Top,
-    label: 'Invalid attach policies to resources',
+    label: "Invalid - can't attach policies to resources directly",
     labelBgPadding: [8, 4],
     labelBgBorderRadius: 4,
     labelBgStyle: { fill: '#FFCC00', color: '#fff', fillOpacity: 1 },

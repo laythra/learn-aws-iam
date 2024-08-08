@@ -20,6 +20,12 @@ export enum IAMNodeImage {
   Server = 'server',
 }
 
+export type CreatableIAMNodeEntity =
+  | IAMNodeEntity.User
+  | IAMNodeEntity.Group
+  | IAMNodeEntity.Policy
+  | IAMNodeEntity.Role;
+
 // Serves as a base interface for all node data types
 // Should not be used directly
 interface IAMNodeData {
