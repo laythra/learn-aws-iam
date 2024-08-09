@@ -7,6 +7,8 @@ export enum IAMNodeEntity {
   Policy = 'IAM Policy',
   Resource = 'AWS Resource',
   S3Bucket = 'S3 Bucket',
+  DynamoDBTable = 'DynamoDB Table',
+  EC2Instance = 'EC2 Instance',
 }
 
 export enum IAMNodeImage {
@@ -14,28 +16,57 @@ export enum IAMNodeImage {
   S3Bucket = 'bucket',
   Policy = 'policy',
   Group = 'group',
+  Database = 'database',
+  Server = 'server',
 }
 
-export interface IAMNodeProps {
+export type CreatableIAMNodeEntity =
+  | IAMNodeEntity.User
+  | IAMNodeEntity.Group
+  | IAMNodeEntity.Policy
+  | IAMNodeEntity.Role;
+
+// Serves as a base interface for all node data types
+// Should not be used directly
+interface IAMNodeData {
   id: string;
   label: string;
   entity: IAMNodeEntity;
   description: string;
   content?: string;
-}
-
-export interface IAMCanvasNodeProps extends IAMNodeProps {
   handles: HandleProps[];
   image: IAMNodeImage;
   code?: string;
 }
 
-export interface IAMUserNodeProps extends IAMNodeProps {
-  associatedPolicies: IAMNodeProps[];
+export interface IAMUserNodeData extends IAMNodeData {
+  associated_policies: IAMNodeData[];
 }
 
-export interface IAMGroupNodeProps extends IAMNodeProps {
-  users: IAMUserNodeProps[];
+export interface IAMGroupNodeData extends IAMNodeData {
+  attached_users: IAMUserNodeData[];
+  attached_policies: IAMPolicyNodeData[];
 }
 
-export interface IAMPolicyNodeProps extends IAMNodeProps {}
+export interface IAMPolicyNodeData extends IAMNodeData {
+  resources_affected: string[];
+}
+
+export interface IAMGroupNodeData extends IAMNodeData {}
+export interface IAMResourceNodeData extends IAMNodeData {}
+
+export type IAMAnyNodeData =
+  | IAMUserNodeData
+  | IAMGroupNodeData
+  | IAMPolicyNodeData
+  | IAMResourceNodeData;
+
+export interface IAMEdgeData {
+  source_node_data: IAMAnyNodeData;
+  target_node_data: IAMAnyNodeData;
+}
+
+export type IAMNodeDataMapping = {
+  iam_user: IAMUserNodeData;
+  iam_group: IAMGroupNodeData;
+};

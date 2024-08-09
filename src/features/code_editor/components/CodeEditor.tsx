@@ -20,7 +20,6 @@ import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
 import { CodeEditorWindow } from './CodeEditorWindow';
 import { useCodeEditor } from '../hooks/useCodeEditor';
 import { WithPopoverButton } from '@/components/Decorated';
-import { useIAMNodesManager } from '@/hooks/useIAMNodesManager';
 import { IAMScriptableEntity, IAMNodeEntity } from '@/types';
 
 interface CodeEditorProps {
@@ -30,7 +29,6 @@ interface CodeEditorProps {
 export const CodeEditor: React.FC<CodeEditorProps> = ({ initialPolicy }) => {
   const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
     useCodeEditor(initialPolicy);
-  const { createNode } = useIAMNodesManager();
   const editorContentRef = React.useRef<HTMLDivElement>(null);
   const [iamEntity, setIamEntity] = useState<IAMScriptableEntity>(IAMNodeEntity.Policy);
 
@@ -46,7 +44,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ initialPolicy }) => {
       content: renderedContent,
     };
 
-    createNode(node);
+    // TODO: Create a new node through level state machine
     closeCodeEditor();
   };
 
@@ -83,8 +81,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ initialPolicy }) => {
             mr={3}
             onClick={submit}
             isDisabled={!_.isEmpty(renderedErrors)}
-            id='modal_content'
-            container_ref={editorContentRef}
+            elementid='modal_content'
           >
             Submit
           </WithPopoverButton>

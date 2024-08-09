@@ -1,23 +1,33 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
-import type { Edge, Node } from 'reactflow';
+import type { Edge, Node, XYPosition } from 'reactflow';
 
-import { IAMCanvasNodeProps, IAMNodeEntity } from '@/types';
+import type { CreatableIAMNodeEntity } from '@/types';
+import {
+  IAMAnyNodeData,
+  IAMEdgeData,
+  IAMGroupNodeData,
+  IAMNodeEntity,
+  IAMUserNodeData,
+} from '@/types';
 
 export interface GenericContext {
-  iam_user_template: Node<IAMCanvasNodeProps>;
+  iam_user_template: Node<IAMUserNodeData>;
+  iam_group_template: Node<IAMGroupNodeData>;
   level_title: string;
   level_description: string;
   level_number: number;
   next_popover_index: number;
+  next_popup_index: number;
   state_name: string;
-  next_iam_user_id: number;
-  nodes: Node[];
+  next_iam_node_id: { [k in CreatableIAMNodeEntity]: number };
+  nodes: Node<IAMAnyNodeData>[];
   edges: Edge[];
   final_edges: Edge[];
   show_popovers: boolean;
   show_popups: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
-  next_node_position: { x: number; y: number };
+  next_iam_node_default_position: XYPosition;
+  fixed_iam_nodes_positions: { [key: string]: XYPosition };
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
   default_policy?: string;
@@ -25,6 +35,7 @@ export interface GenericContext {
   level_finished?: boolean;
 }
 
+// Serves as a list of all events that the UI elements can send to the state machine
 export type GenericEventData =
   | {
       type:
@@ -33,15 +44,24 @@ export type GenericEventData =
         | 'NEXT_POPUP'
         | 'IAM_POLICY_CONNECTED'
         | 'IAM_USER_CREATED'
+        | 'IAM_GROUP_CREATED'
         | 'BEGIN'
         | 'COMPLETE'
         | 'CREATE_USER_POPUP_OPENED'
         | 'HIDE_POPOVERS'
-        | 'CREATE_POLICY_POPUP_OPENED';
+        | 'CREATE_POLICY_POPUP_OPENED'
+        | 'CREATE_IAM_IDENTITY_POPUP_OPENED'
+        | 'CREATE_IAM_IDENTITY_TAB_CHANGED'
+        | 'IAM_USER_ATTACHED_TO_GROUP'
+        | 'IAM_POLICY_ATTACHED_TO_GROUP';
     }
   | { type: 'ADD_IAM_NODE'; node: Node }
-  | { type: 'ADD_EDGE'; edge: Edge }
-  | { type: 'SET_EDGES'; edges: Edge[] }
+  | { type: 'ADD_IAM_USER_NODE'; node: Node }
+  | { type: 'ADD_IAM_GROUP_NODE'; node: Node }
+  | { type: 'UPDATE_IAM_NODE'; node: Node }
+  | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }
+  | { type: 'DELETE_EDGE'; edge: Edge<IAMEdgeData> }
+  | { type: 'SET_EDGES'; edges: Edge<IAMEdgeData>[] }
   | { type: 'SET_NODES'; nodes: Node[] }
   | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage };
 
@@ -63,7 +83,6 @@ export type PopoverTutorialMessage = {
   show_next_button: boolean;
   show_close_button: boolean;
   popover_placement?: PlacementWithLogical;
-  container_ref?: React.RefObject<HTMLElement>; // Defines a ref to the container in which the popover should be rendered
 };
 
 export type PopupTutorialMessage = {

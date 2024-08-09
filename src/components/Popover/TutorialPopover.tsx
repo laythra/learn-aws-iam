@@ -46,7 +46,11 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
 
       <PopoverContent>
         <PopoverArrow />
-        <PopoverHeader fontWeight='semibold' borderBottomWidth={description ? 1 : 0}>
+        <PopoverHeader
+          fontWeight='semibold'
+          borderBottomWidth={description ? 1 : 0}
+          fontSize='16px'
+        >
           {label}
         </PopoverHeader>
         {showCloseButton && <PopoverCloseButton onClick={onCloseClick} />}

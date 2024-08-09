@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { forwardRef, ForwardRefExoticComponent, PropsWithoutRef } from 'react';
 
-import { LevelsProgressionContext } from '@/components/levels_progression/LevelsProgressionProvider'; // eslint-disable-line
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 
 /**
  * `withPopover` is a decorator that wraps a component with a popover.
@@ -9,15 +9,15 @@ import { TutorialPopover } from '@/components/Popover/TutorialPopover';
  * @param {React.FC<T>} WrappedComponent The component to wrap with a popover.
  * @returns The wrapped component with a popover.
  */
-export const withPopover = <T extends { id: string; container_ref?: React.RefObject<HTMLElement> }>(
+export const withPopover = <T extends { elementid: string }, R = HTMLElement>(
   WrappedComponent: React.FC<T>
-): React.FC<T> => {
-  const WithPopover: React.FC<T> = props => {
+): ForwardRefExoticComponent<PropsWithoutRef<T> & React.RefAttributes<R>> => {
+  const WithPopover = forwardRef<R, T>((props, ref) => {
     const machineActor = LevelsProgressionContext.useActorRef();
     const { popover_content: popoverContent, show_popovers: showPopovers } =
       LevelsProgressionContext.useSelector(state => state.context);
 
-    const popoverOpen = showPopovers && popoverContent?.element_id === props.id;
+    const popoverOpen = showPopovers && popoverContent?.element_id === props.elementid;
 
     const goToNextPopOver = (): void => {
       machineActor.send({ type: 'NEXT_POPOVER' });
@@ -38,10 +38,12 @@ export const withPopover = <T extends { id: string; container_ref?: React.RefObj
         onNextClick={goToNextPopOver}
         onCloseClick={closePopover}
       >
-        <WrappedComponent {...props} />
+        <WrappedComponent {...props} ref={ref} />
       </TutorialPopover>
     );
-  };
+  });
+
+  WithPopover.displayName = `WithPopover(${WrappedComponent.displayName || WrappedComponent.name})`;
 
   return WithPopover;
 };

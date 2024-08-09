@@ -44,10 +44,10 @@ export const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
           _hover={{ bg: 'gray.200', opacity: 1 }}
         />
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent w='500px' overflowY='auto'>
         <PopoverArrow />
         <PopoverHeader textAlign='left' display='flex' alignItems='center'>
-          <Text fontSize='16px' fontWeight='500'>
+          <Text fontSize='16px' fontWeight='700'>
             {label}
           </Text>
         </PopoverHeader>

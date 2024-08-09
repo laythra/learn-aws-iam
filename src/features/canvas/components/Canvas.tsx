@@ -2,19 +2,27 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { Box } from '@chakra-ui/react';
 import _ from 'lodash';
-import ReactFlow, {
-  Edge,
-  Connection,
-  useNodesState,
-  useEdgesState,
-  ReactFlowInstance,
-} from 'reactflow';
+import type { Connection, Edge, Node } from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, ReactFlowInstance } from 'reactflow';
 import { EventFromLogic } from 'xstate';
 
-import { LevelsProgressionContext } from '../levels_progression/LevelsProgressionProvider';
+import IAMCanvasNode from './IAMCanvasNode';
+import {
+  attachPolicyToGroup,
+  attachUserToGroup,
+  getUserToResourceEdgesForGroupAccess,
+} from '../utils/edges-creation';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
-import IAMCanvasNode from '@/components/Canvas/IAMCanvasNode';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { GenericInsideLevelMetadata } from '@/machines/types';
+import {
+  type IAMEdgeData,
+  type IAMGroupNodeData,
+  type IAMUserNodeData,
+  IAMAnyNodeData,
+  IAMNodeEntity,
+  IAMPolicyNodeData,
+} from '@/types';
 import { getEdgeName } from '@/utils/names';
 import storage from '@/utils/storage';
 
@@ -31,10 +39,14 @@ const Canvas: React.FC = () => {
   const [nodesState, setNodesState, onNodesChange] = useNodesState(levelState.context.nodes);
   const [edgesState, setEdgesState, onEdgesChange] = useEdgesState(levelState.context.edges);
 
-  const [rfInstance, setRfInstance] = useState<ReactFlowInstance>();
+  const [rfInstance] = useState<ReactFlowInstance>();
 
-  const setEdges = (edges: Edge[]): void => {
+  const setEdges = (edges: Edge<IAMEdgeData>[]): void => {
     levelActor.send({ type: 'SET_EDGES', edges: edges });
+  };
+
+  const updateNode = (node: Node<IAMAnyNodeData>): void => {
+    levelActor.send({ type: 'UPDATE_IAM_NODE', node: node });
   };
 
   useEffect(() => {
@@ -42,7 +54,9 @@ const Canvas: React.FC = () => {
   }, [levelState.context.edges]);
 
   useEffect(() => {
-    setNodesState(levelState.context.nodes);
+    // Doing this to retain old nodes state that's not stored in state machine; ie. position state
+    const newNodes = _.differenceBy(levelState.context.nodes, nodesState, 'id');
+    setNodesState([...nodesState, ...newNodes]);
   }, [levelState.context.nodes]);
 
   useEffect(() => {
@@ -60,10 +74,18 @@ const Canvas: React.FC = () => {
 
       const edgeName = getEdgeName(params.source as string, params.target as string);
       const templateEdge = _.find(levelState.context.final_edges, { id: edgeName });
+      const sourceNode = _.find(levelState.context.nodes, { id: params.source as string });
+      const targetNode = _.find(levelState.context.nodes, { id: params.target as string });
 
       let newEdge;
       if (templateEdge) {
-        newEdge = templateEdge;
+        newEdge = {
+          ...templateEdge,
+          data: {
+            source_node_data: sourceNode?.data,
+            target_node_data: targetNode?.data,
+          },
+        } as Edge<IAMEdgeData>;
       } else {
         // Create a generic edge
         newEdge = {
@@ -71,50 +93,86 @@ const Canvas: React.FC = () => {
           id: edgeName,
           label: 'Attached to',
           labelStyle: { fill: 'black', fontWeight: 700 },
-        } as Edge;
+          data: {
+            source_node_data: sourceNode?.data,
+            target_node_data: targetNode?.data,
+          },
+        } as Edge<IAMEdgeData>;
       }
 
       let newEdges = [...levelState.context.edges, newEdge];
+
+      if (targetNode?.data.entity !== IAMNodeEntity.Group) {
+        return;
+      }
+
+      let newGroupNode: Node<IAMGroupNodeData>;
+
+      if (sourceNode?.data.entity === IAMNodeEntity.User) {
+        newGroupNode = attachUserToGroup(
+          sourceNode as Node<IAMUserNodeData>,
+          targetNode as Node<IAMGroupNodeData>
+        );
+      } else {
+        newGroupNode = attachPolicyToGroup(
+          sourceNode as Node<IAMPolicyNodeData>,
+          targetNode as Node<IAMGroupNodeData>
+        );
+      }
+
+      const usersToResourceEdges = getUserToResourceEdgesForGroupAccess(
+        newGroupNode as Node<IAMGroupNodeData>,
+        levelState.context.nodes
+      );
+
+      newEdges = [...newEdges, ...usersToResourceEdges];
+      newEdges = _.uniqBy(newEdges, 'id');
       setEdges(newEdges);
+      updateNode(newGroupNode);
 
       _.forOwn(levelState.getMeta(), (value, statePath) => {
         const levelMetadata = value as GenericInsideLevelMetadata;
 
-        const finishedTargets = _.map(levelMetadata.connection_targets, connectionTarget => {
+        const finishedTargets = levelMetadata.connection_targets?.map(connectionTarget => {
           if (_.differenceBy(connectionTarget.required_edges, newEdges, 'id').length === 0) {
             // We unlock all locked edges
             _.forEach(connectionTarget.locked_edges, edge => {
               newEdges = [...newEdges, edge];
             });
 
-            setEdges(newEdges);
             return connectionTarget;
           }
         });
+
         if (_.compact(finishedTargets).length === levelMetadata.connection_targets?.length) {
           const actionName = levelState.context.metadata_keys[statePath];
           levelActor.send({ type: actionName } as EventFromLogic<typeof levelState.machine>);
         }
       });
     },
+
     [levelState]
   );
 
-  const handleInit = useCallback((instance: ReactFlowInstance) => {
-    if (!rfInstance) {
-      setRfInstance(instance);
-    }
-
-    const rawFlowState = storage.getKey('flow_state');
-    if (!rawFlowState) {
-      return;
-    }
-
-    const flowState = JSON.parse(rawFlowState);
-
-    setNodesState(flowState.nodes);
-    setEdgesState(flowState.edges);
+  const onEdgeDelete = useCallback((edges: Edge<IAMEdgeData>[]) => {
+    levelActor.send({ type: 'DELETE_EDGE', edge: edges[0] });
   }, []);
+
+  // const handleInit = useCallback((instance: ReactFlowInstance) => {
+  //   if (!rfInstance) {
+  //     setRfInstance(instance);
+  //   }
+
+  //   const rawFlowState = storage.getKey('flow_state');
+  //   if (!rawFlowState) {
+  //     return;
+  //   }
+
+  //   const flowState = JSON.parse(rawFlowState);
+
+  //   // setNodesState(flowState.nodes);
+  //   // setEdgesState(flowState.edges);
+  // }, []);
 
   return (
     <Box
@@ -130,8 +188,9 @@ const Canvas: React.FC = () => {
         nodes={nodesState}
         edges={edgesState}
         onConnect={onConnect}
+        onEdgesDelete={onEdgeDelete}
         nodeTypes={nodeTypes}
-        onInit={handleInit}
+        // onInit={handleInit}
       />
     </Box>
   );

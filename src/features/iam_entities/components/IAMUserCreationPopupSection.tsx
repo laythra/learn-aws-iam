@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FormControl, FormLabel, FormHelperText } from '@chakra-ui/react';
 
-import { InputWithPopover } from '@/components/Form/InputWithPopover';
+import { WithPopoverInput } from '@/components/Decorated';
 
 interface IAMUserCreationPopupSectionProps {
   userName: string;
@@ -17,8 +17,8 @@ export const IAMUserCreationPopupSection: React.FC<IAMUserCreationPopupSectionPr
     <>
       <FormControl>
         <FormLabel>User Name</FormLabel>
-        <InputWithPopover
-          id='username'
+        <WithPopoverInput
+          elementid='username'
           value={userName}
           onChange={e => setUserName(e.target.value)}
         />
