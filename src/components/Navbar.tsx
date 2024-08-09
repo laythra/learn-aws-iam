@@ -18,7 +18,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
           <Text fontSize='lg' fontWeight='bold' color='black'>
             Level 1/10
           </Text>
-          <NewEntityButtonWithPopover id='new_entity_btn' />
+          <NewEntityButtonWithPopover elementid='new_entity_btn' />
         </HStack>
       </Flex>
     </Box>
