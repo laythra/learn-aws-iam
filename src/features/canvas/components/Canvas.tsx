@@ -103,6 +103,7 @@ const Canvas: React.FC = () => {
       let newEdges = [...levelState.context.edges, newEdge];
 
       if (targetNode?.data.entity !== IAMNodeEntity.Group) {
+        setEdges(_.uniqBy(newEdges, 'id'));
         return;
       }
 
@@ -127,6 +128,7 @@ const Canvas: React.FC = () => {
 
       newEdges = [...newEdges, ...usersToResourceEdges];
       newEdges = _.uniqBy(newEdges, 'id');
+
       setEdges(newEdges);
       updateNode(newGroupNode);
 
