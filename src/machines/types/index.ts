@@ -88,6 +88,7 @@ export type PopoverTutorialMessage = {
 export type PopupTutorialMessage = {
   title: string;
   content: string;
+  image?: string;
 };
 
 export type LevelObjective = {
