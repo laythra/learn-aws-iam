@@ -1,15 +1,7 @@
 import '@fontsource/lato';
-import { extendTheme, type Theme } from '@chakra-ui/react';
+import { extendTheme } from '@chakra-ui/react';
 
-interface CustomTheme extends Theme {
-  sizes: Theme['sizes'] & {
-    iamNodeWidthInPixels: number;
-  };
-  fonts: Theme['fonts'] & {
-    heading: string;
-    body: string;
-  };
-}
+import type { CustomTheme } from './types';
 
 export const theme: CustomTheme = extendTheme({
   fonts: {
@@ -18,5 +10,6 @@ export const theme: CustomTheme = extendTheme({
   },
   sizes: {
     iamNodeWidthInPixels: 225,
+    iamNodeHeightInPixels: 75,
   },
 }) as CustomTheme;
