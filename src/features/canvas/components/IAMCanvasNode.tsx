@@ -1,12 +1,13 @@
 import { useContext } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
+import { useTheme } from '@chakra-ui/react';
 import { Handle } from 'reactflow';
 
 import { IAMNodeInfoButton } from './IAMNodeInfoButton';
 import { IAMNodeContext } from './IAMNodeProvider';
 import { WithPopoverBox } from '@/components/Decorated';
-import type { IAMAnyNodeData } from '@/types';
+import type { IAMAnyNodeData, CustomTheme } from '@/types';
 import { loadLocalImage } from '@/utils/image-loader';
 
 export interface IAMCanvasNodeProps {
@@ -25,6 +26,7 @@ export interface IAMCanvasNodeProps {
 const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const { entity, label, handles, image, code } = data;
   const { setSelectedNodeId, selectedNodeId } = useContext(IAMNodeContext);
+  const theme = useTheme<CustomTheme>();
 
   const handleClick = (): void => {
     setSelectedNodeId(id);
@@ -42,8 +44,8 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
       boxShadow='sm'
       borderRadius='md'
       position='relative'
-      width='225px'
-      height='75px'
+      width={theme.sizes.iamNodeWidthInPixels}
+      height={theme.sizes.iamNodeHeightInPixels}
       textAlign='center'
       borderWidth='2px'
       borderColor={isSelected ? 'blue.500' : 'gray.200'}

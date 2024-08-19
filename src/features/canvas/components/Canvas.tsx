@@ -3,7 +3,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import _ from 'lodash';
 import type { Connection, Edge, Node } from 'reactflow';
-import ReactFlow, { useNodesState, useEdgesState, ReactFlowInstance } from 'reactflow';
+import ReactFlow, {
+  useNodesState,
+  useEdgesState,
+  ReactFlowInstance,
+  useReactFlow,
+} from 'reactflow';
 import { EventFromLogic } from 'xstate';
 
 import IAMCanvasNode from './IAMCanvasNode';
@@ -12,6 +17,7 @@ import {
   attachUserToGroup,
   getUserToResourceEdgesForGroupAccess,
 } from '../utils/edges-creation';
+import { getNodeWithInitialPosition } from '../utils/nodes-position';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { GenericInsideLevelMetadata } from '@/machines/types';
@@ -33,10 +39,13 @@ const nodeTypes = {
 };
 
 const Canvas: React.FC = () => {
+  const { getViewport } = useReactFlow();
   const levelState = LevelsProgressionContext.useSelector(state => state);
   const levelActor = LevelsProgressionContext.useActorRef();
 
-  const [nodesState, setNodesState, onNodesChange] = useNodesState(levelState.context.nodes);
+  const [nodesState, setNodesState, onNodesChange] = useNodesState(
+    levelState.context.nodes.map(node => getNodeWithInitialPosition(node, getViewport()))
+  );
   const [edgesState, setEdgesState, onEdgesChange] = useEdgesState(levelState.context.edges);
 
   const [rfInstance] = useState<ReactFlowInstance>();
@@ -55,7 +64,10 @@ const Canvas: React.FC = () => {
 
   useEffect(() => {
     // Doing this to retain old nodes state that's not stored in state machine; ie. position state
-    const newNodes = _.differenceBy(levelState.context.nodes, nodesState, 'id');
+    const newNodes = _.differenceBy(levelState.context.nodes, nodesState, 'id').map(node =>
+      getNodeWithInitialPosition(node, getViewport())
+    );
+
     setNodesState([...nodesState, ...newNodes]);
   }, [levelState.context.nodes]);
 
