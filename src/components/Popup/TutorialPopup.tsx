@@ -6,12 +6,14 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Text,
   Image,
   Box,
+  Text,
 } from '@chakra-ui/react';
+import Markdown from 'react-markdown';
 
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { defaults } from '@/utils/markdown';
 
 interface TutorialPopupProps {}
 
@@ -35,10 +37,8 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
         <ModalHeader fontWeight='700' fontSize={24} pt={6}>
           {popupContent.title}
         </ModalHeader>
-        <ModalBody>
-          <Text pb={10} fontSize={18} color='grey.200'>
-            {popupContent.content}
-          </Text>
+        <ModalBody overflow='auto'>
+          <Markdown components={defaults}>{popupContent.content}</Markdown>
           {popupContent.image && (
             <Box borderRadius={16} borderWidth='2px' borderColor='gray.200'>
               <Image src={popupContent.image} borderRadius={16} />
