@@ -30,7 +30,7 @@ export interface GenericContext {
   fixed_iam_nodes_positions: { [key: string]: XYPosition };
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  default_policy?: string;
+  default_policy?: object;
   level_objectives: { [key: string]: LevelObjective };
   level_finished?: boolean;
 }

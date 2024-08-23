@@ -1,29 +1,20 @@
 import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@uiw/react-codemirror';
-import Ajv from 'ajv';
-
-import roleSchema from '@/schemas/aws-iam-role-schema.json';
-import sampleSchema from '@/schemas/sample-schema.json';
-import { IAMScriptableEntity, IAMNodeEntity } from '@/types';
-
-const ajv = new Ajv();
-const policyValidate = ajv.compile(sampleSchema);
-const roleValidate = ajv.compile(roleSchema);
+import { ValidateFunction } from 'ajv';
 
 interface LintConfig {
-  iamEntity: IAMScriptableEntity;
+  validateFunction: ValidateFunction;
 }
 
-export function lint(view: EditorView, config: LintConfig): Diagnostic[] {
+export function lint(view: EditorView, { validateFunction }: LintConfig): Diagnostic[] {
   const doc = view.state.doc.toString();
   const diagnostics: Diagnostic[] = [];
 
   try {
     const parsedDoc = JSON.parse(doc);
-    const validate = config.iamEntity === IAMNodeEntity.Policy ? policyValidate : roleValidate;
 
-    if (!validate(parsedDoc)) {
-      validate.errors?.forEach(error => {
+    if (!validateFunction(parsedDoc)) {
+      validateFunction.errors?.forEach(error => {
         diagnostics.push({
           from: view.state.doc.line(error.instancePath.split('/').length).from,
           to: view.state.doc.line(error.instancePath.split('/').length).to,

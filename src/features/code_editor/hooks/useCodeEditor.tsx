@@ -77,8 +77,8 @@ const contentReducer = (state: Content, action: ContentAction): Content => {
 };
 
 export const useCodeEditor = (
-  initialPolicyContent?: string,
-  initialRoleContent?: string
+  initialPolicyContent?: object,
+  initialRoleContent?: object
 ): CodeEditorContextState => {
   const context = useModal();
 

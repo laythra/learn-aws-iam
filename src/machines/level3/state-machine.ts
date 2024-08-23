@@ -13,7 +13,9 @@ import { TEMPLATE_GROUP_NODE, GROUP_NODE_Y_OFFSET } from './nodes/group-nodes';
 import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
 import { INITIAL_POLICY_NODES } from './nodes/policy-nodes';
 import { INITIAL_USER_NODES, TEMPLATE_USER_NODE, USER_NODE_Y_OFFSET } from './nodes/user-nodes';
+import s3ReadPolicySchema from './schemas/policy/s3-read-policy-schema.json';
 import type { Context, InsideLevelMetadata, EventData, LevelObjective } from './types';
+import { MANAGED_POLICIES } from '../config';
 import { PopoverTutorialMessage } from '../types';
 import { theme } from '@/theme';
 import { CreatableIAMNodeEntity, IAMAnyNodeData, IAMNodeEntity } from '@/types';
@@ -104,6 +106,7 @@ export const stateMachine = setup({
     edges: [],
     final_edges: edges,
     level_objectives: LEVEL_OBJECTIVES,
+    default_policy: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
     next_iam_node_id: {
       [IAMNodeEntity.Group]: FIRST_CUSTOM_GROUP_ID,
       [IAMNodeEntity.User]: FIRST_CUSTOM_USER_ID,

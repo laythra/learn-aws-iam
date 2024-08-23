@@ -8,7 +8,6 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  ModalCloseButton,
   Button,
   Text,
   Flex,
@@ -22,17 +21,18 @@ import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
 import { CodeEditorWindow } from './CodeEditorWindow';
 import { useCodeEditor } from '../hooks/useCodeEditor';
 import { WithPopoverButton } from '@/components/Decorated';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { IAMScriptableEntity, IAMNodeEntity } from '@/types';
 
-interface CodeEditorProps {
-  initialPolicy?: string;
-}
+interface CodeEditorProps {}
 
-export const CodeEditor: React.FC<CodeEditorProps> = ({ initialPolicy }) => {
+export const CodeEditor: React.FC<CodeEditorProps> = () => {
+  const initialPolicy = LevelsProgressionContext.useSelector(state => state.context.default_policy);
   const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
     useCodeEditor(initialPolicy);
   const editorContentRef = React.useRef<HTMLDivElement>(null);
   const [iamEntity, setIamEntity] = useState<IAMScriptableEntity>(IAMNodeEntity.Policy);
+  const [isLinting, setIsLinting] = useState<boolean>(false);
 
   const renderedErrors = errors[iamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
   const renderedContent = content[iamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
@@ -73,10 +73,10 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ initialPolicy }) => {
         </ModalHeader>
         <ModalBody ref={editorContentRef}>
           <CodeEditorWindow
-            entity={iamEntity}
             setErrors={_.partial(setErrors, iamEntity)}
             setContent={_.partial(setContent, iamEntity)}
             content={renderedContent}
+            setIsLinting={setIsLinting}
           />
           <CodeEditorErrorsBox errors={renderedErrors} />
         </ModalBody>
@@ -86,6 +86,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ initialPolicy }) => {
             mr={3}
             onClick={submit}
             isDisabled={!_.isEmpty(renderedErrors)}
+            isLoading={isLinting}
+            loadingText='Checking...'
             elementid='modal_content'
           >
             Submit
