@@ -14,6 +14,8 @@ import {
 } from '@chakra-ui/react';
 import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
+import { WithStateMachineEventIconButton } from '@/components/Decorated';
+
 interface IAMNodeInfoButtonProps {
   label: string;
   verboseDescription?: string;
@@ -30,7 +32,8 @@ export const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
   return (
     <Popover placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0}>
       <PopoverTrigger>
-        <IconButton
+        <WithStateMachineEventIconButton
+          event='IAM_NODE_CONTENT_OPENED'
           aria-label='info'
           icon={<CodeBracketIcon />}
           position='absolute'
