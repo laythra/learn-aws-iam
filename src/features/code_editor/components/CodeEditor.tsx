@@ -12,7 +12,9 @@ import {
   Button,
   Text,
   Flex,
-  Select,
+  TabList,
+  Tab,
+  Tabs,
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
@@ -48,6 +50,12 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ initialPolicy }) => {
     closeCodeEditor();
   };
 
+  const handleTabChange = (index: number): void => {
+    const newEntity = index === 0 ? IAMNodeEntity.Policy : IAMNodeEntity.Role;
+
+    setIamEntity(newEntity);
+  };
+
   return (
     <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor} id='modal_content'>
       <ModalOverlay />
@@ -55,17 +63,14 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ initialPolicy }) => {
         <ModalHeader>
           <Flex justifyContent='space-between'>
             <Text>New {_.upperFirst(iamEntity)}</Text>
-            <Select
-              value={iamEntity}
-              onChange={e => setIamEntity(e.target.value as IAMScriptableEntity)}
-              width={['100%', '50%']}
-            >
-              <option value={IAMNodeEntity.Policy}>Policy</option>
-              <option value={IAMNodeEntity.Role}>Role</option>
-            </Select>
+            <Tabs onChange={handleTabChange} variant='soft-rounded' size='sm'>
+              <TabList>
+                <Tab>{IAMNodeEntity.Policy}</Tab>
+                <Tab>{IAMNodeEntity.Role}</Tab>
+              </TabList>
+            </Tabs>
           </Flex>
         </ModalHeader>
-        <ModalCloseButton />
         <ModalBody ref={editorContentRef}>
           <CodeEditorWindow
             entity={iamEntity}
