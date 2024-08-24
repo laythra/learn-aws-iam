@@ -14,6 +14,7 @@ import {
   TabList,
   Tab,
   Tabs,
+  useTheme,
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
@@ -22,14 +23,14 @@ import { CodeEditorWindow } from './CodeEditorWindow';
 import { useCodeEditor } from '../hooks/useCodeEditor';
 import { WithPopoverButton } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { IAMScriptableEntity, IAMNodeEntity } from '@/types';
+import { IAMScriptableEntity, IAMNodeEntity, CustomTheme } from '@/types';
 
 interface CodeEditorProps {}
 
 export const CodeEditor: React.FC<CodeEditorProps> = () => {
-  const initialPolicy = LevelsProgressionContext.useSelector(state => state.context.default_policy);
+  const theme = useTheme<CustomTheme>();
   const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
-    useCodeEditor(initialPolicy);
+    useCodeEditor();
   const editorContentRef = React.useRef<HTMLDivElement>(null);
   const [iamEntity, setIamEntity] = useState<IAMScriptableEntity>(IAMNodeEntity.Policy);
   const [isLinting, setIsLinting] = useState<boolean>(false);
@@ -59,7 +60,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
   return (
     <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor} id='modal_content'>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent maxW={theme.sizes.modalsMaxWidthInPixels}>
         <ModalHeader>
           <Flex justifyContent='space-between'>
             <Text>New {_.upperFirst(iamEntity)}</Text>

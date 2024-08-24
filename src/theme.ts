@@ -11,5 +11,6 @@ export const theme: CustomTheme = extendTheme({
   sizes: {
     iamNodeWidthInPixels: 225,
     iamNodeHeightInPixels: 75,
+    modalsMaxWidthInPixels: 720,
   },
 }) as CustomTheme;
