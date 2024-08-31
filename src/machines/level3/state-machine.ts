@@ -2,16 +2,11 @@ import _ from 'lodash';
 import type { Node, Edge } from 'reactflow';
 import { setup, assign } from 'xstate';
 
-import {
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  LEVEL_OBJECTIVES,
-  HIDDEN_LEVEL_OBJECTIVES,
-} from './config';
+import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
 import { initial_nodes, edges } from './nodes';
 import { TEMPLATE_GROUP_NODE, GROUP_NODE_Y_OFFSET } from './nodes/group-nodes';
 import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
-import { INITIAL_POLICY_NODES } from './nodes/policy-nodes';
+import { INITIAL_POLICY_NODES, TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
 import { INITIAL_USER_NODES, TEMPLATE_USER_NODE, USER_NODE_Y_OFFSET } from './nodes/user-nodes';
 import s3ReadPolicySchema from './schemas/policy/s3-read-policy-schema.json';
 import type { Context, InsideLevelMetadata, EventData, LevelObjective } from './types';
@@ -19,7 +14,7 @@ import { MANAGED_POLICIES } from '../config';
 import { PopoverTutorialMessage } from '../types';
 import { theme } from '@/theme';
 import { CreatableIAMNodeEntity, IAMAnyNodeData, IAMNodeEntity } from '@/types';
-import { getEdgeName, getNodeName } from '@/utils/names';
+import { getNodeName } from '@/utils/names';
 
 const IAM_NODE_WIDTH = theme.sizes.iamNodeWidthInPixels;
 const FIRST_CUSTOM_GROUP_ID = INITIAL_GROUP_NODES.length + 1;
@@ -89,9 +84,11 @@ export const stateMachine = setup({
   },
 }).createMachine({
   id: 'level2_state_machine',
-  initial: 'tutorial_popup1',
+  initial: 'create_your_custom_policy_popover',
+  // initial: 'tutorial_popup1',
   context: {
     iam_user_template: TEMPLATE_USER_NODE,
+    iam_policy_template: TEMPLATE_POLICY_NODE,
     iam_group_template: TEMPLATE_GROUP_NODE,
     level_title: 'IAM Groups',
     level_description: 'Scaling your IAM setup with groups',
@@ -106,7 +103,6 @@ export const stateMachine = setup({
     edges: [],
     final_edges: edges,
     level_objectives: LEVEL_OBJECTIVES,
-    default_policy: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
     next_iam_node_id: {
       [IAMNodeEntity.Group]: FIRST_CUSTOM_GROUP_ID,
       [IAMNodeEntity.User]: FIRST_CUSTOM_USER_ID,
@@ -129,6 +125,14 @@ export const stateMachine = setup({
     },
   },
   on: {
+    ADD_IAM_NODE: {
+      actions: [
+        {
+          type: 'add_iam_node',
+          params: ({ event }) => ({ node: event.node }),
+        },
+      ],
+    },
     ADD_IAM_USER_NODE: {
       actions: [
         {
@@ -257,162 +261,20 @@ export const stateMachine = setup({
       entry: assign({
         popover_content: POPOVER_TUTORIAL_MESSAGES[1],
         show_popovers: true,
-      }),
-      // on: {
-      //   ADD_IAM_GROUP_NODE: {
-      //     actions: [
-      //       {
-      //         type: 'add_iam_node',
-      //         params: ({ event }) => ({ node: event.node }),
-      //       },
-      //       {
-      //         type: 'change_objective_progress',
-      //         params: { id: 'create_iam_group', finished: true },
-      //       },
-      //     ],
-      //     target: 'attach_nodes_to_group_tip',
-      //   },
-      // },
-    },
-    attach_nodes_to_group_tip: {
-      entry: assign({
-        popover_content: POPOVER_TUTORIAL_MESSAGES[3],
-        show_popovers: true,
-      }),
-      always: 'attach_nodes_to_group',
-    },
-    attach_nodes_to_group: {
-      type: 'parallel',
-      onDone: {
-        actions: [
+        scriptable_entities_creation_objectives: [
           {
-            type: 'change_objective_progress',
-            params: { id: 'attach_nodes_to_group', finished: true },
+            entity: IAMNodeEntity.Policy,
+            json_schema: s3ReadPolicySchema,
+            initial_code: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+            description:
+              'Create a policy that allows read access to the S3 bucket: staging-public-images',
+            on_finish_event: 'S3_READ_POLICY_CREATED',
+            validate_inside_code_editor: true,
           },
         ],
-        target: 'attach_your_user_to_group',
-      },
-      entry: assign({
-        metadata_keys: {
-          'level2_state_machine.attach_nodes_to_group.attach_users.in_progress':
-            'ALL_USERS_ATTACHED_TO_GROUP',
-          'level2_state_machine.attach_nodes_to_group.attach_policies.in_progress':
-            'ALL_POLICIES_ATTACHED_TO_GROUP',
-        },
       }),
-      states: {
-        attach_users: {
-          initial: 'in_progress',
-          states: {
-            in_progress: {
-              meta: {
-                connection_targets: [
-                  {
-                    required_edges: [
-                      _.find(edges, { id: getEdgeName('iam_user_1', 'iam_group_1') }) as Edge,
-                    ],
-                    locked_edges: [],
-                  },
-                ],
-              },
-              on: {
-                ALL_USERS_ATTACHED_TO_GROUP: 'complete',
-              },
-            },
-            complete: {
-              type: 'final',
-            },
-          },
-        },
-        attach_policies: {
-          initial: 'in_progress',
-          states: {
-            in_progress: {
-              meta: {
-                connection_targets: [
-                  {
-                    required_edges: [
-                      _.find(edges, { id: getEdgeName('iam_policy_1', 'iam_group_1') }) as Edge,
-                      _.find(edges, { id: getEdgeName('iam_policy_2', 'iam_group_1') }) as Edge,
-                      _.find(edges, { id: getEdgeName('iam_policy_3', 'iam_group_1') }) as Edge,
-                    ],
-                    locked_edges: [],
-                  },
-                ],
-              },
-              on: {
-                ALL_POLICIES_ATTACHED_TO_GROUP: 'complete',
-              },
-            },
-            complete: {
-              type: 'final',
-            },
-          },
-        },
-      },
-    },
-    attach_your_user_to_group: {
-      initial: 'create_your_user',
-      onDone: 'finished_level',
-      entry: [
-        {
-          type: 'add_new_level_objective',
-          params: {
-            id: 'attach_your_user_to_group',
-            objective: HIDDEN_LEVEL_OBJECTIVES['attach_your_user_to_group'],
-          },
-        },
-        assign({
-          popover_content: POPOVER_TUTORIAL_MESSAGES[4],
-          show_popovers: true,
-        }),
-      ],
-      states: {
-        create_your_user: {
-          on: {
-            ADD_IAM_USER_NODE: {
-              actions: [
-                {
-                  type: 'add_iam_node',
-                  params: ({ event }) => ({ node: event.node }),
-                },
-              ],
-              target: 'attach_to_group',
-            },
-          },
-        },
-        attach_to_group: {
-          entry: assign({
-            metadata_keys: {
-              'level2_state_machine.attach_your_user_to_group.attach_to_group':
-                'NEW_USER_ATTACHED_TO_GROUP',
-            },
-          }),
-          meta: {
-            connection_targets: [
-              {
-                required_edges: [
-                  _.find(edges, { id: getEdgeName('iam_user_2', 'iam_group_1') }) as Edge,
-                ],
-                locked_edges: [],
-              },
-            ],
-          },
-          on: {
-            NEW_USER_ATTACHED_TO_GROUP: {
-              actions: [
-                {
-                  type: 'change_objective_progress',
-                  params: { id: 'attach_your_user_to_group', finished: true },
-                },
-              ],
-              target: 'completed',
-            },
-          },
-        },
-        completed: {
-          type: 'final',
-        },
+      on: {
+        S3_READ_POLICY_CREATED: 'finished_level',
       },
     },
     finished_level: {

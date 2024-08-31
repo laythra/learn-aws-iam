@@ -1,9 +1,8 @@
-// prettier-ignore
-
+import { MANAGED_POLICIES } from '../config';
 import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
 import { IAMPolicyNodeData, IAMResourceNodeData, IAMUserNodeData } from '@/types';
 
-const firstContent = `
+const POPUP_MSG_1 = `
 Every policy we have used so far was **AWS Managed**.
 
 * **AWS Managed** policies are pre-built policies that you can attach
@@ -12,7 +11,7 @@ Every policy we have used so far was **AWS Managed**.
 * They cannot be edited, only attached or detached.
 `;
 
-const secondContent = `
+const POPUP_MSG_2 = `
 **Customer Managed** Policies are policies that you create and manage yourself.
 
 * You create them as \`JSON\` documents and attach them
@@ -20,7 +19,7 @@ to your IAM \`users\`, \`groups\`, or \`roles\`.
 * They give you more control over the permissions you grant as they are customized by you.
 `;
 
-const thirdContent = `
+const POPUP_MSG_3 = `
 Policies whether **AWS Managed** or **Customer Managed** have the same structure:
 * **Effect**: Whether the policy allows or denies the access
 * **Action**: The specific actions that the policy allows or denies
@@ -37,21 +36,6 @@ Policies whether **AWS Managed** or **Customer Managed** have the same structure
     },
   ],
 }|fullwidth,
-~~~
-`;
-
-const code = `
-~~~js
-{
-  Version: '2012-10-17',
-  Statement: [
-    {
-      "Effect": "Allow", ::badge[Effect to have on the resource]::
-      "Action": ['s3:Get*', 's3:List*'] ::badge[Effect]::
-      "Resource": '*', ::badge[Effect to have on the resource]::
-    },
-  ],
-},
 ~~~
 `;
 
@@ -77,71 +61,21 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: 'AWS Managed Policies',
-    content: firstContent,
+    content: POPUP_MSG_1,
   },
   {
     title: 'Customer Managed Policies',
-    content: secondContent,
+    content: POPUP_MSG_2,
   },
   {
     title: 'Policies Structure',
-    content: thirdContent,
+    content: POPUP_MSG_3,
   },
 ];
 
-export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
-  create_iam_group: {
-    finished: false,
-    label: 'Create an IAM Group',
-  },
-  attach_nodes_to_group: {
-    finished: false,
-    label: 'Make things easier to scale using the newly created group',
-  },
-};
+export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {};
 
-export const HIDDEN_LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
-  attach_your_user_to_group: {
-    finished: false,
-    label: 'Give your user access to all resources in one go',
-  },
-};
-
-const S3_READ_POLICY_CONTENT = JSON.stringify(
-  {
-    Version: '2012-10-17',
-    Statement: [
-      {
-        Effect: 'Allow',
-        Action: ['s3:Get*', 's3:List*'],
-        Resource: '*',
-      },
-    ],
-  },
-  null,
-  2
-);
-
-const DYNAMODB_READ_POLICY_CONTENT = JSON.stringify(
-  {
-    Version: '2012-10-17',
-    Statement: [
-      {
-        Effect: 'Allow',
-        Action: [
-          'dynamodb:GetItem',
-          'dynamodb:BatchGetItem',
-          'dynamodb:Query',
-          'dynamodb:Scan',
-          'dynamodb:DescribeTable',
-        ],
-        Resource: 'arn:aws:dynamodb:*:*:table/prod_Users',
-      },
-    ],
-  },
-  null,
-  2
-);
+export const HIDDEN_LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {};
 
 export const INITIAL_RESOURCES_INFO: Pick<
   IAMResourceNodeData,
@@ -155,7 +89,7 @@ export const INITIAL_POLICIES_INFO: Pick<
   {
     id: 'iam_policy_1',
     label: 's3-read-access',
-    code: S3_READ_POLICY_CONTENT,
+    code: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
     resources_affected: [],
     initial_position: 'center',
     position: { x: '100', y: '100' },
