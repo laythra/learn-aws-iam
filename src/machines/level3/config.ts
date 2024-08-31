@@ -1,6 +1,13 @@
+import s3ReadPolicySchema from './schemas/policy/s3-read-policy-schema.json';
 import { MANAGED_POLICIES } from '../config';
 import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
-import { IAMPolicyNodeData, IAMResourceNodeData, IAMUserNodeData } from '@/types';
+import {
+  IAMNodeEntity,
+  IAMPolicyNodeData,
+  IAMResourceNodeData,
+  IAMScriptableEntitiesCreationObjective,
+  IAMUserNodeData,
+} from '@/types';
 
 const POPUP_MSG_1 = `
 Every policy we have used so far was **AWS Managed**.
@@ -56,6 +63,15 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_close_button: false,
     popover_placement: 'top',
   },
+  {
+    element_id: 'iam_policy_2',
+    popover_title: 'Your first customer managed policy!',
+    popover_content: `You have created your first customer managed policy
+      This policy can be attached to any IAM entity.`,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'top',
+  },
 ];
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
@@ -74,8 +90,21 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
 ];
 
 export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {};
-
 export const HIDDEN_LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {};
+export const SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES: IAMScriptableEntitiesCreationObjective[][] = [
+  [
+    {
+      entity: IAMNodeEntity.Policy,
+      json_schema: s3ReadPolicySchema,
+      initial_code: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+      description:
+        'Create a policy that allows read access\
+          to the S3 bucket: staging-public-images',
+      on_finish_event: 'S3_READ_POLICY_CREATED',
+      validate_inside_code_editor: true,
+    },
+  ],
+];
 
 export const INITIAL_RESOURCES_INFO: Pick<
   IAMResourceNodeData,

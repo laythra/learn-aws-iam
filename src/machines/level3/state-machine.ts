@@ -2,7 +2,12 @@ import _ from 'lodash';
 import type { Node, Edge } from 'reactflow';
 import { setup, assign } from 'xstate';
 
-import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
+import {
+  POPOVER_TUTORIAL_MESSAGES,
+  POPUP_TUTORIAL_MESSAGES,
+  LEVEL_OBJECTIVES,
+  SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES,
+} from './config';
 import { initial_nodes, edges } from './nodes';
 import { TEMPLATE_GROUP_NODE, GROUP_NODE_Y_OFFSET } from './nodes/group-nodes';
 import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
@@ -31,13 +36,20 @@ export const stateMachine = setup({
     next_popover: assign({
       popover_content: ({ context }) => POPOVER_TUTORIAL_MESSAGES[context.next_popover_index ?? 0],
       next_popover_index: ({ context }) => context.next_popover_index + 1,
-      show_popovers: ({ context }) =>
-        context.next_popover_index + 1 < POPOVER_TUTORIAL_MESSAGES.length,
+      show_popovers: ({ context }) => context.next_popover_index < POPOVER_TUTORIAL_MESSAGES.length,
+      show_popups: false,
     }),
     next_popup: assign({
-      popup_content: ({ context }) => POPUP_TUTORIAL_MESSAGES[context.next_popup_index ?? 0],
+      popup_content: ({ context }) => POPUP_TUTORIAL_MESSAGES[context.next_popup_index],
       next_popup_index: ({ context }) => context.next_popup_index + 1,
       show_popups: ({ context }) => context.next_popup_index + 1 < POPUP_TUTORIAL_MESSAGES.length,
+      show_popovers: false,
+    }),
+    next_policy_role_objectives: assign({
+      policy_role_objectives: ({ context }) =>
+        SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES[context.next_policy_role_objectives_index ?? 0],
+      next_policy_role_objectives_index: ({ context }) =>
+        (context.next_policy_role_objectives_index ?? 0) + 1,
     }),
     hide_popups: assign({ show_popups: false }),
     hide_popovers: assign({ show_popovers: false }),
@@ -84,7 +96,7 @@ export const stateMachine = setup({
   },
 }).createMachine({
   id: 'level2_state_machine',
-  initial: 'create_your_custom_policy_popover',
+  initial: 'inside_tutorial',
   // initial: 'tutorial_popup1',
   context: {
     iam_user_template: TEMPLATE_USER_NODE,
@@ -203,88 +215,77 @@ export const stateMachine = setup({
     nodes: initial_nodes,
   }),
   states: {
-    tutorial_popup1: {
-      entry: assign({
-        show_popups: true,
-        popup_content: POPUP_TUTORIAL_MESSAGES[0],
-      }),
-      on: {
-        NEXT_POPUP: {
-          actions: 'next_popup',
-          target: 'tutorial_popup2',
-        },
-      },
-    },
-    tutorial_popup2: {
-      entry: assign({
-        show_popups: true,
-        popup_content: POPUP_TUTORIAL_MESSAGES[1],
-      }),
-      on: {
-        NEXT_POPUP: {
-          actions: 'next_popup',
-          target: 'tutorial_popup3',
-        },
-      },
-    },
-    tutorial_popup3: {
-      entry: assign({
-        show_popups: true,
-        popup_content: POPUP_TUTORIAL_MESSAGES[2],
-      }),
-      on: {
-        NEXT_POPUP: {
-          actions: 'next_popup',
-          target: 'aws_managed_policy_popover',
-        },
-      },
-    },
-    aws_managed_policy_popover: {
-      entry: assign({
-        popover_content: POPOVER_TUTORIAL_MESSAGES[0],
-        show_popovers: true,
-        show_popups: false,
-      }),
-      on: {
-        IAM_NODE_CONTENT_OPENED: 'view_policy_content',
-      },
-    },
-    view_policy_content: {
-      entry: assign({
-        show_popovers: false,
-      }),
-      after: {
-        3000: 'create_your_custom_policy_popover',
-      },
-    },
-    create_your_custom_policy_popover: {
-      entry: assign({
-        popover_content: POPOVER_TUTORIAL_MESSAGES[1],
-        show_popovers: true,
-        scriptable_entities_creation_objectives: [
-          {
-            entity: IAMNodeEntity.Policy,
-            json_schema: s3ReadPolicySchema,
-            initial_code: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
-            description:
-              'Create a policy that allows read access to the S3 bucket: staging-public-images',
-            on_finish_event: 'S3_READ_POLICY_CREATED',
-            validate_inside_code_editor: true,
+    inside_tutorial: {
+      initial: 'tutorial_popup1',
+      states: {
+        tutorial_popup1: {
+          entry: assign({
+            show_popups: true,
+            popup_content: POPUP_TUTORIAL_MESSAGES[0],
+          }),
+          on: {
+            NEXT_POPUP: {
+              actions: 'next_popup',
+              target: 'tutorial_popup2',
+            },
           },
-        ],
-      }),
-      on: {
-        S3_READ_POLICY_CREATED: 'finished_level',
+        },
+        tutorial_popup2: {
+          entry: assign({
+            show_popups: true,
+            popup_content: POPUP_TUTORIAL_MESSAGES[1],
+          }),
+          on: {
+            NEXT_POPUP: {
+              actions: 'next_popup',
+              target: 'tutorial_popup3',
+            },
+          },
+        },
+        tutorial_popup3: {
+          entry: assign({
+            show_popups: true,
+            popup_content: POPUP_TUTORIAL_MESSAGES[2],
+          }),
+          on: {
+            NEXT_POPUP: {
+              actions: 'next_popup',
+              target: 'aws_managed_policy_popover',
+            },
+          },
+        },
+        aws_managed_policy_popover: {
+          entry: ['next_popover'],
+          on: {
+            IAM_NODE_CONTENT_OPENED: 'view_policy_content',
+          },
+        },
+        view_policy_content: {
+          entry: assign({
+            show_popovers: false,
+          }),
+          after: {
+            3000: 'create_your_custom_policy_popover',
+          },
+        },
+        create_your_custom_policy_popover: {
+          entry: ['next_popover', 'next_policy_role_objectives'],
+          on: {
+            S3_READ_POLICY_CREATED: 'custom_policy_created',
+          },
+        },
+        custom_policy_created: {
+          entry: 'next_popover',
+          exit: 'hide_popovers',
+          on: {
+            NEXT_POPOVER: 'tutorial_finished',
+          },
+        },
+        tutorial_finished: {
+          type: 'final',
+        },
       },
     },
-    finished_level: {
-      entry: assign({
-        state_name: 'finished_level',
-        level_finished: true,
-        popover_content: POPOVER_TUTORIAL_MESSAGES[5],
-        show_popovers: true,
-      }),
-      type: 'final',
-    },
+    inside_level: {},
   },
 });

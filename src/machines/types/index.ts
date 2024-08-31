@@ -36,7 +36,8 @@ export interface GenericContext {
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
   level_objectives: { [key: string]: LevelObjective };
-  scriptable_entities_creation_objectives?: IAMScriptableEntitiesCreationObjective[];
+  policy_role_objectives?: IAMScriptableEntitiesCreationObjective[];
+  next_policy_role_objectives_index?: number;
   level_finished?: boolean;
 }
 

@@ -16,8 +16,6 @@ export const components: Components = {
   code: ({ children, ...props }: JSX.IntrinsicElements['code']) => {
     let isFullWidth = false;
 
-    console.log('children', children);
-
     const processedChildren = React.Children.map(children, child => {
       if (typeof child === 'string' && child.includes('|fullwidth')) {
         isFullWidth = true;

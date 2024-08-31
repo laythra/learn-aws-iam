@@ -18,12 +18,13 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 import { Node } from 'reactflow';
+import { EventFromLogic } from 'xstate';
 
 import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
 import { CodeEditorWindow } from './CodeEditorWindow';
 import { useCodeEditor } from '../hooks/useCodeEditor';
-import { WithPopoverButton } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMScriptableEntity, IAMNodeEntity, CustomTheme, IAMAnyNodeData } from '@/types';
 import { getNodeName } from '@/utils/names';
 
@@ -38,16 +39,21 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
   );
   const [isLinting, setIsLinting] = useState<boolean>(false);
   const levelActor = LevelsProgressionContext.useActorRef();
-  const [nextIamNodeId, policyNodeTemplate, scriptableEntityCreationObjective] =
+  const [nextIamNodeId, policyNodeTemplate, scriptableEntityCreationObjective, stateMachine] =
     LevelsProgressionContext.useSelector(state => [
       state.context.next_iam_node_id,
       state.context.iam_policy_template,
-      state.context.scriptable_entities_creation_objectives?.find(
+      state.context.policy_role_objectives?.find(
         objective => objective.validate_inside_code_editor
       ),
+      state.machine,
     ]);
+
   const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
-    useCodeEditor(scriptableEntityCreationObjective?.initial_code);
+    useCodeEditor(
+      scriptableEntityCreationObjective?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+      scriptableEntityCreationObjective?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess
+    );
 
   const renderedErrors = errors[selectedIamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
   const renderedContent = content[selectedIamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
@@ -65,6 +71,13 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     });
 
     levelActor.send({ type: 'ADD_IAM_NODE', node });
+
+    if (scriptableEntityCreationObjective?.on_finish_event) {
+      levelActor.send({
+        type: scriptableEntityCreationObjective.on_finish_event,
+      } as EventFromLogic<typeof stateMachine>);
+    }
+
     closeCodeEditor();
   };
 
@@ -100,17 +113,16 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
           <CodeEditorErrorsBox errors={renderedErrors} />
         </ModalBody>
         <ModalFooter>
-          <WithPopoverButton
+          <Button
             colorScheme='blue'
             mr={3}
             onClick={submit}
             isDisabled={!_.isEmpty(renderedErrors)}
             isLoading={isLinting}
             loadingText='Checking...'
-            elementid='modal_content'
           >
             Submit
-          </WithPopoverButton>
+          </Button>
           <Button variant='ghost' onClick={closeCodeEditor}>
             Cancel
           </Button>

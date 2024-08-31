@@ -6,24 +6,6 @@ import useModal from '@/hooks/useModal';
 import { ModalContextState } from '@/types';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 
-export const defaultRole = {
-  Version: '2012-10-17',
-  Statement: [
-    {
-      Effect: 'Allow',
-      Principal: {
-        Service: 'ec2.amazonaws.com',
-      },
-      Action: 'sts:AssumeRole',
-    },
-  ],
-};
-
-const defaultPolicy = {
-  Version: '2012-10-17',
-  Statement: [{ Effect: 'Allow', Action: '*', Resource: '*' }],
-};
-
 const MODAL_ID = 'code-editor';
 
 interface Errors {
@@ -91,8 +73,8 @@ export const useCodeEditor = (
     role: [],
   });
   const [content, dispatchContent] = useReducer(contentReducer, {
-    policy: JSON.stringify(initialPolicyContent ?? defaultPolicy, null, 2),
-    role: JSON.stringify(initialRoleContent ?? defaultRole, null, 2),
+    policy: JSON.stringify(initialPolicyContent, null, 2),
+    role: JSON.stringify(initialRoleContent, null, 2),
   });
 
   const setErrors = (entity: IAMScriptableEntity, newErrors: Diagnostic[]): void => {
