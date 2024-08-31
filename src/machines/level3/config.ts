@@ -46,6 +46,37 @@ Policies whether **AWS Managed** or **Customer Managed** have the same structure
 ~~~
 `;
 
+const POPUP_MSG_4 = `
+You are a DevOps engineer responsible for managing the IAM policies for a small startup you work at.
+|lg
+
+\\
+The company you work for has only two teams, the **Frontend** and **Backend** teams.
+* **Frontend Team**:
+  - Requires ***read/write*** access to specific \`S3\`
+buckets for storing static assets, ie., images.
+  - They also require a read access to specific \`CloudFront Distributions\` for monitoring the
+assets content delivery.
+* **Backend Team**:
+  * Requires full access access to specific \`DynamoDB\` tables
+  * Requires invoke access to specific \`Lambda\` functions
+`;
+
+const POPUP_MSG_5 = `
+**Important thing to note:** We sometimes need to give backend developers access
+to the same \`S3\` Buckets that frontend developers have access to.|lg
+
+Ensure that you create policies that are reusable
+while maintaining the **principle of least privilege**.|lg
+
+\\
+The **principle of least privilege** means giving users or systems
+the minimum access they need to perform their tasks,
+such as allowing a database administrator to view
+but not modify financial records unless their job specifically requires it.
+It's not an IAM exclusive concept, but rather a security best practice.
+`;
+
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: 'iam_policy_1',
@@ -66,7 +97,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: 'iam_policy_2',
     popover_title: 'Your first customer managed policy!',
-    popover_content: `You have created your first customer managed policy
+    popover_content: `You have created your first customer managed policy!
       This policy can be attached to any IAM entity.`,
     show_next_button: true,
     show_close_button: false,
@@ -86,6 +117,14 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: 'Policies Structure',
     content: POPUP_MSG_3,
+  },
+  {
+    title: 'Your task as a DevOps engineer 👨‍💻',
+    content: POPUP_MSG_4,
+  },
+  {
+    title: 'Your task as a DevOps engineer 👨‍💻',
+    content: POPUP_MSG_5,
   },
 ];
 

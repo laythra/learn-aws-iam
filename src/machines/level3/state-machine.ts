@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import type { Node, Edge } from 'reactflow';
+import type { Node } from 'reactflow';
 import { setup, assign } from 'xstate';
 
 import {
@@ -40,7 +40,7 @@ export const stateMachine = setup({
     next_popup: assign({
       popup_content: ({ context }) => POPUP_TUTORIAL_MESSAGES[context.next_popup_index],
       next_popup_index: ({ context }) => context.next_popup_index + 1,
-      show_popups: ({ context }) => context.next_popup_index + 1 < POPUP_TUTORIAL_MESSAGES.length,
+      show_popups: ({ context }) => context.next_popup_index < POPUP_TUTORIAL_MESSAGES.length,
       show_popovers: false,
     }),
     next_policy_role_objectives: assign({
@@ -209,12 +209,13 @@ export const stateMachine = setup({
       }),
     },
   },
-  entry: assign({
-    nodes: initial_nodes,
-  }),
   states: {
     inside_tutorial: {
       initial: 'tutorial_popup1',
+      onDone: 'inside_level',
+      entry: assign({
+        nodes: INITIAL_TUTORIAL_NODES,
+      }),
       states: {
         tutorial_popup1: {
           entry: assign({
@@ -284,6 +285,20 @@ export const stateMachine = setup({
         },
       },
     },
-    inside_level: {},
+    inside_level: {
+      initial: 'popup1',
+      states: {
+        popup1: {
+          entry: 'next_popup',
+          on: {
+            NEXT_POPUP: 'popup2',
+          },
+        },
+        popup2: {
+          entry: 'next_popup',
+          type: 'final',
+        },
+      },
+    },
   },
 });
