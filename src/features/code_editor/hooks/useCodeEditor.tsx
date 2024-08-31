@@ -86,7 +86,10 @@ export const useCodeEditor = (
     throw new Error('useCodeEditor must be used within a ModalProvider');
   }
 
-  const [errors, dispatchErrors] = useReducer(errorsReducer, { policy: [], role: [] });
+  const [errors, dispatchErrors] = useReducer(errorsReducer, {
+    policy: [],
+    role: [],
+  });
   const [content, dispatchContent] = useReducer(contentReducer, {
     policy: JSON.stringify(initialPolicyContent ?? defaultPolicy, null, 2),
     role: JSON.stringify(initialRoleContent ?? defaultRole, null, 2),

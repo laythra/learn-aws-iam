@@ -7,9 +7,9 @@ import { EditorView } from '@codemirror/view';
 import CodeMirror from '@uiw/react-codemirror';
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import useSchemaValidator from '@/hooks/useSchemaValidator';
-import defaultPolicySchema from '@/schemas/aws-iam-poilcy-schema.json';
+import sampleSchema from '@/schemas/sample-schema.json';
+import { IAMScriptableEntitiesCreationObjective } from '@/types';
 import { lint } from '@/utils/iam-code-linter';
 
 interface CodeEditorWindowProps {
@@ -17,6 +17,7 @@ interface CodeEditorWindowProps {
   setErrors: (errors: Diagnostic[]) => void;
   content: string;
   setIsLinting: (isLinting: boolean) => void;
+  targetObjective: IAMScriptableEntitiesCreationObjective | undefined;
 }
 
 export const CodeEditorWindow: React.FC<CodeEditorWindowProps> = ({
@@ -24,21 +25,24 @@ export const CodeEditorWindow: React.FC<CodeEditorWindowProps> = ({
   setErrors,
   content,
   setIsLinting,
+  targetObjective,
 }) => {
   const [editorInitialized, setEditorInitialized] = useState<boolean>(false);
-
-  const policySchema = LevelsProgressionContext.useSelector(
-    state => state.context.policy_schema ?? defaultPolicySchema
-  );
+  const policySchema = targetObjective?.json_schema || sampleSchema;
 
   const policyValidator = useSchemaValidator(policySchema);
   const editorRef = useRef<EditorView>();
 
-  const handleChange = _.debounce((value: string): void => {
-    setContent(value);
+  const getLintingErrors = (view: EditorView): Diagnostic[] => {
+    return lint(view, {
+      validateFunction: policyValidator,
+      creationObjective: targetObjective?.description,
+    });
+  };
 
+  const validateChange = _.debounce((): void => {
     if (editorRef.current) {
-      setErrors(lint(editorRef.current, { validateFunction: policyValidator }));
+      setErrors(getLintingErrors(editorRef.current));
     }
 
     setIsLinting(false);
@@ -46,8 +50,7 @@ export const CodeEditorWindow: React.FC<CodeEditorWindowProps> = ({
 
   useEffect(() => {
     if (!editorRef.current) return;
-
-    setErrors(lint(editorRef.current, { validateFunction: policyValidator }));
+    setErrors(getLintingErrors(editorRef.current));
   }, [editorInitialized]);
 
   const handleEditorCreate = (editor: EditorView): void => {
@@ -58,12 +61,13 @@ export const CodeEditorWindow: React.FC<CodeEditorWindowProps> = ({
   return (
     <CodeMirror
       value={content}
-      onChange={() => {
+      onChange={newContent => {
         setIsLinting(true);
-        handleChange(content);
+        setContent(newContent);
+        validateChange();
       }}
       height='200px'
-      extensions={[json(), linter(view => lint(view, { validateFunction: policyValidator }))]}
+      extensions={[json(), linter(view => getLintingErrors(view))]}
       onCreateEditor={handleEditorCreate}
     />
   );

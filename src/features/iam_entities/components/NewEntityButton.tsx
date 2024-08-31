@@ -14,7 +14,6 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   const { openCodeEditor } = useCodeEditor();
   const { openIdentityCreator } = useIdentityCreator();
   const levelActor = LevelsProgressionContext.useActorRef();
-  const levelState = LevelsProgressionContext.useSelector(state => state.context);
 
   const hidePopovers = (): void => {
     levelActor.send({ type: 'HIDE_POPOVERS' });
@@ -32,7 +31,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
 
   return (
     <>
-      <CodeEditor initialPolicy={levelState.default_policy} />
+      <CodeEditor />
       <IdentityCreationPopup />
       <Menu>
         <MenuButton
