@@ -8,14 +8,12 @@ import {
   LEVEL_OBJECTIVES,
   SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES,
 } from './config';
-import { initial_nodes, edges } from './nodes';
+import { INITIAL_TUTORIAL_NODES, edges } from './nodes';
 import { TEMPLATE_GROUP_NODE, GROUP_NODE_Y_OFFSET } from './nodes/group-nodes';
 import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
 import { INITIAL_POLICY_NODES, TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
 import { INITIAL_USER_NODES, TEMPLATE_USER_NODE, USER_NODE_Y_OFFSET } from './nodes/user-nodes';
-import s3ReadPolicySchema from './schemas/policy/s3-read-policy-schema.json';
 import type { Context, InsideLevelMetadata, EventData, LevelObjective } from './types';
-import { MANAGED_POLICIES } from '../config';
 import { PopoverTutorialMessage } from '../types';
 import { theme } from '@/theme';
 import { CreatableIAMNodeEntity, IAMAnyNodeData, IAMNodeEntity } from '@/types';

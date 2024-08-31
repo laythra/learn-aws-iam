@@ -1,16 +1,10 @@
 import { Node, Edge } from 'reactflow';
 
-import { INITIAL_POLICY_NODES } from './nodes/policy-nodes';
-import { INITIAL_RESOURCE_NODES } from './nodes/resource-nodes';
-import { INITIAL_USER_NODES } from './nodes/user-nodes';
+import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/policy-nodes';
 import { IAMAnyNodeData } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
-export const initial_nodes: Node<IAMAnyNodeData>[] = [
-  ...INITIAL_POLICY_NODES,
-  ...INITIAL_USER_NODES,
-  ...INITIAL_RESOURCE_NODES,
-];
+export const INITIAL_TUTORIAL_NODES: Node<IAMAnyNodeData>[] = INITIAL_TUTORIAL_POLICY_NODES;
 
 const edgesInfo = [
   {
