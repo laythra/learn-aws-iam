@@ -1,7 +1,11 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
 import type { Edge, Node, XYPosition } from 'reactflow';
 
-import type { CreatableIAMNodeEntity } from '@/types';
+import type {
+  CreatableIAMNodeEntity,
+  IAMPolicyNodeData,
+  IAMScriptableEntitiesCreationObjective,
+} from '@/types';
 import {
   IAMAnyNodeData,
   IAMEdgeData,
@@ -13,6 +17,7 @@ import {
 export interface GenericContext {
   iam_user_template: Node<IAMUserNodeData>;
   iam_group_template: Node<IAMGroupNodeData>;
+  iam_policy_template?: Node<IAMPolicyNodeData>;
   level_title: string;
   level_description: string;
   level_number: number;
@@ -30,8 +35,9 @@ export interface GenericContext {
   fixed_iam_nodes_positions: { [key: string]: XYPosition };
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  default_policy?: string;
   level_objectives: { [key: string]: LevelObjective };
+  policy_role_objectives?: IAMScriptableEntitiesCreationObjective[];
+  next_policy_role_objectives_index?: number;
   level_finished?: boolean;
 }
 
@@ -88,6 +94,7 @@ export type PopoverTutorialMessage = {
 export type PopupTutorialMessage = {
   title: string;
   content: string;
+  image?: string;
 };
 
 export type LevelObjective = {

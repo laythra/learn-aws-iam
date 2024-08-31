@@ -5,7 +5,7 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
 
 /**
  * `withPopover` is a decorator that wraps a component with a popover.
- * * Each passed component must have a unique string `id` prop.
+ * * Each passed component must have a unique string `elementid` prop.
  * @param {React.FC<T>} WrappedComponent The component to wrap with a popover.
  * @returns The wrapped component with a popover.
  */

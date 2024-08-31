@@ -37,6 +37,7 @@ interface IAMNodeData {
   handles: HandleProps[];
   image: IAMNodeImage;
   code?: string;
+  initial_position?: string; // Defines the initial position of the node relative to the canvas viewport
 }
 
 export interface IAMUserNodeData extends IAMNodeData {

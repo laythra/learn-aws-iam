@@ -1,34 +1,38 @@
 import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@uiw/react-codemirror';
-import Ajv from 'ajv';
-
-import roleSchema from '@/schemas/aws-iam-role-schema.json';
-import sampleSchema from '@/schemas/sample-schema.json';
-import { IAMScriptableEntity, IAMNodeEntity } from '@/types';
-
-const ajv = new Ajv();
-const policyValidate = ajv.compile(sampleSchema);
-const roleValidate = ajv.compile(roleSchema);
+import { ErrorObject, ValidateFunction } from 'ajv';
 
 interface LintConfig {
-  iamEntity: IAMScriptableEntity;
+  validateFunction: ValidateFunction;
+  creationObjective: string | undefined;
 }
 
-export function lint(view: EditorView, config: LintConfig): Diagnostic[] {
+// This function transforms the error message(s) to a more user-friendly format
+function getCustomMessage(error: ErrorObject, creationObjective: string | undefined): string {
+  if (creationObjective) {
+    return `Your JSON does not meet the requirements. Our objective is to ${creationObjective}`;
+  }
+
+  return error.message || '';
+}
+
+export function lint(
+  view: EditorView,
+  { validateFunction, creationObjective }: LintConfig
+): Diagnostic[] {
   const doc = view.state.doc.toString();
   const diagnostics: Diagnostic[] = [];
 
   try {
     const parsedDoc = JSON.parse(doc);
-    const validate = config.iamEntity === IAMNodeEntity.Policy ? policyValidate : roleValidate;
 
-    if (!validate(parsedDoc)) {
-      validate.errors?.forEach(error => {
+    if (!validateFunction(parsedDoc)) {
+      validateFunction.errors?.forEach(error => {
         diagnostics.push({
           from: view.state.doc.line(error.instancePath.split('/').length).from,
           to: view.state.doc.line(error.instancePath.split('/').length).to,
           severity: 'error',
-          message: error.message || '',
+          message: getCustomMessage(error, creationObjective),
         });
       });
     }
@@ -40,7 +44,7 @@ export function lint(view: EditorView, config: LintConfig): Diagnostic[] {
         from: view.state.doc.line(lineNumber + 1).from,
         to: view.state.doc.line(lineNumber + 1).to,
         severity: 'error',
-        message: e.message,
+        message: `Syntax Error: ${e.message}`,
       });
     }
   }

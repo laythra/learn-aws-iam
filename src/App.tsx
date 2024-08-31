@@ -1,4 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
+import { ReactFlowProvider } from 'reactflow';
 
 import IAMNodeProvider from './features/canvas/components/IAMNodeProvider';
 import { theme } from './theme';
@@ -12,7 +13,9 @@ const App: React.FC = () => {
       <IAMNodeProvider>
         <ModalProvider>
           <LevelsProgressionProvider>
-            <Home />
+            <ReactFlowProvider>
+              <Home />
+            </ReactFlowProvider>
           </LevelsProgressionProvider>
         </ModalProvider>
       </IAMNodeProvider>

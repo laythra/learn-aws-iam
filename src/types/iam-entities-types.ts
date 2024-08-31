@@ -1,3 +1,5 @@
+import { Schema } from 'ajv';
+
 import { IAMAnyNodeData, IAMNodeEntity } from '@/types';
 
 export interface IAMEntitiesContextState {
@@ -5,6 +7,15 @@ export interface IAMEntitiesContextState {
   createNode: (nodeProps: IAMAnyNodeData) => void;
   removeNode: (nodeId: string) => void;
   maxNodesToCreated?: number;
+}
+
+export interface IAMScriptableEntitiesCreationObjective {
+  entity: IAMScriptableEntity;
+  json_schema: Schema;
+  description: string;
+  initial_code: object;
+  on_finish_event: string;
+  validate_inside_code_editor: boolean;
 }
 
 export type IAMScriptableEntity = IAMNodeEntity.Policy | IAMNodeEntity.Role;
