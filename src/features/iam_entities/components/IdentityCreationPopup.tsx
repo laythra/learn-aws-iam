@@ -85,7 +85,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
     }
 
     const nodeId = getNodeName(iamIdentityEntity, nextIamNodeId[iamIdentityEntity]);
-    const position = fixedIamNodePositions[nodeId] ?? nextNodeDefaultPosition;
+    const position = fixedIamNodePositions?.[nodeId] ?? nextNodeDefaultPosition;
 
     // Passing an empty object as the first argument to _.merge to produce a new object reference.
     // Not the most ideal solution, I know.

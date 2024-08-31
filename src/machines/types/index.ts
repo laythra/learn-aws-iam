@@ -32,7 +32,7 @@ export interface GenericContext {
   show_popups: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
   next_iam_node_default_position: XYPosition;
-  fixed_iam_nodes_positions: { [key: string]: XYPosition };
+  fixed_iam_nodes_positions?: { [key: string]: XYPosition };
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
   level_objectives: { [key: string]: LevelObjective };
