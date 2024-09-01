@@ -2,7 +2,7 @@ import { Text, Flex, Divider, Box, List, ListItem, ListIcon } from '@chakra-ui/r
 import { CheckBadgeIcon, XCircleIcon } from '@heroicons/react/20/solid';
 
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import SidePanel from '@/components/side_panels/SidePanel';
+import SidePanel from '@/components/SidePanels/SidePanel';
 
 const RightSidePanel: React.FC = () => {
   const levelObjectives = LevelsProgressionContext.useSelector(
@@ -10,7 +10,7 @@ const RightSidePanel: React.FC = () => {
   );
 
   return (
-    <SidePanel alignment='right'>
+    <SidePanel>
       <Flex direction='column' alignItems='center' justifyContent='center' height='100vh'>
         <Flex direction='column' alignItems='center' height='25%'>
           <Text fontSize='lg' fontWeight='bold' p={1}>

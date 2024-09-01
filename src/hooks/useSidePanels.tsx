@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import {
   SidePanelsContext,
   SidePanelsContextState,
-} from '@/components/side_panels/SidePanelsProvider';
+} from '@/components/SidePanels/SidePanelsProvider';
 
 const useSidePanels = (): SidePanelsContextState => {
   const context = useContext(SidePanelsContext);
