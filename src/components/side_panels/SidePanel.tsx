@@ -1,8 +1,6 @@
-import { useContext } from 'react';
-
 import { Flex, Box, Collapse } from '@chakra-ui/react';
 
-import { SidePanelsContext } from './SidePanelsProvider';
+import useSidePanels from '@/hooks/useSidePanels';
 
 interface SidePanelProps {
   children: React.ReactNode;
@@ -10,7 +8,7 @@ interface SidePanelProps {
 }
 
 const SidePanel: React.FC<SidePanelProps> = ({ children, alignment }) => {
-  const { leftPanelOpen, rightPanelOpen } = useContext(SidePanelsContext);
+  const { leftPanelOpen, rightPanelOpen } = useSidePanels();
   const isOpen = alignment === 'left' ? leftPanelOpen : rightPanelOpen;
   const flexBasis = isOpen ? '20%' : '0%';
 

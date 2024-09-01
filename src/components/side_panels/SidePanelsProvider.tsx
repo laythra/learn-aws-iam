@@ -1,12 +1,27 @@
 import React, { createContext } from 'react';
 
-import { useSidePanels } from '@/hooks/useSidePanels';
+import { useBoolean } from '@chakra-ui/react';
 
 interface SidePanelsProviderProps {
   children: React.ReactNode;
 }
 
-export const SidePanelsContext = createContext({
+export type SidePanelsContextState = {
+  leftPanelOpen: boolean;
+  setLeftPanelOpen: {
+    on: () => void;
+    off: () => void;
+    toggle: () => void;
+  };
+  rightPanelOpen: boolean;
+  setRightPanelOpen: {
+    on: () => void;
+    off: () => void;
+    toggle: () => void;
+  };
+};
+
+export const SidePanelsContext = createContext<SidePanelsContextState>({
   leftPanelOpen: false,
   setLeftPanelOpen: { on: () => {}, off: () => {}, toggle: () => {} },
   rightPanelOpen: false,
@@ -14,7 +29,8 @@ export const SidePanelsContext = createContext({
 });
 
 const SidePanelProvider: React.FC<SidePanelsProviderProps> = ({ children }) => {
-  const { leftPanelOpen, rightPanelOpen, setLeftPanelOpen, setRightPanelOpen } = useSidePanels();
+  const [leftPanelOpen, setLeftPanelOpen] = useBoolean(false);
+  const [rightPanelOpen, setRightPanelOpen] = useBoolean(false);
 
   return (
     <SidePanelsContext.Provider

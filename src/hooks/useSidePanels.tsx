@@ -1,15 +1,17 @@
-import { useBoolean } from '@chakra-ui/react';
+import { useContext } from 'react';
 
-type SidePanelsState = {
-  leftPanelOpen: boolean;
-  setLeftPanelOpen: { on: () => void; off: () => void; toggle: () => void };
-  rightPanelOpen: boolean;
-  setRightPanelOpen: { on: () => void; off: () => void; toggle: () => void };
+import {
+  SidePanelsContext,
+  SidePanelsContextState,
+} from '@/components/side_panels/SidePanelsProvider';
+
+const useSidePanels = (): SidePanelsContextState => {
+  const context = useContext(SidePanelsContext);
+  if (!context) {
+    throw new Error('useSidePanels must be used within a SidePanelsProvider');
+  }
+
+  return context;
 };
 
-export const useSidePanels = (): SidePanelsState => {
-  const [leftPanelOpen, setLeftPanelOpen] = useBoolean(true);
-  const [rightPanelOpen, setRightPanelOpen] = useBoolean(true);
-
-  return { leftPanelOpen, setLeftPanelOpen, rightPanelOpen, setRightPanelOpen };
-};
+export default useSidePanels;
