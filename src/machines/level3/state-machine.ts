@@ -8,7 +8,7 @@ import {
   LEVEL_OBJECTIVES,
   SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES,
 } from './config';
-import { INITIAL_TUTORIAL_NODES, edges } from './nodes';
+import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES, edges } from './nodes';
 import { TEMPLATE_GROUP_NODE, GROUP_NODE_Y_OFFSET } from './nodes/group-nodes';
 import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
 import { INITIAL_POLICY_NODES, TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
@@ -91,10 +91,11 @@ export const stateMachine = setup({
       ) => popover_content,
       show_popovers: true,
     }),
+    show_side_panel: assign({ side_panel_open: true }),
   },
 }).createMachine({
-  id: 'level2_state_machine',
-  initial: 'inside_tutorial',
+  id: 'level3_state_machine',
+  initial: 'inside_level',
   // initial: 'tutorial_popup1',
   context: {
     iam_user_template: TEMPLATE_USER_NODE,
@@ -122,16 +123,6 @@ export const stateMachine = setup({
     next_iam_node_default_position: {
       x: theme.sizes.iamNodeWidthInPixels / 2,
       y: theme.sizes.iamNodeWidthInPixels / 2,
-    },
-    fixed_iam_nodes_positions: {
-      [getNodeName(IAMNodeEntity.Group, FIRST_CUSTOM_GROUP_ID)]: {
-        x: IAM_NODE_WIDTH * 2,
-        y: GROUP_NODE_Y_OFFSET,
-      },
-      [getNodeName(IAMNodeEntity.User, FIRST_CUSTOM_USER_ID)]: {
-        x: IAM_NODE_WIDTH * 3.5, // TODO: Find a better way to represent those magic numbers
-        y: USER_NODE_Y_OFFSET,
-      },
     },
   },
   on: {
@@ -292,6 +283,9 @@ export const stateMachine = setup({
     },
     inside_level: {
       initial: 'popup1',
+      entry: assign({
+        nodes: INITIAL_IN_LEVEL_NODES,
+      }),
       states: {
         popup1: {
           entry: 'next_popup',
@@ -300,6 +294,18 @@ export const stateMachine = setup({
           },
         },
         popup2: {
+          entry: 'next_popup',
+          on: {
+            NEXT_POPUP: 'popup3',
+          },
+        },
+        popup3: {
+          entry: ['next_popup', 'show_side_panel'],
+          on: {
+            NEXT_POPUP: 'blah',
+          },
+        },
+        blah: {
           entry: 'next_popup',
           type: 'final',
         },

@@ -77,6 +77,11 @@ but not modify financial records unless their job specifically requires it.
 It's not an IAM exclusive concept, but rather a security best practice.
 `;
 
+const POPUP_MSG_6 = `
+In case you hadn't noticed, the list of objectives you need
+to complete is on the right side panel ➡️️|lg
+`;
+
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: 'iam_policy_1',
@@ -91,15 +96,6 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_title: 'Your first Customer Managed Policy',
     popover_content: `Let's create your first Customer Managed Policy!`,
     show_next_button: false,
-    show_close_button: false,
-    popover_placement: 'top',
-  },
-  {
-    element_id: 'iam_policy_2',
-    popover_title: 'Your first customer managed policy!',
-    popover_content: `You have created your first customer managed policy!
-      This policy can be attached to any IAM entity.`,
-    show_next_button: true,
     show_close_button: false,
     popover_placement: 'top',
   },
@@ -119,12 +115,16 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG_3,
   },
   {
-    title: 'Your task as a DevOps engineer 👨‍💻',
+    title: 'Your task as a DevOps engineer 👨‍💻️',
     content: POPUP_MSG_4,
   },
   {
     title: 'Your task as a DevOps engineer 👨‍💻',
     content: POPUP_MSG_5,
+  },
+  {
+    title: "You're on your own now!",
+    content: POPUP_MSG_6,
   },
 ];
 

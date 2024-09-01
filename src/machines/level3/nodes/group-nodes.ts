@@ -1,9 +1,10 @@
+import _ from 'lodash';
 import { type Node, HandleProps, Position } from 'reactflow';
 
 import { Y_OFFSET as POLICY_NODE_Y_OFFSET } from './policy-nodes';
 import { Y_OFFSET as RESOURCE_NODE_Y_OFFSET } from './resource-nodes';
 import { theme } from '@/theme';
-import type { IAMGroupNodeData } from '@/types';
+import type { IAMGroupNodeData, IAMMinGroupNodeData } from '@/types';
 import { IAMNodeEntity, IAMNodeImage } from '@/types';
 
 export const X_OFFSET = theme.sizes.iamNodeWidthInPixels;
@@ -31,4 +32,25 @@ export const TEMPLATE_GROUP_NODE: Node<IAMGroupNodeData> = {
   },
 };
 
-export const INITIAL_GROUP_NODES: Node<IAMGroupNodeData>[] = [];
+const IN_LEVEL_GROUP_NODES: IAMMinGroupNodeData[] = [
+  {
+    id: 'iam_policy_1',
+    label: 's3-read-access',
+    initial_position: 'center',
+    position: { x: 100, y: 100 },
+  },
+];
+
+export const INITIAL_IN_LEVEL_GROUP_NODES: Node<IAMGroupNodeData>[] = IN_LEVEL_GROUP_NODES.map(
+  ({ id, label, initial_position }) =>
+    _.merge({}, TEMPLATE_GROUP_NODE, {
+      id,
+      data: {
+        id,
+        label,
+        initial_position,
+      },
+    })
+);
+
+export const INITIAL_GROUP_NODES = INITIAL_IN_LEVEL_GROUP_NODES;
