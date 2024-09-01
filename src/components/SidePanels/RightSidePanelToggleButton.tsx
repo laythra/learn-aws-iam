@@ -1,27 +1,30 @@
-import { useContext } from 'react';
-
 import { IconButton } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 
-import { SidePanelsContext } from './SidePanelsProvider';
+import { LevelsProgressionContext } from '../providers/LevelsProgressionProvider';
 
 interface SidePanelToggleButtonProps {}
 
 const SidePanelToggleButton: React.FC<SidePanelToggleButtonProps> = () => {
-  const { rightPanelOpen, setRightPanelOpen } = useContext(SidePanelsContext);
+  const isOpen = LevelsProgressionContext.useSelector(state => state.context.side_panel_open);
+  const levelActor = LevelsProgressionContext.useActorRef();
 
-  const icon = rightPanelOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />;
+  const icon = isOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />;
+
+  const toggleSidePanel = (): void => {
+    levelActor.send({ type: 'TOGGLE_SIDE_PANEL' });
+  };
 
   return (
     <IconButton
       aria-label='Toggle right panel'
       position='fixed'
       top='50%'
-      right={rightPanelOpen ? '300px' : '0px'}
+      right={isOpen ? '300px' : '0px'}
       transform='translateY(-50%)'
       colorScheme='gray'
       variant='ghost'
-      onClick={setRightPanelOpen.toggle}
+      onClick={toggleSidePanel}
       size='sm'
       icon={icon}
     />

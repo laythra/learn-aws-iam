@@ -1,13 +1,11 @@
 import { Flex, Box, Collapse } from '@chakra-ui/react';
 
-import useSidePanels from '@/hooks/useSidePanels';
-
 interface SidePanelProps {
   children: React.ReactNode;
+  isOpen: boolean;
 }
 
-const SidePanel: React.FC<SidePanelProps> = ({ children }) => {
-  const { rightPanelOpen: isOpen } = useSidePanels();
+const SidePanel: React.FC<SidePanelProps> = ({ children, isOpen }) => {
   const flexBasis = isOpen ? '20%' : '0%';
 
   return (

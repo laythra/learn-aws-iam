@@ -39,6 +39,7 @@ export interface GenericContext {
   policy_role_objectives?: IAMScriptableEntitiesCreationObjective[];
   next_policy_role_objectives_index?: number;
   level_finished?: boolean;
+  side_panel_open?: boolean;
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -59,7 +60,8 @@ export type GenericEventData =
         | 'CREATE_IAM_IDENTITY_POPUP_OPENED'
         | 'CREATE_IAM_IDENTITY_TAB_CHANGED'
         | 'IAM_USER_ATTACHED_TO_GROUP'
-        | 'IAM_POLICY_ATTACHED_TO_GROUP';
+        | 'IAM_POLICY_ATTACHED_TO_GROUP'
+        | 'TOGGLE_SIDE_PANEL';
     }
   | { type: 'ADD_IAM_NODE'; node: Node }
   | { type: 'ADD_IAM_USER_NODE'; node: Node }

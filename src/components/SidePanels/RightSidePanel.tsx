@@ -5,12 +5,13 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
 import SidePanel from '@/components/SidePanels/SidePanel';
 
 const RightSidePanel: React.FC = () => {
-  const levelObjectives = LevelsProgressionContext.useSelector(
-    state => state.context.level_objectives
-  );
+  const [levelObjectives, isSidePanelOpen] = LevelsProgressionContext.useSelector(state => [
+    state.context.level_objectives,
+    state.context.side_panel_open,
+  ]);
 
   return (
-    <SidePanel>
+    <SidePanel isOpen={isSidePanelOpen ?? false}>
       <Flex direction='column' alignItems='center' justifyContent='center' height='100vh'>
         <Flex direction='column' alignItems='center' height='25%'>
           <Text fontSize='lg' fontWeight='bold' p={1}>
