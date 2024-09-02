@@ -44,7 +44,9 @@ const Canvas: React.FC = () => {
   const levelActor = LevelsProgressionContext.useActorRef();
 
   const [nodesState, setNodesState, onNodesChange] = useNodesState(
-    levelState.context.nodes.map(node => getNodeWithInitialPosition(node, getViewport()))
+    levelState.context.nodes.map((node, index) =>
+      getNodeWithInitialPosition(node, getViewport(), levelState.context.nodes.length, index)
+    )
   );
   const [edgesState, setEdgesState, onEdgesChange] = useEdgesState(levelState.context.edges);
 
@@ -63,9 +65,10 @@ const Canvas: React.FC = () => {
   }, [levelState.context.edges]);
 
   useEffect(() => {
-    // Doing this to retain old nodes state that's not stored in state machine; ie. position state
-    const newNodes = _.differenceBy(levelState.context.nodes, nodesState, 'id').map(node =>
-      getNodeWithInitialPosition(node, getViewport())
+    // Doing this to retain old nodes' state that's not stored in state machine; ie. position state
+    let newNodes = _.differenceBy(levelState.context.nodes, nodesState, 'id');
+    newNodes = newNodes.map((node, idx) =>
+      getNodeWithInitialPosition(node, getViewport(), newNodes.length, idx)
     );
 
     setNodesState([...nodesState, ...newNodes]);

@@ -7,7 +7,9 @@ const VALID_INITIAL_POSITIONS = ['center'];
 
 export function getNodeWithInitialPosition(
   node: Node<IAMAnyNodeData>,
-  viewport: Viewport
+  viewport: Viewport,
+  numNodes: number,
+  nodeIndex: number
 ): Node<IAMAnyNodeData> {
   const {
     data: { initial_position: initialPostion },
@@ -22,9 +24,16 @@ export function getNodeWithInitialPosition(
   if (initialPostion === 'center') {
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
+    const nodeWidth = theme.sizes.iamNodeWidthInPixels;
+    const nodeHeight = theme.sizes.iamNodeHeightInPixels;
+    const nodeSpacing = 20;
 
-    const centerX = (windowWidth / 2 - x) / zoom - theme.sizes.iamNodeWidthInPixels / 2;
-    const centerY = (windowHeight / 2 - y) / zoom - theme.sizes.iamNodeHeightInPixels / 2;
+    const centerX =
+      (windowWidth / 2 - x) / zoom -
+      (numNodes * nodeWidth) / 2 +
+      nodeIndex * nodeWidth +
+      nodeSpacing * nodeIndex;
+    const centerY = (windowHeight / 2 - y) / zoom - nodeHeight / 2;
 
     const position: XYPosition = {
       x: centerX,
