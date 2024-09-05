@@ -99,6 +99,17 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_close_button: false,
     popover_placement: 'top',
   },
+  {
+    element_id: 'iam_policy_2',
+    popover_title: 'Your first Customer Managed Policy 🔥',
+    popover_content: `
+      You have created your first Customer Managed Policy!
+      You can view its content and attach it to your IAM entities like an AWS managed one.
+    `,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'top',
+  },
 ];
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
