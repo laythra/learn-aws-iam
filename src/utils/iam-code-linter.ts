@@ -13,22 +13,22 @@ function getCustomMessage(error: ErrorObject, creationObjective: string | undefi
     return `Your JSON does not meet the requirements. Our objective is to ${creationObjective}`;
   }
 
-  return error.message || '';
+  return 'Your JSON is invalid';
 }
 
 export function lint(
   view: EditorView,
   { validateFunction, creationObjective }: LintConfig
-): Diagnostic[] {
+): { [key in 'syntax' | 'logical']: Diagnostic[] } {
   const doc = view.state.doc.toString();
-  const diagnostics: Diagnostic[] = [];
+  const diagnostics: { [key in 'syntax' | 'logical']: Diagnostic[] } = { syntax: [], logical: [] };
 
   try {
     const parsedDoc = JSON.parse(doc);
 
     if (!validateFunction(parsedDoc)) {
       validateFunction.errors?.forEach(error => {
-        diagnostics.push({
+        diagnostics['logical'].push({
           from: view.state.doc.line(error.instancePath.split('/').length).from,
           to: view.state.doc.line(error.instancePath.split('/').length).to,
           severity: 'error',
@@ -40,7 +40,7 @@ export function lint(
     if (e instanceof SyntaxError) {
       const line = e.message.match(/line (\d+)/)?.[1];
       const lineNumber = line ? parseInt(line) - 1 : 0;
-      diagnostics.push({
+      diagnostics['syntax'].push({
         from: view.state.doc.line(lineNumber + 1).from,
         to: view.state.doc.line(lineNumber + 1).to,
         severity: 'error',
@@ -51,3 +51,19 @@ export function lint(
 
   return diagnostics;
 }
+
+export const getLintingErrors = (
+  view: EditorView,
+  policyValidator: ValidateFunction,
+  creationObjective: string | undefined,
+  validateFormat: boolean = false
+): Diagnostic[] => {
+  const lintingErrors = lint(view, {
+    validateFunction: policyValidator,
+    creationObjective,
+  });
+
+  return validateFormat
+    ? lintingErrors['logical'] || lintingErrors['syntax']
+    : lintingErrors['syntax'];
+};

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useState } from 'react';
 
 import {
@@ -16,6 +16,7 @@ import {
   Tabs,
   useTheme,
 } from '@chakra-ui/react';
+import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import _ from 'lodash';
 import { Node } from 'reactflow';
 import { EventFromLogic } from 'xstate';
@@ -24,8 +25,10 @@ import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
 import { CodeEditorWindow } from './CodeEditorWindow';
 import { useCodeEditor } from '../hooks/useCodeEditor';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { useMultipleSchemaValidators } from '@/hooks/useSchemaValidator';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMScriptableEntity, IAMNodeEntity, CustomTheme, IAMAnyNodeData } from '@/types';
+import { getLintingErrors } from '@/utils/iam-code-linter';
 import { getNodeName } from '@/utils/names';
 
 interface CodeEditorProps {}
@@ -39,26 +42,37 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
   );
   const [isLinting, setIsLinting] = useState<boolean>(false);
   const levelActor = LevelsProgressionContext.useActorRef();
-  const [nextIamNodeId, policyNodeTemplate, scriptableEntityCreationObjective, stateMachine] =
+  const [nextIamNodeId, policyNodeTemplate, policyRoleObjectives, stateMachine] =
     LevelsProgressionContext.useSelector(state => [
       state.context.next_iam_node_id,
       state.context.iam_policy_template,
-      state.context.policy_role_objectives?.find(
-        objective => objective.validate_inside_code_editor
-      ),
+      state.context.policy_role_objectives,
       state.machine,
     ]);
 
   const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
     useCodeEditor(
-      scriptableEntityCreationObjective?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess,
-      scriptableEntityCreationObjective?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess
+      policyRoleObjectives?.[0]?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+      policyRoleObjectives?.[0]?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess
     );
 
   const renderedErrors = errors[selectedIamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
   const renderedContent = content[selectedIamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
+  const codeEditorRef = useRef<ReactCodeMirrorRef>(null);
+  const schemaValidators = useMultipleSchemaValidators(policyRoleObjectives);
 
   const submit = (): void => {
+    if (!codeEditorRef.current || !codeEditorRef.current.view) return;
+
+    // We need to find the first objective with no errors
+    const targetPolicy = policyRoleObjectives?.find((objective, index) => {
+      return getLintingErrors(
+        codeEditorRef.current!.view!,
+        schemaValidators[index],
+        objective.description
+      );
+    });
+
     const nodeId = getNodeName(selectedIamEntity, nextIamNodeId[selectedIamEntity]);
     const node: Node<IAMAnyNodeData> = _.merge({}, policyNodeTemplate, {
       id: nodeId,
@@ -72,9 +86,9 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
 
     levelActor.send({ type: 'ADD_IAM_NODE', node });
 
-    if (scriptableEntityCreationObjective?.on_finish_event) {
+    if (targetPolicy?.on_finish_event) {
       levelActor.send({
-        type: scriptableEntityCreationObjective.on_finish_event,
+        type: targetPolicy.on_finish_event,
       } as EventFromLogic<typeof stateMachine>);
     }
 
@@ -108,7 +122,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
             setContent={_.partial(setContent, selectedIamEntity)}
             content={renderedContent}
             setIsLinting={setIsLinting}
-            targetObjective={scriptableEntityCreationObjective}
+            targetObjective={policyRoleObjectives.length == 1 ? policyRoleObjectives[0] : undefined}
+            ref={codeEditorRef}
           />
           <CodeEditorErrorsBox errors={renderedErrors} />
         </ModalBody>

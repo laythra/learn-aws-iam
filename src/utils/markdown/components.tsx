@@ -17,8 +17,6 @@ export const components: Components = {
       return child;
     });
 
-    console.log(processedChildren);
-
     return (
       <Text fontSize={fontSize} py={1}>
         {processedChildren}
