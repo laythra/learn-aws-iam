@@ -124,6 +124,7 @@ export const stateMachine = setup({
       x: theme.sizes.iamNodeWidthInPixels / 2,
       y: theme.sizes.iamNodeWidthInPixels / 2,
     },
+    policy_role_objectives: [],
   },
   on: {
     ADD_IAM_NODE: {

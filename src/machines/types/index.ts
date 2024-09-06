@@ -36,10 +36,10 @@ export interface GenericContext {
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
   level_objectives: { [key: string]: LevelObjective };
-  policy_role_objectives?: IAMScriptableEntitiesCreationObjective[];
   next_policy_role_objectives_index?: number;
   level_finished?: boolean;
   side_panel_open?: boolean;
+  policy_role_objectives: IAMScriptableEntitiesCreationObjective[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine

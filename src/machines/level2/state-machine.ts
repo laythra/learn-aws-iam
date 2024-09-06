@@ -115,6 +115,7 @@ export const stateMachine = setup({
         y: USER_NODE_Y_OFFSET,
       },
     },
+    policy_role_objectives: [],
   },
   on: {
     ADD_IAM_USER_NODE: {

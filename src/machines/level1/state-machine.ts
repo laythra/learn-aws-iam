@@ -72,6 +72,7 @@ export const stateMachine = setup({
     ) as { [k in IAMNodeEntity]: number },
     next_iam_node_default_position: { x: 500, y: 500 },
     fixed_iam_nodes_positions: {},
+    policy_role_objectives: [],
   },
   on: {
     ADD_IAM_USER_NODE: {
