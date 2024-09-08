@@ -27,8 +27,8 @@ import { useCodeEditor } from '../hooks/useCodeEditor';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { useMultipleSchemaValidators } from '@/hooks/useSchemaValidator';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { IAMScriptableEntity, IAMNodeEntity, CustomTheme, IAMAnyNodeData } from '@/types';
-import { getLintingErrors } from '@/utils/iam-code-linter';
+import { IAMScriptableEntity, IAMNodeEntity, CustomTheme, IAMPolicyNodeData } from '@/types';
+import { isJSONValid } from '@/utils/iam-code-linter';
 import { getNodeName } from '@/utils/names';
 
 interface CodeEditorProps {}
@@ -65,30 +65,27 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     if (!codeEditorRef.current || !codeEditorRef.current.view) return;
 
     // We need to find the first objective with no errors
-    const targetPolicy = policyRoleObjectives?.find((objective, index) => {
-      return getLintingErrors(
-        codeEditorRef.current!.view!,
-        schemaValidators[index],
-        objective.description
-      );
+    const targetValidPolicy = policyRoleObjectives?.find((_objective, index) => {
+      return isJSONValid(codeEditorRef.current!.view!, schemaValidators[index]);
     });
 
     const nodeId = getNodeName(selectedIamEntity, nextIamNodeId[selectedIamEntity]);
-    const node: Node<IAMAnyNodeData> = _.merge({}, policyNodeTemplate, {
+    const node: Node<IAMPolicyNodeData> = _.merge({}, policyNodeTemplate, {
       id: nodeId,
       data: {
         id: nodeId,
         label: nodeId,
         entity: selectedIamEntity,
         code: renderedContent,
-      },
+        unnecessary_policy: !targetValidPolicy,
+      } as IAMPolicyNodeData,
     });
 
     levelActor.send({ type: 'ADD_IAM_NODE', node });
 
-    if (targetPolicy?.on_finish_event) {
+    if (targetValidPolicy?.on_finish_event) {
       levelActor.send({
-        type: targetPolicy.on_finish_event,
+        type: targetValidPolicy.on_finish_event,
       } as EventFromLogic<typeof stateMachine>);
     }
 
