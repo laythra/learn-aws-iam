@@ -8,6 +8,7 @@ import {
   IAMGroupNodeData,
   IAMPolicyNodeData,
   IAMNodeDataMapping,
+  IAMResourceNodeData,
 } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
@@ -63,7 +64,7 @@ export const initial_nodes: Node<IAMAnyNodeData>[] = [
         { id: Position.Bottom, type: 'target', position: Position.Bottom },
       ] as HandleProps[],
       image: IAMNodeImage.S3Bucket,
-    } as IAMGroupNodeData,
+    } as IAMResourceNodeData,
     type: 'iam_default',
     draggable: true,
   },

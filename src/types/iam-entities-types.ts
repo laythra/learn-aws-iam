@@ -12,7 +12,7 @@ export interface IAMEntitiesContextState {
 export interface IAMScriptableEntitiesCreationObjective {
   entity: IAMScriptableEntity;
   json_schema: Schema;
-  description: string;
+  description?: string;
   initial_code: object;
   on_finish_event: string;
   validate_inside_code_editor: boolean;

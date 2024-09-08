@@ -41,20 +41,30 @@ interface IAMNodeData {
 }
 
 export interface IAMUserNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.User;
   associated_policies: IAMNodeData[];
 }
 
 export interface IAMGroupNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.Group;
   attached_users: IAMUserNodeData[];
   attached_policies: IAMPolicyNodeData[];
 }
 
 export interface IAMPolicyNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.Policy;
   resources_affected: string[];
+  unnecessary_policy?: boolean;
 }
 
 export interface IAMGroupNodeData extends IAMNodeData {}
-export interface IAMResourceNodeData extends IAMNodeData {}
+export interface IAMResourceNodeData extends IAMNodeData {
+  entity:
+    | IAMNodeEntity.Resource
+    | IAMNodeEntity.DynamoDBTable
+    | IAMNodeEntity.EC2Instance
+    | IAMNodeEntity.S3Bucket;
+}
 
 export type IAMAnyNodeData =
   | IAMUserNodeData
