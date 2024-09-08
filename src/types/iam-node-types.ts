@@ -57,7 +57,6 @@ export interface IAMPolicyNodeData extends IAMNodeData {
   unnecessary_policy?: boolean;
 }
 
-export interface IAMGroupNodeData extends IAMNodeData {}
 export interface IAMResourceNodeData extends IAMNodeData {
   entity:
     | IAMNodeEntity.Resource
