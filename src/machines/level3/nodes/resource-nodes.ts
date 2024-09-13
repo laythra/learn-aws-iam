@@ -34,6 +34,18 @@ const IN_LEVEL_RESOURCE_NODES: IAMMinResourceNodeData[] = [
     initial_position: 'top-center',
     position: { x: 100, y: 100 },
   },
+  {
+    id: 'iam_resource_2',
+    label: 'public-assets',
+    initial_position: 'top-center',
+    position: { x: 100, y: 100 },
+  },
+  {
+    id: 'iam_resource_3',
+    label: 'public-assets',
+    initial_position: 'top-center',
+    position: { x: 100, y: 100 },
+  },
 ];
 
 export const INITIAL_IN_LEVEL_RESOURCE_NODES: Node<IAMResourceNodeData>[] =

@@ -27,7 +27,8 @@ export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
     image: IAMNodeImage.Policy,
     resources_affected: [],
     description: '',
-  },
+    initial_position: 'bottom-center',
+  } as IAMPolicyNodeData,
 };
 
 const TUTORIAL_POLICY_NODES: IAMMinPolicyNodeData[] = [
