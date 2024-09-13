@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Box } from '@chakra-ui/react';
+import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
-import type { Connection, Edge, Node } from 'reactflow';
 import ReactFlow, {
-  useNodesState,
-  useEdgesState,
   ReactFlowInstance,
   useReactFlow,
+  type Connection,
+  type Edge,
+  type Node,
 } from 'reactflow';
 import { EventFromLogic } from 'xstate';
 
@@ -21,6 +22,7 @@ import { getNodeWithInitialPosition } from '../utils/nodes-position';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { GenericInsideLevelMetadata } from '@/machines/types';
+import { CanvasStore } from '@/stores/canvas-store';
 import {
   type IAMEdgeData,
   type IAMGroupNodeData,
@@ -43,13 +45,6 @@ const Canvas: React.FC = () => {
   const levelState = LevelsProgressionContext.useSelector(state => state);
   const levelActor = LevelsProgressionContext.useActorRef();
 
-  const [nodesState, setNodesState, onNodesChange] = useNodesState(
-    levelState.context.nodes.map((node, index) =>
-      getNodeWithInitialPosition(node, getViewport(), levelState.context.nodes.length, index)
-    )
-  );
-  const [edgesState, setEdgesState, onEdgesChange] = useEdgesState(levelState.context.edges);
-
   const [rfInstance] = useState<ReactFlowInstance>();
 
   const setEdges = (edges: Edge<IAMEdgeData>[]): void => {
@@ -60,18 +55,27 @@ const Canvas: React.FC = () => {
     levelActor.send({ type: 'UPDATE_IAM_NODE', node: node });
   };
 
+  const [nodesState, edgesState] = useSelector(
+    CanvasStore,
+    state => [state.context.nodes, state.context.edges],
+    _.isEqual
+  );
+
   useEffect(() => {
-    setEdgesState(levelState.context.edges);
+    CanvasStore.send({ type: 'setEdges', edges: levelState.context.edges });
   }, [levelState.context.edges]);
 
   useEffect(() => {
-    // Doing this to retain old nodes' state that's not stored in state machine; ie. position state
-    let newNodes = _.differenceBy(levelState.context.nodes, nodesState, 'id');
-    newNodes = newNodes.map((node, idx) =>
-      getNodeWithInitialPosition(node, getViewport(), newNodes.length, idx)
-    );
+    const nodeGroups = _.groupBy(levelState.context.nodes, 'data.entity');
 
-    setNodesState([...nodesState, ...newNodes]);
+    const newNodes = Object.keys(nodeGroups).flatMap(entityType => {
+      const nodes = nodeGroups[entityType];
+      return nodes.map((node, nodeIndex) =>
+        getNodeWithInitialPosition(node, getViewport(), nodes.length, nodeIndex)
+      );
+    });
+
+    CanvasStore.send({ type: 'setNodes', nodes: newNodes });
   }, [levelState.context.nodes]);
 
   useEffect(() => {
@@ -200,8 +204,8 @@ const Canvas: React.FC = () => {
       height='100vh'
     >
       <ReactFlow
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
+        onNodesChange={changes => CanvasStore.send({ type: 'changeNodesState', changes })}
+        onEdgesChange={changes => CanvasStore.send({ type: 'changeEdgesState', changes })}
         nodes={nodesState}
         edges={edgesState}
         onConnect={onConnect}
