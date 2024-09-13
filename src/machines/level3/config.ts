@@ -5,7 +5,7 @@ import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } fro
 import {
   IAMNodeEntity,
   IAMPolicyNodeData,
-  IAMScriptableEntitiesCreationObjective,
+  IAMPolicyRoleCreationObjective,
   IAMUserNodeData,
 } from '@/types';
 
@@ -154,7 +154,7 @@ export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
   },
 };
 export const HIDDEN_LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {};
-export const SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES: IAMScriptableEntitiesCreationObjective[][] = [
+export const SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][] = [
   [
     {
       entity: IAMNodeEntity.Policy,

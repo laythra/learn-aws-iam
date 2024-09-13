@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 import useSchemaValidator from '@/hooks/useSchemaValidator';
 import sampleSchema from '@/schemas/sample-schema.json';
-import { IAMScriptableEntitiesCreationObjective } from '@/types';
+import { IAMPolicyRoleCreationObjective } from '@/types';
 import { getLintingErrors } from '@/utils/iam-code-linter';
 
 interface CodeEditorWindowProps {
@@ -18,8 +18,8 @@ interface CodeEditorWindowProps {
   setWarnings: (warnings: string[]) => void;
   content: string;
   setIsLinting: (isLinting: boolean) => void;
-  targetObjective: IAMScriptableEntitiesCreationObjective | undefined;
-  findTargetValidPolicy: () => IAMScriptableEntitiesCreationObjective | undefined;
+  targetObjective: IAMPolicyRoleCreationObjective | undefined;
+  findTargetValidPolicy: () => IAMPolicyRoleCreationObjective | undefined;
 }
 
 const NO_MATCHING_POLICY_WARNING = 'This policy does not achieve any of the objectives.';

@@ -9,7 +9,7 @@ export interface IAMEntitiesContextState {
   maxNodesToCreated?: number;
 }
 
-export interface IAMScriptableEntitiesCreationObjective {
+export interface IAMPolicyRoleCreationObjective {
   entity: IAMScriptableEntity;
   json_schema: Schema;
   description?: string;

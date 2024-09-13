@@ -4,7 +4,7 @@ import type { Edge, EdgeChange, Node, NodeChange, OnNodesChange, XYPosition } fr
 import type {
   CreatableIAMNodeEntity,
   IAMPolicyNodeData,
-  IAMScriptableEntitiesCreationObjective,
+  IAMPolicyRoleCreationObjective,
 } from '@/types';
 import {
   IAMAnyNodeData,
@@ -39,7 +39,7 @@ export interface GenericContext {
   next_policy_role_objectives_index?: number;
   level_finished?: boolean;
   side_panel_open?: boolean;
-  policy_role_objectives: IAMScriptableEntitiesCreationObjective[];
+  policy_role_objectives: IAMPolicyRoleCreationObjective[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine

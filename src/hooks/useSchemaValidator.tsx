@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import Ajv, { ValidateFunction, JSONSchemaType, Schema } from 'ajv';
 
-import { IAMScriptableEntitiesCreationObjective } from '@/types';
+import { IAMPolicyRoleCreationObjective } from '@/types';
 
 const ajv = new Ajv();
 
@@ -13,7 +13,7 @@ function useSchemaValidator<T>(schema: JSONSchemaType<T> | Schema): ValidateFunc
 }
 
 export function useMultipleSchemaValidators<T>(
-  policyRoleObjectives: IAMScriptableEntitiesCreationObjective[]
+  policyRoleObjectives: IAMPolicyRoleCreationObjective[]
 ): ValidateFunction<T>[] {
   return useMemo(() => {
     return policyRoleObjectives.map(objective => ajv.compile(objective.json_schema));

@@ -33,7 +33,7 @@ import {
   IAMNodeEntity,
   CustomTheme,
   IAMPolicyNodeData,
-  IAMScriptableEntitiesCreationObjective,
+  IAMPolicyRoleCreationObjective,
 } from '@/types';
 import { isJSONValid } from '@/utils/iam-code-linter';
 import { getNodeName } from '@/utils/names';
@@ -77,7 +77,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
   const codeEditorRef = useRef<ReactCodeMirrorRef>(null);
   const schemaValidators = useMultipleSchemaValidators(policyRoleObjectives);
 
-  const findTargetValidPolicy = (): IAMScriptableEntitiesCreationObjective | undefined => {
+  const findTargetValidPolicy = (): IAMPolicyRoleCreationObjective | undefined => {
     return policyRoleObjectives?.find((_objective, index) => {
       return isJSONValid(codeEditorRef.current!.view!, schemaValidators[index]);
     });
