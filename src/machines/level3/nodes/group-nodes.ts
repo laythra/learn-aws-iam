@@ -34,8 +34,14 @@ export const TEMPLATE_GROUP_NODE: Node<IAMGroupNodeData> = {
 
 const IN_LEVEL_GROUP_NODES: IAMMinGroupNodeData[] = [
   {
-    id: 'iam_policy_1',
-    label: 's3-read-access',
+    id: 'iam_group_1',
+    label: 'frontend-team',
+    initial_position: 'center',
+    position: { x: 100, y: 100 },
+  },
+  {
+    id: 'iam_group_2',
+    label: 'backend-team',
     initial_position: 'center',
     position: { x: 100, y: 100 },
   },

@@ -4,7 +4,7 @@ import { ErrorObject, ValidateFunction } from 'ajv';
 
 interface LintConfig {
   validateFunction: ValidateFunction;
-  creationObjective: string | undefined;
+  creationObjective?: string;
 }
 
 // This function transforms the error message(s) to a more user-friendly format
@@ -16,7 +16,7 @@ function getCustomMessage(error: ErrorObject, creationObjective: string | undefi
   return 'Your JSON is invalid';
 }
 
-export function lint(
+function lint(
   view: EditorView,
   { validateFunction, creationObjective }: LintConfig
 ): { [key in 'syntax' | 'logical']: Diagnostic[] } {
@@ -51,6 +51,12 @@ export function lint(
 
   return diagnostics;
 }
+
+export const isJSONValid = (view: EditorView, validateFunction: ValidateFunction): boolean => {
+  const errors = lint(view, { validateFunction });
+
+  return errors['syntax'].length === 0 && errors['logical'].length === 0;
+};
 
 export const getLintingErrors = (
   view: EditorView,

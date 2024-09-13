@@ -1,10 +1,10 @@
 import s3ReadPolicySchema from './schemas/policy/s3-read-policy-schema.json';
+import s3ReadWritePolicySchema from './schemas/policy/s3-read-write-policy-schema.json';
 import { MANAGED_POLICIES } from '../config';
 import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
 import {
   IAMNodeEntity,
   IAMPolicyNodeData,
-  IAMResourceNodeData,
   IAMScriptableEntitiesCreationObjective,
   IAMUserNodeData,
 } from '@/types';
@@ -139,7 +139,20 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   },
 ];
 
-export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {};
+export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
+  frontend_team_policy_1: {
+    label: '**Frontend Team**: Full access to `S3` bucket public-assets',
+    finished: false,
+  },
+  frontend_team_policy_2: {
+    label: '**Frontend Team**: Read access to CloudFront Distribution 1234',
+    finished: false,
+  },
+  backend_team_policy_1: {
+    label: '**Backend Team**: Full access to `DynamoDB` table: user-profiles',
+    finished: false,
+  },
+};
 export const HIDDEN_LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {};
 export const SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES: IAMScriptableEntitiesCreationObjective[][] = [
   [
@@ -154,12 +167,30 @@ export const SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES: IAMScriptableEntitiesCreat
       validate_inside_code_editor: true,
     },
   ],
+  [
+    {
+      entity: IAMNodeEntity.Policy,
+      json_schema: s3ReadWritePolicySchema,
+      initial_code: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+      on_finish_event: 'S3_READ_WRITE_POLICY_CREATED',
+      validate_inside_code_editor: false,
+    },
+    {
+      entity: IAMNodeEntity.Policy,
+      json_schema: s3ReadWritePolicySchema,
+      initial_code: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+      on_finish_event: 'DYNAMO_READ_WRITE_POLICY_CREATED',
+      validate_inside_code_editor: false,
+    },
+    {
+      entity: IAMNodeEntity.Policy,
+      json_schema: s3ReadWritePolicySchema,
+      initial_code: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+      on_finish_event: 'CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED',
+      validate_inside_code_editor: false,
+    },
+  ],
 ];
-
-export const INITIAL_RESOURCES_INFO: Pick<
-  IAMResourceNodeData,
-  'id' | 'label' | 'entity' | 'image'
->[] = [];
 
 export const INITIAL_POLICIES_INFO: Pick<
   IAMPolicyNodeData & { position: { x: string; y: string } },

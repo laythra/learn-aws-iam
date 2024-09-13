@@ -1,5 +1,5 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
-import type { Edge, Node, XYPosition } from 'reactflow';
+import type { Edge, EdgeChange, Node, NodeChange, OnNodesChange, XYPosition } from 'reactflow';
 
 import type {
   CreatableIAMNodeEntity,

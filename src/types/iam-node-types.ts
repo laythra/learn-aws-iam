@@ -32,7 +32,7 @@ interface IAMNodeData {
   id: string;
   label: string;
   entity: IAMNodeEntity;
-  description: string;
+  description?: string;
   content?: string;
   handles: HandleProps[];
   image: IAMNodeImage;
@@ -89,3 +89,4 @@ export type IAMMinPolicyNodeData = IAMMinAnyNodeData &
   Pick<IAMPolicyNodeData, 'resources_affected'>;
 
 export type IAMMinGroupNodeData = IAMMinAnyNodeData;
+export type IAMMinResourceNodeData = IAMMinAnyNodeData;

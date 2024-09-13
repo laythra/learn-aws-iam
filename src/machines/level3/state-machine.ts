@@ -9,17 +9,15 @@ import {
   SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES,
 } from './config';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES, edges } from './nodes';
-import { TEMPLATE_GROUP_NODE, GROUP_NODE_Y_OFFSET } from './nodes/group-nodes';
+import { TEMPLATE_GROUP_NODE } from './nodes/group-nodes';
 import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
 import { INITIAL_POLICY_NODES, TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
-import { INITIAL_USER_NODES, TEMPLATE_USER_NODE, USER_NODE_Y_OFFSET } from './nodes/user-nodes';
+import { INITIAL_USER_NODES, TEMPLATE_USER_NODE } from './nodes/user-nodes';
 import type { Context, InsideLevelMetadata, EventData, LevelObjective } from './types';
 import { PopoverTutorialMessage } from '../types';
 import { theme } from '@/theme';
 import { CreatableIAMNodeEntity, IAMAnyNodeData, IAMNodeEntity } from '@/types';
-import { getNodeName } from '@/utils/names';
 
-const IAM_NODE_WIDTH = theme.sizes.iamNodeWidthInPixels;
 const FIRST_CUSTOM_GROUP_ID = INITIAL_GROUP_NODES.length + 1;
 const FIRST_CUSTOM_USER_ID = INITIAL_USER_NODES.length + 1;
 const FIRST_CUSTOM_POLICY_ID = INITIAL_POLICY_NODES.length + 1;
@@ -63,6 +61,12 @@ export const stateMachine = setup({
         ...context.level_objectives,
         [id]: objective,
       }),
+    }),
+    set_level_objectives: assign({
+      level_objectives: (
+        _context,
+        { objectives }: { objectives: { [key: string]: LevelObjective } }
+      ) => objectives,
     }),
     add_iam_node: assign({
       nodes: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => [...context.nodes, node],
@@ -303,11 +307,57 @@ export const stateMachine = setup({
         popup3: {
           entry: ['next_popup', 'show_side_panel'],
           on: {
-            NEXT_POPUP: 'blah',
+            NEXT_POPUP: 'create_and_attach_policies',
+          },
+          exit: 'hide_popups',
+        },
+        create_and_attach_policies: {
+          entry: 'next_policy_role_objectives',
+          type: 'parallel',
+          onDone: 'create_and_attach_policies_completed',
+          states: {
+            create_s3_read_write_policy: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES[1][0].on_finish_event]: 'completed',
+                  },
+                },
+                completed: {
+                  type: 'final',
+                },
+              },
+            },
+            create_dynamo_read_write_policy: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES[1][1].on_finish_event]: 'completed',
+                  },
+                },
+                completed: {
+                  type: 'final',
+                },
+              },
+            },
+            create_cloudfront_read_policy: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES[1][2].on_finish_event]: 'completed',
+                  },
+                },
+                completed: {
+                  type: 'final',
+                },
+              },
+            },
           },
         },
-        blah: {
-          entry: 'next_popup',
+        create_and_attach_policies_completed: {
           type: 'final',
         },
       },
