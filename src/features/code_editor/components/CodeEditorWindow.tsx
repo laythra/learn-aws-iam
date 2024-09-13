@@ -15,13 +15,28 @@ import { getLintingErrors } from '@/utils/iam-code-linter';
 interface CodeEditorWindowProps {
   setContent: (content: string) => void;
   setErrors: (errors: Diagnostic[]) => void;
+  setWarnings: (warnings: string[]) => void;
   content: string;
   setIsLinting: (isLinting: boolean) => void;
   targetObjective: IAMScriptableEntitiesCreationObjective | undefined;
+  findTargetValidPolicy: () => IAMScriptableEntitiesCreationObjective | undefined;
 }
 
+const NO_MATCHING_POLICY_WARNING = 'This policy does not achieve any of the objectives.';
+
 export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowProps>(
-  ({ setContent, setErrors, content, setIsLinting, targetObjective }, ref) => {
+  (
+    {
+      setContent,
+      setErrors,
+      setWarnings,
+      content,
+      setIsLinting,
+      targetObjective,
+      findTargetValidPolicy,
+    },
+    ref
+  ) => {
     const [editorInitialized, setEditorInitialized] = useState<boolean>(false);
     const policySchema = targetObjective?.json_schema || sampleSchema;
 
@@ -38,6 +53,12 @@ export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowP
         );
 
         setErrors(lintingErrors);
+
+        if (lintingErrors.length === 0 && !findTargetValidPolicy()) {
+          setWarnings([NO_MATCHING_POLICY_WARNING]);
+        } else {
+          setWarnings([]);
+        }
       }
 
       setIsLinting(false);
@@ -46,7 +67,19 @@ export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowP
     useEffect(() => {
       if (!editorRef.current) return;
 
-      setErrors(getLintingErrors(editorRef.current, policyValidator, targetObjective?.description));
+      const lintingErrors = getLintingErrors(
+        editorRef.current,
+        policyValidator,
+        targetObjective?.description
+      );
+
+      setErrors(lintingErrors);
+
+      if (lintingErrors.length === 0 && !findTargetValidPolicy()) {
+        setWarnings([NO_MATCHING_POLICY_WARNING]);
+      } else {
+        setWarnings([]);
+      }
     }, [editorInitialized]);
 
     const handleEditorCreate = (editor: EditorView): void => {

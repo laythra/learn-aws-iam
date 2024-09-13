@@ -70,6 +70,7 @@ const Canvas: React.FC = () => {
 
     const newNodes = Object.keys(nodeGroups).flatMap(entityType => {
       const nodes = nodeGroups[entityType];
+
       return nodes.map((node, nodeIndex) =>
         getNodeWithInitialPosition(node, getViewport(), nodes.length, nodeIndex)
       );

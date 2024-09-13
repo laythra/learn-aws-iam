@@ -22,12 +22,19 @@ import { Node } from 'reactflow';
 import { EventFromLogic } from 'xstate';
 
 import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
+import { CodeEditorWarningsBox } from './CodeEditorWarningsBox';
 import { CodeEditorWindow } from './CodeEditorWindow';
 import { useCodeEditor } from '../hooks/useCodeEditor';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { useMultipleSchemaValidators } from '@/hooks/useSchemaValidator';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { IAMScriptableEntity, IAMNodeEntity, CustomTheme, IAMPolicyNodeData } from '@/types';
+import {
+  IAMScriptableEntity,
+  IAMNodeEntity,
+  CustomTheme,
+  IAMPolicyNodeData,
+  IAMScriptableEntitiesCreationObjective,
+} from '@/types';
 import { isJSONValid } from '@/utils/iam-code-linter';
 import { getNodeName } from '@/utils/names';
 
@@ -50,24 +57,37 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
       state.machine,
     ]);
 
-  const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
-    useCodeEditor(
-      policyRoleObjectives?.[0]?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess,
-      policyRoleObjectives?.[0]?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess
-    );
+  const {
+    isCodeEditorOpen,
+    content,
+    setContent,
+    errors,
+    setErrors,
+    closeCodeEditor,
+    setWarnings,
+    warnings,
+  } = useCodeEditor(
+    policyRoleObjectives?.[0]?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+    policyRoleObjectives?.[0]?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess
+  );
 
-  const renderedErrors = errors[selectedIamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
-  const renderedContent = content[selectedIamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
+  const renderedErrors = errors[selectedIamEntity];
+  const renderedWarnings = warnings[selectedIamEntity];
+  const renderedContent = content[selectedIamEntity];
   const codeEditorRef = useRef<ReactCodeMirrorRef>(null);
   const schemaValidators = useMultipleSchemaValidators(policyRoleObjectives);
+
+  const findTargetValidPolicy = (): IAMScriptableEntitiesCreationObjective | undefined => {
+    return policyRoleObjectives?.find((_objective, index) => {
+      return isJSONValid(codeEditorRef.current!.view!, schemaValidators[index]);
+    });
+  };
 
   const submit = (): void => {
     if (!codeEditorRef.current || !codeEditorRef.current.view) return;
 
     // We need to find the first objective with no errors
-    const targetValidPolicy = policyRoleObjectives?.find((_objective, index) => {
-      return isJSONValid(codeEditorRef.current!.view!, schemaValidators[index]);
-    });
+    const targetValidPolicy = findTargetValidPolicy();
 
     const nodeId = getNodeName(selectedIamEntity, nextIamNodeId[selectedIamEntity]);
     const node: Node<IAMPolicyNodeData> = _.merge({}, policyNodeTemplate, {
@@ -116,13 +136,16 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
         <ModalBody ref={editorContentRef}>
           <CodeEditorWindow
             setErrors={_.partial(setErrors, selectedIamEntity)}
+            setWarnings={_.partial(setWarnings, selectedIamEntity)}
             setContent={_.partial(setContent, selectedIamEntity)}
             content={renderedContent}
             setIsLinting={setIsLinting}
             targetObjective={policyRoleObjectives.length == 1 ? policyRoleObjectives[0] : undefined}
+            findTargetValidPolicy={findTargetValidPolicy}
             ref={codeEditorRef}
           />
           <CodeEditorErrorsBox errors={renderedErrors} />
+          <CodeEditorWarningsBox warnings={renderedWarnings} />
         </ModalBody>
         <ModalFooter>
           <Button
