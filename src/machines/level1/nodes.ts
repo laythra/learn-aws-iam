@@ -5,7 +5,6 @@ import {
   IAMNodeEntity,
   IAMAnyNodeData,
   IAMNodeImage,
-  IAMGroupNodeData,
   IAMPolicyNodeData,
   IAMNodeDataMapping,
   IAMResourceNodeData,
@@ -58,7 +57,7 @@ export const initial_nodes: Node<IAMAnyNodeData>[] = [
     position: { x: 500, y: 250 },
     data: {
       label: 'public-images',
-      entity: IAMNodeEntity.S3Bucket,
+      entity: IAMNodeEntity.Resource,
       handles: [
         { id: Position.Top, type: 'source', position: Position.Top },
         { id: Position.Bottom, type: 'target', position: Position.Bottom },

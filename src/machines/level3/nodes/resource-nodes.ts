@@ -3,7 +3,7 @@ import { type Node, HandleProps, Position } from 'reactflow';
 
 import { theme } from '@/theme';
 import type { IAMMinResourceNodeData, IAMResourceNodeData } from '@/types';
-import { IAMNodeEntity, IAMNodeImage } from '@/types';
+import { IAMNodeEntity, IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 
 export const X_OFFSET = theme.sizes.iamNodeWidthInPixels;
 export const Y_OFFSET = 100;
@@ -15,7 +15,7 @@ export const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
   draggable: true,
   data: {
     id: 'iam_group',
-    label: 'IAM Group',
+    label: 'IAM Resource',
     entity: IAMNodeEntity.Resource,
     handles: [
       { id: Position.Top, type: 'source', position: Position.Top },
@@ -24,6 +24,7 @@ export const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
       { id: Position.Left, type: 'target', position: Position.Left },
     ] as HandleProps[],
     image: IAMNodeImage.S3Bucket,
+    resource_type: IAMNodeResourceEntity.S3Bucket,
   },
 };
 
@@ -32,30 +33,35 @@ const IN_LEVEL_RESOURCE_NODES: IAMMinResourceNodeData[] = [
     id: 'iam_resource_1',
     label: 'public-assets',
     initial_position: 'top-center',
-    position: { x: 100, y: 100 },
+    image: IAMNodeImage.S3Bucket,
+    resource_type: IAMNodeResourceEntity.S3Bucket,
   },
   {
     id: 'iam_resource_2',
-    label: 'public-assets',
+    label: 'Image Distribution',
     initial_position: 'top-center',
-    position: { x: 100, y: 100 },
+    image: IAMNodeImage.CDN,
+    resource_type: IAMNodeResourceEntity.CloudFront,
   },
   {
     id: 'iam_resource_3',
-    label: 'public-assets',
+    label: 'user-profiles',
     initial_position: 'top-center',
-    position: { x: 100, y: 100 },
+    image: IAMNodeImage.Database,
+    resource_type: IAMNodeResourceEntity.DynamoDBTable,
   },
 ];
 
 export const INITIAL_IN_LEVEL_RESOURCE_NODES: Node<IAMResourceNodeData>[] =
-  IN_LEVEL_RESOURCE_NODES.map(({ id, label, initial_position }) =>
+  IN_LEVEL_RESOURCE_NODES.map(({ id, label, initial_position, image, resource_type }) =>
     _.merge({}, TEMPLATE_RESOURCE_NODE, {
       id,
       data: {
         id,
         label,
         initial_position,
+        image,
+        resource_type,
       },
     })
   );

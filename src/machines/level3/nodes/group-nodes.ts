@@ -37,13 +37,11 @@ const IN_LEVEL_GROUP_NODES: IAMMinGroupNodeData[] = [
     id: 'iam_group_1',
     label: 'frontend-team',
     initial_position: 'center',
-    position: { x: 100, y: 100 },
   },
   {
     id: 'iam_group_2',
     label: 'backend-team',
     initial_position: 'center',
-    position: { x: 100, y: 100 },
   },
 ];
 

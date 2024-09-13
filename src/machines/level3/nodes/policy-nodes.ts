@@ -38,7 +38,6 @@ const TUTORIAL_POLICY_NODES: IAMMinPolicyNodeData[] = [
     code: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
     resources_affected: [],
     initial_position: 'center',
-    position: { x: 100, y: 100 },
   },
 ];
 

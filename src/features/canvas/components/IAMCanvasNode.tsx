@@ -26,6 +26,8 @@ export interface IAMCanvasNodeProps {
 const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const { entity, label, handles, image, code } = data;
   const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_policy;
+  const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
+
   const { setSelectedNodeId, selectedNodeId } = useContext(IAMNodeContext);
   const theme = useTheme<CustomTheme>();
 
@@ -84,7 +86,9 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
               </Tooltip>
             )}
           </HStack>
-          <Text fontSize='14px'>{entity}</Text>
+          <Text fontSize='14px' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
+            {resourceType || entity}
+          </Text>
         </Box>
         {code && (
           <Box flex='none'>

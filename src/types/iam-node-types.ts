@@ -6,9 +6,14 @@ export enum IAMNodeEntity {
   Role = 'IAM Role',
   Policy = 'IAM Policy',
   Resource = 'AWS Resource',
+}
+
+export enum IAMNodeResourceEntity {
+  Resource = 'AWS Resource',
   S3Bucket = 'S3 Bucket',
   DynamoDBTable = 'DynamoDB Table',
   EC2Instance = 'EC2 Instance',
+  CloudFront = 'CloudFront',
 }
 
 export enum IAMNodeImage {
@@ -18,6 +23,7 @@ export enum IAMNodeImage {
   Group = 'group',
   Database = 'database',
   Server = 'server',
+  CDN = 'cdn',
 }
 
 export type CreatableIAMNodeEntity =
@@ -58,11 +64,8 @@ export interface IAMPolicyNodeData extends IAMNodeData {
 }
 
 export interface IAMResourceNodeData extends IAMNodeData {
-  entity:
-    | IAMNodeEntity.Resource
-    | IAMNodeEntity.DynamoDBTable
-    | IAMNodeEntity.EC2Instance
-    | IAMNodeEntity.S3Bucket;
+  entity: IAMNodeEntity.Resource;
+  resource_type: IAMNodeResourceEntity;
 }
 
 export type IAMAnyNodeData =
@@ -81,12 +84,11 @@ export type IAMNodeDataMapping = {
   iam_group: IAMGroupNodeData;
 };
 
-type IAMMinAnyNodeData = Pick<IAMAnyNodeData, 'id' | 'label' | 'code' | 'initial_position'> & {
-  position: XYPosition;
-};
+type IAMMinAnyNodeData = Pick<IAMAnyNodeData, 'id' | 'label' | 'code' | 'initial_position'>;
 
 export type IAMMinPolicyNodeData = IAMMinAnyNodeData &
   Pick<IAMPolicyNodeData, 'resources_affected'>;
 
 export type IAMMinGroupNodeData = IAMMinAnyNodeData;
-export type IAMMinResourceNodeData = IAMMinAnyNodeData;
+export type IAMMinResourceNodeData = IAMMinAnyNodeData &
+  Pick<IAMResourceNodeData, 'image' | 'resource_type'>;
