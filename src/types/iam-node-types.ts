@@ -13,7 +13,7 @@ export enum IAMNodeResourceEntity {
   S3Bucket = 'S3 Bucket',
   DynamoDBTable = 'DynamoDB Table',
   EC2Instance = 'EC2 Instance',
-  CloudFront = 'CloudFront',
+  CloudFront = 'CloudFront CDN',
 }
 
 export enum IAMNodeImage {

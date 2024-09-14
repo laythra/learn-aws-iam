@@ -9,6 +9,13 @@ import { IAMPolicyNodeData, IAMNodeImage, IAMNodeEntity, IAMMinPolicyNodeData } 
 export const X_OFFSET = 350;
 export const Y_OFFSET = 450;
 
+export enum PolicyNodeID {
+  S3ReadAccess = 'iam_policy_1',
+  S3ReadWriteAcces = 'iam_policy_2',
+  DynamoDBReadWriteAccess = 'iam_policy_3',
+  CloudfrontReadAccess = 'iam_policy_4',
+}
+
 export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
   id: 'iam_policy',
   position: { x: X_OFFSET, y: Y_OFFSET },
@@ -33,7 +40,7 @@ export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
 
 const TUTORIAL_POLICY_NODES: IAMMinPolicyNodeData[] = [
   {
-    id: 'iam_policy_1',
+    id: PolicyNodeID.S3ReadAccess,
     label: 's3-read-access',
     code: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
     resources_affected: [],

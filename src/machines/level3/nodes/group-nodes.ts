@@ -10,6 +10,11 @@ import { IAMNodeEntity, IAMNodeImage } from '@/types';
 export const X_OFFSET = theme.sizes.iamNodeWidthInPixels;
 export const GROUP_NODE_Y_OFFSET = (POLICY_NODE_Y_OFFSET + RESOURCE_NODE_Y_OFFSET) / 2;
 
+export enum GroupNodeID {
+  FrontendGroup = 'iam_group_1',
+  BackendGroup = 'iam_group_2',
+}
+
 export const TEMPLATE_GROUP_NODE: Node<IAMGroupNodeData> = {
   id: 'iam_group',
   position: { x: X_OFFSET * 3, y: GROUP_NODE_Y_OFFSET },
@@ -34,12 +39,12 @@ export const TEMPLATE_GROUP_NODE: Node<IAMGroupNodeData> = {
 
 const IN_LEVEL_GROUP_NODES: IAMMinGroupNodeData[] = [
   {
-    id: 'iam_group_1',
+    id: GroupNodeID.FrontendGroup,
     label: 'frontend-team',
     initial_position: 'center',
   },
   {
-    id: 'iam_group_2',
+    id: GroupNodeID.BackendGroup,
     label: 'backend-team',
     initial_position: 'center',
   },

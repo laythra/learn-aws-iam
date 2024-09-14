@@ -89,7 +89,14 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     // We need to find the first objective with no errors
     const targetValidPolicy = findTargetValidPolicy();
 
-    const nodeId = getNodeName(selectedIamEntity, nextIamNodeId[selectedIamEntity]);
+    let nodeId;
+
+    if (targetValidPolicy) {
+      nodeId = targetValidPolicy.entityId;
+    } else {
+      nodeId = getNodeName(selectedIamEntity, nextIamNodeId[selectedIamEntity]);
+    }
+
     const node: Node<IAMPolicyNodeData> = _.merge({}, policyNodeTemplate, {
       id: nodeId,
       data: {

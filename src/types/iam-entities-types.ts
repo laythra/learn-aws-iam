@@ -10,6 +10,7 @@ export interface IAMEntitiesContextState {
 }
 
 export interface IAMPolicyRoleCreationObjective {
+  entityId: string;
   entity: IAMScriptableEntity;
   json_schema: Schema;
   description?: string;

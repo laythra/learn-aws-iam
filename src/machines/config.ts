@@ -9,4 +9,8 @@ export const MANAGED_POLICIES = {
       },
     ],
   },
+  EmptyPolicy: {
+    Version: '2012-10-17',
+    Statement: [],
+  },
 };

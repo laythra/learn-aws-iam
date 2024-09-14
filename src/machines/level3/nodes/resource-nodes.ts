@@ -8,6 +8,12 @@ import { IAMNodeEntity, IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 export const X_OFFSET = theme.sizes.iamNodeWidthInPixels;
 export const Y_OFFSET = 100;
 
+export enum ResourceNodeID {
+  S3Bucket = 'iam_resource_1',
+  CloudFront = 'iam_resource_2',
+  DynamoDBTable = 'iam_resource_3',
+}
+
 export const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
   id: 'iam_resources',
   position: { x: 100, y: 100 },
@@ -30,21 +36,21 @@ export const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
 
 const IN_LEVEL_RESOURCE_NODES: IAMMinResourceNodeData[] = [
   {
-    id: 'iam_resource_1',
+    id: ResourceNodeID.S3Bucket,
     label: 'public-assets',
     initial_position: 'top-center',
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,
   },
   {
-    id: 'iam_resource_2',
-    label: 'Image Distribution',
+    id: ResourceNodeID.CloudFront,
+    label: 'E1234567890ABC',
     initial_position: 'top-center',
     image: IAMNodeImage.CDN,
     resource_type: IAMNodeResourceEntity.CloudFront,
   },
   {
-    id: 'iam_resource_3',
+    id: ResourceNodeID.DynamoDBTable,
     label: 'user-profiles',
     initial_position: 'top-center',
     image: IAMNodeImage.Database,
