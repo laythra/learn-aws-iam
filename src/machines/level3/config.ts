@@ -1,13 +1,27 @@
+import { Edge } from 'reactflow';
+
+import { edges } from './edges';
+import { groupedByIdEdges } from './edges';
+import { GroupNodeID } from './nodes/group-nodes';
+import { PolicyNodeID } from './nodes/policy-nodes';
+import { ResourceNodeID } from './nodes/resource-nodes';
+import cloudfrontReadPolicySchema from './schemas/policy/cloudfront-read-policy-schema.json';
 import s3ReadPolicySchema from './schemas/policy/s3-read-policy-schema.json';
 import s3ReadWritePolicySchema from './schemas/policy/s3-read-write-policy-schema.json';
 import { MANAGED_POLICIES } from '../config';
-import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
+import type {
+  PopoverTutorialMessage,
+  PopupTutorialMessage,
+  LevelObjective,
+  EdgeConnectionObjective,
+} from '../types';
 import {
   IAMNodeEntity,
   IAMPolicyNodeData,
   IAMPolicyRoleCreationObjective,
   IAMUserNodeData,
 } from '@/types';
+import { getEdgeName } from '@/utils/names';
 
 const POPUP_MSG_1 = `
 Every policy we have used so far was **AWS Managed**.
@@ -141,53 +155,85 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
 
 export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
   frontend_team_policy_1: {
-    label: '**Frontend Team**: Full access to `S3` bucket public-assets',
+    label: '**Frontend Team**: Read/Write access to S3 bucket `public-assets`',
     finished: false,
   },
   frontend_team_policy_2: {
-    label: '**Frontend Team**: Read access to CloudFront Distribution 1234',
+    label: '**Frontend Team**: Read access to CloudFront Distribution `E1234567890ABC`',
     finished: false,
   },
   backend_team_policy_1: {
-    label: '**Backend Team**: Full access to `DynamoDB` table: user-profiles',
+    label: '**Backend Team**: Read/Write access to DynamoDB table: `user-profiles`',
     finished: false,
   },
 };
 export const HIDDEN_LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {};
-export const SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][] = [
+export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][] = [
   [
     {
+      entityId: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadPolicySchema,
-      initial_code: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+      initial_code: MANAGED_POLICIES.EmptyPolicy,
       description:
-        'Create a policy that allows read access\
-          to the S3 bucket: staging-public-images',
+        'Create a policy that allows read/write access\
+          to the S3 bucket: public-assets',
       on_finish_event: 'S3_READ_POLICY_CREATED',
       validate_inside_code_editor: true,
     },
   ],
   [
     {
+      entityId: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadWritePolicySchema,
-      initial_code: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+      initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: 'S3_READ_WRITE_POLICY_CREATED',
       validate_inside_code_editor: false,
     },
     {
+      entityId: PolicyNodeID.CloudfrontReadAccess,
       entity: IAMNodeEntity.Policy,
-      json_schema: s3ReadWritePolicySchema,
-      initial_code: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
-      on_finish_event: 'DYNAMO_READ_WRITE_POLICY_CREATED',
+      json_schema: cloudfrontReadPolicySchema,
+      initial_code: MANAGED_POLICIES.EmptyPolicy,
+      on_finish_event: 'DYNAMO_DB_READ_WRITE_POLICY_CREATED',
       validate_inside_code_editor: false,
     },
     {
+      entityId: PolicyNodeID.DynamoDBReadWriteAccess,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadWritePolicySchema,
-      initial_code: MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+      initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: 'CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED',
       validate_inside_code_editor: false,
+    },
+  ],
+];
+
+export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective[][] = [
+  [
+    {
+      required_edges: [
+        groupedByIdEdges[getEdgeName(PolicyNodeID.S3ReadWriteAcces, GroupNodeID.FrontendGroup)],
+      ],
+      locked_edges: [],
+      on_finish_event: 'S3_READ_WRITE_POLICY_CONNECTED',
+    },
+    {
+      required_edges: [
+        groupedByIdEdges[getEdgeName(PolicyNodeID.CloudfrontReadAccess, GroupNodeID.FrontendGroup)],
+      ],
+      locked_edges: [],
+      on_finish_event: 'CLOUDFRONT_READ_POLICY_CONNECTED',
+    },
+    {
+      required_edges: [
+        groupedByIdEdges[
+          getEdgeName(PolicyNodeID.DynamoDBReadWriteAccess, GroupNodeID.BackendGroup)
+        ],
+      ],
+      locked_edges: [],
+      on_finish_event: 'DYNAMO_DB_READ_WRITE_POLICY_CONNECTED',
     },
   ],
 ];

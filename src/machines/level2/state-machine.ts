@@ -116,6 +116,7 @@ export const stateMachine = setup({
       },
     },
     policy_role_objectives: [],
+    edges_connection_objectives: [],
   },
   on: {
     ADD_IAM_USER_NODE: {

@@ -1,5 +1,5 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
-import type { Edge, EdgeChange, Node, NodeChange, OnNodesChange, XYPosition } from 'reactflow';
+import type { Edge, Node, XYPosition } from 'reactflow';
 
 import type {
   CreatableIAMNodeEntity,
@@ -37,9 +37,11 @@ export interface GenericContext {
   popup_content?: PopupTutorialMessage;
   level_objectives: { [key: string]: LevelObjective };
   next_policy_role_objectives_index?: number;
+  next_edges_connection_objectives_index?: number;
   level_finished?: boolean;
   side_panel_open?: boolean;
   policy_role_objectives: IAMPolicyRoleCreationObjective[];
+  edges_connection_objectives: EdgeConnectionObjective[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -102,4 +104,10 @@ export type PopupTutorialMessage = {
 export type LevelObjective = {
   label: string;
   finished: boolean;
+};
+
+export type EdgeConnectionObjective = {
+  required_edges: Edge[];
+  locked_edges: Edge[];
+  on_finish_event: string;
 };

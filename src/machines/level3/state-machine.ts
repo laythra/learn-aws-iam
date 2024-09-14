@@ -6,9 +6,11 @@ import {
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
   LEVEL_OBJECTIVES,
-  SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES,
+  POLICY_ROLE_CREATION_OBJECTIVES,
+  EDGE_CONNECTION_OBJECTIVES,
 } from './config';
-import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES, edges } from './nodes';
+import { edges } from './edges';
+import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { TEMPLATE_GROUP_NODE } from './nodes/group-nodes';
 import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
 import { INITIAL_POLICY_NODES, TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
@@ -43,9 +45,15 @@ export const stateMachine = setup({
     }),
     next_policy_role_objectives: assign({
       policy_role_objectives: ({ context }) =>
-        SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES[context.next_policy_role_objectives_index ?? 0],
+        POLICY_ROLE_CREATION_OBJECTIVES[context.next_policy_role_objectives_index ?? 0],
       next_policy_role_objectives_index: ({ context }) =>
         (context.next_policy_role_objectives_index ?? 0) + 1,
+    }),
+    next_edge_connection_objectives: assign({
+      edges_connection_objectives: ({ context }) =>
+        EDGE_CONNECTION_OBJECTIVES[context.next_edges_connection_objectives_index ?? 0],
+      next_policy_role_objectives_index: ({ context }) =>
+        (context.next_edges_connection_objectives_index ?? 0) + 1,
     }),
     hide_popups: assign({ show_popups: false }),
     hide_popovers: assign({ show_popovers: false }),
@@ -129,6 +137,7 @@ export const stateMachine = setup({
       y: theme.sizes.iamNodeWidthInPixels / 2,
     },
     policy_role_objectives: [],
+    edges_connection_objectives: [],
   },
   on: {
     ADD_IAM_NODE: {
@@ -312,16 +321,22 @@ export const stateMachine = setup({
           exit: 'hide_popups',
         },
         create_and_attach_policies: {
-          entry: 'next_policy_role_objectives',
+          entry: ['next_policy_role_objectives', 'next_edge_connection_objectives'],
           type: 'parallel',
           onDone: 'create_and_attach_policies_completed',
           states: {
             create_s3_read_write_policy: {
-              initial: 'in_progress',
+              initial: 'creation_in_progress',
               states: {
-                in_progress: {
+                creation_in_progress: {
                   on: {
-                    [SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES[1][0].on_finish_event]: 'completed',
+                    [POLICY_ROLE_CREATION_OBJECTIVES[1][0].on_finish_event]:
+                      'attachment_in_progress',
+                  },
+                },
+                attachment_in_progress: {
+                  on: {
+                    [EDGE_CONNECTION_OBJECTIVES[0][0].on_finish_event]: 'completed',
                   },
                 },
                 completed: {
@@ -330,11 +345,17 @@ export const stateMachine = setup({
               },
             },
             create_dynamo_read_write_policy: {
-              initial: 'in_progress',
+              initial: 'creation_in_progress',
               states: {
-                in_progress: {
+                creation_in_progress: {
                   on: {
-                    [SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES[1][1].on_finish_event]: 'completed',
+                    [POLICY_ROLE_CREATION_OBJECTIVES[1][1].on_finish_event]:
+                      'attachment_in_progress',
+                  },
+                },
+                attachment_in_progress: {
+                  on: {
+                    [EDGE_CONNECTION_OBJECTIVES[0][1].on_finish_event]: 'completed',
                   },
                 },
                 completed: {
@@ -343,11 +364,17 @@ export const stateMachine = setup({
               },
             },
             create_cloudfront_read_policy: {
-              initial: 'in_progress',
+              initial: 'creation_in_progress',
               states: {
-                in_progress: {
+                creation_in_progress: {
                   on: {
-                    [SCRIPTABLE_ENTITIES_CREATION_OBJECTIVES[1][2].on_finish_event]: 'completed',
+                    [POLICY_ROLE_CREATION_OBJECTIVES[1][2].on_finish_event]:
+                      'attachment_in_progress',
+                  },
+                },
+                attachment_in_progress: {
+                  on: {
+                    [EDGE_CONNECTION_OBJECTIVES[0][2].on_finish_event]: 'completed',
                   },
                 },
                 completed: {
