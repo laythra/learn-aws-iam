@@ -20,12 +20,26 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"]
-            }
+              "enum": ["s3:PutObject", "s3:GetObject", "s3:DeleteObject", "s3:ListBucket"]
+            },
+            "minItems": 4,
+            "maxItems": 4,
+            "uniqueItems": true
           },
           "Resource": {
-            "type": "string",
-            "enum": ["arn:aws:s3:::my_bucket/*"]
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": ["arn:aws:s3:::public-assets/*"]
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["arn:aws:s3:::public-assets/*"]
+                }
+              }
+            ]
           }
         }
       }
