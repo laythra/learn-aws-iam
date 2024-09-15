@@ -12,17 +12,12 @@ import {
 import { edges } from './edges';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { TEMPLATE_GROUP_NODE } from './nodes/group-nodes';
-import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
-import { INITIAL_POLICY_NODES, TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
-import { INITIAL_USER_NODES, TEMPLATE_USER_NODE } from './nodes/user-nodes';
+import { TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
+import { TEMPLATE_USER_NODE } from './nodes/user-nodes';
 import type { Context, InsideLevelMetadata, EventData, LevelObjective } from './types';
 import { PopoverTutorialMessage } from '../types';
 import { theme } from '@/theme';
 import { CreatableIAMNodeEntity, IAMAnyNodeData, IAMNodeEntity } from '@/types';
-
-const FIRST_CUSTOM_GROUP_ID = INITIAL_GROUP_NODES.length + 1;
-const FIRST_CUSTOM_USER_ID = INITIAL_USER_NODES.length + 1;
-const FIRST_CUSTOM_POLICY_ID = INITIAL_POLICY_NODES.length + 1;
 
 export const stateMachine = setup({
   types: {} as {
@@ -299,6 +294,7 @@ export const stateMachine = setup({
       initial: 'popup1',
       entry: assign({
         nodes: INITIAL_IN_LEVEL_NODES,
+        final_edges: edges,
       }),
       states: {
         popup1: {

@@ -1,6 +1,3 @@
-import { Edge } from 'reactflow';
-
-import { edges } from './edges';
 import { groupedByIdEdges } from './edges';
 import { GroupNodeID } from './nodes/group-nodes';
 import { PolicyNodeID } from './nodes/policy-nodes';
@@ -15,12 +12,7 @@ import type {
   LevelObjective,
   EdgeConnectionObjective,
 } from '../types';
-import {
-  IAMNodeEntity,
-  IAMPolicyNodeData,
-  IAMPolicyRoleCreationObjective,
-  IAMUserNodeData,
-} from '@/types';
+import { IAMNodeEntity, IAMPolicyNodeData, IAMPolicyRoleCreationObjective } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
 const POPUP_MSG_1 = `
@@ -180,6 +172,7 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][]
           to the S3 bucket: public-assets',
       on_finish_event: 'S3_READ_POLICY_CREATED',
       validate_inside_code_editor: true,
+      resource_affected: [],
     },
   ],
   [
@@ -190,6 +183,7 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][]
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: 'S3_READ_WRITE_POLICY_CREATED',
       validate_inside_code_editor: false,
+      resource_affected: [ResourceNodeID.S3Bucket],
     },
     {
       entityId: PolicyNodeID.CloudfrontReadAccess,
@@ -198,6 +192,7 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][]
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: 'DYNAMO_DB_READ_WRITE_POLICY_CREATED',
       validate_inside_code_editor: false,
+      resource_affected: [ResourceNodeID.DynamoDBTable],
     },
     {
       entityId: PolicyNodeID.DynamoDBReadWriteAccess,
@@ -206,6 +201,7 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][]
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: 'CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED',
       validate_inside_code_editor: false,
+      resource_affected: [ResourceNodeID.CloudFront],
     },
   ],
 ];
@@ -251,5 +247,3 @@ export const INITIAL_POLICIES_INFO: Pick<
     position: { x: '100', y: '100' },
   },
 ];
-
-export const INITIAL_USERS_INFO: Pick<IAMUserNodeData, 'id' | 'label'>[] = [];

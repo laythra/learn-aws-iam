@@ -1,4 +1,4 @@
-import { HandleProps, XYPosition } from 'reactflow';
+import { HandleProps } from 'reactflow';
 
 export enum IAMNodeEntity {
   User = 'IAM User',
@@ -89,6 +89,7 @@ type IAMMinAnyNodeData = Pick<IAMAnyNodeData, 'id' | 'label' | 'code' | 'initial
 export type IAMMinPolicyNodeData = IAMMinAnyNodeData &
   Pick<IAMPolicyNodeData, 'resources_affected'>;
 
+export type IAMMinUserNodeData = IAMMinAnyNodeData;
 export type IAMMinGroupNodeData = IAMMinAnyNodeData;
 export type IAMMinResourceNodeData = IAMMinAnyNodeData &
   Pick<IAMResourceNodeData, 'image' | 'resource_type'>;

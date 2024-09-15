@@ -21,7 +21,6 @@ import {
 import { getNodeWithInitialPosition } from '../utils/nodes-position';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { GenericInsideLevelMetadata } from '@/machines/types';
 import { CanvasStore } from '@/stores/canvas-store';
 import {
   type IAMEdgeData,
@@ -152,24 +151,17 @@ const Canvas: React.FC = () => {
       setEdges(newEdges);
       updateNode(newGroupNode);
 
-      _.forOwn(levelState.getMeta(), (value, statePath) => {
-        const levelMetadata = value as GenericInsideLevelMetadata;
-
-        const finishedTargets = levelMetadata.connection_targets?.map(connectionTarget => {
-          if (_.differenceBy(connectionTarget.required_edges, newEdges, 'id').length === 0) {
-            // We unlock all locked edges
-            _.forEach(connectionTarget.locked_edges, edge => {
-              newEdges = [...newEdges, edge];
-            });
-
-            return connectionTarget;
-          }
-        });
-
-        if (_.compact(finishedTargets).length === levelMetadata.connection_targets?.length) {
-          const actionName = levelState.context.metadata_keys[statePath];
-          levelActor.send({ type: actionName } as EventFromLogic<typeof levelState.machine>);
+      const edgesConnectionObjectives = levelState.context.edges_connection_objectives;
+      edgesConnectionObjectives.forEach(objective => {
+        if (_.differenceBy(objective.required_edges, newEdges, 'id').length === 0) {
+          objective.locked_edges.forEach(edge => {
+            newEdges = [...newEdges, edge];
+          });
         }
+
+        levelActor.send({ type: objective.on_finish_event } as EventFromLogic<
+          typeof levelState.machine
+        >);
       });
     },
 

@@ -10,10 +10,10 @@ export const X_OFFSET = 350;
 export const Y_OFFSET = 450;
 
 export enum PolicyNodeID {
-  S3ReadAccess = 'iam_policy_1',
-  S3ReadWriteAcces = 'iam_policy_2',
-  DynamoDBReadWriteAccess = 'iam_policy_3',
-  CloudfrontReadAccess = 'iam_policy_4',
+  S3ReadAccess = 'S3_read_access',
+  S3ReadWriteAcces = 'S3_read_write_access',
+  DynamoDBReadWriteAccess = 'DynamoDB_read_write_access',
+  CloudfrontReadAccess = 'Cloudfront_read_access',
 }
 
 export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {

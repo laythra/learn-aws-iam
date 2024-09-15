@@ -17,6 +17,7 @@ export interface IAMPolicyRoleCreationObjective {
   initial_code: object;
   on_finish_event: string;
   validate_inside_code_editor: boolean;
+  resource_affected: string[];
 }
 
 export type IAMScriptableEntity = IAMNodeEntity.Policy | IAMNodeEntity.Role;
