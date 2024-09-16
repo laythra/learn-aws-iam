@@ -38,7 +38,7 @@ export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
   },
 };
 
-const IN_LEVEL_USER_NODES: IAMMinUserNodeData[] = [
+const IN_LEVEL_USER_NODES: Partial<IAMUserNodeData>[] = [
   {
     id: UserNodeID.User1,
     label: 'Laith',

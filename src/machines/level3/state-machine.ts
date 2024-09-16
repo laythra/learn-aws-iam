@@ -122,9 +122,9 @@ export const stateMachine = setup({
     final_edges: edges,
     level_objectives: LEVEL_OBJECTIVES,
     next_iam_node_id: {
-      [IAMNodeEntity.Group]: FIRST_CUSTOM_GROUP_ID,
-      [IAMNodeEntity.User]: FIRST_CUSTOM_USER_ID,
-      [IAMNodeEntity.Policy]: FIRST_CUSTOM_POLICY_ID,
+      [IAMNodeEntity.Group]: 1,
+      [IAMNodeEntity.User]: 1,
+      [IAMNodeEntity.Policy]: 1,
       [IAMNodeEntity.Role]: 1,
     },
     next_iam_node_default_position: {
