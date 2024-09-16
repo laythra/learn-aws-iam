@@ -12,11 +12,11 @@ const VALID_INITIAL_POSITIONS = [
 ];
 
 // TODO: Take into account the right side panel width and navbar height
-function getCenterCoordinates(viewport: Viewport): XYPosition {
+function getCenterCoordinates(viewport: Viewport, sidePanelWidth: number): XYPosition {
   const { x, y, zoom } = viewport;
 
   const windowHeight = window.innerHeight;
-  const windowWidth = window.innerWidth;
+  const windowWidth = window.innerWidth - sidePanelWidth;
 
   const centerX = (windowWidth / 2 - x) / zoom;
   const centerY = (windowHeight / 2 - y) / zoom;
@@ -31,7 +31,8 @@ export function getNodeWithInitialPosition(
   node: Node<IAMAnyNodeData>,
   viewport: Viewport,
   numNodes: number,
-  nodeIndex: number
+  nodeIndex: number,
+  sidePanelWidth: number
 ): Node<IAMAnyNodeData> {
   const {
     data: { initial_position: initialPostion },
@@ -43,7 +44,7 @@ export function getNodeWithInitialPosition(
 
   const nodeWidth = theme.sizes.iamNodeWidthInPixels;
   const nodeHeight = theme.sizes.iamNodeHeightInPixels;
-  const centerCoordinates = getCenterCoordinates(viewport);
+  const centerCoordinates = getCenterCoordinates(viewport, sidePanelWidth);
   const nodeSpacing = 20;
 
   let { x, y } = centerCoordinates;
@@ -81,13 +82,15 @@ export function getNodeWithInitialPosition(
         position: { x, y },
       };
     case 'left-center':
-      x /= 4; // Move node to the left by half of the left half of the screen width
+      x = x / 6;
+
       return {
         ...node,
         position: { x, y },
       };
     case 'right-center':
-      x += x / 4; // Move node to the right by half of the right half of the screen width
+      x = window.innerWidth - sidePanelWidth - nodeWidth - x / 6;
+
       return {
         ...node,
         position: { x, y },

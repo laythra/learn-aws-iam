@@ -1,33 +1,26 @@
-import React, { createContext } from 'react';
-
-import { useBoolean } from '@chakra-ui/react';
+import React, { createContext, useRef } from 'react';
 
 interface SidePanelsProviderProps {
   children: React.ReactNode;
 }
 
 export type SidePanelsContextState = {
-  rightPanelOpen: boolean;
-  setRightPanelOpen: {
-    on: () => void;
-    off: () => void;
-    toggle: () => void;
-  };
+  ref: React.RefObject<HTMLDivElement> | null;
 };
 
 export const SidePanelsContext = createContext<SidePanelsContextState>({
-  rightPanelOpen: false,
-  setRightPanelOpen: { on: () => {}, off: () => {}, toggle: () => {} },
+  ref: null,
 });
 
+// I am not sure if I should store the ref in the context or inside the statemachine
+// This will do for now
 const SidePanelProvider: React.FC<SidePanelsProviderProps> = ({ children }) => {
-  const [rightPanelOpen, setRightPanelOpen] = useBoolean(false);
+  const sidePanelRef = useRef<HTMLDivElement>(null);
 
   return (
     <SidePanelsContext.Provider
       value={{
-        rightPanelOpen,
-        setRightPanelOpen,
+        ref: sidePanelRef,
       }}
     >
       {children}

@@ -21,6 +21,7 @@ import {
 import { getNodeWithInitialPosition } from '../utils/nodes-position';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import useSidePanels from '@/hooks/useSidePanels';
 import { CanvasStore } from '@/stores/canvas-store';
 import {
   type IAMEdgeData,
@@ -43,6 +44,7 @@ const Canvas: React.FC = () => {
   const { getViewport } = useReactFlow();
   const levelState = LevelsProgressionContext.useSelector(state => state);
   const levelActor = LevelsProgressionContext.useActorRef();
+  const { ref: sidePanelRef } = useSidePanels();
 
   const [rfInstance] = useState<ReactFlowInstance>();
 
@@ -65,13 +67,19 @@ const Canvas: React.FC = () => {
   }, [levelState.context.edges]);
 
   useEffect(() => {
-    const nodeGroups = _.groupBy(levelState.context.nodes, 'data.entity');
+    const nodeGroups = _.groupBy(levelState.context.nodes, 'data.initial_position');
 
     const newNodes = Object.keys(nodeGroups).flatMap(entityType => {
       const nodes = nodeGroups[entityType];
 
       return nodes.map((node, nodeIndex) =>
-        getNodeWithInitialPosition(node, getViewport(), nodes.length, nodeIndex)
+        getNodeWithInitialPosition(
+          node,
+          getViewport(),
+          nodes.length,
+          nodeIndex,
+          sidePanelRef?.current?.clientWidth || 0
+        )
       );
     });
 

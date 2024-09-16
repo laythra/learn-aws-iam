@@ -12,12 +12,12 @@ import Canvas from '@/features/canvas/components/Canvas';
 const Home: React.FC = () => {
   return (
     <Flex direction='row' h='100vh' w='100vw'>
-      <TutorialPopup />
-      <Box flex='1 0 80%'>
-        <Navbar />
-        <Canvas />
-      </Box>
       <SidePanelProvider>
+        <TutorialPopup />
+        <Box flex='1 0 80%'>
+          <Navbar />
+          <Canvas />
+        </Box>
         <RightSidePanelToggleButton />
         <RightSidePanel />
       </SidePanelProvider>
