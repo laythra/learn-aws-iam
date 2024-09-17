@@ -1,6 +1,6 @@
 import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@uiw/react-codemirror';
-import { ErrorObject, ValidateFunction } from 'ajv';
+import { ValidateFunction } from 'ajv';
 
 interface LintConfig {
   validateFunction: ValidateFunction;

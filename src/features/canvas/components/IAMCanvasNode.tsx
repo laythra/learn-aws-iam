@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { Flex, Text, Box, Image, Badge, Tooltip, HStack, position } from '@chakra-ui/react';
+import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
 import { Handle } from 'reactflow';
 

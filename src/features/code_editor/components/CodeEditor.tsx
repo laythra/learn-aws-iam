@@ -36,7 +36,6 @@ import {
   IAMPolicyRoleCreationObjective,
 } from '@/types';
 import { isJSONValid } from '@/utils/iam-code-linter';
-import { getNodeName } from '@/utils/names';
 
 interface CodeEditorProps {}
 
@@ -49,9 +48,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
   );
   const [isLinting, setIsLinting] = useState<boolean>(false);
   const levelActor = LevelsProgressionContext.useActorRef();
-  const [nextIamNodeId, policyNodeTemplate, policyRoleObjectives, stateMachine] =
+  const [policyNodeTemplate, policyRoleObjectives, stateMachine] =
     LevelsProgressionContext.useSelector(state => [
-      state.context.next_iam_node_id,
       state.context.iam_policy_template,
       state.context.policy_role_objectives,
       state.machine,
@@ -96,7 +94,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
       nodeId = targetValidPolicy.entityId;
       label = nodeId;
     } else {
-      // nodeId = getNodeName(selectedIamEntity, nextIamNodeId[selectedIamEntity]);
       nodeId = new Date().getTime().toString();
       label = 'IAM Policy';
     }

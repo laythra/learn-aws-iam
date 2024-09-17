@@ -11,7 +11,7 @@ const VALID_INITIAL_POSITIONS = [
   'right-center',
 ];
 
-// TODO: Take into account the right side panel width and navbar height
+// TODO: Take into account the navbar height
 function getCenterCoordinates(viewport: Viewport, sidePanelWidth: number): XYPosition {
   const { x, y, zoom } = viewport;
 

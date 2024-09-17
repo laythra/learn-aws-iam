@@ -1,11 +1,9 @@
 import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
 import {
   IAMMinResourceNodeData,
-  IAMNodeEntity,
   IAMNodeImage,
   IAMNodeResourceEntity,
   IAMPolicyNodeData,
-  IAMResourceNodeData,
   IAMUserNodeData,
 } from '@/types';
 
