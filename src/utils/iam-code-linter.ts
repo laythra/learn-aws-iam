@@ -7,18 +7,9 @@ interface LintConfig {
   creationObjective?: string;
 }
 
-// This function transforms the error message(s) to a more user-friendly format
-function getCustomMessage(error: ErrorObject, creationObjective: string | undefined): string {
-  if (creationObjective) {
-    return `Your JSON does not meet the requirements. Our objective is to ${creationObjective}`;
-  }
-
-  return 'Your JSON is invalid';
-}
-
 function lint(
   view: EditorView,
-  { validateFunction, creationObjective }: LintConfig
+  { validateFunction }: LintConfig
 ): { [key in 'syntax' | 'logical']: Diagnostic[] } {
   const doc = view.state.doc.toString();
   const diagnostics: { [key in 'syntax' | 'logical']: Diagnostic[] } = { syntax: [], logical: [] };
@@ -32,7 +23,7 @@ function lint(
           from: view.state.doc.line(error.instancePath.split('/').length).from,
           to: view.state.doc.line(error.instancePath.split('/').length).to,
           severity: 'error',
-          message: getCustomMessage(error, creationObjective),
+          message: 'Invalid JSON',
         });
       });
     }
@@ -60,16 +51,11 @@ export const isJSONValid = (view: EditorView, validateFunction: ValidateFunction
 
 export const getLintingErrors = (
   view: EditorView,
-  policyValidator: ValidateFunction,
-  creationObjective: string | undefined,
-  validateFormat: boolean = false
+  policyValidator: ValidateFunction
 ): Diagnostic[] => {
   const lintingErrors = lint(view, {
     validateFunction: policyValidator,
-    creationObjective,
   });
 
-  return validateFormat
-    ? lintingErrors['logical'] || lintingErrors['syntax']
-    : lintingErrors['syntax'];
+  return lintingErrors['syntax'] || lintingErrors['logical'];
 };

@@ -43,22 +43,26 @@ export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowP
     const policyValidator = useSchemaValidator(policySchema);
     const editorRef = useRef<EditorView>();
 
+    const getWarnings = (lintingErrors: Diagnostic[]): string[] => {
+      if (lintingErrors.length > 0 || findTargetValidPolicy()) {
+        return [];
+      }
+
+      if (targetObjective?.validate_inside_code_editor) {
+        const levelObjectiveMessage = `Our objective is to ${targetObjective.description}`;
+
+        return [NO_MATCHING_POLICY_WARNING, levelObjectiveMessage];
+      } else {
+        return [NO_MATCHING_POLICY_WARNING];
+      }
+    };
+
     const validateChange = _.debounce((): void => {
       if (editorRef.current) {
-        const lintingErrors = getLintingErrors(
-          editorRef.current,
-          policyValidator,
-          targetObjective?.description,
-          targetObjective?.validate_inside_code_editor
-        );
+        const lintingErrors = getLintingErrors(editorRef.current, policyValidator);
 
         setErrors(lintingErrors);
-
-        if (lintingErrors.length === 0 && !findTargetValidPolicy()) {
-          setWarnings([NO_MATCHING_POLICY_WARNING]);
-        } else {
-          setWarnings([]);
-        }
+        setWarnings(getWarnings(lintingErrors));
       }
 
       setIsLinting(false);
@@ -67,19 +71,10 @@ export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowP
     useEffect(() => {
       if (!editorRef.current) return;
 
-      const lintingErrors = getLintingErrors(
-        editorRef.current,
-        policyValidator,
-        targetObjective?.description
-      );
+      const lintingErrors = getLintingErrors(editorRef.current, policyValidator);
 
       setErrors(lintingErrors);
-
-      if (lintingErrors.length === 0 && !findTargetValidPolicy()) {
-        setWarnings([NO_MATCHING_POLICY_WARNING]);
-      } else {
-        setWarnings([]);
-      }
+      setWarnings(getWarnings(lintingErrors));
     }, [editorInitialized]);
 
     const handleEditorCreate = (editor: EditorView): void => {
@@ -96,10 +91,7 @@ export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowP
           validateChange();
         }}
         height='200px'
-        extensions={[
-          json(),
-          linter(view => getLintingErrors(view, policyValidator, targetObjective?.description)),
-        ]}
+        extensions={[json(), linter(view => getLintingErrors(view, policyValidator))]}
         onCreateEditor={handleEditorCreate}
         ref={ref}
       />
