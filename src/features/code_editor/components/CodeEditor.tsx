@@ -90,18 +90,22 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     const targetValidPolicy = findTargetValidPolicy();
 
     let nodeId;
+    let label;
 
     if (targetValidPolicy) {
       nodeId = targetValidPolicy.entityId;
+      label = nodeId;
     } else {
-      nodeId = getNodeName(selectedIamEntity, nextIamNodeId[selectedIamEntity]);
+      // nodeId = getNodeName(selectedIamEntity, nextIamNodeId[selectedIamEntity]);
+      nodeId = new Date().getTime().toString();
+      label = 'IAM Policy';
     }
 
     const node: Node<IAMPolicyNodeData> = _.merge({}, policyNodeTemplate, {
       id: nodeId,
       data: {
         id: nodeId,
-        label: nodeId,
+        label,
         entity: selectedIamEntity,
         code: renderedContent,
         unnecessary_policy: !targetValidPolicy,

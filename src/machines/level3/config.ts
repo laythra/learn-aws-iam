@@ -90,7 +90,7 @@ to complete is on the right side panel ➡️️|lg
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
-    element_id: 'iam_policy_1',
+    element_id: PolicyNodeID.S3ReadAccess,
     popover_title: 'AWS Managed policies',
     popover_content: `This is an AWS Managed policy, click on the top right to see its contents`,
     show_next_button: false,
@@ -106,7 +106,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'top',
   },
   {
-    element_id: 'iam_policy_2',
+    element_id: PolicyNodeID.S3ReadWriteAcces,
     popover_title: 'Your first Customer Managed Policy 🔥',
     popover_content: `
       You have created your first Customer Managed Policy!
@@ -145,20 +145,28 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   },
 ];
 
-export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
-  frontend_team_policy_1: {
-    label: '**Frontend Team**: Read/Write access to S3 bucket `public-assets`',
-    finished: false,
+export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective }[] = [
+  {
+    policy_creation_1: {
+      label: 'Create your first customer managed policy',
+      finished: false,
+    },
   },
-  frontend_team_policy_2: {
-    label: '**Frontend Team**: Read access to CloudFront Distribution `E1234567890ABC`',
-    finished: false,
+  {
+    frontend_team_policy_1: {
+      label: '**Frontend Team**: Read/Write access to S3 bucket `public-assets`',
+      finished: false,
+    },
+    frontend_team_policy_2: {
+      label: '**Frontend Team**: Read access to CloudFront Distribution `E1234567890ABC`',
+      finished: false,
+    },
+    backend_team_policy_1: {
+      label: '**Backend Team**: Read/Write access to DynamoDB table: `user-profiles`',
+      finished: false,
+    },
   },
-  backend_team_policy_1: {
-    label: '**Backend Team**: Read/Write access to DynamoDB table: `user-profiles`',
-    finished: false,
-  },
-};
+];
 export const HIDDEN_LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {};
 export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][] = [
   [

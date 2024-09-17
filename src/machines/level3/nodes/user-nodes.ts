@@ -4,7 +4,7 @@ import { type Node, HandleProps, Position } from 'reactflow';
 import { Y_OFFSET as POLICY_NODE_Y_OFFSET } from './policy-nodes';
 import { Y_OFFSET as RESOURCE_NODE_Y_OFFSET } from './resource-nodes';
 import { theme } from '@/theme';
-import type { IAMMinUserNodeData, IAMUserNodeData } from '@/types';
+import type { IAMUserNodeData } from '@/types';
 import { IAMNodeEntity, IAMNodeImage } from '@/types';
 
 export const USER_NODE_X_OFFSET = theme.sizes.iamNodeWidthInPixels / 2;
@@ -72,3 +72,5 @@ export const INITIAL_IN_LEVEL_USER_NODES: Node<IAMUserNodeData>[] = IN_LEVEL_USE
       } as Partial<IAMUserNodeData>,
     })
 );
+
+export const groupedByIdUsers = _.keyBy(INITIAL_IN_LEVEL_USER_NODES, 'id');

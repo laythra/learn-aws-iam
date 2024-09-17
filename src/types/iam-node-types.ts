@@ -84,6 +84,7 @@ export type IAMNodeDataMapping = {
   iam_group: IAMGroupNodeData;
 };
 
+// TODO: Remove Min variants and use the Partials instead
 type IAMMinAnyNodeData = Pick<IAMAnyNodeData, 'id' | 'label' | 'code' | 'initial_position'>;
 
 export type IAMMinPolicyNodeData = IAMMinAnyNodeData &

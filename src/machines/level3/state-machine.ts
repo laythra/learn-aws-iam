@@ -9,7 +9,7 @@ import {
   POLICY_ROLE_CREATION_OBJECTIVES,
   EDGE_CONNECTION_OBJECTIVES,
 } from './config';
-import { edges } from './edges';
+import { INITIAL_IN_LEVEL_EDGES, REQUIRED_EDGES } from './edges';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { TEMPLATE_GROUP_NODE } from './nodes/group-nodes';
 import { TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
@@ -28,14 +28,14 @@ export const stateMachine = setup({
   actions: {
     next_popover: assign({
       popover_content: ({ context }) => POPOVER_TUTORIAL_MESSAGES[context.next_popover_index ?? 0],
-      next_popover_index: ({ context }) => context.next_popover_index + 1,
       show_popovers: ({ context }) => context.next_popover_index < POPOVER_TUTORIAL_MESSAGES.length,
+      next_popover_index: ({ context }) => context.next_popover_index + 1,
       show_popups: false,
     }),
     next_popup: assign({
       popup_content: ({ context }) => POPUP_TUTORIAL_MESSAGES[context.next_popup_index],
-      next_popup_index: ({ context }) => context.next_popup_index + 1,
       show_popups: ({ context }) => context.next_popup_index < POPUP_TUTORIAL_MESSAGES.length,
+      next_popup_index: ({ context }) => context.next_popup_index + 1,
       show_popovers: false,
     }),
     next_policy_role_objectives: assign({
@@ -102,8 +102,7 @@ export const stateMachine = setup({
   },
 }).createMachine({
   id: 'level3_state_machine',
-  initial: 'inside_level',
-  // initial: 'tutorial_popup1',
+  initial: 'inside_tutorial',
   context: {
     iam_user_template: TEMPLATE_USER_NODE,
     iam_policy_template: TEMPLATE_POLICY_NODE,
@@ -119,8 +118,8 @@ export const stateMachine = setup({
     nodes: [],
     metadata_keys: {},
     edges: [],
-    final_edges: edges,
-    level_objectives: LEVEL_OBJECTIVES,
+    final_edges: REQUIRED_EDGES,
+    level_objectives: {},
     next_iam_node_id: {
       [IAMNodeEntity.Group]: 1,
       [IAMNodeEntity.User]: 1,
@@ -220,42 +219,25 @@ export const stateMachine = setup({
       onDone: 'inside_level',
       entry: assign({
         nodes: INITIAL_TUTORIAL_NODES,
+        level_objectives: LEVEL_OBJECTIVES[0],
       }),
       states: {
         tutorial_popup1: {
-          entry: assign({
-            show_popups: true,
-            popup_content: POPUP_TUTORIAL_MESSAGES[0],
-          }),
+          entry: ['next_popup'],
           on: {
-            NEXT_POPUP: {
-              actions: 'next_popup',
-              target: 'tutorial_popup2',
-            },
+            NEXT_POPUP: 'tutorial_popup2',
           },
         },
         tutorial_popup2: {
-          entry: assign({
-            show_popups: true,
-            popup_content: POPUP_TUTORIAL_MESSAGES[1],
-          }),
+          entry: ['next_popup'],
           on: {
-            NEXT_POPUP: {
-              actions: 'next_popup',
-              target: 'tutorial_popup3',
-            },
+            NEXT_POPUP: 'tutorial_popup3',
           },
         },
         tutorial_popup3: {
-          entry: assign({
-            show_popups: true,
-            popup_content: POPUP_TUTORIAL_MESSAGES[2],
-          }),
+          entry: ['next_popup'],
           on: {
-            NEXT_POPUP: {
-              actions: 'next_popup',
-              target: 'aws_managed_policy_popover',
-            },
+            NEXT_POPUP: 'aws_managed_policy_popover',
           },
         },
         aws_managed_policy_popover: {
@@ -273,9 +255,20 @@ export const stateMachine = setup({
           },
         },
         create_your_custom_policy_popover: {
-          entry: ['next_popover', 'next_policy_role_objectives'],
+          entry: ['next_popover', 'next_policy_role_objectives', 'show_side_panel'],
           on: {
-            S3_READ_POLICY_CREATED: 'custom_policy_created',
+            [POLICY_ROLE_CREATION_OBJECTIVES[0][0].on_finish_event]: {
+              actions: [
+                {
+                  type: 'change_objective_progress',
+                  params: ({ context }: { context: Context }) => ({
+                    id: Object.keys(context.level_objectives)[0],
+                    finished: true,
+                  }),
+                },
+              ],
+              target: 'custom_policy_created',
+            },
           },
         },
         custom_policy_created: {
@@ -293,8 +286,11 @@ export const stateMachine = setup({
     inside_level: {
       initial: 'popup1',
       entry: assign({
+        level_objectives: LEVEL_OBJECTIVES[1],
+        edges: INITIAL_IN_LEVEL_EDGES,
         nodes: INITIAL_IN_LEVEL_NODES,
-        final_edges: edges,
+        final_edges: REQUIRED_EDGES,
+        side_panel_open: true,
       }),
       states: {
         popup1: {
@@ -332,7 +328,18 @@ export const stateMachine = setup({
                 },
                 attachment_in_progress: {
                   on: {
-                    [EDGE_CONNECTION_OBJECTIVES[0][0].on_finish_event]: 'completed',
+                    [EDGE_CONNECTION_OBJECTIVES[0][0].on_finish_event]: {
+                      target: 'completed',
+                      actions: [
+                        {
+                          type: 'change_objective_progress',
+                          params: ({ context }: { context: Context }) => ({
+                            id: Object.keys(context.level_objectives)[0],
+                            finished: true,
+                          }),
+                        },
+                      ],
+                    },
                   },
                 },
                 completed: {
@@ -351,7 +358,18 @@ export const stateMachine = setup({
                 },
                 attachment_in_progress: {
                   on: {
-                    [EDGE_CONNECTION_OBJECTIVES[0][1].on_finish_event]: 'completed',
+                    [EDGE_CONNECTION_OBJECTIVES[0][1].on_finish_event]: {
+                      target: 'completed',
+                      actions: [
+                        {
+                          type: 'change_objective_progress',
+                          params: ({ context }: { context: Context }) => ({
+                            id: Object.keys(context.level_objectives)[1],
+                            finished: true,
+                          }),
+                        },
+                      ],
+                    },
                   },
                 },
                 completed: {
@@ -370,7 +388,18 @@ export const stateMachine = setup({
                 },
                 attachment_in_progress: {
                   on: {
-                    [EDGE_CONNECTION_OBJECTIVES[0][2].on_finish_event]: 'completed',
+                    [EDGE_CONNECTION_OBJECTIVES[0][2].on_finish_event]: {
+                      target: 'completed',
+                      actions: [
+                        {
+                          type: 'change_objective_progress',
+                          params: ({ context }: { context: Context }) => ({
+                            id: Object.keys(context.level_objectives)[2],
+                            finished: true,
+                          }),
+                        },
+                      ],
+                    },
                   },
                 },
                 completed: {
