@@ -4,7 +4,7 @@ import type { Edge, Node, XYPosition } from 'reactflow';
 import type {
   CreatableIAMNodeEntity,
   IAMPolicyNodeData,
-  IAMScriptableEntitiesCreationObjective,
+  IAMPolicyRoleCreationObjective,
 } from '@/types';
 import {
   IAMAnyNodeData,
@@ -32,13 +32,16 @@ export interface GenericContext {
   show_popups: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
   next_iam_node_default_position: XYPosition;
-  fixed_iam_nodes_positions: { [key: string]: XYPosition };
+  fixed_iam_nodes_positions?: { [key: string]: XYPosition };
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
   level_objectives: { [key: string]: LevelObjective };
-  policy_role_objectives?: IAMScriptableEntitiesCreationObjective[];
   next_policy_role_objectives_index?: number;
+  next_edges_connection_objectives_index?: number;
   level_finished?: boolean;
+  side_panel_open?: boolean;
+  policy_role_objectives: IAMPolicyRoleCreationObjective[];
+  edges_connection_objectives: EdgeConnectionObjective[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -59,7 +62,8 @@ export type GenericEventData =
         | 'CREATE_IAM_IDENTITY_POPUP_OPENED'
         | 'CREATE_IAM_IDENTITY_TAB_CHANGED'
         | 'IAM_USER_ATTACHED_TO_GROUP'
-        | 'IAM_POLICY_ATTACHED_TO_GROUP';
+        | 'IAM_POLICY_ATTACHED_TO_GROUP'
+        | 'TOGGLE_SIDE_PANEL';
     }
   | { type: 'ADD_IAM_NODE'; node: Node }
   | { type: 'ADD_IAM_USER_NODE'; node: Node }
@@ -100,4 +104,10 @@ export type PopupTutorialMessage = {
 export type LevelObjective = {
   label: string;
   finished: boolean;
+};
+
+export type EdgeConnectionObjective = {
+  required_edges: Edge[];
+  locked_edges: Edge[];
+  on_finish_event: string;
 };

@@ -7,7 +7,7 @@ import { Handle } from 'reactflow';
 import { IAMNodeInfoButton } from './IAMNodeInfoButton';
 import { IAMNodeContext } from './IAMNodeProvider';
 import { WithPopoverBox } from '@/components/Decorated';
-import type { IAMAnyNodeData, CustomTheme } from '@/types';
+import { type IAMAnyNodeData, type CustomTheme, IAMNodeEntity } from '@/types';
 import { loadLocalImage } from '@/utils/image-loader';
 
 export interface IAMCanvasNodeProps {
@@ -25,6 +25,9 @@ export interface IAMCanvasNodeProps {
  */
 const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const { entity, label, handles, image, code } = data;
+  const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_policy;
+  const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
+
   const { setSelectedNodeId, selectedNodeId } = useContext(IAMNodeContext);
   const theme = useTheme<CustomTheme>();
 
@@ -70,7 +73,7 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
                 {label}
               </Text>
             </Tooltip>
-            {false && ( // Hiding badge for now
+            {isAnUnecessaryPolicy && (
               <Tooltip
                 label={`This ${entity} does not serve any purpose`}
                 aria-label='A tooltip'
@@ -83,7 +86,9 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
               </Tooltip>
             )}
           </HStack>
-          <Text fontSize='14px'>{entity}</Text>
+          <Text fontSize='14px' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
+            {resourceType || entity}
+          </Text>
         </Box>
         {code && (
           <Box flex='none'>

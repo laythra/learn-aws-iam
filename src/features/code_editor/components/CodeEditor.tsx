@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useState } from 'react';
 
 import {
@@ -16,17 +16,26 @@ import {
   Tabs,
   useTheme,
 } from '@chakra-ui/react';
+import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import _ from 'lodash';
 import { Node } from 'reactflow';
 import { EventFromLogic } from 'xstate';
 
 import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
+import { CodeEditorWarningsBox } from './CodeEditorWarningsBox';
 import { CodeEditorWindow } from './CodeEditorWindow';
 import { useCodeEditor } from '../hooks/useCodeEditor';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { useMultipleSchemaValidators } from '@/hooks/useSchemaValidator';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { IAMScriptableEntity, IAMNodeEntity, CustomTheme, IAMAnyNodeData } from '@/types';
-import { getNodeName } from '@/utils/names';
+import {
+  IAMScriptableEntity,
+  IAMNodeEntity,
+  CustomTheme,
+  IAMPolicyNodeData,
+  IAMPolicyRoleCreationObjective,
+} from '@/types';
+import { isJSONValid } from '@/utils/iam-code-linter';
 
 interface CodeEditorProps {}
 
@@ -39,42 +48,73 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
   );
   const [isLinting, setIsLinting] = useState<boolean>(false);
   const levelActor = LevelsProgressionContext.useActorRef();
-  const [nextIamNodeId, policyNodeTemplate, scriptableEntityCreationObjective, stateMachine] =
+  const [policyNodeTemplate, policyRoleObjectives, stateMachine] =
     LevelsProgressionContext.useSelector(state => [
-      state.context.next_iam_node_id,
       state.context.iam_policy_template,
-      state.context.policy_role_objectives?.find(
-        objective => objective.validate_inside_code_editor
-      ),
+      state.context.policy_role_objectives,
       state.machine,
     ]);
 
-  const { isCodeEditorOpen, content, setContent, errors, setErrors, closeCodeEditor } =
-    useCodeEditor(
-      scriptableEntityCreationObjective?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess,
-      scriptableEntityCreationObjective?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess
-    );
+  const {
+    isCodeEditorOpen,
+    content,
+    setContent,
+    errors,
+    setErrors,
+    closeCodeEditor,
+    setWarnings,
+    warnings,
+  } = useCodeEditor(
+    policyRoleObjectives?.[0]?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess,
+    policyRoleObjectives?.[0]?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess
+  );
 
-  const renderedErrors = errors[selectedIamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
-  const renderedContent = content[selectedIamEntity === IAMNodeEntity.Policy ? 'policy' : 'role'];
+  const renderedErrors = errors[selectedIamEntity];
+  const renderedWarnings = warnings[selectedIamEntity];
+  const renderedContent = content[selectedIamEntity];
+  const codeEditorRef = useRef<ReactCodeMirrorRef>(null);
+  const schemaValidators = useMultipleSchemaValidators(policyRoleObjectives);
+
+  const findTargetValidPolicy = (): IAMPolicyRoleCreationObjective | undefined => {
+    return policyRoleObjectives?.find((_objective, index) => {
+      return isJSONValid(codeEditorRef.current!.view!, schemaValidators[index]);
+    });
+  };
 
   const submit = (): void => {
-    const nodeId = getNodeName(selectedIamEntity, nextIamNodeId[selectedIamEntity]);
-    const node: Node<IAMAnyNodeData> = _.merge({}, policyNodeTemplate, {
+    if (!codeEditorRef.current || !codeEditorRef.current.view) return;
+
+    // We need to find the first objective with no errors
+    const targetValidPolicy = findTargetValidPolicy();
+
+    let nodeId;
+    let label;
+
+    if (targetValidPolicy) {
+      nodeId = targetValidPolicy.entityId;
+      label = nodeId;
+    } else {
+      nodeId = new Date().getTime().toString();
+      label = 'IAM Policy';
+    }
+
+    const node: Node<IAMPolicyNodeData> = _.merge({}, policyNodeTemplate, {
       id: nodeId,
       data: {
         id: nodeId,
-        label: nodeId,
+        label,
         entity: selectedIamEntity,
         code: renderedContent,
-      },
+        unnecessary_policy: !targetValidPolicy,
+        resources_affected: targetValidPolicy?.resource_affected || [],
+      } as IAMPolicyNodeData,
     });
 
     levelActor.send({ type: 'ADD_IAM_NODE', node });
 
-    if (scriptableEntityCreationObjective?.on_finish_event) {
+    if (targetValidPolicy?.on_finish_event) {
       levelActor.send({
-        type: scriptableEntityCreationObjective.on_finish_event,
+        type: targetValidPolicy.on_finish_event,
       } as EventFromLogic<typeof stateMachine>);
     }
 
@@ -105,12 +145,16 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
         <ModalBody ref={editorContentRef}>
           <CodeEditorWindow
             setErrors={_.partial(setErrors, selectedIamEntity)}
+            setWarnings={_.partial(setWarnings, selectedIamEntity)}
             setContent={_.partial(setContent, selectedIamEntity)}
             content={renderedContent}
             setIsLinting={setIsLinting}
-            targetObjective={scriptableEntityCreationObjective}
+            targetObjective={policyRoleObjectives.length == 1 ? policyRoleObjectives[0] : undefined}
+            findTargetValidPolicy={findTargetValidPolicy}
+            ref={codeEditorRef}
           />
           <CodeEditorErrorsBox errors={renderedErrors} />
+          <CodeEditorWarningsBox warnings={renderedWarnings} />
         </ModalBody>
         <ModalFooter>
           <Button

@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Box } from '@chakra-ui/react';
+import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
-import type { Connection, Edge, Node } from 'reactflow';
 import ReactFlow, {
-  useNodesState,
-  useEdgesState,
   ReactFlowInstance,
   useReactFlow,
+  type Connection,
+  type Edge,
+  type Node,
 } from 'reactflow';
 import { EventFromLogic } from 'xstate';
 
@@ -20,7 +21,8 @@ import {
 import { getNodeWithInitialPosition } from '../utils/nodes-position';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { GenericInsideLevelMetadata } from '@/machines/types';
+import useSidePanels from '@/hooks/useSidePanels';
+import { CanvasStore } from '@/stores/canvas-store';
 import {
   type IAMEdgeData,
   type IAMGroupNodeData,
@@ -42,11 +44,7 @@ const Canvas: React.FC = () => {
   const { getViewport } = useReactFlow();
   const levelState = LevelsProgressionContext.useSelector(state => state);
   const levelActor = LevelsProgressionContext.useActorRef();
-
-  const [nodesState, setNodesState, onNodesChange] = useNodesState(
-    levelState.context.nodes.map(node => getNodeWithInitialPosition(node, getViewport()))
-  );
-  const [edgesState, setEdgesState, onEdgesChange] = useEdgesState(levelState.context.edges);
+  const { ref: sidePanelRef } = useSidePanels();
 
   const [rfInstance] = useState<ReactFlowInstance>();
 
@@ -58,17 +56,34 @@ const Canvas: React.FC = () => {
     levelActor.send({ type: 'UPDATE_IAM_NODE', node: node });
   };
 
+  const [nodesState, edgesState] = useSelector(
+    CanvasStore,
+    state => [state.context.nodes, state.context.edges],
+    _.isEqual
+  );
+
   useEffect(() => {
-    setEdgesState(levelState.context.edges);
+    CanvasStore.send({ type: 'setEdges', edges: levelState.context.edges });
   }, [levelState.context.edges]);
 
   useEffect(() => {
-    // Doing this to retain old nodes state that's not stored in state machine; ie. position state
-    const newNodes = _.differenceBy(levelState.context.nodes, nodesState, 'id').map(node =>
-      getNodeWithInitialPosition(node, getViewport())
-    );
+    const nodeGroups = _.groupBy(levelState.context.nodes, 'data.initial_position');
 
-    setNodesState([...nodesState, ...newNodes]);
+    const newNodes = Object.keys(nodeGroups).flatMap(entityType => {
+      const nodes = nodeGroups[entityType];
+
+      return nodes.map((node, nodeIndex) =>
+        getNodeWithInitialPosition(
+          node,
+          getViewport(),
+          nodes.length,
+          nodeIndex,
+          sidePanelRef?.current?.clientWidth || 0
+        )
+      );
+    });
+
+    CanvasStore.send({ type: 'setNodes', nodes: newNodes });
   }, [levelState.context.nodes]);
 
   useEffect(() => {
@@ -144,24 +159,17 @@ const Canvas: React.FC = () => {
       setEdges(newEdges);
       updateNode(newGroupNode);
 
-      _.forOwn(levelState.getMeta(), (value, statePath) => {
-        const levelMetadata = value as GenericInsideLevelMetadata;
-
-        const finishedTargets = levelMetadata.connection_targets?.map(connectionTarget => {
-          if (_.differenceBy(connectionTarget.required_edges, newEdges, 'id').length === 0) {
-            // We unlock all locked edges
-            _.forEach(connectionTarget.locked_edges, edge => {
-              newEdges = [...newEdges, edge];
-            });
-
-            return connectionTarget;
-          }
-        });
-
-        if (_.compact(finishedTargets).length === levelMetadata.connection_targets?.length) {
-          const actionName = levelState.context.metadata_keys[statePath];
-          levelActor.send({ type: actionName } as EventFromLogic<typeof levelState.machine>);
+      const edgesConnectionObjectives = levelState.context.edges_connection_objectives;
+      edgesConnectionObjectives.forEach(objective => {
+        if (_.differenceBy(objective.required_edges, newEdges, 'id').length === 0) {
+          objective.locked_edges.forEach(edge => {
+            newEdges = [...newEdges, edge];
+          });
         }
+
+        levelActor.send({ type: objective.on_finish_event } as EventFromLogic<
+          typeof levelState.machine
+        >);
       });
     },
 
@@ -197,8 +205,8 @@ const Canvas: React.FC = () => {
       height='100vh'
     >
       <ReactFlow
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
+        onNodesChange={changes => CanvasStore.send({ type: 'changeNodesState', changes })}
+        onEdgesChange={changes => CanvasStore.send({ type: 'changeEdgesState', changes })}
         nodes={nodesState}
         edges={edgesState}
         onConnect={onConnect}

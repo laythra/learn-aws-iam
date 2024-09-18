@@ -9,13 +9,15 @@ export interface IAMEntitiesContextState {
   maxNodesToCreated?: number;
 }
 
-export interface IAMScriptableEntitiesCreationObjective {
+export interface IAMPolicyRoleCreationObjective {
+  entityId: string;
   entity: IAMScriptableEntity;
   json_schema: Schema;
-  description: string;
+  description?: string;
   initial_code: object;
   on_finish_event: string;
   validate_inside_code_editor: boolean;
+  resource_affected: string[];
 }
 
 export type IAMScriptableEntity = IAMNodeEntity.Policy | IAMNodeEntity.Role;

@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "required": ["Version", "Statement"],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": ["2012-10-17"]
+    },
+    "Statement": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["Effect", "Action", "Resource"],
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "enum": ["Allow", "Deny"]
+          },
+          "Action": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "cloudfront:ListDistributions",
+                "cloudfront:GetDistribution",
+                "cloudfront:GetDistributionConfig",
+                "cloudfront:ListTagsForResource"
+              ]
+            }
+          },
+          "Resource": {
+            "type": "string",
+            "pattern": "^arn:aws:cloudfront::[0-9]{12}:distribution/E1234567890ABC$"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

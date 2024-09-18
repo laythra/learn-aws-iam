@@ -42,3 +42,5 @@ export const INITIAL_USER_NODES: Node<IAMUserNodeData>[] = INITIAL_USERS_INFO.ma
       },
     })
 );
+
+export const groupedByIdUsers = _.keyBy(INITIAL_USER_NODES, 'id');

@@ -1,16 +1,20 @@
-import { Text, Flex, Divider, Box, List, ListItem, ListIcon } from '@chakra-ui/react';
+import { Text, Flex, Divider, Box, List, ListItem, ListIcon, HStack } from '@chakra-ui/react';
 import { CheckBadgeIcon, XCircleIcon } from '@heroicons/react/20/solid';
+import Markdown from 'react-markdown';
 
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import SidePanel from '@/components/side_panels/SidePanel';
+import SidePanel from '@/components/SidePanels/SidePanel';
+import { remarkChakra } from '@/utils/markdown/chakra-markdown';
+import { components } from '@/utils/markdown/components';
 
 const RightSidePanel: React.FC = () => {
-  const levelObjectives = LevelsProgressionContext.useSelector(
-    state => state.context.level_objectives
-  );
+  const [levelObjectives, isSidePanelOpen] = LevelsProgressionContext.useSelector(state => [
+    state.context.level_objectives,
+    state.context.side_panel_open,
+  ]);
 
   return (
-    <SidePanel alignment='right'>
+    <SidePanel isOpen={isSidePanelOpen ?? false}>
       <Flex direction='column' alignItems='center' justifyContent='center' height='100vh'>
         <Flex direction='column' alignItems='center' height='25%'>
           <Text fontSize='lg' fontWeight='bold' p={1}>
@@ -35,13 +39,18 @@ const RightSidePanel: React.FC = () => {
               {Object.values(levelObjectives).map((objective, index) => {
                 return (
                   <ListItem key={index}>
-                    <ListIcon
-                      w={5}
-                      h={5}
-                      as={objective.finished ? CheckBadgeIcon : XCircleIcon}
-                      color={objective.finished ? 'green.500' : 'black'}
-                    />
-                    <Text as={objective.finished ? 's' : 'abbr'}>{objective.label}</Text>
+                    <HStack alignItems='center'>
+                      <ListIcon
+                        w={5}
+                        h={5}
+                        as={objective.finished ? CheckBadgeIcon : XCircleIcon}
+                        color={objective.finished ? 'green.500' : 'black'}
+                        verticalAlign='top'
+                      />
+                      <Markdown components={components} rehypePlugins={[remarkChakra]}>
+                        {objective.label}
+                      </Markdown>
+                    </HStack>
                   </ListItem>
                 );
               })}

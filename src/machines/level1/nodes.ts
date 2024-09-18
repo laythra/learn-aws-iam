@@ -5,9 +5,9 @@ import {
   IAMNodeEntity,
   IAMAnyNodeData,
   IAMNodeImage,
-  IAMGroupNodeData,
   IAMPolicyNodeData,
   IAMNodeDataMapping,
+  IAMResourceNodeData,
 } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
@@ -57,13 +57,13 @@ export const initial_nodes: Node<IAMAnyNodeData>[] = [
     position: { x: 500, y: 250 },
     data: {
       label: 'public-images',
-      entity: IAMNodeEntity.S3Bucket,
+      entity: IAMNodeEntity.Resource,
       handles: [
         { id: Position.Top, type: 'source', position: Position.Top },
         { id: Position.Bottom, type: 'target', position: Position.Bottom },
       ] as HandleProps[],
       image: IAMNodeImage.S3Bucket,
-    } as IAMGroupNodeData,
+    } as IAMResourceNodeData,
     type: 'iam_default',
     draggable: true,
   },

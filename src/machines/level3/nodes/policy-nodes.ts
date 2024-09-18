@@ -2,12 +2,19 @@ import _ from 'lodash';
 import type { Node, HandleProps } from 'reactflow';
 import { Position } from 'reactflow';
 
-import { INITIAL_POLICIES_INFO } from '../config';
-import { IAMPolicyNodeData, IAMNodeImage, IAMNodeEntity } from '@/types';
+import { MANAGED_POLICIES } from '@/machines/config';
+import { IAMPolicyNodeData, IAMNodeImage, IAMNodeEntity, IAMMinPolicyNodeData } from '@/types';
 
 // export const X_OFFSET = theme.sizes.iamNodeWidthInPixels;
 export const X_OFFSET = 350;
 export const Y_OFFSET = 450;
+
+export enum PolicyNodeID {
+  S3ReadAccess = 'S3_read_access',
+  S3ReadWriteAcces = 'S3_read_write_access',
+  DynamoDBReadWriteAccess = 'DynamoDB_read_write_access',
+  CloudfrontReadAccess = 'Cloudfront_read_access',
+}
 
 export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
   id: 'iam_policy',
@@ -27,10 +34,21 @@ export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
     image: IAMNodeImage.Policy,
     resources_affected: [],
     description: '',
-  },
+    initial_position: 'bottom-center',
+  } as IAMPolicyNodeData,
 };
 
-export const INITIAL_POLICY_NODES: Node<IAMPolicyNodeData>[] = INITIAL_POLICIES_INFO.map(
+const TUTORIAL_POLICY_NODES: IAMMinPolicyNodeData[] = [
+  {
+    id: PolicyNodeID.S3ReadAccess,
+    label: 's3-read-access',
+    code: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
+    resources_affected: [],
+    initial_position: 'center',
+  },
+];
+
+export const INITIAL_TUTORIAL_POLICY_NODES: Node<IAMPolicyNodeData>[] = TUTORIAL_POLICY_NODES.map(
   ({ id, label, code, initial_position }) =>
     _.merge({}, TEMPLATE_POLICY_NODE, {
       id,
@@ -42,3 +60,5 @@ export const INITIAL_POLICY_NODES: Node<IAMPolicyNodeData>[] = INITIAL_POLICIES_
       },
     })
 );
+
+export const INITIAL_POLICY_NODES: Node<IAMPolicyNodeData>[] = INITIAL_TUTORIAL_POLICY_NODES;

@@ -1,9 +1,9 @@
 import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
 import {
-  IAMNodeEntity,
+  IAMMinResourceNodeData,
   IAMNodeImage,
+  IAMNodeResourceEntity,
   IAMPolicyNodeData,
-  IAMResourceNodeData,
   IAMUserNodeData,
 } from '@/types';
 
@@ -168,27 +168,24 @@ const EC2_READ_POLICY_CONTENT = JSON.stringify(
   2
 );
 
-export const INITIAL_RESOURCES_INFO: Pick<
-  IAMResourceNodeData,
-  'id' | 'label' | 'entity' | 'image'
->[] = [
+export const INITIAL_RESOURCES_INFO: IAMMinResourceNodeData[] = [
   {
     id: 's3_bucket_1',
     label: 'public-images',
-    entity: IAMNodeEntity.S3Bucket,
     image: IAMNodeImage.S3Bucket,
+    resource_type: IAMNodeResourceEntity.S3Bucket,
   },
   {
     id: 'dynamo_table_1',
     label: 'prod_Users',
-    entity: IAMNodeEntity.DynamoDBTable,
     image: IAMNodeImage.Database,
+    resource_type: IAMNodeResourceEntity.DynamoDBTable,
   },
   {
     id: 'ec2_instance_1',
     label: 'ec2-instance',
-    entity: IAMNodeEntity.EC2Instance,
     image: IAMNodeImage.Server,
+    resource_type: IAMNodeResourceEntity.EC2Instance,
   },
 ];
 

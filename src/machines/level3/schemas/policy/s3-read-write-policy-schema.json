@@ -1,0 +1,49 @@
+{
+  "type": "object",
+  "required": ["Version", "Statement"],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": ["2012-10-17"]
+    },
+    "Statement": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["Effect", "Action", "Resource"],
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "enum": ["Allow", "Deny"]
+          },
+          "Action": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["s3:PutObject", "s3:GetObject", "s3:DeleteObject", "s3:ListBucket"]
+            },
+            "minItems": 4,
+            "maxItems": 4,
+            "uniqueItems": true
+          },
+          "Resource": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": ["arn:aws:s3:::public-assets/*"]
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["arn:aws:s3:::public-assets/*"]
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

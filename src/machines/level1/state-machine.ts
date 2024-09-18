@@ -35,7 +35,7 @@ export const stateMachine = setup({
           _.constant(context.next_iam_node_id[node.entity as CreatableIAMNodeEntity] + 1)
         ),
       next_iam_node_default_position: ({ context }, { node }: { node: IAMAnyNodeData }) => {
-        if (node.id in context.fixed_iam_nodes_positions) {
+        if (context.fixed_iam_nodes_positions?.[node.id]) {
           return context.next_iam_node_default_position;
         } else {
           return {
@@ -72,6 +72,8 @@ export const stateMachine = setup({
     ) as { [k in IAMNodeEntity]: number },
     next_iam_node_default_position: { x: 500, y: 500 },
     fixed_iam_nodes_positions: {},
+    policy_role_objectives: [],
+    edges_connection_objectives: [],
   },
   on: {
     ADD_IAM_USER_NODE: {

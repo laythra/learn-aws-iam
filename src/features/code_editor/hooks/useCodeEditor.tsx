@@ -8,51 +8,55 @@ import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 
 const MODAL_ID = 'code-editor';
 
-interface Errors {
-  policy: Diagnostic[];
-  role: Diagnostic[];
+interface CodeEditorState {
+  errors: Record<IAMScriptableEntity, Diagnostic[]>;
+  warnings: Record<IAMScriptableEntity, string[]>;
+  content: Record<IAMScriptableEntity, string>;
 }
 
-interface Content {
-  policy: string;
-  role: string;
-}
+type Action =
+  | { type: 'SET_ERRORS'; entity: IAMScriptableEntity; payload: Diagnostic[] }
+  | { type: 'SET_WARNINGS'; entity: IAMScriptableEntity; payload: string[] }
+  | { type: 'SET_CONTENT'; entity: IAMScriptableEntity; payload: string };
 
 interface CodeEditorContextState extends ModalContextState {
-  errors: Errors;
-  content: Content;
+  errors: CodeEditorState['errors'];
+  warnings: CodeEditorState['warnings'];
+  content: CodeEditorState['content'];
   setErrors: (entity: IAMScriptableEntity, newErrors: Diagnostic[]) => void;
+  setWarnings: (entity: IAMScriptableEntity, newWarnings: string[]) => void;
   setContent: (entity: IAMScriptableEntity, newContent: string) => void;
   closeCodeEditor: () => void;
   openCodeEditor: () => void;
   isCodeEditorOpen: boolean;
 }
 
-type ErrorsAction =
-  | { type: 'SET_POLICY_ERROR'; payload: Diagnostic[] }
-  | { type: 'SET_ROLE_ERROR'; payload: Diagnostic[] };
-
-type ContentAction =
-  | { type: 'SET_POLICY_CONTENT'; payload: string }
-  | { type: 'SET_ROLE_CONTENT'; payload: string };
-
-const errorsReducer = (state: Errors, action: ErrorsAction): Errors => {
+const codeEditorReducer = (state: CodeEditorState, action: Action): CodeEditorState => {
   switch (action.type) {
-    case 'SET_POLICY_ERROR':
-      return { ...state, policy: action.payload };
-    case 'SET_ROLE_ERROR':
-      return { ...state, role: action.payload };
-    default:
-      return state;
-  }
-};
-
-const contentReducer = (state: Content, action: ContentAction): Content => {
-  switch (action.type) {
-    case 'SET_POLICY_CONTENT':
-      return { ...state, policy: action.payload };
-    case 'SET_ROLE_CONTENT':
-      return { ...state, role: action.payload };
+    case 'SET_ERRORS':
+      return {
+        ...state,
+        errors: {
+          ...state.errors,
+          [action.entity]: action.payload,
+        },
+      };
+    case 'SET_WARNINGS':
+      return {
+        ...state,
+        warnings: {
+          ...state.warnings,
+          [action.entity]: action.payload,
+        },
+      };
+    case 'SET_CONTENT':
+      return {
+        ...state,
+        content: {
+          ...state.content,
+          [action.entity]: action.payload,
+        },
+      };
     default:
       return state;
   }
@@ -68,23 +72,31 @@ export const useCodeEditor = (
     throw new Error('useCodeEditor must be used within a ModalProvider');
   }
 
-  const [errors, dispatchErrors] = useReducer(errorsReducer, {
-    policy: [],
-    role: [],
-  });
-  const [content, dispatchContent] = useReducer(contentReducer, {
-    policy: JSON.stringify(initialPolicyContent, null, 2),
-    role: JSON.stringify(initialRoleContent, null, 2),
+  const [state, dispatch] = useReducer(codeEditorReducer, {
+    errors: {
+      [IAMNodeEntity.Policy]: [],
+      [IAMNodeEntity.Role]: [],
+    },
+    warnings: {
+      [IAMNodeEntity.Policy]: [],
+      [IAMNodeEntity.Role]: [],
+    },
+    content: {
+      [IAMNodeEntity.Policy]: JSON.stringify(initialPolicyContent, null, 2),
+      [IAMNodeEntity.Role]: JSON.stringify(initialRoleContent, null, 2),
+    },
   });
 
   const setErrors = (entity: IAMScriptableEntity, newErrors: Diagnostic[]): void => {
-    const action = entity === IAMNodeEntity.Policy ? 'SET_POLICY_ERROR' : 'SET_ROLE_ERROR';
-    dispatchErrors({ type: action, payload: newErrors });
+    dispatch({ type: 'SET_ERRORS', entity, payload: newErrors });
+  };
+
+  const setWarnings = (entity: IAMScriptableEntity, newWarnings: string[]): void => {
+    dispatch({ type: 'SET_WARNINGS', entity, payload: newWarnings });
   };
 
   const setContent = (entity: IAMScriptableEntity, newContent: string): void => {
-    const action = entity === IAMNodeEntity.Policy ? 'SET_POLICY_CONTENT' : 'SET_ROLE_CONTENT';
-    dispatchContent({ type: action, payload: newContent });
+    dispatch({ type: 'SET_CONTENT', entity, payload: newContent });
   };
 
   const closeCodeEditor = (): void => context.closeModal(MODAL_ID);
@@ -93,9 +105,11 @@ export const useCodeEditor = (
 
   return {
     ...context,
-    errors,
-    content,
+    errors: state.errors,
+    warnings: state.warnings,
+    content: state.content,
     setErrors,
+    setWarnings,
     setContent,
     closeCodeEditor,
     openCodeEditor,

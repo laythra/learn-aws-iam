@@ -6,9 +6,14 @@ export enum IAMNodeEntity {
   Role = 'IAM Role',
   Policy = 'IAM Policy',
   Resource = 'AWS Resource',
+}
+
+export enum IAMNodeResourceEntity {
+  Resource = 'AWS Resource',
   S3Bucket = 'S3 Bucket',
   DynamoDBTable = 'DynamoDB Table',
   EC2Instance = 'EC2 Instance',
+  CloudFront = 'CloudFront CDN',
 }
 
 export enum IAMNodeImage {
@@ -18,6 +23,7 @@ export enum IAMNodeImage {
   Group = 'group',
   Database = 'database',
   Server = 'server',
+  CDN = 'cdn',
 }
 
 export type CreatableIAMNodeEntity =
@@ -32,7 +38,7 @@ interface IAMNodeData {
   id: string;
   label: string;
   entity: IAMNodeEntity;
-  description: string;
+  description?: string;
   content?: string;
   handles: HandleProps[];
   image: IAMNodeImage;
@@ -41,20 +47,26 @@ interface IAMNodeData {
 }
 
 export interface IAMUserNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.User;
   associated_policies: IAMNodeData[];
 }
 
 export interface IAMGroupNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.Group;
   attached_users: IAMUserNodeData[];
   attached_policies: IAMPolicyNodeData[];
 }
 
 export interface IAMPolicyNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.Policy;
   resources_affected: string[];
+  unnecessary_policy?: boolean;
 }
 
-export interface IAMGroupNodeData extends IAMNodeData {}
-export interface IAMResourceNodeData extends IAMNodeData {}
+export interface IAMResourceNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.Resource;
+  resource_type: IAMNodeResourceEntity;
+}
 
 export type IAMAnyNodeData =
   | IAMUserNodeData
@@ -71,3 +83,14 @@ export type IAMNodeDataMapping = {
   iam_user: IAMUserNodeData;
   iam_group: IAMGroupNodeData;
 };
+
+// TODO: Remove Min variants and use the Partials instead
+type IAMMinAnyNodeData = Pick<IAMAnyNodeData, 'id' | 'label' | 'code' | 'initial_position'>;
+
+export type IAMMinPolicyNodeData = IAMMinAnyNodeData &
+  Pick<IAMPolicyNodeData, 'resources_affected'>;
+
+export type IAMMinUserNodeData = IAMMinAnyNodeData;
+export type IAMMinGroupNodeData = IAMMinAnyNodeData;
+export type IAMMinResourceNodeData = IAMMinAnyNodeData &
+  Pick<IAMResourceNodeData, 'image' | 'resource_type'>;

@@ -5,11 +5,21 @@ import { chakra } from '@chakra-ui/system';
 import { Components } from 'react-markdown';
 
 export const components: Components = {
-  p: (props: JSX.IntrinsicElements['p']) => {
-    const { children } = props;
+  p: ({ children }: JSX.IntrinsicElements['p']) => {
+    let fontSize;
+    const sizeRegex = /\|(xs|sm|md|lg|xl)$/;
+
+    const processedChildren = React.Children.map(children, child => {
+      if (typeof child === 'string' && child.match(sizeRegex)) {
+        fontSize = child.match(sizeRegex)?.[1] || 'md';
+        return child.replace(sizeRegex, '');
+      }
+      return child;
+    });
+
     return (
-      <Text fontSize='lg' py={1}>
-        {children}
+      <Text fontSize={fontSize} py={1}>
+        {processedChildren}
       </Text>
     );
   },
