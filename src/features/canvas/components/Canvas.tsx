@@ -72,15 +72,21 @@ const Canvas: React.FC = () => {
     const newNodes = Object.keys(nodeGroups).flatMap(entityType => {
       const nodes = nodeGroups[entityType];
 
-      return nodes.map((node, nodeIndex) =>
-        getNodeWithInitialPosition(
+      return nodes.map((node, nodeIndex) => {
+        const existingNode = _.find(nodesState, { id: node.id });
+
+        if (existingNode) {
+          return existingNode;
+        }
+
+        return getNodeWithInitialPosition(
           node,
           getViewport(),
           nodes.length,
           nodeIndex,
           sidePanelRef?.current?.clientWidth || 0
-        )
-      );
+        );
+      });
     });
 
     CanvasStore.send({ type: 'setNodes', nodes: newNodes });
