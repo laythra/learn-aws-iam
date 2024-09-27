@@ -98,6 +98,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
       label = 'IAM Policy';
     }
 
+    // TODO: We should use user-node-factory.ts to create the node
     const node: Node<IAMPolicyNodeData> = _.merge({}, policyNodeTemplate, {
       id: nodeId,
       data: {
