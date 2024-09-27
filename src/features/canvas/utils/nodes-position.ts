@@ -11,6 +11,8 @@ const VALID_INITIAL_POSITIONS = [
   'right-center',
 ];
 
+const BETWEEN_NODES_SPACING = 20;
+
 function getCenterCoordinates(viewport: Viewport, sidePanelWidth: number): XYPosition {
   const { x, y, zoom } = viewport;
 
@@ -51,14 +53,21 @@ export function getNodeWithInitialPosition(
 
   // Stack nodes horizontally
   if (['center', 'top-center', 'bottom-center'].includes(initialPostion)) {
-    x -= (numNodes * nodeWidth) / 2; // Move nodes to the left by half of the total width
-    x += nodeIndex * nodeWidth; // Move node to the right by the width of the node
-    x += nodeIndex * nodeSpacing; // Add spacing between nodes
+    // Move nodes to the left by half of the total width
+    x -= (numNodes * nodeWidth + (numNodes - 1) * BETWEEN_NODES_SPACING) / 2;
+    // Move node to the right by the width of the node
+    x += nodeIndex * nodeWidth;
+    // Add spacing between nodes
+    x += nodeIndex * BETWEEN_NODES_SPACING;
   } else {
     // Stack nodes vertically
-    y -= (numNodes * nodeHeight) / 2; // Move nodes to the top by half of the total height
-    y += nodeIndex * nodeHeight; // Move node to the bottom by the height of the node
-    y += nodeIndex * nodeSpacing; // Add spacing between nodes
+
+    // Move nodes to the top by half of the total height
+    y -= (numNodes * nodeHeight + (numNodes - 1) * BETWEEN_NODES_SPACING) / 2;
+    // Move node to the bottom by the height of the node
+    y += nodeIndex * nodeHeight;
+    // Add spacing between nodes
+    y += nodeIndex * nodeSpacing;
   }
 
   switch (initialPostion) {
@@ -69,7 +78,7 @@ export function getNodeWithInitialPosition(
         position: { x, y },
       };
     case 'top-center':
-      y = theme.sizes.iamNodeHeightInPixels + nodeSpacing;
+      y = theme.sizes.navbarHeightInPixels + nodeSpacing;
       return {
         ...node,
         position: { x, y },
@@ -81,14 +90,14 @@ export function getNodeWithInitialPosition(
         position: { x, y },
       };
     case 'left-center':
-      x = x / 6;
+      x = nodeSpacing;
 
       return {
         ...node,
         position: { x, y },
       };
     case 'right-center':
-      x = window.innerWidth - sidePanelWidth - nodeWidth - x / 6;
+      x = window.innerWidth - sidePanelWidth - nodeWidth - nodeSpacing;
 
       return {
         ...node,
