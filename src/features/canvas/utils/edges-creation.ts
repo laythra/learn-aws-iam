@@ -7,10 +7,16 @@ import {
   IAMGroupNodeData,
   IAMPolicyNodeData,
   IAMUserNodeData,
+  IAMNodeEntity,
 } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
-export function attachUserToGroup(
+type AttachFunction = (
+  sourceNode: Node<IAMAnyNodeData>,
+  targetNode: Node<IAMAnyNodeData>
+) => Node<IAMAnyNodeData>;
+
+function attachUserToGroup(
   userNode: Node<IAMUserNodeData>,
   groupNode: Node<IAMGroupNodeData>
 ): Node<IAMGroupNodeData> {
@@ -28,7 +34,7 @@ export function attachUserToGroup(
   return _.chain(groupNode).cloneDeep().set(['data', 'attached_users'], newAttachedUsers).value();
 }
 
-export function attachPolicyToGroup(
+function attachPolicyToGroup(
   policyNode: Node<IAMPolicyNodeData>,
   groupNode: Node<IAMGroupNodeData>
 ): Node<IAMGroupNodeData> {
@@ -46,6 +52,23 @@ export function attachPolicyToGroup(
   return _.chain(groupNode)
     .cloneDeep()
     .set(['data', 'attached_policies'], newAttachedPolicies)
+    .value();
+}
+
+function attachPolicyToUser(
+  policyNode: Node<IAMPolicyNodeData>,
+  userNode: Node<IAMUserNodeData>
+): Node<IAMUserNodeData> {
+  const userNodeData = userNode.data;
+  const policyNodeData = policyNode.data;
+  const newAttachedPolicies: string[] = _.uniq([
+    ...userNodeData.associated_policies,
+    policyNodeData.id,
+  ]);
+
+  return _.chain(userNode)
+    .cloneDeep()
+    .set(['data', 'associated_policies'], newAttachedPolicies)
     .value();
 }
 
@@ -83,3 +106,21 @@ export function getUserToResourceEdgesForGroupAccess(
     );
   });
 }
+
+const userToGroupConnectionKey = `${IAMNodeEntity.User}-${IAMNodeEntity.Group}`;
+const policyToGroupConnectionKey = `${IAMNodeEntity.Policy}-${IAMNodeEntity.Group}`;
+const policyToUserConnectionKey = `${IAMNodeEntity.Policy}-${IAMNodeEntity.User}`;
+
+// This mapping should be used to determine which connection handler to use
+// when connecting two nodes in the canvas, based on the type of the source and target nodes
+export const edgeConnectionHandlers: Record<string, AttachFunction> = {
+  [userToGroupConnectionKey]: (sourceNode, targetNode) =>
+    attachUserToGroup(sourceNode as Node<IAMUserNodeData>, targetNode as Node<IAMGroupNodeData>),
+  [policyToGroupConnectionKey]: (sourceNode, targetNode) =>
+    attachPolicyToGroup(
+      sourceNode as Node<IAMPolicyNodeData>,
+      targetNode as Node<IAMGroupNodeData>
+    ),
+  [policyToUserConnectionKey]: (sourceNode, targetNode) =>
+    attachPolicyToUser(sourceNode as Node<IAMPolicyNodeData>, targetNode as Node<IAMUserNodeData>),
+};

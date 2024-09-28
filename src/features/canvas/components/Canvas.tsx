@@ -10,28 +10,15 @@ import ReactFlow, {
   type Edge,
   type Node,
 } from 'reactflow';
-import { EventFromLogic } from 'xstate';
 
 import IAMCanvasNode from './IAMCanvasNode';
-import {
-  attachPolicyToGroup,
-  attachUserToGroup,
-  getUserToResourceEdgesForGroupAccess,
-} from '../utils/edges-creation';
+import { edgeConnectionHandlers } from '../utils/edges-creation';
 import { getNodeWithInitialPosition } from '../utils/nodes-position';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import useSidePanels from '@/hooks/useSidePanels';
 import { CanvasStore } from '@/stores/canvas-store';
-import {
-  type IAMEdgeData,
-  type IAMGroupNodeData,
-  type IAMUserNodeData,
-  IAMAnyNodeData,
-  IAMNodeEntity,
-  IAMPolicyNodeData,
-} from '@/types';
-import { getEdgeName } from '@/utils/names';
+import { type IAMEdgeData, IAMAnyNodeData } from '@/types';
 import storage from '@/utils/storage';
 
 import 'reactflow/dist/style.css';
@@ -47,10 +34,6 @@ const Canvas: React.FC = () => {
   const { ref: sidePanelRef } = useSidePanels();
 
   const [rfInstance] = useState<ReactFlowInstance>();
-
-  const setEdges = (edges: Edge<IAMEdgeData>[]): void => {
-    levelActor.send({ type: 'SET_EDGES', edges: edges });
-  };
 
   const updateNode = (node: Node<IAMAnyNodeData>): void => {
     levelActor.send({ type: 'UPDATE_IAM_NODE', node: node });
@@ -76,7 +59,11 @@ const Canvas: React.FC = () => {
         const existingNode = _.find(nodesState, { id: node.id });
 
         if (existingNode) {
-          return existingNode;
+          return {
+            ...existingNode,
+            data: { ...existingNode.data, ...node.data },
+            position: existingNode.position, // Ensure position remains unchanged
+          };
         }
 
         return getNodeWithInitialPosition(
@@ -105,78 +92,17 @@ const Canvas: React.FC = () => {
         return;
       }
 
-      const edgeName = getEdgeName(params.source as string, params.target as string);
-      const templateEdge = _.find(levelState.context.final_edges, { id: edgeName });
       const sourceNode = _.find(levelState.context.nodes, { id: params.source as string });
       const targetNode = _.find(levelState.context.nodes, { id: params.target as string });
+      const connectionHandlerKey = `${sourceNode?.data.entity}-${targetNode?.data.entity}`;
+      const connectionHandler = edgeConnectionHandlers[connectionHandlerKey];
 
-      let newEdge;
-      if (templateEdge) {
-        newEdge = {
-          ...templateEdge,
-          data: {
-            source_node_data: sourceNode?.data,
-            target_node_data: targetNode?.data,
-          },
-        } as Edge<IAMEdgeData>;
-      } else {
-        // Create a generic edge
-        newEdge = {
-          ...params,
-          id: edgeName,
-          label: 'Attached to',
-          labelStyle: { fill: 'black', fontWeight: 700 },
-          data: {
-            source_node_data: sourceNode?.data,
-            target_node_data: targetNode?.data,
-          },
-        } as Edge<IAMEdgeData>;
-      }
-
-      let newEdges = [...levelState.context.edges, newEdge];
-
-      if (targetNode?.data.entity !== IAMNodeEntity.Group) {
-        setEdges(_.uniqBy(newEdges, 'id'));
+      if (!connectionHandler || !sourceNode || !targetNode) {
         return;
       }
 
-      let newGroupNode: Node<IAMGroupNodeData>;
-
-      if (sourceNode?.data.entity === IAMNodeEntity.User) {
-        newGroupNode = attachUserToGroup(
-          sourceNode as Node<IAMUserNodeData>,
-          targetNode as Node<IAMGroupNodeData>
-        );
-      } else {
-        newGroupNode = attachPolicyToGroup(
-          sourceNode as Node<IAMPolicyNodeData>,
-          targetNode as Node<IAMGroupNodeData>
-        );
-      }
-
-      const usersToResourceEdges = getUserToResourceEdgesForGroupAccess(
-        newGroupNode as Node<IAMGroupNodeData>,
-        levelState.context.nodes
-      );
-
-      newEdges = [...newEdges, ...usersToResourceEdges];
-      newEdges = _.uniqBy(newEdges, 'id');
-
-      setEdges(newEdges);
-      updateNode(newGroupNode);
-
-      const edgesConnectionObjectives = levelState.context.edges_connection_objectives;
-      edgesConnectionObjectives.forEach(objective => {
-        if (_.differenceBy(objective.required_edges, newEdges, 'id').length === 0) {
-          objective.locked_edges.forEach(edge => {
-            newEdges = [...newEdges, edge];
-          });
-        }
-
-        levelActor.send({ type: objective.on_finish_event } as EventFromLogic<
-          typeof levelState.machine
-        >);
-      });
+      const updatedNode = connectionHandler(sourceNode, targetNode);
+      updateNode(updatedNode);
     },
 
     [levelState]

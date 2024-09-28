@@ -48,7 +48,7 @@ interface IAMNodeData {
 
 export interface IAMUserNodeData extends IAMNodeData {
   entity: IAMNodeEntity.User;
-  associated_policies: IAMNodeData[];
+  associated_policies: string[];
 }
 
 export interface IAMGroupNodeData extends IAMNodeData {
