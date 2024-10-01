@@ -3,13 +3,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
-import ReactFlow, {
-  ReactFlowInstance,
-  useReactFlow,
-  type Connection,
-  type Edge,
-  type Node,
-} from 'reactflow';
+import ReactFlow, { ReactFlowInstance, useReactFlow, type Connection, type Edge } from 'reactflow';
+import { EventFromLogic } from 'xstate';
 
 import IAMCanvasNode from './IAMCanvasNode';
 import { edgeConnectionHandlers } from '../utils/edges-creation';
@@ -18,7 +13,7 @@ import DotsPattern from '@/assets/images/dots_pattern.svg';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import useSidePanels from '@/hooks/useSidePanels';
 import { CanvasStore } from '@/stores/canvas-store';
-import { type IAMEdgeData, IAMAnyNodeData } from '@/types';
+import { type IAMEdgeData } from '@/types';
 import storage from '@/utils/storage';
 
 import 'reactflow/dist/style.css';
@@ -34,10 +29,6 @@ const Canvas: React.FC = () => {
   const { ref: sidePanelRef } = useSidePanels();
 
   const [rfInstance] = useState<ReactFlowInstance>();
-
-  const updateNode = (node: Node<IAMAnyNodeData>): void => {
-    levelActor.send({ type: 'UPDATE_IAM_NODE', node: node });
-  };
 
   const [nodesState, edgesState] = useSelector(
     CanvasStore,
@@ -86,27 +77,24 @@ const Canvas: React.FC = () => {
     }
   }, [levelState.context.level_finished]);
 
-  const onConnect = useCallback(
-    (params: Connection) => {
-      if (params.source === params.target) {
-        return;
-      }
+  const onConnect = useCallback((params: Connection) => {
+    if (params.source === params.target) {
+      return;
+    }
 
-      const sourceNode = _.find(levelState.context.nodes, { id: params.source as string });
-      const targetNode = _.find(levelState.context.nodes, { id: params.target as string });
-      const connectionHandlerKey = `${sourceNode?.data.entity}-${targetNode?.data.entity}`;
-      const connectionHandler = edgeConnectionHandlers[connectionHandlerKey];
+    const sourceNode = _.find(levelState.context.nodes, { id: params.source as string });
+    const targetNode = _.find(levelState.context.nodes, { id: params.target as string });
+    const connectionHandlerKey = `${sourceNode?.data.entity}-${targetNode?.data.entity}`;
+    const connectionEventName = edgeConnectionHandlers[connectionHandlerKey];
 
-      if (!connectionHandler || !sourceNode || !targetNode) {
-        return;
-      }
+    if (!connectionEventName || !sourceNode || !targetNode) {
+      return;
+    }
 
-      const updatedNode = connectionHandler(sourceNode, targetNode);
-      updateNode(updatedNode);
-    },
-
-    [levelState]
-  );
+    levelActor.send({ type: connectionEventName, sourceNode, targetNode } as EventFromLogic<
+      typeof levelState.machine
+    >);
+  }, []);
 
   const onEdgeDelete = useCallback((edges: Edge<IAMEdgeData>[]) => {
     levelActor.send({ type: 'DELETE_EDGE', edge: edges[0] });

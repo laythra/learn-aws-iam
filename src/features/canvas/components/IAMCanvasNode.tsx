@@ -1,4 +1,4 @@
-import { useContext, memo, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
@@ -9,9 +9,6 @@ import { EventFromLogic } from 'xstate';
 import { IAMNodeInfoButton } from './IAMNodeInfoButton';
 import { IAMNodeContext } from './IAMNodeProvider';
 import { WithPopoverBox } from '@/components/Decorated';
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { createEdge } from '@/factories/edge-factory';
-import { EdgeConnectionObjective } from '@/machines/types';
 import { type IAMAnyNodeData, type CustomTheme, IAMNodeEntity } from '@/types';
 import { loadLocalImage } from '@/utils/image-loader';
 
@@ -35,40 +32,10 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
 
   const { setSelectedNodeId, selectedNodeId } = useContext(IAMNodeContext);
   const theme = useTheme<CustomTheme>();
-  const levelActor = LevelsProgressionContext.useActorRef();
 
   const handleClick = (): void => {
     setSelectedNodeId(id);
   };
-
-  const updateEdges = (newEdges: Edge[]): void => {
-    const levelContext = levelActor.getSnapshot().context;
-    let updatedEdges = [...levelContext.edges, ...newEdges];
-    const finishedEdgeConnectionObjectives: EdgeConnectionObjective[] = [];
-
-    levelContext.edges_connection_objectives.forEach(objective => {
-      if (_.differenceBy(objective.required_edges, newEdges, 'id').length === 0) {
-        updatedEdges = [...updatedEdges, ...objective.locked_edges];
-        finishedEdgeConnectionObjectives.push(objective);
-      }
-    });
-
-    const stateMachine = levelActor.getSnapshot().machine;
-    levelActor.send({ type: 'SET_EDGES', edges: updatedEdges });
-    finishedEdgeConnectionObjectives.forEach(objective => {
-      levelActor.send({ type: objective.on_finish_event } as EventFromLogic<typeof stateMachine>);
-    });
-  };
-
-  if (data.entity === IAMNodeEntity.User) {
-    useEffect(() => {
-      const associatedEdges = data.associated_policies.map(policyId =>
-        createEdge({ target: id, source: policyId })
-      );
-
-      updateEdges(associatedEdges);
-    }, [data.associated_policies]);
-  }
 
   const isSelected = selectedNodeId === id;
 
