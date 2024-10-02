@@ -222,6 +222,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective[][] = [
       ],
       locked_edges: [],
       on_finish_event: 'S3_READ_WRITE_POLICY_CONNECTED',
+      is_finished: false,
     },
     {
       required_edges: [
@@ -229,6 +230,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective[][] = [
       ],
       locked_edges: [],
       on_finish_event: 'CLOUDFRONT_READ_POLICY_CONNECTED',
+      is_finished: false,
     },
     {
       required_edges: [
@@ -238,6 +240,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective[][] = [
       ],
       locked_edges: [],
       on_finish_event: 'DYNAMO_DB_READ_WRITE_POLICY_CONNECTED',
+      is_finished: false,
     },
   ],
 ];

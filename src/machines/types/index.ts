@@ -73,6 +73,12 @@ export type GenericEventData =
   | { type: 'DELETE_EDGE'; edge: Edge<IAMEdgeData> }
   | { type: 'SET_EDGES'; edges: Edge<IAMEdgeData>[] }
   | { type: 'SET_NODES'; nodes: Node[] }
+  | { type: 'UPDATE_USER_POLICY_EDGES'; node: Node }
+  | {
+      type: 'ATTACH_POLICY_TO_USER';
+      sourceNode: Node<IAMPolicyNodeData>;
+      targetNode: Node<IAMUserNodeData>;
+    }
   | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage };
 
 export type GenericInsideLevelMetadata = {
@@ -110,4 +116,5 @@ export type EdgeConnectionObjective = {
   required_edges: Edge[];
   locked_edges: Edge[];
   on_finish_event: string;
+  is_finished: boolean;
 };
