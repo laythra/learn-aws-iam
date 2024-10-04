@@ -1,10 +1,8 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
-import _ from 'lodash';
-import { Edge, Handle } from 'reactflow';
-import { EventFromLogic } from 'xstate';
+import { Handle } from 'reactflow';
 
 import { IAMNodeInfoButton } from './IAMNodeInfoButton';
 import { IAMNodeContext } from './IAMNodeProvider';

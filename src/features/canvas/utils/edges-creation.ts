@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import type { Node, Edge } from 'reactflow';
 
 import { IAMAnyNodeData, IAMEdgeData, IAMGroupNodeData, IAMNodeEntity } from '@/types';

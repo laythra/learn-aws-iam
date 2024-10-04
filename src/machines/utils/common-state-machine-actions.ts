@@ -40,9 +40,15 @@ export function updatePolicyToUserConnectionEdges(
 
       if (!objectiveAchieved) return;
 
+      // TODO: Locked edges are deprecated, resolve edges manually through affected_resources instead
       draftEdges.push(...objective.locked_edges);
 
       sideEffectsEvents.push(objective.on_finish_event as EdgeConnectionFinishEvent);
+    });
+
+    policyNode.data.resources_affected.forEach(resourceID => {
+      const userToResourceEdge = createEdge({ source: userNode.id, target: resourceID });
+      draftEdges.push(userToResourceEdge);
     });
   });
 
