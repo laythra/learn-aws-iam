@@ -6,13 +6,14 @@ import _ from 'lodash';
 import ReactFlow, { ReactFlowInstance, useReactFlow, type Connection, type Edge } from 'reactflow';
 import { EventFromLogic } from 'xstate';
 
+import IAMCanvasEdge from './IAMCanvasEdge';
 import IAMCanvasNode from './IAMCanvasNode';
+import { CanvasStore } from '../stores/canvas-store';
 import { edgeConnectionHandlers } from '../utils/edges-creation';
 import { getNodeWithInitialPosition } from '../utils/nodes-position';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import useSidePanels from '@/hooks/useSidePanels';
-import { CanvasStore } from '@/stores/canvas-store';
 import { type IAMEdgeData } from '@/types';
 import storage from '@/utils/storage';
 
@@ -20,6 +21,10 @@ import 'reactflow/dist/style.css';
 
 const nodeTypes = {
   iam_default: IAMCanvasNode,
+};
+
+const edgeTypes = {
+  iam_default: IAMCanvasEdge,
 };
 
 const Canvas: React.FC = () => {
@@ -132,7 +137,13 @@ const Canvas: React.FC = () => {
         onConnect={onConnect}
         onEdgesDelete={onEdgeDelete}
         nodeTypes={nodeTypes}
-        // onInit={handleInit}
+        edgeTypes={edgeTypes}
+        onEdgeMouseEnter={(_e, edge) =>
+          CanvasStore.send({ type: 'hoverOverEdge', edge, isHovering: true })
+        }
+        onEdgeMouseLeave={(_e, edge) =>
+          CanvasStore.send({ type: 'hoverOverEdge', edge, isHovering: false })
+        }
       />
     </Box>
   );
