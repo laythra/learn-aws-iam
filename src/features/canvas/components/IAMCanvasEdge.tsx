@@ -23,9 +23,18 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdgeData>> = ({
     targetPosition,
   });
 
+  const edgeStrokeColor = data?.is_hovering ? '#3b82f6' : '#000'; // Blue when hovered, black otherwise
+  const edgeStrokeWidth = data?.is_hovering ? 3 : 1; // Thicker when hovered
+
   return (
     <>
-      <BaseEdge path={edgePath} />
+      <BaseEdge
+        path={edgePath}
+        style={{
+          stroke: edgeStrokeColor,
+          strokeWidth: edgeStrokeWidth,
+        }}
+      />
       <EdgeLabelRenderer>
         {data?.is_hovering && (
           <Box
