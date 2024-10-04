@@ -75,8 +75,9 @@ export type IAMAnyNodeData =
   | IAMResourceNodeData;
 
 export interface IAMEdgeData {
-  source_node_data: IAMAnyNodeData;
-  target_node_data: IAMAnyNodeData;
+  source_node_data?: IAMAnyNodeData;
+  target_node_data?: IAMAnyNodeData;
+  is_hovering: boolean;
 }
 
 export type IAMNodeDataMapping = {
