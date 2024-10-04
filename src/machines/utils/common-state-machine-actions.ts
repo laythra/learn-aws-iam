@@ -46,7 +46,7 @@ export function updatePolicyToUserConnectionEdges(
       sideEffectsEvents.push(objective.on_finish_event as EdgeConnectionFinishEvent);
     });
 
-    policyNode.data.resources_affected.forEach(resourceID => {
+    Object.keys(policyNode.data.granted_accesses).forEach(resourceID => {
       const userToResourceEdge = createEdge({ source: userNode.id, target: resourceID });
       draftEdges.push(userToResourceEdge);
     });

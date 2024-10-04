@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { type Node, HandleProps, Position } from 'reactflow';
 
 import { theme } from '@/theme';
-import type { IAMMinResourceNodeData, IAMResourceNodeData } from '@/types';
+import type { IAMResourceNodeData } from '@/types';
 import { IAMNodeEntity, IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 
 export const X_OFFSET = theme.sizes.iamNodeWidthInPixels;
@@ -34,7 +34,7 @@ export const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
   },
 };
 
-const IN_LEVEL_RESOURCE_NODES: IAMMinResourceNodeData[] = [
+const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
   {
     id: ResourceNodeID.S3Bucket,
     label: 'public-assets',

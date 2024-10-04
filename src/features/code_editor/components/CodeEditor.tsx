@@ -107,7 +107,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
         entity: selectedIamEntity,
         code: renderedContent,
         unnecessary_policy: !targetValidPolicy,
-        resources_affected: targetValidPolicy?.resource_affected || [],
       } as IAMPolicyNodeData,
     });
 

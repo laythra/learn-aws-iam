@@ -21,7 +21,7 @@ const EDGE_TEMPLATE: Edge<IAMEdgeData> = {
 };
 
 export const createEdge = (
-  props: PartialWithRequired<Edge, 'source' | 'target'>
+  props: PartialWithRequired<Edge<IAMEdgeData>, 'source' | 'target'>
 ): Edge<IAMEdgeData> => {
   return {
     ...EDGE_TEMPLATE,

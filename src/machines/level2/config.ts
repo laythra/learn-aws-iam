@@ -1,11 +1,13 @@
 import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
 import {
-  IAMMinResourceNodeData,
+  AccessLevel,
   IAMNodeImage,
   IAMNodeResourceEntity,
   IAMPolicyNodeData,
+  IAMResourceNodeData,
   IAMUserNodeData,
 } from '@/types';
+import { PartialWithRequired } from '@/types/common';
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
@@ -168,7 +170,10 @@ const EC2_READ_POLICY_CONTENT = JSON.stringify(
   2
 );
 
-export const INITIAL_RESOURCES_INFO: IAMMinResourceNodeData[] = [
+export const INITIAL_RESOURCES_INFO: PartialWithRequired<
+  IAMResourceNodeData,
+  'id' | 'label' | 'image'
+>[] = [
   {
     id: 's3_bucket_1',
     label: 'public-images',
@@ -189,27 +194,33 @@ export const INITIAL_RESOURCES_INFO: IAMMinResourceNodeData[] = [
   },
 ];
 
-export const INITIAL_POLICIES_INFO: Pick<
+export const INITIAL_POLICIES_INFO: PartialWithRequired<
   IAMPolicyNodeData,
-  'id' | 'label' | 'code' | 'resources_affected'
+  'id' | 'label' | 'granted_accesses'
 >[] = [
   {
     id: 'iam_policy_1',
     label: 's3-read-access',
     code: S3_READ_POLICY_CONTENT,
-    resources_affected: [INITIAL_RESOURCES_INFO[0].id],
+    granted_accesses: {
+      [INITIAL_RESOURCES_INFO[0].id]: AccessLevel.Read,
+    },
   },
   {
     id: 'iam_policy_2',
     label: 'dynamo-read-access',
     code: DYNAMODB_READ_POLICY_CONTENT,
-    resources_affected: [INITIAL_RESOURCES_INFO[1].id],
+    granted_accesses: {
+      [INITIAL_RESOURCES_INFO[1].id]: AccessLevel.Read,
+    },
   },
   {
     id: 'iam_policy_3',
     label: 'ec2-read-access',
     code: EC2_READ_POLICY_CONTENT,
-    resources_affected: [INITIAL_RESOURCES_INFO[2].id],
+    granted_accesses: {
+      [INITIAL_RESOURCES_INFO[2].id]: AccessLevel.Read,
+    },
   },
 ];
 

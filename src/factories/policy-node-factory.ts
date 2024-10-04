@@ -20,7 +20,6 @@ export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
       { id: Position.Left, type: 'source', position: Position.Left },
     ] as HandleProps[],
     image: IAMNodeImage.Policy,
-    resources_affected: [],
     initial_position: 'bottom-center',
   } as IAMPolicyNodeData,
 };

@@ -1,5 +1,12 @@
 import { HandleProps } from 'reactflow';
 
+export enum AccessLevel {
+  Read = 'Read',
+  Write = 'Write',
+  ReadWrite = 'Read/Write',
+  Full = 'Full',
+}
+
 export enum IAMNodeEntity {
   User = 'IAM User',
   Group = 'IAM Group',
@@ -59,8 +66,8 @@ export interface IAMGroupNodeData extends IAMNodeData {
 
 export interface IAMPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
-  resources_affected: string[];
   unnecessary_policy?: boolean;
+  granted_accesses: Record<string, AccessLevel>;
 }
 
 export interface IAMResourceNodeData extends IAMNodeData {
@@ -78,20 +85,10 @@ export interface IAMEdgeData {
   source_node_data?: IAMAnyNodeData;
   target_node_data?: IAMAnyNodeData;
   is_hovering: boolean;
+  hovering_label?: AccessLevel;
 }
 
 export type IAMNodeDataMapping = {
   iam_user: IAMUserNodeData;
   iam_group: IAMGroupNodeData;
 };
-
-// TODO: Remove Min variants and use the Partials instead
-type IAMMinAnyNodeData = Pick<IAMAnyNodeData, 'id' | 'label' | 'code' | 'initial_position'>;
-
-export type IAMMinPolicyNodeData = IAMMinAnyNodeData &
-  Pick<IAMPolicyNodeData, 'resources_affected'>;
-
-export type IAMMinUserNodeData = IAMMinAnyNodeData;
-export type IAMMinGroupNodeData = IAMMinAnyNodeData;
-export type IAMMinResourceNodeData = IAMMinAnyNodeData &
-  Pick<IAMResourceNodeData, 'image' | 'resource_type'>;

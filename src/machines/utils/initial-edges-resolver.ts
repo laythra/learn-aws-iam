@@ -14,8 +14,15 @@ export function resolveInitialEdges(initialNodes: Node<IAMAnyNodeData>[]): Edge[
       const policyToUserEdge = createEdge({ source: policyId, target: userNode.id });
       const policyNode = nodesById[policyId] as Node<IAMPolicyNodeData>;
 
-      const userToResourceEdges = policyNode.data.resources_affected.map(resourceId => {
-        return createEdge({ source: userNode.id, target: resourceId });
+      const userToResourceEdges = Object.keys(policyNode.data.granted_accesses).map(resourceId => {
+        return createEdge({
+          source: userNode.id,
+          target: resourceId,
+          data: {
+            hovering_label: policyNode.data.granted_accesses[resourceId],
+            is_hovering: false,
+          },
+        });
       });
 
       return [policyToUserEdge, userToResourceEdges];

@@ -245,16 +245,11 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective[][] = [
   ],
 ];
 
-export const INITIAL_POLICIES_INFO: Pick<
-  IAMPolicyNodeData & { position: { x: string; y: string } },
-  'id' | 'label' | 'code' | 'resources_affected' | 'position' | 'initial_position'
->[] = [
+export const INITIAL_POLICIES_INFO: Partial<IAMPolicyNodeData>[] = [
   {
     id: 'iam_policy_1',
     label: 's3-read-access',
     code: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
-    resources_affected: [],
     initial_position: 'center',
-    position: { x: '100', y: '100' },
   },
 ];

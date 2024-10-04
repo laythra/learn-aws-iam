@@ -14,7 +14,7 @@ export function getUserToResourceEdgesForGroupAccess(
     return [];
   }
 
-  const resourceIds = attachedPolicies.flatMap(policy => policy.resources_affected);
+  const resourceIds = attachedPolicies.flatMap(policy => Object.keys(policy.granted_accesses));
 
   return resourceIds.flatMap(resourceId => {
     return attachedUsers.map(

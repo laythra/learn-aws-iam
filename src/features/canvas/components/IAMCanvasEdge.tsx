@@ -44,13 +44,11 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdgeData>> = ({
               background: 'white',
               padding: '1px',
               pointerEvents: 'all',
-              fontSize: '10px',
+              fontSize: '11px',
+              fontWeight: 'bold',
             }}
           >
-            {
-              // TODO: Read tooltip text from data
-              'Placeholder Tooltip'
-            }
+            {data.hovering_label || 'Placeholder Tooltip'}
           </Box>
         )}
       </EdgeLabelRenderer>
