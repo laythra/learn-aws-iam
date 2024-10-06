@@ -1,7 +1,7 @@
 import '@fontsource/lato';
 import { extendTheme } from '@chakra-ui/react';
 
-import type { CustomTheme } from './types';
+import { CustomTheme } from './types/custom-theme';
 
 export const theme: CustomTheme = extendTheme({
   fonts: {
@@ -10,7 +10,7 @@ export const theme: CustomTheme = extendTheme({
   },
   sizes: {
     iamNodeWidthInPixels: 225,
-    iamNodeHeightInPixels: 75,
+    iamNodeHeightInPixels: 82,
     modalsMaxWidthInPixels: 720,
     navbarHeightInPixels: 65,
   },

@@ -68,8 +68,8 @@ export const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
                   height='20px'
                   width='20px'
                   position='absolute'
-                  top={1}
-                  right={1}
+                  top={2}
+                  right={2}
                   opacity={0.5}
                   _hover={{ bg: 'gray.200', opacity: 1 }}
                 />
