@@ -101,23 +101,32 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   },
 ];
 
-export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
-  create_iam_group: {
+export enum LevelObjectiveID {
+  CreateIAMGroup = 'create_iam_group',
+  MakeScalingEasier = 'make_scaling_easier',
+  AttachUserToGroup = 'attach_your_user_to_group',
+}
+
+export const LEVEL_OBJECTIVES: LevelObjective[] = [
+  {
+    id: LevelObjectiveID.CreateIAMGroup,
     finished: false,
     label: 'Create an IAM Group',
   },
-  attach_nodes_to_group: {
+  {
+    id: LevelObjectiveID.MakeScalingEasier,
     finished: false,
     label: 'Make things easier to scale using the newly created group',
   },
-};
+];
 
-export const HIDDEN_LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
-  attach_your_user_to_group: {
+export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective[] = [
+  {
+    id: LevelObjectiveID.AttachUserToGroup,
     finished: false,
     label: 'Give your user access to all resources in one go',
   },
-};
+];
 
 const S3_READ_POLICY_CONTENT = JSON.stringify(
   {

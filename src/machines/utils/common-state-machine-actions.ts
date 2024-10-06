@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Node, Edge } from 'reactflow';
 
 import { EdgeConnectionFinishEvent } from '../level4/objectives/edge-connection-objectives';
-import { GenericContext } from '../types';
+import { GenericContext, LevelObjective } from '../types';
 import { createEdge } from '@/factories/edge-factory';
 import type { IAMPolicyNodeData, IAMUserNodeData } from '@/types';
 

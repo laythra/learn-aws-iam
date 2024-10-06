@@ -145,29 +145,36 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   },
 ];
 
-export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective }[] = [
+export enum LevelObjectiveID {
+  CreateFirstCustomerManagedPolicy = 'create_first_customer_managed_policy',
+  FrontendTeamS3BucketAccess = 'grant_frontend_team_s3_bucket_access',
+  FrontendTeamCloudFrontAccess = 'grant_frontend_team_cloudfront_access',
+  BackendTeamDynamoDBAccess = 'grant_backend_team_dynamodb_access',
+}
+
+export const LEVEL_OBJECTIVES: LevelObjective[] = [
   {
-    policy_creation_1: {
-      label: 'Create your first customer managed policy',
-      finished: false,
-    },
+    label: 'Create your first customer managed policy',
+    finished: false,
+    id: LevelObjectiveID.CreateFirstCustomerManagedPolicy,
   },
   {
-    frontend_team_policy_1: {
-      label: '**Frontend Team**: Read/Write access to S3 bucket `public-assets`',
-      finished: false,
-    },
-    frontend_team_policy_2: {
-      label: '**Frontend Team**: Read access to CloudFront Distribution `E1234567890ABC`',
-      finished: false,
-    },
-    backend_team_policy_1: {
-      label: '**Backend Team**: Read/Write access to DynamoDB table: `user-profiles`',
-      finished: false,
-    },
+    label: '**Frontend Team**: Read/Write access to S3 bucket `public-assets`',
+    finished: false,
+    id: LevelObjectiveID.FrontendTeamS3BucketAccess,
+  },
+  {
+    label: '**Frontend Team**: Read access to CloudFront Distribution `E1234567890ABC`',
+    finished: false,
+    id: LevelObjectiveID.FrontendTeamCloudFrontAccess,
+  },
+  {
+    label: '**Backend Team**: Read/Write access to DynamoDB table: `user-profiles`',
+    finished: false,
+    id: LevelObjectiveID.BackendTeamDynamoDBAccess,
   },
 ];
-export const HIDDEN_LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {};
+export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective[] = [];
 export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][] = [
   [
     {

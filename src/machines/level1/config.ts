@@ -82,13 +82,20 @@ export const POLICY_CONTENT = JSON.stringify(
   2
 );
 
-export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {
-  create_iam_user: {
+export enum LevelObjectiveID {
+  CreateIAMUser = 'create_iam_user',
+  GrantIAMUserReadAccessToS3Bucket = 'grant_iam_user_read_access_to_s3_bucket',
+}
+
+export const LEVEL_OBJECTIVES: LevelObjective[] = [
+  {
     finished: false,
+    id: LevelObjectiveID.CreateIAMUser,
     label: 'Create an IAM user',
   },
-  enable_reading_from_bucket: {
+  {
     finished: false,
+    id: LevelObjectiveID.GrantIAMUserReadAccessToS3Bucket,
     label: 'Grant IAM user read access to S3 bucket',
   },
-};
+];

@@ -8,6 +8,7 @@ import {
   LEVEL_OBJECTIVES,
   POLICY_ROLE_CREATION_OBJECTIVES,
   EDGE_CONNECTION_OBJECTIVES,
+  HIDDEN_LEVEL_OBJECTIVES,
 } from './config';
 import { INITIAL_IN_LEVEL_EDGES, REQUIRED_EDGES } from './edges';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
@@ -66,10 +67,7 @@ export const stateMachine = setup({
       }),
     }),
     set_level_objectives: assign({
-      level_objectives: (
-        _context,
-        { objectives }: { objectives: { [key: string]: LevelObjective } }
-      ) => objectives,
+      level_objectives: (_context, { objectives }: { objectives: LevelObjective[] }) => objectives,
     }),
     add_iam_node: assign({
       nodes: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => [...context.nodes, node],
@@ -119,7 +117,7 @@ export const stateMachine = setup({
     metadata_keys: {},
     edges: [],
     final_edges: REQUIRED_EDGES,
-    level_objectives: {},
+    level_objectives: [],
     next_iam_node_id: {
       [IAMNodeEntity.Group]: 1,
       [IAMNodeEntity.User]: 1,
@@ -219,7 +217,7 @@ export const stateMachine = setup({
       onDone: 'inside_level',
       entry: assign({
         nodes: INITIAL_TUTORIAL_NODES,
-        level_objectives: LEVEL_OBJECTIVES[0],
+        level_objectives: LEVEL_OBJECTIVES,
       }),
       states: {
         tutorial_popup1: {
@@ -286,7 +284,7 @@ export const stateMachine = setup({
     inside_level: {
       initial: 'popup1',
       entry: assign({
-        level_objectives: LEVEL_OBJECTIVES[1],
+        level_objectives: HIDDEN_LEVEL_OBJECTIVES,
         edges: INITIAL_IN_LEVEL_EDGES,
         nodes: INITIAL_IN_LEVEL_NODES,
         final_edges: REQUIRED_EDGES,

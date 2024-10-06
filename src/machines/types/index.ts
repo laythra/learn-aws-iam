@@ -35,7 +35,7 @@ export interface GenericContext {
   fixed_iam_nodes_positions?: { [key: string]: XYPosition };
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  level_objectives: { [key: string]: LevelObjective };
+  level_objectives: LevelObjective[];
   next_policy_role_objectives_index?: number;
   next_edges_connection_objectives_index?: number;
   level_finished?: boolean;
@@ -108,8 +108,10 @@ export type PopupTutorialMessage = {
 };
 
 export type LevelObjective = {
+  id: string;
   label: string;
   finished: boolean;
+  on_finished_event?: string;
 };
 
 export type EdgeConnectionObjective = {
