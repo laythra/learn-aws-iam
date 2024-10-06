@@ -54,3 +54,16 @@ export function updatePolicyToUserConnectionEdges(
 
   return [newEdges, sideEffectsEvents];
 }
+
+export function changeLevelObjectiveProgress(
+  context: GenericContext,
+  id: string,
+  finished: boolean
+): LevelObjective[] {
+  return produce(context.level_objectives, draftLevelObjectives => {
+    const targetObjective = draftLevelObjectives.find(objective => objective.id === id);
+    if (!targetObjective) return;
+
+    targetObjective.finished = finished;
+  });
+}
