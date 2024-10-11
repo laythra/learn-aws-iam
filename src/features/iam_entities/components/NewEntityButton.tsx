@@ -6,12 +6,12 @@ import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverMenuItem } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { withPopover } from '@/decorators/withPopover';
-import { CodeEditor, useCodeEditor } from '@/features/code_editor';
+import { CodeEditor } from '@/features/code_editor';
+import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
 
 interface NewEntityButtonProps {}
 
 export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
-  const { openCodeEditor } = useCodeEditor();
   const { openIdentityCreator } = useIdentityCreator();
   const levelActor = LevelsProgressionContext.useActorRef();
 
@@ -25,7 +25,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   };
 
   const openCodeEditorAndSendEvent = (): void => {
-    openCodeEditor();
+    codeEditorPopupStore.send({ type: 'open', mode: CodeEditorMode.Create });
     levelActor.send({ type: 'CREATE_POLICY_POPUP_OPENED' });
   };
 
