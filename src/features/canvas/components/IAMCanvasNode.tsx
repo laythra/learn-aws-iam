@@ -4,7 +4,7 @@ import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react
 import { useTheme } from '@chakra-ui/react';
 import { Handle } from 'reactflow';
 
-import { IAMNodeInfoButton } from './IAMNodeInfoButton';
+import IAMNodeInfoButton from './IAMNodeInfoButton';
 import { IAMNodeContext } from './IAMNodeProvider';
 import { WithPopoverBox } from '@/components/Decorated';
 import { type IAMAnyNodeData, type CustomTheme, IAMNodeEntity } from '@/types';

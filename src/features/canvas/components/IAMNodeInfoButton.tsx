@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import {
   Popover,
   Text,
@@ -23,7 +25,7 @@ interface IAMNodeInfoButtonProps {
   placement?: PlacementWithLogical;
 }
 
-export const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
+const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
   label,
   verboseDescription,
   codeDescription,
@@ -83,3 +85,5 @@ export const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
     </Popover>
   );
 };
+
+export default React.memo(IAMNodeInfoButton);
