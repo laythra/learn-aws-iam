@@ -10,6 +10,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
+import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
@@ -22,10 +23,10 @@ interface TutorialPopupProps {}
 export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
   const theme = useTheme<CustomTheme>();
   const levelActor = LevelsProgressionContext.useActorRef();
-  const { showPopups, popupContent } = LevelsProgressionContext.useSelector(state => ({
-    showPopups: state.context.show_popups,
-    popupContent: state.context.popup_content,
-  }));
+  const [showPopups, popupContent] = LevelsProgressionContext.useSelector(
+    state => [state.context.show_popups, state.context.popup_content],
+    _.isEqual
+  );
 
   const handleNextPopup = (): void => {
     levelActor.send({ type: 'NEXT_POPUP' });

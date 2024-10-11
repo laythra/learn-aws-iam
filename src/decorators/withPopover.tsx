@@ -1,5 +1,7 @@
 import React, { forwardRef, ForwardRefExoticComponent, PropsWithoutRef } from 'react';
 
+import _ from 'lodash';
+
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 
@@ -14,8 +16,10 @@ export const withPopover = <T extends { elementid: string }, R = HTMLElement>(
 ): ForwardRefExoticComponent<PropsWithoutRef<T> & React.RefAttributes<R>> => {
   const WithPopover = forwardRef<R, T>((props, ref) => {
     const machineActor = LevelsProgressionContext.useActorRef();
-    const { popover_content: popoverContent, show_popovers: showPopovers } =
-      LevelsProgressionContext.useSelector(state => state.context);
+    const [showPopovers, popoverContent] = LevelsProgressionContext.useSelector(
+      state => [state.context.show_popovers, state.context.popover_content],
+      _.isEqual
+    );
 
     const popoverOpen = showPopovers && popoverContent?.element_id === props.elementid;
 
