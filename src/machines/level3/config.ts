@@ -1,3 +1,5 @@
+import Ajv from 'ajv';
+
 import { groupedByIdEdges } from './edges';
 import { GroupNodeID } from './nodes/group-nodes';
 import { PolicyNodeID } from './nodes/policy-nodes';
@@ -12,7 +14,10 @@ import type {
   LevelObjective,
   EdgeConnectionObjective,
 } from '../types';
-import { IAMNodeEntity, IAMPolicyNodeData, IAMPolicyRoleCreationObjective } from '@/types';
+import { NodeCreationFinishEvent } from '../types';
+import { IAMPolicyRoleCreationObjective } from '../types';
+import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
+import { IAMNodeEntity, IAMPolicyNodeData } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
 const POPUP_MSG_1 = `
@@ -87,6 +92,8 @@ const POPUP_MSG_6 = `
 In case you hadn't noticed, the list of objectives you need
 to complete is on the right side panel ➡️️|lg
 `;
+
+const AJV_COMPILER = new Ajv();
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
@@ -174,49 +181,54 @@ export const LEVEL_OBJECTIVES: LevelObjective[] = [
     id: LevelObjectiveID.BackendTeamDynamoDBAccess,
   },
 ];
+
 export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective[] = [];
 export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][] = [
   [
     {
-      entityId: PolicyNodeID.S3ReadWriteAcces,
+      entity_id: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadPolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       description:
         'Create a policy that allows read/write access\
           to the S3 bucket: public-assets',
-      on_finish_event: 'S3_READ_POLICY_CREATED',
+      on_finish_event: NodeCreationFinishEvent.S3_READ_POLICY_CREATED,
       validate_inside_code_editor: true,
       resource_affected: [],
+      validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
     },
   ],
   [
     {
-      entityId: PolicyNodeID.S3ReadWriteAcces,
+      entity_id: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadWritePolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
-      on_finish_event: 'S3_READ_WRITE_POLICY_CREATED',
+      on_finish_event: NodeCreationFinishEvent.S3_READ_WRITE_POLICY_CREATED,
       validate_inside_code_editor: false,
       resource_affected: [ResourceNodeID.S3Bucket],
+      validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
     },
     {
-      entityId: PolicyNodeID.CloudfrontReadAccess,
+      entity_id: PolicyNodeID.CloudfrontReadAccess,
       entity: IAMNodeEntity.Policy,
       json_schema: cloudfrontReadPolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
-      on_finish_event: 'DYNAMO_DB_READ_WRITE_POLICY_CREATED',
+      on_finish_event: NodeCreationFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CREATED,
       validate_inside_code_editor: false,
       resource_affected: [ResourceNodeID.DynamoDBTable],
+      validate_function: AJV_COMPILER.compile(iamPolicySchema),
     },
     {
-      entityId: PolicyNodeID.DynamoDBReadWriteAccess,
+      entity_id: PolicyNodeID.DynamoDBReadWriteAccess,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadWritePolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
-      on_finish_event: 'CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED',
+      on_finish_event: NodeCreationFinishEvent.CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED,
       validate_inside_code_editor: false,
       resource_affected: [ResourceNodeID.CloudFront],
+      validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
     },
   ],
 ];

@@ -135,21 +135,6 @@ export const stateMachine = setup({
         }),
       ],
     },
-    UPDATE_IAM_NODE: {
-      actions: [
-        assign({
-          nodes: ({ context, event }) => {
-            const updatedNode = event.node;
-            return context.nodes.map(node => {
-              if (node.id === updatedNode.id) {
-                return updatedNode;
-              }
-              return node;
-            });
-          },
-        }),
-      ],
-    },
     ADD_EDGE: {
       actions: [
         assign({

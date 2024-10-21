@@ -150,24 +150,10 @@ export const stateMachine = setup({
     },
     ADD_IAM_GROUP_NODE: {
       actions: [
-        assign({
-          nodes: ({ context, event }) => [...context.nodes, event.node],
-        }),
-      ],
-    },
-    UPDATE_IAM_NODE: {
-      actions: [
-        assign({
-          nodes: ({ context, event }) => {
-            const updatedNode = event.node;
-            return context.nodes.map(node => {
-              if (node.id === updatedNode.id) {
-                return updatedNode;
-              }
-              return node;
-            });
-          },
-        }),
+        {
+          type: 'add_iam_node',
+          params: ({ event }) => ({ node: event.node }),
+        },
       ],
     },
     ADD_EDGE: {
