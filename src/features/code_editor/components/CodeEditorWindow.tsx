@@ -5,13 +5,13 @@ import { linter } from '@codemirror/lint';
 import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
-import Ajv from 'ajv';
+import { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 
-import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
-import iamRoleSchema from '@/schemas/aws-iam-role-schema.json';
-import { IAMNodeEntity, IAMPolicyRoleCreationObjective, IAMScriptableEntity } from '@/types';
-import { findAnyValidPolicy, getLintingErrors } from '@/utils/iam-code-linter';
+import { IAMPolicyRoleCreationObjective } from '@/machines/types';
+import { IAMScriptableEntity } from '@/types';
+import { findAnyValidPolicy, getLintingErrors, isObjectiveValid } from '@/utils/iam-code-linter';
+import { GENERIC_VALIDATION_FNS } from '@/utils/iam-code-linter';
 
 interface CodeEditorWindowProps {
   setContent: (content: string) => void;
@@ -24,7 +24,6 @@ interface CodeEditorWindowProps {
 }
 
 const NO_MATCHING_POLICY_WARNING = 'This policy does not achieve any of the objectives.';
-const AJV_COMPILER = new Ajv();
 
 export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowProps>(
   (
@@ -41,46 +40,32 @@ export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowP
   ) => {
     const [editorInitialized, setEditorInitialized] = useState<boolean>(false);
 
-    const [objectiveToValidate, objectivesWithValidators] = useMemo(() => {
-      const fullObjectives = policyRoleObjectives.map(objective => {
-        return {
-          ...objective,
-          validate_function: AJV_COMPILER.compile(objective.json_schema),
-        };
-      });
-
-      const targetObjective = _.find(fullObjectives, 'validate_inside_code_editor');
-      return [targetObjective, fullObjectives];
+    const objectiveToValidate = useMemo(() => {
+      return _.find(policyRoleObjectives, 'validate_inside_code_editor');
     }, [policyRoleObjectives]);
 
-    const validateFunction = useMemo(() => {
-      if (objectiveToValidate) {
-        return objectiveToValidate.validate_function;
-      } else {
-        return selectedIAMEntity === IAMNodeEntity.Policy
-          ? AJV_COMPILER.compile(iamPolicySchema)
-          : AJV_COMPILER.compile(iamRoleSchema);
-      }
-    }, [objectivesWithValidators]);
+    const validateFunction: ValidateFunction =
+      objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity];
 
     const editorRef = useRef<EditorView>();
 
     const getWarnings = (lintingErrors: Diagnostic[]): string[] => {
+      const warnings = [NO_MATCHING_POLICY_WARNING];
       if (!editorRef.current || lintingErrors.length > 0) {
         return [];
       }
 
-      if (findAnyValidPolicy(objectivesWithValidators, editorRef.current)) {
+      if (objectiveToValidate) {
+        if (isObjectiveValid(objectiveToValidate, editorRef.current)) {
+          return [];
+        } else {
+          return warnings;
+        }
+      } else if (!findAnyValidPolicy(policyRoleObjectives, editorRef.current)) {
+        return warnings;
+      } else {
         return [];
       }
-
-      const warnings = [NO_MATCHING_POLICY_WARNING];
-
-      if (objectiveToValidate) {
-        warnings.push(`Our objective is to ${objectiveToValidate.description}`);
-      }
-
-      return warnings;
     };
 
     const validateChange = _.debounce((): void => {
@@ -103,7 +88,7 @@ export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowP
       setWarnings(getWarnings(lintingErrors));
     }, [editorInitialized]);
 
-    const handleEditorCreate = (editor: EditorView): void => {
+    const onCreateEditor = (editor: EditorView): void => {
       editorRef.current = editor;
       setEditorInitialized(true);
     };
@@ -118,7 +103,7 @@ export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowP
         }}
         height='200px'
         extensions={[json(), linter(view => getLintingErrors(view, validateFunction))]}
-        onCreateEditor={handleEditorCreate}
+        onCreateEditor={onCreateEditor}
         ref={ref}
       />
     );
