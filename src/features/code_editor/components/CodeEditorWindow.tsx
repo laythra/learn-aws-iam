@@ -1,25 +1,26 @@
-import { useEffect, useRef, useState, forwardRef } from 'react';
+import { useEffect, useRef, useState, forwardRef, useMemo } from 'react';
 
 import { json } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
 import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 
-import useSchemaValidator from '@/hooks/useSchemaValidator';
-import sampleSchema from '@/schemas/sample-schema.json';
-import { IAMPolicyRoleCreationObjective } from '@/types';
-import { getLintingErrors } from '@/utils/iam-code-linter';
+import { IAMPolicyRoleCreationObjective } from '@/machines/types';
+import { IAMScriptableEntity } from '@/types';
+import { findAnyValidPolicy, getLintingErrors, isObjectiveValid } from '@/utils/iam-code-linter';
+import { GENERIC_VALIDATION_FNS } from '@/utils/iam-code-linter';
 
 interface CodeEditorWindowProps {
   setContent: (content: string) => void;
   setErrors: (errors: Diagnostic[]) => void;
   setWarnings: (warnings: string[]) => void;
-  content: string;
   setIsLinting: (isLinting: boolean) => void;
-  targetObjective: IAMPolicyRoleCreationObjective | undefined;
-  findTargetValidPolicy: () => IAMPolicyRoleCreationObjective | undefined;
+  content: string;
+  policyRoleObjectives: IAMPolicyRoleCreationObjective[];
+  selectedIAMEntity: IAMScriptableEntity;
 }
 
 const NO_MATCHING_POLICY_WARNING = 'This policy does not achieve any of the objectives.';
@@ -32,34 +33,44 @@ export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowP
       setWarnings,
       content,
       setIsLinting,
-      targetObjective,
-      findTargetValidPolicy,
+      policyRoleObjectives,
+      selectedIAMEntity,
     },
     ref
   ) => {
     const [editorInitialized, setEditorInitialized] = useState<boolean>(false);
-    const policySchema = targetObjective?.json_schema || sampleSchema;
 
-    const policyValidator = useSchemaValidator(policySchema);
+    const objectiveToValidate = useMemo(() => {
+      return _.find(policyRoleObjectives, 'validate_inside_code_editor');
+    }, [policyRoleObjectives]);
+
+    const validateFunction: ValidateFunction =
+      objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity];
+
     const editorRef = useRef<EditorView>();
 
     const getWarnings = (lintingErrors: Diagnostic[]): string[] => {
-      if (lintingErrors.length > 0 || findTargetValidPolicy()) {
+      const warnings = [NO_MATCHING_POLICY_WARNING];
+      if (!editorRef.current || lintingErrors.length > 0) {
         return [];
       }
 
-      if (targetObjective?.validate_inside_code_editor) {
-        const levelObjectiveMessage = `Our objective is to ${targetObjective.description}`;
-
-        return [NO_MATCHING_POLICY_WARNING, levelObjectiveMessage];
+      if (objectiveToValidate) {
+        if (isObjectiveValid(objectiveToValidate, editorRef.current)) {
+          return [];
+        } else {
+          return warnings;
+        }
+      } else if (!findAnyValidPolicy(policyRoleObjectives, editorRef.current)) {
+        return warnings;
       } else {
-        return [NO_MATCHING_POLICY_WARNING];
+        return [];
       }
     };
 
     const validateChange = _.debounce((): void => {
       if (editorRef.current) {
-        const lintingErrors = getLintingErrors(editorRef.current, policyValidator);
+        const lintingErrors = getLintingErrors(editorRef.current, validateFunction);
 
         setErrors(lintingErrors);
         setWarnings(getWarnings(lintingErrors));
@@ -71,13 +82,13 @@ export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowP
     useEffect(() => {
       if (!editorRef.current) return;
 
-      const lintingErrors = getLintingErrors(editorRef.current, policyValidator);
+      const lintingErrors = getLintingErrors(editorRef.current, validateFunction);
 
       setErrors(lintingErrors);
       setWarnings(getWarnings(lintingErrors));
     }, [editorInitialized]);
 
-    const handleEditorCreate = (editor: EditorView): void => {
+    const onCreateEditor = (editor: EditorView): void => {
       editorRef.current = editor;
       setEditorInitialized(true);
     };
@@ -91,8 +102,8 @@ export const CodeEditorWindow = forwardRef<ReactCodeMirrorRef, CodeEditorWindowP
           validateChange();
         }}
         height='200px'
-        extensions={[json(), linter(view => getLintingErrors(view, policyValidator))]}
-        onCreateEditor={handleEditorCreate}
+        extensions={[json(), linter(view => getLintingErrors(view, validateFunction))]}
+        onCreateEditor={onCreateEditor}
         ref={ref}
       />
     );

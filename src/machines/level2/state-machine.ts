@@ -7,6 +7,7 @@ import {
   POPUP_TUTORIAL_MESSAGES,
   LEVEL_OBJECTIVES,
   HIDDEN_LEVEL_OBJECTIVES,
+  LevelObjectiveID,
 } from './config';
 import { initial_nodes, edges } from './nodes';
 import { TEMPLATE_GROUP_NODE, GROUP_NODE_Y_OFFSET } from './nodes/group-nodes';
@@ -131,21 +132,6 @@ export const stateMachine = setup({
       actions: [
         assign({
           nodes: ({ context, event }) => [...context.nodes, event.node],
-        }),
-      ],
-    },
-    UPDATE_IAM_NODE: {
-      actions: [
-        assign({
-          nodes: ({ context, event }) => {
-            const updatedNode = event.node;
-            return context.nodes.map(node => {
-              if (node.id === updatedNode.id) {
-                return updatedNode;
-              }
-              return node;
-            });
-          },
         }),
       ],
     },
@@ -365,7 +351,9 @@ export const stateMachine = setup({
           type: 'add_new_level_objective',
           params: {
             id: 'attach_your_user_to_group',
-            objective: HIDDEN_LEVEL_OBJECTIVES['attach_your_user_to_group'],
+            objective: HIDDEN_LEVEL_OBJECTIVES.find(
+              objective => objective.id === LevelObjectiveID.AttachUserToGroup
+            ) as LevelObjective,
           },
         },
         assign({

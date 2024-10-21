@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import {
   Popover,
   Text,
@@ -15,15 +17,19 @@ import {
 import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { WithStateMachineEventIconButton } from '@/components/Decorated';
+import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
+import { IAMAnyNodeData } from '@/types';
 
 interface IAMNodeInfoButtonProps {
+  nodeId: string;
   label: string;
   verboseDescription?: string;
   codeDescription?: string;
   placement?: PlacementWithLogical;
 }
 
-export const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
+const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
+  nodeId,
   label,
   verboseDescription,
   codeDescription,
@@ -60,6 +66,13 @@ export const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
             <Code width='100%' whiteSpace='pre-wrap' position='relative'>
               <Tooltip label='Edit' aria-label='Edit' placement='top'>
                 <IconButton
+                  onClick={() =>
+                    codeEditorPopupStore.send({
+                      type: 'open',
+                      mode: CodeEditorMode.Edit,
+                      selectedNodeId: nodeId,
+                    })
+                  }
                   ml={1}
                   aria-label='edit'
                   icon={<PencilSquareIcon />}
@@ -68,8 +81,8 @@ export const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
                   height='20px'
                   width='20px'
                   position='absolute'
-                  top={1}
-                  right={1}
+                  top={2}
+                  right={2}
                   opacity={0.5}
                   _hover={{ bg: 'gray.200', opacity: 1 }}
                 />
@@ -83,3 +96,5 @@ export const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
     </Popover>
   );
 };
+
+export default memo(IAMNodeInfoButton);

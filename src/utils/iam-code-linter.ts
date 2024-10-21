@@ -1,11 +1,24 @@
 import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@uiw/react-codemirror';
-import { ValidateFunction } from 'ajv';
+import Ajv, { ValidateFunction } from 'ajv';
+import _ from 'lodash';
+
+import { IAMPolicyRoleCreationObjective } from '@/machines/types';
+import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
+import iamRoleSchema from '@/schemas/aws-iam-role-schema.json';
+import { IAMNodeEntity } from '@/types';
 
 interface LintConfig {
   validateFunction: ValidateFunction;
   creationObjective?: string;
 }
+
+const AJV_COMPILER = new Ajv();
+
+export const GENERIC_VALIDATION_FNS = {
+  [IAMNodeEntity.Policy]: AJV_COMPILER.compile(iamPolicySchema),
+  [IAMNodeEntity.Role]: AJV_COMPILER.compile(iamRoleSchema),
+};
 
 function lint(
   view: EditorView,
@@ -43,10 +56,31 @@ function lint(
   return diagnostics;
 }
 
-export const isJSONValid = (view: EditorView, validateFunction: ValidateFunction): boolean => {
+const isJSONValid = (view: EditorView, validateFunction: ValidateFunction): boolean => {
   const errors = lint(view, { validateFunction });
 
   return errors['syntax'].length === 0 && errors['logical'].length === 0;
+};
+
+export const isObjectiveValid = (
+  policyRoleObjective: IAMPolicyRoleCreationObjective,
+  editorView: EditorView
+): IAMPolicyRoleCreationObjective | undefined => {
+  const valdiateFn =
+    policyRoleObjective.validate_function ?? GENERIC_VALIDATION_FNS[policyRoleObjective.entity];
+
+  return isJSONValid(editorView, valdiateFn) ? policyRoleObjective : undefined;
+};
+
+export const findAnyValidPolicy = (
+  policyRoleObjectives: IAMPolicyRoleCreationObjective[],
+  editorView: EditorView
+): IAMPolicyRoleCreationObjective | undefined => {
+  policyRoleObjectives = _.orderBy(policyRoleObjectives, 'validate_inside_code_editor', 'desc');
+
+  return policyRoleObjectives.find(policyRoleObjective =>
+    isObjectiveValid(policyRoleObjective, editorView)
+  );
 };
 
 export const getLintingErrors = (

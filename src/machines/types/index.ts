@@ -1,11 +1,9 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
+import { EditorView } from '@uiw/react-codemirror';
+import { Schema, ValidateFunction } from 'ajv';
 import type { Edge, Node, XYPosition } from 'reactflow';
 
-import type {
-  CreatableIAMNodeEntity,
-  IAMPolicyNodeData,
-  IAMPolicyRoleCreationObjective,
-} from '@/types';
+import type { CreatableIAMNodeEntity, IAMPolicyNodeData, IAMScriptableEntity } from '@/types';
 import {
   IAMAnyNodeData,
   IAMEdgeData,
@@ -35,7 +33,7 @@ export interface GenericContext {
   fixed_iam_nodes_positions?: { [key: string]: XYPosition };
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  level_objectives: { [key: string]: LevelObjective };
+  level_objectives: LevelObjective[];
   next_policy_role_objectives_index?: number;
   next_edges_connection_objectives_index?: number;
   level_finished?: boolean;
@@ -65,14 +63,21 @@ export type GenericEventData =
         | 'IAM_POLICY_ATTACHED_TO_GROUP'
         | 'TOGGLE_SIDE_PANEL';
     }
-  | { type: 'ADD_IAM_NODE'; node: Node }
+  | { type: 'ADD_IAM_NODE'; node: Node<IAMAnyNodeData> }
+  | { type: 'ADD_IAM_POLICY_NODE'; editor_view: EditorView }
+  | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
   | { type: 'ADD_IAM_USER_NODE'; node: Node }
   | { type: 'ADD_IAM_GROUP_NODE'; node: Node }
-  | { type: 'UPDATE_IAM_NODE'; node: Node }
   | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }
   | { type: 'DELETE_EDGE'; edge: Edge<IAMEdgeData> }
   | { type: 'SET_EDGES'; edges: Edge<IAMEdgeData>[] }
   | { type: 'SET_NODES'; nodes: Node[] }
+  | { type: 'UPDATE_USER_POLICY_EDGES'; node: Node }
+  | {
+      type: 'ATTACH_POLICY_TO_USER';
+      sourceNode: Node<IAMPolicyNodeData>;
+      targetNode: Node<IAMUserNodeData>;
+    }
   | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage };
 
 export type GenericInsideLevelMetadata = {
@@ -102,12 +107,35 @@ export type PopupTutorialMessage = {
 };
 
 export type LevelObjective = {
+  id: string;
   label: string;
   finished: boolean;
+  on_finished_event?: string;
 };
 
 export type EdgeConnectionObjective = {
   required_edges: Edge[];
   locked_edges: Edge[];
   on_finish_event: string;
+  is_finished: boolean;
 };
+
+export interface IAMPolicyRoleCreationObjective {
+  readonly entity_id: string;
+  readonly entity: IAMScriptableEntity;
+  readonly json_schema: Schema;
+  readonly description?: string;
+  readonly initial_code: object;
+  readonly on_finish_event: NodeCreationFinishEvent;
+  readonly validate_inside_code_editor: boolean;
+  readonly resource_affected: string[];
+  readonly validate_function?: ValidateFunction;
+}
+
+export enum EdgeConnectionFinishEvent {}
+export enum NodeCreationFinishEvent {
+  S3_READ_POLICY_CREATED = 'S3_READ_POLICY_CREATED',
+  S3_READ_WRITE_POLICY_CREATED = 'S3_READ_WRITE_POLICY_CREATED',
+  DYNAMO_DB_READ_WRITE_POLICY_CREATED = 'DYNAMO_DB_READ_WRITE_POLICY_CREATED',
+  CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED = 'CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED',
+}

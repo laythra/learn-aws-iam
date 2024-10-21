@@ -3,7 +3,7 @@ import type { Node, HandleProps } from 'reactflow';
 import { Position } from 'reactflow';
 
 import { MANAGED_POLICIES } from '@/machines/config';
-import { IAMPolicyNodeData, IAMNodeImage, IAMNodeEntity, IAMMinPolicyNodeData } from '@/types';
+import { IAMPolicyNodeData, IAMNodeImage, IAMNodeEntity } from '@/types';
 
 // export const X_OFFSET = theme.sizes.iamNodeWidthInPixels;
 export const X_OFFSET = 350;
@@ -32,18 +32,17 @@ export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
       { id: Position.Left, type: 'source', position: Position.Left },
     ] as HandleProps[],
     image: IAMNodeImage.Policy,
-    resources_affected: [],
+    // resources_affected: [],
     description: '',
     initial_position: 'bottom-center',
   } as IAMPolicyNodeData,
 };
 
-const TUTORIAL_POLICY_NODES: IAMMinPolicyNodeData[] = [
+const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   {
     id: PolicyNodeID.S3ReadAccess,
     label: 's3-read-access',
     code: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
-    resources_affected: [],
     initial_position: 'center',
   },
 ];

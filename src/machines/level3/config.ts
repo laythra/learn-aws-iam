@@ -1,3 +1,5 @@
+import Ajv from 'ajv';
+
 import { groupedByIdEdges } from './edges';
 import { GroupNodeID } from './nodes/group-nodes';
 import { PolicyNodeID } from './nodes/policy-nodes';
@@ -12,7 +14,10 @@ import type {
   LevelObjective,
   EdgeConnectionObjective,
 } from '../types';
-import { IAMNodeEntity, IAMPolicyNodeData, IAMPolicyRoleCreationObjective } from '@/types';
+import { NodeCreationFinishEvent } from '../types';
+import { IAMPolicyRoleCreationObjective } from '../types';
+import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
+import { IAMNodeEntity, IAMPolicyNodeData } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
 const POPUP_MSG_1 = `
@@ -88,6 +93,8 @@ In case you hadn't noticed, the list of objectives you need
 to complete is on the right side panel ➡️️|lg
 `;
 
+const AJV_COMPILER = new Ajv();
+
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: PolicyNodeID.S3ReadAccess,
@@ -145,71 +152,83 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   },
 ];
 
-export const LEVEL_OBJECTIVES: { [key: string]: LevelObjective }[] = [
+export enum LevelObjectiveID {
+  CreateFirstCustomerManagedPolicy = 'create_first_customer_managed_policy',
+  FrontendTeamS3BucketAccess = 'grant_frontend_team_s3_bucket_access',
+  FrontendTeamCloudFrontAccess = 'grant_frontend_team_cloudfront_access',
+  BackendTeamDynamoDBAccess = 'grant_backend_team_dynamodb_access',
+}
+
+export const LEVEL_OBJECTIVES: LevelObjective[] = [
   {
-    policy_creation_1: {
-      label: 'Create your first customer managed policy',
-      finished: false,
-    },
+    label: 'Create your first customer managed policy',
+    finished: false,
+    id: LevelObjectiveID.CreateFirstCustomerManagedPolicy,
   },
   {
-    frontend_team_policy_1: {
-      label: '**Frontend Team**: Read/Write access to S3 bucket `public-assets`',
-      finished: false,
-    },
-    frontend_team_policy_2: {
-      label: '**Frontend Team**: Read access to CloudFront Distribution `E1234567890ABC`',
-      finished: false,
-    },
-    backend_team_policy_1: {
-      label: '**Backend Team**: Read/Write access to DynamoDB table: `user-profiles`',
-      finished: false,
-    },
+    label: '**Frontend Team**: Read/Write access to S3 bucket `public-assets`',
+    finished: false,
+    id: LevelObjectiveID.FrontendTeamS3BucketAccess,
+  },
+  {
+    label: '**Frontend Team**: Read access to CloudFront Distribution `E1234567890ABC`',
+    finished: false,
+    id: LevelObjectiveID.FrontendTeamCloudFrontAccess,
+  },
+  {
+    label: '**Backend Team**: Read/Write access to DynamoDB table: `user-profiles`',
+    finished: false,
+    id: LevelObjectiveID.BackendTeamDynamoDBAccess,
   },
 ];
-export const HIDDEN_LEVEL_OBJECTIVES: { [key: string]: LevelObjective } = {};
+
+export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective[] = [];
 export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][] = [
   [
     {
-      entityId: PolicyNodeID.S3ReadWriteAcces,
+      entity_id: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadPolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       description:
         'Create a policy that allows read/write access\
           to the S3 bucket: public-assets',
-      on_finish_event: 'S3_READ_POLICY_CREATED',
+      on_finish_event: NodeCreationFinishEvent.S3_READ_POLICY_CREATED,
       validate_inside_code_editor: true,
       resource_affected: [],
+      validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
     },
   ],
   [
     {
-      entityId: PolicyNodeID.S3ReadWriteAcces,
+      entity_id: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadWritePolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
-      on_finish_event: 'S3_READ_WRITE_POLICY_CREATED',
+      on_finish_event: NodeCreationFinishEvent.S3_READ_WRITE_POLICY_CREATED,
       validate_inside_code_editor: false,
       resource_affected: [ResourceNodeID.S3Bucket],
+      validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
     },
     {
-      entityId: PolicyNodeID.CloudfrontReadAccess,
+      entity_id: PolicyNodeID.CloudfrontReadAccess,
       entity: IAMNodeEntity.Policy,
       json_schema: cloudfrontReadPolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
-      on_finish_event: 'DYNAMO_DB_READ_WRITE_POLICY_CREATED',
+      on_finish_event: NodeCreationFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CREATED,
       validate_inside_code_editor: false,
       resource_affected: [ResourceNodeID.DynamoDBTable],
+      validate_function: AJV_COMPILER.compile(iamPolicySchema),
     },
     {
-      entityId: PolicyNodeID.DynamoDBReadWriteAccess,
+      entity_id: PolicyNodeID.DynamoDBReadWriteAccess,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadWritePolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
-      on_finish_event: 'CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED',
+      on_finish_event: NodeCreationFinishEvent.CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED,
       validate_inside_code_editor: false,
       resource_affected: [ResourceNodeID.CloudFront],
+      validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
     },
   ],
 ];
@@ -222,6 +241,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective[][] = [
       ],
       locked_edges: [],
       on_finish_event: 'S3_READ_WRITE_POLICY_CONNECTED',
+      is_finished: false,
     },
     {
       required_edges: [
@@ -229,6 +249,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective[][] = [
       ],
       locked_edges: [],
       on_finish_event: 'CLOUDFRONT_READ_POLICY_CONNECTED',
+      is_finished: false,
     },
     {
       required_edges: [
@@ -238,20 +259,16 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective[][] = [
       ],
       locked_edges: [],
       on_finish_event: 'DYNAMO_DB_READ_WRITE_POLICY_CONNECTED',
+      is_finished: false,
     },
   ],
 ];
 
-export const INITIAL_POLICIES_INFO: Pick<
-  IAMPolicyNodeData & { position: { x: string; y: string } },
-  'id' | 'label' | 'code' | 'resources_affected' | 'position' | 'initial_position'
->[] = [
+export const INITIAL_POLICIES_INFO: Partial<IAMPolicyNodeData>[] = [
   {
     id: 'iam_policy_1',
     label: 's3-read-access',
     code: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
-    resources_affected: [],
     initial_position: 'center',
-    position: { x: '100', y: '100' },
   },
 ];

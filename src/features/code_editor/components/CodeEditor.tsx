@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useReducer } from 'react';
 import { useState } from 'react';
 
 import {
@@ -9,122 +9,135 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Text,
-  Flex,
-  TabList,
-  Tab,
-  Tabs,
   useTheme,
 } from '@chakra-ui/react';
+import { Diagnostic } from '@codemirror/lint';
 import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import { useSelector } from '@xstate/store/react';
+import { produce } from 'immer';
 import _ from 'lodash';
-import { Node } from 'reactflow';
-import { EventFromLogic } from 'xstate';
 
 import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
+import { CodeEditorHeader } from './CodeEditorHeader';
 import { CodeEditorWarningsBox } from './CodeEditorWarningsBox';
 import { CodeEditorWindow } from './CodeEditorWindow';
-import { useCodeEditor } from '../hooks/useCodeEditor';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { useMultipleSchemaValidators } from '@/hooks/useSchemaValidator';
 import { MANAGED_POLICIES } from '@/machines/config';
-import {
-  IAMScriptableEntity,
-  IAMNodeEntity,
-  CustomTheme,
-  IAMPolicyNodeData,
-  IAMPolicyRoleCreationObjective,
-} from '@/types';
-import { isJSONValid } from '@/utils/iam-code-linter';
+import CodeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
+import { IAMScriptableEntity, IAMNodeEntity, CustomTheme, IAMAnyNodeData } from '@/types';
+
+type Action =
+  | { type: 'SET_ERRORS'; entity: IAMScriptableEntity; payload: Diagnostic[] }
+  | { type: 'SET_WARNINGS'; entity: IAMScriptableEntity; payload: string[] }
+  | { type: 'SET_CONTENT'; entity: IAMScriptableEntity; payload: string }
+  | { type: 'SET_SELECTED_IAM_ENTITY'; payload: IAMScriptableEntity };
+
+interface CodeEditorState {
+  errors: Record<IAMScriptableEntity, Diagnostic[]>;
+  warnings: Record<IAMScriptableEntity, string[]>;
+  content: Record<IAMScriptableEntity, string>;
+  selectedIAMEntity: IAMScriptableEntity;
+}
 
 interface CodeEditorProps {}
 
 export const CodeEditor: React.FC<CodeEditorProps> = () => {
   const theme = useTheme<CustomTheme>();
 
-  const editorContentRef = React.useRef<HTMLDivElement>(null);
-  const [selectedIamEntity, setSelectedIamEntity] = useState<IAMScriptableEntity>(
-    IAMNodeEntity.Policy
-  );
   const [isLinting, setIsLinting] = useState<boolean>(false);
   const levelActor = LevelsProgressionContext.useActorRef();
-  const [policyNodeTemplate, policyRoleObjectives, stateMachine] =
-    LevelsProgressionContext.useSelector(state => [
-      state.context.iam_policy_template,
-      state.context.policy_role_objectives,
-      state.machine,
-    ]);
-
-  const {
-    isCodeEditorOpen,
-    content,
-    setContent,
-    errors,
-    setErrors,
-    closeCodeEditor,
-    setWarnings,
-    warnings,
-  } = useCodeEditor(
-    policyRoleObjectives?.[0]?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess,
-    policyRoleObjectives?.[0]?.initial_code || MANAGED_POLICIES.AWSS3ReadOnlyAccess
+  const policyRoleObjectives = LevelsProgressionContext.useSelector(
+    state => state.context.policy_role_objectives,
+    _.isEqual
   );
 
-  const renderedErrors = errors[selectedIamEntity];
-  const renderedWarnings = warnings[selectedIamEntity];
-  const renderedContent = content[selectedIamEntity];
-  const codeEditorRef = useRef<ReactCodeMirrorRef>(null);
-  const schemaValidators = useMultipleSchemaValidators(policyRoleObjectives);
+  const [isCodeEditorOpen, codeEditorMode, selectedNodeId] = useSelector(
+    CodeEditorPopupStore,
+    state => [state.context.isOpen, state.context.mode, state.context.selectedNodeId],
+    _.isEqual
+  );
 
-  const findTargetValidPolicy = (): IAMPolicyRoleCreationObjective | undefined => {
-    return policyRoleObjectives?.find((_objective, index) => {
-      return isJSONValid(codeEditorRef.current!.view!, schemaValidators[index]);
-    });
+  const codeEditorRef = useRef<ReactCodeMirrorRef>(null);
+
+  const codeEditorReducer = (state: CodeEditorState, action: Action): CodeEditorState => {
+    switch (action.type) {
+      case 'SET_ERRORS':
+        // We're not using immer here because the Diagnostic type has readonly properties
+        return {
+          ...state,
+          errors: {
+            ...state.errors,
+            [action.entity]: action.payload,
+          },
+        };
+      case 'SET_WARNINGS':
+        return produce(state, draftState => {
+          draftState.warnings[action.entity] = action.payload;
+        });
+      case 'SET_CONTENT':
+        return produce(state, draftState => {
+          draftState.content[action.entity] = action.payload;
+        });
+      case 'SET_SELECTED_IAM_ENTITY':
+        return produce(state, draftState => {
+          draftState.selectedIAMEntity = action.payload;
+        });
+      default:
+        return state;
+    }
+  };
+
+  const [codeEditorState, dispatch] = useReducer(codeEditorReducer, {
+    errors: {
+      [IAMNodeEntity.Policy]: [],
+      [IAMNodeEntity.Role]: [],
+    },
+    warnings: {
+      [IAMNodeEntity.Policy]: [],
+      [IAMNodeEntity.Role]: [],
+    },
+    content: {
+      [IAMNodeEntity.Policy]: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
+      [IAMNodeEntity.Role]: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
+    },
+    selectedIAMEntity: IAMNodeEntity.Policy,
+  });
+
+  const selectedIAMEntity = codeEditorState.selectedIAMEntity;
+
+  const setErrors = (entity: IAMScriptableEntity, newErrors: Diagnostic[]): void => {
+    dispatch({ type: 'SET_ERRORS', entity, payload: newErrors });
+  };
+
+  const setWarnings = (entity: IAMScriptableEntity, newWarnings: string[]): void => {
+    dispatch({ type: 'SET_WARNINGS', entity, payload: newWarnings });
+  };
+
+  const setContent = (entity: IAMScriptableEntity, newContent: string): void => {
+    dispatch({ type: 'SET_CONTENT', entity, payload: newContent });
+  };
+
+  const setSelectedIAMEntity = (entity: IAMScriptableEntity): void => {
+    dispatch({ type: 'SET_SELECTED_IAM_ENTITY', payload: entity });
+  };
+
+  const closeCodeEditor = (): void => {
+    CodeEditorPopupStore.send({ type: 'close' });
   };
 
   const submit = (): void => {
-    if (!codeEditorRef.current || !codeEditorRef.current.view) return;
-
-    // We need to find the first objective with no errors
-    const targetValidPolicy = findTargetValidPolicy();
-
-    let nodeId;
-    let label;
-
-    if (targetValidPolicy) {
-      nodeId = targetValidPolicy.entityId;
-      label = nodeId;
-    } else {
-      nodeId = new Date().getTime().toString();
-      label = 'IAM Policy';
+    if (!codeEditorRef.current || !codeEditorRef.current.view) {
+      return;
     }
 
-    const node: Node<IAMPolicyNodeData> = _.merge({}, policyNodeTemplate, {
-      id: nodeId,
-      data: {
-        id: nodeId,
-        label,
-        entity: selectedIamEntity,
-        code: renderedContent,
-        unnecessary_policy: !targetValidPolicy,
-        resources_affected: targetValidPolicy?.resource_affected || [],
-      } as IAMPolicyNodeData,
-    });
-
-    levelActor.send({ type: 'ADD_IAM_NODE', node });
-
-    if (targetValidPolicy?.on_finish_event) {
-      levelActor.send({
-        type: targetValidPolicy.on_finish_event,
-      } as EventFromLogic<typeof stateMachine>);
+    if (codeEditorMode === CodeEditorMode.Create) {
+      levelActor.send({ type: 'ADD_IAM_POLICY_NODE', editor_view: codeEditorRef.current.view });
+    } else {
+      const updatedProps = { code: codeEditorRef.current.view.state.doc.toString() };
+      levelActor.send({ type: 'UPDATE_IAM_NODE', props: updatedProps, node_id: selectedNodeId! });
     }
 
     closeCodeEditor();
-  };
-
-  const handleTabChange = (index: number): void => {
-    const newEntity = index === 0 ? IAMNodeEntity.Policy : IAMNodeEntity.Role;
-
-    setSelectedIamEntity(newEntity);
   };
 
   return (
@@ -132,36 +145,32 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
       <ModalOverlay />
       <ModalContent maxW={theme.sizes.modalsMaxWidthInPixels}>
         <ModalHeader>
-          <Flex justifyContent='space-between'>
-            <Text>New {_.upperFirst(selectedIamEntity)}</Text>
-            <Tabs onChange={handleTabChange} variant='soft-rounded' size='sm'>
-              <TabList>
-                <Tab>{IAMNodeEntity.Policy}</Tab>
-                <Tab>{IAMNodeEntity.Role}</Tab>
-              </TabList>
-            </Tabs>
-          </Flex>
-        </ModalHeader>
-        <ModalBody ref={editorContentRef}>
-          <CodeEditorWindow
-            setErrors={_.partial(setErrors, selectedIamEntity)}
-            setWarnings={_.partial(setWarnings, selectedIamEntity)}
-            setContent={_.partial(setContent, selectedIamEntity)}
-            content={renderedContent}
-            setIsLinting={setIsLinting}
-            targetObjective={policyRoleObjectives.length == 1 ? policyRoleObjectives[0] : undefined}
-            findTargetValidPolicy={findTargetValidPolicy}
-            ref={codeEditorRef}
+          <CodeEditorHeader
+            selectedIAMEntity={selectedIAMEntity}
+            setSelectedIAMEntity={setSelectedIAMEntity}
+            codeEditorMode={codeEditorMode}
           />
-          <CodeEditorErrorsBox errors={renderedErrors} />
-          <CodeEditorWarningsBox warnings={renderedWarnings} />
+        </ModalHeader>
+        <ModalBody>
+          <CodeEditorWindow
+            setErrors={_.partial(setErrors, selectedIAMEntity)}
+            setWarnings={_.partial(setWarnings, selectedIAMEntity)}
+            setContent={_.partial(setContent, selectedIAMEntity)}
+            content={codeEditorState.content[selectedIAMEntity]}
+            setIsLinting={setIsLinting}
+            ref={codeEditorRef}
+            policyRoleObjectives={policyRoleObjectives}
+            selectedIAMEntity={selectedIAMEntity}
+          />
+          <CodeEditorErrorsBox errors={codeEditorState.errors[selectedIAMEntity]} />
+          <CodeEditorWarningsBox warnings={codeEditorState.warnings[selectedIAMEntity]} />
         </ModalBody>
         <ModalFooter>
           <Button
             colorScheme='blue'
             mr={3}
             onClick={submit}
-            isDisabled={!_.isEmpty(renderedErrors)}
+            isDisabled={!_.isEmpty(codeEditorState.errors[selectedIAMEntity])}
             isLoading={isLinting}
             loadingText='Checking...'
           >

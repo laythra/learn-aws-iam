@@ -1,11 +1,16 @@
 {
   "type": "object",
-  "required": ["Statement"],
+  "required": [
+    "Statement"
+  ],
   "additionalProperties": false,
   "properties": {
     "Version": {
       "type": "string",
-      "enum": ["2008-10-17", "2012-10-17"]
+      "enum": [
+        "2008-10-17",
+        "2012-10-17"
+      ]
     },
     "Id": {
       "type": "string"
@@ -62,26 +67,55 @@
       "type": "object",
       "additionalProperties": {
         "anyOf": [
-          { "$ref": "#/definitions/string-or-string-array" },
-          { "type": "boolean" },
-          { "type": "number" }
+          {
+            "$ref": "#/definitions/string-or-string-array"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "number"
+          }
         ]
       }
     },
     "Statement": {
+      "type": "object",
       "allOf": [
         {
-          "oneOf": [{ "required": ["Action"] }, { "required": ["NotAction"] }]
-        },
-        {
           "oneOf": [
-            { "required": ["Resource"] },
-            { "required": ["NotResource"] }
+            {
+              "required": [
+                "Action"
+              ]
+            },
+            {
+              "required": [
+                "NotAction"
+              ]
+            }
           ]
         },
         {
           "type": "object",
-          "required": ["Effect"],
+          "oneOf": [
+            {
+              "required": [
+                "Resource"
+              ]
+            },
+            {
+              "required": [
+                "NotResource"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "required": [
+            "Effect"
+          ],
           "additionalProperties": false,
           "properties": {
             "Sid": {
@@ -89,7 +123,10 @@
             },
             "Effect": {
               "type": "string",
-              "enum": ["Allow", "Deny"]
+              "enum": [
+                "Allow",
+                "Deny"
+              ]
             },
             "Action": {
               "$ref": "#/definitions/Action"
@@ -182,7 +219,12 @@
         "Null": {
           "type": "object",
           "additionalProperties": {
-            "enum": ["true", "false", true, false]
+            "enum": [
+              "true",
+              "false",
+              true,
+              false
+            ]
           }
         },
         "StringEquals": {

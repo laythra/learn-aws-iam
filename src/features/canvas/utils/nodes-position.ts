@@ -11,15 +11,17 @@ const VALID_INITIAL_POSITIONS = [
   'right-center',
 ];
 
-// TODO: Take into account the navbar height
+const BETWEEN_NODES_SPACING = 20;
+
 function getCenterCoordinates(viewport: Viewport, sidePanelWidth: number): XYPosition {
   const { x, y, zoom } = viewport;
 
+  const navbarHeight = theme.sizes.navbarHeightInPixels;
   const windowHeight = window.innerHeight;
   const windowWidth = window.innerWidth - sidePanelWidth;
 
   const centerX = (windowWidth / 2 - x) / zoom;
-  const centerY = (windowHeight / 2 - y) / zoom;
+  const centerY = (windowHeight / 2 - y) / zoom + navbarHeight / 2;
 
   return {
     x: centerX,
@@ -51,45 +53,51 @@ export function getNodeWithInitialPosition(
 
   // Stack nodes horizontally
   if (['center', 'top-center', 'bottom-center'].includes(initialPostion)) {
-    x -= (numNodes * nodeWidth) / 2; // Move nodes to the left by half of the total width
-    x += nodeIndex * nodeWidth; // Move node to the right by the width of the node
-    x += nodeIndex * nodeSpacing; // Add spacing between nodes
-    y -= nodeHeight / 2; // Move node up by half of the height, to get its center at the center of the screen
+    // Move nodes to the left by half of the total width
+    x -= (numNodes * nodeWidth + (numNodes - 1) * BETWEEN_NODES_SPACING) / 2;
+    // Move node to the right by the width of the node
+    x += nodeIndex * nodeWidth;
+    // Add spacing between nodes
+    x += nodeIndex * BETWEEN_NODES_SPACING;
   } else {
     // Stack nodes vertically
-    y -= (numNodes * nodeHeight) / 2; // Move nodes to the top by half of the total height
-    y += nodeIndex * nodeHeight; // Move node to the bottom by the height of the node
-    y += nodeIndex * nodeSpacing; // Add spacing between nodes
-    x -= nodeWidth / 2; // Move node to the left by half of the width, to get its center at the center of the screen
+
+    // Move nodes to the top by half of the total height
+    y -= (numNodes * nodeHeight + (numNodes - 1) * BETWEEN_NODES_SPACING) / 2;
+    // Move node to the bottom by the height of the node
+    y += nodeIndex * nodeHeight;
+    // Add spacing between nodes
+    y += nodeIndex * nodeSpacing;
   }
 
   switch (initialPostion) {
     case 'center':
+      y -= nodeHeight / 2; // Move node up by half of the height, to get its center at the center of the screen
       return {
         ...node,
         position: { x, y },
       };
     case 'top-center':
-      y /= 2; // Move node to the top by half of the top half of the screen height
+      y = theme.sizes.navbarHeightInPixels + nodeSpacing;
       return {
         ...node,
         position: { x, y },
       };
     case 'bottom-center':
-      y += y / 2; // Move node to the bottom by half of the top half of the screen height
+      y = window.innerHeight - theme.sizes.iamNodeHeightInPixels - nodeSpacing;
       return {
         ...node,
         position: { x, y },
       };
     case 'left-center':
-      x = x / 6;
+      x = nodeSpacing;
 
       return {
         ...node,
         position: { x, y },
       };
     case 'right-center':
-      x = window.innerWidth - sidePanelWidth - nodeWidth - x / 6;
+      x = window.innerWidth - sidePanelWidth - nodeWidth - nodeSpacing;
 
       return {
         ...node,
