@@ -96,7 +96,7 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
       </Flex>
       {code && (
         <Box>
-          <IAMNodeInfoButton label={label} codeDescription={code} placement='top-end' />
+          <IAMNodeInfoButton nodeId={id} label={label} codeDescription={code} placement='top-end' />
         </Box>
       )}
     </>

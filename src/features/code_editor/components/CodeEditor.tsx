@@ -23,18 +23,20 @@ import { CodeEditorWarningsBox } from './CodeEditorWarningsBox';
 import { CodeEditorWindow } from './CodeEditorWindow';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
-import CodeEditorPopupStore from '@/stores/code-editor-popup-store';
-import { IAMScriptableEntity, IAMNodeEntity, CustomTheme } from '@/types';
+import CodeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
+import { IAMScriptableEntity, IAMNodeEntity, CustomTheme, IAMAnyNodeData } from '@/types';
 
 type Action =
   | { type: 'SET_ERRORS'; entity: IAMScriptableEntity; payload: Diagnostic[] }
   | { type: 'SET_WARNINGS'; entity: IAMScriptableEntity; payload: string[] }
-  | { type: 'SET_CONTENT'; entity: IAMScriptableEntity; payload: string };
+  | { type: 'SET_CONTENT'; entity: IAMScriptableEntity; payload: string }
+  | { type: 'SET_SELECTED_IAM_ENTITY'; payload: IAMScriptableEntity };
 
 interface CodeEditorState {
   errors: Record<IAMScriptableEntity, Diagnostic[]>;
   warnings: Record<IAMScriptableEntity, string[]>;
   content: Record<IAMScriptableEntity, string>;
+  selectedIAMEntity: IAMScriptableEntity;
 }
 
 interface CodeEditorProps {}
@@ -42,21 +44,19 @@ interface CodeEditorProps {}
 export const CodeEditor: React.FC<CodeEditorProps> = () => {
   const theme = useTheme<CustomTheme>();
 
-  const editorContentRef = React.useRef<HTMLDivElement>(null);
-  const [selectedIAMEntity, setSelectedIAMEntity] = useState<IAMScriptableEntity>(
-    IAMNodeEntity.Policy
-  );
   const [isLinting, setIsLinting] = useState<boolean>(false);
+  const levelActor = LevelsProgressionContext.useActorRef();
   const policyRoleObjectives = LevelsProgressionContext.useSelector(
     state => state.context.policy_role_objectives,
     _.isEqual
   );
 
-  const [isCodeEditorOpen, codeEditorMode] = useSelector(
+  const [isCodeEditorOpen, codeEditorMode, selectedNodeId] = useSelector(
     CodeEditorPopupStore,
-    state => [state.context.isOpen, state.context.mode],
+    state => [state.context.isOpen, state.context.mode, state.context.selectedNodeId],
     _.isEqual
   );
+
   const codeEditorRef = useRef<ReactCodeMirrorRef>(null);
 
   const codeEditorReducer = (state: CodeEditorState, action: Action): CodeEditorState => {
@@ -78,6 +78,10 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
         return produce(state, draftState => {
           draftState.content[action.entity] = action.payload;
         });
+      case 'SET_SELECTED_IAM_ENTITY':
+        return produce(state, draftState => {
+          draftState.selectedIAMEntity = action.payload;
+        });
       default:
         return state;
     }
@@ -96,7 +100,10 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
       [IAMNodeEntity.Policy]: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
       [IAMNodeEntity.Role]: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
     },
+    selectedIAMEntity: IAMNodeEntity.Policy,
   });
+
+  const selectedIAMEntity = codeEditorState.selectedIAMEntity;
 
   const setErrors = (entity: IAMScriptableEntity, newErrors: Diagnostic[]): void => {
     dispatch({ type: 'SET_ERRORS', entity, payload: newErrors });
@@ -110,12 +117,26 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     dispatch({ type: 'SET_CONTENT', entity, payload: newContent });
   };
 
+  const setSelectedIAMEntity = (entity: IAMScriptableEntity): void => {
+    dispatch({ type: 'SET_SELECTED_IAM_ENTITY', payload: entity });
+  };
+
   const closeCodeEditor = (): void => {
     CodeEditorPopupStore.send({ type: 'close' });
   };
 
   const submit = (): void => {
-    // TODO: Submit created policy/role to the state machine
+    if (!codeEditorRef.current || !codeEditorRef.current.view) {
+      return;
+    }
+
+    if (codeEditorMode === CodeEditorMode.Create) {
+      levelActor.send({ type: 'ADD_IAM_POLICY_NODE', editor_view: codeEditorRef.current.view });
+    } else {
+      const updatedProps = { code: codeEditorRef.current.view.state.doc.toString() };
+      levelActor.send({ type: 'UPDATE_IAM_NODE', props: updatedProps, node_id: selectedNodeId! });
+    }
+
     closeCodeEditor();
   };
 
@@ -130,7 +151,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
             codeEditorMode={codeEditorMode}
           />
         </ModalHeader>
-        <ModalBody ref={editorContentRef}>
+        <ModalBody>
           <CodeEditorWindow
             setErrors={_.partial(setErrors, selectedIAMEntity)}
             setWarnings={_.partial(setWarnings, selectedIAMEntity)}

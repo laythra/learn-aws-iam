@@ -1,11 +1,20 @@
+import type { EditorView } from '@uiw/react-codemirror';
+import type { ValidateFunction } from 'ajv';
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 import { Node, Edge } from 'reactflow';
 
 import { EdgeConnectionFinishEvent } from '../level4/objectives/edge-connection-objectives';
-import { GenericContext, LevelObjective } from '../types';
+import { GenericContext, LevelObjective, NodeCreationFinishEvent } from '../types';
 import { createEdge } from '@/factories/edge-factory';
-import type { IAMPolicyNodeData, IAMUserNodeData } from '@/types';
+import { createPolicyNode } from '@/factories/policy-node-factory';
+import {
+  IAMAnyNodeData,
+  IAMNodeEntity,
+  type IAMPolicyNodeData,
+  type IAMUserNodeData,
+} from '@/types';
+import { findAnyValidPolicy } from '@/utils/iam-code-linter';
 
 export function attachPolicyToUser(
   context: GenericContext,
@@ -65,5 +74,45 @@ export function changeLevelObjectiveProgress(
     if (!targetObjective) return;
 
     targetObjective.finished = finished;
+  });
+}
+
+export function createIAMPolicyNode(
+  context: GenericContext,
+  editorView: EditorView
+): [Node[], NodeCreationFinishEvent[]] {
+  const targetValidPolicy = findAnyValidPolicy(context.policy_role_objectives, editorView);
+  const sideEffectsEvents: NodeCreationFinishEvent[] = [];
+
+  const newNodes = produce(context.nodes, draftNodes => {
+    const newPolicyNode = createPolicyNode({
+      id: targetValidPolicy?.entity_id ?? new Date().getTime().toString(),
+      content: editorView.state.doc.toString(),
+      label: targetValidPolicy?.entity ?? IAMNodeEntity.Policy,
+      unnecessary_policy: targetValidPolicy === undefined,
+      code: editorView.state.doc.toString(),
+    });
+
+    draftNodes.push(newPolicyNode);
+    if (targetValidPolicy) {
+      sideEffectsEvents.push(targetValidPolicy.on_finish_event);
+    }
+  });
+
+  return [newNodes, sideEffectsEvents];
+}
+
+export function updateIAMNode(
+  context: GenericContext,
+  nodeId: string,
+  props: Partial<Omit<IAMAnyNodeData, 'entity'>>
+): Node[] {
+  return produce(context.nodes, draftNodes => {
+    const targetNode = draftNodes.find(node => node.id === nodeId);
+    if (!targetNode) return;
+
+    targetNode.data = { ...targetNode.data, ...props };
+
+    return draftNodes;
   });
 }

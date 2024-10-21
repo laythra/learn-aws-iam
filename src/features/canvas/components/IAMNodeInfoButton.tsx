@@ -18,8 +18,10 @@ import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { WithStateMachineEventIconButton } from '@/components/Decorated';
 import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
+import { IAMAnyNodeData } from '@/types';
 
 interface IAMNodeInfoButtonProps {
+  nodeId: string;
   label: string;
   verboseDescription?: string;
   codeDescription?: string;
@@ -27,6 +29,7 @@ interface IAMNodeInfoButtonProps {
 }
 
 const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
+  nodeId,
   label,
   verboseDescription,
   codeDescription,
@@ -67,6 +70,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
                     codeEditorPopupStore.send({
                       type: 'open',
                       mode: CodeEditorMode.Edit,
+                      selectedNodeId: nodeId,
                     })
                   }
                   ml={1}

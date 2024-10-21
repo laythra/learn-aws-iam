@@ -9,7 +9,7 @@ import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 interface CodeEditorHeaderProps {
   codeEditorMode: CodeEditorMode;
   selectedIAMEntity: string;
-  setSelectedIAMEntity: Dispatch<SetStateAction<IAMScriptableEntity>>;
+  setSelectedIAMEntity: (entity: IAMScriptableEntity) => void;
 }
 
 export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
