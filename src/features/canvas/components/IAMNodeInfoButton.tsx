@@ -18,7 +18,6 @@ import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { WithStateMachineEventIconButton } from '@/components/Decorated';
 import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
-import { IAMAnyNodeData } from '@/types';
 
 interface IAMNodeInfoButtonProps {
   nodeId: string;

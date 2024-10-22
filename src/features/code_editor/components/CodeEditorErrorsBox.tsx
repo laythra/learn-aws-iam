@@ -1,12 +1,16 @@
 import { Box, Divider } from '@chakra-ui/react';
-import { Diagnostic } from '@codemirror/lint';
+import { useSelector } from '@xstate/store/react';
+
+import codeEditorStateStore from '../stores/code-editor-state-store';
 
 interface CodeEditorErrorsBoxProps {
-  errors: Diagnostic[];
+  nodeId: string;
 }
 
-export const CodeEditorErrorsBox: React.FC<CodeEditorErrorsBoxProps> = ({ errors }) => {
-  if (errors.length === 0) {
+export const CodeEditorErrorsBox: React.FC<CodeEditorErrorsBoxProps> = ({ nodeId }) => {
+  const errors = useSelector(codeEditorStateStore, state => state.context.errors[nodeId]);
+
+  if (!errors || errors.length === 0) {
     return null;
   } else {
     return (
