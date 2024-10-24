@@ -1,0 +1,382 @@
+import type { Node } from 'reactflow';
+import { setup, assign, enqueueActions } from 'xstate';
+
+import { INITIAL_IN_LEVEL_NODES } from './nodes';
+import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
+import { LEVEL_OBJECTIVES, LevelObjectiveID } from './objectives/level-objectives';
+import { POLICY_ROLE_CREATION_OBJECTIVES } from './objectives/policy-role-creation-objectives';
+import { POLICY_ROLE_EDIT_OBJECTIVES } from './objectives/policy-role-edit-objectives';
+import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
+import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
+import type { Context, EventData, LevelObjective } from './types/state-machine-types';
+import { NodeEditFinishEvent, PopoverTutorialMessage } from '../types';
+import { resolveInitialEdges } from '../utils/initial-edges-resolver';
+import { TEMPLATE_GROUP_NODE } from '@/factories/group-node-factory';
+import { TEMPLATE_POLICY_NODE } from '@/factories/policy-node-factory';
+import { TEMPLATE_USER_NODE } from '@/factories/user-node-factory';
+import {
+  attachPolicyToUser,
+  updatePolicyToUserConnectionEdges,
+  changeLevelObjectiveProgress,
+  createIAMPolicyNode,
+  editObjectiveState,
+  editIAMPolicyNode,
+} from '@/machines/utils/common-state-machine-actions';
+import { theme } from '@/theme';
+import { IAMAnyNodeData, IAMNodeEntity, IAMPolicyNodeData, IAMUserNodeData } from '@/types';
+
+export const stateMachine = setup({
+  types: {} as {
+    context: Context;
+    events: EventData;
+  },
+  actions: {
+    attach_policy_to_user: enqueueActions(
+      (
+        { context, enqueue },
+        {
+          userNode,
+          policyNode,
+        }: { userNode: Node<IAMUserNodeData>; policyNode: Node<IAMPolicyNodeData> }
+      ) => {
+        const updatedNodes = attachPolicyToUser(context, policyNode, userNode);
+        const [updatedEdges, sideEffectsEvents] = updatePolicyToUserConnectionEdges(
+          context,
+          policyNode,
+          userNode
+        );
+
+        enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+        sideEffectsEvents.forEach(event => {
+          enqueue.raise({ type: event });
+        });
+      }
+    ),
+    add_policy_node: enqueueActions(
+      ({ context, enqueue }, { docString }: { docString: string }) => {
+        const [updatedNodes, sideEffectsEvents] = createIAMPolicyNode(context, docString);
+
+        enqueue.assign({ nodes: updatedNodes });
+        sideEffectsEvents.forEach(event => {
+          enqueue.raise({ type: event });
+        });
+      }
+    ),
+    update_iam_policy_node: enqueueActions(
+      ({ context, enqueue }, { docString, nodeId }: { docString: string; nodeId: string }) => {
+        const [updatedNodes, updatedEdges, sideEffectsEvents] =
+          editIAMPolicyNode<NodeEditFinishEvent>(context, nodeId, docString);
+
+        enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+        sideEffectsEvents.forEach(event => {
+          enqueue.raise({ type: event });
+        });
+      }
+    ),
+    next_popover: assign({
+      popover_content: ({ context }) => POPOVER_TUTORIAL_MESSAGES[context.next_popover_index ?? 0],
+      show_popovers: ({ context }) => context.next_popover_index < POPOVER_TUTORIAL_MESSAGES.length,
+      next_popover_index: ({ context }) => context.next_popover_index + 1,
+      show_popups: false,
+    }),
+    next_popup: assign({
+      popup_content: ({ context }) => POPUP_TUTORIAL_MESSAGES[context.next_popup_index],
+      show_popups: ({ context }) => context.next_popup_index < POPUP_TUTORIAL_MESSAGES.length,
+      next_popup_index: ({ context }) => context.next_popup_index + 1,
+      show_popovers: false,
+    }),
+    // update_iam_node: assign({
+    //   nodes: ({ context }, params: { node_id: string; props: Partial<IAMAnyNodeData> }) =>
+    //     updateIAMNode(context, params.node_id, params.props),
+    // }),
+    next_policy_role_objectives: assign({
+      policy_role_objectives: ({ context }) =>
+        POLICY_ROLE_CREATION_OBJECTIVES[context.next_policy_role_objectives_index ?? 0],
+      next_policy_role_objectives_index: ({ context }) =>
+        (context.next_policy_role_objectives_index ?? 0) + 1,
+    }),
+    next_edge_connection_objectives: assign({
+      edges_connection_objectives: ({ context }) =>
+        EDGE_CONNECTION_OBJECTIVES[context.next_edges_connection_objectives_index ?? 0],
+      next_policy_role_objectives_index: ({ context }) =>
+        (context.next_edges_connection_objectives_index ?? 0) + 1,
+    }),
+    hide_popups: assign({ show_popups: false }),
+    hide_popovers: assign({ show_popovers: false }),
+    change_objective_progress: assign({
+      level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) =>
+        changeLevelObjectiveProgress(context, id, finished),
+    }),
+    add_new_level_objective: assign({
+      level_objectives: (
+        { context },
+        { id, objective }: { id: string; objective: LevelObjective }
+      ) => ({
+        ...context.level_objectives,
+        [id]: objective,
+      }),
+    }),
+    finish_level_objective: assign({
+      level_objectives: ({ context }, { id }: { id: string }) =>
+        editObjectiveState(context, id, true),
+    }),
+    add_iam_node: assign({
+      nodes: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => [...context.nodes, node],
+    }),
+    show_popover: assign({
+      popover_content: (
+        _context_obj,
+        { popover_content }: { popover_content: PopoverTutorialMessage }
+      ) => popover_content,
+      show_popovers: true,
+    }),
+    toggle_side_panel: assign({ side_panel_open: ({ context }) => !context.side_panel_open }),
+  },
+}).createMachine({
+  id: 'level4_state_machine',
+  initial: 'inside_level',
+  context: {
+    iam_user_template: TEMPLATE_USER_NODE,
+    iam_policy_template: TEMPLATE_POLICY_NODE,
+    iam_group_template: TEMPLATE_GROUP_NODE,
+    level_title: 'IAM Groups',
+    level_description: 'Scaling your IAM setup with groups',
+    level_number: 1,
+    next_popover_index: 0,
+    next_popup_index: 0,
+    state_name: 'inside_tutorial',
+    show_popovers: false,
+    show_popups: false,
+    nodes: [],
+    metadata_keys: {},
+    edges: [],
+    final_edges: [],
+    level_objectives: LEVEL_OBJECTIVES,
+    side_panel_open: false,
+    next_iam_node_id: {
+      [IAMNodeEntity.Group]: 1,
+      [IAMNodeEntity.User]: 1,
+      [IAMNodeEntity.Policy]: 1,
+      [IAMNodeEntity.Role]: 1,
+    },
+    next_iam_node_default_position: {
+      x: theme.sizes.iamNodeWidthInPixels / 2,
+      y: theme.sizes.iamNodeWidthInPixels / 2,
+    },
+    policy_role_objectives: [],
+    policy_role_edit_objectives: [],
+    edges_connection_objectives: [],
+  },
+  on: {
+    ATTACH_POLICY_TO_USER: {
+      actions: [
+        {
+          type: 'attach_policy_to_user',
+          params: ({ event }) => ({ policyNode: event.sourceNode, userNode: event.targetNode }),
+        },
+      ],
+    },
+    ADD_IAM_NODE: {
+      actions: [
+        {
+          type: 'add_iam_node',
+          params: ({ event }) => ({ node: event.node }),
+        },
+      ],
+    },
+    ADD_IAM_POLICY_NODE: {
+      actions: [
+        {
+          type: 'add_policy_node',
+          params: ({ event }) => ({ docString: event.doc_string }),
+        },
+      ],
+    },
+    UPDATE_IAM_POLICY_NODE: {
+      actions: [
+        {
+          type: 'update_iam_policy_node',
+          params: ({ event }) => ({ nodeId: event.node_id, docString: event.doc_string }),
+        },
+      ],
+    },
+    ADD_IAM_USER_NODE: {
+      actions: [
+        {
+          type: 'add_iam_node',
+          params: ({ event }) => ({ node: event.node }),
+        },
+      ],
+    },
+    ADD_IAM_GROUP_NODE: {
+      actions: [
+        assign({
+          nodes: ({ context, event }) => [...context.nodes, event.node],
+        }),
+      ],
+    },
+    ADD_EDGE: {
+      actions: [
+        assign({
+          edges: ({ context, event }) => [...context.edges, event.edge],
+        }),
+      ],
+    },
+    DELETE_EDGE: {
+      actions: [
+        assign({
+          edges: ({ context, event }) => context.edges.filter(edge => edge.id !== event.edge.id),
+        }),
+      ],
+    },
+    SET_NODES: {
+      actions: assign({
+        nodes: ({ event }) => event.nodes,
+      }),
+    },
+    SET_EDGES: {
+      actions: assign({
+        edges: ({ event }) => event.edges,
+      }),
+    },
+    SHOW_POPOVER: {
+      actions: assign({
+        popover_content: ({ event }) => event.popover_content,
+        show_popovers: true,
+      }),
+    },
+    HIDE_POPOVERS: {
+      actions: assign({
+        show_popovers: false,
+      }),
+    },
+    TOGGLE_SIDE_PANEL: {
+      actions: assign({
+        side_panel_open: ({ context }) => !context.side_panel_open,
+      }),
+    },
+  },
+  states: {
+    inside_tutorial: {
+      initial: 'popup1',
+      onDone: 'inside_level',
+      entry: assign({
+        nodes: INITIAL_IN_LEVEL_NODES,
+        edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
+        edges_connection_objectives: EDGE_CONNECTION_OBJECTIVES[0],
+      }),
+      states: {
+        popup1: {
+          entry: 'next_popup',
+          on: {
+            NEXT_POPUP: 'popup2',
+          },
+        },
+        popup2: {
+          entry: 'next_popup',
+          on: {
+            NEXT_POPUP: 'popup3',
+          },
+        },
+        popup3: {
+          entry: 'next_popup',
+          on: {
+            NEXT_POPUP: 'popup4',
+          },
+          exit: 'hide_popups',
+        },
+        popup4: {
+          entry: 'next_popup',
+          on: {
+            NEXT_POPUP: 'popup5',
+          },
+          exit: 'hide_popups',
+        },
+        popup5: {
+          entry: ['next_popup', 'toggle_side_panel'],
+          on: {
+            NEXT_POPUP: 'tutorial_finished',
+          },
+          exit: 'hide_popups',
+        },
+        tutorial_finished: {
+          type: 'final',
+        },
+      },
+    },
+    inside_level: {
+      type: 'parallel',
+      entry: assign({
+        nodes: INITIAL_IN_LEVEL_NODES,
+        edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
+        edges_connection_objectives: EDGE_CONNECTION_OBJECTIVES[0],
+        policy_role_edit_objectives: POLICY_ROLE_EDIT_OBJECTIVES[0],
+      }),
+      states: {
+        fix_developer_policy: {
+          initial: 'editing_in_progress',
+          states: {
+            editing_in_progress: {
+              on: {
+                [NodeEditFinishEvent.DEVELOPER_POLICY_EDITED]: {
+                  target: 'completed',
+                  actions: [
+                    {
+                      type: 'finish_level_objective',
+                      params: { id: LevelObjectiveID.DeveloperAnalyticsDataReadAccess },
+                    },
+                  ],
+                },
+              },
+            },
+            completed: {
+              type: 'final',
+            },
+          },
+        },
+        fix_data_scientist_policy: {
+          initial: 'editing_in_progress',
+          states: {
+            editing_in_progress: {
+              on: {
+                [NodeEditFinishEvent.DATA_SCIENTIST_POLICY_EDITED]: {
+                  target: 'completed',
+                  actions: [
+                    {
+                      type: 'finish_level_objective',
+                      params: { id: LevelObjectiveID.DataScientistS3ReadWriteAccess },
+                    },
+                  ],
+                },
+              },
+            },
+            completed: {
+              type: 'final',
+            },
+          },
+        },
+        fix_interns_policy: {
+          initial: 'editing_in_progress',
+          states: {
+            editing_in_progress: {
+              on: {
+                [NodeEditFinishEvent.INTERN_POLICY_EDITED]: {
+                  target: 'completed',
+                  actions: [
+                    {
+                      type: 'finish_level_objective',
+                      params: { id: LevelObjectiveID.InternS3ReadAccess },
+                    },
+                  ],
+                },
+              },
+            },
+            completed: {
+              type: 'final',
+            },
+          },
+        },
+      },
+    },
+  },
+});

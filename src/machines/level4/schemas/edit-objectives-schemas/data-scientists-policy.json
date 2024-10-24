@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "Version": {
+      "type": "string",
+      "const": "2012-10-17"
+    },
+    "Statement": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "Effect": {
+              "type": "string",
+              "const": "Allow"
+            },
+            "Action": {
+              "type": "string",
+              "const": "dynamodb:GetItem"
+            },
+            "Resource": {
+              "type": "string",
+              "const": "*"
+            }
+          },
+          "required": [
+            "Effect",
+            "Action",
+            "Resource"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Effect": {
+              "type": "string",
+              "const": "Allow"
+            },
+            "Action": {
+              "type": "string",
+              "const": "s3:Get*"
+            },
+            "Resource": {
+              "type": "string",
+              "const": "arn:aws:s3:::securecorp-data/*"
+            }
+          },
+          "required": [
+            "Effect",
+            "Action",
+            "Resource"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "additionalProperties": false
+}
