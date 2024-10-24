@@ -1,4 +1,3 @@
-import { click } from '@testing-library/user-event/dist/click';
 import { createStoreWithProducer } from '@xstate/store';
 import { produce } from 'immer';
 import {
@@ -13,15 +12,16 @@ import {
 type CanvasStoreState = {
   nodes: Node[];
   edges: Edge[];
-  clickedEdgeId?: string;
+  selectedEdgeId?: string;
+  selectedNodeId?: string;
+  hoveredOverEdgeId?: string;
 };
 
 type CanvasStoreEvents = {
   changeNodesState: { changes: NodeChange[] };
   changeEdgesState: { changes: EdgeChange[] };
-  hoverOverEdge: { edge: Edge; isHovering: boolean };
-  clickEdge: { edgeId: string };
-  deselectEdges: { type: string };
+  selectEdge: { edgeId?: string };
+  hoverOverEdge: { edgeId?: string };
   setNodes: { nodes: Node[] };
   setEdges: { edges: Edge[] };
 };
@@ -35,17 +35,11 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
     changeEdgesState: (context: CanvasStoreState, event: { changes: EdgeChange[] }) => {
       context.edges = applyEdgeChanges(event.changes, context.edges);
     },
-    hoverOverEdge: (context: CanvasStoreState, event: { edge: Edge; isHovering: boolean }) => {
-      const targetEdge = context.edges.find(e => e.id === event.edge.id);
-      if (!targetEdge) return;
-
-      targetEdge.data.is_hovering = event.isHovering;
+    hoverOverEdge: (context: CanvasStoreState, event: { edgeId?: string }) => {
+      context.hoveredOverEdgeId = event.edgeId;
     },
-    clickEdge: (context: CanvasStoreState, event: { edgeId: string }) => {
-      context.clickedEdgeId = event.edgeId;
-    },
-    deselectEdges: (context: CanvasStoreState) => {
-      context.clickedEdgeId = undefined;
+    selectEdge: (context: CanvasStoreState, event: { edgeId?: string }) => {
+      context.selectedEdgeId = event.edgeId;
     },
     setNodes: (context: CanvasStoreState, event: { nodes: Node[] }) => {
       context.nodes = event.nodes;

@@ -90,8 +90,7 @@ export type IAMAnyNodeData =
 export interface IAMEdgeData {
   source_node_data?: IAMAnyNodeData;
   target_node_data?: IAMAnyNodeData;
-  is_hovering: boolean;
-  hovering_label?: AccessLevel;
+  hovering_label?: AccessLevel | string;
 }
 
 export type IAMNodeDataMapping = {

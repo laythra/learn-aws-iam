@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Box } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
+import _ from 'lodash';
 import { getBezierPath, EdgeLabelRenderer, EdgeProps, BaseEdge } from 'reactflow';
 
 import { CanvasStore } from '../stores/canvas-store';
@@ -26,14 +27,19 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdgeData>> = ({
     targetPosition,
   });
 
-  const clickedEdgeId = useSelector(CanvasStore, state => state.context.clickedEdgeId);
-  const highlightEdge = data?.is_hovering || clickedEdgeId === id;
+  const [clickedEdgeId, hoveredOverEdgeId] = useSelector(
+    CanvasStore,
+    state => [state.context.selectedEdgeId, state.context.hoveredOverEdgeId],
+    _.isEqual
+  );
+
+  const highlightEdge = clickedEdgeId === id || hoveredOverEdgeId === id;
   const edgeStrokeColor = highlightEdge ? '#3b82f6' : '#000'; // Blue when hovered, black otherwise
   const edgeStrokeWidth = highlightEdge ? 3 : 1; // Thicker when hovered
 
   return (
     <>
-      <g onClick={() => CanvasStore.send({ type: 'clickEdge', edgeId: id })}>
+      <g onClick={() => CanvasStore.send({ type: 'selectEdge', edgeId: id })}>
         <BaseEdge
           path={edgePath}
           style={{

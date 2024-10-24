@@ -153,7 +153,6 @@ export function editIAMPolicyNode<TEditFinishEvent>(
           target: resourceId,
           data: {
             hovering_label: accessLevel,
-            is_hovering: false,
           },
         })
       );

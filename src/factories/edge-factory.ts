@@ -11,13 +11,11 @@ const EDGE_TEMPLATE: Edge<IAMEdgeData> = {
   sourceHandle: 'top',
   targetHandle: 'bottom',
   focusable: true,
+  deletable: false,
   markerEnd: 'arrow',
   animated: true,
   type: 'iam_default',
   style: { stroke: '#f6ab6c' },
-  data: {
-    is_hovering: false,
-  },
 };
 
 export const createEdge = (
@@ -26,8 +24,6 @@ export const createEdge = (
   return {
     ...EDGE_TEMPLATE,
     ...props,
-    ...{
-      id: getEdgeName(props.source, props.target),
-    },
+    id: getEdgeName(props.source, props.target),
   };
 };
