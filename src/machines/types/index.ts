@@ -69,7 +69,8 @@ export type GenericEventData =
         | 'TOGGLE_SIDE_PANEL';
     }
   | { type: 'ADD_IAM_NODE'; node: Node<IAMAnyNodeData> }
-  | { type: 'ADD_IAM_POLICY_NODE'; editor_view: EditorView }
+  | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string }
+  | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
   | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
   | { type: 'ADD_IAM_USER_NODE'; node: Node }
   | { type: 'ADD_IAM_GROUP_NODE'; node: Node }
