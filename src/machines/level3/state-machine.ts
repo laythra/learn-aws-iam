@@ -129,6 +129,7 @@ export const stateMachine = setup({
       y: theme.sizes.iamNodeWidthInPixels / 2,
     },
     policy_role_objectives: [],
+    policy_role_edit_objectives: [],
     edges_connection_objectives: [],
   },
   on: {

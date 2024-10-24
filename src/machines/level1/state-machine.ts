@@ -73,6 +73,7 @@ export const stateMachine = setup({
     fixed_iam_nodes_positions: {},
     policy_role_objectives: [],
     edges_connection_objectives: [],
+    policy_role_edit_objectives: [],
   },
   on: {
     ADD_IAM_USER_NODE: {
