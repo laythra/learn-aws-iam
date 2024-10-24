@@ -19,6 +19,7 @@ export const INITIAL_POLICY_NODES: Node<IAMPolicyNodeData>[] = INITIAL_POLICIES_
       image: IAMNodeImage.Policy,
       code,
       granted_accesses,
+      associated_users: [],
       description: '',
       handles: [
         { id: Position.Top, type: 'source', position: Position.Top },
