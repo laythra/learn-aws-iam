@@ -1,9 +1,13 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
-import { EditorView } from '@uiw/react-codemirror';
 import { Schema, ValidateFunction } from 'ajv';
 import type { Edge, Node, XYPosition } from 'reactflow';
 
-import type { CreatableIAMNodeEntity, IAMPolicyNodeData, IAMScriptableEntity } from '@/types';
+import type {
+  AccessLevel,
+  CreatableIAMNodeEntity,
+  IAMPolicyNodeData,
+  IAMScriptableEntity,
+} from '@/types';
 import {
   IAMAnyNodeData,
   IAMEdgeData,
@@ -39,6 +43,7 @@ export interface GenericContext {
   level_finished?: boolean;
   side_panel_open?: boolean;
   policy_role_objectives: IAMPolicyRoleCreationObjective[];
+  policy_role_edit_objectives: IAMPolicyRoleEditObjective[];
   edges_connection_objectives: EdgeConnectionObjective[];
 }
 
@@ -130,6 +135,31 @@ export interface IAMPolicyRoleCreationObjective {
   readonly validate_inside_code_editor: boolean;
   readonly resource_affected: string[];
   readonly validate_function?: ValidateFunction;
+}
+
+export interface IAMPolicyRoleEditObjective {
+  readonly entity_id: string;
+  readonly entity: IAMScriptableEntity;
+  readonly json_schema: Schema;
+
+  /**
+   * Optional description for the IAM Policy/Role Edit Objective.
+   * Used to help the user understand what they need to do when editing the IAM Policy/Role.
+   */
+  readonly description?: string;
+
+  readonly on_finish_event: NodeEditFinishEvent;
+  readonly validate_function: ValidateFunction;
+
+  /**
+   * Resources to grant to the users/groups associated with the IAM Policy/Role.
+   */
+  readonly resources_to_grant: Record<string, AccessLevel>;
+
+  /**
+   * Resources to revoke from the users/groups associated with the IAM Policy/Role.
+   */
+  readonly resources_to_revoke: string[];
 }
 
 export enum EdgeConnectionFinishEvent {}

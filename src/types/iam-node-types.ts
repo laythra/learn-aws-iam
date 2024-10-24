@@ -39,8 +39,10 @@ export type CreatableIAMNodeEntity =
   | IAMNodeEntity.Policy
   | IAMNodeEntity.Role;
 
-// Serves as a base interface for all node data types
-// Should not be used directly
+/**
+ * Serves as a base interface for all node data types
+ * Should not be used directly
+ */
 interface IAMNodeData {
   id: string;
   label: string;
