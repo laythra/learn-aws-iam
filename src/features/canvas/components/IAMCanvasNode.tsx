@@ -27,6 +27,7 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
   const { entity, label, handles, image, content } = data;
   const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_policy;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
+  const isEditable = data.entity === IAMNodeEntity.Policy && data.editable;
 
   const { setSelectedNodeId, selectedNodeId } = useContext(IAMNodeContext);
   const theme = useTheme<CustomTheme>();
@@ -94,7 +95,7 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
           </Box>
         </Flex>
       </Flex>
-      {content && (
+      {isEditable && (
         <Box>
           <IAMNodeInfoButton
             nodeId={id}

@@ -127,10 +127,13 @@ export function editIAMPolicyNode<TEditFinishEvent>(
   }
 
   const updatedNodes = produce(context.nodes, draftNodes => {
-    const targetNode = draftNodes.find(node => node.id === nodeId);
+    const targetNode = draftNodes.find(
+      node => node.id === nodeId && node.data.entity === IAMNodeEntity.Policy
+    ) as WritableDraft<Node<IAMPolicyNodeData>>;
     if (!targetNode) return;
 
     targetNode.data.content = docString;
+    targetNode.data.editable = false;
   });
 
   const affectedUsers = context.nodes.filter(
