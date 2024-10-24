@@ -70,6 +70,7 @@ export interface IAMGroupNodeData extends IAMNodeData {
 
 export interface IAMPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
+  editable: boolean;
   unnecessary_policy?: boolean;
   associated_users: string[];
   granted_accesses: Record<string, AccessLevel>;

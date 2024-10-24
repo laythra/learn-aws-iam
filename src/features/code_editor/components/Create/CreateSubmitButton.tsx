@@ -12,8 +12,10 @@ interface CreateSubmitButtonProps {
 
 export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({ nodeId }) => {
   const levelActor = LevelsProgressionContext.useActorRef();
-  const { errors, isValidating } = useSelector(codeEditorStateStore, state =>
-    _.pick(state.context, ['errors', 'isValidating'])
+  const { errors, isValidating } = useSelector(
+    codeEditorStateStore,
+    state => _.pick(state.context, ['errors', 'isValidating']),
+    _.isEqual
   );
 
   const isButtonDisabled = !_.isEmpty(errors[nodeId]);

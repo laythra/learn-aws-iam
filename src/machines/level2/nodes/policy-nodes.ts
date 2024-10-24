@@ -17,6 +17,7 @@ export const INITIAL_POLICY_NODES: Node<IAMPolicyNodeData>[] = INITIAL_POLICIES_
       label,
       entity: IAMNodeEntity.Policy,
       image: IAMNodeImage.Policy,
+      editable: false,
       content,
       granted_accesses,
       associated_users: [],
