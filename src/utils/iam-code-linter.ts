@@ -56,39 +56,35 @@ function lint(
   return diagnostics;
 }
 
-const isJSONValid = (view: EditorView, validateFunction: ValidateFunction): boolean => {
-  const errors = lint(view, { validateFunction });
-
-  return errors['syntax'].length === 0 && errors['logical'].length === 0;
-};
-
-export const isObjectiveValid = (
-  policyRoleObjective: IAMPolicyRoleCreationObjective,
-  editorView: EditorView
-): IAMPolicyRoleCreationObjective | undefined => {
-  const valdiateFn =
-    policyRoleObjective.validate_function ?? GENERIC_VALIDATION_FNS[policyRoleObjective.entity];
-
-  return isJSONValid(editorView, valdiateFn) ? policyRoleObjective : undefined;
+export const isJSONValid = (docString: string, validateFunction: ValidateFunction): boolean => {
+  try {
+    const parsedDoc = JSON.parse(docString);
+    return validateFunction(parsedDoc);
+  } catch {
+    return false;
+  }
 };
 
 export const findAnyValidPolicy = (
   policyRoleObjectives: IAMPolicyRoleCreationObjective[],
-  editorView: EditorView
+  docString: string
 ): IAMPolicyRoleCreationObjective | undefined => {
   policyRoleObjectives = _.orderBy(policyRoleObjectives, 'validate_inside_code_editor', 'desc');
 
   return policyRoleObjectives.find(policyRoleObjective =>
-    isObjectiveValid(policyRoleObjective, editorView)
+    isJSONValid(
+      docString,
+      policyRoleObjective.validate_function ?? GENERIC_VALIDATION_FNS[policyRoleObjective.entity]
+    )
   );
 };
 
 export const getLintingErrors = (
   view: EditorView,
-  policyValidator: ValidateFunction
+  validateFunction: ValidateFunction
 ): Diagnostic[] => {
   const lintingErrors = lint(view, {
-    validateFunction: policyValidator,
+    validateFunction: validateFunction,
   });
 
   return lintingErrors['syntax'] || lintingErrors['logical'];

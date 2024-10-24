@@ -39,17 +39,21 @@ export type CreatableIAMNodeEntity =
   | IAMNodeEntity.Policy
   | IAMNodeEntity.Role;
 
-// Serves as a base interface for all node data types
-// Should not be used directly
+/**
+ * Serves as a base interface for all node data types
+ * Should not be used directly
+ */
 interface IAMNodeData {
   id: string;
   label: string;
   entity: IAMNodeEntity;
   description?: string;
+  /**
+   * The content of the node, namely a JSON string representing the node's data
+   */
   content?: string;
   handles: HandleProps[];
   image: IAMNodeImage;
-  code?: string;
   initial_position?: string; // Defines the initial position of the node relative to the canvas viewport
 }
 
@@ -67,7 +71,9 @@ export interface IAMGroupNodeData extends IAMNodeData {
 export interface IAMPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
   unnecessary_policy?: boolean;
+  associated_users: string[];
   granted_accesses: Record<string, AccessLevel>;
+  content: string;
 }
 
 export interface IAMResourceNodeData extends IAMNodeData {

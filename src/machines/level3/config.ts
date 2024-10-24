@@ -268,7 +268,7 @@ export const INITIAL_POLICIES_INFO: Partial<IAMPolicyNodeData>[] = [
   {
     id: 'iam_policy_1',
     label: 's3-read-access',
-    code: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
+    content: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
     initial_position: 'center',
   },
 ];

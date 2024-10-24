@@ -20,11 +20,11 @@ export interface IAMCanvasNodeProps {
  * It uses Chakra UI for styling and Ant Design icons for the icon.
  *
  * Props:
- * @param `id`: The unique identifier of the node.
- * @param `data`: The node data passed from React Flow.
+ * @param `id` The unique identifier of the node.
+ * @param `data` The node data passed from React Flow.
  */
 const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
-  const { entity, label, handles, image, code } = data;
+  const { entity, label, handles, image, content } = data;
   const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_policy;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
 
@@ -94,9 +94,14 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
           </Box>
         </Flex>
       </Flex>
-      {code && (
+      {content && (
         <Box>
-          <IAMNodeInfoButton nodeId={id} label={label} codeDescription={code} placement='top-end' />
+          <IAMNodeInfoButton
+            nodeId={id}
+            label={label}
+            codeDescription={content}
+            placement='top-end'
+          />
         </Box>
       )}
     </>

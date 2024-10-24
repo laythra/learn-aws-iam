@@ -205,12 +205,12 @@ export const INITIAL_RESOURCES_INFO: PartialWithRequired<
 
 export const INITIAL_POLICIES_INFO: PartialWithRequired<
   IAMPolicyNodeData,
-  'id' | 'label' | 'granted_accesses'
+  'id' | 'label' | 'granted_accesses' | 'content'
 >[] = [
   {
     id: 'iam_policy_1',
     label: 's3-read-access',
-    code: S3_READ_POLICY_CONTENT,
+    content: S3_READ_POLICY_CONTENT,
     granted_accesses: {
       [INITIAL_RESOURCES_INFO[0].id]: AccessLevel.Read,
     },
@@ -218,7 +218,7 @@ export const INITIAL_POLICIES_INFO: PartialWithRequired<
   {
     id: 'iam_policy_2',
     label: 'dynamo-read-access',
-    code: DYNAMODB_READ_POLICY_CONTENT,
+    content: DYNAMODB_READ_POLICY_CONTENT,
     granted_accesses: {
       [INITIAL_RESOURCES_INFO[1].id]: AccessLevel.Read,
     },
@@ -226,7 +226,7 @@ export const INITIAL_POLICIES_INFO: PartialWithRequired<
   {
     id: 'iam_policy_3',
     label: 'ec2-read-access',
-    code: EC2_READ_POLICY_CONTENT,
+    content: EC2_READ_POLICY_CONTENT,
     granted_accesses: {
       [INITIAL_RESOURCES_INFO[2].id]: AccessLevel.Read,
     },
