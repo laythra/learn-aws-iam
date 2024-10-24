@@ -69,7 +69,8 @@ export type GenericEventData =
         | 'TOGGLE_SIDE_PANEL';
     }
   | { type: 'ADD_IAM_NODE'; node: Node<IAMAnyNodeData> }
-  | { type: 'ADD_IAM_POLICY_NODE'; editor_view: EditorView }
+  | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string }
+  | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
   | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
   | { type: 'ADD_IAM_USER_NODE'; node: Node }
   | { type: 'ADD_IAM_GROUP_NODE'; node: Node }
@@ -168,4 +169,10 @@ export enum NodeCreationFinishEvent {
   S3_READ_WRITE_POLICY_CREATED = 'S3_READ_WRITE_POLICY_CREATED',
   DYNAMO_DB_READ_WRITE_POLICY_CREATED = 'DYNAMO_DB_READ_WRITE_POLICY_CREATED',
   CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED = 'CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED',
+}
+
+export enum NodeEditFinishEvent {
+  DEVELOPER_POLICY_EDITED = 'DEVELOPER_POLICY_EDITED',
+  DATA_SCIENTIST_POLICY_EDITED = 'DATA_SCIENTIST_POLICY_EDITED',
+  INTERN_POLICY_EDITED = 'INTERN_POLICY_EDITED',
 }
