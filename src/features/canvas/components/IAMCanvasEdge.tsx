@@ -1,11 +1,14 @@
 import React from 'react';
 
 import { Box } from '@chakra-ui/react';
+import { useSelector } from '@xstate/store/react';
 import { getBezierPath, EdgeLabelRenderer, EdgeProps, BaseEdge } from 'reactflow';
 
+import { CanvasStore } from '../stores/canvas-store';
 import { IAMEdgeData } from '@/types';
 
 const IAMCanvasEdge: React.FC<EdgeProps<IAMEdgeData>> = ({
+  id,
   sourceX,
   sourceY,
   targetX,
@@ -23,20 +26,24 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdgeData>> = ({
     targetPosition,
   });
 
-  const edgeStrokeColor = data?.is_hovering ? '#3b82f6' : '#000'; // Blue when hovered, black otherwise
-  const edgeStrokeWidth = data?.is_hovering ? 3 : 1; // Thicker when hovered
+  const clickedEdgeId = useSelector(CanvasStore, state => state.context.clickedEdgeId);
+  const highlightEdge = data?.is_hovering || clickedEdgeId === id;
+  const edgeStrokeColor = highlightEdge ? '#3b82f6' : '#000'; // Blue when hovered, black otherwise
+  const edgeStrokeWidth = highlightEdge ? 3 : 1; // Thicker when hovered
 
   return (
     <>
-      <BaseEdge
-        path={edgePath}
-        style={{
-          stroke: edgeStrokeColor,
-          strokeWidth: edgeStrokeWidth,
-        }}
-      />
+      <g onClick={() => CanvasStore.send({ type: 'clickEdge', edgeId: id })}>
+        <BaseEdge
+          path={edgePath}
+          style={{
+            stroke: edgeStrokeColor,
+            strokeWidth: edgeStrokeWidth,
+          }}
+        />
+      </g>
       <EdgeLabelRenderer>
-        {data?.is_hovering && (
+        {highlightEdge && (
           <Box
             style={{
               position: 'absolute',
@@ -48,7 +55,7 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdgeData>> = ({
               fontWeight: 'bold',
             }}
           >
-            {data.hovering_label || 'Placeholder Tooltip'}
+            {data?.hovering_label || 'Placeholder Tooltip'}
           </Box>
         )}
       </EdgeLabelRenderer>
