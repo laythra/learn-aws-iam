@@ -21,8 +21,7 @@ export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({ nodeId }) =>
   const isButtonDisabled = !_.isEmpty(errors[nodeId]) || !_.isEmpty(warnings[nodeId]);
 
   const submit = (): void => {
-    const stateSnapshot = codeEditorStateStore.getSnapshot().context;
-    const content = stateSnapshot.content[stateSnapshot.selectedIAMEntity];
+    const content = codeEditorStateStore.getSnapshot().context.content[nodeId];
     levelActor.send({ type: 'UPDATE_IAM_POLICY_NODE', doc_string: content, node_id: nodeId });
     codeEditorPopupStore.send({ type: 'close' });
   };

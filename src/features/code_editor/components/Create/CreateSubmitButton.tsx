@@ -19,8 +19,7 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({ nodeId }
   const isButtonDisabled = !_.isEmpty(errors[nodeId]);
 
   const submit = (): void => {
-    const stateSnapshot = codeEditorStateStore.getSnapshot().context;
-    const content = stateSnapshot.content[stateSnapshot.selectedIAMEntity];
+    const content = codeEditorStateStore.getSnapshot().context.content[nodeId];
 
     levelActor.send({
       type: 'ADD_IAM_POLICY_NODE',

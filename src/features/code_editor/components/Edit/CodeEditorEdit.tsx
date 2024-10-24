@@ -68,14 +68,14 @@ export const CodeEditorEdit: React.FC<CodeEditorWindowProps> = ({ nodeId }) => {
     codeEditorStateStore.send({
       type: 'initializeCodeEditor',
       nodeId,
-      content: selectedNode.data.code,
+      content: selectedNode.data.content,
     });
   };
 
   return (
     <CodeMirror
       // The content won't be loaded into the store until the editor is initialized
-      value={content[nodeId] ?? selectedNode.data.code}
+      value={content[nodeId] ?? selectedNode.data.content}
       onChange={(newContent, viewUpdate) => {
         codeEditorStateStore.send({ type: 'setContent', content: newContent, nodeId });
         validateChange(viewUpdate.view);

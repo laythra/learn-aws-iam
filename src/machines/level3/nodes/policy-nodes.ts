@@ -32,7 +32,6 @@ export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
       { id: Position.Left, type: 'source', position: Position.Left },
     ] as HandleProps[],
     image: IAMNodeImage.Policy,
-    // resources_affected: [],
     description: '',
     initial_position: 'bottom-center',
   } as IAMPolicyNodeData,
@@ -42,18 +41,18 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   {
     id: PolicyNodeID.S3ReadAccess,
     label: 's3-read-access',
-    code: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
+    content: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
     initial_position: 'center',
   },
 ];
 
 export const INITIAL_TUTORIAL_POLICY_NODES: Node<IAMPolicyNodeData>[] = TUTORIAL_POLICY_NODES.map(
-  ({ id, label, code, initial_position }) =>
+  ({ id, label, content, initial_position }) =>
     _.merge({}, TEMPLATE_POLICY_NODE, {
       id,
       data: {
         id,
-        code,
+        content,
         label,
         initial_position,
       },

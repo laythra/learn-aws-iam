@@ -48,10 +48,12 @@ interface IAMNodeData {
   label: string;
   entity: IAMNodeEntity;
   description?: string;
+  /**
+   * The content of the node, namely a JSON string representing the node's data
+   */
   content?: string;
   handles: HandleProps[];
   image: IAMNodeImage;
-  code?: string;
   initial_position?: string; // Defines the initial position of the node relative to the canvas viewport
 }
 
