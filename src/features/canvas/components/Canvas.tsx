@@ -138,12 +138,11 @@ const Canvas: React.FC = () => {
         onEdgesDelete={onEdgeDelete}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
+        onPaneClick={() => CanvasStore.send({ type: 'selectEdge', edgeId: undefined })}
         onEdgeMouseEnter={(_e, edge) =>
-          CanvasStore.send({ type: 'hoverOverEdge', edge, isHovering: true })
+          CanvasStore.send({ type: 'hoverOverEdge', edgeId: edge.id })
         }
-        onEdgeMouseLeave={(_e, edge) =>
-          CanvasStore.send({ type: 'hoverOverEdge', edge, isHovering: false })
-        }
+        onEdgeMouseLeave={() => CanvasStore.send({ type: 'hoverOverEdge', edgeId: undefined })}
       />
     </Box>
   );

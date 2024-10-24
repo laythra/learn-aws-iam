@@ -1,4 +1,4 @@
-import { createStore } from '@xstate/store';
+import { createStoreWithProducer } from '@xstate/store';
 import { produce } from 'immer';
 import {
   type Node,
@@ -12,38 +12,40 @@ import {
 type CanvasStoreState = {
   nodes: Node[];
   edges: Edge[];
+  selectedEdgeId?: string;
+  selectedNodeId?: string;
+  hoveredOverEdgeId?: string;
 };
 
 type CanvasStoreEvents = {
   changeNodesState: { changes: NodeChange[] };
   changeEdgesState: { changes: EdgeChange[] };
-  hoverOverEdge: { edge: Edge; isHovering: boolean };
+  selectEdge: { edgeId?: string };
+  hoverOverEdge: { edgeId?: string };
   setNodes: { nodes: Node[] };
   setEdges: { edges: Edge[] };
 };
 
-export const CanvasStore = createStore<CanvasStoreState, CanvasStoreEvents>(
-  { nodes: [], edges: [] },
-  {
-    changeNodesState: (context: CanvasStoreState, event: { changes: NodeChange[] }) => ({
-      nodes: applyNodeChanges(event.changes, context.nodes),
-    }),
-    changeEdgesState: (context: CanvasStoreState, event: { changes: EdgeChange[] }) => ({
-      edges: applyEdgeChanges(event.changes, context.edges),
-    }),
-    hoverOverEdge: (context: CanvasStoreState, event: { edge: Edge; isHovering: boolean }) => ({
-      edges: produce(context.edges, draftEdges => {
-        const targetEdge = draftEdges.find(e => e.id === event.edge.id);
-        if (!targetEdge) return;
-
-        targetEdge.data.is_hovering = event.isHovering;
-      }),
-    }),
-    setNodes: (_context: CanvasStoreState, event: { nodes: Node[] }) => ({
-      nodes: event.nodes,
-    }),
-    setEdges: (_context: CanvasStoreState, event: { edges: Edge[] }) => ({
-      edges: event.edges,
-    }),
-  }
-);
+export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStoreEvents>(produce, {
+  context: { nodes: [], edges: [] },
+  on: {
+    changeNodesState: (context: CanvasStoreState, event: { changes: NodeChange[] }) => {
+      context.nodes = applyNodeChanges(event.changes, context.nodes);
+    },
+    changeEdgesState: (context: CanvasStoreState, event: { changes: EdgeChange[] }) => {
+      context.edges = applyEdgeChanges(event.changes, context.edges);
+    },
+    hoverOverEdge: (context: CanvasStoreState, event: { edgeId?: string }) => {
+      context.hoveredOverEdgeId = event.edgeId;
+    },
+    selectEdge: (context: CanvasStoreState, event: { edgeId?: string }) => {
+      context.selectedEdgeId = event.edgeId;
+    },
+    setNodes: (context: CanvasStoreState, event: { nodes: Node[] }) => {
+      context.nodes = event.nodes;
+    },
+    setEdges: (context: CanvasStoreState, event: { edges: Edge[] }) => {
+      context.edges = event.edges;
+    },
+  },
+});

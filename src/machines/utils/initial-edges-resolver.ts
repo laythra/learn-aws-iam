@@ -20,7 +20,6 @@ export function resolveInitialEdges(initialNodes: Node<IAMAnyNodeData>[]): Edge[
           target: resourceId,
           data: {
             hovering_label: policyNode.data.granted_accesses[resourceId],
-            is_hovering: false,
           },
         });
       });
