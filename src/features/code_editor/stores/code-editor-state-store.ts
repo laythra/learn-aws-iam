@@ -2,7 +2,6 @@ import { Diagnostic } from '@codemirror/lint';
 import { createStoreWithProducer } from '@xstate/store';
 import { produce } from 'immer';
 
-import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 
 type CodeEditorEvents = {

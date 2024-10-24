@@ -10,7 +10,6 @@ import {
   Button,
   useTheme,
 } from '@chakra-ui/react';
-import { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
@@ -42,7 +41,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     _.isEqual
   );
 
-  const codeEditorRef = useRef<ReactCodeMirrorRef>(null);
   const newNodeId = useRef(new Date().getTime().toString());
   const nodeId = selectedNodeId ?? newNodeId.current;
 
@@ -59,18 +57,18 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
         </ModalHeader>
         <ModalBody>
           {codeEditorMode === CodeEditorMode.Create ? (
-            <CodeEditorCreate ref={codeEditorRef} nodeId={nodeId} />
+            <CodeEditorCreate nodeId={nodeId} />
           ) : (
-            <CodeEditorEdit ref={codeEditorRef} nodeId={nodeId} />
+            <CodeEditorEdit nodeId={nodeId} />
           )}
           <CodeEditorErrorsBox nodeId={nodeId} />
           {_.isEmpty(errors[nodeId]) && <CodeEditorWarningsBox nodeId={nodeId} />}
         </ModalBody>
         <ModalFooter>
           {codeEditorMode === CodeEditorMode.Create ? (
-            <CreateSubmitButton nodeId={nodeId} editorView={codeEditorRef.current?.view} />
+            <CreateSubmitButton nodeId={nodeId} />
           ) : (
-            <EditSubmitButton nodeId={nodeId} editorView={codeEditorRef.current?.view} />
+            <EditSubmitButton nodeId={nodeId} />
           )}
           <Button variant='ghost' onClick={closeCodeEditor}>
             Cancel

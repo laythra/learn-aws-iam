@@ -1,5 +1,4 @@
 import { Button } from '@chakra-ui/react';
-import { EditorView } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
@@ -9,10 +8,9 @@ import codeEditorPopupStore from '@/stores/code-editor-popup-store';
 
 interface CreateSubmitButtonProps {
   nodeId: string;
-  editorView: EditorView | undefined;
 }
 
-export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({ nodeId, editorView }) => {
+export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({ nodeId }) => {
   const levelActor = LevelsProgressionContext.useActorRef();
   const { errors, isValidating } = useSelector(codeEditorStateStore, state =>
     _.pick(state.context, ['errors', 'isValidating'])
@@ -21,9 +19,13 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({ nodeId, 
   const isButtonDisabled = !_.isEmpty(errors[nodeId]);
 
   const submit = (): void => {
-    if (!editorView) return;
+    const stateSnapshot = codeEditorStateStore.getSnapshot().context;
+    const content = stateSnapshot.content[stateSnapshot.selectedIAMEntity];
 
-    levelActor.send({ type: 'ADD_IAM_POLICY_NODE', editor_view: editorView });
+    levelActor.send({
+      type: 'ADD_IAM_POLICY_NODE',
+      doc_string: content,
+    });
     codeEditorPopupStore.send({ type: 'close' });
   };
 
