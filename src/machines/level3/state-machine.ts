@@ -114,6 +114,7 @@ export const stateMachine = setup({
     policy_role_objectives: [],
     policy_role_edit_objectives: [],
     edges_connection_objectives: [],
+    user_group_creation_objectives: [],
   },
   on: {
     ADD_IAM_NODE: {
@@ -124,14 +125,14 @@ export const stateMachine = setup({
         },
       ],
     },
-    ADD_IAM_USER_NODE: {
-      actions: [
-        {
-          type: 'add_iam_node',
-          params: ({ event }) => ({ node: event.node }),
-        },
-      ],
-    },
+    // ADD_IAM_USER_NODE: { // TODO: Implement this
+    //   actions: [
+    //     {
+    //       type: 'add_iam_node',
+    //       params: ({ event }) => ({ node: event.node }),
+    //     },
+    //   ],
+    // },
     ADD_IAM_GROUP_NODE: {
       actions: [
         {

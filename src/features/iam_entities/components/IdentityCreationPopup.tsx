@@ -19,34 +19,17 @@ import {
   Tab,
 } from '@chakra-ui/react';
 import _ from 'lodash';
-import { Node } from 'reactflow';
 import { EventFrom } from 'xstate';
 
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { IAMIdentityEntity, IAMNodeEntity, IAMAnyNodeData } from '@/types';
-import { getNodeName } from '@/utils/names';
+import { IAMIdentityEntity, IAMNodeEntity } from '@/types';
 
 interface IdentityCreationPopupProps {}
 
 export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () => {
   const levelActor = LevelsProgressionContext.useActorRef();
-  const {
-    iam_user_template: iamUserNodeTemplate,
-    iam_group_template: iamGroupNodeTemplate,
-    next_iam_node_id: nextIamNodeId,
-    fixed_iam_nodes_positions: fixedIamNodePositions,
-    next_iam_node_default_position: nextNodeDefaultPosition,
-  } = LevelsProgressionContext.useSelector(state => {
-    return _.pick(state.context, [
-      'iam_user_template',
-      'iam_group_template',
-      'next_iam_node_id',
-      'fixed_iam_nodes_positions',
-      'next_iam_node_default_position',
-    ]);
-  }, _.isEqual);
 
   const { closeIdentityCreator, isIdentityCreatorOpen } = useIdentityCreator();
   const [userName, setUserName] = useState('');
@@ -73,36 +56,11 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
   };
 
   const submit = (): void => {
-    let addNodeEvent: 'ADD_IAM_USER_NODE' | 'ADD_IAM_GROUP_NODE';
-    let nodeTemplate: Node<IAMAnyNodeData>;
-
     if (iamIdentityEntity === IAMNodeEntity.User) {
-      addNodeEvent = 'ADD_IAM_USER_NODE';
-      nodeTemplate = iamUserNodeTemplate;
+      levelActor.send({ type: 'ADD_IAM_USER_NODE', user_props: { label: userName } });
     } else {
-      addNodeEvent = 'ADD_IAM_GROUP_NODE';
-      nodeTemplate = iamGroupNodeTemplate;
+      // TODO: Create IAM Group node
     }
-
-    // TODO: This is a temporary solution to get the node ID.
-    // The entire node creation logic should happen inside the state machine
-    const nodeId = getNodeName(iamIdentityEntity, 12);
-    const position = fixedIamNodePositions?.[nodeId] ?? nextNodeDefaultPosition;
-
-    // Passing an empty object as the first argument to _.merge to produce a new object reference.
-    // Not the most ideal solution, I know.
-    const node: Node<IAMAnyNodeData> = _.merge({}, nodeTemplate, {
-      id: nodeId,
-      description: `New ${_.upperFirst(iamIdentityEntity)}`,
-      position,
-      data: {
-        id: nodeId,
-        label: getNameFieldVal(),
-        entity: iamIdentityEntity,
-      },
-    });
-
-    levelActor.send({ type: addNodeEvent, node: node });
 
     closeIdentityCreator();
   };

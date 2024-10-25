@@ -15,6 +15,17 @@ export const stateMachine = setup({
     meta: InsideLevelMetadata;
   },
   actions: {
+    add_iam_user_node: enqueueActions(
+      ({ context, enqueue }, { params }: { params: Partial<IAMUserNodeData> }) => {
+        const [updatedNodes, sideEffectsEvents] = createIAMUserNode<
+          LevelObjectiveID,
+          NodeCreationFinishEvent
+        >(context, params);
+
+        enqueue.assign({ nodes: updatedNodes });
+        sideEffectsEvents.forEach(event => enqueue.raise({ type: event }));
+      }
+    ),
     next_popover: assign({
       popover_content: ({ context }) => POPOVER_TUTORIAL_MESSAGES[context.next_popover_index ?? 0],
       next_popover_index: ({ context }) => context.next_popover_index + 1,
@@ -50,13 +61,15 @@ export const stateMachine = setup({
     policy_role_objectives: [],
     edges_connection_objectives: [],
     policy_role_edit_objectives: [],
+    user_group_creation_objectives: [],
   },
   on: {
     ADD_IAM_USER_NODE: {
       actions: [
-        assign({
-          nodes: ({ context, event }) => [...context.nodes, event.node],
-        }),
+        {
+          type: 'add_iam_user_node',
+          params: ({ event }) => ({ params: event.user_props }),
+        },
       ],
     },
     ADD_IAM_GROUP_NODE: {

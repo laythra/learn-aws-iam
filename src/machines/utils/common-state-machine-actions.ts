@@ -5,6 +5,7 @@ import { Node, Edge } from 'reactflow';
 import { GenericContext, LevelObjective } from '../types';
 import { createEdge } from '@/factories/edge-factory';
 import { createPolicyNode } from '@/factories/policy-node-factory';
+import { createUserNode } from '@/factories/user-node-factory';
 import { IAMNodeEntity, type IAMPolicyNodeData, type IAMUserNodeData } from '@/types';
 import { findAnyValidPolicy, isJSONValid } from '@/utils/iam-code-linter';
 import { getEdgeName } from '@/utils/names';
@@ -185,4 +186,32 @@ export function editObjectiveState<TLevelObjectiveID>(
 
     targetObjective.finished = finished;
   });
+}
+
+/**
+ * Creates a new IAM user node and checks if an associated user creation objective is finished.
+ * If the user creation objective is finished, the `on_finish_event` is pushed to the `finishEvents` array.
+ * @param context The current state machine context
+ * @param props The properties of the new user node
+ * @returns A tuple containing the updated nodes and finish events.
+ */
+export function createIAMUserNode<TLevelObjectiveID, TFinishEvent>(
+  context: GenericContext<TLevelObjectiveID>,
+  props: Partial<IAMUserNodeData>
+): [Node[], TFinishEvent[]] {
+  const targetObjective = context.user_group_creation_objectives.find(
+    objective => objective.entity_to_create === IAMNodeEntity.User && !objective.finished
+  );
+
+  const newNodes = produce(context.nodes, draftNodes => {
+    const newNode = createUserNode({
+      id: new Date().getTime().toString(),
+      ...props,
+    });
+
+    draftNodes.push(newNode);
+  });
+
+  const finishEvents = targetObjective ? [targetObjective.on_finish_event as TFinishEvent] : [];
+  return [newNodes, finishEvents];
 }

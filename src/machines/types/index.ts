@@ -73,7 +73,7 @@ export type GenericEventData =
   | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string }
   | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
   | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
-  | { type: 'ADD_IAM_USER_NODE'; node: Node }
+  | { type: 'ADD_IAM_USER_NODE'; user_props: Partial<IAMUserNodeData> }
   | { type: 'ADD_IAM_GROUP_NODE'; node: Node }
   | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }
   | { type: 'DELETE_EDGE'; edge: Edge<IAMEdgeData> }
