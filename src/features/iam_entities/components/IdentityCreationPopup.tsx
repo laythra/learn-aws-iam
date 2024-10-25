@@ -46,7 +46,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
       'fixed_iam_nodes_positions',
       'next_iam_node_default_position',
     ]);
-  });
+  }, _.isEqual);
 
   const { closeIdentityCreator, isIdentityCreatorOpen } = useIdentityCreator();
   const [userName, setUserName] = useState('');
