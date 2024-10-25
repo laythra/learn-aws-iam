@@ -7,6 +7,8 @@ import { ResourceNodeID } from './nodes/resource-nodes';
 import cloudfrontReadPolicySchema from './schemas/policy/cloudfront-read-policy-schema.json';
 import s3ReadPolicySchema from './schemas/policy/s3-read-policy-schema.json';
 import s3ReadWritePolicySchema from './schemas/policy/s3-read-write-policy-schema.json';
+import { NodeCreationFinishEvent } from './types/finish-event-enums';
+import { LevelObjectiveID } from './types/objective-enums';
 import { MANAGED_POLICIES } from '../config';
 import type {
   PopoverTutorialMessage,
@@ -14,8 +16,7 @@ import type {
   LevelObjective,
   EdgeConnectionObjective,
 } from '../types';
-import { NodeCreationFinishEvent } from '../types';
-import { IAMPolicyRoleCreationObjective } from '../types';
+import { IAMPolicyRoleCreationObjective } from '@/machines/types';
 import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
 import { IAMNodeEntity, IAMPolicyNodeData } from '@/types';
 import { getEdgeName } from '@/utils/names';
@@ -152,14 +153,7 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   },
 ];
 
-export enum LevelObjectiveID {
-  CreateFirstCustomerManagedPolicy = 'create_first_customer_managed_policy',
-  FrontendTeamS3BucketAccess = 'grant_frontend_team_s3_bucket_access',
-  FrontendTeamCloudFrontAccess = 'grant_frontend_team_cloudfront_access',
-  BackendTeamDynamoDBAccess = 'grant_backend_team_dynamodb_access',
-}
-
-export const LEVEL_OBJECTIVES: LevelObjective[] = [
+export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID>[] = [
   {
     label: 'Create your first customer managed policy',
     finished: false,
@@ -182,7 +176,7 @@ export const LEVEL_OBJECTIVES: LevelObjective[] = [
   },
 ];
 
-export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective[] = [];
+export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID>[] = [];
 export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][] = [
   [
     {

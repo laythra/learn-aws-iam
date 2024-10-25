@@ -1,3 +1,4 @@
+import { LevelObjectiveID } from './objective-enums';
 import type {
   GenericContext,
   GenericEventData,
@@ -5,7 +6,7 @@ import type {
   LevelObjective,
 } from '@/machines/types';
 
-export type Context = GenericContext;
+export type Context = GenericContext<LevelObjectiveID>;
 
 export type EventData =
   | GenericEventData

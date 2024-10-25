@@ -1,3 +1,4 @@
+import { LevelObjectiveID } from './types/objective-enums';
 import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
@@ -82,12 +83,7 @@ export const POLICY_CONTENT = JSON.stringify(
   2
 );
 
-export enum LevelObjectiveID {
-  CreateIAMUser = 'create_iam_user',
-  GrantIAMUserReadAccessToS3Bucket = 'grant_iam_user_read_access_to_s3_bucket',
-}
-
-export const LEVEL_OBJECTIVES: LevelObjective[] = [
+export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID>[] = [
   {
     finished: false,
     id: LevelObjectiveID.CreateIAMUser,

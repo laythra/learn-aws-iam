@@ -1,3 +1,4 @@
+import { LevelObjectiveID } from './types/objective-enums';
 import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
 import {
   AccessLevel,
@@ -101,13 +102,7 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   },
 ];
 
-export enum LevelObjectiveID {
-  CreateIAMGroup = 'create_iam_group',
-  MakeScalingEasier = 'make_scaling_easier',
-  AttachUserToGroup = 'attach_your_user_to_group',
-}
-
-export const LEVEL_OBJECTIVES: LevelObjective[] = [
+export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID>[] = [
   {
     id: LevelObjectiveID.CreateIAMGroup,
     finished: false,
@@ -120,7 +115,7 @@ export const LEVEL_OBJECTIVES: LevelObjective[] = [
   },
 ];
 
-export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective[] = [
+export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID>[] = [
   {
     id: LevelObjectiveID.AttachUserToGroup,
     finished: false,

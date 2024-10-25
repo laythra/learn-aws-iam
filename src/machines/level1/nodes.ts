@@ -79,7 +79,6 @@ export const initial_nodes: Node<IAMAnyNodeData>[] = [
         { id: Position.Bottom, type: 'target', position: Position.Bottom },
       ] as HandleProps[],
       image: IAMNodeImage.Policy,
-      content: POLICY_CONTENT,
     } as IAMPolicyNodeData,
     type: 'iam_default',
     draggable: true,
