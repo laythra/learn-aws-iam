@@ -45,6 +45,7 @@ export interface GenericContext<TLevelObjectiveID, TLevelObjectiveFinishEvent = 
   policy_role_objectives: IAMPolicyRoleCreationObjective[];
   policy_role_edit_objectives: IAMPolicyRoleEditObjective[];
   edges_connection_objectives: EdgeConnectionObjective[];
+  user_group_creation_objectives: IAMUserGroupCreationObjective[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -164,7 +165,8 @@ export interface IAMPolicyRoleEditObjective<TFinishEvent = string> {
    */
   readonly resources_to_revoke: string[];
 }
-export type IAMUserGroupCreationObjective<TFinishEvent> = {
+export type IAMUserGroupCreationObjective<TFinishEvent = string> = {
   readonly on_finish_event: TFinishEvent;
+  readonly entity_to_create: CreatableIAMNodeEntity;
   finished: boolean;
 };
