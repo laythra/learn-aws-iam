@@ -4,8 +4,7 @@ import { setup, assign } from 'xstate';
 
 import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
 import { initial_nodes, template_nodes, edges } from './nodes';
-import type { Context, InsideLevelMetadata, EventData } from './types';
-import { CreatableIAMNodeEntity, IAMNodeEntity, type IAMAnyNodeData } from '@/types';
+import type { Context, InsideLevelMetadata, EventData } from './types/state-machine-types';
 import { IAMGroupNodeData, IAMUserNodeData } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
@@ -27,24 +26,6 @@ export const stateMachine = setup({
         ..._.update(context.level_objectives, [id, 'finished'], _.constant(finished)), // cloning is a must since update returns the same reference
       }),
     }),
-    iam_node_creation_side_effects: assign({
-      next_iam_node_id: ({ context }, { node }: { node: IAMAnyNodeData }) =>
-        _.update(
-          { ...context.next_iam_node_id },
-          [node.entity],
-          _.constant(context.next_iam_node_id[node.entity as CreatableIAMNodeEntity] + 1)
-        ),
-      next_iam_node_default_position: ({ context }, { node }: { node: IAMAnyNodeData }) => {
-        if (context.fixed_iam_nodes_positions?.[node.id]) {
-          return context.next_iam_node_default_position;
-        } else {
-          return {
-            x: context.next_iam_node_default_position.x + 20,
-            y: context.next_iam_node_default_position.y + 20,
-          };
-        }
-      },
-    }),
   },
 }).createMachine({
   id: 'level1_state_machine',
@@ -65,11 +46,6 @@ export const stateMachine = setup({
     edges: [],
     final_edges: edges,
     level_objectives: LEVEL_OBJECTIVES,
-    next_iam_node_id: Object.values(IAMNodeEntity).reduce(
-      (acc, entity) => ({ ...acc, [entity]: 1 }),
-      {}
-    ) as { [k in IAMNodeEntity]: number },
-    next_iam_node_default_position: { x: 500, y: 500 },
     fixed_iam_nodes_positions: {},
     policy_role_objectives: [],
     edges_connection_objectives: [],
@@ -81,10 +57,6 @@ export const stateMachine = setup({
         assign({
           nodes: ({ context, event }) => [...context.nodes, event.node],
         }),
-        {
-          type: 'iam_node_creation_side_effects',
-          params: ({ event }) => ({ node: event.node.data }),
-        },
       ],
     },
     ADD_IAM_GROUP_NODE: {
@@ -92,10 +64,6 @@ export const stateMachine = setup({
         assign({
           nodes: ({ context, event }) => [...context.nodes, event.node],
         }),
-        {
-          type: 'iam_node_creation_side_effects',
-          params: ({ event }) => ({ node: event.node.data }),
-        },
       ],
     },
     ADD_EDGE: {

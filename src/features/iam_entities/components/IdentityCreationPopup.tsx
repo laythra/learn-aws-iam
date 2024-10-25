@@ -46,7 +46,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
       'fixed_iam_nodes_positions',
       'next_iam_node_default_position',
     ]);
-  });
+  }, _.isEqual);
 
   const { closeIdentityCreator, isIdentityCreatorOpen } = useIdentityCreator();
   const [userName, setUserName] = useState('');
@@ -84,7 +84,9 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
       nodeTemplate = iamGroupNodeTemplate;
     }
 
-    const nodeId = getNodeName(iamIdentityEntity, nextIamNodeId[iamIdentityEntity]);
+    // TODO: This is a temporary solution to get the node ID.
+    // The entire node creation logic should happen inside the state machine
+    const nodeId = getNodeName(iamIdentityEntity, 12);
     const position = fixedIamNodePositions?.[nodeId] ?? nextNodeDefaultPosition;
 
     // Passing an empty object as the first argument to _.merge to produce a new object reference.

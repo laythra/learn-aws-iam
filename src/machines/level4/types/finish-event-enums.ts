@@ -1,0 +1,9 @@
+export enum NodeEditFinishEvent {
+  DEVELOPER_POLICY_EDITED = 'DEVELOPER_POLICY_EDITED',
+  DATA_SCIENTIST_POLICY_EDITED = 'DATA_SCIENTIST_POLICY_EDITED',
+  INTERN_POLICY_EDITED = 'INTERN_POLICY_EDITED',
+}
+
+export enum EdgeConnectionFinishEvent {
+  ONE = 'one',
+}

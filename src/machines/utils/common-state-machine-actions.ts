@@ -2,21 +2,15 @@ import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 import { Node, Edge } from 'reactflow';
 
-import { EdgeConnectionFinishEvent } from '../level4/objectives/edge-connection-objectives';
-import {
-  GenericContext,
-  IAMPolicyRoleCreationObjective,
-  LevelObjective,
-  NodeCreationFinishEvent,
-} from '../types';
+import { GenericContext, LevelObjective } from '../types';
 import { createEdge } from '@/factories/edge-factory';
 import { createPolicyNode } from '@/factories/policy-node-factory';
 import { IAMNodeEntity, type IAMPolicyNodeData, type IAMUserNodeData } from '@/types';
 import { findAnyValidPolicy, isJSONValid } from '@/utils/iam-code-linter';
 import { getEdgeName } from '@/utils/names';
 
-export function attachPolicyToUser(
-  context: GenericContext,
+export function attachPolicyToUser<TLevelObjectiveID>(
+  context: GenericContext<TLevelObjectiveID>,
   policyNode: Node<IAMPolicyNodeData>,
   userNode: Node<IAMUserNodeData>
 ): Node[] {
@@ -30,12 +24,15 @@ export function attachPolicyToUser(
   });
 }
 
-export function updatePolicyToUserConnectionEdges(
-  context: GenericContext,
+export function updatePolicyToUserConnectionEdges<
+  TLevelObjectiveID,
+  TEdgeConnectionFinishEvent = string,
+>(
+  context: GenericContext<TLevelObjectiveID>,
   policyNode: Node<IAMPolicyNodeData>,
   userNode: Node<IAMUserNodeData>
-): [Edge[], EdgeConnectionFinishEvent[]] {
-  const sideEffectsEvents: EdgeConnectionFinishEvent[] = [];
+): [Edge[], TEdgeConnectionFinishEvent[]] {
+  const sideEffectsEvents: TEdgeConnectionFinishEvent[] = [];
   const newEdges = produce(context.edges, draftEdges => {
     const newEdge = createEdge({ source: policyNode.id, target: userNode.id });
     draftEdges.push(newEdge);
@@ -48,10 +45,10 @@ export function updatePolicyToUserConnectionEdges(
 
       if (!objectiveAchieved) return;
 
-      // TODO: Locked edges are deprecated, resolve edges manually through affected_resources instead
+      // TODO: Locked edges are deprecated, resolve edges manually through granted_accesses instead
       draftEdges.push(...objective.locked_edges);
 
-      sideEffectsEvents.push(objective.on_finish_event as EdgeConnectionFinishEvent);
+      sideEffectsEvents.push(objective.on_finish_event as TEdgeConnectionFinishEvent);
     });
 
     Object.keys(policyNode.data.granted_accesses).forEach(resourceID => {
@@ -63,11 +60,11 @@ export function updatePolicyToUserConnectionEdges(
   return [newEdges, sideEffectsEvents];
 }
 
-export function changeLevelObjectiveProgress(
-  context: GenericContext,
+export function changeLevelObjectiveProgress<TLevelObjectiveID>(
+  context: GenericContext<TLevelObjectiveID>,
   id: string,
   finished: boolean
-): LevelObjective[] {
+): LevelObjective<TLevelObjectiveID>[] {
   return produce(context.level_objectives, draftLevelObjectives => {
     const targetObjective = draftLevelObjectives.find(objective => objective.id === id);
     if (!targetObjective) return;
@@ -76,12 +73,12 @@ export function changeLevelObjectiveProgress(
   });
 }
 
-export function createIAMPolicyNode(
-  context: GenericContext,
+export function createIAMPolicyNode<TLevelObjectiveID, TNodeCreationFinishEvent>(
+  context: GenericContext<TLevelObjectiveID>,
   docString: string
-): [Node[], NodeCreationFinishEvent[]] {
+): [Node[], TNodeCreationFinishEvent[]] {
   const targetValidPolicy = findAnyValidPolicy(context.policy_role_objectives, docString);
-  const sideEffectsEvents: NodeCreationFinishEvent[] = [];
+  const sideEffectsEvents: TNodeCreationFinishEvent[] = [];
 
   const newNodes = produce(context.nodes, draftNodes => {
     const newPolicyNode = createPolicyNode({
@@ -93,7 +90,7 @@ export function createIAMPolicyNode(
 
     draftNodes.push(newPolicyNode);
     if (targetValidPolicy) {
-      sideEffectsEvents.push((targetValidPolicy as IAMPolicyRoleCreationObjective).on_finish_event);
+      sideEffectsEvents.push(targetValidPolicy.on_finish_event as TNodeCreationFinishEvent);
     }
   });
 
@@ -113,8 +110,8 @@ export function createIAMPolicyNode(
  * @param nodeId The node ID of the policy being edited
  * @returns Updated array of node edit finish events.
  */
-export function editIAMPolicyNode<TEditFinishEvent>(
-  context: GenericContext,
+export function editIAMPolicyNode<TLevelObjectiveID, TEditFinishEvent>(
+  context: GenericContext<TLevelObjectiveID>,
   nodeId: string,
   docString: string
 ): [Node[], Edge[], TEditFinishEvent[]] {
@@ -177,11 +174,11 @@ export function editIAMPolicyNode<TEditFinishEvent>(
  * @param finished The new `finished` state of the objective
  * @returns Updated array of level objectives.
  */
-export function editObjectiveState(
-  context: GenericContext,
+export function editObjectiveState<TLevelObjectiveID>(
+  context: GenericContext<TLevelObjectiveID>,
   objectiveId: string,
   finished: boolean
-): LevelObjective[] {
+): LevelObjective<TLevelObjectiveID>[] {
   return produce(context.level_objectives, draftLevelObjectives => {
     const targetObjective = draftLevelObjectives.find(objective => objective.id === objectiveId);
     if (!targetObjective) return;

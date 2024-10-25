@@ -7,16 +7,17 @@ import {
   POPUP_TUTORIAL_MESSAGES,
   LEVEL_OBJECTIVES,
   HIDDEN_LEVEL_OBJECTIVES,
-  LevelObjectiveID,
 } from './config';
 import { initial_nodes, edges } from './nodes';
 import { TEMPLATE_GROUP_NODE, GROUP_NODE_Y_OFFSET } from './nodes/group-nodes';
 import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
 import { INITIAL_POLICY_NODES } from './nodes/policy-nodes';
 import { INITIAL_USER_NODES, TEMPLATE_USER_NODE, USER_NODE_Y_OFFSET } from './nodes/user-nodes';
-import type { Context, InsideLevelMetadata, EventData, LevelObjective } from './types';
+import { LevelObjectiveID } from './types/objective-enums';
+import type { Context, InsideLevelMetadata, EventData } from './types/state-machine-types';
+import type { LevelObjective } from '@/machines/types';
 import { theme } from '@/theme';
-import { CreatableIAMNodeEntity, IAMAnyNodeData, IAMNodeEntity } from '@/types';
+import { IAMAnyNodeData, IAMNodeEntity } from '@/types';
 import { getEdgeName, getNodeName } from '@/utils/names';
 
 const IAM_NODE_WIDTH = theme.sizes.iamNodeWidthInPixels;
@@ -50,7 +51,7 @@ export const stateMachine = setup({
     add_new_level_objective: assign({
       level_objectives: (
         { context },
-        { id, objective }: { id: string; objective: LevelObjective }
+        { id, objective }: { id: string; objective: LevelObjective<LevelObjectiveID> }
       ) => ({
         ...context.level_objectives,
         [id]: objective,
@@ -58,23 +59,6 @@ export const stateMachine = setup({
     }),
     add_iam_node: assign({
       nodes: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => [...context.nodes, node],
-      next_iam_node_id: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => {
-        return _.update(
-          { ...context.next_iam_node_id },
-          [node.data.entity],
-          _.constant(context.next_iam_node_id[node.data.entity as CreatableIAMNodeEntity] + 1)
-        );
-      },
-      next_iam_node_default_position: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => {
-        if (context.fixed_iam_nodes_positions?.[node.id]) {
-          return context.next_iam_node_default_position;
-        } else {
-          return {
-            x: context.next_iam_node_default_position.x + 20,
-            y: context.next_iam_node_default_position.y + 20,
-          };
-        }
-      },
     }),
   },
 }).createMachine({
@@ -354,7 +338,7 @@ export const stateMachine = setup({
             id: 'attach_your_user_to_group',
             objective: HIDDEN_LEVEL_OBJECTIVES.find(
               objective => objective.id === LevelObjectiveID.AttachUserToGroup
-            ) as LevelObjective,
+            ) as LevelObjective<LevelObjectiveID>,
           },
         },
         assign({

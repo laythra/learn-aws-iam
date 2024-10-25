@@ -1,20 +1,18 @@
-import { EdgeConnectionFinishEvent } from '../objectives/edge-connection-objectives';
+import { EdgeConnectionFinishEvent, NodeEditFinishEvent } from './finish-event-enums';
+import { LevelObjectiveID } from './objective-enums';
 import type {
   GenericContext,
   GenericEventData,
   GenericInsideLevelMetadata,
   LevelObjective,
-  NodeCreationFinishEvent,
-  NodeEditFinishEvent,
 } from '@/machines/types';
 
-export type Context = GenericContext;
+export type Context = GenericContext<LevelObjectiveID>;
 
 export type EventData =
   | GenericEventData
-  | { type: EdgeConnectionFinishEvent }
-  | { type: NodeCreationFinishEvent }
-  | { type: NodeEditFinishEvent };
+  | { type: NodeEditFinishEvent }
+  | { type: EdgeConnectionFinishEvent };
 
 export type InsideLevelMetadata = GenericInsideLevelMetadata;
 export type { LevelObjective };

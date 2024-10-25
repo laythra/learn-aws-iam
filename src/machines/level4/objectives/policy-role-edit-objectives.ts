@@ -3,13 +3,14 @@ import Ajv from 'ajv';
 import dataScientistsPolicy from '../schemas/edit-objectives-schemas/data-scientists-policy.json';
 import developersPolicy from '../schemas/edit-objectives-schemas/developers-policy.json';
 import internsPolicy from '../schemas/edit-objectives-schemas/interns-policy.json';
+import { NodeEditFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { IAMPolicyRoleEditObjective, NodeEditFinishEvent } from '@/machines/types';
+import { IAMPolicyRoleEditObjective } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
 
 const AJV_COMPILER = new Ajv();
 
-export const POLICY_ROLE_EDIT_OBJECTIVES: IAMPolicyRoleEditObjective[][] = [
+export const POLICY_ROLE_EDIT_OBJECTIVES: IAMPolicyRoleEditObjective<NodeEditFinishEvent>[][] = [
   [
     {
       entity_id: PolicyNodeID.DeveloperPolicy,

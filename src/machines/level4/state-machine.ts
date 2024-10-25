@@ -2,14 +2,15 @@ import type { Node } from 'reactflow';
 import { setup, assign, enqueueActions } from 'xstate';
 
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
-import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
-import { LEVEL_OBJECTIVES, LevelObjectiveID } from './objectives/level-objectives';
+import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_ROLE_CREATION_OBJECTIVES } from './objectives/policy-role-creation-objectives';
 import { POLICY_ROLE_EDIT_OBJECTIVES } from './objectives/policy-role-edit-objectives';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
+import { EdgeConnectionFinishEvent, NodeEditFinishEvent } from './types/finish-event-enums';
+import { LevelObjectiveID } from './types/objective-enums';
 import type { Context, EventData, LevelObjective } from './types/state-machine-types';
-import { NodeEditFinishEvent, PopoverTutorialMessage } from '../types';
+import { PopoverTutorialMessage } from '../types';
 import { resolveInitialEdges } from '../utils/initial-edges-resolver';
 import { TEMPLATE_GROUP_NODE } from '@/factories/group-node-factory';
 import { TEMPLATE_POLICY_NODE } from '@/factories/policy-node-factory';
@@ -40,11 +41,10 @@ export const stateMachine = setup({
         }: { userNode: Node<IAMUserNodeData>; policyNode: Node<IAMPolicyNodeData> }
       ) => {
         const updatedNodes = attachPolicyToUser(context, policyNode, userNode);
-        const [updatedEdges, sideEffectsEvents] = updatePolicyToUserConnectionEdges(
-          context,
-          policyNode,
-          userNode
-        );
+        const [updatedEdges, sideEffectsEvents] = updatePolicyToUserConnectionEdges<
+          LevelObjectiveID,
+          EdgeConnectionFinishEvent
+        >(context, policyNode, userNode);
 
         enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
         sideEffectsEvents.forEach(event => {
@@ -54,7 +54,10 @@ export const stateMachine = setup({
     ),
     add_policy_node: enqueueActions(
       ({ context, enqueue }, { docString }: { docString: string }) => {
-        const [updatedNodes, sideEffectsEvents] = createIAMPolicyNode(context, docString);
+        const [updatedNodes, sideEffectsEvents] = createIAMPolicyNode<
+          LevelObjectiveID,
+          NodeEditFinishEvent
+        >(context, docString);
 
         enqueue.assign({ nodes: updatedNodes });
         sideEffectsEvents.forEach(event => {
@@ -64,8 +67,10 @@ export const stateMachine = setup({
     ),
     update_iam_policy_node: enqueueActions(
       ({ context, enqueue }, { docString, nodeId }: { docString: string; nodeId: string }) => {
-        const [updatedNodes, updatedEdges, sideEffectsEvents] =
-          editIAMPolicyNode<NodeEditFinishEvent>(context, nodeId, docString);
+        const [updatedNodes, updatedEdges, sideEffectsEvents] = editIAMPolicyNode<
+          LevelObjectiveID,
+          NodeEditFinishEvent
+        >(context, nodeId, docString);
 
         enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
         sideEffectsEvents.forEach(event => {
@@ -85,21 +90,11 @@ export const stateMachine = setup({
       next_popup_index: ({ context }) => context.next_popup_index + 1,
       show_popovers: false,
     }),
-    // update_iam_node: assign({
-    //   nodes: ({ context }, params: { node_id: string; props: Partial<IAMAnyNodeData> }) =>
-    //     updateIAMNode(context, params.node_id, params.props),
-    // }),
     next_policy_role_objectives: assign({
       policy_role_objectives: ({ context }) =>
         POLICY_ROLE_CREATION_OBJECTIVES[context.next_policy_role_objectives_index ?? 0],
       next_policy_role_objectives_index: ({ context }) =>
         (context.next_policy_role_objectives_index ?? 0) + 1,
-    }),
-    next_edge_connection_objectives: assign({
-      edges_connection_objectives: ({ context }) =>
-        EDGE_CONNECTION_OBJECTIVES[context.next_edges_connection_objectives_index ?? 0],
-      next_policy_role_objectives_index: ({ context }) =>
-        (context.next_edges_connection_objectives_index ?? 0) + 1,
     }),
     hide_popups: assign({ show_popups: false }),
     hide_popovers: assign({ show_popovers: false }),
@@ -110,7 +105,7 @@ export const stateMachine = setup({
     add_new_level_objective: assign({
       level_objectives: (
         { context },
-        { id, objective }: { id: string; objective: LevelObjective }
+        { id, objective }: { id: string; objective: LevelObjective<LevelObjectiveID> }
       ) => ({
         ...context.level_objectives,
         [id]: objective,
@@ -263,7 +258,6 @@ export const stateMachine = setup({
       entry: assign({
         nodes: INITIAL_IN_LEVEL_NODES,
         edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
-        edges_connection_objectives: EDGE_CONNECTION_OBJECTIVES[0],
       }),
       states: {
         popup1: {
@@ -309,7 +303,6 @@ export const stateMachine = setup({
       entry: assign({
         nodes: INITIAL_IN_LEVEL_NODES,
         edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
-        edges_connection_objectives: EDGE_CONNECTION_OBJECTIVES[0],
         policy_role_edit_objectives: POLICY_ROLE_EDIT_OBJECTIVES[0],
       }),
       states: {

@@ -15,10 +15,11 @@ import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { TEMPLATE_GROUP_NODE } from './nodes/group-nodes';
 import { TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
 import { TEMPLATE_USER_NODE } from './nodes/user-nodes';
-import type { Context, InsideLevelMetadata, EventData, LevelObjective } from './types';
+import { LevelObjectiveID } from './types/objective-enums';
+import type { Context, InsideLevelMetadata, EventData } from './types/state-machine-types';
 import { PopoverTutorialMessage } from '../types';
-import { theme } from '@/theme';
-import { CreatableIAMNodeEntity, IAMAnyNodeData, IAMNodeEntity } from '@/types';
+import { LevelObjective } from '@/machines/types';
+import { IAMAnyNodeData, IAMNodeEntity } from '@/types';
 
 export const stateMachine = setup({
   types: {} as {
@@ -60,34 +61,20 @@ export const stateMachine = setup({
     add_new_level_objective: assign({
       level_objectives: (
         { context },
-        { id, objective }: { id: string; objective: LevelObjective }
+        { id, objective }: { id: string; objective: LevelObjective<LevelObjectiveID> }
       ) => ({
         ...context.level_objectives,
         [id]: objective,
       }),
     }),
     set_level_objectives: assign({
-      level_objectives: (_context, { objectives }: { objectives: LevelObjective[] }) => objectives,
+      level_objectives: (
+        _context,
+        { objectives }: { objectives: LevelObjective<LevelObjectiveID>[] }
+      ) => objectives,
     }),
     add_iam_node: assign({
       nodes: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => [...context.nodes, node],
-      next_iam_node_id: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => {
-        return _.update(
-          { ...context.next_iam_node_id },
-          [node.data.entity],
-          _.constant(context.next_iam_node_id[node.data.entity as CreatableIAMNodeEntity] + 1)
-        );
-      },
-      next_iam_node_default_position: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => {
-        if (context.fixed_iam_nodes_positions?.[node.id]) {
-          return context.next_iam_node_default_position;
-        } else {
-          return {
-            x: context.next_iam_node_default_position.x + 20,
-            y: context.next_iam_node_default_position.y + 20,
-          };
-        }
-      },
     }),
     show_popover: assign({
       popover_content: (
@@ -123,10 +110,6 @@ export const stateMachine = setup({
       [IAMNodeEntity.User]: 1,
       [IAMNodeEntity.Policy]: 1,
       [IAMNodeEntity.Role]: 1,
-    },
-    next_iam_node_default_position: {
-      x: theme.sizes.iamNodeWidthInPixels / 2,
-      y: theme.sizes.iamNodeWidthInPixels / 2,
     },
     policy_role_objectives: [],
     policy_role_edit_objectives: [],

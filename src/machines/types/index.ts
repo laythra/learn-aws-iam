@@ -16,7 +16,7 @@ import {
   IAMUserNodeData,
 } from '@/types';
 
-export interface GenericContext {
+export interface GenericContext<TLevelObjectiveID, TLevelObjectiveFinishEvent = never> {
   iam_user_template: Node<IAMUserNodeData>;
   iam_group_template: Node<IAMGroupNodeData>;
   iam_policy_template?: Node<IAMPolicyNodeData>;
@@ -26,18 +26,18 @@ export interface GenericContext {
   next_popover_index: number;
   next_popup_index: number;
   state_name: string;
-  next_iam_node_id: { [k in CreatableIAMNodeEntity]: number };
+  next_iam_node_id?: { [k in CreatableIAMNodeEntity]: number };
   nodes: Node<IAMAnyNodeData>[];
   edges: Edge[];
   final_edges: Edge[];
   show_popovers: boolean;
   show_popups: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
-  next_iam_node_default_position: XYPosition;
+  next_iam_node_default_position?: XYPosition;
   fixed_iam_nodes_positions?: { [key: string]: XYPosition };
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  level_objectives: LevelObjective[];
+  level_objectives: LevelObjective<TLevelObjectiveID, TLevelObjectiveFinishEvent>[];
   next_policy_role_objectives_index?: number;
   next_edges_connection_objectives_index?: number;
   level_finished?: boolean;
@@ -96,7 +96,6 @@ export type GenericInsideLevelMetadata = {
   entity_targets?: IAMNodeEntity[];
 };
 
-export type InsideTutorial = 'inside_tutorial';
 export type PopoverTutorialMessage = {
   element_id: string;
   popover_title: string;
@@ -112,33 +111,36 @@ export type PopupTutorialMessage = {
   image?: string;
 };
 
-export type LevelObjective = {
-  id: string;
+export type LevelObjective<TObjectiveID, TFinishEvent = never> = {
+  id: TObjectiveID;
   label: string;
   finished: boolean;
-  on_finished_event?: string;
+  on_finished_event?: TFinishEvent;
 };
 
 export type EdgeConnectionObjective = {
   required_edges: Edge[];
+  /**
+   * @deprecated Use `granted_accesses` inside policies instead
+   */
   locked_edges: Edge[];
   on_finish_event: string;
   is_finished: boolean;
 };
 
-export interface IAMPolicyRoleCreationObjective {
+export interface IAMPolicyRoleCreationObjective<TFinishEvent = string> {
   readonly entity_id: string;
   readonly entity: IAMScriptableEntity;
   readonly json_schema: Schema;
   readonly description?: string;
   readonly initial_code: object;
-  readonly on_finish_event: NodeCreationFinishEvent;
+  readonly on_finish_event: TFinishEvent;
   readonly validate_inside_code_editor: boolean;
   readonly resource_affected: string[];
   readonly validate_function?: ValidateFunction;
 }
 
-export interface IAMPolicyRoleEditObjective {
+export interface IAMPolicyRoleEditObjective<TFinishEvent = string> {
   readonly entity_id: string;
   readonly entity: IAMScriptableEntity;
   readonly json_schema: Schema;
@@ -149,7 +151,7 @@ export interface IAMPolicyRoleEditObjective {
    */
   readonly description?: string;
 
-  readonly on_finish_event: NodeEditFinishEvent;
+  readonly on_finish_event: TFinishEvent;
   readonly validate_function: ValidateFunction;
 
   /**
@@ -162,17 +164,7 @@ export interface IAMPolicyRoleEditObjective {
    */
   readonly resources_to_revoke: string[];
 }
-
-export enum EdgeConnectionFinishEvent {}
-export enum NodeCreationFinishEvent {
-  S3_READ_POLICY_CREATED = 'S3_READ_POLICY_CREATED',
-  S3_READ_WRITE_POLICY_CREATED = 'S3_READ_WRITE_POLICY_CREATED',
-  DYNAMO_DB_READ_WRITE_POLICY_CREATED = 'DYNAMO_DB_READ_WRITE_POLICY_CREATED',
-  CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED = 'CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED',
-}
-
-export enum NodeEditFinishEvent {
-  DEVELOPER_POLICY_EDITED = 'DEVELOPER_POLICY_EDITED',
-  DATA_SCIENTIST_POLICY_EDITED = 'DATA_SCIENTIST_POLICY_EDITED',
-  INTERN_POLICY_EDITED = 'INTERN_POLICY_EDITED',
-}
+export type IAMUserGroupCreationObjective<TFinishEvent> = {
+  readonly on_finish_event: TFinishEvent;
+  finished: boolean;
+};

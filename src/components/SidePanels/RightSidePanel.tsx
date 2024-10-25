@@ -1,5 +1,6 @@
 import { Text, Flex, Divider, Box, List, ListItem, ListIcon, HStack } from '@chakra-ui/react';
 import { CheckBadgeIcon, XCircleIcon } from '@heroicons/react/20/solid';
+import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
@@ -8,10 +9,10 @@ import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';
 
 const RightSidePanel: React.FC = () => {
-  const [levelObjectives, isSidePanelOpen] = LevelsProgressionContext.useSelector(state => [
-    state.context.level_objectives,
-    state.context.side_panel_open,
-  ]);
+  const [levelObjectives, isSidePanelOpen] = LevelsProgressionContext.useSelector(
+    state => [state.context.level_objectives, state.context.side_panel_open],
+    _.isEqual
+  );
 
   return (
     <SidePanel isOpen={isSidePanelOpen ?? false}>
