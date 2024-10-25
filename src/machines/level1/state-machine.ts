@@ -1,12 +1,18 @@
 import _ from 'lodash';
-import type { Edge, Node } from 'reactflow';
-import { setup, assign } from 'xstate';
+import { setup, assign, enqueueActions } from 'xstate';
 
-import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
-import { initial_nodes, template_nodes, edges } from './nodes';
+// import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
+// import { initial_nodes, template_nodes, edges } from './nodes';
+import { INITIAL_TUTORIAL_NODES } from './nodes';
+import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
+import { USER_GROUP_CREATION_OBJECTIVES } from './objectives/user-group-creation-objectives';
+import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
+import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
+import { NodeCreationFinishEvent } from './types/finish-event-enums';
+import { LevelObjectiveID } from './types/objective-enums';
 import type { Context, InsideLevelMetadata, EventData } from './types/state-machine-types';
-import { IAMGroupNodeData, IAMUserNodeData } from '@/types';
-import { getEdgeName } from '@/utils/names';
+import { createIAMUserNode } from '../utils/common-state-machine-actions';
+import { IAMUserNodeData } from '@/types';
 
 export const stateMachine = setup({
   types: {} as {
@@ -42,8 +48,6 @@ export const stateMachine = setup({
   id: 'level1_state_machine',
   initial: 'inside_tutorial',
   context: {
-    iam_user_template: template_nodes.iam_user as Node<IAMUserNodeData>,
-    iam_group_template: template_nodes.iam_group as Node<IAMGroupNodeData>,
     level_title: 'IAM Basics',
     level_description: 'Learn about Identity and Access Management',
     level_number: 1,
@@ -55,7 +59,6 @@ export const stateMachine = setup({
     nodes: [],
     metadata_keys: {},
     edges: [],
-    final_edges: edges,
     level_objectives: LEVEL_OBJECTIVES,
     fixed_iam_nodes_positions: {},
     policy_role_objectives: [],
@@ -109,7 +112,8 @@ export const stateMachine = setup({
     },
   },
   entry: assign({
-    nodes: initial_nodes,
+    nodes: INITIAL_TUTORIAL_NODES,
+    user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
   }),
   states: {
     inside_tutorial: {
@@ -223,18 +227,6 @@ export const stateMachine = setup({
       }),
       states: {
         connect_iam_policy_to_user: {
-          meta: {
-            connection_targets: [
-              {
-                required_edges: [
-                  _.find(edges, { id: getEdgeName('iam_policy_1', 'iam_user_1') }) as Edge,
-                ],
-                locked_edges: [
-                  _.find(edges, { id: getEdgeName('iam_user_1', 'iam_resource_1') }) as Edge,
-                ],
-              },
-            ],
-          },
           on: {
             IAM_POLICY_CONNECTED: {
               target: 'policy_attached',

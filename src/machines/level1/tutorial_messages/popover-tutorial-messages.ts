@@ -1,5 +1,4 @@
-import { LevelObjectiveID } from './types/objective-enums';
-import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
+import type { PopoverTutorialMessage } from '@/machines/types';
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
@@ -64,34 +63,5 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_next_button: true,
     show_close_button: false,
     popover_placement: 'top',
-  },
-];
-
-export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
-  {
-    title: 'IAM Project',
-    content: `This is a project that will guide you through the basics of IAM`,
-  },
-];
-
-export const POLICY_CONTENT = JSON.stringify(
-  {
-    Version: '2012-10-17',
-    Statement: [{ Effect: 'Allow', Action: '*', Resource: '*' }],
-  },
-  null,
-  2
-);
-
-export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID>[] = [
-  {
-    finished: false,
-    id: LevelObjectiveID.CreateIAMUser,
-    label: 'Create an IAM user',
-  },
-  {
-    finished: false,
-    id: LevelObjectiveID.GrantIAMUserReadAccessToS3Bucket,
-    label: 'Grant IAM user read access to S3 bucket',
   },
 ];

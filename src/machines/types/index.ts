@@ -17,8 +17,8 @@ import {
 } from '@/types';
 
 export interface GenericContext<TLevelObjectiveID, TLevelObjectiveFinishEvent = never> {
-  iam_user_template: Node<IAMUserNodeData>;
-  iam_group_template: Node<IAMGroupNodeData>;
+  iam_user_template?: Node<IAMUserNodeData>;
+  iam_group_template?: Node<IAMGroupNodeData>;
   iam_policy_template?: Node<IAMPolicyNodeData>;
   level_title: string;
   level_description: string;
@@ -29,7 +29,7 @@ export interface GenericContext<TLevelObjectiveID, TLevelObjectiveFinishEvent = 
   next_iam_node_id?: { [k in CreatableIAMNodeEntity]: number };
   nodes: Node<IAMAnyNodeData>[];
   edges: Edge[];
-  final_edges: Edge[];
+  final_edges?: Edge[];
   show_popovers: boolean;
   show_popups: boolean;
   metadata_keys: { [key: string]: string }; // Make it stricter
