@@ -3,16 +3,17 @@ import Ajv from 'ajv';
 import dataScientistsPolicy from '../schemas/edit-objectives-schemas/data-scientists-policy.json';
 import developersPolicy from '../schemas/edit-objectives-schemas/developers-policy.json';
 import internsPolicy from '../schemas/edit-objectives-schemas/interns-policy.json';
-import { NodeEditFinishEvent } from '../types/finish-event-enums';
+import { FinishEventMap, NodeEditFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { IAMPolicyRoleEditObjective } from '@/machines/types';
+import { IAMPolicyRoleEditObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
 
 const AJV_COMPILER = new Ajv();
 
-export const POLICY_ROLE_EDIT_OBJECTIVES: IAMPolicyRoleEditObjective<NodeEditFinishEvent>[][] = [
+export const POLICY_ROLE_EDIT_OBJECTIVES: IAMPolicyRoleEditObjective<FinishEventMap>[][] = [
   [
     {
+      type: ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE,
       entity_id: PolicyNodeID.DeveloperPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: developersPolicy,
@@ -27,6 +28,7 @@ export const POLICY_ROLE_EDIT_OBJECTIVES: IAMPolicyRoleEditObjective<NodeEditFin
       validate_function: AJV_COMPILER.compile(developersPolicy),
     },
     {
+      type: ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE,
       entity_id: PolicyNodeID.DataScientistPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: dataScientistsPolicy,
@@ -43,6 +45,7 @@ export const POLICY_ROLE_EDIT_OBJECTIVES: IAMPolicyRoleEditObjective<NodeEditFin
       validate_function: AJV_COMPILER.compile(dataScientistsPolicy),
     },
     {
+      type: ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE,
       entity_id: PolicyNodeID.InternPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: internsPolicy,

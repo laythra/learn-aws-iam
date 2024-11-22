@@ -1,50 +1,21 @@
-import _ from 'lodash';
-import { setup, assign, enqueueActions } from 'xstate';
+import { assign, enqueueActions } from 'xstate';
 
-// import { POPOVER_TUTORIAL_MESSAGES, POPUP_TUTORIAL_MESSAGES, LEVEL_OBJECTIVES } from './config';
-// import { initial_nodes, template_nodes, edges } from './nodes';
 import { INITIAL_TUTORIAL_NODES } from './nodes';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { USER_GROUP_CREATION_OBJECTIVES } from './objectives/user-group-creation-objectives';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
-import { NodeCreationFinishEvent } from './types/finish-event-enums';
+import { FinishEventMap } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
-import type { Context, InsideLevelMetadata, EventData } from './types/state-machine-types';
-import { createIAMUserNode } from '../utils/common-state-machine-actions';
-import { IAMUserNodeData } from '@/types';
+import { createStateMachineSetup } from '../common-state-machine-setup';
+import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
-export const stateMachine = setup({
-  types: {} as {
-    context: Context;
-    events: EventData;
-    meta: InsideLevelMetadata;
-  },
-  actions: {
-    add_iam_user_node: enqueueActions(
-      ({ context, enqueue }, { params }: { params: Partial<IAMUserNodeData> }) => {
-        const [updatedNodes, sideEffectsEvents] = createIAMUserNode<
-          LevelObjectiveID,
-          NodeCreationFinishEvent
-        >(context, params);
-
-        enqueue.assign({ nodes: updatedNodes });
-        sideEffectsEvents.forEach(event => enqueue.raise({ type: event }));
-      }
-    ),
-    next_popover: assign({
-      popover_content: ({ context }) => POPOVER_TUTORIAL_MESSAGES[context.next_popover_index ?? 0],
-      next_popover_index: ({ context }) => context.next_popover_index + 1,
-      show_popovers: true,
-    }),
-    hide_popups: assign({ show_popups: false }),
-    change_objective_progress: assign({
-      level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) => ({
-        ..._.update(context.level_objectives, [id, 'finished'], _.constant(finished)), // cloning is a must since update returns the same reference
-      }),
-    }),
-  },
-}).createMachine({
+export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
+  POPOVER_TUTORIAL_MESSAGES,
+  POPUP_TUTORIAL_MESSAGES,
+  [],
+  []
+).createMachine({
   id: 'level1_state_machine',
   initial: 'inside_tutorial',
   context: {
@@ -67,19 +38,13 @@ export const stateMachine = setup({
     user_group_creation_objectives: [],
   },
   on: {
-    ADD_IAM_USER_NODE: {
+    [StatefulStateMachineEvent.AddIAMUserNode]: {
+      guard: ({ context }) => context.state_name === 'inside_tutorial',
       actions: [
         {
           type: 'add_iam_user_node',
-          params: ({ event }) => ({ params: event.user_props }),
+          params: ({ event }) => ({ params: event.user_node }),
         },
-      ],
-    },
-    ADD_IAM_GROUP_NODE: {
-      actions: [
-        assign({
-          nodes: ({ context, event }) => [...context.nodes, event.node],
-        }),
       ],
     },
     ADD_EDGE: {
@@ -110,17 +75,28 @@ export const stateMachine = setup({
         show_popovers: false,
       }),
     },
+    TOGGLE_SIDE_PANEL: {
+      actions: assign({
+        side_panel_open: ({ context }) => !context.side_panel_open,
+      }),
+    },
+    ATTACH_POLICY_TO_USER: {
+      actions: [
+        {
+          type: 'attach_policy_to_user',
+          params: ({ event }) => ({ policyNode: event.sourceNode, userNode: event.targetNode }),
+        },
+      ],
+    },
   },
-  entry: assign({
-    nodes: INITIAL_TUTORIAL_NODES,
-    user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
-  }),
   states: {
     inside_tutorial: {
-      initial: 'welcoming_message',
       entry: assign({
+        nodes: INITIAL_TUTORIAL_NODES,
+        user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
         state_name: 'inside_tutorial',
       }),
+      initial: 'welcoming_message',
       onDone: 'inside_level',
       states: {
         welcoming_message: {
@@ -174,13 +150,27 @@ export const stateMachine = setup({
             show_popovers: true,
           }),
           on: {
-            ADD_IAM_USER_NODE: {
+            [StatefulStateMachineEvent.AddIAMUserNode]: {
               actions: [
                 {
+                  type: 'add_iam_user_node',
+                  params: ({ event }) => ({ params: event.user_node }),
+                },
+                {
                   type: 'change_objective_progress',
-                  params: { id: 'create_iam_user', finished: true },
+                  params: { id: LevelObjectiveID.CreateIAMUser, finished: true },
                 },
               ],
+              // actions: enqueueActions(({ enqueue }) => {
+              //   enqueue({
+              //     type: 'add_iam_user_node',
+              //     params: ({ event }) => ({ params: event.user_node }),
+              //   });
+              //   enqueue({
+              //     type: 'change_objective_progress',
+              //     params: { id: LevelObjectiveID.CreateIAMUser, finished: true },
+              //   });
+              // }),
               target: 'iam_user_popover',
             },
           },
@@ -220,10 +210,6 @@ export const stateMachine = setup({
       entry: assign({
         show_popovers: false,
         state_name: 'inside_level',
-        metadata_keys: {
-          'level1_state_machine.inside_level.connect_iam_policy_to_user': 'IAM_POLICY_CONNECTED',
-          'level1_state_machine.inside_level.create_iam_user': 'IAM_USER_CREATED',
-        },
       }),
       states: {
         connect_iam_policy_to_user: {

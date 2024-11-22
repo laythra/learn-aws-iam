@@ -15,8 +15,28 @@ import {
   IAMNodeEntity,
   IAMUserNodeData,
 } from '@/types';
+import {
+  StatefulStateMachineEvent,
+  StatelessStateMachineEvent,
+} from '@/types/state-machine-event-enums';
 
-export interface GenericContext<TLevelObjectiveID, TLevelObjectiveFinishEvent = never> {
+export enum ObjectiveType {
+  POLICY_ROLE_CREATION_OBJECTIVE = 'POLICY_ROLE_CREATION_OBJECTIVE',
+  POLICY_ROLE_EDIT_OBJECTIVE = 'POLICY_ROLE_EDIT_OBJECTIVE',
+  IAM_USER_GROUP_CREATION_OBJECTIVE = 'IAM_USER_GROUP_CREATION_OBJECTIVE',
+  EDGE_CONNECTION_OBJECTIVE = 'EDGE_CONNECTION_OBJECTIVE',
+  LEVEL_OBJECTIVE = 'LEVEL_OBJECTIVE',
+}
+
+export interface BaseFinishEventMap {
+  [ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE]: string;
+  [ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE]: string;
+  [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: string;
+  [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: string;
+  [ObjectiveType.LEVEL_OBJECTIVE]: string;
+}
+
+export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
   iam_user_template?: Node<IAMUserNodeData>;
   iam_group_template?: Node<IAMGroupNodeData>;
   iam_policy_template?: Node<IAMPolicyNodeData>;
@@ -37,19 +57,19 @@ export interface GenericContext<TLevelObjectiveID, TLevelObjectiveFinishEvent = 
   fixed_iam_nodes_positions?: { [key: string]: XYPosition };
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  level_objectives: LevelObjective<TLevelObjectiveID, TLevelObjectiveFinishEvent>[];
   next_policy_role_objectives_index?: number;
   next_edges_connection_objectives_index?: number;
   level_finished?: boolean;
   side_panel_open?: boolean;
-  policy_role_objectives: IAMPolicyRoleCreationObjective[];
-  policy_role_edit_objectives: IAMPolicyRoleEditObjective[];
-  edges_connection_objectives: EdgeConnectionObjective[];
-  user_group_creation_objectives: IAMUserGroupCreationObjective[];
+  level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
+  policy_role_objectives: IAMPolicyRoleCreationObjective<TBaseFinishEventMap>[];
+  policy_role_edit_objectives: IAMPolicyRoleEditObjective<TBaseFinishEventMap>[];
+  edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
+  user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
-export type GenericEventData =
+export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
   | {
       type:
         | 'NEXT'
@@ -64,16 +84,17 @@ export type GenericEventData =
         | 'HIDE_POPOVERS'
         | 'CREATE_POLICY_POPUP_OPENED'
         | 'CREATE_IAM_IDENTITY_POPUP_OPENED'
-        | 'CREATE_IAM_IDENTITY_TAB_CHANGED'
         | 'IAM_USER_ATTACHED_TO_GROUP'
         | 'IAM_POLICY_ATTACHED_TO_GROUP'
-        | 'TOGGLE_SIDE_PANEL';
+        | 'TOGGLE_SIDE_PANEL'
+        | (TBaseFinishEventMap[keyof TBaseFinishEventMap] & string)
+        | StatelessStateMachineEvent;
     }
   | { type: 'ADD_IAM_NODE'; node: Node<IAMAnyNodeData> }
   | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string }
   | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
   | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
-  | { type: 'ADD_IAM_USER_NODE'; user_props: Partial<IAMUserNodeData> }
+  | { type: StatefulStateMachineEvent.AddIAMUserNode; user_node: Partial<IAMUserNodeData> }
   | { type: 'ADD_IAM_GROUP_NODE'; node: Node }
   | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }
   | { type: 'DELETE_EDGE'; edge: Edge<IAMEdgeData> }
@@ -112,36 +133,40 @@ export type PopupTutorialMessage = {
   image?: string;
 };
 
-export type LevelObjective<TObjectiveID, TFinishEvent = never> = {
+export type LevelObjective<TObjectiveID, TFinishEventMap extends BaseFinishEventMap> = {
+  type: ObjectiveType.LEVEL_OBJECTIVE;
   id: TObjectiveID;
   label: string;
   finished: boolean;
-  on_finished_event?: TFinishEvent;
+  on_finished_event?: TFinishEventMap[ObjectiveType.LEVEL_OBJECTIVE];
 };
 
-export type EdgeConnectionObjective = {
-  required_edges: Edge[];
+export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> = {
+  readonly type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE;
+  readonly required_edges: Edge[];
   /**
    * @deprecated Use `granted_accesses` inside policies instead
    */
-  locked_edges: Edge[];
-  on_finish_event: string;
-  is_finished: boolean;
+  locked_edges?: Edge[];
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE];
+  readonly is_finished: boolean;
 };
 
-export interface IAMPolicyRoleCreationObjective<TFinishEvent = string> {
+export interface IAMPolicyRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
+  readonly type: ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE;
   readonly entity_id: string;
   readonly entity: IAMScriptableEntity;
   readonly json_schema: Schema;
   readonly description?: string;
   readonly initial_code: object;
-  readonly on_finish_event: TFinishEvent;
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE];
   readonly validate_inside_code_editor: boolean;
   readonly resource_affected: string[];
   readonly validate_function?: ValidateFunction;
 }
 
-export interface IAMPolicyRoleEditObjective<TFinishEvent = string> {
+export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEventMap> {
+  readonly type: ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE;
   readonly entity_id: string;
   readonly entity: IAMScriptableEntity;
   readonly json_schema: Schema;
@@ -152,7 +177,7 @@ export interface IAMPolicyRoleEditObjective<TFinishEvent = string> {
    */
   readonly description?: string;
 
-  readonly on_finish_event: TFinishEvent;
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE];
   readonly validate_function: ValidateFunction;
 
   /**
@@ -165,8 +190,19 @@ export interface IAMPolicyRoleEditObjective<TFinishEvent = string> {
    */
   readonly resources_to_revoke: string[];
 }
-export type IAMUserGroupCreationObjective<TFinishEvent = string> = {
-  readonly on_finish_event: TFinishEvent;
+export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEventMap> = {
+  readonly entity_id: string;
+  readonly type: ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE;
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE];
   readonly entity_to_create: CreatableIAMNodeEntity;
+  readonly initial_position?: string;
   finished: boolean;
 };
+
+// /**
+//  * Typescript should be able to narrow down the concrete type of the objective based on the `type` property.
+//  */
+// export type IAMAnyObjective<TBaseFinishEventMap extends BaseFinishEventMap> =
+//   | IAMPolicyRoleCreationObjective<TBaseFinishEventMap>
+//   | IAMPolicyRoleEditObjective<TBaseFinishEventMap>
+//   | IAMUserGroupCreationObjective<TBaseFinishEventMap>;

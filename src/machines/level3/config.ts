@@ -7,14 +7,21 @@ import { ResourceNodeID } from './nodes/resource-nodes';
 import cloudfrontReadPolicySchema from './schemas/policy/cloudfront-read-policy-schema.json';
 import s3ReadPolicySchema from './schemas/policy/s3-read-policy-schema.json';
 import s3ReadWritePolicySchema from './schemas/policy/s3-read-write-policy-schema.json';
-import { NodeCreationFinishEvent } from './types/finish-event-enums';
+import {
+  EdgeConnectionFinishEvent,
+  FinishEventMap,
+  LevelObjectiveFinishEvent,
+  NodeCreationFinishEvent,
+} from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { MANAGED_POLICIES } from '../config';
-import type {
+import {
   PopoverTutorialMessage,
   PopupTutorialMessage,
   LevelObjective,
   EdgeConnectionObjective,
+  ObjectiveType,
+  BaseFinishEventMap,
 } from '../types';
 import { IAMPolicyRoleCreationObjective } from '@/machines/types';
 import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
@@ -153,33 +160,42 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   },
 ];
 
-export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID>[] = [
+export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[] = [
   {
+    type: ObjectiveType.LEVEL_OBJECTIVE,
     label: 'Create your first customer managed policy',
     finished: false,
     id: LevelObjectiveID.CreateFirstCustomerManagedPolicy,
+    on_finished_event: LevelObjectiveFinishEvent.LEVEL_OBJECTIVE_FINISHED,
   },
   {
+    type: ObjectiveType.LEVEL_OBJECTIVE,
     label: '**Frontend Team**: Read/Write access to S3 bucket `public-assets`',
     finished: false,
     id: LevelObjectiveID.FrontendTeamS3BucketAccess,
+    on_finished_event: LevelObjectiveFinishEvent.LEVEL_OBJECTIVE_FINISHED,
   },
   {
+    type: ObjectiveType.LEVEL_OBJECTIVE,
     label: '**Frontend Team**: Read access to CloudFront Distribution `E1234567890ABC`',
     finished: false,
     id: LevelObjectiveID.FrontendTeamCloudFrontAccess,
+    on_finished_event: LevelObjectiveFinishEvent.LEVEL_OBJECTIVE_FINISHED,
   },
   {
+    type: ObjectiveType.LEVEL_OBJECTIVE,
     label: '**Backend Team**: Read/Write access to DynamoDB table: `user-profiles`',
     finished: false,
     id: LevelObjectiveID.BackendTeamDynamoDBAccess,
+    on_finished_event: LevelObjectiveFinishEvent.LEVEL_OBJECTIVE_FINISHED,
   },
 ];
 
-export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID>[] = [];
-export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][] = [
+export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[] = [];
+export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective<FinishEventMap>[][] = [
   [
     {
+      type: ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadPolicySchema,
@@ -195,6 +211,7 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][]
   ],
   [
     {
+      type: ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadWritePolicySchema,
@@ -205,6 +222,7 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][]
       validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
     },
     {
+      type: ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.CloudfrontReadAccess,
       entity: IAMNodeEntity.Policy,
       json_schema: cloudfrontReadPolicySchema,
@@ -215,6 +233,7 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][]
       validate_function: AJV_COMPILER.compile(iamPolicySchema),
     },
     {
+      type: ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.DynamoDBReadWriteAccess,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadWritePolicySchema,
@@ -227,32 +246,35 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective[][]
   ],
 ];
 
-export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective[][] = [
+export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>[][] = [
   [
     {
+      type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         groupedByIdEdges[getEdgeName(PolicyNodeID.S3ReadWriteAcces, GroupNodeID.FrontendGroup)],
       ],
       locked_edges: [],
-      on_finish_event: 'S3_READ_WRITE_POLICY_CONNECTED',
+      on_finish_event: EdgeConnectionFinishEvent.S3_READ_WRITE_POLICY_CONNECTED,
       is_finished: false,
     },
     {
+      type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         groupedByIdEdges[getEdgeName(PolicyNodeID.CloudfrontReadAccess, GroupNodeID.FrontendGroup)],
       ],
       locked_edges: [],
-      on_finish_event: 'CLOUDFRONT_READ_POLICY_CONNECTED',
+      on_finish_event: EdgeConnectionFinishEvent.CLOUDFRONT_READ_POLICY_CONNECTED,
       is_finished: false,
     },
     {
+      type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         groupedByIdEdges[
           getEdgeName(PolicyNodeID.DynamoDBReadWriteAccess, GroupNodeID.BackendGroup)
         ],
       ],
       locked_edges: [],
-      on_finish_event: 'DYNAMO_DB_READ_WRITE_POLICY_CONNECTED',
+      on_finish_event: EdgeConnectionFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CONNECTED,
       is_finished: false,
     },
   ],

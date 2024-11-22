@@ -1,5 +1,11 @@
 import { LevelObjectiveID } from './types/objective-enums';
-import type { PopoverTutorialMessage, PopupTutorialMessage, LevelObjective } from '../types';
+import {
+  type PopoverTutorialMessage,
+  type PopupTutorialMessage,
+  type LevelObjective,
+  type BaseFinishEventMap,
+  ObjectiveType,
+} from '../types';
 import {
   AccessLevel,
   IAMNodeImage,
@@ -102,21 +108,32 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   },
 ];
 
-export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID>[] = [
+export interface FinishEventMap extends BaseFinishEventMap {
+  [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: never;
+  [ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE]: never;
+  [ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE]: never;
+  [ObjectiveType.LEVEL_OBJECTIVE]: never;
+  [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: never;
+}
+
+export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[] = [
   {
+    type: ObjectiveType.LEVEL_OBJECTIVE,
     id: LevelObjectiveID.CreateIAMGroup,
     finished: false,
     label: 'Create an IAM Group',
   },
   {
+    type: ObjectiveType.LEVEL_OBJECTIVE,
     id: LevelObjectiveID.MakeScalingEasier,
     finished: false,
     label: 'Make things easier to scale using the newly created group',
   },
 ];
 
-export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID>[] = [
+export const HIDDEN_LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[] = [
   {
+    type: ObjectiveType.LEVEL_OBJECTIVE,
     id: LevelObjectiveID.AttachUserToGroup,
     finished: false,
     label: 'Give your user access to all resources in one go',

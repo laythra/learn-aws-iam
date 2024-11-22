@@ -9,9 +9,10 @@ import {
   createIAMPolicyNode,
   changeLevelObjectiveProgress,
   createIAMUserNode,
-} from './utils/common-state-machine-actions-new';
+} from './utils/common-state-machine-actions';
 import type {
-  FinishEventMap,
+  BaseFinishEventMap,
+  EdgeConnectionObjective,
   PopoverTutorialMessage,
   PopupTutorialMessage,
 } from '@/machines/types';
@@ -21,7 +22,7 @@ import type {
   LevelObjective,
   IAMPolicyRoleCreationObjective,
 } from '@/machines/types';
-import { IAMPolicyNodeData, IAMUserNodeData } from '@/types';
+import { IAMAnyNodeData, IAMPolicyNodeData, IAMUserNodeData } from '@/types';
 
 /**
  * Defines a common state machine setup for all levels
@@ -31,7 +32,7 @@ import { IAMPolicyNodeData, IAMUserNodeData } from '@/types';
  * We still need to define the various top-level events for each state machine,
  * ie: `ADD_IAM_USER_NODE`, `ADD_IAM_POLICY_NODE`, etc.
  * Unfortunately, we can't share those definitions across state machines without losing typescript's type safety.
- * It all boils down losing the contextual typing magic, which xstate heavily relies on.
+ * It all boils down to losing the contextual typing magic, which xstate heavily relies on.
  * check the github issue: https://github.com/statelyai/xstate/issues/4846
  * @template TLevelObjectiveID - Type of level objective ID, will be passed to the generic context
  * @template TFinishEventMap - Defines the event finish type for each objective type, will be passed to the generic context
@@ -41,10 +42,14 @@ import { IAMPolicyNodeData, IAMUserNodeData } from '@/types';
  */
 
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-export const createStateMachineSetup = <TLevelObjectiveID, TFinishEventMap extends FinishEventMap>(
+export const createStateMachineSetup = <
+  TLevelObjectiveID,
+  TFinishEventMap extends BaseFinishEventMap,
+>(
   popoverTutorialMessages: PopoverTutorialMessage[],
   popupTutorialMessages: PopupTutorialMessage[],
-  policyRoleCreationObjectives: IAMPolicyRoleCreationObjective<TFinishEventMap>[][]
+  policyRoleCreationObjectives: IAMPolicyRoleCreationObjective<TFinishEventMap>[][],
+  edgeConnectionObjectives: EdgeConnectionObjective<TFinishEventMap>[][]
 ) => {
   return setup({
     types: {} as {
@@ -150,10 +155,7 @@ export const createStateMachineSetup = <TLevelObjectiveID, TFinishEventMap exten
           editObjectiveState(context, id, true),
       }),
       add_iam_node: assign({
-        nodes: ({ context }, { node }: { node: Node<IAMPolicyNodeData> }) => [
-          ...context.nodes,
-          node,
-        ],
+        nodes: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => [...context.nodes, node],
       }),
       show_popover: assign({
         popover_content: (
@@ -163,6 +165,11 @@ export const createStateMachineSetup = <TLevelObjectiveID, TFinishEventMap exten
         show_popovers: true,
       }),
       toggle_side_panel: assign({ side_panel_open: ({ context }) => !context.side_panel_open }),
+      show_side_panel: assign({ side_panel_open: true }),
+      next_edge_connection_objectives: assign({
+        edges_connection_objectives: ({ context }) =>
+          edgeConnectionObjectives[context.next_edges_connection_objectives_index ?? 0],
+      }),
     },
   });
 };

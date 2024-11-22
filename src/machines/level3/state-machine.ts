@@ -1,6 +1,5 @@
 import _ from 'lodash';
-import type { Node } from 'reactflow';
-import { setup, assign } from 'xstate';
+import { assign } from 'xstate';
 
 import {
   POPOVER_TUTORIAL_MESSAGES,
@@ -15,77 +14,18 @@ import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { TEMPLATE_GROUP_NODE } from './nodes/group-nodes';
 import { TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
 import { TEMPLATE_USER_NODE } from './nodes/user-nodes';
+import { FinishEventMap } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
-import type { Context, InsideLevelMetadata, EventData } from './types/state-machine-types';
-import { PopoverTutorialMessage } from '../types';
-import { LevelObjective } from '@/machines/types';
-import { IAMAnyNodeData, IAMNodeEntity } from '@/types';
+import { createStateMachineSetup } from '../common-state-machine-setup';
+import { GenericContext } from '../types';
+import { IAMNodeEntity } from '@/types';
 
-export const stateMachine = setup({
-  types: {} as {
-    context: Context;
-    events: EventData;
-    meta: InsideLevelMetadata;
-  },
-  actions: {
-    next_popover: assign({
-      popover_content: ({ context }) => POPOVER_TUTORIAL_MESSAGES[context.next_popover_index ?? 0],
-      show_popovers: ({ context }) => context.next_popover_index < POPOVER_TUTORIAL_MESSAGES.length,
-      next_popover_index: ({ context }) => context.next_popover_index + 1,
-      show_popups: false,
-    }),
-    next_popup: assign({
-      popup_content: ({ context }) => POPUP_TUTORIAL_MESSAGES[context.next_popup_index],
-      show_popups: ({ context }) => context.next_popup_index < POPUP_TUTORIAL_MESSAGES.length,
-      next_popup_index: ({ context }) => context.next_popup_index + 1,
-      show_popovers: false,
-    }),
-    next_policy_role_objectives: assign({
-      policy_role_objectives: ({ context }) =>
-        POLICY_ROLE_CREATION_OBJECTIVES[context.next_policy_role_objectives_index ?? 0],
-      next_policy_role_objectives_index: ({ context }) =>
-        (context.next_policy_role_objectives_index ?? 0) + 1,
-    }),
-    next_edge_connection_objectives: assign({
-      edges_connection_objectives: ({ context }) =>
-        EDGE_CONNECTION_OBJECTIVES[context.next_edges_connection_objectives_index ?? 0],
-      next_policy_role_objectives_index: ({ context }) =>
-        (context.next_edges_connection_objectives_index ?? 0) + 1,
-    }),
-    hide_popups: assign({ show_popups: false }),
-    hide_popovers: assign({ show_popovers: false }),
-    change_objective_progress: assign({
-      level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) =>
-        _.update({ ...context.level_objectives }, [id, 'finished'], _.constant(finished)),
-    }),
-    add_new_level_objective: assign({
-      level_objectives: (
-        { context },
-        { id, objective }: { id: string; objective: LevelObjective<LevelObjectiveID> }
-      ) => ({
-        ...context.level_objectives,
-        [id]: objective,
-      }),
-    }),
-    set_level_objectives: assign({
-      level_objectives: (
-        _context,
-        { objectives }: { objectives: LevelObjective<LevelObjectiveID>[] }
-      ) => objectives,
-    }),
-    add_iam_node: assign({
-      nodes: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => [...context.nodes, node],
-    }),
-    show_popover: assign({
-      popover_content: (
-        _context_obj,
-        { popover_content }: { popover_content: PopoverTutorialMessage }
-      ) => popover_content,
-      show_popovers: true,
-    }),
-    show_side_panel: assign({ side_panel_open: true }),
-  },
-}).createMachine({
+export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
+  POPOVER_TUTORIAL_MESSAGES,
+  POPUP_TUTORIAL_MESSAGES,
+  [],
+  EDGE_CONNECTION_OBJECTIVES
+).createMachine({
   id: 'level3_state_machine',
   initial: 'inside_tutorial',
   context: {
@@ -133,44 +73,44 @@ export const stateMachine = setup({
     //     },
     //   ],
     // },
-    ADD_IAM_GROUP_NODE: {
-      actions: [
-        {
-          type: 'add_iam_node',
-          params: ({ event }) => ({ node: event.node }),
-        },
-      ],
-    },
-    ADD_EDGE: {
-      actions: [
-        assign({
-          edges: ({ context, event }) => [...context.edges, event.edge],
-        }),
-      ],
-    },
-    DELETE_EDGE: {
-      actions: [
-        assign({
-          edges: ({ context, event }) => context.edges.filter(edge => edge.id !== event.edge.id),
-        }),
-      ],
-    },
-    SET_NODES: {
-      actions: assign({
-        nodes: ({ event }) => event.nodes,
-      }),
-    },
-    SET_EDGES: {
-      actions: assign({
-        edges: ({ event }) => event.edges,
-      }),
-    },
-    SHOW_POPOVER: {
-      actions: assign({
-        popover_content: ({ event }) => event.popover_content,
-        show_popovers: true,
-      }),
-    },
+    // ADD_IAM_GROUP_NODE: {
+    //   actions: [
+    //     {
+    //       type: 'add_iam_node',
+    //       params: ({ event }) => ({ node: event.node }),
+    //     },
+    //   ],
+    // },
+    // ADD_EDGE: {
+    //   actions: [
+    //     assign({
+    //       edges: ({ context, event }) => [...context.edges, event.edge],
+    //     }),
+    //   ],
+    // },
+    // DELETE_EDGE: {
+    //   actions: [
+    //     assign({
+    //       edges: ({ context, event }) => context.edges.filter(edge => edge.id !== event.edge.id),
+    //     }),
+    //   ],
+    // },
+    // SET_NODES: {
+    //   actions: assign({
+    //     nodes: ({ event }) => event.nodes,
+    //   }),
+    // },
+    // SET_EDGES: {
+    //   actions: assign({
+    //     edges: ({ event }) => event.edges,
+    //   }),
+    // },
+    // SHOW_POPOVER: {
+    //   actions: assign({
+    //     popover_content: ({ event }) => event.popover_content,
+    //     show_popovers: true,
+    //   }),
+    //
     HIDE_POPOVERS: {
       actions: assign({
         show_popovers: false,
@@ -212,7 +152,7 @@ export const stateMachine = setup({
         aws_managed_policy_popover: {
           entry: ['next_popover'],
           on: {
-            IAM_NODE_CONTENT_OPENED: 'view_policy_content',
+            // IAM_NODE_CONTENT_OPENED: 'view_policy_content',
           },
         },
         view_policy_content: {
@@ -230,7 +170,11 @@ export const stateMachine = setup({
               actions: [
                 {
                   type: 'change_objective_progress',
-                  params: ({ context }: { context: Context }) => ({
+                  params: ({
+                    context,
+                  }: {
+                    context: GenericContext<LevelObjectiveID, FinishEventMap>;
+                  }) => ({
                     id: Object.keys(context.level_objectives)[0],
                     finished: true,
                   }),
@@ -302,7 +246,11 @@ export const stateMachine = setup({
                       actions: [
                         {
                           type: 'change_objective_progress',
-                          params: ({ context }: { context: Context }) => ({
+                          params: ({
+                            context,
+                          }: {
+                            context: GenericContext<LevelObjectiveID, FinishEventMap>;
+                          }) => ({
                             id: Object.keys(context.level_objectives)[0],
                             finished: true,
                           }),
@@ -332,7 +280,11 @@ export const stateMachine = setup({
                       actions: [
                         {
                           type: 'change_objective_progress',
-                          params: ({ context }: { context: Context }) => ({
+                          params: ({
+                            context,
+                          }: {
+                            context: GenericContext<LevelObjectiveID, FinishEventMap>;
+                          }) => ({
                             id: Object.keys(context.level_objectives)[1],
                             finished: true,
                           }),
@@ -362,7 +314,11 @@ export const stateMachine = setup({
                       actions: [
                         {
                           type: 'change_objective_progress',
-                          params: ({ context }: { context: Context }) => ({
+                          params: ({
+                            context,
+                          }: {
+                            context: GenericContext<LevelObjectiveID, FinishEventMap>;
+                          }) => ({
                             id: Object.keys(context.level_objectives)[2],
                             finished: true,
                           }),

@@ -7,6 +7,7 @@ import {
   POPUP_TUTORIAL_MESSAGES,
   LEVEL_OBJECTIVES,
   HIDDEN_LEVEL_OBJECTIVES,
+  FinishEventMap,
 } from './config';
 import { initial_nodes, edges } from './nodes';
 import { TEMPLATE_GROUP_NODE, GROUP_NODE_Y_OFFSET } from './nodes/group-nodes';
@@ -14,10 +15,11 @@ import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
 import { INITIAL_POLICY_NODES } from './nodes/policy-nodes';
 import { INITIAL_USER_NODES, TEMPLATE_USER_NODE, USER_NODE_Y_OFFSET } from './nodes/user-nodes';
 import { LevelObjectiveID } from './types/objective-enums';
-import type { Context, InsideLevelMetadata, EventData } from './types/state-machine-types';
+import { createStateMachineSetup } from '../common-state-machine-setup';
 import type { LevelObjective } from '@/machines/types';
 import { theme } from '@/theme';
-import { IAMAnyNodeData, IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types';
+import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 import { getEdgeName, getNodeName } from '@/utils/names';
 
 const IAM_NODE_WIDTH = theme.sizes.iamNodeWidthInPixels;
@@ -25,43 +27,12 @@ const FIRST_CUSTOM_GROUP_ID = INITIAL_GROUP_NODES.length + 1;
 const FIRST_CUSTOM_USER_ID = INITIAL_USER_NODES.length + 1;
 const FIRST_CUSTOM_POLICY_ID = INITIAL_POLICY_NODES.length + 1;
 
-export const stateMachine = setup({
-  types: {} as {
-    context: Context;
-    events: EventData;
-    meta: InsideLevelMetadata;
-  },
-  actions: {
-    next_popover: assign({
-      popover_content: ({ context }) => POPOVER_TUTORIAL_MESSAGES[context.next_popover_index ?? 0],
-      next_popover_index: ({ context }) => context.next_popover_index + 1,
-      show_popovers: ({ context }) =>
-        context.next_popover_index + 1 < POPOVER_TUTORIAL_MESSAGES.length,
-    }),
-    next_popup: assign({
-      popup_content: ({ context }) => POPUP_TUTORIAL_MESSAGES[context.next_popup_index ?? 0],
-      next_popup_index: ({ context }) => context.next_popup_index + 1,
-      show_popups: ({ context }) => context.next_popup_index + 1 < POPUP_TUTORIAL_MESSAGES.length,
-    }),
-    hide_popups: assign({ show_popups: false }),
-    change_objective_progress: assign({
-      level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) =>
-        _.update({ ...context.level_objectives }, [id, 'finished'], _.constant(finished)),
-    }),
-    add_new_level_objective: assign({
-      level_objectives: (
-        { context },
-        { id, objective }: { id: string; objective: LevelObjective<LevelObjectiveID> }
-      ) => ({
-        ...context.level_objectives,
-        [id]: objective,
-      }),
-    }),
-    add_iam_node: assign({
-      nodes: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => [...context.nodes, node],
-    }),
-  },
-}).createMachine({
+export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
+  POPOVER_TUTORIAL_MESSAGES,
+  POPUP_TUTORIAL_MESSAGES,
+  [],
+  []
+).createMachine({
   id: 'level2_state_machine',
   initial: 'tutorial_popup1',
   context: {
@@ -106,7 +77,14 @@ export const stateMachine = setup({
     user_group_creation_objectives: [],
   },
   on: {
-    ADD_IAM_USER_NODE: {}, // TODO: Implement this
+    [StatefulStateMachineEvent.AddIAMUserNode]: {
+      actions: [
+        {
+          type: 'add_iam_user_node',
+          params: ({ event }) => ({ params: event.user_node }),
+        },
+      ],
+    },
     ADD_IAM_GROUP_NODE: {
       actions: [
         assign({
@@ -286,9 +264,9 @@ export const stateMachine = setup({
                   },
                 ],
               },
-              on: {
-                ALL_USERS_ATTACHED_TO_GROUP: 'complete',
-              },
+              // on: {
+              //   ALL_USERS_ATTACHED_TO_GROUP: 'complete',
+              // },
             },
             complete: {
               type: 'final',
@@ -311,9 +289,9 @@ export const stateMachine = setup({
                   },
                 ],
               },
-              on: {
-                ALL_POLICIES_ATTACHED_TO_GROUP: 'complete',
-              },
+              // on: {
+              //   ALL_POLICIES_ATTACHED_TO_GROUP: 'complete',
+              // },
             },
             complete: {
               type: 'final',
@@ -332,7 +310,7 @@ export const stateMachine = setup({
             id: 'attach_your_user_to_group',
             objective: HIDDEN_LEVEL_OBJECTIVES.find(
               objective => objective.id === LevelObjectiveID.AttachUserToGroup
-            ) as LevelObjective<LevelObjectiveID>,
+            ) as LevelObjective<LevelObjectiveID, FinishEventMap>,
           },
         },
         assign({
@@ -372,15 +350,15 @@ export const stateMachine = setup({
             ],
           },
           on: {
-            NEW_USER_ATTACHED_TO_GROUP: {
-              actions: [
-                {
-                  type: 'change_objective_progress',
-                  params: { id: 'attach_your_user_to_group', finished: true },
-                },
-              ],
-              target: 'completed',
-            },
+            // NEW_USER_ATTACHED_TO_GROUP: {
+            //   actions: [
+            //     {
+            //       type: 'change_objective_progress',
+            //       params: { id: 'attach_your_user_to_group', finished: true },
+            //     },
+            //   ],
+            //   target: 'completed',
+            // },
           },
         },
         completed: {
