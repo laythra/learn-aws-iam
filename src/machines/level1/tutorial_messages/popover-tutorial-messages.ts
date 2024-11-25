@@ -1,6 +1,7 @@
 import { PolicyNodeID, ResourceNodeID, UserNodeID } from '../types/node-id-enums';
 import type { PopoverTutorialMessage } from '@/machines/types';
 import { PopoverElementID } from '@/theme';
+import { getEdgeName } from '@/utils/names';
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
@@ -58,13 +59,24 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: ResourceNodeID.PublicImagesS3Bucket,
-    popover_title: `Access Granted!`,
+    popover_title: `Access Granted! 🎉`,
     popover_content: `
       Your IAM user now has access to the S3 bucket
-      and pretty much any other AWS resource you can think of
+      and pretty much any other AWS resource you can think of.
     `,
     show_next_button: true,
     show_close_button: false,
     popover_placement: 'top',
+  },
+  {
+    element_id: getEdgeName(PolicyNodeID.S3ReadPolicy, ResourceNodeID.PublicImagesS3Bucket),
+    popover_title: `Hover over the edge`,
+    popover_content: `
+      You can see the access level and the resource that the policy grants access to
+      by hovering over the edge connecting the policy and the resource
+    `,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'left',
   },
 ];

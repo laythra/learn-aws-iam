@@ -1,11 +1,12 @@
 import { assign, enqueueActions } from 'xstate';
 
 import { INITIAL_TUTORIAL_NODES } from './nodes';
+import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { USER_GROUP_CREATION_OBJECTIVES } from './objectives/user-group-creation-objectives';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
-import { FinishEventMap } from './types/finish-event-enums';
+import { EdgeConnectionFinishEvent, FinishEventMap } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -33,7 +34,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     level_objectives: LEVEL_OBJECTIVES,
     fixed_iam_nodes_positions: {},
     policy_role_objectives: [],
-    edges_connection_objectives: [],
+    edges_connection_objectives: EDGE_CONNECTION_OBJECTIVES,
     policy_role_edit_objectives: [],
     user_group_creation_objectives: [],
   },
@@ -121,6 +122,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
               target: 's3_bucket_onboarding_popover',
             },
           },
+          exit: 'hide_popovers',
         },
         s3_bucket_onboarding_popover: {
           entry: assign({
@@ -214,7 +216,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       states: {
         connect_iam_policy_to_user: {
           on: {
-            IAM_POLICY_CONNECTED: {
+            [EdgeConnectionFinishEvent.PolicyAttachedToUser]: {
               target: 'policy_attached',
               actions: [
                 {
@@ -235,6 +237,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         completed: {
+          entry: 'hide_popovers',
           type: 'final',
         },
       },

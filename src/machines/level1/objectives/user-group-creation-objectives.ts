@@ -10,6 +10,6 @@ export const USER_GROUP_CREATION_OBJECTIVES: IAMUserGroupCreationObjective<Finis
     finished: false,
     entity_to_create: IAMNodeEntity.User,
     on_finish_event: NodeCreationFinishEvent.USER_NODE_CREATED,
-    initial_position: 'top-center',
+    initial_position: 'center',
   },
 ];

@@ -9,9 +9,15 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   {
     id: PolicyNodeID.S3ReadPolicy,
     label: 'public-images',
-    initial_position: 'center',
+    initial_position: 'bottom-center',
     image: IAMNodeImage.Policy,
-    granted_accesses: { [ResourceNodeID.PublicImagesS3Bucket]: AccessLevel.Read },
+    granted_accesses: [
+      {
+        target_node: ResourceNodeID.PublicImagesS3Bucket,
+        target_handle: 'right',
+        access_level: AccessLevel.Read,
+      },
+    ],
   },
 ];
 
