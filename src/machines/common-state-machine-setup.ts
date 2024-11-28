@@ -2,13 +2,15 @@ import type { Node } from 'reactflow';
 import { setup, enqueueActions, assign } from 'xstate';
 
 import {
-  attachPolicyToUser,
-  updatePolicyToUserConnectionEdges,
   editIAMPolicyNode,
   editObjectiveState,
   createIAMPolicyNode,
   changeLevelObjectiveProgress,
-  createIAMUserNode,
+  createIAMUserGroupNode,
+  attachPolicyToEntity,
+  updatePolicyToEntityConnectionEdges,
+  attachUserToGroup,
+  updateUserToGroupConnectionEdges,
 } from './utils/common-state-machine-actions';
 import type {
   BaseFinishEventMap,
@@ -22,7 +24,13 @@ import type {
   LevelObjective,
   IAMPolicyRoleCreationObjective,
 } from '@/machines/types';
-import { IAMAnyNodeData, IAMPolicyNodeData, IAMUserNodeData } from '@/types';
+import {
+  IAMAnyNodeData,
+  IAMGroupNodeData,
+  IAMNodeEntity,
+  IAMPolicyNodeData,
+  IAMUserNodeData,
+} from '@/types';
 
 /**
  * Defines a common state machine setup for all levels
@@ -57,19 +65,22 @@ export const createStateMachineSetup = <
       events: GenericEventData<TFinishEventMap>;
     },
     actions: {
-      attach_policy_to_user: enqueueActions(
+      attach_policy_to_entity: enqueueActions(
         (
           { context, enqueue },
           {
-            userNode,
+            entityNode,
             policyNode,
-          }: { userNode: Node<IAMUserNodeData>; policyNode: Node<IAMPolicyNodeData> }
+          }: {
+            entityNode: Node<IAMUserNodeData | IAMGroupNodeData>;
+            policyNode: Node<IAMPolicyNodeData>;
+          }
         ) => {
-          const updatedNodes = attachPolicyToUser(context, policyNode, userNode);
-          const [updatedEdges, sideEffectsEvents] = updatePolicyToUserConnectionEdges<
+          const updatedNodes = attachPolicyToEntity(context, policyNode, entityNode);
+          const [updatedEdges, sideEffectsEvents] = updatePolicyToEntityConnectionEdges<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, policyNode, userNode);
+          >(context, policyNode, entityNode);
 
           enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
           sideEffectsEvents.forEach(event => {
@@ -77,14 +88,47 @@ export const createStateMachineSetup = <
           });
         }
       ),
-      add_iam_user_node: enqueueActions(
-        ({ context, enqueue }, { params }: { params: Partial<IAMUserNodeData> }) => {
-          const [updatedNodes, sideEffectsEvents] = createIAMUserNode<
+      attach_user_to_group: enqueueActions(
+        (
+          { context, enqueue },
+          {
+            userNode,
+            groupNode,
+          }: {
+            userNode: Node<IAMUserNodeData>;
+            groupNode: Node<IAMGroupNodeData>;
+          }
+        ) => {
+          const updatedNodes = attachUserToGroup(context, userNode, groupNode);
+          const [updatedEdges, sideEffectsEvents] = updateUserToGroupConnectionEdges<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, params);
+          >(context, userNode, groupNode);
+
+          enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+          sideEffectsEvents.forEach(event => {
+            enqueue.raise({ type: event });
+          });
+        }
+      ),
+      add_iam_user_group_node: enqueueActions(
+        (
+          { context, enqueue },
+          {
+            nodeType,
+            params,
+          }: {
+            nodeType: IAMNodeEntity.Group | IAMNodeEntity.User;
+            params: Partial<IAMUserNodeData> | Partial<IAMGroupNodeData>;
+          }
+        ) => {
+          const [updatedNodes, updatedObjectives, sideEffectsEvents] = createIAMUserGroupNode<
+            TLevelObjectiveID,
+            TFinishEventMap
+          >(context, nodeType, params);
 
           enqueue.assign({ nodes: updatedNodes });
+          enqueue.assign({ user_group_creation_objectives: updatedObjectives });
           sideEffectsEvents.forEach(event => enqueue.raise({ type: event }));
         }
       ),
@@ -122,8 +166,8 @@ export const createStateMachineSetup = <
       }),
       next_popup: assign({
         popup_content: ({ context }) => popupTutorialMessages[context.next_popup_index],
-        show_popups: ({ context }) => context.next_popup_index < popupTutorialMessages.length,
         next_popup_index: ({ context }) => context.next_popup_index + 1,
+        show_popups: ({ context }) => context.next_popup_index + 1 < popupTutorialMessages.length,
         show_popovers: false,
       }),
       next_policy_role_objectives: assign({
@@ -141,14 +185,8 @@ export const createStateMachineSetup = <
       add_new_level_objective: assign({
         level_objectives: (
           { context },
-          {
-            id,
-            objective,
-          }: { id: string; objective: LevelObjective<TLevelObjectiveID, TFinishEventMap> }
-        ) => ({
-          ...context.level_objectives,
-          [id]: objective,
-        }),
+          { objectives }: { objectives: LevelObjective<TLevelObjectiveID, TFinishEventMap>[] }
+        ) => [...context.level_objectives, ...objectives],
       }),
       finish_level_objective: assign({
         level_objectives: ({ context }, { id }: { id: string }) =>
