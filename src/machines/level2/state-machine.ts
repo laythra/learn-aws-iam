@@ -1,31 +1,21 @@
 import _ from 'lodash';
-import type { Node, Edge } from 'reactflow';
-import { setup, assign } from 'xstate';
+import { assign } from 'xstate';
 
+import { INITIAL_LEVEL_NODES } from './nodes';
+import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
+import { HIDDEN_LEVEL_OBJECTIVES, LEVEL_OBJECTIVES } from './objectives/level-objectives';
+import { USER_GROUP_CREATION_OBJECTIVES } from './objectives/user-group-creation-objectives';
+import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
+import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
+import { FinishEventMap } from './types/finish-event-enums';
 import {
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  LEVEL_OBJECTIVES,
-  HIDDEN_LEVEL_OBJECTIVES,
-  FinishEventMap,
-} from './config';
-import { initial_nodes, edges } from './nodes';
-import { TEMPLATE_GROUP_NODE, GROUP_NODE_Y_OFFSET } from './nodes/group-nodes';
-import { INITIAL_GROUP_NODES } from './nodes/group-nodes';
-import { INITIAL_POLICY_NODES } from './nodes/policy-nodes';
-import { INITIAL_USER_NODES, TEMPLATE_USER_NODE, USER_NODE_Y_OFFSET } from './nodes/user-nodes';
+  EdgeConnectionFinishEvent,
+  UserGroupCreationFinishEvent,
+} from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import type { LevelObjective } from '@/machines/types';
-import { theme } from '@/theme';
-import { IAMNodeEntity } from '@/types';
+import { resolveInitialEdges } from '../utils/initial-edges-resolver';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
-import { getEdgeName, getNodeName } from '@/utils/names';
-
-const IAM_NODE_WIDTH = theme.sizes.iamNodeWidthInPixels;
-const FIRST_CUSTOM_GROUP_ID = INITIAL_GROUP_NODES.length + 1;
-const FIRST_CUSTOM_USER_ID = INITIAL_USER_NODES.length + 1;
-const FIRST_CUSTOM_POLICY_ID = INITIAL_POLICY_NODES.length + 1;
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
@@ -34,10 +24,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   []
 ).createMachine({
   id: 'level2_state_machine',
-  initial: 'tutorial_popup1',
+  initial: 'create_group_popover',
   context: {
-    iam_user_template: TEMPLATE_USER_NODE,
-    iam_group_template: TEMPLATE_GROUP_NODE,
     level_title: 'IAM Groups',
     level_description: 'Scaling your IAM setup with groups',
     level_number: 1,
@@ -49,47 +37,19 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     nodes: [],
     metadata_keys: {},
     edges: [],
-    final_edges: edges,
     level_objectives: LEVEL_OBJECTIVES,
-    next_iam_node_id: {
-      [IAMNodeEntity.Group]: FIRST_CUSTOM_GROUP_ID,
-      [IAMNodeEntity.User]: FIRST_CUSTOM_USER_ID,
-      [IAMNodeEntity.Policy]: FIRST_CUSTOM_POLICY_ID,
-      [IAMNodeEntity.Role]: 1,
-    },
-    next_iam_node_default_position: {
-      x: theme.sizes.iamNodeWidthInPixels / 2,
-      y: theme.sizes.iamNodeWidthInPixels / 2,
-    },
-    fixed_iam_nodes_positions: {
-      [getNodeName(IAMNodeEntity.Group, FIRST_CUSTOM_GROUP_ID)]: {
-        x: IAM_NODE_WIDTH * 2,
-        y: GROUP_NODE_Y_OFFSET,
-      },
-      [getNodeName(IAMNodeEntity.User, FIRST_CUSTOM_USER_ID)]: {
-        x: IAM_NODE_WIDTH * 3.5, // TODO: Find a better way to represent those magic numbers
-        y: USER_NODE_Y_OFFSET,
-      },
-    },
     policy_role_objectives: [],
     policy_role_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
   },
   on: {
-    [StatefulStateMachineEvent.AddIAMUserNode]: {
+    [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [
         {
-          type: 'add_iam_user_node',
-          params: ({ event }) => ({ params: event.user_node }),
+          type: 'add_iam_user_group_node',
+          params: ({ event }) => ({ params: event.node_data, nodeType: event.node_entity }),
         },
-      ],
-    },
-    ADD_IAM_GROUP_NODE: {
-      actions: [
-        assign({
-          nodes: ({ context, event }) => [...context.nodes, event.node],
-        }),
       ],
     },
     ADD_EDGE: {
@@ -127,40 +87,52 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         show_popovers: false,
       }),
     },
+    TOGGLE_SIDE_PANEL: {
+      actions: assign({
+        side_panel_open: ({ context }) => !context.side_panel_open,
+      }),
+    },
+    ATTACH_POLICY_TO_ENTITY: {
+      actions: [
+        {
+          type: 'attach_policy_to_entity',
+          params: ({ event }) => ({ policyNode: event.sourceNode, entityNode: event.targetNode }),
+        },
+      ],
+    },
+    ATTACH_USER_TO_GROUP: {
+      actions: [
+        {
+          type: 'attach_user_to_group',
+          params: ({ event }) => ({ userNode: event.sourceNode, groupNode: event.targetNode }),
+        },
+      ],
+    },
   },
   entry: assign({
-    nodes: initial_nodes,
+    nodes: INITIAL_LEVEL_NODES,
+    edges: resolveInitialEdges(INITIAL_LEVEL_NODES),
+    user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
   }),
   states: {
     tutorial_popup1: {
-      entry: assign({
-        show_popups: true,
-        popup_content: POPUP_TUTORIAL_MESSAGES[0],
-      }),
+      entry: 'next_popup',
       on: {
         NEXT_POPUP: {
-          actions: 'next_popup',
           target: 'tutorial_popup2',
         },
       },
     },
     tutorial_popup2: {
-      entry: assign({
-        show_popups: true,
-        popup_content: POPUP_TUTORIAL_MESSAGES[1],
-      }),
+      entry: 'next_popup',
       on: {
         NEXT_POPUP: {
-          actions: 'next_popup',
           target: 'tutorial_popup3',
         },
       },
     },
     tutorial_popup3: {
-      entry: assign({
-        show_popups: true,
-        popup_content: POPUP_TUTORIAL_MESSAGES[2],
-      }),
+      entry: 'next_popup',
       on: {
         NEXT_POPUP: {
           actions: 'next_popup',
@@ -169,10 +141,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       },
     },
     tutorial_popup4: {
-      entry: assign({
-        show_popups: true,
-        popup_content: POPUP_TUTORIAL_MESSAGES[3],
-      }),
+      entry: 'next_popup',
       on: {
         NEXT_POPUP: {
           actions: 'next_popup',
@@ -181,10 +150,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       },
     },
     create_group_popover: {
-      entry: assign({
-        popover_content: POPOVER_TUTORIAL_MESSAGES[0],
-        show_popovers: true,
-      }),
+      entry: 'next_popover',
       on: {
         CREATE_IAM_IDENTITY_POPUP_OPENED: {
           target: 'select_group_type_popover',
@@ -192,10 +158,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       },
     },
     select_group_type_popover: {
-      entry: assign({
-        popover_content: POPOVER_TUTORIAL_MESSAGES[1],
-        show_popovers: true,
-      }),
+      entry: 'next_popover',
       on: {
         CREATE_IAM_IDENTITY_TAB_CHANGED: {
           target: 'add_group_name_popover',
@@ -203,31 +166,28 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       },
     },
     add_group_name_popover: {
-      entry: assign({
-        popover_content: POPOVER_TUTORIAL_MESSAGES[2],
-        show_popovers: true,
-      }),
+      entry: 'next_popover',
       on: {
-        ADD_IAM_GROUP_NODE: {
+        [UserGroupCreationFinishEvent.GroupCreated]: {
           actions: [
-            {
-              type: 'add_iam_node',
-              params: ({ event }) => ({ node: event.node }),
-            },
             {
               type: 'change_objective_progress',
               params: { id: 'create_iam_group', finished: true },
             },
           ],
-          target: 'attach_nodes_to_group_tip',
+          target: 'attach_nodes_to_group_tooltip',
         },
       },
     },
-    attach_nodes_to_group_tip: {
-      entry: assign({
-        popover_content: POPOVER_TUTORIAL_MESSAGES[3],
-        show_popovers: true,
-      }),
+    attach_nodes_to_group_tooltip: {
+      entry: [
+        'next_popover',
+        assign({
+          show_popovers: true,
+          edges_connection_objectives: EDGE_CONNECTION_OBJECTIVES[0],
+          edges: [],
+        }),
+      ],
       always: 'attach_nodes_to_group',
     },
     attach_nodes_to_group: {
@@ -236,37 +196,19 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         actions: [
           {
             type: 'change_objective_progress',
-            params: { id: 'attach_nodes_to_group', finished: true },
+            params: { id: LevelObjectiveID.MakeScalingEasier, finished: true },
           },
         ],
         target: 'attach_your_user_to_group',
       },
-      entry: assign({
-        metadata_keys: {
-          'level2_state_machine.attach_nodes_to_group.attach_users.in_progress':
-            'ALL_USERS_ATTACHED_TO_GROUP',
-          'level2_state_machine.attach_nodes_to_group.attach_policies.in_progress':
-            'ALL_POLICIES_ATTACHED_TO_GROUP',
-        },
-      }),
       states: {
         attach_users: {
           initial: 'in_progress',
           states: {
             in_progress: {
-              meta: {
-                connection_targets: [
-                  {
-                    required_edges: [
-                      _.find(edges, { id: getEdgeName('iam_user_1', 'iam_group_1') }) as Edge,
-                    ],
-                    locked_edges: [],
-                  },
-                ],
+              on: {
+                [EdgeConnectionFinishEvent.User1AttachedToGroup]: 'complete',
               },
-              // on: {
-              //   ALL_USERS_ATTACHED_TO_GROUP: 'complete',
-              // },
             },
             complete: {
               type: 'final',
@@ -277,21 +219,51 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           initial: 'in_progress',
           states: {
             in_progress: {
-              meta: {
-                connection_targets: [
-                  {
-                    required_edges: [
-                      _.find(edges, { id: getEdgeName('iam_policy_1', 'iam_group_1') }) as Edge,
-                      _.find(edges, { id: getEdgeName('iam_policy_2', 'iam_group_1') }) as Edge,
-                      _.find(edges, { id: getEdgeName('iam_policy_3', 'iam_group_1') }) as Edge,
-                    ],
-                    locked_edges: [],
-                  },
-                ],
+              type: 'parallel',
+              onDone: {
+                target: 'complete',
               },
-              // on: {
-              //   ALL_POLICIES_ATTACHED_TO_GROUP: 'complete',
-              // },
+              states: {
+                policy1_attached: {
+                  initial: 'in_progress',
+                  states: {
+                    in_progress: {
+                      on: {
+                        [EdgeConnectionFinishEvent.Policy1AttachedToGroup]: 'complete',
+                      },
+                    },
+                    complete: {
+                      type: 'final',
+                    },
+                  },
+                },
+                policy2_attached: {
+                  initial: 'in_progress',
+                  states: {
+                    in_progress: {
+                      on: {
+                        [EdgeConnectionFinishEvent.Policy2AttachedToGroup]: 'complete',
+                      },
+                    },
+                    complete: {
+                      type: 'final',
+                    },
+                  },
+                },
+                policy3_attached: {
+                  initial: 'in_progress',
+                  states: {
+                    in_progress: {
+                      on: {
+                        [EdgeConnectionFinishEvent.Policy3AttachedToGroup]: 'complete',
+                      },
+                    },
+                    complete: {
+                      type: 'final',
+                    },
+                  },
+                },
+              },
             },
             complete: {
               type: 'final',
@@ -301,67 +273,49 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       },
     },
     attach_your_user_to_group: {
-      initial: 'create_your_user',
+      initial: 'first_user_attached_popover',
       onDone: 'finished_level',
       entry: [
         {
           type: 'add_new_level_objective',
-          params: {
-            id: 'attach_your_user_to_group',
-            objective: HIDDEN_LEVEL_OBJECTIVES.find(
-              objective => objective.id === LevelObjectiveID.AttachUserToGroup
-            ) as LevelObjective<LevelObjectiveID, FinishEventMap>,
-          },
+          params: { objectives: HIDDEN_LEVEL_OBJECTIVES },
         },
-        assign({
-          popover_content: POPOVER_TUTORIAL_MESSAGES[4],
-          show_popovers: true,
-        }),
       ],
       states: {
-        create_your_user: {
+        first_user_attached_popover: {
+          entry: 'next_popover',
           on: {
-            ADD_IAM_USER_NODE: {
-              // actions: [ // TODO: Implement this
-              //   {
-              //     type: 'add_iam_node',
-              //     params: ({ event }) => ({ node: event.node }),
-              //   },
-              // ],
+            NEXT_POPOVER: 'create_your_user_popover',
+          },
+        },
+        create_your_user_popover: {
+          entry: 'next_popover',
+          on: {
+            NEXT_POPOVER: 'create_your_user',
+          },
+        },
+        create_your_user: {
+          entry: 'hide_popovers',
+          on: {
+            [UserGroupCreationFinishEvent.UserCreated]: {
               target: 'attach_to_group',
             },
           },
         },
         attach_to_group: {
-          entry: assign({
-            metadata_keys: {
-              'level2_state_machine.attach_your_user_to_group.attach_to_group':
-                'NEW_USER_ATTACHED_TO_GROUP',
-            },
-          }),
-          meta: {
-            connection_targets: [
-              {
-                required_edges: [
-                  _.find(edges, { id: getEdgeName('iam_user_2', 'iam_group_1') }) as Edge,
-                ],
-                locked_edges: [],
-              },
-            ],
-          },
           on: {
-            // NEW_USER_ATTACHED_TO_GROUP: {
-            //   actions: [
-            //     {
-            //       type: 'change_objective_progress',
-            //       params: { id: 'attach_your_user_to_group', finished: true },
-            //     },
-            //   ],
-            //   target: 'completed',
-            // },
+            [EdgeConnectionFinishEvent.User2AttachedToGroup]: {
+              actions: [
+                {
+                  type: 'change_objective_progress',
+                  params: { id: LevelObjectiveID.AttachUserToGroup, finished: true },
+                },
+              ],
+              target: 'level_finished',
+            },
           },
         },
-        completed: {
+        level_finished: {
           type: 'final',
         },
       },
@@ -370,7 +324,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       entry: assign({
         state_name: 'finished_level',
         level_finished: true,
-        popover_content: POPOVER_TUTORIAL_MESSAGES[5],
+        popover_content: POPOVER_TUTORIAL_MESSAGES[6],
         show_popovers: true,
       }),
       type: 'final',

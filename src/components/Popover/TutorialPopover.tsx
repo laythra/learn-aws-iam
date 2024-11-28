@@ -39,7 +39,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
   onCloseClick,
 }) => {
   return (
-    <Popover isOpen={isOpen} placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0}>
+    <Popover isOpen={isOpen} placement={placement} closeOnBlur={true} isLazy={true}>
       <PopoverTrigger>
         <Box>{children}</Box>
       </PopoverTrigger>

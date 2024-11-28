@@ -20,9 +20,12 @@ export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
     ] as HandleProps[],
     image: IAMNodeImage.User,
     associated_policies: [],
+    initial_position: 'top-center',
   },
 };
 
 export function createUserNode(props: Partial<IAMUserNodeData>): Node<IAMUserNodeData> {
+  props.id ||= Date.now().toString();
+
   return _.merge({}, TEMPLATE_USER_NODE, { data: props }, { id: props.id });
 }

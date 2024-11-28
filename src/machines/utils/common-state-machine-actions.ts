@@ -179,7 +179,7 @@ export function updateUserToGroupConnectionEdges<
       source: userNode.id,
       target: groupNode.id,
       data: {
-        hovering_label: 'Attached to',
+        hovering_label: 'Belongs to',
       },
     };
     draftEdges.push(createEdge(newEdgeData));

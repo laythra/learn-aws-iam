@@ -11,6 +11,7 @@ import type {
 
 import { withPopover } from '@/decorators/withPopover';
 import { withStatemachineEvent } from '@/decorators/withStatemachineEvent';
+import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const WithPopoverButton = withPopover<ButtonProps & { elementid: string }>(Button);
 export const WithPopoverMenuItem = withPopover<MenuItemProps & { elementid: string }>(MenuItem);
@@ -22,5 +23,9 @@ export const WithPopoverSelect = withPopover<SelectProps & { elementid: string }
 export const WithPopoverBox = withPopover<BoxProps & { elementid: string }>(Box);
 
 export const WithStateMachineEventIconButton = withStatemachineEvent<
-  IconButtonProps & { event: string }
+  IconButtonProps & { event: StatelessStateMachineEvent }
 >(IconButton);
+
+export const WithStateMachineEventButton = withStatemachineEvent<
+  ButtonProps & { event: StatelessStateMachineEvent }
+>(Button);

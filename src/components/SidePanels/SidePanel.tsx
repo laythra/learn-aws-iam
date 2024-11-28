@@ -1,4 +1,4 @@
-import { Flex, Box, Collapse } from '@chakra-ui/react';
+import { Flex, Box, Collapse, useTheme } from '@chakra-ui/react';
 
 import useSidePanels from '@/hooks/useSidePanels';
 
@@ -8,12 +8,14 @@ interface SidePanelProps {
 }
 
 const SidePanel: React.FC<SidePanelProps> = ({ children, isOpen }) => {
+  const theme = useTheme();
   const sidePanelsContext = useSidePanels();
   const flexBasis = isOpen ? '20%' : '0%';
 
   return (
     <Flex
-      h='100vh'
+      h={`calc(100vh - ${theme.sizes.navbarHeightInPixels})`}
+      mt={theme.sizes.navbarHeightInPixels}
       direction='row-reverse'
       flexGrow={0}
       flexShrink={1}
