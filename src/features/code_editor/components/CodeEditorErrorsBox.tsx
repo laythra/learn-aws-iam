@@ -1,4 +1,4 @@
-import { Box, Divider } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 
 import codeEditorStateStore from '../stores/code-editor-state-store';
@@ -15,7 +15,6 @@ export const CodeEditorErrorsBox: React.FC<CodeEditorErrorsBoxProps> = ({ nodeId
   } else {
     return (
       <Box>
-        <Divider orientation='horizontal' marginTop={4} marginBottom={4} />
         {errors.map(error => (
           <Box key={error.from} color='red.500'>
             {error.message}

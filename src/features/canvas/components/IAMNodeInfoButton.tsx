@@ -18,6 +18,7 @@ import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { WithStateMachineEventIconButton } from '@/components/Decorated';
 import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
+import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface IAMNodeInfoButtonProps {
   nodeId: string;
@@ -38,7 +39,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
     <Popover placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0}>
       <PopoverTrigger>
         <WithStateMachineEventIconButton
-          event='IAM_NODE_CONTENT_OPENED'
+          event={StatelessStateMachineEvent.IAMNodeContentOpened}
           aria-label='info'
           icon={<CodeBracketIcon />}
           position='absolute'

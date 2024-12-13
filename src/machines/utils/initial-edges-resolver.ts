@@ -11,15 +11,22 @@ export function resolveInitialEdges(initialNodes: Node<IAMAnyNodeData>[]): Edge[
 
   const policyEdges = _.flatMapDeep(userNodes, userNode => {
     return userNode.data.associated_policies.map(policyId => {
-      const policyToUserEdge = createEdge({ source: policyId, target: userNode.id });
+      const policyToUserEdge = createEdge({
+        source: policyId,
+        target: userNode.id,
+        data: {
+          hovering_label: 'Attached to',
+        },
+      });
       const policyNode = nodesById[policyId] as Node<IAMPolicyNodeData>;
 
-      const userToResourceEdges = Object.keys(policyNode.data.granted_accesses).map(resourceId => {
+      const userToResourceEdges = policyNode.data.granted_accesses.map(accessInfo => {
         return createEdge({
           source: userNode.id,
-          target: resourceId,
+          target: accessInfo.target_node,
+          targetHandle: accessInfo.target_handle,
           data: {
-            hovering_label: policyNode.data.granted_accesses[resourceId],
+            hovering_label: accessInfo.access_level,
           },
         });
       });

@@ -14,10 +14,18 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
     id: PolicyNodeID.DeveloperPolicy,
     label: 'developers-access',
     content: DEVELOPERS_POLICY_DOCUMENT,
-    granted_accesses: {
-      [ResourceNodeID.CustomerDataDynamoTable]: AccessLevel.ReadWrite,
-      [ResourceNodeID.AnalyticsDataDynanoTable]: AccessLevel.ReadWrite,
-    },
+    granted_accesses: [
+      {
+        target_node: ResourceNodeID.CustomerDataDynamoTable,
+        target_handle: 'top',
+        access_level: AccessLevel.ReadWrite,
+      },
+      {
+        target_node: ResourceNodeID.AnalyticsDataDynanoTable,
+        target_handle: 'top',
+        access_level: AccessLevel.ReadWrite,
+      },
+    ],
     initial_position: 'bottom-center',
     // TODO: Add associated users IDs
   },
@@ -25,17 +33,25 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
     id: PolicyNodeID.DataScientistPolicy,
     label: 'data-scientists-access',
     content: DATA_SCIENTISTS_POLICY_DOCUMENT,
-    granted_accesses: {
-      [ResourceNodeID.CustomerDataDynamoTable]: AccessLevel.ReadWrite,
-      [ResourceNodeID.AnalyticsDataDynanoTable]: AccessLevel.ReadWrite,
-    },
+    granted_accesses: [
+      {
+        target_node: ResourceNodeID.CustomerDataDynamoTable,
+        target_handle: 'top',
+        access_level: AccessLevel.ReadWrite,
+      },
+      {
+        target_node: ResourceNodeID.AnalyticsDataDynanoTable,
+        target_handle: 'top',
+        access_level: AccessLevel.ReadWrite,
+      },
+    ],
     initial_position: 'bottom-center',
   },
   {
     id: PolicyNodeID.InternPolicy,
     label: 'interns-access',
     content: INTERNS_POLICY_DOCUMENT,
-    granted_accesses: {},
+    granted_accesses: [],
     initial_position: 'bottom-center',
   },
 ];

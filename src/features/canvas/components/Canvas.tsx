@@ -3,7 +3,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
-import ReactFlow, { ReactFlowInstance, useReactFlow, type Connection, type Edge } from 'reactflow';
+import ReactFlow, {
+  Node,
+  ReactFlowInstance,
+  useReactFlow,
+  type Connection,
+  type Edge,
+} from 'reactflow';
 import { EventFromLogic } from 'xstate';
 
 import IAMCanvasEdge from './IAMCanvasEdge';
@@ -12,9 +18,12 @@ import { CanvasStore } from '../stores/canvas-store';
 import { edgeConnectionHandlers } from '../utils/edges-creation';
 import { getNodeWithInitialPosition } from '../utils/nodes-position';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import {
+  currentLevelStateMachine,
+  LevelsProgressionContext,
+} from '@/components/providers/LevelsProgressionProvider';
 import useSidePanels from '@/hooks/useSidePanels';
-import { type IAMEdgeData } from '@/types';
+import { IAMAnyNodeData, IAMNodeEntity, type IAMEdgeData } from '@/types';
 import storage from '@/utils/storage';
 
 import 'reactflow/dist/style.css';
@@ -28,8 +37,12 @@ const edgeTypes = {
 };
 
 const Canvas: React.FC = () => {
-  const { getViewport } = useReactFlow();
-  const levelState = LevelsProgressionContext.useSelector(state => state);
+  const reactFlow = useReactFlow();
+  const [nodes, edges, levelFinished] = LevelsProgressionContext.useSelector(
+    state => [state.context.nodes, state.context.edges, state.context.level_finished],
+    _.isEqual
+  );
+
   const levelActor = LevelsProgressionContext.useActorRef();
   const { ref: sidePanelRef } = useSidePanels();
 
@@ -42,16 +55,14 @@ const Canvas: React.FC = () => {
   );
 
   useEffect(() => {
-    CanvasStore.send({ type: 'setEdges', edges: levelState.context.edges });
-  }, [levelState.context.edges]);
+    CanvasStore.send({ type: 'setEdges', edges });
+  }, [edges]);
 
   useEffect(() => {
-    const nodeGroups = _.groupBy(levelState.context.nodes, 'data.initial_position');
+    const nodeGroups = _.groupBy(nodes, 'data.initial_position');
 
-    const newNodes = Object.keys(nodeGroups).flatMap(entityType => {
-      const nodes = nodeGroups[entityType];
-
-      return nodes.map((node, nodeIndex) => {
+    const newNodes = Object.values(nodeGroups).flatMap(nodesGroup => {
+      return nodesGroup.map((node, nodeIndex) => {
         const existingNode = _.find(nodesState, { id: node.id });
 
         if (existingNode) {
@@ -64,8 +75,8 @@ const Canvas: React.FC = () => {
 
         return getNodeWithInitialPosition(
           node,
-          getViewport(),
-          nodes.length,
+          reactFlow.getViewport(),
+          nodesGroup.length,
           nodeIndex,
           sidePanelRef?.current?.clientWidth || 0
         );
@@ -73,36 +84,40 @@ const Canvas: React.FC = () => {
     });
 
     CanvasStore.send({ type: 'setNodes', nodes: newNodes });
-  }, [levelState.context.nodes]);
+  }, [nodes]);
 
   useEffect(() => {
-    if (rfInstance && levelState.context.level_finished) {
+    if (rfInstance && levelFinished) {
       const flowState = rfInstance.toObject();
       storage.setKey('flow_state', JSON.stringify(flowState));
     }
-  }, [levelState.context.level_finished]);
+  }, [levelFinished]);
 
-  const onConnect = useCallback((params: Connection) => {
-    if (params.source === params.target) {
-      return;
-    }
+  const onConnect = useCallback(
+    (params: Connection) => {
+      if (params.source === params.target || !params.source || !params.target) {
+        return;
+      }
 
-    const sourceNode = _.find(levelState.context.nodes, { id: params.source as string });
-    const targetNode = _.find(levelState.context.nodes, { id: params.target as string });
-    const connectionHandlerKey = `${sourceNode?.data.entity}-${targetNode?.data.entity}`;
-    const connectionEventName = edgeConnectionHandlers[connectionHandlerKey];
+      const sourceNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.source });
+      const targetNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.target });
 
-    if (!connectionEventName || !sourceNode || !targetNode) {
-      return;
-    }
+      const connectionHandlerKey = `${sourceNode?.data.entity}-${targetNode?.data.entity}`;
+      const connectionEventName = edgeConnectionHandlers[connectionHandlerKey];
 
-    levelActor.send({ type: connectionEventName, sourceNode, targetNode } as EventFromLogic<
-      typeof levelState.machine
-    >);
-  }, []);
+      if (!connectionEventName) {
+        return;
+      }
 
-  const onEdgeDelete = useCallback((edges: Edge<IAMEdgeData>[]) => {
-    levelActor.send({ type: 'DELETE_EDGE', edge: edges[0] });
+      levelActor.send({ type: connectionEventName, sourceNode, targetNode } as EventFromLogic<
+        typeof currentLevelStateMachine
+      >);
+    },
+    [nodes]
+  );
+
+  const onEdgeDelete = useCallback((targetEdges: Edge<IAMEdgeData>[]) => {
+    levelActor.send({ type: 'DELETE_EDGE', edge: targetEdges[0] });
   }, []);
 
   // const handleInit = useCallback((instance: ReactFlowInstance) => {
@@ -138,7 +153,6 @@ const Canvas: React.FC = () => {
         onEdgesDelete={onEdgeDelete}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        onPaneClick={() => CanvasStore.send({ type: 'selectEdge', edgeId: undefined })}
         onEdgeMouseEnter={(_e, edge) =>
           CanvasStore.send({ type: 'hoverOverEdge', edgeId: edge.id })
         }

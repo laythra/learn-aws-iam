@@ -8,6 +8,7 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
 import { withPopover } from '@/decorators/withPopover';
 import { CodeEditor } from '@/features/code_editor';
 import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
+import { PopoverElementID } from '@/theme';
 
 interface NewEntityButtonProps {}
 
@@ -40,19 +41,22 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
           aria-label='New'
           icon={<PlusCircleIcon />}
           onClick={hidePopovers}
+          color={'purple.600'}
+          _hover={{ color: 'purple.500' }}
+          _active={{ color: 'purple.600' }}
           bg='transparent'
         />
         <MenuList>
           <WithPopoverMenuItem
             onClick={openIdentityCreatorAndSendEvent}
-            elementid='create_entities_menu_item'
+            elementid={PopoverElementID.CreateEntitiesMenuItem}
           >
             Users & Groups
           </WithPopoverMenuItem>
           <WithPopoverMenuItem /* TODO: Each button should be wrapped in a decorator that emits an event automatically on click.
                                   This is a good example of a place where we can use a decorated MenuItem variant to reduce boilerplate. */
             onClick={openCodeEditorAndSendEvent}
-            elementid='create_roles_and_policies_menu_item'
+            elementid={PopoverElementID.CreateRolesAndPoliciesMenuItem}
           >
             Roles & Policies
           </WithPopoverMenuItem>

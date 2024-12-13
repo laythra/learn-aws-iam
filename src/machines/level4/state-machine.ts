@@ -14,6 +14,7 @@ import { TEMPLATE_POLICY_NODE } from '@/factories/policy-node-factory';
 import { TEMPLATE_USER_NODE } from '@/factories/user-node-factory';
 import { theme } from '@/theme';
 import { IAMNodeEntity } from '@/types';
+import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
@@ -57,19 +58,19 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     user_group_creation_objectives: [],
   },
   on: {
-    ATTACH_POLICY_TO_USER: {
+    ATTACH_POLICY_TO_ENTITY: {
       actions: [
         {
-          type: 'attach_policy_to_user',
-          params: ({ event }) => ({ policyNode: event.sourceNode, userNode: event.targetNode }),
+          type: 'attach_policy_to_entity',
+          params: ({ event }) => ({ policyNode: event.sourceNode, entityNode: event.targetNode }),
         },
       ],
     },
-    ADD_IAM_NODE: {
+    [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [
         {
-          type: 'add_iam_node',
-          params: ({ event }) => ({ node: event.node }),
+          type: 'add_iam_user_group_node',
+          params: ({ event }) => ({ nodeType: event.node_entity, params: event.node_data }),
         },
       ],
     },

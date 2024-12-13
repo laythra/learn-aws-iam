@@ -53,7 +53,7 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme='blue' onClick={handleNextPopup}>
+          <Button onClick={handleNextPopup} colorScheme='cyan'>
             Next
           </Button>
         </ModalFooter>

@@ -1,37 +1,35 @@
-import _ from 'lodash';
 import { assign } from 'xstate';
 
+import { INITIAL_TUTORIAL_NODES } from './nodes';
+import { INITIAL_IN_LEVEL_NODES } from './nodes';
+import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
+import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
+import { POLICY_ROLE_CREATION_OBJECTIVES } from './objectives/policy-role-creation-objectives';
+import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
+import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import {
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  LEVEL_OBJECTIVES,
-  POLICY_ROLE_CREATION_OBJECTIVES,
-  EDGE_CONNECTION_OBJECTIVES,
-  HIDDEN_LEVEL_OBJECTIVES,
-} from './config';
-import { INITIAL_IN_LEVEL_EDGES, REQUIRED_EDGES } from './edges';
-import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
-import { TEMPLATE_GROUP_NODE } from './nodes/group-nodes';
-import { TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
-import { TEMPLATE_USER_NODE } from './nodes/user-nodes';
-import { FinishEventMap } from './types/finish-event-enums';
+  EdgeConnectionFinishEvent,
+  FinishEventMap,
+  NodeCreationFinishEvent,
+} from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { GenericContext } from '../types';
-import { IAMNodeEntity } from '@/types';
+import { resolveInitialEdges } from '../utils/initial-edges-resolver';
+import {
+  StatefulStateMachineEvent,
+  StatelessStateMachineEvent,
+} from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
-  [],
+  POLICY_ROLE_CREATION_OBJECTIVES,
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level3_state_machine',
   initial: 'inside_tutorial',
   context: {
-    iam_user_template: TEMPLATE_USER_NODE,
-    iam_policy_template: TEMPLATE_POLICY_NODE,
-    iam_group_template: TEMPLATE_GROUP_NODE,
     level_title: 'IAM Groups',
     level_description: 'Scaling your IAM setup with groups',
     level_number: 1,
@@ -43,25 +41,18 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     nodes: [],
     metadata_keys: {},
     edges: [],
-    final_edges: REQUIRED_EDGES,
     level_objectives: [],
-    next_iam_node_id: {
-      [IAMNodeEntity.Group]: 1,
-      [IAMNodeEntity.User]: 1,
-      [IAMNodeEntity.Policy]: 1,
-      [IAMNodeEntity.Role]: 1,
-    },
     policy_role_objectives: [],
     policy_role_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
   },
   on: {
-    ADD_IAM_NODE: {
+    [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [
         {
-          type: 'add_iam_node',
-          params: ({ event }) => ({ node: event.node }),
+          type: 'add_iam_user_group_node',
+          params: ({ event }) => ({ nodeType: event.node_entity, params: event.node_data }),
         },
       ],
     },
@@ -132,27 +123,27 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       }),
       states: {
         tutorial_popup1: {
-          entry: ['next_popup'],
+          entry: 'next_popup',
           on: {
             NEXT_POPUP: 'tutorial_popup2',
           },
         },
         tutorial_popup2: {
-          entry: ['next_popup'],
+          entry: 'next_popup',
           on: {
             NEXT_POPUP: 'tutorial_popup3',
           },
         },
         tutorial_popup3: {
-          entry: ['next_popup'],
+          entry: 'next_popup',
           on: {
             NEXT_POPUP: 'aws_managed_policy_popover',
           },
         },
         aws_managed_policy_popover: {
-          entry: ['next_popover'],
+          entry: 'next_popover',
           on: {
-            // IAM_NODE_CONTENT_OPENED: 'view_policy_content',
+            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'view_policy_content',
           },
         },
         view_policy_content: {
@@ -166,7 +157,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         create_your_custom_policy_popover: {
           entry: ['next_popover', 'next_policy_role_objectives', 'show_side_panel'],
           on: {
-            [POLICY_ROLE_CREATION_OBJECTIVES[0][0].on_finish_event]: {
+            [NodeCreationFinishEvent.S3_READ_POLICY_CREATED]: {
               actions: [
                 {
                   type: 'change_objective_progress',
@@ -199,10 +190,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     inside_level: {
       initial: 'popup1',
       entry: assign({
-        level_objectives: HIDDEN_LEVEL_OBJECTIVES,
-        edges: INITIAL_IN_LEVEL_EDGES,
+        level_objectives: LEVEL_OBJECTIVES,
+        edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
         nodes: INITIAL_IN_LEVEL_NODES,
-        final_edges: REQUIRED_EDGES,
         side_panel_open: true,
       }),
       states: {
@@ -235,13 +225,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
               states: {
                 creation_in_progress: {
                   on: {
-                    [POLICY_ROLE_CREATION_OBJECTIVES[1][0].on_finish_event]:
+                    [NodeCreationFinishEvent.S3_READ_WRITE_POLICY_CREATED]:
                       'attachment_in_progress',
                   },
                 },
                 attachment_in_progress: {
                   on: {
-                    [EDGE_CONNECTION_OBJECTIVES[0][0].on_finish_event]: {
+                    [EdgeConnectionFinishEvent.S3_READ_WRITE_POLICY_CONNECTED]: {
                       target: 'completed',
                       actions: [
                         {
@@ -269,7 +259,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
               states: {
                 creation_in_progress: {
                   on: {
-                    [POLICY_ROLE_CREATION_OBJECTIVES[1][1].on_finish_event]:
+                    [NodeCreationFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CREATED]:
                       'attachment_in_progress',
                   },
                 },
@@ -303,7 +293,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
               states: {
                 creation_in_progress: {
                   on: {
-                    [POLICY_ROLE_CREATION_OBJECTIVES[1][2].on_finish_event]:
+                    [NodeCreationFinishEvent.CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED]:
                       'attachment_in_progress',
                   },
                 },

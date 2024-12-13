@@ -166,8 +166,8 @@ export const createStateMachineSetup = <
       }),
       next_popup: assign({
         popup_content: ({ context }) => popupTutorialMessages[context.next_popup_index],
+        show_popups: ({ context }) => context.next_popup_index < popupTutorialMessages.length,
         next_popup_index: ({ context }) => context.next_popup_index + 1,
-        show_popups: ({ context }) => context.next_popup_index + 1 < popupTutorialMessages.length,
         show_popovers: false,
       }),
       next_policy_role_objectives: assign({

@@ -1,4 +1,4 @@
-import { assign, enqueueActions } from 'xstate';
+import { assign } from 'xstate';
 
 import { INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
@@ -6,7 +6,11 @@ import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { USER_GROUP_CREATION_OBJECTIVES } from './objectives/user-group-creation-objectives';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
-import { EdgeConnectionFinishEvent, FinishEventMap } from './types/finish-event-enums';
+import {
+  EdgeConnectionFinishEvent,
+  FinishEventMap,
+  NodeCreationFinishEvent,
+} from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -39,12 +43,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     user_group_creation_objectives: [],
   },
   on: {
-    [StatefulStateMachineEvent.AddIAMUserNode]: {
-      guard: ({ context }) => context.state_name === 'inside_tutorial',
+    [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [
         {
-          type: 'add_iam_user_node',
-          params: ({ event }) => ({ params: event.user_node }),
+          type: 'add_iam_user_group_node',
+          params: ({ event }) => ({ params: event.node_data, nodeType: event.node_entity }),
         },
       ],
     },
@@ -81,11 +84,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         side_panel_open: ({ context }) => !context.side_panel_open,
       }),
     },
-    ATTACH_POLICY_TO_USER: {
+    ATTACH_POLICY_TO_ENTITY: {
       actions: [
         {
-          type: 'attach_policy_to_user',
-          params: ({ event }) => ({ policyNode: event.sourceNode, userNode: event.targetNode }),
+          type: 'attach_policy_to_entity',
+          params: ({ event }) => ({ policyNode: event.sourceNode, entityNode: event.targetNode }),
         },
       ],
     },
@@ -152,27 +155,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             show_popovers: true,
           }),
           on: {
-            [StatefulStateMachineEvent.AddIAMUserNode]: {
+            [NodeCreationFinishEvent.USER_NODE_CREATED]: {
               actions: [
-                {
-                  type: 'add_iam_user_node',
-                  params: ({ event }) => ({ params: event.user_node }),
-                },
                 {
                   type: 'change_objective_progress',
                   params: { id: LevelObjectiveID.CreateIAMUser, finished: true },
                 },
               ],
-              // actions: enqueueActions(({ enqueue }) => {
-              //   enqueue({
-              //     type: 'add_iam_user_node',
-              //     params: ({ event }) => ({ params: event.user_node }),
-              //   });
-              //   enqueue({
-              //     type: 'change_objective_progress',
-              //     params: { id: LevelObjectiveID.CreateIAMUser, finished: true },
-              //   });
-              // }),
               target: 'iam_user_popover',
             },
           },

@@ -1,5 +1,6 @@
 import '@fontsource/lato';
 import { extendTheme } from '@chakra-ui/react';
+import { defineStyleConfig } from '@chakra-ui/styled-system';
 
 import { CustomTheme } from './types/custom-theme';
 

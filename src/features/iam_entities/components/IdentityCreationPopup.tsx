@@ -18,13 +18,21 @@ import {
   Tabs,
   Tab,
 } from '@chakra-ui/react';
-import _ from 'lodash';
+import _, { get } from 'lodash';
 import { EventFrom } from 'xstate';
 
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { createGroupNode } from '@/factories/group-node-factory';
+import { createUserNode } from '@/factories/user-node-factory';
+import { BaseFinishEventMap, IAMUserGroupCreationObjective } from '@/machines/types';
+import { PopoverElementID } from '@/theme';
 import { IAMIdentityEntity, IAMNodeEntity } from '@/types';
+import {
+  StatefulStateMachineEvent,
+  StatelessStateMachineEvent,
+} from '@/types/state-machine-event-enums';
 
 interface IdentityCreationPopupProps {}
 
@@ -46,7 +54,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
 
   const handleTabChange = (index: number): void => {
     const newEntity = index === 0 ? IAMNodeEntity.User : IAMNodeEntity.Group;
-    levelActor.send({ type: 'CREATE_IAM_IDENTITY_TAB_CHANGED' });
+    levelActor.send({ type: StatelessStateMachineEvent.CreateIAMIdentityTabChanged });
 
     setIamIdentityEntity(newEntity);
   };
@@ -56,11 +64,11 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
   };
 
   const submit = (): void => {
-    if (iamIdentityEntity === IAMNodeEntity.User) {
-      levelActor.send({ type: 'ADD_IAM_USER_NODE', user_props: { label: userName } });
-    } else {
-      // TODO: Create IAM Group node
-    }
+    levelActor.send({
+      type: StatefulStateMachineEvent.AddIAMUserGroupNode,
+      node_data: { label: getNameFieldVal() },
+      node_entity: iamIdentityEntity,
+    });
 
     closeIdentityCreator();
   };
@@ -80,7 +88,10 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
         <ModalHeader>
           <Flex justifyContent='space-between'>
             <Text>New {_.upperFirst(iamIdentityEntity)}</Text>
-            <WithPopoverBox elementid='identity_creation_select' fontSize='8px'>
+            <WithPopoverBox
+              elementid={PopoverElementID.IAMIdentitySelectorTypeForCreation}
+              fontSize='8px'
+            >
               <Tabs onChange={handleTabChange} variant='soft-rounded' size='sm'>
                 <TabList>
                   <Tab>User</Tab>
@@ -96,7 +107,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
               {iamIdentityEntity === IAMNodeEntity.User ? 'User Name' : 'Group Name'}
             </FormLabel>
             <WithPopoverInput
-              elementid='iam_identity_name'
+              elementid={PopoverElementID.IAMIdentityNameInput}
               value={getNameFieldVal()}
               onChange={handleNameChange}
             />
@@ -112,7 +123,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme='blue' mr={3} onClick={submit}>
-            Submit
+            submit
           </Button>
           <Button variant='ghost' onClick={closeIdentityCreator}>
             Cancel

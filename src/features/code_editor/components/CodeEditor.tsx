@@ -9,12 +9,15 @@ import {
   ModalFooter,
   Button,
   useTheme,
+  VStack,
+  StackDivider,
 } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
 import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
 import { CodeEditorHeader } from './CodeEditorHeader';
+import { CodeEditorObjectiveDescriptionBox } from './CodeEditorObjectiveDescriptionBox';
 import { CodeEditorWarningsBox } from './CodeEditorWarningsBox';
 import { CodeEditorCreate } from './Create/CodeEditorCreate';
 import { CreateSubmitButton } from './Create/CreateSubmitButton';
@@ -56,13 +59,16 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
           <CodeEditorHeader codeEditorMode={codeEditorMode} selectedIAMEntity={selectedIAMEntity} />
         </ModalHeader>
         <ModalBody>
-          {codeEditorMode === CodeEditorMode.Create ? (
-            <CodeEditorCreate nodeId={nodeId} />
-          ) : (
-            <CodeEditorEdit nodeId={nodeId} />
-          )}
-          <CodeEditorErrorsBox nodeId={nodeId} />
-          {_.isEmpty(errors[nodeId]) && <CodeEditorWarningsBox nodeId={nodeId} />}
+          <VStack align='stretch' spacing={4}>
+            {codeEditorMode === CodeEditorMode.Create ? (
+              <CodeEditorCreate nodeId={nodeId} />
+            ) : (
+              <CodeEditorEdit nodeId={nodeId} />
+            )}
+            {/* <CodeEditorObjectiveDescriptionBox nodeId={nodeId} /> */}
+            <CodeEditorErrorsBox nodeId={nodeId} />
+            {_.isEmpty(errors[nodeId]) && <CodeEditorWarningsBox nodeId={nodeId} />}
+          </VStack>
         </ModalBody>
         <ModalFooter>
           {codeEditorMode === CodeEditorMode.Create ? (

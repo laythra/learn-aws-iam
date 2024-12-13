@@ -28,13 +28,7 @@ export enum ObjectiveType {
   LEVEL_OBJECTIVE = 'LEVEL_OBJECTIVE',
 }
 
-export interface BaseFinishEventMap {
-  [ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE]: string;
-  [ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE]: string;
-  [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: string;
-  [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: string;
-  [ObjectiveType.LEVEL_OBJECTIVE]: string;
-}
+export type BaseFinishEventMap = Record<ObjectiveType, string>;
 
 export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
   iam_user_template?: Node<IAMUserNodeData>;
@@ -87,15 +81,17 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
         | 'IAM_USER_ATTACHED_TO_GROUP'
         | 'IAM_POLICY_ATTACHED_TO_GROUP'
         | 'TOGGLE_SIDE_PANEL'
-        | (TBaseFinishEventMap[keyof TBaseFinishEventMap] & string)
-        | StatelessStateMachineEvent;
+        | StatelessStateMachineEvent
+        | (TBaseFinishEventMap[keyof TBaseFinishEventMap] & string);
     }
-  | { type: 'ADD_IAM_NODE'; node: Node<IAMAnyNodeData> }
+  | {
+      type: StatefulStateMachineEvent.AddIAMUserGroupNode;
+      node_entity: IAMNodeEntity.Group | IAMNodeEntity.User;
+      node_data: Partial<IAMUserNodeData> | Partial<IAMGroupNodeData>;
+    }
   | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string }
   | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
   | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
-  | { type: StatefulStateMachineEvent.AddIAMUserNode; user_node: Partial<IAMUserNodeData> }
-  | { type: 'ADD_IAM_GROUP_NODE'; node: Node }
   | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }
   | { type: 'DELETE_EDGE'; edge: Edge<IAMEdgeData> }
   | { type: 'SET_EDGES'; edges: Edge<IAMEdgeData>[] }
@@ -105,6 +101,16 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: 'ATTACH_POLICY_TO_USER';
       sourceNode: Node<IAMPolicyNodeData>;
       targetNode: Node<IAMUserNodeData>;
+    }
+  | {
+      type: 'ATTACH_POLICY_TO_ENTITY';
+      sourceNode: Node<IAMPolicyNodeData>;
+      targetNode: Node<IAMUserNodeData | IAMGroupNodeData>;
+    }
+  | {
+      type: 'ATTACH_USER_TO_GROUP';
+      sourceNode: Node<IAMUserNodeData>;
+      targetNode: Node<IAMGroupNodeData>;
     }
   | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage };
 
@@ -138,7 +144,7 @@ export type LevelObjective<TObjectiveID, TFinishEventMap extends BaseFinishEvent
   id: TObjectiveID;
   label: string;
   finished: boolean;
-  on_finished_event?: TFinishEventMap[ObjectiveType.LEVEL_OBJECTIVE];
+  on_finish_event?: TFinishEventMap[ObjectiveType.LEVEL_OBJECTIVE];
 };
 
 export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> = {
@@ -150,6 +156,8 @@ export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> 
   locked_edges?: Edge[];
   readonly on_finish_event: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE];
   readonly is_finished: boolean;
+  readonly established_edge_hovering_label: AccessLevel | string;
+  readonly established_edge_target_handle?: string;
 };
 
 export interface IAMPolicyRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
@@ -163,6 +171,7 @@ export interface IAMPolicyRoleCreationObjective<TFinishEventMap extends BaseFini
   readonly validate_inside_code_editor: boolean;
   readonly resource_affected: string[];
   readonly validate_function?: ValidateFunction;
+  readonly tooltips_data?: { pos: number; content: string }[];
 }
 
 export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEventMap> {
