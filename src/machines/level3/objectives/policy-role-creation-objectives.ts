@@ -27,12 +27,14 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective<Fin
       validate_inside_code_editor: true,
       resource_affected: [],
       validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
-      tooltips_data: [
+      help_badges: [
         {
-          pos: 0,
-          content: 'testing content',
+          path: 'Statement',
+          content: "LOOKS LIKE IT'S HITTING YOU PRETTY DAMN HARD!!!",
+          color: 'green',
         },
       ],
+      limit_new_lines: true,
     },
   ],
   [

@@ -20,6 +20,12 @@ import {
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
 
+export type HelpBadge = {
+  path: string;
+  content: string;
+  color: string;
+};
+
 export enum ObjectiveType {
   POLICY_ROLE_CREATION_OBJECTIVE = 'POLICY_ROLE_CREATION_OBJECTIVE',
   POLICY_ROLE_EDIT_OBJECTIVE = 'POLICY_ROLE_EDIT_OBJECTIVE',
@@ -171,7 +177,8 @@ export interface IAMPolicyRoleCreationObjective<TFinishEventMap extends BaseFini
   readonly validate_inside_code_editor: boolean;
   readonly resource_affected: string[];
   readonly validate_function?: ValidateFunction;
-  readonly tooltips_data?: { pos: number; content: string }[];
+  readonly help_badges?: HelpBadge[];
+  readonly limit_new_lines?: boolean;
 }
 
 export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEventMap> {
@@ -179,6 +186,7 @@ export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEv
   readonly entity_id: string;
   readonly entity: IAMScriptableEntity;
   readonly json_schema: Schema;
+  readonly allow_new_lines?: boolean;
 
   /**
    * Optional description for the IAM Policy/Role Edit Objective.
@@ -207,11 +215,3 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
   readonly initial_position?: string;
   finished: boolean;
 };
-
-// /**
-//  * Typescript should be able to narrow down the concrete type of the objective based on the `type` property.
-//  */
-// export type IAMAnyObjective<TBaseFinishEventMap extends BaseFinishEventMap> =
-//   | IAMPolicyRoleCreationObjective<TBaseFinishEventMap>
-//   | IAMPolicyRoleEditObjective<TBaseFinishEventMap>
-//   | IAMUserGroupCreationObjective<TBaseFinishEventMap>;
