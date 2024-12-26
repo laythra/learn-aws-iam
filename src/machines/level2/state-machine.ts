@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { assign } from 'xstate';
 
 import { INITIAL_LEVEL_NODES } from './nodes';

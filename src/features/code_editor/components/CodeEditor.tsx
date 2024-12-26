@@ -10,14 +10,12 @@ import {
   Button,
   useTheme,
   VStack,
-  StackDivider,
 } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
 import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
 import { CodeEditorHeader } from './CodeEditorHeader';
-import { CodeEditorObjectiveDescriptionBox } from './CodeEditorObjectiveDescriptionBox';
 import { CodeEditorWarningsBox } from './CodeEditorWarningsBox';
 import { CodeEditorCreate } from './Create/CodeEditorCreate';
 import { CreateSubmitButton } from './Create/CreateSubmitButton';
@@ -49,12 +47,16 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
 
   const closeCodeEditor = (): void => {
     CodeEditorPopupStore.send({ type: 'close' });
+    codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });
   };
 
   return (
     <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor} id='modal_content'>
       <ModalOverlay />
-      <ModalContent maxW={theme.sizes.modalsMaxWidthInPixels}>
+      <ModalContent
+        maxW={theme.sizes.modalsMaxWidthInPixels}
+        maxH={theme.sizes.codeEditorMaxHeightInPixels}
+      >
         <ModalHeader>
           <CodeEditorHeader codeEditorMode={codeEditorMode} selectedIAMEntity={selectedIAMEntity} />
         </ModalHeader>

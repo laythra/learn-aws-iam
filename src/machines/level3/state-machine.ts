@@ -27,9 +27,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level3_state_machine',
-  initial: 'inside_level',
+  initial: 'inside_tutorial',
   context: {
-    level_title: 'IAM Groups',
+    level_title: 'Customer Managed Policies',
     level_description: 'Customer managed policies!',
     level_number: 1,
     next_popover_index: 0,
@@ -306,6 +306,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
         create_and_attach_policies_completed: {
           type: 'final',
+          entry: 'next_popup',
         },
       },
     },

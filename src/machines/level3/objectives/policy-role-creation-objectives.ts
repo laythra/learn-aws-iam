@@ -26,7 +26,6 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective<Fin
           to the S3 bucket: public-assets',
       on_finish_event: NodeCreationFinishEvent.S3_READ_POLICY_CREATED,
       validate_inside_code_editor: true,
-      // resource_affected: [],
       granted_accesses: [],
       validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
       help_badges: [
@@ -73,16 +72,15 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective<Fin
       entity: IAMNodeEntity.Policy,
       json_schema: cloudfrontReadPolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
-      on_finish_event: NodeCreationFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CREATED,
+      on_finish_event: NodeCreationFinishEvent.CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED,
       validate_inside_code_editor: false,
       granted_accesses: [
         {
-          target_node: ResourceNodeID.DynamoDBTable,
-          access_level: AccessLevel.ReadWrite,
+          target_node: ResourceNodeID.CloudFront,
+          access_level: AccessLevel.Read,
           target_handle: 'bottom',
         },
       ],
-      // resource_affected: [ResourceNodeID.DynamoDBTable],
       validate_function: AJV_COMPILER.compile(cloudfrontReadPolicySchema),
     },
     {
@@ -93,11 +91,10 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective<Fin
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: NodeCreationFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CREATED,
       validate_inside_code_editor: false,
-      // resource_affected: [ResourceNodeID.CloudFront],
       granted_accesses: [
         {
           target_node: ResourceNodeID.CloudFront,
-          access_level: AccessLevel.ReadWrite,
+          access_level: AccessLevel.Read,
           target_handle: 'bottom',
         },
       ],

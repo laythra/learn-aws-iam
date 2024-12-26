@@ -23,7 +23,7 @@ import {
   LevelsProgressionContext,
 } from '@/components/providers/LevelsProgressionProvider';
 import useSidePanels from '@/hooks/useSidePanels';
-import { IAMAnyNodeData, IAMNodeEntity, type IAMEdgeData } from '@/types';
+import { IAMAnyNodeData, type IAMEdgeData } from '@/types';
 import storage from '@/utils/storage';
 
 import 'reactflow/dist/style.css';

@@ -22,5 +22,6 @@ export const theme: CustomTheme = extendTheme({
     iamNodeHeightInPixels: 82,
     modalsMaxWidthInPixels: 720,
     navbarHeightInPixels: 65,
+    codeEditorHeightInPixels: 500,
   },
 }) as CustomTheme;

@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import { json } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
-import CodeMirror, { EditorView, ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
@@ -25,15 +25,13 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
   const policyRoleObjectives = LevelsProgressionContext.useSelector(
     state => state.context.policy_role_objectives
   );
-  const { selectedIAMEntity, content, isCodeEditorInitialized } = useSelector(
+  const { selectedIAMEntity, content } = useSelector(
     codeEditorStateStore,
-    state => _.pick(state.context, ['selectedIAMEntity', 'content', 'isCodeEditorInitialized']),
+    state => _.pick(state.context, ['selectedIAMEntity', 'content']),
     _.isEqual
   );
 
-  const editorRef = useRef<ReactCodeMirrorRef>(null);
   const editorView = useRef<EditorView | null>(null);
-  // const badgesInitialized = useRef(false);
 
   const objectiveToValidate = _.find<IAMPolicyRoleCreationObjective<BaseFinishEventMap>>(
     policyRoleObjectives,
@@ -50,19 +48,19 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
     if (!objectiveToValidate) {
       const anyValidPolicy = findAnyValidPolicy<BaseFinishEventMap>(
         policyRoleObjectives,
-        content[selectedIAMEntity]
+        editorView.current!.state.doc.toString()
       );
 
-      anyValidPolicy ? [] : warnings;
+      return anyValidPolicy ? [] : warnings;
     }
 
-    return isJSONValid(content[selectedIAMEntity], validateFunction) ? [] : warnings;
+    return isJSONValid(editorView.current!.state.doc.toString(), validateFunction) ? [] : warnings;
   };
 
   const setErrorsAndWarnings = (): void => {
-    if (!editorRef.current?.view) return;
+    if (!editorView.current) return;
 
-    const lintingErrors = getLintingErrors(editorRef.current.view, validateFunction);
+    const lintingErrors = getLintingErrors(editorView.current, validateFunction);
     const warnings = getWarnings();
 
     codeEditorStateStore.send({
@@ -82,11 +80,12 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
     editorView.current = view;
 
     InitializeBadgeWidgets(view, objectiveToValidate?.help_badges ?? [], initialCode);
+    validateChange();
 
-    // TODO: Include a pre-computed jsonized version of the initial code
-    // notice how many times we're doing it throughout the codebase
+    // TODO: Include a pre-computed jsonized version of the initial code in the objective itself
+    // notice how many times we're doing JSON.stringify for the initial content throughout the codebase
     codeEditorStateStore.send({
-      type: 'initializeCodeEditor',
+      type: 'setContent',
       content: JSON.stringify(initialCode, null, 2),
       nodeId,
     });
@@ -112,7 +111,6 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
       height='200px'
       extensions={extensions}
       onCreateEditor={onCreateEditor}
-      ref={editorRef}
     />
   );
 };

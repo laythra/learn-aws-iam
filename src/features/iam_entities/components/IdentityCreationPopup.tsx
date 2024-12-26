@@ -18,15 +18,12 @@ import {
   Tabs,
   Tab,
 } from '@chakra-ui/react';
-import _, { get } from 'lodash';
+import _ from 'lodash';
 import { EventFrom } from 'xstate';
 
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { createGroupNode } from '@/factories/group-node-factory';
-import { createUserNode } from '@/factories/user-node-factory';
-import { BaseFinishEventMap, IAMUserGroupCreationObjective } from '@/machines/types';
 import { PopoverElementID } from '@/theme';
 import { IAMIdentityEntity, IAMNodeEntity } from '@/types';
 import {

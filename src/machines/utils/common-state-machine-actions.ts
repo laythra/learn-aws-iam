@@ -280,7 +280,7 @@ export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends B
     const newPolicyNode = createPolicyNode({
       id: targetValidPolicy?.entity_id ?? new Date().getTime().toString(),
       content: docString,
-      label: targetValidPolicy?.entity ?? IAMNodeEntity.Policy,
+      label: targetValidPolicy?.entity_id ?? IAMNodeEntity.Policy,
       unnecessary_policy: targetValidPolicy === undefined,
       granted_accesses: targetValidPolicy?.granted_accesses ?? [],
       editable: true,

@@ -73,6 +73,10 @@ In case you hadn't noticed, the list of objectives you need
 to complete is on the right side panel ➡️️|lg
 `;
 
+const POPUP_MSG_7 = `
+Awesome work! You've completed the first set of objectives. 🎉️|lg
+`;
+
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: 'AWS Managed Policies',
@@ -97,5 +101,9 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: "You're on your own now!",
     content: POPUP_MSG_6,
+  },
+  {
+    title: '🎉',
+    content: POPUP_MSG_7,
   },
 ];

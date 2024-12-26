@@ -16,8 +16,8 @@ export const TEMPLATE_GROUP_NODE: Node<IAMGroupNodeData> = {
     handles: [
       { id: Position.Top, type: 'source', position: Position.Top },
       { id: Position.Right, type: 'source', position: Position.Right },
-      { id: Position.Bottom, type: 'target', position: Position.Bottom },
       { id: Position.Left, type: 'source', position: Position.Left },
+      { id: Position.Bottom, type: 'target', position: Position.Bottom },
     ] as HandleProps[],
     image: IAMNodeImage.Group,
     associated_policies: [],

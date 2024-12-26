@@ -63,8 +63,8 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     },
     deinitializeCodeEditor: (context: CodeEditorState, event: { nodeId: string }) => {
       context.isCodeEditorInitialized = false;
-      context.content[event.nodeId] = '';
       context.isValidating = false;
+      delete context.content[event.nodeId];
     },
   },
 });

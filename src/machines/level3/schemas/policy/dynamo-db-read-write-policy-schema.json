@@ -12,9 +12,9 @@
       ]
     },
     "Statement": {
-      "type": "array",
       "minItems": 1,
       "maxItems": 1,
+      "type": "array",
       "items": {
         "type": "object",
         "required": [
@@ -35,18 +35,23 @@
             "items": {
               "type": "string",
               "enum": [
-                "cloudfront:ListDistributions",
-                "cloudfront:GetDistribution",
-                "cloudfront:GetDistributionConfig",
-                "cloudfront:ListTagsForResource"
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:Query",
+                "dynamodb:Scan"
               ]
             },
-            "minItems": 4,
-            "maxItems": 4
+            "minItems": 6,
+            "maxItems": 6,
+            "uniqueItems": true
           },
           "Resource": {
             "type": "string",
-            "pattern": "^arn:aws:cloudfront::[0-9]{12}:distribution/E1234567890ABC$"
+            "enum": [
+              "arn:aws:dynamodb:*:*:table/*"
+            ]
           }
         }
       }

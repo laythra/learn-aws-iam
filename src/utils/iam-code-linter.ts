@@ -1,5 +1,5 @@
 import { Diagnostic } from '@codemirror/lint';
-import { EditorView } from '@uiw/react-codemirror';
+import { EditorView } from '@codemirror/view';
 import Ajv, { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 
