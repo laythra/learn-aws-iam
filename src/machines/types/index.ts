@@ -7,6 +7,7 @@ import type {
   CreatableIAMNodeEntity,
   IAMPolicyNodeData,
   IAMScriptableEntity,
+  PolicyRoleGrantedAccess,
 } from '@/types';
 import {
   IAMAnyNodeData,
@@ -66,6 +67,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   policy_role_edit_objectives: IAMPolicyRoleEditObjective<TBaseFinishEventMap>[];
   edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
+  next_level_objectives_list_index?: number;
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -175,7 +177,7 @@ export interface IAMPolicyRoleCreationObjective<TFinishEventMap extends BaseFini
   readonly initial_code: object;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE];
   readonly validate_inside_code_editor: boolean;
-  readonly resource_affected: string[];
+  readonly granted_accesses: PolicyRoleGrantedAccess[];
   readonly validate_function?: ValidateFunction;
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
@@ -206,7 +208,9 @@ export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEv
    * Resources to revoke from the users/groups associated with the IAM Policy/Role.
    */
   readonly resources_to_revoke: string[];
+  readonly limit_new_lines?: boolean;
 }
+
 export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEventMap> = {
   readonly entity_id: string;
   readonly type: ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE;

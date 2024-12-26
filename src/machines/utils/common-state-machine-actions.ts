@@ -125,29 +125,29 @@ function updatePolicyToGroupConnectionEdges<
         hovering_label: 'Attached to',
       },
     };
+
     draftEdges.push(createEdge(newEdgeData));
 
-    context.edges_connection_objectives.forEach(objective => {
-      if (objective.is_finished) return;
+    context.edges_connection_objectives
+      .filter(objective => !objective.is_finished)
+      .forEach(objective => {
+        const objectiveAchieved =
+          _.differenceBy(objective.required_edges, draftEdges, 'id').length === 0;
 
-      const objectiveAchieved =
-        _.differenceBy(objective.required_edges, draftEdges, 'id').length === 0;
+        if (!objectiveAchieved) {
+          return;
+        }
 
-      if (!objectiveAchieved) {
-        return;
-      }
+        newEdgeData = {
+          ...newEdgeData,
+          targetHandle: objective.established_edge_target_handle,
+        };
 
-      newEdgeData = {
-        ...newEdgeData,
-        targetHandle: objective.established_edge_target_handle,
-      };
+        draftEdges.pop();
+        draftEdges.push(createEdge(newEdgeData));
+        sideEffectsEvents.push(objective.on_finish_event);
+      });
 
-      draftEdges.pop();
-      draftEdges.push(createEdge(newEdgeData));
-      sideEffectsEvents.push(objective.on_finish_event);
-    });
-
-    console.log(policyNode.data.granted_accesses);
     policyNode.data.granted_accesses.forEach(accessInfo => {
       const userToResourceEdges = groupNode.data.associated_users.map(userNodeId =>
         createEdge({
@@ -282,6 +282,8 @@ export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends B
       content: docString,
       label: targetValidPolicy?.entity ?? IAMNodeEntity.Policy,
       unnecessary_policy: targetValidPolicy === undefined,
+      granted_accesses: targetValidPolicy?.granted_accesses ?? [],
+      editable: true,
     });
 
     draftNodes.push(newPolicyNode);

@@ -1,35 +1,52 @@
 {
   "type": "object",
-  "required": ["Version", "Statement"],
+  "required": [
+    "Version",
+    "Statement"
+  ],
   "properties": {
     "Version": {
       "type": "string",
-      "enum": ["2012-10-17"]
+      "enum": [
+        "2012-10-17"
+      ]
     },
     "Statement": {
       "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
       "items": {
         "type": "object",
-        "required": ["Effect", "Action", "Resource"],
+        "required": [
+          "Effect",
+          "Action",
+          "Resource"
+        ],
         "properties": {
           "Effect": {
             "type": "string",
-            "enum": ["Allow", "Deny"]
+            "enum": [
+              "Allow"
+            ]
           },
           "Action": {
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["s3:Get*", "s3:List*"]
+              "enum": [
+                "s3:GetObject"
+              ]
             }
           },
           "Resource": {
             "type": "array",
-            "minItems": 2,
-            "maxItems": 2,
+            "minItems": 1,
+            "maxItems": 1,
             "uniqueItems": true,
             "items": {
-              "enum": ["arn:aws:s3:::staging-public-images", "arn:aws:s3:::staging-public-images/*"]
+              "enum": [
+                "arn:aws:s3:::public-assets/*"
+              ]
             }
           }
         }

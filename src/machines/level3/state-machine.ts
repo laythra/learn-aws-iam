@@ -14,7 +14,6 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { GenericContext } from '../types';
 import { resolveInitialEdges } from '../utils/initial-edges-resolver';
 import {
   StatefulStateMachineEvent,
@@ -28,10 +27,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level3_state_machine',
-  initial: 'inside_tutorial',
+  initial: 'inside_level',
   context: {
     level_title: 'IAM Groups',
-    level_description: 'Scaling your IAM setup with groups',
+    level_description: 'Customer managed policies!',
     level_number: 1,
     next_popover_index: 0,
     next_popup_index: 0,
@@ -56,52 +55,44 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
-    // ADD_IAM_USER_NODE: { // TODO: Implement this
-    //   actions: [
-    //     {
-    //       type: 'add_iam_node',
-    //       params: ({ event }) => ({ node: event.node }),
-    //     },
-    //   ],
-    // },
-    // ADD_IAM_GROUP_NODE: {
-    //   actions: [
-    //     {
-    //       type: 'add_iam_node',
-    //       params: ({ event }) => ({ node: event.node }),
-    //     },
-    //   ],
-    // },
-    // ADD_EDGE: {
-    //   actions: [
-    //     assign({
-    //       edges: ({ context, event }) => [...context.edges, event.edge],
-    //     }),
-    //   ],
-    // },
-    // DELETE_EDGE: {
-    //   actions: [
-    //     assign({
-    //       edges: ({ context, event }) => context.edges.filter(edge => edge.id !== event.edge.id),
-    //     }),
-    //   ],
-    // },
-    // SET_NODES: {
-    //   actions: assign({
-    //     nodes: ({ event }) => event.nodes,
-    //   }),
-    // },
-    // SET_EDGES: {
-    //   actions: assign({
-    //     edges: ({ event }) => event.edges,
-    //   }),
-    // },
-    // SHOW_POPOVER: {
-    //   actions: assign({
-    //     popover_content: ({ event }) => event.popover_content,
-    //     show_popovers: true,
-    //   }),
-    //
+    ADD_IAM_POLICY_NODE: {
+      actions: [
+        {
+          type: 'add_policy_node',
+          params: ({ event }) => ({ docString: event.doc_string }),
+        },
+      ],
+    },
+    ADD_EDGE: {
+      actions: [
+        assign({
+          edges: ({ context, event }) => [...context.edges, event.edge],
+        }),
+      ],
+    },
+    DELETE_EDGE: {
+      actions: [
+        assign({
+          edges: ({ context, event }) => context.edges.filter(edge => edge.id !== event.edge.id),
+        }),
+      ],
+    },
+    SET_NODES: {
+      actions: assign({
+        nodes: ({ event }) => event.nodes,
+      }),
+    },
+    SET_EDGES: {
+      actions: assign({
+        edges: ({ event }) => event.edges,
+      }),
+    },
+    SHOW_POPOVER: {
+      actions: assign({
+        popover_content: ({ event }) => event.popover_content,
+        show_popovers: true,
+      }),
+    },
     HIDE_POPOVERS: {
       actions: assign({
         show_popovers: false,
@@ -112,15 +103,25 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         side_panel_open: ({ context }) => !context.side_panel_open,
       }),
     },
+    ATTACH_POLICY_TO_ENTITY: {
+      actions: [
+        {
+          type: 'attach_policy_to_entity',
+          params: ({ event }) => ({ policyNode: event.sourceNode, entityNode: event.targetNode }),
+        },
+      ],
+    },
   },
   states: {
     inside_tutorial: {
       initial: 'tutorial_popup1',
       onDone: 'inside_level',
-      entry: assign({
-        nodes: INITIAL_TUTORIAL_NODES,
-        level_objectives: LEVEL_OBJECTIVES,
-      }),
+      entry: [
+        assign({
+          nodes: INITIAL_TUTORIAL_NODES,
+          level_objectives: LEVEL_OBJECTIVES[0],
+        }),
+      ],
       states: {
         tutorial_popup1: {
           entry: 'next_popup',
@@ -151,7 +152,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             show_popovers: false,
           }),
           after: {
-            3000: 'create_your_custom_policy_popover',
+            0: 'create_your_custom_policy_popover',
           },
         },
         create_your_custom_policy_popover: {
@@ -160,15 +161,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             [NodeCreationFinishEvent.S3_READ_POLICY_CREATED]: {
               actions: [
                 {
-                  type: 'change_objective_progress',
-                  params: ({
-                    context,
-                  }: {
-                    context: GenericContext<LevelObjectiveID, FinishEventMap>;
-                  }) => ({
-                    id: Object.keys(context.level_objectives)[0],
-                    finished: true,
-                  }),
+                  type: 'finish_level_objective',
+                  params: { id: LevelObjectiveID.CreateFirstCustomerManagedPolicy },
                 },
               ],
               target: 'custom_policy_created',
@@ -189,12 +183,15 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     },
     inside_level: {
       initial: 'popup1',
-      entry: assign({
-        level_objectives: LEVEL_OBJECTIVES,
-        edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
-        nodes: INITIAL_IN_LEVEL_NODES,
-        side_panel_open: true,
-      }),
+      entry: [
+        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
+        'next_policy_role_objectives',
+        assign({
+          edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
+          nodes: INITIAL_IN_LEVEL_NODES,
+          side_panel_open: false,
+        }),
+      ],
       states: {
         popup1: {
           entry: 'next_popup',
@@ -216,7 +213,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           exit: 'hide_popups',
         },
         create_and_attach_policies: {
-          entry: ['next_policy_role_objectives', 'next_edge_connection_objectives'],
+          entry: [
+            'next_policy_role_objectives',
+            'next_edge_connection_objectives',
+            'toggle_side_panel',
+          ],
           type: 'parallel',
           onDone: 'create_and_attach_policies_completed',
           states: {
@@ -232,20 +233,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
                 attachment_in_progress: {
                   on: {
                     [EdgeConnectionFinishEvent.S3_READ_WRITE_POLICY_CONNECTED]: {
-                      target: 'completed',
                       actions: [
                         {
-                          type: 'change_objective_progress',
-                          params: ({
-                            context,
-                          }: {
-                            context: GenericContext<LevelObjectiveID, FinishEventMap>;
-                          }) => ({
-                            id: Object.keys(context.level_objectives)[0],
-                            finished: true,
-                          }),
+                          type: 'finish_level_objective',
+                          params: { id: LevelObjectiveID.FrontendTeamS3BucketAccess },
                         },
                       ],
+                      target: 'completed',
                     },
                   },
                 },
@@ -265,21 +259,14 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
                 },
                 attachment_in_progress: {
                   on: {
-                    [EDGE_CONNECTION_OBJECTIVES[0][1].on_finish_event]: {
-                      target: 'completed',
+                    [EdgeConnectionFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CONNECTED]: {
                       actions: [
                         {
-                          type: 'change_objective_progress',
-                          params: ({
-                            context,
-                          }: {
-                            context: GenericContext<LevelObjectiveID, FinishEventMap>;
-                          }) => ({
-                            id: Object.keys(context.level_objectives)[1],
-                            finished: true,
-                          }),
+                          type: 'finish_level_objective',
+                          params: { id: LevelObjectiveID.BackendTeamDynamoDBAccess },
                         },
                       ],
+                      target: 'completed',
                     },
                   },
                 },
@@ -299,21 +286,14 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
                 },
                 attachment_in_progress: {
                   on: {
-                    [EDGE_CONNECTION_OBJECTIVES[0][2].on_finish_event]: {
-                      target: 'completed',
+                    [EdgeConnectionFinishEvent.CLOUDFRONT_READ_POLICY_CONNECTED]: {
                       actions: [
                         {
-                          type: 'change_objective_progress',
-                          params: ({
-                            context,
-                          }: {
-                            context: GenericContext<LevelObjectiveID, FinishEventMap>;
-                          }) => ({
-                            id: Object.keys(context.level_objectives)[2],
-                            finished: true,
-                          }),
+                          type: 'finish_level_objective',
+                          params: { id: LevelObjectiveID.FrontendTeamCloudFrontAccess },
                         },
                       ],
+                      target: 'completed',
                     },
                   },
                 },

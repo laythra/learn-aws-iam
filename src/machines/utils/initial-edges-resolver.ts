@@ -2,12 +2,19 @@ import _ from 'lodash';
 import { Edge, Node } from 'reactflow';
 
 import { createEdge } from '@/factories/edge-factory';
-import { IAMAnyNodeData, IAMNodeEntity, IAMPolicyNodeData, IAMUserNodeData } from '@/types';
+import {
+  IAMAnyNodeData,
+  IAMGroupNodeData,
+  IAMNodeEntity,
+  IAMPolicyNodeData,
+  IAMUserNodeData,
+} from '@/types';
 
 export function resolveInitialEdges(initialNodes: Node<IAMAnyNodeData>[]): Edge[] {
   const nodesById = _.keyBy(initialNodes, 'id');
   const nodesByEntity = _.groupBy(initialNodes, 'data.entity');
   const userNodes = nodesByEntity[IAMNodeEntity.User] as Node<IAMUserNodeData>[];
+  const groupNodes = nodesByEntity[IAMNodeEntity.Group] as Node<IAMGroupNodeData>[];
 
   const policyEdges = _.flatMapDeep(userNodes, userNode => {
     return userNode.data.associated_policies.map(policyId => {
@@ -35,7 +42,33 @@ export function resolveInitialEdges(initialNodes: Node<IAMAnyNodeData>[]): Edge[
     });
   });
 
-  // TODO: Handle edges established through group nodes
+  const userToGroupEdges = _.flatMapDeep(groupNodes, groupNode => {
+    return groupNode.data.associated_users.map(userId => {
+      const policyToUserEdge = createEdge({
+        source: userId,
+        target: groupNode.id,
+        data: {
+          hovering_label: 'Attached to',
+        },
+      });
 
-  return policyEdges;
+      const userToResourceEdgesThroughGroup = groupNode.data.associated_policies.map(policyId => {
+        const policyNode = nodesById[policyId] as Node<IAMPolicyNodeData>;
+        return policyNode.data.granted_accesses.map(accessInfo => {
+          return createEdge({
+            source: userId,
+            target: accessInfo.target_node,
+            targetHandle: accessInfo.target_handle,
+            data: {
+              hovering_label: accessInfo.access_level,
+            },
+          });
+        });
+      });
+
+      return [policyToUserEdge, userToResourceEdgesThroughGroup];
+    });
+  });
+
+  return [...policyEdges, ...userToGroupEdges];
 }

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import type { Node } from 'reactflow';
 import { setup, enqueueActions, assign } from 'xstate';
 
@@ -82,7 +83,7 @@ export const createStateMachineSetup = <
             TFinishEventMap
           >(context, policyNode, entityNode);
 
-          enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+          enqueue.assign({ nodes: updatedNodes, edges: _.uniqBy(updatedEdges, 'id') });
           sideEffectsEvents.forEach(event => {
             enqueue.raise({ type: event });
           });
