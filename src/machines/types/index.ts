@@ -208,6 +208,7 @@ export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEv
    * Resources to revoke from the users/groups associated with the IAM Policy/Role.
    */
   readonly resources_to_revoke: string[];
+  readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
 }
 

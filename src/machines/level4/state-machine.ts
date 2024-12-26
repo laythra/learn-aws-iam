@@ -23,7 +23,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   []
 ).createMachine({
   id: 'level4_state_machine',
-  initial: 'inside_level',
+  initial: 'inside_tutorial',
   context: {
     iam_user_template: TEMPLATE_USER_NODE,
     iam_policy_template: TEMPLATE_POLICY_NODE,
@@ -90,14 +90,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
-    // ADD_IAM_USER_NODE: { // TODO: Implement this
-    //   actions: [
-    //     {
-    //       type: 'add_iam_node',
-    //       params: ({ event }) => ({ node: event.node }),
-    //     },
-    //   ],
-    // },
     ADD_IAM_GROUP_NODE: {
       actions: [
         assign({

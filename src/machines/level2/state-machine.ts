@@ -23,11 +23,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   []
 ).createMachine({
   id: 'level2_state_machine',
-  initial: 'create_group_popover',
+  initial: 'tutorial_popup1',
   context: {
     level_title: 'IAM Groups',
     level_description: 'Scaling your IAM setup with groups',
-    level_number: 1,
+    level_number: 2,
     next_popover_index: 0,
     next_popup_index: 0,
     state_name: 'inside_tutorial',
@@ -134,7 +134,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       entry: 'next_popup',
       on: {
         NEXT_POPUP: {
-          actions: 'next_popup',
           target: 'tutorial_popup4',
         },
       },
@@ -143,7 +142,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       entry: 'next_popup',
       on: {
         NEXT_POPUP: {
-          actions: 'next_popup',
           target: 'create_group_popover',
         },
       },

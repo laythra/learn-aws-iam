@@ -184,25 +184,25 @@ export function updateUserToGroupConnectionEdges<
     };
     draftEdges.push(createEdge(newEdgeData));
 
-    context.edges_connection_objectives.forEach(objective => {
-      if (objective.is_finished) return;
+    context.edges_connection_objectives
+      .filter(objective => !objective.is_finished)
+      .forEach(objective => {
+        const objectiveAchieved =
+          _.differenceBy(objective.required_edges, draftEdges, 'id').length === 0;
 
-      const objectiveAchieved =
-        _.differenceBy(objective.required_edges, draftEdges, 'id').length === 0;
+        if (!objectiveAchieved) {
+          return;
+        }
 
-      if (!objectiveAchieved) {
-        return;
-      }
+        newEdgeData = {
+          ...newEdgeData,
+          targetHandle: objective.established_edge_target_handle,
+        };
 
-      newEdgeData = {
-        ...newEdgeData,
-        targetHandle: objective.established_edge_target_handle,
-      };
-
-      draftEdges.pop();
-      draftEdges.push(createEdge(newEdgeData));
-      sideEffectsEvents.push(objective.on_finish_event);
-    });
+        draftEdges.pop();
+        draftEdges.push(createEdge(newEdgeData));
+        sideEffectsEvents.push(objective.on_finish_event);
+      });
 
     const policyNodes = _.chain(context.nodes)
       .filter((node): node is Node<IAMPolicyNodeData> => node.data.entity === IAMNodeEntity.Policy)

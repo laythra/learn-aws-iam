@@ -95,7 +95,7 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
           </Box>
         </Flex>
       </Flex>
-      {isEditable && (
+      {isEditable && ( // TODO: Show info button even if not editable
         <Box>
           <IAMNodeInfoButton
             nodeId={id}

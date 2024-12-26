@@ -27,6 +27,7 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
       },
     ],
     initial_position: 'bottom-center',
+    editable: true,
     // TODO: Add associated users IDs
   },
   {
@@ -46,6 +47,7 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
       },
     ],
     initial_position: 'bottom-center',
+    editable: true,
   },
   {
     id: PolicyNodeID.InternPolicy,
@@ -53,6 +55,7 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
     content: INTERNS_POLICY_DOCUMENT,
     granted_accesses: [],
     initial_position: 'bottom-center',
+    editable: true,
   },
 ];
 
