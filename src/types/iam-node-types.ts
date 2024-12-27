@@ -88,6 +88,14 @@ export interface IAMPolicyNodeData extends IAMNodeData {
   content: string;
 }
 
+export interface IAMRoleNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.Role;
+  editable: boolean;
+  associated_users: string[];
+  attached_policies: IAMPolicyNodeData[];
+  trust_policy_content: string;
+}
+
 export interface IAMResourceNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Resource;
   resource_type: IAMNodeResourceEntity;
