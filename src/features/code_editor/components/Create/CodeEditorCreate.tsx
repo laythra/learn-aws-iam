@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 
+import { Box, Heading } from '@chakra-ui/react';
 import { json } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';

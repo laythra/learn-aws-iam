@@ -10,6 +10,7 @@ import {
   Button,
   useTheme,
   VStack,
+  Heading,
 } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
@@ -21,9 +22,10 @@ import { CodeEditorCreate } from './Create/CodeEditorCreate';
 import { CreateSubmitButton } from './Create/CreateSubmitButton';
 import { CodeEditorEdit } from './Edit/CodeEditorEdit';
 import { EditSubmitButton } from './Edit/EditSubmitButton';
+import { RolePermissionsList } from './RolePermissionsList';
 import codeEditorStateStore from '../stores/code-editor-state-store';
 import CodeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
-import { CustomTheme } from '@/types';
+import { CustomTheme, IAMNodeEntity } from '@/types';
 
 interface CodeEditorProps {}
 
@@ -62,12 +64,13 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
         </ModalHeader>
         <ModalBody>
           <VStack align='stretch' spacing={4}>
+            <Heading size='md'>Code</Heading>
             {codeEditorMode === CodeEditorMode.Create ? (
               <CodeEditorCreate nodeId={nodeId} />
             ) : (
               <CodeEditorEdit nodeId={nodeId} />
             )}
-            {/* <CodeEditorObjectiveDescriptionBox nodeId={nodeId} /> */}
+            {selectedIAMEntity === IAMNodeEntity.Role && <RolePermissionsList />}
             <CodeEditorErrorsBox nodeId={nodeId} />
             {_.isEmpty(errors[nodeId]) && <CodeEditorWarningsBox nodeId={nodeId} />}
           </VStack>

@@ -64,6 +64,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     deinitializeCodeEditor: (context: CodeEditorState, event: { nodeId: string }) => {
       context.isCodeEditorInitialized = false;
       context.isValidating = false;
+      context.selectedIAMEntity = IAMNodeEntity.Policy;
       delete context.content[event.nodeId];
     },
   },
