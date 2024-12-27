@@ -98,6 +98,11 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       node_entity: IAMNodeEntity.Group | IAMNodeEntity.User;
       node_data: Partial<IAMUserNodeData> | Partial<IAMGroupNodeData>;
     }
+  | {
+      type: StatefulStateMachineEvent.ADDIAMRoleNode;
+      doc_string: string;
+      associated_policies: string[];
+    }
   | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string }
   | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
   | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
@@ -182,6 +187,12 @@ export interface IAMPolicyRoleCreationObjective<TFinishEventMap extends BaseFini
   readonly validate_function?: ValidateFunction;
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
+}
+
+export interface IAMRoleCreationObject<TFinishEventMap extends BaseFinishEventMap>
+  extends IAMPolicyRoleCreationObjective<TFinishEventMap> {
+  readonly required_policies: string[];
+  readonly required_principles: string[];
 }
 
 export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEventMap> {

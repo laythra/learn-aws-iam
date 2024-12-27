@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 
 import codeEditorStateStore from '../stores/code-editor-state-store';
@@ -15,11 +15,9 @@ export const CodeEditorErrorsBox: React.FC<CodeEditorErrorsBoxProps> = ({ nodeId
   } else {
     return (
       <Box>
-        {errors.map(error => (
-          <Box key={error.from} color='red.500'>
-            {error.message}
-          </Box>
-        ))}
+        <Text color='red.500' fontSize='lg'>
+          {errors[0].message}
+        </Text>
       </Box>
     );
   }

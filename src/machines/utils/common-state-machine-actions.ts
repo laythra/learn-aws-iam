@@ -12,6 +12,7 @@ import {
 import { createEdge } from '@/factories/edge-factory';
 import { createGroupNode } from '@/factories/group-node-factory';
 import { createPolicyNode } from '@/factories/policy-node-factory';
+import { createRoleNode } from '@/factories/role-node-factory';
 import { createUserNode } from '@/factories/user-node-factory';
 import {
   IAMEdgeData,
@@ -21,7 +22,7 @@ import {
   type IAMUserNodeData,
 } from '@/types';
 import { PartialWithRequired } from '@/types/common';
-import { findAnyValidPolicy, isJSONValid } from '@/utils/iam-code-linter';
+import { findAnyValidPolicy, findAnyValidRole, isJSONValid } from '@/utils/iam-code-linter';
 import { getEdgeName } from '@/utils/names';
 
 export function attachPolicyToEntity<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
@@ -294,7 +295,6 @@ export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends B
 
   return [newNodes, sideEffectsEvents];
 }
-
 /**
  * Edits the IAM Policy and checks if an associated edit objective is finished.
  *
@@ -435,4 +435,34 @@ export function createIAMUserGroupNode<
 
   const finishEvents = targetObjective ? [targetObjective.on_finish_event] : [];
   return [newNodes, updatedObjectives, finishEvents];
+}
+
+export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  docString: string,
+  attachedPolicies: string[]
+): [Node[], TFinishEventMap[ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE][]] {
+  const targetValidPolicy = findAnyValidRole(
+    context.role_creation_objectives,
+    docString,
+    attachedPolicies
+  );
+  const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE][] = [];
+
+  const newNodes = produce(context.nodes, draftNodes => {
+    const newRoleNode = createRoleNode({
+      id: targetValidPolicy?.entity_id ?? new Date().getTime().toString(),
+      content: docString,
+      label: targetValidPolicy?.entity_id ?? IAMNodeEntity.Role,
+      associated_policies: attachedPolicies,
+      editable: true,
+    });
+
+    draftNodes.push(newRoleNode);
+    if (targetValidPolicy) {
+      sideEffectsEvents.push(targetValidPolicy.on_finish_event);
+    }
+  });
+
+  return [newNodes, sideEffectsEvents];
 }

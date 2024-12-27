@@ -1,6 +1,5 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import { Box, Heading } from '@chakra-ui/react';
 import { json } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
@@ -13,7 +12,13 @@ import { limitLinesFilter } from '../../utils/code-editor-filters';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { BaseFinishEventMap, IAMPolicyRoleCreationObjective } from '@/machines/types';
-import { findAnyValidPolicy, getLintingErrors, isJSONValid } from '@/utils/iam-code-linter';
+import { IAMNodeEntity } from '@/types';
+import {
+  findAnyValidPolicy,
+  findAnyValidRole,
+  getLintingErrors,
+  isJSONValid,
+} from '@/utils/iam-code-linter';
 import { GENERIC_VALIDATION_FNS } from '@/utils/iam-code-linter';
 
 interface CodeEditorCreateProps {
@@ -21,14 +26,16 @@ interface CodeEditorCreateProps {
 }
 
 const NO_MATCHING_POLICY_WARNING = 'This policy does not achieve any of the objectives.';
+const NO_MATCHING_ROLE_WARNING = 'This role does not achieve any of the objectives.';
 
 export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) => {
-  const policyRoleObjectives = LevelsProgressionContext.useSelector(
-    state => state.context.policy_role_objectives
+  const [policyRoleObjectives, roleObjectives] = LevelsProgressionContext.useSelector(
+    state => [state.context.policy_role_objectives, state.context.role_creation_objectives],
+    _.isEqual
   );
-  const { selectedIAMEntity, content } = useSelector(
+  const { selectedIAMEntity, content, selectedPolicies } = useSelector(
     codeEditorStateStore,
-    state => _.pick(state.context, ['selectedIAMEntity', 'content']),
+    state => _.pick(state.context, ['selectedIAMEntity', 'content', 'selectedPolicies']),
     _.isEqual
   );
 
@@ -44,24 +51,43 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
     objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity];
 
   const getWarnings = (): string[] => {
-    const warnings = [NO_MATCHING_POLICY_WARNING];
+    const warnings =
+      selectedIAMEntity == IAMNodeEntity.Policy
+        ? [NO_MATCHING_POLICY_WARNING]
+        : [NO_MATCHING_ROLE_WARNING];
 
-    if (!objectiveToValidate) {
+    if (objectiveToValidate) {
+      return isJSONValid(editorView.current!.state.doc.toString(), validateFunction)
+        ? []
+        : warnings;
+    }
+
+    if (selectedIAMEntity === IAMNodeEntity.Policy) {
       const anyValidPolicy = findAnyValidPolicy<BaseFinishEventMap>(
         policyRoleObjectives,
         editorView.current!.state.doc.toString()
       );
 
       return anyValidPolicy ? [] : warnings;
-    }
+    } else {
+      const anyValidPolicy = findAnyValidRole<BaseFinishEventMap>(
+        roleObjectives,
+        editorView.current!.state.doc.toString(),
+        selectedPolicies
+      );
 
-    return isJSONValid(editorView.current!.state.doc.toString(), validateFunction) ? [] : warnings;
+      return anyValidPolicy ? [] : warnings;
+    }
   };
 
   const setErrorsAndWarnings = (): void => {
     if (!editorView.current) return;
 
-    const lintingErrors = getLintingErrors(editorView.current, validateFunction);
+    const lintingErrors = getLintingErrors(
+      editorView.current,
+      GENERIC_VALIDATION_FNS[IAMNodeEntity.Policy]
+    );
+
     const warnings = getWarnings();
 
     codeEditorStateStore.send({
@@ -76,6 +102,10 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
     setErrorsAndWarnings();
     codeEditorStateStore.send({ type: 'setIsValidating', payload: false });
   }, 500);
+
+  useEffect(() => {
+    setErrorsAndWarnings();
+  }, [selectedIAMEntity]);
 
   const onCreateEditor = (view: EditorView): void => {
     editorView.current = view;

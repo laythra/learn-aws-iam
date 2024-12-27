@@ -5,6 +5,8 @@ import _ from 'lodash';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import codeEditorPopupStore from '@/stores/code-editor-popup-store';
+import { IAMNodeEntity } from '@/types';
+import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface CreateSubmitButtonProps {
   nodeId: string;
@@ -23,10 +25,19 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({ nodeId }
   const submit = (): void => {
     const content = codeEditorStateStore.getSnapshot().context.content[nodeId];
 
-    levelActor.send({
-      type: 'ADD_IAM_POLICY_NODE',
-      doc_string: content,
-    });
+    if (selectedIAMEntity == IAMNodeEntity.Policy) {
+      levelActor.send({
+        type: 'ADD_IAM_POLICY_NODE',
+        doc_string: content,
+      });
+    } else {
+      levelActor.send({
+        type: StatefulStateMachineEvent.ADDIAMRoleNode,
+        doc_string: content,
+        associated_policies: [],
+      });
+    }
+
     codeEditorPopupStore.send({ type: 'close' });
   };
 
