@@ -64,6 +64,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   side_panel_open?: boolean;
   level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
   policy_role_objectives: IAMPolicyRoleCreationObjective<TBaseFinishEventMap>[];
+  role_creation_objectives: IAMRoleCreationObject<TBaseFinishEventMap>[];
   policy_role_edit_objectives: IAMPolicyRoleEditObjective<TBaseFinishEventMap>[];
   edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];

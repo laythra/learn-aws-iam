@@ -45,6 +45,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     policy_role_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
+    role_creation_objectives: [],
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
