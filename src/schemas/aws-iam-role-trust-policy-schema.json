@@ -1,0 +1,53 @@
+{
+  "$id": "aws-iam-role-trust-policy-schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IAM Role Trust Policy",
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ],
+      "description": "The version of the IAM policy language."
+    },
+    "Statement": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "Effect",
+          "Principal",
+          "Action"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "enum": [
+              "Allow",
+              "Deny"
+            ]
+          },
+          "Principal": {
+            "$ref": "shared-condition-schema.json#/definitions/Principal"
+          },
+          "Action": {
+            "type": "string",
+            "enum": [
+              "sts:AssumeRole"
+            ],
+            "description": "The action permitted by the policy."
+          },
+          "Condition": {
+            "$ref": "shared-condition-schema.json#/definitions/Condition"
+          }
+        }
+      }
+    }
+  }
+}

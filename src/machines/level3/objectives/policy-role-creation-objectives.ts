@@ -1,5 +1,3 @@
-import Ajv from 'ajv';
-
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import cloudfrontReadPolicySchema from '../schemas/policy/cloudfront-read-policy-schema.json';
 import dynamoReadWritePolicySchema from '../schemas/policy/dynamo-db-read-write-policy-schema.json';
@@ -10,8 +8,7 @@ import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMPolicyRoleCreationObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
-
-const AJV_COMPILER = new Ajv();
+import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective<FinishEventMap>[][] = [
   [

@@ -1,5 +1,3 @@
-import Ajv from 'ajv';
-
 import dataScientistsPolicy from '../schemas/edit-objectives-schemas/data-scientists-policy.json';
 import developersPolicy from '../schemas/edit-objectives-schemas/developers-policy.json';
 import internsPolicy from '../schemas/edit-objectives-schemas/interns-policy.json';
@@ -7,8 +5,7 @@ import { FinishEventMap, NodeEditFinishEvent } from '../types/finish-event-enums
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { IAMPolicyRoleEditObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
-
-const AJV_COMPILER = new Ajv();
+import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 export const POLICY_ROLE_EDIT_OBJECTIVES: IAMPolicyRoleEditObjective<FinishEventMap>[][] = [
   [
