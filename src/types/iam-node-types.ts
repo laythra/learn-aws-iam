@@ -31,6 +31,7 @@ export enum IAMNodeImage {
   Database = 'database',
   Server = 'server',
   CDN = 'cdn',
+  Role = 'role',
 }
 
 export type CreatableIAMNodeEntity =
@@ -88,6 +89,14 @@ export interface IAMPolicyNodeData extends IAMNodeData {
   content: string;
 }
 
+export interface IAMRoleNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.Role;
+  editable: boolean;
+  associated_users: string[];
+  associated_policies: string[];
+  trust_policy_content: string;
+}
+
 export interface IAMResourceNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Resource;
   resource_type: IAMNodeResourceEntity;
@@ -97,7 +106,8 @@ export type IAMAnyNodeData =
   | IAMUserNodeData
   | IAMGroupNodeData
   | IAMPolicyNodeData
-  | IAMResourceNodeData;
+  | IAMResourceNodeData
+  | IAMRoleNodeData;
 
 export interface IAMEdgeData {
   source_node_data?: IAMAnyNodeData;

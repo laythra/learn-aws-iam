@@ -18,4 +18,5 @@ export enum StatelessStateMachineEvent {
 export enum StatefulStateMachineEvent {
   AddIAMUserGroupNode = 'ADD_IAM_USER_GROUP_NODE',
   AddIAMPolicyRoleNode = 'ADD_IAM_POLICY_ROLE_NODE',
+  ADDIAMRoleNode = 'ADD_IAM_ROLE_NODE',
 }

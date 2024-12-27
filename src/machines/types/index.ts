@@ -64,6 +64,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   side_panel_open?: boolean;
   level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
   policy_role_objectives: IAMPolicyRoleCreationObjective<TBaseFinishEventMap>[];
+  role_creation_objectives: IAMRoleCreationObject<TBaseFinishEventMap>[];
   policy_role_edit_objectives: IAMPolicyRoleEditObjective<TBaseFinishEventMap>[];
   edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
@@ -96,6 +97,11 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: StatefulStateMachineEvent.AddIAMUserGroupNode;
       node_entity: IAMNodeEntity.Group | IAMNodeEntity.User;
       node_data: Partial<IAMUserNodeData> | Partial<IAMGroupNodeData>;
+    }
+  | {
+      type: StatefulStateMachineEvent.ADDIAMRoleNode;
+      doc_string: string;
+      associated_policies: string[];
     }
   | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string }
   | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
@@ -181,6 +187,12 @@ export interface IAMPolicyRoleCreationObjective<TFinishEventMap extends BaseFini
   readonly validate_function?: ValidateFunction;
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
+}
+
+export interface IAMRoleCreationObject<TFinishEventMap extends BaseFinishEventMap>
+  extends IAMPolicyRoleCreationObjective<TFinishEventMap> {
+  readonly required_policies: string[];
+  readonly required_principles: string[];
 }
 
 export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEventMap> {

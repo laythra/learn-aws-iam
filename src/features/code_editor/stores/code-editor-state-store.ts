@@ -15,6 +15,8 @@ type CodeEditorEvents = {
   setIsValidating: { payload: boolean };
   initializeCodeEditor: { content: string; nodeId: string };
   deinitializeCodeEditor: { nodeId: string };
+  selectPolicy: { policyId: string };
+  deselectPolicy: { policyId: string };
 };
 
 export type CodeEditorState = {
@@ -24,6 +26,7 @@ export type CodeEditorState = {
   selectedIAMEntity: IAMScriptableEntity;
   isValidating?: boolean;
   isCodeEditorInitialized: boolean;
+  selectedPolicies: string[];
 };
 
 export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produce, {
@@ -33,6 +36,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     content: {},
     selectedIAMEntity: IAMNodeEntity.Policy,
     isCodeEditorInitialized: false,
+    selectedPolicies: [],
   },
   on: {
     setErrorsAndWarnings: (
@@ -64,7 +68,16 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     deinitializeCodeEditor: (context: CodeEditorState, event: { nodeId: string }) => {
       context.isCodeEditorInitialized = false;
       context.isValidating = false;
+      context.selectedIAMEntity = IAMNodeEntity.Policy;
       delete context.content[event.nodeId];
+    },
+    selectPolicy: (context: CodeEditorState, event: { policyId: string }) => {
+      context.selectedPolicies = [...context.selectedPolicies, event.policyId];
+    },
+    deselectPolicy: (context: CodeEditorState, event: { policyId: string }) => {
+      context.selectedPolicies = context.selectedPolicies.filter(
+        selectedPolicy => selectedPolicy !== event.policyId
+      );
     },
   },
 });

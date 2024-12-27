@@ -45,6 +45,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     policy_role_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
+    role_creation_objectives: [],
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -52,6 +53,17 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         {
           type: 'add_iam_user_group_node',
           params: ({ event }) => ({ nodeType: event.node_entity, params: event.node_data }),
+        },
+      ],
+    },
+    [StatefulStateMachineEvent.ADDIAMRoleNode]: {
+      actions: [
+        {
+          type: 'add_role_node',
+          params: ({ event }) => ({
+            docString: event.doc_string,
+            policies: event.associated_policies,
+          }),
         },
       ],
     },

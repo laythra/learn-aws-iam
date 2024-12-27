@@ -12,6 +12,7 @@ import {
   updatePolicyToEntityConnectionEdges,
   attachUserToGroup,
   updateUserToGroupConnectionEdges,
+  createIAMRoleNode,
 } from './utils/common-state-machine-actions';
 import type {
   BaseFinishEventMap,
@@ -154,6 +155,22 @@ export const createStateMachineSetup = <
           >(context, nodeId, docString);
 
           enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+          sideEffectsEvents.forEach(event => {
+            enqueue.raise({ type: event });
+          });
+        }
+      ),
+      add_role_node: enqueueActions(
+        (
+          { context, enqueue },
+          { docString, policies }: { docString: string; policies: string[] }
+        ) => {
+          const [updatedNodes, sideEffectsEvents] = createIAMRoleNode<
+            TLevelObjectiveID,
+            TFinishEventMap
+          >(context, docString, policies);
+
+          enqueue.assign({ nodes: updatedNodes });
           sideEffectsEvents.forEach(event => {
             enqueue.raise({ type: event });
           });
