@@ -6,6 +6,7 @@ export interface CustomTheme extends Theme {
     iamNodeHeightInPixels: number;
     modalsMaxWidthInPixels: number;
     navbarHeightInPixels: number;
+    codeEditorMaxHeightInPixels: number;
   };
   fonts: Theme['fonts'] & {
     heading: string;

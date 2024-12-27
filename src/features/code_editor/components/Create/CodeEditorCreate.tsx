@@ -1,14 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
 import { json } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
-import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
 import codeEditorStateStore from '../../stores/code-editor-state-store';
+import { badgeExtension, InitializeBadgeWidgets } from '../../utils/badge-widget';
+import { limitLinesFilter } from '../../utils/code-editor-filters';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
+import { BaseFinishEventMap, IAMPolicyRoleCreationObjective } from '@/machines/types';
 import { findAnyValidPolicy, getLintingErrors, isJSONValid } from '@/utils/iam-code-linter';
 import { GENERIC_VALIDATION_FNS } from '@/utils/iam-code-linter';
 
@@ -22,14 +25,20 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
   const policyRoleObjectives = LevelsProgressionContext.useSelector(
     state => state.context.policy_role_objectives
   );
-  const { selectedIAMEntity, content, isCodeEditorInitialized } = useSelector(
+  const { selectedIAMEntity, content } = useSelector(
     codeEditorStateStore,
-    state => _.pick(state.context, ['selectedIAMEntity', 'content', 'isCodeEditorInitialized']),
+    state => _.pick(state.context, ['selectedIAMEntity', 'content']),
     _.isEqual
   );
-  const editorRef = useRef<ReactCodeMirrorRef>(null);
 
-  const objectiveToValidate = _.find(policyRoleObjectives, 'validate_inside_code_editor');
+  const editorView = useRef<EditorView | null>(null);
+
+  const objectiveToValidate = _.find<IAMPolicyRoleCreationObjective<BaseFinishEventMap>>(
+    policyRoleObjectives,
+    'validate_inside_code_editor'
+  );
+
+  const initialCode = objectiveToValidate?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
   const validateFunction =
     objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity];
 
@@ -37,16 +46,21 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
     const warnings = [NO_MATCHING_POLICY_WARNING];
 
     if (!objectiveToValidate) {
-      return findAnyValidPolicy(policyRoleObjectives, content[selectedIAMEntity]) ? [] : warnings;
+      const anyValidPolicy = findAnyValidPolicy<BaseFinishEventMap>(
+        policyRoleObjectives,
+        editorView.current!.state.doc.toString()
+      );
+
+      return anyValidPolicy ? [] : warnings;
     }
 
-    return isJSONValid(content[selectedIAMEntity], validateFunction) ? [] : warnings;
+    return isJSONValid(editorView.current!.state.doc.toString(), validateFunction) ? [] : warnings;
   };
 
   const setErrorsAndWarnings = (): void => {
-    if (!editorRef.current?.view) return;
+    if (!editorView.current) return;
 
-    const lintingErrors = getLintingErrors(editorRef.current.view, validateFunction);
+    const lintingErrors = getLintingErrors(editorView.current, validateFunction);
     const warnings = getWarnings();
 
     codeEditorStateStore.send({
@@ -62,27 +76,41 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
     codeEditorStateStore.send({ type: 'setIsValidating', payload: false });
   }, 500);
 
-  useEffect(setErrorsAndWarnings, [isCodeEditorInitialized]);
+  const onCreateEditor = (view: EditorView): void => {
+    editorView.current = view;
 
-  const onCreateEditor = (): void => {
+    InitializeBadgeWidgets(view, objectiveToValidate?.help_badges ?? [], initialCode);
+    validateChange();
+
+    // TODO: Include a pre-computed jsonized version of the initial code in the objective itself
+    // notice how many times we're doing JSON.stringify for the initial content throughout the codebase
     codeEditorStateStore.send({
-      type: 'initializeCodeEditor',
-      content: JSON.stringify(MANAGED_POLICIES.EmptyPolicy, null, 2),
+      type: 'setContent',
+      content: JSON.stringify(initialCode, null, 2),
       nodeId,
     });
   };
 
+  const extensions = [
+    json(),
+    linter(view => getLintingErrors(view, validateFunction)),
+    badgeExtension,
+  ];
+
+  if (objectiveToValidate?.limit_new_lines) {
+    extensions.push(limitLinesFilter(JSON.stringify(initialCode, null, 2)));
+  }
+
   return (
     <CodeMirror
-      value={content[nodeId]}
+      value={content[nodeId] ?? JSON.stringify(initialCode, null, 2)}
       onChange={newContent => {
         codeEditorStateStore.send({ type: 'setContent', content: newContent, nodeId });
         validateChange();
       }}
       height='200px'
-      extensions={[json(), linter(view => getLintingErrors(view, validateFunction))]}
+      extensions={extensions}
       onCreateEditor={onCreateEditor}
-      ref={editorRef}
     />
   );
 };

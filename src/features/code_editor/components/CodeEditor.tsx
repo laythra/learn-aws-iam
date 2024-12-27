@@ -9,6 +9,7 @@ import {
   ModalFooter,
   Button,
   useTheme,
+  VStack,
 } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
@@ -46,23 +47,30 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
 
   const closeCodeEditor = (): void => {
     CodeEditorPopupStore.send({ type: 'close' });
+    codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });
   };
 
   return (
     <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor} id='modal_content'>
       <ModalOverlay />
-      <ModalContent maxW={theme.sizes.modalsMaxWidthInPixels}>
+      <ModalContent
+        maxW={theme.sizes.modalsMaxWidthInPixels}
+        maxH={theme.sizes.codeEditorMaxHeightInPixels}
+      >
         <ModalHeader>
           <CodeEditorHeader codeEditorMode={codeEditorMode} selectedIAMEntity={selectedIAMEntity} />
         </ModalHeader>
         <ModalBody>
-          {codeEditorMode === CodeEditorMode.Create ? (
-            <CodeEditorCreate nodeId={nodeId} />
-          ) : (
-            <CodeEditorEdit nodeId={nodeId} />
-          )}
-          <CodeEditorErrorsBox nodeId={nodeId} />
-          {_.isEmpty(errors[nodeId]) && <CodeEditorWarningsBox nodeId={nodeId} />}
+          <VStack align='stretch' spacing={4}>
+            {codeEditorMode === CodeEditorMode.Create ? (
+              <CodeEditorCreate nodeId={nodeId} />
+            ) : (
+              <CodeEditorEdit nodeId={nodeId} />
+            )}
+            {/* <CodeEditorObjectiveDescriptionBox nodeId={nodeId} /> */}
+            <CodeEditorErrorsBox nodeId={nodeId} />
+            {_.isEmpty(errors[nodeId]) && <CodeEditorWarningsBox nodeId={nodeId} />}
+          </VStack>
         </ModalBody>
         <ModalFooter>
           {codeEditorMode === CodeEditorMode.Create ? (

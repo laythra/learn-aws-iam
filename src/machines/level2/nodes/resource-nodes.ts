@@ -1,26 +1,30 @@
-import { type Node, HandleProps, Position } from 'reactflow';
+import { type Node } from 'reactflow';
 
-import { INITIAL_RESOURCES_INFO } from '../config';
-import { theme } from '@/theme';
+import { ResourceNodeID } from '../types/node-id-enums';
+import { createResourceNode } from '@/factories/resource-node-factory';
 import type { IAMResourceNodeData } from '@/types';
-import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types';
+import { IAMNodeImage } from '@/types';
 
-export const X_OFFSET = theme.sizes.iamNodeWidthInPixels;
-export const Y_OFFSET = 100;
+const RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
+  {
+    id: ResourceNodeID.S3Bucket,
+    label: ResourceNodeID.S3Bucket,
+    initial_position: 'top-center',
+    image: IAMNodeImage.S3Bucket,
+  },
+  {
+    id: ResourceNodeID.DynamoDBTable,
+    label: ResourceNodeID.DynamoDBTable,
+    initial_position: 'top-center',
+    image: IAMNodeImage.Database,
+  },
+  {
+    id: ResourceNodeID.EC2Instance,
+    label: ResourceNodeID.EC2Instance,
+    initial_position: 'top-center',
+    image: IAMNodeImage.Server,
+  },
+];
 
-export const INITIAL_RESOURCE_NODES: Node<IAMResourceNodeData>[] = INITIAL_RESOURCES_INFO.map(
-  ({ id, label, image }, index) => ({
-    id,
-    position: { x: X_OFFSET + index * X_OFFSET, y: Y_OFFSET },
-    data: {
-      id,
-      label,
-      entity: IAMNodeEntity.Resource,
-      resource_type: IAMNodeResourceEntity.S3Bucket,
-      image,
-      handles: [{ id: Position.Top, type: 'target', position: Position.Bottom }] as HandleProps[],
-    },
-    type: 'iam_default',
-    draggable: false,
-  })
-);
+export const INITIAL_RESOURCE_NODES: Node<IAMResourceNodeData>[] =
+  RESOURCE_NODES.map(createResourceNode);

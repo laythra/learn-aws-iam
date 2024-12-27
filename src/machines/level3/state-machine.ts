@@ -1,99 +1,36 @@
-import _ from 'lodash';
-import type { Node } from 'reactflow';
-import { setup, assign } from 'xstate';
+import { assign } from 'xstate';
 
+import { INITIAL_TUTORIAL_NODES } from './nodes';
+import { INITIAL_IN_LEVEL_NODES } from './nodes';
+import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
+import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
+import { POLICY_ROLE_CREATION_OBJECTIVES } from './objectives/policy-role-creation-objectives';
+import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
+import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import {
+  EdgeConnectionFinishEvent,
+  FinishEventMap,
+  NodeCreationFinishEvent,
+} from './types/finish-event-enums';
+import { LevelObjectiveID } from './types/objective-enums';
+import { createStateMachineSetup } from '../common-state-machine-setup';
+import { resolveInitialEdges } from '../utils/initial-edges-resolver';
+import {
+  StatefulStateMachineEvent,
+  StatelessStateMachineEvent,
+} from '@/types/state-machine-event-enums';
+
+export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
-  LEVEL_OBJECTIVES,
   POLICY_ROLE_CREATION_OBJECTIVES,
-  EDGE_CONNECTION_OBJECTIVES,
-  HIDDEN_LEVEL_OBJECTIVES,
-} from './config';
-import { INITIAL_IN_LEVEL_EDGES, REQUIRED_EDGES } from './edges';
-import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
-import { TEMPLATE_GROUP_NODE } from './nodes/group-nodes';
-import { TEMPLATE_POLICY_NODE } from './nodes/policy-nodes';
-import { TEMPLATE_USER_NODE } from './nodes/user-nodes';
-import { LevelObjectiveID } from './types/objective-enums';
-import type { Context, InsideLevelMetadata, EventData } from './types/state-machine-types';
-import { PopoverTutorialMessage } from '../types';
-import { LevelObjective } from '@/machines/types';
-import { IAMAnyNodeData, IAMNodeEntity } from '@/types';
-
-export const stateMachine = setup({
-  types: {} as {
-    context: Context;
-    events: EventData;
-    meta: InsideLevelMetadata;
-  },
-  actions: {
-    next_popover: assign({
-      popover_content: ({ context }) => POPOVER_TUTORIAL_MESSAGES[context.next_popover_index ?? 0],
-      show_popovers: ({ context }) => context.next_popover_index < POPOVER_TUTORIAL_MESSAGES.length,
-      next_popover_index: ({ context }) => context.next_popover_index + 1,
-      show_popups: false,
-    }),
-    next_popup: assign({
-      popup_content: ({ context }) => POPUP_TUTORIAL_MESSAGES[context.next_popup_index],
-      show_popups: ({ context }) => context.next_popup_index < POPUP_TUTORIAL_MESSAGES.length,
-      next_popup_index: ({ context }) => context.next_popup_index + 1,
-      show_popovers: false,
-    }),
-    next_policy_role_objectives: assign({
-      policy_role_objectives: ({ context }) =>
-        POLICY_ROLE_CREATION_OBJECTIVES[context.next_policy_role_objectives_index ?? 0],
-      next_policy_role_objectives_index: ({ context }) =>
-        (context.next_policy_role_objectives_index ?? 0) + 1,
-    }),
-    next_edge_connection_objectives: assign({
-      edges_connection_objectives: ({ context }) =>
-        EDGE_CONNECTION_OBJECTIVES[context.next_edges_connection_objectives_index ?? 0],
-      next_policy_role_objectives_index: ({ context }) =>
-        (context.next_edges_connection_objectives_index ?? 0) + 1,
-    }),
-    hide_popups: assign({ show_popups: false }),
-    hide_popovers: assign({ show_popovers: false }),
-    change_objective_progress: assign({
-      level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) =>
-        _.update({ ...context.level_objectives }, [id, 'finished'], _.constant(finished)),
-    }),
-    add_new_level_objective: assign({
-      level_objectives: (
-        { context },
-        { id, objective }: { id: string; objective: LevelObjective<LevelObjectiveID> }
-      ) => ({
-        ...context.level_objectives,
-        [id]: objective,
-      }),
-    }),
-    set_level_objectives: assign({
-      level_objectives: (
-        _context,
-        { objectives }: { objectives: LevelObjective<LevelObjectiveID>[] }
-      ) => objectives,
-    }),
-    add_iam_node: assign({
-      nodes: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => [...context.nodes, node],
-    }),
-    show_popover: assign({
-      popover_content: (
-        _context_obj,
-        { popover_content }: { popover_content: PopoverTutorialMessage }
-      ) => popover_content,
-      show_popovers: true,
-    }),
-    show_side_panel: assign({ side_panel_open: true }),
-  },
-}).createMachine({
+  EDGE_CONNECTION_OBJECTIVES
+).createMachine({
   id: 'level3_state_machine',
   initial: 'inside_tutorial',
   context: {
-    iam_user_template: TEMPLATE_USER_NODE,
-    iam_policy_template: TEMPLATE_POLICY_NODE,
-    iam_group_template: TEMPLATE_GROUP_NODE,
-    level_title: 'IAM Groups',
-    level_description: 'Scaling your IAM setup with groups',
+    level_title: 'Customer Managed Policies',
+    level_description: 'Customer managed policies!',
     level_number: 1,
     next_popover_index: 0,
     next_popup_index: 0,
@@ -103,40 +40,26 @@ export const stateMachine = setup({
     nodes: [],
     metadata_keys: {},
     edges: [],
-    final_edges: REQUIRED_EDGES,
     level_objectives: [],
-    next_iam_node_id: {
-      [IAMNodeEntity.Group]: 1,
-      [IAMNodeEntity.User]: 1,
-      [IAMNodeEntity.Policy]: 1,
-      [IAMNodeEntity.Role]: 1,
-    },
     policy_role_objectives: [],
     policy_role_edit_objectives: [],
     edges_connection_objectives: [],
+    user_group_creation_objectives: [],
   },
   on: {
-    ADD_IAM_NODE: {
+    [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [
         {
-          type: 'add_iam_node',
-          params: ({ event }) => ({ node: event.node }),
+          type: 'add_iam_user_group_node',
+          params: ({ event }) => ({ nodeType: event.node_entity, params: event.node_data }),
         },
       ],
     },
-    ADD_IAM_USER_NODE: {
+    ADD_IAM_POLICY_NODE: {
       actions: [
         {
-          type: 'add_iam_node',
-          params: ({ event }) => ({ node: event.node }),
-        },
-      ],
-    },
-    ADD_IAM_GROUP_NODE: {
-      actions: [
-        {
-          type: 'add_iam_node',
-          params: ({ event }) => ({ node: event.node }),
+          type: 'add_policy_node',
+          params: ({ event }) => ({ docString: event.doc_string }),
         },
       ],
     },
@@ -180,38 +103,48 @@ export const stateMachine = setup({
         side_panel_open: ({ context }) => !context.side_panel_open,
       }),
     },
+    ATTACH_POLICY_TO_ENTITY: {
+      actions: [
+        {
+          type: 'attach_policy_to_entity',
+          params: ({ event }) => ({ policyNode: event.sourceNode, entityNode: event.targetNode }),
+        },
+      ],
+    },
   },
   states: {
     inside_tutorial: {
       initial: 'tutorial_popup1',
       onDone: 'inside_level',
-      entry: assign({
-        nodes: INITIAL_TUTORIAL_NODES,
-        level_objectives: LEVEL_OBJECTIVES,
-      }),
+      entry: [
+        assign({
+          nodes: INITIAL_TUTORIAL_NODES,
+          level_objectives: LEVEL_OBJECTIVES[0],
+        }),
+      ],
       states: {
         tutorial_popup1: {
-          entry: ['next_popup'],
+          entry: 'next_popup',
           on: {
             NEXT_POPUP: 'tutorial_popup2',
           },
         },
         tutorial_popup2: {
-          entry: ['next_popup'],
+          entry: 'next_popup',
           on: {
             NEXT_POPUP: 'tutorial_popup3',
           },
         },
         tutorial_popup3: {
-          entry: ['next_popup'],
+          entry: 'next_popup',
           on: {
             NEXT_POPUP: 'aws_managed_policy_popover',
           },
         },
         aws_managed_policy_popover: {
-          entry: ['next_popover'],
+          entry: 'next_popover',
           on: {
-            IAM_NODE_CONTENT_OPENED: 'view_policy_content',
+            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'view_policy_content',
           },
         },
         view_policy_content: {
@@ -219,20 +152,17 @@ export const stateMachine = setup({
             show_popovers: false,
           }),
           after: {
-            3000: 'create_your_custom_policy_popover',
+            0: 'create_your_custom_policy_popover',
           },
         },
         create_your_custom_policy_popover: {
           entry: ['next_popover', 'next_policy_role_objectives', 'show_side_panel'],
           on: {
-            [POLICY_ROLE_CREATION_OBJECTIVES[0][0].on_finish_event]: {
+            [NodeCreationFinishEvent.S3_READ_POLICY_CREATED]: {
               actions: [
                 {
-                  type: 'change_objective_progress',
-                  params: ({ context }: { context: Context }) => ({
-                    id: Object.keys(context.level_objectives)[0],
-                    finished: true,
-                  }),
+                  type: 'finish_level_objective',
+                  params: { id: LevelObjectiveID.CreateFirstCustomerManagedPolicy },
                 },
               ],
               target: 'custom_policy_created',
@@ -253,13 +183,15 @@ export const stateMachine = setup({
     },
     inside_level: {
       initial: 'popup1',
-      entry: assign({
-        level_objectives: HIDDEN_LEVEL_OBJECTIVES,
-        edges: INITIAL_IN_LEVEL_EDGES,
-        nodes: INITIAL_IN_LEVEL_NODES,
-        final_edges: REQUIRED_EDGES,
-        side_panel_open: true,
-      }),
+      entry: [
+        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
+        'next_policy_role_objectives',
+        assign({
+          edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
+          nodes: INITIAL_IN_LEVEL_NODES,
+          side_panel_open: false,
+        }),
+      ],
       states: {
         popup1: {
           entry: 'next_popup',
@@ -281,7 +213,11 @@ export const stateMachine = setup({
           exit: 'hide_popups',
         },
         create_and_attach_policies: {
-          entry: ['next_policy_role_objectives', 'next_edge_connection_objectives'],
+          entry: [
+            'next_policy_role_objectives',
+            'next_edge_connection_objectives',
+            'toggle_side_panel',
+          ],
           type: 'parallel',
           onDone: 'create_and_attach_policies_completed',
           states: {
@@ -290,23 +226,20 @@ export const stateMachine = setup({
               states: {
                 creation_in_progress: {
                   on: {
-                    [POLICY_ROLE_CREATION_OBJECTIVES[1][0].on_finish_event]:
+                    [NodeCreationFinishEvent.S3_READ_WRITE_POLICY_CREATED]:
                       'attachment_in_progress',
                   },
                 },
                 attachment_in_progress: {
                   on: {
-                    [EDGE_CONNECTION_OBJECTIVES[0][0].on_finish_event]: {
-                      target: 'completed',
+                    [EdgeConnectionFinishEvent.S3_READ_WRITE_POLICY_CONNECTED]: {
                       actions: [
                         {
-                          type: 'change_objective_progress',
-                          params: ({ context }: { context: Context }) => ({
-                            id: Object.keys(context.level_objectives)[0],
-                            finished: true,
-                          }),
+                          type: 'finish_level_objective',
+                          params: { id: LevelObjectiveID.FrontendTeamS3BucketAccess },
                         },
                       ],
+                      target: 'completed',
                     },
                   },
                 },
@@ -320,23 +253,20 @@ export const stateMachine = setup({
               states: {
                 creation_in_progress: {
                   on: {
-                    [POLICY_ROLE_CREATION_OBJECTIVES[1][1].on_finish_event]:
+                    [NodeCreationFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CREATED]:
                       'attachment_in_progress',
                   },
                 },
                 attachment_in_progress: {
                   on: {
-                    [EDGE_CONNECTION_OBJECTIVES[0][1].on_finish_event]: {
-                      target: 'completed',
+                    [EdgeConnectionFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CONNECTED]: {
                       actions: [
                         {
-                          type: 'change_objective_progress',
-                          params: ({ context }: { context: Context }) => ({
-                            id: Object.keys(context.level_objectives)[1],
-                            finished: true,
-                          }),
+                          type: 'finish_level_objective',
+                          params: { id: LevelObjectiveID.BackendTeamDynamoDBAccess },
                         },
                       ],
+                      target: 'completed',
                     },
                   },
                 },
@@ -350,23 +280,20 @@ export const stateMachine = setup({
               states: {
                 creation_in_progress: {
                   on: {
-                    [POLICY_ROLE_CREATION_OBJECTIVES[1][2].on_finish_event]:
+                    [NodeCreationFinishEvent.CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED]:
                       'attachment_in_progress',
                   },
                 },
                 attachment_in_progress: {
                   on: {
-                    [EDGE_CONNECTION_OBJECTIVES[0][2].on_finish_event]: {
-                      target: 'completed',
+                    [EdgeConnectionFinishEvent.CLOUDFRONT_READ_POLICY_CONNECTED]: {
                       actions: [
                         {
-                          type: 'change_objective_progress',
-                          params: ({ context }: { context: Context }) => ({
-                            id: Object.keys(context.level_objectives)[2],
-                            finished: true,
-                          }),
+                          type: 'finish_level_objective',
+                          params: { id: LevelObjectiveID.FrontendTeamCloudFrontAccess },
                         },
                       ],
+                      target: 'completed',
                     },
                   },
                 },
@@ -379,6 +306,7 @@ export const stateMachine = setup({
         },
         create_and_attach_policies_completed: {
           type: 'final',
+          entry: 'next_popup',
         },
       },
     },

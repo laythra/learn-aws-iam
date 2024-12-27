@@ -1,9 +1,9 @@
 import { Diagnostic } from '@codemirror/lint';
-import { EditorView } from '@uiw/react-codemirror';
+import { EditorView } from '@codemirror/view';
 import Ajv, { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 
-import { IAMPolicyRoleCreationObjective } from '@/machines/types';
+import { BaseFinishEventMap, IAMPolicyRoleCreationObjective } from '@/machines/types';
 import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
 import iamRoleSchema from '@/schemas/aws-iam-role-schema.json';
 import { IAMNodeEntity } from '@/types';
@@ -65,10 +65,10 @@ export const isJSONValid = (docString: string, validateFunction: ValidateFunctio
   }
 };
 
-export const findAnyValidPolicy = (
-  policyRoleObjectives: IAMPolicyRoleCreationObjective[],
+export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
+  policyRoleObjectives: IAMPolicyRoleCreationObjective<TFinishEventMap>[],
   docString: string
-): IAMPolicyRoleCreationObjective | undefined => {
+): IAMPolicyRoleCreationObjective<TFinishEventMap> | undefined => {
   policyRoleObjectives = _.orderBy(policyRoleObjectives, 'validate_inside_code_editor', 'desc');
 
   return policyRoleObjectives.find(policyRoleObjective =>

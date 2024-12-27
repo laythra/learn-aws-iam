@@ -3,11 +3,13 @@ import { createActorContext } from '@xstate/react';
 import { stateMachine as level1StateMachine } from '@/machines/level1/state-machine';
 import { stateMachine as level2StateMachine } from '@/machines/level2/state-machine';
 import { stateMachine as level3StateMachine } from '@/machines/level3/state-machine';
+import { stateMachine as level4StateMachine } from '@/machines/level4/state-machine';
 
 const LEVELS_STATE_MACHINES = {
   1: level1StateMachine,
   2: level2StateMachine,
   3: level3StateMachine,
+  4: level4StateMachine,
 };
 
 const currentLevelNumber = parseInt(
@@ -15,9 +17,10 @@ const currentLevelNumber = parseInt(
   // storage.getKey('current_level_number', '2')
 ) as keyof typeof LEVELS_STATE_MACHINES;
 
-const currentLevelStateMachine = LEVELS_STATE_MACHINES[currentLevelNumber];
+export const currentLevelStateMachine = LEVELS_STATE_MACHINES[currentLevelNumber];
 
-export const LevelsProgressionContext = createActorContext(currentLevelStateMachine);
+export const LevelsProgressionContext =
+  createActorContext<typeof currentLevelStateMachine>(currentLevelStateMachine);
 
 interface LevelsProgressionProviderProps {
   children: React.ReactNode;

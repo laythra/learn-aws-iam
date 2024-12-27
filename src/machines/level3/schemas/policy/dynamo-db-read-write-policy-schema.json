@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ]
+    },
+    "Statement": {
+      "minItems": 1,
+      "maxItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "Effect",
+          "Action",
+          "Resource"
+        ],
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "enum": [
+              "Allow",
+              "Deny"
+            ]
+          },
+          "Action": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:Query",
+                "dynamodb:Scan"
+              ]
+            },
+            "minItems": 6,
+            "maxItems": 6,
+            "uniqueItems": true
+          },
+          "Resource": {
+            "type": "string",
+            "enum": [
+              "arn:aws:dynamodb:*:*:table/*"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,3 +1,7 @@
+export enum UserNodeID {
+  FirstUser = 'FirstUser',
+}
+
 export enum ResourceNodeID {
   PublicImagesS3Bucket = 'PublicImagesS3Bucket',
 }
