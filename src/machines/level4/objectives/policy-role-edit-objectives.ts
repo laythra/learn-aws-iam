@@ -3,14 +3,14 @@ import developersPolicy from '../schemas/edit-objectives-schemas/developers-poli
 import internsPolicy from '../schemas/edit-objectives-schemas/interns-policy.json';
 import { FinishEventMap, NodeEditFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { IAMPolicyRoleEditObjective, ObjectiveType } from '@/machines/types';
+import { IAMPolicyEditObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
-export const POLICY_ROLE_EDIT_OBJECTIVES: IAMPolicyRoleEditObjective<FinishEventMap>[][] = [
+export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] = [
   [
     {
-      type: ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE,
+      type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       entity_id: PolicyNodeID.DeveloperPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: developersPolicy,
@@ -25,7 +25,7 @@ export const POLICY_ROLE_EDIT_OBJECTIVES: IAMPolicyRoleEditObjective<FinishEvent
       validate_function: AJV_COMPILER.compile(developersPolicy),
     },
     {
-      type: ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE,
+      type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       entity_id: PolicyNodeID.DataScientistPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: dataScientistsPolicy,
@@ -42,7 +42,7 @@ export const POLICY_ROLE_EDIT_OBJECTIVES: IAMPolicyRoleEditObjective<FinishEvent
       validate_function: AJV_COMPILER.compile(dataScientistsPolicy),
     },
     {
-      type: ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE,
+      type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       entity_id: PolicyNodeID.InternPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: internsPolicy,

@@ -273,9 +273,9 @@ export function changeLevelObjectiveProgress<
 export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   docString: string
-): [Node[], TFinishEventMap[ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE][]] {
-  const targetValidPolicy = findAnyValidPolicy(context.policy_role_objectives, docString);
-  const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE][] = [];
+): [Node[], TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][]] {
+  const targetValidPolicy = findAnyValidPolicy(context.policy_creation_objectives, docString);
+  const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
 
   const newNodes = produce(context.nodes, draftNodes => {
     const newPolicyNode = createPolicyNode({
@@ -312,8 +312,8 @@ export function editIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends Bas
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   nodeId: string,
   docString: string
-): [Node[], Edge[], TFinishEventMap[ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE][]] {
-  const targetEditObjective = context.policy_role_edit_objectives.find(
+): [Node[], Edge[], TFinishEventMap[ObjectiveType.POLICY_EDIT_OBJECTIVE][]] {
+  const targetEditObjective = context.policy_edit_objectives.find(
     objective => objective.entity_id === nodeId
   );
 
@@ -441,13 +441,13 @@ export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends Bas
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   docString: string,
   attachedPolicies: string[]
-): [Node[], TFinishEventMap[ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE][]] {
+): [Node[], TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][]] {
   const targetValidPolicy = findAnyValidRole(
     context.role_creation_objectives,
     docString,
     attachedPolicies
   );
-  const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE][] = [];
+  const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
 
   const newNodes = produce(context.nodes, draftNodes => {
     const newRoleNode = createRoleNode({

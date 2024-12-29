@@ -6,14 +6,14 @@ import s3ReadWritePolicySchema from '../schemas/policy/s3-read-write-policy-sche
 import { FinishEventMap, NodeCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { IAMPolicyRoleCreationObjective, ObjectiveType } from '@/machines/types';
+import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
-export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective<FinishEventMap>[][] = [
+export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
   [
     {
-      type: ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE,
+      type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadPolicySchema,
@@ -47,7 +47,7 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective<Fin
   ],
   [
     {
-      type: ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE,
+      type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadWritePolicySchema,
@@ -64,7 +64,7 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective<Fin
       validate_function: AJV_COMPILER.compile(s3ReadWritePolicySchema),
     },
     {
-      type: ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE,
+      type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.CloudfrontReadAccess,
       entity: IAMNodeEntity.Policy,
       json_schema: cloudfrontReadPolicySchema,
@@ -81,7 +81,7 @@ export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective<Fin
       validate_function: AJV_COMPILER.compile(cloudfrontReadPolicySchema),
     },
     {
-      type: ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE,
+      type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.DynamoDBReadWriteAccess,
       entity: IAMNodeEntity.Policy,
       json_schema: dynamoReadWritePolicySchema,

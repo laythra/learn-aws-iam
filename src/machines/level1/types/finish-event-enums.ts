@@ -10,8 +10,8 @@ export enum EdgeConnectionFinishEvent {
 
 export interface FinishEventMap {
   [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: NodeCreationFinishEvent;
-  [ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE]: never;
+  [ObjectiveType.POLICY_CREATION_OBJECTIVE]: never;
   [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: EdgeConnectionFinishEvent;
-  [ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE]: never;
+  [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
   [ObjectiveType.LEVEL_OBJECTIVE]: never;
 }

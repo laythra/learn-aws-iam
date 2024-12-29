@@ -20,7 +20,7 @@ export enum NodeCreationFinishEvent {
 export interface FinishEventMap extends BaseFinishEventMap {
   [ObjectiveType.LEVEL_OBJECTIVE]: LevelObjectiveFinishEvent;
   [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: EdgeConnectionFinishEvent;
-  [ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE]: NodeCreationFinishEvent;
-  [ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE]: never;
+  [ObjectiveType.POLICY_CREATION_OBJECTIVE]: NodeCreationFinishEvent;
+  [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
   [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: never;
 }

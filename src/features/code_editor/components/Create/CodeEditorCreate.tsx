@@ -11,7 +11,7 @@ import { badgeExtension, InitializeBadgeWidgets } from '../../utils/badge-widget
 import { limitLinesFilter } from '../../utils/code-editor-filters';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { BaseFinishEventMap, IAMPolicyRoleCreationObjective } from '@/machines/types';
+import { BaseFinishEventMap, IAMPolicyCreationObjective } from '@/machines/types';
 import { IAMNodeEntity } from '@/types';
 import {
   findAnyValidPolicy,
@@ -29,8 +29,8 @@ const NO_MATCHING_POLICY_WARNING = 'This policy does not achieve any of the obje
 const NO_MATCHING_ROLE_WARNING = 'This role does not achieve any of the objectives.';
 
 export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) => {
-  const [policyRoleObjectives, roleObjectives] = LevelsProgressionContext.useSelector(
-    state => [state.context.policy_role_objectives, state.context.role_creation_objectives],
+  const [policyObjectives, roleObjectives] = LevelsProgressionContext.useSelector(
+    state => [state.context.policy_objectives, state.context.role_creation_objectives],
     _.isEqual
   );
   const { selectedIAMEntity, content, selectedPolicies } = useSelector(
@@ -41,8 +41,8 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
 
   const editorView = useRef<EditorView | null>(null);
 
-  const objectiveToValidate = _.find<IAMPolicyRoleCreationObjective<BaseFinishEventMap>>(
-    policyRoleObjectives,
+  const objectiveToValidate = _.find<IAMPolicyCreationObjective<BaseFinishEventMap>>(
+    policyObjectives,
     'validate_inside_code_editor'
   );
 
@@ -64,7 +64,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
 
     if (selectedIAMEntity === IAMNodeEntity.Policy) {
       const anyValidPolicy = findAnyValidPolicy<BaseFinishEventMap>(
-        policyRoleObjectives,
+        policyObjectives,
         editorView.current!.state.doc.toString()
       );
 

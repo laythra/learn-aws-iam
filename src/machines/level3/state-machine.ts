@@ -4,7 +4,7 @@ import { INITIAL_TUTORIAL_NODES } from './nodes';
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
-import { POLICY_ROLE_CREATION_OBJECTIVES } from './objectives/policy-role-creation-objectives';
+import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-role-creation-objectives';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import {
@@ -23,7 +23,7 @@ import {
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
-  POLICY_ROLE_CREATION_OBJECTIVES,
+  POLICY_CREATION_OBJECTIVES,
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level3_state_machine',
@@ -41,8 +41,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     metadata_keys: {},
     edges: [],
     level_objectives: [],
-    policy_role_objectives: [],
-    policy_role_edit_objectives: [],
+    policy_creation_objectives: [],
+    policy_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
@@ -168,7 +168,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         create_your_custom_policy_popover: {
-          entry: ['next_popover', 'next_policy_role_objectives', 'show_side_panel'],
+          entry: ['next_popover', 'next_policy_creation_objectives', 'show_side_panel'],
           on: {
             [NodeCreationFinishEvent.S3_READ_POLICY_CREATED]: {
               actions: [
@@ -197,7 +197,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       initial: 'popup1',
       entry: [
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
-        'next_policy_role_objectives',
+        'next_policy_creation_objectives',
         assign({
           edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
           nodes: INITIAL_IN_LEVEL_NODES,
@@ -226,7 +226,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
         create_and_attach_policies: {
           entry: [
-            'next_policy_role_objectives',
+            'next_policy_creation_objectives',
             'next_edge_connection_objectives',
             'toggle_side_panel',
           ],

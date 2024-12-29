@@ -7,7 +7,7 @@ import type {
   CreatableIAMNodeEntity,
   IAMPolicyNodeData,
   IAMScriptableEntity,
-  PolicyRoleGrantedAccess,
+  PolicyGrantedAccess,
 } from '@/types';
 import {
   IAMAnyNodeData,
@@ -28,8 +28,8 @@ export type HelpBadge = {
 };
 
 export enum ObjectiveType {
-  POLICY_ROLE_CREATION_OBJECTIVE = 'POLICY_ROLE_CREATION_OBJECTIVE',
-  POLICY_ROLE_EDIT_OBJECTIVE = 'POLICY_ROLE_EDIT_OBJECTIVE',
+  POLICY_CREATION_OBJECTIVE = 'POLICY_CREATION_OBJECTIVE',
+  POLICY_EDIT_OBJECTIVE = 'POLICY_EDIT_OBJECTIVE',
   IAM_USER_GROUP_CREATION_OBJECTIVE = 'IAM_USER_GROUP_CREATION_OBJECTIVE',
   EDGE_CONNECTION_OBJECTIVE = 'EDGE_CONNECTION_OBJECTIVE',
   LEVEL_OBJECTIVE = 'LEVEL_OBJECTIVE',
@@ -58,14 +58,14 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   fixed_iam_nodes_positions?: { [key: string]: XYPosition };
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  next_policy_role_objectives_index?: number;
+  next_policy_creation_objectives_index?: number;
   next_edges_connection_objectives_index?: number;
   level_finished?: boolean;
   side_panel_open?: boolean;
   level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
-  policy_role_objectives: IAMPolicyRoleCreationObjective<TBaseFinishEventMap>[];
-  role_creation_objectives: IAMRoleCreationObject<TBaseFinishEventMap>[];
-  policy_role_edit_objectives: IAMPolicyRoleEditObjective<TBaseFinishEventMap>[];
+  policy_creation_objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[];
+  role_creation_objectives: IAMRoleCreationObjective<TBaseFinishEventMap>[];
+  policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
   edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
   next_level_objectives_list_index?: number;
@@ -174,16 +174,17 @@ export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> 
   readonly established_edge_target_handle?: string;
 };
 
-export interface IAMPolicyRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
-  readonly type: ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE;
+// TODO: Make the following interface only responsible for creating Policy creation objectives
+export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
+  readonly type: ObjectiveType.POLICY_CREATION_OBJECTIVE;
   readonly entity_id: string;
   readonly entity: IAMScriptableEntity;
   readonly json_schema: Schema;
   readonly description?: string;
   readonly initial_code: object;
-  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE];
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE];
   readonly validate_inside_code_editor: boolean;
-  readonly granted_accesses: PolicyRoleGrantedAccess[];
+  readonly granted_accesses: PolicyGrantedAccess[];
   readonly validate_function?: ValidateFunction;
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
@@ -195,8 +196,8 @@ export interface IAMRoleCreationObject<TFinishEventMap extends BaseFinishEventMa
   readonly required_principles: string[];
 }
 
-export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEventMap> {
-  readonly type: ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE;
+export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {
+  readonly type: ObjectiveType.POLICY_EDIT_OBJECTIVE;
   readonly entity_id: string;
   readonly entity: IAMScriptableEntity;
   readonly json_schema: Schema;
@@ -208,7 +209,7 @@ export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEv
    */
   readonly description?: string;
 
-  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE];
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_EDIT_OBJECTIVE];
   readonly validate_function: ValidateFunction;
 
   /**

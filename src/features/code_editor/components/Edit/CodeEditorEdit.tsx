@@ -26,15 +26,15 @@ const CONTENT_UNCHANGED_WARNING = 'You have not made any changes to the policy.'
 export const CodeEditorEdit: React.FC<CodeEditorWindowProps> = ({ nodeId }) => {
   const content = useSelector(codeEditorStateStore, state => state.context.content[nodeId]);
 
-  const { policy_role_edit_objectives: policyRoleEditObjectives, nodes } =
+  const { policy_edit_objectives: policyEditObjectives, nodes } =
     LevelsProgressionContext.useSelector(
-      state => _.pick(state.context, ['policy_role_edit_objectives', 'nodes']),
+      state => _.pick(state.context, ['policy_edit_objectives', 'nodes']),
       _.isEqual
     );
 
   const editorView = useRef<EditorView | null>(null);
   const selectedNode = nodes.find(node => node.id === nodeId) as Node<IAMPolicyNodeData>;
-  const objectiveToValidate = policyRoleEditObjectives.find(
+  const objectiveToValidate = policyEditObjectives.find(
     objective => objective.entity_id === selectedNode.id
   )!;
 

@@ -24,7 +24,7 @@ import type {
   GenericContext,
   GenericEventData,
   LevelObjective,
-  IAMPolicyRoleCreationObjective,
+  IAMPolicyCreationObjective,
 } from '@/machines/types';
 import {
   IAMAnyNodeData,
@@ -48,7 +48,7 @@ import {
  * @template TFinishEventMap - Defines the event finish type for each objective type, will be passed to the generic context
  * @param popoverTutorialMessages - List of popover tutorial messages
  * @param popupTutorialMessages - List of popup tutorial messages
- * @param policyRoleCreationObjectives - List of policy role creation objectives
+ * @param policyCreationObjectives - List of policy role creation objectives
  */
 
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -58,7 +58,7 @@ export const createStateMachineSetup = <
 >(
   popoverTutorialMessages: PopoverTutorialMessage[],
   popupTutorialMessages: PopupTutorialMessage[],
-  policyRoleCreationObjectives: IAMPolicyRoleCreationObjective<TFinishEventMap>[][],
+  policyCreationObjectives: IAMPolicyCreationObjective<TFinishEventMap>[][],
   edgeConnectionObjectives: EdgeConnectionObjective<TFinishEventMap>[][]
 ) => {
   return setup({
