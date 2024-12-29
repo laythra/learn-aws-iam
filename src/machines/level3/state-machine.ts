@@ -24,6 +24,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
   POLICY_CREATION_OBJECTIVES,
+  [],
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level3_state_machine',

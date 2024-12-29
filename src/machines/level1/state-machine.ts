@@ -19,6 +19,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
   [],
+  [],
   []
 ).createMachine({
   id: 'level1_state_machine',

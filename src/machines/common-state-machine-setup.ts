@@ -17,6 +17,7 @@ import {
 import type {
   BaseFinishEventMap,
   EdgeConnectionObjective,
+  IAMRoleCreationObjective,
   PopoverTutorialMessage,
   PopupTutorialMessage,
 } from '@/machines/types';
@@ -59,6 +60,7 @@ export const createStateMachineSetup = <
   popoverTutorialMessages: PopoverTutorialMessage[],
   popupTutorialMessages: PopupTutorialMessage[],
   policyCreationObjectives: IAMPolicyCreationObjective<TFinishEventMap>[][],
+  roleCreationObjectives: IAMRoleCreationObjective<TFinishEventMap>[][],
   edgeConnectionObjectives: EdgeConnectionObjective<TFinishEventMap>[][]
 ) => {
   return setup({
@@ -188,11 +190,17 @@ export const createStateMachineSetup = <
         next_popup_index: ({ context }) => context.next_popup_index + 1,
         show_popovers: false,
       }),
-      next_policy_role_objectives: assign({
-        policy_role_objectives: ({ context }) =>
-          policyRoleCreationObjectives[context.next_policy_role_objectives_index ?? 0],
-        next_policy_role_objectives_index: ({ context }) =>
-          (context.next_policy_role_objectives_index ?? 0) + 1,
+      next_policy_creation_objectives: assign({
+        policy_creation_objectives: ({ context }) =>
+          policyCreationObjectives[context.next_policy_creation_objectives_index ?? 0],
+        next_policy_creation_objectives_index: ({ context }) =>
+          (context.next_policy_creation_objectives_index ?? 0) + 1,
+      }),
+      next_role_creation_objectives: assign({
+        role_creation_objectives: ({ context }) =>
+          roleCreationObjectives[context.next_role_creation_objectives_index ?? 0],
+        next_role_creation_objectives_index: ({ context }) =>
+          (context.next_role_creation_objectives_index ?? 0) + 1,
       }),
       hide_popups: assign({ show_popups: false }),
       hide_popovers: assign({ show_popovers: false }),

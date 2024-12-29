@@ -23,4 +23,5 @@ export interface FinishEventMap extends BaseFinishEventMap {
   [ObjectiveType.POLICY_CREATION_OBJECTIVE]: NodeCreationFinishEvent;
   [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
   [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: never;
+  [ObjectiveType.ROLE_CREATION_OBJECTIVE]: never;
 }

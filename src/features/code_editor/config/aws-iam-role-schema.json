@@ -1,22 +1,33 @@
 {
   "type": "object",
-  "required": ["Statement"],
+  "required": [
+    "Statement"
+  ],
   "additionalProperties": false,
   "properties": {
     "Version": {
       "type": "string",
-      "enum": ["2008-10-17", "2012-10-17"]
+      "enum": [
+        "2012-10-17"
+      ]
     },
     "Statement": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["Effect", "Action", "Resource"],
+        "required": [
+          "Effect",
+          "Action",
+          "Resource"
+        ],
         "additionalProperties": false,
         "properties": {
           "Effect": {
             "type": "string",
-            "enum": ["Allow", "Deny"]
+            "enum": [
+              "Allow",
+              "Deny"
+            ]
           },
           "Action": {
             "type": "array",

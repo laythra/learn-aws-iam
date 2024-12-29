@@ -30,6 +30,7 @@ export type HelpBadge = {
 export enum ObjectiveType {
   POLICY_CREATION_OBJECTIVE = 'POLICY_CREATION_OBJECTIVE',
   POLICY_EDIT_OBJECTIVE = 'POLICY_EDIT_OBJECTIVE',
+  ROLE_CREATION_OBJECTIVE = 'ROLE_CREATION_OBJECTIVE',
   IAM_USER_GROUP_CREATION_OBJECTIVE = 'IAM_USER_GROUP_CREATION_OBJECTIVE',
   EDGE_CONNECTION_OBJECTIVE = 'EDGE_CONNECTION_OBJECTIVE',
   LEVEL_OBJECTIVE = 'LEVEL_OBJECTIVE',
@@ -38,37 +39,38 @@ export enum ObjectiveType {
 export type BaseFinishEventMap = Record<ObjectiveType, string>;
 
 export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
-  iam_user_template?: Node<IAMUserNodeData>;
+  edges: Edge[];
+  edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
+  final_edges?: Edge[];
+  fixed_iam_nodes_positions?: { [key: string]: XYPosition };
   iam_group_template?: Node<IAMGroupNodeData>;
   iam_policy_template?: Node<IAMPolicyNodeData>;
-  level_title: string;
+  iam_user_template?: Node<IAMUserNodeData>;
   level_description: string;
+  level_finished?: boolean;
   level_number: number;
+  level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
+  level_title: string;
+  metadata_keys: { [key: string]: string }; // Make it stricter
+  next_edges_connection_objectives_index?: number;
+  next_iam_node_default_position?: XYPosition;
+  next_iam_node_id?: { [k in CreatableIAMNodeEntity]: number };
+  next_level_objectives_list_index?: number;
+  next_policy_creation_objectives_index?: number;
+  next_role_creation_objectives_index?: number;
   next_popover_index: number;
   next_popup_index: number;
-  state_name: string;
-  next_iam_node_id?: { [k in CreatableIAMNodeEntity]: number };
   nodes: Node<IAMAnyNodeData>[];
-  edges: Edge[];
-  final_edges?: Edge[];
-  show_popovers: boolean;
-  show_popups: boolean;
-  metadata_keys: { [key: string]: string }; // Make it stricter
-  next_iam_node_default_position?: XYPosition;
-  fixed_iam_nodes_positions?: { [key: string]: XYPosition };
+  policy_creation_objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[];
+  policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  next_policy_creation_objectives_index?: number;
-  next_edges_connection_objectives_index?: number;
-  level_finished?: boolean;
-  side_panel_open?: boolean;
-  level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
-  policy_creation_objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[];
   role_creation_objectives: IAMRoleCreationObjective<TBaseFinishEventMap>[];
-  policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
-  edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
+  show_popovers: boolean;
+  show_popups: boolean;
+  side_panel_open?: boolean;
+  state_name: string;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
-  next_level_objectives_list_index?: number;
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -190,10 +192,19 @@ export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEv
   readonly limit_new_lines?: boolean;
 }
 
-export interface IAMRoleCreationObject<TFinishEventMap extends BaseFinishEventMap>
-  extends IAMPolicyRoleCreationObjective<TFinishEventMap> {
+export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
+  readonly type: ObjectiveType.ROLE_CREATION_OBJECTIVE;
+  readonly entity_id: string;
+  readonly entity: IAMNodeEntity.Role;
+  readonly json_schema: Schema;
+  readonly initial_code: object;
+  readonly validate_inside_code_editor: boolean;
   readonly required_policies: string[];
   readonly required_principles: string[];
+  readonly validate_function?: ValidateFunction;
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE];
+  readonly help_badges?: HelpBadge[];
+  readonly limit_new_lines?: boolean;
 }
 
 export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {

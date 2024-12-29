@@ -19,4 +19,5 @@ export interface FinishEventMap extends BaseFinishEventMap {
   [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
   [ObjectiveType.LEVEL_OBJECTIVE]: never;
   [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: UserGroupCreationFinishEvent;
+  [ObjectiveType.ROLE_CREATION_OBJECTIVE]: never;
 }

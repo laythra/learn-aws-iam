@@ -29,8 +29,8 @@ const NO_MATCHING_POLICY_WARNING = 'This policy does not achieve any of the obje
 const NO_MATCHING_ROLE_WARNING = 'This role does not achieve any of the objectives.';
 
 export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) => {
-  const [policyObjectives, roleObjectives] = LevelsProgressionContext.useSelector(
-    state => [state.context.policy_objectives, state.context.role_creation_objectives],
+  const [policyCreationObjectives, roleCreationObjectives] = LevelsProgressionContext.useSelector(
+    state => [state.context.policy_creation_objectives, state.context.role_creation_objectives],
     _.isEqual
   );
   const { selectedIAMEntity, content, selectedPolicies } = useSelector(
@@ -42,7 +42,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
   const editorView = useRef<EditorView | null>(null);
 
   const objectiveToValidate = _.find<IAMPolicyCreationObjective<BaseFinishEventMap>>(
-    policyObjectives,
+    policyCreationObjectives,
     'validate_inside_code_editor'
   );
 
@@ -64,14 +64,14 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) =>
 
     if (selectedIAMEntity === IAMNodeEntity.Policy) {
       const anyValidPolicy = findAnyValidPolicy<BaseFinishEventMap>(
-        policyObjectives,
+        policyCreationObjectives,
         editorView.current!.state.doc.toString()
       );
 
       return anyValidPolicy ? [] : warnings;
     } else {
       const anyValidPolicy = findAnyValidRole<BaseFinishEventMap>(
-        roleObjectives,
+        roleCreationObjectives,
         editorView.current!.state.doc.toString(),
         selectedPolicies
       );

@@ -40,7 +40,7 @@ export type CreatableIAMNodeEntity =
   | IAMNodeEntity.Policy
   | IAMNodeEntity.Role;
 
-export interface PolicyRoleGrantedAccess {
+export interface PolicyGrantedAccess {
   readonly target_node: string;
   readonly access_level: AccessLevel;
   readonly target_handle: string;
@@ -85,7 +85,7 @@ export interface IAMPolicyNodeData extends IAMNodeData {
   editable: boolean;
   unnecessary_policy?: boolean;
   associated_users: string[];
-  granted_accesses: PolicyRoleGrantedAccess[];
+  granted_accesses: PolicyGrantedAccess[];
   content: string;
 }
 

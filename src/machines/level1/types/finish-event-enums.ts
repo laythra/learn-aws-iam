@@ -14,4 +14,5 @@ export interface FinishEventMap {
   [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: EdgeConnectionFinishEvent;
   [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
   [ObjectiveType.LEVEL_OBJECTIVE]: never;
+  [ObjectiveType.ROLE_CREATION_OBJECTIVE]: never;
 }
