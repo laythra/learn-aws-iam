@@ -9,6 +9,7 @@
 export enum StatelessStateMachineEvent {
   IAMNodeContentOpened = 'IAM_NODE_CONTENT_OPENED',
   CreateIAMIdentityTabChanged = 'CREATE_IAM_IDENTITY_TAB_CHANGED',
+  CreateIAMPolicyRoleWindowOpened = 'CREATE_IAM_POLICY_ROLE_WINDOW_OPENED',
 }
 
 // /**
@@ -19,4 +20,5 @@ export enum StatefulStateMachineEvent {
   AddIAMUserGroupNode = 'ADD_IAM_USER_GROUP_NODE',
   AddIAMPolicyNode = 'ADD_IAM_POLICY_NODE',
   ADDIAMRoleNode = 'ADD_IAM_ROLE_NODE',
+  AttachRoleToUserNode = 'ATTACH_ROLE_TO_USER_NODE',
 }

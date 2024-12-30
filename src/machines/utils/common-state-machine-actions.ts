@@ -18,6 +18,8 @@ import {
   IAMEdgeData,
   IAMGroupNodeData,
   IAMNodeEntity,
+  IAMResourceNodeData,
+  IAMRoleNodeData,
   type IAMPolicyNodeData,
   type IAMUserNodeData,
 } from '@/types';
@@ -465,4 +467,106 @@ export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends Bas
   });
 
   return [newNodes, sideEffectsEvents];
+}
+
+export function attachRoleToEntity<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  roleNode: Node<IAMRoleNodeData>,
+  entityNode: Node<IAMUserNodeData | IAMResourceNodeData>
+): Node[] {
+  return produce(context.nodes, draftNodes => {
+    debugger;
+    const targetNode = draftNodes.find(
+      node => node.id === entityNode.id && node.data.entity === entityNode.data.entity
+    );
+    if (!targetNode) return;
+
+    (
+      targetNode as WritableDraft<Node<IAMUserNodeData | IAMResourceNodeData>>
+    ).data.associated_roles.push(roleNode.id);
+  });
+}
+
+function updateRoleToUserConnectionEdges<
+  TLevelObjectiveID,
+  TFinishEventMap extends BaseFinishEventMap,
+>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  roleNode: Node<IAMRoleNodeData>,
+  userNode: Node<IAMUserNodeData>
+): [Edge[], TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][]] {
+  const sideEffectsEvents: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] = [];
+  const newEdges = produce(context.edges, draftEdges => {
+    let newEdgeData: PartialWithRequired<Edge<IAMEdgeData>, 'source' | 'target'> = {
+      source: roleNode.id,
+      target: userNode.id,
+      data: {
+        hovering_label: 'Assumed by',
+      },
+    };
+    draftEdges.push(createEdge(newEdgeData));
+
+    context.edges_connection_objectives.forEach(objective => {
+      if (objective.is_finished) return;
+
+      const objectiveAchieved =
+        _.differenceBy(objective.required_edges, draftEdges, 'id').length === 0;
+
+      if (!objectiveAchieved) {
+        return;
+      }
+
+      newEdgeData = {
+        ...newEdgeData,
+        targetHandle: objective.established_edge_target_handle,
+      };
+
+      draftEdges.pop();
+      draftEdges.push(createEdge(newEdgeData));
+      sideEffectsEvents.push(objective.on_finish_event);
+    });
+
+    const policiesById = _.chain(context.nodes)
+      .filter((node): node is Node<IAMPolicyNodeData> => node.data.entity === IAMNodeEntity.Policy)
+      .keyBy('id')
+      .value();
+
+    _.flatMapDeep(roleNode.data.associated_policies, policyId => {
+      const policyNode = policiesById[policyId];
+      policyNode.data.granted_accesses.forEach(accessInfo => {
+        const userToResourceEdge = createEdge({
+          source: userNode.id,
+          target: accessInfo.target_node,
+          targetHandle: accessInfo.target_handle,
+          data: { hovering_label: accessInfo.access_level },
+        });
+
+        draftEdges.push(userToResourceEdge);
+      });
+    });
+  });
+
+  return [newEdges, sideEffectsEvents];
+}
+
+export function updateRoleToEntityConnectionEdges<
+  TLevelObjectiveID,
+  TFinishEventMap extends BaseFinishEventMap,
+>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  roleNode: Node<IAMRoleNodeData>,
+  entityNode: Node<IAMUserNodeData | IAMResourceNodeData>
+): [Edge[], TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][]] {
+  if (entityNode.data.entity === IAMNodeEntity.User) {
+    return updateRoleToUserConnectionEdges(context, roleNode, entityNode as Node<IAMUserNodeData>);
+  } else if (entityNode.data.entity === IAMNodeEntity.Resource) {
+    throw new Error('Not implemented');
+    // return updatePolicyToGroupConnectionEdges(
+    //   context,
+    //   policyNode,
+    //   entityNode as Node<IAMGroupNodeData>
+    // );
+  } else {
+    throw new Error('Invalid entity type');
+  }
 }

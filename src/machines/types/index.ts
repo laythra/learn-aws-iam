@@ -6,6 +6,7 @@ import type {
   AccessLevel,
   CreatableIAMNodeEntity,
   IAMPolicyNodeData,
+  IAMRoleNodeData,
   IAMScriptableEntity,
   PolicyGrantedAccess,
 } from '@/types';
@@ -30,6 +31,7 @@ export type HelpBadge = {
 export enum ObjectiveType {
   POLICY_CREATION_OBJECTIVE = 'POLICY_CREATION_OBJECTIVE',
   POLICY_EDIT_OBJECTIVE = 'POLICY_EDIT_OBJECTIVE',
+  TRUST_POLICY_EDIT_OBJECTIVE = 'TRUST_POLICY_EDIT_OBJECTIVE',
   ROLE_CREATION_OBJECTIVE = 'ROLE_CREATION_OBJECTIVE',
   IAM_USER_GROUP_CREATION_OBJECTIVE = 'IAM_USER_GROUP_CREATION_OBJECTIVE',
   EDGE_CONNECTION_OBJECTIVE = 'EDGE_CONNECTION_OBJECTIVE',
@@ -127,6 +129,11 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: 'ATTACH_USER_TO_GROUP';
       sourceNode: Node<IAMUserNodeData>;
       targetNode: Node<IAMGroupNodeData>;
+    }
+  | {
+      type: StatefulStateMachineEvent.AttachRoleToUserNode;
+      sourceNode: Node<IAMRoleNodeData>;
+      targetNode: Node<IAMUserNodeData>;
     }
   | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage };
 
@@ -232,6 +239,26 @@ export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventM
    * Resources to revoke from the users/groups associated with the IAM Policy/Role.
    */
   readonly resources_to_revoke: string[];
+  readonly help_badges?: HelpBadge[];
+  readonly limit_new_lines?: boolean;
+}
+
+export interface IAMTrustPolicyEditObject<TFinishEventMap extends BaseFinishEventMap> {
+  readonly type: ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE;
+  readonly entity_id: string;
+  readonly entity: IAMNodeEntity.Role;
+  readonly json_schema: Schema;
+  readonly allow_new_lines?: boolean;
+
+  /**
+   * Optional description for the IAM Policy/Role Edit Objective.
+   * Used to help the user understand what they need to do when editing the IAM Policy/Role.
+   */
+  readonly description?: string;
+
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE];
+  readonly validate_function: ValidateFunction;
+
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
 }

@@ -21,6 +21,7 @@ export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
     image: IAMNodeImage.User,
     associated_policies: [],
     initial_position: 'top-center',
+    associated_roles: [],
   },
 };
 

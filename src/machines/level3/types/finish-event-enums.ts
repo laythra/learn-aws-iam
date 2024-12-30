@@ -10,6 +10,7 @@ export enum EdgeConnectionFinishEvent {
   DYNAMO_DB_READ_WRITE_POLICY_CONNECTED = 'DYNAMO_DB_READ_WRITE_POLICY_CONNECTED',
 }
 
+// TODO: Rename to PolicyCreationFinishEvent instead
 export enum NodeCreationFinishEvent {
   S3_READ_POLICY_CREATED = 'S3_READ_POLICY_CREATED',
   S3_READ_WRITE_POLICY_CREATED = 'S3_READ_WRITE_POLICY_CREATED',
@@ -24,4 +25,5 @@ export interface FinishEventMap extends BaseFinishEventMap {
   [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
   [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: never;
   [ObjectiveType.ROLE_CREATION_OBJECTIVE]: never;
+  [ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE]: never;
 }
