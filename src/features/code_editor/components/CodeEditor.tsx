@@ -66,20 +66,22 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
           <VStack align='stretch' spacing={4}>
             <Heading size='md'>Code</Heading>
             {codeEditorMode === CodeEditorMode.Create ? (
-              <CodeEditorCreate nodeId={nodeId} />
+              <CodeEditorCreate nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
             ) : (
-              <CodeEditorEdit nodeId={nodeId} />
+              <CodeEditorEdit nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
             )}
             {selectedIAMEntity === IAMNodeEntity.Role && <RolePermissionsList />}
-            <CodeEditorErrorsBox nodeId={nodeId} />
-            {_.isEmpty(errors[nodeId]) && <CodeEditorWarningsBox nodeId={nodeId} />}
+            <CodeEditorErrorsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+            {_.isEmpty(errors[selectedIAMEntity][nodeId]) && (
+              <CodeEditorWarningsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+            )}
           </VStack>
         </ModalBody>
         <ModalFooter>
           {codeEditorMode === CodeEditorMode.Create ? (
-            <CreateSubmitButton nodeId={nodeId} />
+            <CreateSubmitButton nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
           ) : (
-            <EditSubmitButton nodeId={nodeId} />
+            <EditSubmitButton nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
           )}
           <Button variant='ghost' onClick={closeCodeEditor}>
             Cancel

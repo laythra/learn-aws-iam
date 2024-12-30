@@ -27,8 +27,9 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
   const { entity, label, handles, image, content } = data;
   const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_policy;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
-  const isEditable = data.entity === IAMNodeEntity.Policy && data.editable;
+  const isEditable = data.entity === IAMNodeEntity.Role || data.entity === IAMNodeEntity.Policy;
 
+  // TODO: Move selected node id state to an xstate store instead
   const { setSelectedNodeId, selectedNodeId } = useContext(IAMNodeContext);
   const theme = useTheme<CustomTheme>();
 

@@ -1,21 +1,23 @@
 import React, { useRef } from 'react';
 
-import { json } from '@codemirror/lang-json';
-import { linter } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import CodeMirror from '@uiw/react-codemirror';
-import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
-import { Node } from 'reactflow';
 
+import { useCodeEditor } from '../../hooks/useCodeEditor';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
-import { InitializeBadgeWidgets } from '../../utils/badge-widget';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { IAMPolicyNodeData } from '@/types';
-import { getLintingErrors, isJSONValid } from '@/utils/iam-code-linter';
+import {
+  BaseFinishEventMap,
+  IAMPolicyEditObjective,
+  IAMTrustPolicyEditObject,
+} from '@/machines/types';
+import { IAMNodeEntity } from '@/types';
+import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/utils/iam-code-linter';
 
 interface CodeEditorWindowProps {
   nodeId: string;
+  selectedIAMEntity: IAMNodeEntity;
 }
 
 const VALIDATION_ERROR_WARNING =
@@ -23,77 +25,71 @@ const VALIDATION_ERROR_WARNING =
 
 const CONTENT_UNCHANGED_WARNING = 'You have not made any changes to the policy.';
 
-export const CodeEditorEdit: React.FC<CodeEditorWindowProps> = ({ nodeId }) => {
-  const content = useSelector(codeEditorStateStore, state => state.context.content[nodeId]);
-
-  const { policy_edit_objectives: policyEditObjectives, nodes } =
-    LevelsProgressionContext.useSelector(
-      state => _.pick(state.context, ['policy_edit_objectives', 'nodes']),
-      _.isEqual
-    );
+export const CodeEditorEdit: React.FC<CodeEditorWindowProps> = ({ nodeId, selectedIAMEntity }) => {
+  const [policyEditObjectives, nodes] = LevelsProgressionContext.useSelector(
+    state => [state.context.policy_edit_objectives, state.context.nodes],
+    _.isEqual
+  );
 
   const editorView = useRef<EditorView | null>(null);
-  const selectedNode = nodes.find(node => node.id === nodeId) as Node<IAMPolicyNodeData>;
-  const objectiveToValidate = policyEditObjectives.find(
-    objective => objective.entity_id === selectedNode.id
+  const selectedNode = nodes.find(
+    node => node.id === nodeId && node.data.entity === selectedIAMEntity
   )!;
 
-  const validateFunction = objectiveToValidate.validate_function;
+  let objectiveToValidate:
+    | IAMPolicyEditObjective<BaseFinishEventMap>
+    | IAMTrustPolicyEditObject<BaseFinishEventMap>
+    | undefined;
 
-  const setErrorsAndWarnings = (): void => {
-    if (!editorView.current) return;
+  if (selectedIAMEntity === IAMNodeEntity.Policy) {
+    objectiveToValidate = policyEditObjectives.find(
+      objective => objective.entity_id === selectedNode?.data.id
+    );
+  } else {
+    // TODO: Support role editing
+    throw new Error('Role editing is not supported yet');
+  }
+
+  const getWarnings = (): string[] => {
+    if (!editorView.current) return [];
 
     const currentContent = editorView.current.state.doc.toString();
-    const lintingErrors = getLintingErrors(editorView.current, validateFunction);
-    const isHarmfulEdit = !isJSONValid(currentContent, validateFunction);
-    let warnings: string[] = [];
+    const isHarmfulEdit = !isJSONValid(
+      currentContent,
+      objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity]
+    );
 
     if (currentContent === selectedNode.data.content) {
-      warnings = [CONTENT_UNCHANGED_WARNING];
+      return [CONTENT_UNCHANGED_WARNING];
     } else if (isHarmfulEdit) {
-      warnings = [VALIDATION_ERROR_WARNING];
+      return [VALIDATION_ERROR_WARNING];
+    } else {
+      return [];
     }
-
-    codeEditorStateStore.send({
-      type: 'setErrorsAndWarnings',
-      errors: lintingErrors,
-      warnings,
-      nodeId,
-    });
   };
 
-  const validateChange = _.debounce((): void => {
-    setErrorsAndWarnings();
-    codeEditorStateStore.send({ type: 'setIsValidating', payload: false });
-  }, 500);
-
-  const onCreateEditor = (view: EditorView): void => {
-    editorView.current = view;
-
-    InitializeBadgeWidgets(
-      view,
-      objectiveToValidate.help_badges ?? [],
-      JSON.parse(selectedNode.data.content)
-    );
-    validateChange();
-
-    codeEditorStateStore.send({
-      type: 'initializeCodeEditor',
-      nodeId,
-      content: selectedNode.data.content,
-    });
-  };
+  const { onCreateEditor, validateChange, getContent, extensions } = useCodeEditor({
+    nodeId,
+    editorView,
+    getWarnings,
+    initialContent: JSON.parse(selectedNode.data.content ?? '{}'),
+  });
 
   return (
     <CodeMirror
       // The content won't be loaded into the store until the editor is initialized
-      value={content ?? selectedNode.data.content}
+      value={getContent() ?? selectedNode.data.content}
       onChange={newContent => {
-        codeEditorStateStore.send({ type: 'setContent', content: newContent, nodeId });
+        codeEditorStateStore.send({
+          type: 'setContent',
+          content: newContent,
+          nodeId,
+          entity: selectedIAMEntity,
+        });
         validateChange();
       }}
       height='200px'
-      extensions={[json(), linter(view => getLintingErrors(view, validateFunction))]}
+      extensions={extensions}
       onCreateEditor={onCreateEditor}
     />
   );

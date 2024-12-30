@@ -5,12 +5,17 @@ import _ from 'lodash';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import codeEditorPopupStore from '@/stores/code-editor-popup-store';
+import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 
 interface EditSubmitButtonProps {
   nodeId: string;
+  selectedIAMEntity: IAMScriptableEntity;
 }
 
-export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({ nodeId }) => {
+export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({
+  nodeId,
+  selectedIAMEntity,
+}) => {
   const levelActor = LevelsProgressionContext.useActorRef();
   const { errors, warnings, isValidating } = useSelector(
     codeEditorStateStore,
@@ -18,10 +23,13 @@ export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({ nodeId }) =>
     _.isEqual
   );
 
-  const isButtonDisabled = !_.isEmpty(errors[nodeId]) || !_.isEmpty(warnings[nodeId]);
+  const isButtonDisabled =
+    !_.isEmpty(errors[selectedIAMEntity][nodeId]) ||
+    !_.isEmpty(warnings[selectedIAMEntity][nodeId]);
 
   const submit = (): void => {
-    const content = codeEditorStateStore.getSnapshot().context.content[nodeId];
+    const content = codeEditorStateStore.getSnapshot().context.content[selectedIAMEntity][nodeId];
+
     levelActor.send({ type: 'UPDATE_IAM_POLICY_NODE', doc_string: content, node_id: nodeId });
     codeEditorPopupStore.send({ type: 'close' });
   };
