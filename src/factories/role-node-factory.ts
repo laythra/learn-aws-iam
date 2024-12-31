@@ -16,7 +16,7 @@ export const TEMPLATE_ROLE_NODE: Node<IAMRoleNodeData> = {
     handles: [
       { id: Position.Top, type: 'source', position: Position.Top },
       { id: Position.Right, type: 'source', position: Position.Right },
-      { id: Position.Bottom, type: 'source', position: Position.Bottom },
+      { id: Position.Bottom, type: 'target', position: Position.Bottom },
       { id: Position.Left, type: 'source', position: Position.Left },
     ] as HandleProps[],
     image: IAMNodeImage.Role,

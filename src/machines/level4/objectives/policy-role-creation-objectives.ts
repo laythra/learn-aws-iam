@@ -1,5 +1,4 @@
 import { FinishEventMap } from '../types/finish-event-enums';
-import { IAMPolicyRoleCreationObjective } from '@/machines/types';
+import { IAMPolicyCreationObjective } from '@/machines/types';
 
-export const POLICY_ROLE_CREATION_OBJECTIVES: IAMPolicyRoleCreationObjective<FinishEventMap>[][] =
-  [];
+export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [];

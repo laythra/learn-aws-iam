@@ -19,6 +19,7 @@ to your IAM \`users\`, \`groups\`, or \`roles\`.
 
 const POPUP_MSG_3 = `
 Policies whether **AWS Managed** or **Customer Managed** have the same structure:
+
 * **Effect**: Whether the policy allows or denies the access
 * **Action**: The specific actions that the policy allows or denies
 * **Resource**: The resources to which the policy applies

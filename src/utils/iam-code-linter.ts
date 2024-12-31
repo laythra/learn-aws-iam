@@ -5,8 +5,8 @@ import _ from 'lodash';
 
 import {
   BaseFinishEventMap,
-  IAMPolicyRoleCreationObjective,
-  IAMRoleCreationObject,
+  IAMPolicyCreationObjective,
+  IAMRoleCreationObjective,
 } from '@/machines/types';
 import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
 import iamRoleTurstPolicySchema from '@/schemas/aws-iam-role-trust-policy-schema.json';
@@ -77,25 +77,25 @@ export const isJSONValid = (docString: string, validateFunction: ValidateFunctio
 // TODO: This helper script surely shouldn't understand the context of policy/role objectives
 // Move this elsewhere
 export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
-  policyRoleObjectives: IAMPolicyRoleCreationObjective<TFinishEventMap>[],
+  policyObjectives: IAMPolicyCreationObjective<TFinishEventMap>[],
   docString: string
-): IAMPolicyRoleCreationObjective<TFinishEventMap> | undefined => {
-  policyRoleObjectives = _.orderBy(policyRoleObjectives, 'validate_inside_code_editor', 'desc');
+): IAMPolicyCreationObjective<TFinishEventMap> | undefined => {
+  policyObjectives = _.orderBy(policyObjectives, 'validate_inside_code_editor', 'desc');
 
-  return policyRoleObjectives.find(policyRoleObjective =>
+  return policyObjectives.find(policyObjective =>
     isJSONValid(
       docString,
-      policyRoleObjective.validate_function ?? GENERIC_VALIDATION_FNS[policyRoleObjective.entity]
+      policyObjective.validate_function ?? GENERIC_VALIDATION_FNS[policyObjective.entity]
     )
   );
 };
 
 // TODO: The feels like it doesn't belong here. Move it
 export const findAnyValidRole = <TFinishEventMap extends BaseFinishEventMap>(
-  roleObjectives: IAMRoleCreationObject<TFinishEventMap>[],
+  roleObjectives: IAMRoleCreationObjective<TFinishEventMap>[],
   docString: string,
   attachedPolicies: string[]
-): IAMPolicyRoleCreationObjective<TFinishEventMap> | undefined => {
+): IAMRoleCreationObjective<TFinishEventMap> | undefined => {
   roleObjectives = _.orderBy(roleObjectives, 'validate_inside_code_editor', 'desc');
 
   return roleObjectives.find(

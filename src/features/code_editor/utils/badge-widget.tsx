@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Badge, ChakraProvider } from '@chakra-ui/react';
 import { StateEffect, StateField } from '@codemirror/state';
 import { EditorView, Decoration, DecorationSet, WidgetType } from '@codemirror/view';
@@ -70,6 +68,7 @@ type Json = { [key: string]: Json } | Json[] | string | number | boolean | objec
 function getLineNumberForPath(json: Json, path: string): number | null {
   const resolvedValue = _.get(json, path);
   if (!resolvedValue) {
+    throw new Error('Path does not exist');
     return null;
   }
 
@@ -121,6 +120,7 @@ export const InitializeBadgeWidgets = (
   if (!badges.length) return;
 
   const effects = _.flatMap(badges, badge => {
+    console.log('Initializing badge widget for badge: ', badge);
     const lineNumber = getLineNumberForPath(code, badge.path);
     if (lineNumber === null) return [];
 

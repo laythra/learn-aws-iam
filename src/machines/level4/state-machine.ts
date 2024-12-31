@@ -2,7 +2,7 @@ import { assign } from 'xstate';
 
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
-import { POLICY_ROLE_EDIT_OBJECTIVES } from './objectives/policy-role-edit-objectives';
+import { POLICY_EDIT_OBJECTIVES } from './objectives/policy-role-edit-objectives';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import { FinishEventMap, NodeEditFinishEvent } from './types/finish-event-enums';
@@ -19,6 +19,7 @@ import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
+  [],
   [],
   []
 ).createMachine({
@@ -52,14 +53,14 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       x: theme.sizes.iamNodeWidthInPixels / 2,
       y: theme.sizes.iamNodeWidthInPixels / 2,
     },
-    policy_role_objectives: [],
-    policy_role_edit_objectives: [],
+    policy_creation_objectives: [],
+    policy_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
   },
   on: {
-    ATTACH_POLICY_TO_ENTITY: {
+    [StatefulStateMachineEvent.AttachPolicyToEntity]: {
       actions: [
         {
           type: 'attach_policy_to_entity',
@@ -191,7 +192,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       entry: assign({
         nodes: INITIAL_IN_LEVEL_NODES,
         edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
-        policy_role_edit_objectives: POLICY_ROLE_EDIT_OBJECTIVES[0],
+        policy_edit_objectives: POLICY_EDIT_OBJECTIVES[0],
       }),
       states: {
         fix_developer_policy: {

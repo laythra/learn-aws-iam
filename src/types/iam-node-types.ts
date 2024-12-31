@@ -21,6 +21,7 @@ export enum IAMNodeResourceEntity {
   DynamoDBTable = 'DynamoDB Table',
   EC2Instance = 'EC2 Instance',
   CloudFront = 'CloudFront CDN',
+  Billing = 'Billing and Cost Management',
 }
 
 export enum IAMNodeImage {
@@ -32,6 +33,7 @@ export enum IAMNodeImage {
   Server = 'server',
   CDN = 'cdn',
   Role = 'role',
+  Billing = 'billing',
 }
 
 export type CreatableIAMNodeEntity =
@@ -40,7 +42,7 @@ export type CreatableIAMNodeEntity =
   | IAMNodeEntity.Policy
   | IAMNodeEntity.Role;
 
-export interface PolicyRoleGrantedAccess {
+export interface PolicyGrantedAccess {
   readonly target_node: string;
   readonly access_level: AccessLevel;
   readonly target_handle: string;
@@ -72,6 +74,7 @@ interface IAMNodeData {
 export interface IAMUserNodeData extends IAMNodeData {
   entity: IAMNodeEntity.User;
   associated_policies: string[];
+  associated_roles: string[];
 }
 
 export interface IAMGroupNodeData extends IAMNodeData {
@@ -85,7 +88,7 @@ export interface IAMPolicyNodeData extends IAMNodeData {
   editable: boolean;
   unnecessary_policy?: boolean;
   associated_users: string[];
-  granted_accesses: PolicyRoleGrantedAccess[];
+  granted_accesses: PolicyGrantedAccess[];
   content: string;
 }
 
@@ -100,6 +103,7 @@ export interface IAMRoleNodeData extends IAMNodeData {
 export interface IAMResourceNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Resource;
   resource_type: IAMNodeResourceEntity;
+  associated_roles: string[];
 }
 
 export type IAMAnyNodeData =

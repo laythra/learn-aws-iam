@@ -1,142 +1,96 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
-import { json } from '@codemirror/lang-json';
-import { linter } from '@codemirror/lint';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
-import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
+import { useCodeEditor } from '../../hooks/useCodeEditor';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
-import { badgeExtension, InitializeBadgeWidgets } from '../../utils/badge-widget';
-import { limitLinesFilter } from '../../utils/code-editor-filters';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { BaseFinishEventMap, IAMPolicyRoleCreationObjective } from '@/machines/types';
-import { IAMNodeEntity } from '@/types';
 import {
-  findAnyValidPolicy,
-  findAnyValidRole,
-  getLintingErrors,
-  isJSONValid,
-} from '@/utils/iam-code-linter';
-import { GENERIC_VALIDATION_FNS } from '@/utils/iam-code-linter';
+  BaseFinishEventMap,
+  IAMPolicyCreationObjective,
+  IAMRoleCreationObjective,
+} from '@/machines/types';
+import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
+import { findAnyValidPolicy, findAnyValidRole } from '@/utils/iam-code-linter';
 
 interface CodeEditorCreateProps {
   nodeId: string;
+  selectedIAMEntity: IAMScriptableEntity;
 }
 
 const NO_MATCHING_POLICY_WARNING = 'This policy does not achieve any of the objectives.';
 const NO_MATCHING_ROLE_WARNING = 'This role does not achieve any of the objectives.';
 
-export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({ nodeId }) => {
-  const [policyRoleObjectives, roleObjectives] = LevelsProgressionContext.useSelector(
-    state => [state.context.policy_role_objectives, state.context.role_creation_objectives],
-    _.isEqual
-  );
-  const { selectedIAMEntity, content, selectedPolicies } = useSelector(
-    codeEditorStateStore,
-    state => _.pick(state.context, ['selectedIAMEntity', 'content', 'selectedPolicies']),
+export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
+  nodeId,
+  selectedIAMEntity,
+}) => {
+  const [policyCreationObjectives, roleCreationObjectives] = LevelsProgressionContext.useSelector(
+    state => [state.context.policy_creation_objectives, state.context.role_creation_objectives],
     _.isEqual
   );
 
   const editorView = useRef<EditorView | null>(null);
 
-  const objectiveToValidate = _.find<IAMPolicyRoleCreationObjective<BaseFinishEventMap>>(
-    policyRoleObjectives,
-    'validate_inside_code_editor'
-  );
+  let objectiveToValidate:
+    | IAMPolicyCreationObjective<BaseFinishEventMap>
+    | IAMRoleCreationObjective<BaseFinishEventMap>
+    | undefined;
 
-  const initialCode = objectiveToValidate?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
-  const validateFunction =
-    objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity];
+  if (selectedIAMEntity === IAMNodeEntity.Policy) {
+    objectiveToValidate = policyCreationObjectives.find(
+      objective => objective.validate_inside_code_editor
+    );
+  } else {
+    console.log('Attempting to find a role objective to validate');
+    objectiveToValidate = roleCreationObjectives.find(
+      objective => objective.validate_inside_code_editor
+    );
+    debugger;
+  }
+
+  const initialContent = objectiveToValidate?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
 
   const getWarnings = (): string[] => {
-    const warnings =
-      selectedIAMEntity == IAMNodeEntity.Policy
-        ? [NO_MATCHING_POLICY_WARNING]
-        : [NO_MATCHING_ROLE_WARNING];
-
-    if (objectiveToValidate) {
-      return isJSONValid(editorView.current!.state.doc.toString(), validateFunction)
-        ? []
-        : warnings;
-    }
-
     if (selectedIAMEntity === IAMNodeEntity.Policy) {
       const anyValidPolicy = findAnyValidPolicy<BaseFinishEventMap>(
-        policyRoleObjectives,
+        policyCreationObjectives,
         editorView.current!.state.doc.toString()
       );
 
-      return anyValidPolicy ? [] : warnings;
+      return anyValidPolicy ? [] : [NO_MATCHING_POLICY_WARNING];
     } else {
       const anyValidPolicy = findAnyValidRole<BaseFinishEventMap>(
-        roleObjectives,
+        roleCreationObjectives,
         editorView.current!.state.doc.toString(),
-        selectedPolicies
+        []
       );
 
-      return anyValidPolicy ? [] : warnings;
+      return anyValidPolicy ? [] : [NO_MATCHING_ROLE_WARNING];
     }
   };
 
-  const setErrorsAndWarnings = (): void => {
-    if (!editorView.current) return;
-
-    const lintingErrors = getLintingErrors(
-      editorView.current,
-      GENERIC_VALIDATION_FNS[IAMNodeEntity.Policy]
-    );
-
-    const warnings = getWarnings();
-
-    codeEditorStateStore.send({
-      type: 'setErrorsAndWarnings',
-      errors: lintingErrors,
-      warnings,
-      nodeId: nodeId,
-    });
-  };
-
-  const validateChange = _.debounce((): void => {
-    setErrorsAndWarnings();
-    codeEditorStateStore.send({ type: 'setIsValidating', payload: false });
-  }, 500);
-
-  useEffect(() => {
-    setErrorsAndWarnings();
-  }, [selectedIAMEntity]);
-
-  const onCreateEditor = (view: EditorView): void => {
-    editorView.current = view;
-
-    InitializeBadgeWidgets(view, objectiveToValidate?.help_badges ?? [], initialCode);
-    validateChange();
-
-    // TODO: Include a pre-computed jsonized version of the initial code in the objective itself
-    // notice how many times we're doing JSON.stringify for the initial content throughout the codebase
-    codeEditorStateStore.send({
-      type: 'setContent',
-      content: JSON.stringify(initialCode, null, 2),
-      nodeId,
-    });
-  };
-
-  const extensions = [
-    json(),
-    linter(view => getLintingErrors(view, validateFunction)),
-    badgeExtension,
-  ];
-
-  if (objectiveToValidate?.limit_new_lines) {
-    extensions.push(limitLinesFilter(JSON.stringify(initialCode, null, 2)));
-  }
+  const { onCreateEditor, validateChange, getContent, extensions } = useCodeEditor({
+    nodeId,
+    editorView,
+    getWarnings,
+    objectiveToValidate,
+    initialContent: initialContent,
+  });
 
   return (
     <CodeMirror
-      value={content[nodeId] ?? JSON.stringify(initialCode, null, 2)}
+      value={getContent() ?? JSON.stringify(initialContent, null, 2)}
       onChange={newContent => {
-        codeEditorStateStore.send({ type: 'setContent', content: newContent, nodeId });
+        codeEditorStateStore.send({
+          type: 'setContent',
+          content: newContent,
+          nodeId,
+          entity: selectedIAMEntity,
+        });
+
         validateChange();
       }}
       height='200px'

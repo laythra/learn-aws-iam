@@ -20,6 +20,7 @@ const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
     ] as HandleProps[],
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,
+    associated_roles: [],
   },
 };
 

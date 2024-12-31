@@ -1,3 +1,4 @@
+// TODO: REMOVE AND STOP USING THIS FILE
 /**
  * This file contains hashmaps that represent the associations between nodes
  * These enums are specific to Level 4.

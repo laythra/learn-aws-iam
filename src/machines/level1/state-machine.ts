@@ -19,6 +19,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
   [],
+  [],
   []
 ).createMachine({
   id: 'level1_state_machine',
@@ -37,9 +38,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     edges: [],
     level_objectives: LEVEL_OBJECTIVES,
     fixed_iam_nodes_positions: {},
-    policy_role_objectives: [],
+    policy_creation_objectives: [],
     edges_connection_objectives: EDGE_CONNECTION_OBJECTIVES,
-    policy_role_edit_objectives: [],
+    policy_edit_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
   },
@@ -85,7 +86,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         side_panel_open: ({ context }) => !context.side_panel_open,
       }),
     },
-    ATTACH_POLICY_TO_ENTITY: {
+    [StatefulStateMachineEvent.AttachPolicyToEntity]: {
       actions: [
         {
           type: 'attach_policy_to_entity',

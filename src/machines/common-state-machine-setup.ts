@@ -13,10 +13,13 @@ import {
   attachUserToGroup,
   updateUserToGroupConnectionEdges,
   createIAMRoleNode,
+  attachRoleToEntity,
+  updateRoleToEntityConnectionEdges,
 } from './utils/common-state-machine-actions';
 import type {
   BaseFinishEventMap,
   EdgeConnectionObjective,
+  IAMRoleCreationObjective,
   PopoverTutorialMessage,
   PopupTutorialMessage,
 } from '@/machines/types';
@@ -24,13 +27,14 @@ import type {
   GenericContext,
   GenericEventData,
   LevelObjective,
-  IAMPolicyRoleCreationObjective,
+  IAMPolicyCreationObjective,
 } from '@/machines/types';
 import {
   IAMAnyNodeData,
   IAMGroupNodeData,
   IAMNodeEntity,
   IAMPolicyNodeData,
+  IAMRoleNodeData,
   IAMUserNodeData,
 } from '@/types';
 
@@ -48,7 +52,7 @@ import {
  * @template TFinishEventMap - Defines the event finish type for each objective type, will be passed to the generic context
  * @param popoverTutorialMessages - List of popover tutorial messages
  * @param popupTutorialMessages - List of popup tutorial messages
- * @param policyRoleCreationObjectives - List of policy role creation objectives
+ * @param policyCreationObjectives - List of policy role creation objectives
  */
 
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -58,7 +62,8 @@ export const createStateMachineSetup = <
 >(
   popoverTutorialMessages: PopoverTutorialMessage[],
   popupTutorialMessages: PopupTutorialMessage[],
-  policyRoleCreationObjectives: IAMPolicyRoleCreationObjective<TFinishEventMap>[][],
+  policyCreationObjectives: IAMPolicyCreationObjective<TFinishEventMap>[][],
+  roleCreationObjectives: IAMRoleCreationObjective<TFinishEventMap>[][],
   edgeConnectionObjectives: EdgeConnectionObjective<TFinishEventMap>[][]
 ) => {
   return setup({
@@ -74,17 +79,41 @@ export const createStateMachineSetup = <
             entityNode,
             policyNode,
           }: {
-            entityNode: Node<IAMUserNodeData | IAMGroupNodeData>;
+            entityNode: Node<IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData>;
             policyNode: Node<IAMPolicyNodeData>;
           }
         ) => {
           const updatedNodes = attachPolicyToEntity(context, policyNode, entityNode);
+          const updatedNode = updatedNodes.find(node => node.id === entityNode.id)!;
           const [updatedEdges, sideEffectsEvents] = updatePolicyToEntityConnectionEdges<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, policyNode, entityNode);
+          >(context, policyNode, updatedNode);
 
           enqueue.assign({ nodes: updatedNodes, edges: _.uniqBy(updatedEdges, 'id') });
+          sideEffectsEvents.forEach(event => {
+            enqueue.raise({ type: event });
+          });
+        }
+      ),
+      attach_role_to_user: enqueueActions(
+        (
+          { context, enqueue },
+          {
+            userNode,
+            roleNode,
+          }: {
+            userNode: Node<IAMUserNodeData>;
+            roleNode: Node<IAMRoleNodeData>;
+          }
+        ) => {
+          const updatedNodes = attachRoleToEntity(context, roleNode, userNode);
+          const [updatedEdges, sideEffectsEvents] = updateRoleToEntityConnectionEdges<
+            TLevelObjectiveID,
+            TFinishEventMap
+          >(context, roleNode, userNode);
+
+          enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
           sideEffectsEvents.forEach(event => {
             enqueue.raise({ type: event });
           });
@@ -188,11 +217,17 @@ export const createStateMachineSetup = <
         next_popup_index: ({ context }) => context.next_popup_index + 1,
         show_popovers: false,
       }),
-      next_policy_role_objectives: assign({
-        policy_role_objectives: ({ context }) =>
-          policyRoleCreationObjectives[context.next_policy_role_objectives_index ?? 0],
-        next_policy_role_objectives_index: ({ context }) =>
-          (context.next_policy_role_objectives_index ?? 0) + 1,
+      next_policy_creation_objectives: assign({
+        policy_creation_objectives: ({ context }) =>
+          policyCreationObjectives[context.next_policy_creation_objectives_index ?? 0],
+        next_policy_creation_objectives_index: ({ context }) =>
+          (context.next_policy_creation_objectives_index ?? 0) + 1,
+      }),
+      next_role_creation_objectives: assign({
+        role_creation_objectives: ({ context }) =>
+          roleCreationObjectives[context.next_role_creation_objectives_index ?? 0],
+        next_role_creation_objectives_index: ({ context }) =>
+          (context.next_role_creation_objectives_index ?? 0) + 1,
       }),
       hide_popups: assign({ show_popups: false }),
       hide_popovers: assign({ show_popovers: false }),

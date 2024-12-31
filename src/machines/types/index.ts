@@ -6,8 +6,9 @@ import type {
   AccessLevel,
   CreatableIAMNodeEntity,
   IAMPolicyNodeData,
+  IAMRoleNodeData,
   IAMScriptableEntity,
-  PolicyRoleGrantedAccess,
+  PolicyGrantedAccess,
 } from '@/types';
 import {
   IAMAnyNodeData,
@@ -28,8 +29,10 @@ export type HelpBadge = {
 };
 
 export enum ObjectiveType {
-  POLICY_ROLE_CREATION_OBJECTIVE = 'POLICY_ROLE_CREATION_OBJECTIVE',
-  POLICY_ROLE_EDIT_OBJECTIVE = 'POLICY_ROLE_EDIT_OBJECTIVE',
+  POLICY_CREATION_OBJECTIVE = 'POLICY_CREATION_OBJECTIVE',
+  POLICY_EDIT_OBJECTIVE = 'POLICY_EDIT_OBJECTIVE',
+  TRUST_POLICY_EDIT_OBJECTIVE = 'TRUST_POLICY_EDIT_OBJECTIVE',
+  ROLE_CREATION_OBJECTIVE = 'ROLE_CREATION_OBJECTIVE',
   IAM_USER_GROUP_CREATION_OBJECTIVE = 'IAM_USER_GROUP_CREATION_OBJECTIVE',
   EDGE_CONNECTION_OBJECTIVE = 'EDGE_CONNECTION_OBJECTIVE',
   LEVEL_OBJECTIVE = 'LEVEL_OBJECTIVE',
@@ -38,37 +41,38 @@ export enum ObjectiveType {
 export type BaseFinishEventMap = Record<ObjectiveType, string>;
 
 export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
-  iam_user_template?: Node<IAMUserNodeData>;
+  edges: Edge[];
+  edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
+  final_edges?: Edge[];
+  fixed_iam_nodes_positions?: { [key: string]: XYPosition };
   iam_group_template?: Node<IAMGroupNodeData>;
   iam_policy_template?: Node<IAMPolicyNodeData>;
-  level_title: string;
+  iam_user_template?: Node<IAMUserNodeData>;
   level_description: string;
+  level_finished?: boolean;
   level_number: number;
+  level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
+  level_title: string;
+  metadata_keys: { [key: string]: string }; // Make it stricter
+  next_edges_connection_objectives_index?: number;
+  next_iam_node_default_position?: XYPosition;
+  next_iam_node_id?: { [k in CreatableIAMNodeEntity]: number };
+  next_level_objectives_list_index?: number;
+  next_policy_creation_objectives_index?: number;
+  next_role_creation_objectives_index?: number;
   next_popover_index: number;
   next_popup_index: number;
-  state_name: string;
-  next_iam_node_id?: { [k in CreatableIAMNodeEntity]: number };
   nodes: Node<IAMAnyNodeData>[];
-  edges: Edge[];
-  final_edges?: Edge[];
-  show_popovers: boolean;
-  show_popups: boolean;
-  metadata_keys: { [key: string]: string }; // Make it stricter
-  next_iam_node_default_position?: XYPosition;
-  fixed_iam_nodes_positions?: { [key: string]: XYPosition };
+  policy_creation_objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[];
+  policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  next_policy_role_objectives_index?: number;
-  next_edges_connection_objectives_index?: number;
-  level_finished?: boolean;
+  role_creation_objectives: IAMRoleCreationObjective<TBaseFinishEventMap>[];
+  show_popovers: boolean;
+  show_popups: boolean;
   side_panel_open?: boolean;
-  level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
-  policy_role_objectives: IAMPolicyRoleCreationObjective<TBaseFinishEventMap>[];
-  role_creation_objectives: IAMRoleCreationObject<TBaseFinishEventMap>[];
-  policy_role_edit_objectives: IAMPolicyRoleEditObjective<TBaseFinishEventMap>[];
-  edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
+  state_name: string;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
-  next_level_objectives_list_index?: number;
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -117,14 +121,19 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       targetNode: Node<IAMUserNodeData>;
     }
   | {
-      type: 'ATTACH_POLICY_TO_ENTITY';
+      type: StatefulStateMachineEvent.AttachPolicyToEntity;
       sourceNode: Node<IAMPolicyNodeData>;
-      targetNode: Node<IAMUserNodeData | IAMGroupNodeData>;
+      targetNode: Node<IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData>;
     }
   | {
       type: 'ATTACH_USER_TO_GROUP';
       sourceNode: Node<IAMUserNodeData>;
       targetNode: Node<IAMGroupNodeData>;
+    }
+  | {
+      type: StatefulStateMachineEvent.AttachRoleToUserNode;
+      sourceNode: Node<IAMRoleNodeData>;
+      targetNode: Node<IAMUserNodeData>;
     }
   | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage };
 
@@ -174,29 +183,39 @@ export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> 
   readonly established_edge_target_handle?: string;
 };
 
-export interface IAMPolicyRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
-  readonly type: ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE;
+// TODO: Make the following interface only responsible for creating Policy creation objectives
+export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
+  readonly type: ObjectiveType.POLICY_CREATION_OBJECTIVE;
   readonly entity_id: string;
   readonly entity: IAMScriptableEntity;
   readonly json_schema: Schema;
   readonly description?: string;
   readonly initial_code: object;
-  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE];
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE];
   readonly validate_inside_code_editor: boolean;
-  readonly granted_accesses: PolicyRoleGrantedAccess[];
+  readonly granted_accesses: PolicyGrantedAccess[];
   readonly validate_function?: ValidateFunction;
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
 }
 
-export interface IAMRoleCreationObject<TFinishEventMap extends BaseFinishEventMap>
-  extends IAMPolicyRoleCreationObjective<TFinishEventMap> {
+export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
+  readonly type: ObjectiveType.ROLE_CREATION_OBJECTIVE;
+  readonly entity_id: string;
+  readonly entity: IAMNodeEntity.Role;
+  readonly json_schema: Schema;
+  readonly initial_code: object;
+  readonly validate_inside_code_editor: boolean;
   readonly required_policies: string[];
   readonly required_principles: string[];
+  readonly validate_function?: ValidateFunction;
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE];
+  readonly help_badges?: HelpBadge[];
+  readonly limit_new_lines?: boolean;
 }
 
-export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEventMap> {
-  readonly type: ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE;
+export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {
+  readonly type: ObjectiveType.POLICY_EDIT_OBJECTIVE;
   readonly entity_id: string;
   readonly entity: IAMScriptableEntity;
   readonly json_schema: Schema;
@@ -208,7 +227,7 @@ export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEv
    */
   readonly description?: string;
 
-  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE];
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_EDIT_OBJECTIVE];
   readonly validate_function: ValidateFunction;
 
   /**
@@ -220,6 +239,26 @@ export interface IAMPolicyRoleEditObjective<TFinishEventMap extends BaseFinishEv
    * Resources to revoke from the users/groups associated with the IAM Policy/Role.
    */
   readonly resources_to_revoke: string[];
+  readonly help_badges?: HelpBadge[];
+  readonly limit_new_lines?: boolean;
+}
+
+export interface IAMTrustPolicyEditObject<TFinishEventMap extends BaseFinishEventMap> {
+  readonly type: ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE;
+  readonly entity_id: string;
+  readonly entity: IAMNodeEntity.Role;
+  readonly json_schema: Schema;
+  readonly allow_new_lines?: boolean;
+
+  /**
+   * Optional description for the IAM Policy/Role Edit Objective.
+   * Used to help the user understand what they need to do when editing the IAM Policy/Role.
+   */
+  readonly description?: string;
+
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE];
+  readonly validate_function: ValidateFunction;
+
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
 }

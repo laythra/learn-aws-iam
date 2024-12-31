@@ -15,8 +15,10 @@ export enum UserGroupCreationFinishEvent {
 
 export interface FinishEventMap extends BaseFinishEventMap {
   [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: EdgeConnectionFinishEvent;
-  [ObjectiveType.POLICY_ROLE_CREATION_OBJECTIVE]: never;
-  [ObjectiveType.POLICY_ROLE_EDIT_OBJECTIVE]: never;
+  [ObjectiveType.POLICY_CREATION_OBJECTIVE]: never;
+  [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
   [ObjectiveType.LEVEL_OBJECTIVE]: never;
   [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: UserGroupCreationFinishEvent;
+  [ObjectiveType.ROLE_CREATION_OBJECTIVE]: never;
+  [ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE]: never;
 }

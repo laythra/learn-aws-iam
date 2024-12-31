@@ -5,25 +5,29 @@ import _ from 'lodash';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import codeEditorPopupStore from '@/stores/code-editor-popup-store';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface CreateSubmitButtonProps {
   nodeId: string;
+  selectedIAMEntity: IAMScriptableEntity;
 }
 
-export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({ nodeId }) => {
+export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
+  nodeId,
+  selectedIAMEntity,
+}) => {
   const levelActor = LevelsProgressionContext.useActorRef();
-  const { errors, isValidating, selectedIAMEntity } = useSelector(
+  const { errors, isValidating } = useSelector(
     codeEditorStateStore,
-    state => _.pick(state.context, ['errors', 'isValidating', 'selectedIAMEntity']),
+    state => _.pick(state.context, ['errors', 'isValidating']),
     _.isEqual
   );
 
-  const isButtonDisabled = !_.isEmpty(errors[nodeId]);
+  const isButtonDisabled = !_.isEmpty(errors[selectedIAMEntity][nodeId]);
 
   const submit = (): void => {
-    const content = codeEditorStateStore.getSnapshot().context.content[nodeId];
+    const content = codeEditorStateStore.getSnapshot().context.content[selectedIAMEntity][nodeId];
 
     if (selectedIAMEntity == IAMNodeEntity.Policy) {
       levelActor.send({
