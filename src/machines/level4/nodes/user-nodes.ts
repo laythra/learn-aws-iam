@@ -35,6 +35,7 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNodeData>[] = [
   },
 ];
 
+// TODO: Get rid of defining association in this way, and define them manually in the above array instead
 export const INITIAL_IN_LEVEL_USER_NODES: Node<IAMUserNodeData>[] = attachPoliciesToUsers(
   IN_LEVEL_USER_NODES.map(createUserNode),
   userToPolicyAssocations

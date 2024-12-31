@@ -60,7 +60,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     role_creation_objectives: [],
   },
   on: {
-    ATTACH_POLICY_TO_ENTITY: {
+    [StatefulStateMachineEvent.AttachPolicyToEntity]: {
       actions: [
         {
           type: 'attach_policy_to_entity',

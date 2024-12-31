@@ -121,9 +121,9 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       targetNode: Node<IAMUserNodeData>;
     }
   | {
-      type: 'ATTACH_POLICY_TO_ENTITY';
+      type: StatefulStateMachineEvent.AttachPolicyToEntity;
       sourceNode: Node<IAMPolicyNodeData>;
-      targetNode: Node<IAMUserNodeData | IAMGroupNodeData>;
+      targetNode: Node<IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData>;
     }
   | {
       type: 'ATTACH_USER_TO_GROUP';

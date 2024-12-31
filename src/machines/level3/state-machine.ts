@@ -116,7 +116,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         side_panel_open: ({ context }) => !context.side_panel_open,
       }),
     },
-    ATTACH_POLICY_TO_ENTITY: {
+    [StatefulStateMachineEvent.AttachPolicyToEntity]: {
       actions: [
         {
           type: 'attach_policy_to_entity',

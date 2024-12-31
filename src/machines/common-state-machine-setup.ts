@@ -79,15 +79,16 @@ export const createStateMachineSetup = <
             entityNode,
             policyNode,
           }: {
-            entityNode: Node<IAMUserNodeData | IAMGroupNodeData>;
+            entityNode: Node<IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData>;
             policyNode: Node<IAMPolicyNodeData>;
           }
         ) => {
           const updatedNodes = attachPolicyToEntity(context, policyNode, entityNode);
+          const updatedNode = updatedNodes.find(node => node.id === entityNode.id)!;
           const [updatedEdges, sideEffectsEvents] = updatePolicyToEntityConnectionEdges<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, policyNode, entityNode);
+          >(context, policyNode, updatedNode);
 
           enqueue.assign({ nodes: updatedNodes, edges: _.uniqBy(updatedEdges, 'id') });
           sideEffectsEvents.forEach(event => {
@@ -106,7 +107,6 @@ export const createStateMachineSetup = <
             roleNode: Node<IAMRoleNodeData>;
           }
         ) => {
-          debugger;
           const updatedNodes = attachRoleToEntity(context, roleNode, userNode);
           const [updatedEdges, sideEffectsEvents] = updateRoleToEntityConnectionEdges<
             TLevelObjectiveID,
