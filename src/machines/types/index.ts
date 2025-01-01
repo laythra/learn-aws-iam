@@ -105,7 +105,6 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
   | {
       type: StatefulStateMachineEvent.ADDIAMRoleNode;
       doc_string: string;
-      associated_policies: string[];
     }
   | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string }
   | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
@@ -131,7 +130,7 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       targetNode: Node<IAMGroupNodeData>;
     }
   | {
-      type: StatefulStateMachineEvent.AttachRoleToUserNode;
+      type: StatefulStateMachineEvent.AttachRoleToEntity;
       sourceNode: Node<IAMRoleNodeData>;
       targetNode: Node<IAMUserNodeData>;
     }

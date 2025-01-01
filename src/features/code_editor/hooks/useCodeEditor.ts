@@ -77,10 +77,6 @@ export function useCodeEditor({
   useEffect(() => {
     if (editorView.current) {
       validateChange();
-      console.log(
-        "We're about to initialize the badge widgets for: ",
-        objectiveToValidate?.help_badges
-      );
       InitializeBadgeWidgets(
         editorView.current,
         objectiveToValidate?.help_badges ?? [],

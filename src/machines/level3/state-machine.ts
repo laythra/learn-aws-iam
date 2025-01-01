@@ -57,17 +57,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
-    [StatefulStateMachineEvent.ADDIAMRoleNode]: {
-      actions: [
-        {
-          type: 'add_role_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            policies: event.associated_policies,
-          }),
-        },
-      ],
-    },
     ADD_IAM_POLICY_NODE: {
       actions: [
         {

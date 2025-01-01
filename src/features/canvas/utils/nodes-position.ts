@@ -14,7 +14,7 @@ const VALID_INITIAL_POSITIONS = [
 const BETWEEN_NODES_SPACING = 20;
 
 /**
- * Returns the center coordinates of the viewport, it takes into account the navbar height and the side panel width
+ * Returns the center coordinates of the viewport, it takes into account the navbar's height and the side panel's width
  * @param viewport The viewport object from react-flow
  * @param sidePanelWidth The width of the side panel
  * @returns The center coordinates of the viewport
