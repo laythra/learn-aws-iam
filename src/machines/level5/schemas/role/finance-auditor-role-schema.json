@@ -1,0 +1,60 @@
+{
+  "$id": "finance-auditor-role-schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IAM Role Trust Policy",
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ],
+      "description": "The version of the IAM policy language."
+    },
+    "Statement": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "Effect",
+          "Principal",
+          "Action"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "enum": [
+              "Allow"
+            ]
+          },
+          "Principal": {
+            "type": "object",
+            "required": [
+              "AWS"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "AWS": {
+                "type": "string",
+                "enum": [
+                  "arn:aws:iam::123456789012:laith"
+                ]
+              }
+            }
+          },
+          "Action": {
+            "type": "string",
+            "enum": [
+              "sts:AssumeRole"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
