@@ -84,7 +84,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
       context.content = { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} };
     },
     selectPolicy: (context: CodeEditorState, event: { policyId: string }) => {
-      context.selectedPolicies = [...context.selectedPolicies, event.policyId];
+      context.selectedPolicies.push(event.policyId);
     },
     deselectPolicy: (context: CodeEditorState, event: { policyId: string }) => {
       context.selectedPolicies = context.selectedPolicies.filter(

@@ -62,8 +62,8 @@ export function useCodeEditor({
 
     codeEditorStateStore.send({
       type: 'setErrorsAndWarnings',
-      errors: lintingErrors,
       warnings: getWarnings(),
+      errors: lintingErrors,
       nodeId,
       entity: selectedIAMEntity,
     });

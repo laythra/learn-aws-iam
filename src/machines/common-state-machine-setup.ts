@@ -111,7 +111,6 @@ export const createStateMachineSetup = <
           const updatedNodes = attachRoleToEntity(context, roleNode, targetNode);
           const updatedRoleNode = updatedNodes.find(node => node.id === roleNode.id)!;
           const updatedTargetNode = updatedNodes.find(node => node.id === targetNode.id)!;
-          debugger;
 
           const [updatedEdges, sideEffectsEvents] = updateRoleToEntityConnectionEdges<
             TLevelObjectiveID,

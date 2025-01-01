@@ -9,6 +9,7 @@ import { withPopover } from '@/decorators/withPopover';
 import { CodeEditor } from '@/features/code_editor';
 import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { PopoverElementID } from '@/theme';
+import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface NewEntityButtonProps {}
 
@@ -27,7 +28,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
 
   const openCodeEditorAndSendEvent = (): void => {
     codeEditorPopupStore.send({ type: 'open', mode: CodeEditorMode.Create });
-    levelActor.send({ type: 'CREATE_POLICY_POPUP_OPENED' });
+    levelActor.send({ type: StatelessStateMachineEvent.CreateIAMPolicyRoleWindowOpened });
   };
 
   return (

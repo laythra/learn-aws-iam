@@ -17,6 +17,7 @@
     },
     "Statement": {
       "type": "array",
+      "minItems": 1,
       "items": {
         "type": "object",
         "required": [
@@ -40,8 +41,7 @@
             "type": "string",
             "enum": [
               "sts:AssumeRole"
-            ],
-            "description": "The action permitted by the policy."
+            ]
           },
           "Condition": {
             "$ref": "shared-condition-schema.json#/definitions/Condition"

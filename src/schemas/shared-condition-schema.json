@@ -51,6 +51,10 @@
         ]
       }
     },
+    "service-principal": {
+      "type": "string",
+      "pattern": "^[a-z0-9\\-]+\\.amazonaws\\.com$"
+    },
     "Statement": {
       "type": "object",
       "allOf": [
@@ -143,6 +147,9 @@
         {
           "type": "object",
           "properties": {
+            "Service": {
+              "$ref": "#/definitions/service-principal"
+            },
             "AWS": {
               "anyOf": [
                 {
