@@ -1,0 +1,61 @@
+{
+  "$id": "ec2-role-schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IAM Role Trust Policy",
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ]
+    },
+    "Statement": {
+      "minItems": 1,
+      "maxItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "Effect",
+          "Principal",
+          "Action"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "enum": [
+              "Allow"
+            ]
+          },
+          "Principal": {
+            "type": "object",
+            "required": [
+              "Service"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "Service": {
+                "type": "string",
+                "enum": [
+                  "ec2.amazonaws.com"
+                ]
+              }
+            }
+          },
+          "Action": {
+            "type": "string",
+            "enum": [
+              "sts:AssumeRole"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

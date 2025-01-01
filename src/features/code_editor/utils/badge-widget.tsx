@@ -120,7 +120,6 @@ export const InitializeBadgeWidgets = (
   if (!badges.length) return;
 
   const effects = _.flatMap(badges, badge => {
-    console.log('Initializing badge widget for badge: ', badge);
     const lineNumber = getLineNumberForPath(code, badge.path);
     if (lineNumber === null) return [];
 
