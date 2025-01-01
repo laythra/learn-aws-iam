@@ -70,7 +70,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
             ) : (
               <CodeEditorEdit nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
             )}
-            {selectedIAMEntity === IAMNodeEntity.Role && <RolePermissionsList />}
+            {/* {selectedIAMEntity === IAMNodeEntity.Role && <RolePermissionsList />} */}
             <CodeEditorErrorsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
             {_.isEmpty(errors[selectedIAMEntity][nodeId]) && (
               <CodeEditorWarningsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />

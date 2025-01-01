@@ -531,28 +531,23 @@ export function createIAMUserGroupNode<
 
 export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  docString: string,
-  attachedPolicies: string[]
+  docString: string
 ): [Node[], TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][]] {
-  const targetValidPolicy = findAnyValidRole(
-    context.role_creation_objectives,
-    docString,
-    attachedPolicies
-  );
+  const targetValidRole = findAnyValidRole(context.role_creation_objectives, docString);
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
 
   const newNodes = produce(context.nodes, draftNodes => {
     const newRoleNode = createRoleNode({
-      id: targetValidPolicy?.entity_id ?? new Date().getTime().toString(),
+      id: targetValidRole?.entity_id ?? new Date().getTime().toString(),
       content: docString,
-      label: targetValidPolicy?.entity_id ?? IAMNodeEntity.Role,
-      associated_policies: attachedPolicies,
+      label: targetValidRole?.entity_id ?? IAMNodeEntity.Role,
+      associated_policies: [],
       editable: true,
     });
 
     draftNodes.push(newRoleNode);
-    if (targetValidPolicy) {
-      sideEffectsEvents.push(targetValidPolicy.on_finish_event);
+    if (targetValidRole) {
+      sideEffectsEvents.push(targetValidRole.on_finish_event);
     }
   });
 

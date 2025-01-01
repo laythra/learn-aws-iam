@@ -190,14 +190,11 @@ export const createStateMachineSetup = <
         }
       ),
       add_role_node: enqueueActions(
-        (
-          { context, enqueue },
-          { docString, policies }: { docString: string; policies: string[] }
-        ) => {
+        ({ context, enqueue }, { docString }: { docString: string }) => {
           const [updatedNodes, sideEffectsEvents] = createIAMRoleNode<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, docString, policies);
+          >(context, docString);
 
           enqueue.assign({ nodes: updatedNodes });
           sideEffectsEvents.forEach(event => {
