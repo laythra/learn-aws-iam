@@ -21,7 +21,12 @@ export const TEMPLATE_ROLE_NODE: Node<IAMRoleNodeData> = {
     ] as HandleProps[],
     image: IAMNodeImage.Role,
     initial_position: 'center',
-  } as IAMRoleNodeData,
+    editable: true,
+    associated_users: [],
+    associated_policies: [],
+    associated_resources: [],
+    trust_policy_content: '',
+  },
 };
 
 export function createRoleNode(props: Partial<IAMRoleNodeData>): Node<IAMRoleNodeData> {

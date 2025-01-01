@@ -93,17 +93,15 @@ export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
 // TODO: The feels like it doesn't belong here. Move it
 export const findAnyValidRole = <TFinishEventMap extends BaseFinishEventMap>(
   roleObjectives: IAMRoleCreationObjective<TFinishEventMap>[],
-  docString: string,
-  attachedPolicies: string[]
+  docString: string
 ): IAMRoleCreationObjective<TFinishEventMap> | undefined => {
   roleObjectives = _.orderBy(roleObjectives, 'validate_inside_code_editor', 'desc');
 
-  return roleObjectives.find(
-    roleObjective =>
-      isJSONValid(
-        docString,
-        roleObjective.validate_function ?? GENERIC_VALIDATION_FNS[IAMNodeEntity.Role]
-      ) && roleObjective.required_policies.every(policy => attachedPolicies.includes(policy))
+  return roleObjectives.find(roleObjective =>
+    isJSONValid(
+      docString,
+      roleObjective.validate_function ?? GENERIC_VALIDATION_FNS[IAMNodeEntity.Role]
+    )
   );
 };
 

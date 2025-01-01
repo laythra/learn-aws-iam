@@ -34,6 +34,7 @@ import {
   IAMGroupNodeData,
   IAMNodeEntity,
   IAMPolicyNodeData,
+  IAMResourceNodeData,
   IAMRoleNodeData,
   IAMUserNodeData,
 } from '@/types';
@@ -96,24 +97,27 @@ export const createStateMachineSetup = <
           });
         }
       ),
-      attach_role_to_user: enqueueActions(
+      attach_role_to_entity: enqueueActions(
         (
           { context, enqueue },
           {
-            userNode,
+            targetNode,
             roleNode,
           }: {
-            userNode: Node<IAMUserNodeData>;
+            targetNode: Node<IAMUserNodeData | IAMResourceNodeData>;
             roleNode: Node<IAMRoleNodeData>;
           }
         ) => {
-          const updatedNodes = attachRoleToEntity(context, roleNode, userNode);
+          const updatedNodes = attachRoleToEntity(context, roleNode, targetNode);
+          const updatedRoleNode = updatedNodes.find(node => node.id === roleNode.id)!;
+          const updatedTargetNode = updatedNodes.find(node => node.id === targetNode.id)!;
+
           const [updatedEdges, sideEffectsEvents] = updateRoleToEntityConnectionEdges<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, roleNode, userNode);
+          >(context, updatedRoleNode, updatedTargetNode);
 
-          enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+          enqueue.assign({ nodes: updatedNodes, edges: _.uniqBy(updatedEdges, 'id') });
           sideEffectsEvents.forEach(event => {
             enqueue.raise({ type: event });
           });
@@ -136,7 +140,7 @@ export const createStateMachineSetup = <
             TFinishEventMap
           >(context, userNode, groupNode);
 
-          enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+          enqueue.assign({ nodes: updatedNodes, edges: _.uniqBy(updatedEdges, 'id') });
           sideEffectsEvents.forEach(event => {
             enqueue.raise({ type: event });
           });
@@ -190,14 +194,11 @@ export const createStateMachineSetup = <
         }
       ),
       add_role_node: enqueueActions(
-        (
-          { context, enqueue },
-          { docString, policies }: { docString: string; policies: string[] }
-        ) => {
+        ({ context, enqueue }, { docString }: { docString: string }) => {
           const [updatedNodes, sideEffectsEvents] = createIAMRoleNode<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, docString, policies);
+          >(context, docString);
 
           enqueue.assign({ nodes: updatedNodes });
           sideEffectsEvents.forEach(event => {

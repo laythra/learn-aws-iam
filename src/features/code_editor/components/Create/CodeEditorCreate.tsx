@@ -44,11 +44,9 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       objective => objective.validate_inside_code_editor
     );
   } else {
-    console.log('Attempting to find a role objective to validate');
     objectiveToValidate = roleCreationObjectives.find(
       objective => objective.validate_inside_code_editor
     );
-    debugger;
   }
 
   const initialContent = objectiveToValidate?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
@@ -62,13 +60,12 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
 
       return anyValidPolicy ? [] : [NO_MATCHING_POLICY_WARNING];
     } else {
-      const anyValidPolicy = findAnyValidRole<BaseFinishEventMap>(
+      const anyValidRole = findAnyValidRole<BaseFinishEventMap>(
         roleCreationObjectives,
-        editorView.current!.state.doc.toString(),
-        []
+        editorView.current!.state.doc.toString()
       );
 
-      return anyValidPolicy ? [] : [NO_MATCHING_ROLE_WARNING];
+      return anyValidRole ? [] : [NO_MATCHING_ROLE_WARNING];
     }
   };
 

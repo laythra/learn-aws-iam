@@ -38,7 +38,6 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
       levelActor.send({
         type: StatefulStateMachineEvent.ADDIAMRoleNode,
         doc_string: content,
-        associated_policies: [],
       });
     }
 

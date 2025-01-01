@@ -22,6 +22,7 @@ export enum IAMNodeResourceEntity {
   EC2Instance = 'EC2 Instance',
   CloudFront = 'CloudFront CDN',
   Billing = 'Billing and Cost Management',
+  Lambda = 'Lambda Function',
 }
 
 export enum IAMNodeImage {
@@ -34,6 +35,7 @@ export enum IAMNodeImage {
   CDN = 'cdn',
   Role = 'role',
   Billing = 'billing',
+  Lambda = 'lambda',
 }
 
 export type CreatableIAMNodeEntity =
@@ -87,7 +89,7 @@ export interface IAMPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
   editable: boolean;
   unnecessary_policy?: boolean;
-  associated_users: string[];
+  associated_users: string[]; // Do we use this?
   granted_accesses: PolicyGrantedAccess[];
   content: string;
 }
@@ -97,6 +99,7 @@ export interface IAMRoleNodeData extends IAMNodeData {
   editable: boolean;
   associated_users: string[];
   associated_policies: string[];
+  associated_resources: string[];
   trust_policy_content: string;
 }
 

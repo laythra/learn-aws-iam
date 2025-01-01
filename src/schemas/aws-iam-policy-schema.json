@@ -16,6 +16,8 @@
       "type": "string"
     },
     "Statement": {
+      "minItems": 1,
+      "type": "array",
       "oneOf": [
         {
           "$ref": "shared-condition-schema.json#/definitions/Statement"
