@@ -43,20 +43,12 @@ export type BaseFinishEventMap = Record<ObjectiveType, string>;
 export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
   edges: Edge[];
   edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
-  final_edges?: Edge[];
-  fixed_iam_nodes_positions?: { [key: string]: XYPosition };
-  iam_group_template?: Node<IAMGroupNodeData>;
-  iam_policy_template?: Node<IAMPolicyNodeData>;
-  iam_user_template?: Node<IAMUserNodeData>;
   level_description: string;
   level_finished?: boolean;
   level_number: number;
   level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
   level_title: string;
-  metadata_keys: { [key: string]: string }; // Make it stricter
   next_edges_connection_objectives_index?: number;
-  next_iam_node_default_position?: XYPosition;
-  next_iam_node_id?: { [k in CreatableIAMNodeEntity]: number };
   next_level_objectives_list_index?: number;
   next_policy_creation_objectives_index?: number;
   next_role_creation_objectives_index?: number;
