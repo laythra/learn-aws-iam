@@ -3,6 +3,7 @@ import { Node, XYPosition, Viewport } from 'reactflow';
 import { theme } from '@/theme';
 import { IAMAnyNodeData } from '@/types';
 
+// TODO: Use an enum
 const VALID_INITIAL_POSITIONS = [
   'center',
   'top-center',

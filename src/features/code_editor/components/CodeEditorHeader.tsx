@@ -4,7 +4,6 @@ import _ from 'lodash';
 import codeEditorStateStore from '../stores/code-editor-state-store';
 import { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
-
 interface CodeEditorHeaderProps {
   selectedIAMEntity: IAMScriptableEntity;
   codeEditorMode: CodeEditorMode;
