@@ -131,10 +131,10 @@ const MultiAccountCanvas: React.FC = () => {
     });
 
     if (
-      node.position.x <= midpointInFlowCoords.x &&
+      node.position.x + theme.sizes.iamNodeWidthInPixels >= midpointInFlowCoords.x &&
       node.data.account_id === AccountID.Destination
     ) {
-      const clampedX = midpointInFlowCoords.x + 10;
+      const clampedX = midpointInFlowCoords.x - theme.sizes.iamNodeWidthInPixels - 10;
       CanvasStore.send({
         type: 'updateNodePosition',
         nodeId: node.id,
@@ -143,10 +143,10 @@ const MultiAccountCanvas: React.FC = () => {
     }
 
     if (
-      node.position.x >= midpointInFlowCoords.x &&
+      node.position.x <= midpointInFlowCoords.x &&
       node.data.account_id === AccountID.Originating
     ) {
-      const clampedX = midpointInFlowCoords.x - theme.sizes.iamNodeWidthInPixels - 10;
+      const clampedX = midpointInFlowCoords.x + 10;
       CanvasStore.send({
         type: 'updateNodePosition',
         nodeId: node.id,
@@ -178,6 +178,7 @@ const MultiAccountCanvas: React.FC = () => {
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         autoPanOnNodeDrag={false}
+        autoPanOnConnect={false}
         zoomOnPinch={false}
         zoomOnScroll={false}
         zoomOnDoubleClick={false}
@@ -203,9 +204,6 @@ const MultiAccountCanvas: React.FC = () => {
         top='0'
         bottom='0'
         borderStyle='dashed'
-        sx={{
-          animation: 'dash-animation 2s linear infinite',
-        }}
       />
 
       <Text
