@@ -1,3 +1,4 @@
+import { LevelObjectiveID } from './objective-enums';
 import { ObjectiveType } from '@/machines/types';
 
 export enum RoleCreationFinishEvent {
@@ -26,7 +27,7 @@ export interface FinishEventMap {
   [ObjectiveType.POLICY_CREATION_OBJECTIVE]: never;
   [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: EdgeConnectionFinishEvent;
   [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
-  [ObjectiveType.LEVEL_OBJECTIVE]: never;
+  [ObjectiveType.LEVEL_OBJECTIVE]: LevelObjectiveID;
   [ObjectiveType.ROLE_CREATION_OBJECTIVE]: RoleCreationFinishEvent;
   [ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE]: TrustPolicyEditFinishEvent;
 }

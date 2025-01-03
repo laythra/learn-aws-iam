@@ -37,7 +37,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     metadata_keys: {},
     edges: [],
     level_objectives: LEVEL_OBJECTIVES,
-    fixed_iam_nodes_positions: {},
     policy_creation_objectives: [],
     edges_connection_objectives: EDGE_CONNECTION_OBJECTIVES,
     policy_edit_objectives: [],

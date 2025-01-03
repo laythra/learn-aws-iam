@@ -2,6 +2,7 @@ import { Diagnostic } from '@codemirror/lint';
 import { createStoreWithProducer } from '@xstate/store';
 import { produce } from 'immer';
 
+import { AccountID } from '@/machines/types';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 
 type CodeEditorEvents = {

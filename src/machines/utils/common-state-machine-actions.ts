@@ -401,6 +401,7 @@ export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends B
       label: targetValidPolicy?.entity_id ?? IAMNodeEntity.Policy,
       unnecessary_policy: targetValidPolicy === undefined,
       granted_accesses: targetValidPolicy?.granted_accesses ?? [],
+      initial_position: targetValidPolicy?.created_node_initial_position ?? 'center',
       editable: true,
     });
 
@@ -566,6 +567,7 @@ export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends Bas
       id: targetValidRole?.entity_id ?? new Date().getTime().toString(),
       content: docString,
       label: targetValidRole?.entity_id ?? IAMNodeEntity.Role,
+      initial_position: targetValidRole?.created_node_initial_position ?? 'center',
       associated_policies: [],
       editable: true,
     });
