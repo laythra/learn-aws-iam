@@ -71,6 +71,11 @@ interface IAMNodeData {
    * Defines the initial position of the node relative to the canvas viewport
    */
   initial_position?: string;
+  /**
+   * Defines the account for which the node belongs to
+   * mainly used for multi-account scenarios
+   */
+  account_id?: string;
 }
 
 export interface IAMUserNodeData extends IAMNodeData {

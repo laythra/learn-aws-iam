@@ -4,6 +4,7 @@ import Ajv, { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 
 import {
+  AccountID,
   BaseFinishEventMap,
   IAMPolicyCreationObjective,
   IAMRoleCreationObjective,
@@ -78,30 +79,33 @@ export const isJSONValid = (docString: string, validateFunction: ValidateFunctio
 // Move this elsewhere
 export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
   policyObjectives: IAMPolicyCreationObjective<TFinishEventMap>[],
-  docString: string
+  docString: string,
+  accountId?: AccountID
 ): IAMPolicyCreationObjective<TFinishEventMap> | undefined => {
   policyObjectives = _.orderBy(policyObjectives, 'validate_inside_code_editor', 'desc');
 
-  return policyObjectives.find(policyObjective =>
-    isJSONValid(
-      docString,
-      policyObjective.validate_function ?? GENERIC_VALIDATION_FNS[policyObjective.entity]
-    )
+  return policyObjectives.find(
+    policyObjective =>
+      isJSONValid(
+        docString,
+        policyObjective.validate_function ?? GENERIC_VALIDATION_FNS[policyObjective.entity]
+      ) && policyObjective.account_id === accountId
   );
 };
 
 // TODO: The feels like it doesn't belong here. Move it
 export const findAnyValidRole = <TFinishEventMap extends BaseFinishEventMap>(
   roleObjectives: IAMRoleCreationObjective<TFinishEventMap>[],
-  docString: string
+  docString: string,
+  accountId?: AccountID
 ): IAMRoleCreationObjective<TFinishEventMap> | undefined => {
   roleObjectives = _.orderBy(roleObjectives, 'validate_inside_code_editor', 'desc');
-
-  return roleObjectives.find(roleObjective =>
-    isJSONValid(
-      docString,
-      roleObjective.validate_function ?? GENERIC_VALIDATION_FNS[IAMNodeEntity.Role]
-    )
+  return roleObjectives.find(
+    roleObjective =>
+      isJSONValid(
+        docString,
+        roleObjective.validate_function ?? GENERIC_VALIDATION_FNS[IAMNodeEntity.Role]
+      ) && roleObjective.account_id === accountId
   );
 };
 

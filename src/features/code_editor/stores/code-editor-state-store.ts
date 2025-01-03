@@ -19,6 +19,7 @@ type CodeEditorEvents = {
   deinitializeCodeEditor: { nodeId: string };
   selectPolicy: { policyId: string };
   deselectPolicy: { policyId: string };
+  setSelectedAccount: { selectedAccountId: AccountID };
 };
 
 export type CodeEditorState = {
@@ -29,6 +30,7 @@ export type CodeEditorState = {
   isValidating?: boolean;
   isCodeEditorInitialized: boolean;
   selectedPolicies: string[];
+  selectedAccountId?: AccountID;
 };
 
 export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produce, {
@@ -39,6 +41,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     selectedIAMEntity: IAMNodeEntity.Policy,
     isCodeEditorInitialized: false,
     selectedPolicies: [],
+    selectedAccountId: AccountID.Originating,
   },
   on: {
     setErrorsAndWarnings: (
@@ -91,6 +94,10 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
       context.selectedPolicies = context.selectedPolicies.filter(
         selectedPolicy => selectedPolicy !== event.policyId
       );
+    },
+    setSelectedAccount: (context: CodeEditorState, event: { selectedAccountId: AccountID }) => {
+      context.isValidating = true;
+      context.selectedAccountId = event.selectedAccountId;
     },
   },
 });

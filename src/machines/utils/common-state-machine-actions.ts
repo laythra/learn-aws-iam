@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { Node, Edge } from 'reactflow';
 
 import {
+  AccountID,
   BaseFinishEventMap,
   GenericContext,
   IAMUserGroupCreationObjective,
@@ -389,9 +390,14 @@ export function changeLevelObjectiveProgress<
 
 export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  docString: string
+  docString: string,
+  accountId?: AccountID
 ): [Node[], TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][]] {
-  const targetValidPolicy = findAnyValidPolicy(context.policy_creation_objectives, docString);
+  const targetValidPolicy = findAnyValidPolicy(
+    context.policy_creation_objectives,
+    docString,
+    accountId
+  );
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
 
   const newNodes = produce(context.nodes, draftNodes => {
@@ -402,6 +408,7 @@ export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends B
       unnecessary_policy: targetValidPolicy === undefined,
       granted_accesses: targetValidPolicy?.granted_accesses ?? [],
       initial_position: targetValidPolicy?.created_node_initial_position ?? 'center',
+      account_id: accountId,
       editable: true,
     });
 
@@ -557,9 +564,10 @@ export function createIAMUserGroupNode<
 
 export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  docString: string
+  docString: string,
+  accountId?: AccountID
 ): [Node[], TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][]] {
-  const targetValidRole = findAnyValidRole(context.role_creation_objectives, docString);
+  const targetValidRole = findAnyValidRole(context.role_creation_objectives, docString, accountId);
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
 
   const newNodes = produce(context.nodes, draftNodes => {
@@ -570,6 +578,7 @@ export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends Bas
       initial_position: targetValidRole?.created_node_initial_position ?? 'center',
       associated_policies: [],
       editable: true,
+      account_id: accountId,
     });
 
     draftNodes.push(newRoleNode);

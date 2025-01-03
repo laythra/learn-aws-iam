@@ -17,6 +17,7 @@ import {
   updateRoleToEntityConnectionEdges,
 } from './utils/common-state-machine-actions';
 import type {
+  AccountID,
   BaseFinishEventMap,
   EdgeConnectionObjective,
   IAMRoleCreationObjective,
@@ -168,11 +169,14 @@ export const createStateMachineSetup = <
         }
       ),
       add_policy_node: enqueueActions(
-        ({ context, enqueue }, { docString }: { docString: string }) => {
+        (
+          { context, enqueue },
+          { docString, accountId }: { docString: string; accountId?: AccountID }
+        ) => {
           const [updatedNodes, sideEffectsEvents] = createIAMPolicyNode<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, docString);
+          >(context, docString, accountId);
 
           enqueue.assign({ nodes: updatedNodes });
           sideEffectsEvents.forEach(event => {
@@ -194,11 +198,14 @@ export const createStateMachineSetup = <
         }
       ),
       add_role_node: enqueueActions(
-        ({ context, enqueue }, { docString }: { docString: string }) => {
+        (
+          { context, enqueue },
+          { docString, accountId }: { docString: string; accountId?: AccountID }
+        ) => {
           const [updatedNodes, sideEffectsEvents] = createIAMRoleNode<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, docString);
+          >(context, docString, accountId);
 
           enqueue.assign({ nodes: updatedNodes });
           sideEffectsEvents.forEach(event => {

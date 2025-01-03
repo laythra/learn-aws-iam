@@ -1,6 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 
+import { Select } from '@chakra-ui/react';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
+import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
 import { useCodeEditor } from '../../hooks/useCodeEditor';
@@ -8,6 +10,7 @@ import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
 import {
+  AccountID,
   BaseFinishEventMap,
   IAMPolicyCreationObjective,
   IAMRoleCreationObjective,
@@ -27,9 +30,19 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   nodeId,
   selectedIAMEntity,
 }) => {
-  const [policyCreationObjectives, roleCreationObjectives] = LevelsProgressionContext.useSelector(
-    state => [state.context.policy_creation_objectives, state.context.role_creation_objectives],
-    _.isEqual
+  const [policyCreationObjectives, roleCreationObjectives, multiAccount] =
+    LevelsProgressionContext.useSelector(
+      state => [
+        state.context.policy_creation_objectives,
+        state.context.role_creation_objectives,
+        state.context.use_multi_account_canvas,
+      ],
+      _.isEqual
+    );
+
+  const selectedAccountId = useSelector(
+    codeEditorStateStore,
+    state => state.context.selectedAccountId
   );
 
   const editorView = useRef<EditorView | null>(null);
@@ -55,14 +68,16 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     if (selectedIAMEntity === IAMNodeEntity.Policy) {
       const anyValidPolicy = findAnyValidPolicy<BaseFinishEventMap>(
         policyCreationObjectives,
-        editorView.current!.state.doc.toString()
+        editorView.current!.state.doc.toString(),
+        selectedAccountId
       );
 
       return anyValidPolicy ? [] : [NO_MATCHING_POLICY_WARNING];
     } else {
       const anyValidRole = findAnyValidRole<BaseFinishEventMap>(
         roleCreationObjectives,
-        editorView.current!.state.doc.toString()
+        editorView.current!.state.doc.toString(),
+        selectedAccountId
       );
 
       return anyValidRole ? [] : [NO_MATCHING_ROLE_WARNING];
@@ -77,22 +92,46 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     initialContent: initialContent,
   });
 
-  return (
-    <CodeMirror
-      value={getContent() ?? JSON.stringify(initialContent, null, 2)}
-      onChange={newContent => {
-        codeEditorStateStore.send({
-          type: 'setContent',
-          content: newContent,
-          nodeId,
-          entity: selectedIAMEntity,
-        });
+  useEffect(() => {
+    validateChange();
+  }, [selectedAccountId]);
 
-        validateChange();
-      }}
-      height='200px'
-      extensions={extensions}
-      onCreateEditor={onCreateEditor}
-    />
+  return (
+    <>
+      {multiAccount && (
+        <Select
+          size='md'
+          variant='filled'
+          mb={4}
+          width='40%'
+          value={selectedAccountId}
+          onChange={e => {
+            codeEditorStateStore.send({
+              type: 'setSelectedAccount',
+              selectedAccountId: e.target.value as AccountID,
+            });
+          }}
+        >
+          <option value={AccountID.Destination}>Destination Account</option>
+          <option value={AccountID.Originating}>Originating Account</option>
+        </Select>
+      )}
+      <CodeMirror
+        value={getContent() ?? JSON.stringify(initialContent, null, 2)}
+        onChange={newContent => {
+          codeEditorStateStore.send({
+            type: 'setContent',
+            content: newContent,
+            nodeId,
+            entity: selectedIAMEntity,
+          });
+
+          validateChange();
+        }}
+        height='200px'
+        extensions={extensions}
+        onCreateEditor={onCreateEditor}
+      />
+    </>
   );
 };
