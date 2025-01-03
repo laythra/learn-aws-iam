@@ -65,6 +65,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   side_panel_open?: boolean;
   state_name: string;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
+  use_multi_account_canvas?: boolean;
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
