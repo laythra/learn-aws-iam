@@ -189,6 +189,8 @@ export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEv
   readonly validate_function?: ValidateFunction;
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
+  readonly account_id?: AccountID;
+  readonly created_node_initial_position?: string;
 }
 
 export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
@@ -204,6 +206,8 @@ export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEven
   readonly on_finish_event: TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE];
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
+  readonly account_id?: AccountID;
+  readonly created_node_initial_position?: string;
 }
 
 export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {
@@ -263,3 +267,8 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
   readonly initial_position?: string;
   finished: boolean;
 };
+
+export enum AccountID {
+  Originating = 'originating',
+  Destination = 'destination',
+}
