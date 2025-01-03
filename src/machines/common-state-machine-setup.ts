@@ -261,6 +261,8 @@ export const createStateMachineSetup = <
       next_edge_connection_objectives: assign({
         edges_connection_objectives: ({ context }) =>
           edgeConnectionObjectives[context.next_edges_connection_objectives_index ?? 0],
+        next_edges_connection_objectives_index: ({ context }) =>
+          (context.next_edges_connection_objectives_index ?? 0) + 1,
       }),
     },
   });
