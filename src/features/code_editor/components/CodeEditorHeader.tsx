@@ -25,6 +25,7 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
     <Flex justifyContent='space-between'>
       <Text>New {_.upperFirst(selectedIAMEntity)}</Text>
       <Tabs
+        index={selectedIAMEntity === IAMNodeEntity.Policy ? 0 : 1}
         onChange={index =>
           setSelectedIAMEntity(index === 0 ? IAMNodeEntity.Policy : IAMNodeEntity.Role)
         }
