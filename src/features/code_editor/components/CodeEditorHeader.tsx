@@ -4,7 +4,6 @@ import _ from 'lodash';
 import codeEditorStateStore from '../stores/code-editor-state-store';
 import { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
-
 interface CodeEditorHeaderProps {
   selectedIAMEntity: IAMScriptableEntity;
   codeEditorMode: CodeEditorMode;
@@ -26,6 +25,7 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
     <Flex justifyContent='space-between'>
       <Text>New {_.upperFirst(selectedIAMEntity)}</Text>
       <Tabs
+        index={selectedIAMEntity === IAMNodeEntity.Policy ? 0 : 1}
         onChange={index =>
           setSelectedIAMEntity(index === 0 ? IAMNodeEntity.Policy : IAMNodeEntity.Role)
         }

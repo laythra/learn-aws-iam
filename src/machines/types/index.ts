@@ -1,6 +1,6 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
 import { Schema, ValidateFunction } from 'ajv';
-import type { Edge, Node, XYPosition } from 'reactflow';
+import type { Edge, Node } from 'reactflow';
 
 import type {
   AccessLevel,
@@ -43,20 +43,12 @@ export type BaseFinishEventMap = Record<ObjectiveType, string>;
 export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
   edges: Edge[];
   edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
-  final_edges?: Edge[];
-  fixed_iam_nodes_positions?: { [key: string]: XYPosition };
-  iam_group_template?: Node<IAMGroupNodeData>;
-  iam_policy_template?: Node<IAMPolicyNodeData>;
-  iam_user_template?: Node<IAMUserNodeData>;
   level_description: string;
   level_finished?: boolean;
   level_number: number;
   level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
   level_title: string;
-  metadata_keys: { [key: string]: string }; // Make it stricter
   next_edges_connection_objectives_index?: number;
-  next_iam_node_default_position?: XYPosition;
-  next_iam_node_id?: { [k in CreatableIAMNodeEntity]: number };
   next_level_objectives_list_index?: number;
   next_policy_creation_objectives_index?: number;
   next_role_creation_objectives_index?: number;
@@ -73,6 +65,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   side_panel_open?: boolean;
   state_name: string;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
+  use_multi_account_canvas?: boolean;
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -105,8 +98,9 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
   | {
       type: StatefulStateMachineEvent.ADDIAMRoleNode;
       doc_string: string;
+      account_id?: AccountID;
     }
-  | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string }
+  | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string; account_id?: AccountID }
   | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
   | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
   | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }
@@ -196,6 +190,8 @@ export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEv
   readonly validate_function?: ValidateFunction;
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
+  readonly account_id?: AccountID;
+  readonly created_node_initial_position?: string;
 }
 
 export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
@@ -211,6 +207,8 @@ export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEven
   readonly on_finish_event: TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE];
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
+  readonly account_id?: AccountID;
+  readonly created_node_initial_position?: string;
 }
 
 export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {
@@ -270,3 +268,8 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
   readonly initial_position?: string;
   finished: boolean;
 };
+
+export enum AccountID {
+  Originating = 'originating',
+  Destination = 'destination',
+}

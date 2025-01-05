@@ -28,16 +28,20 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
 
   const submit = (): void => {
     const content = codeEditorStateStore.getSnapshot().context.content[selectedIAMEntity][nodeId];
+    const accountId = codeEditorStateStore.getSnapshot().context.selectedAccountId;
 
+    // TODO: Create policies and roles through the same state machine event
     if (selectedIAMEntity == IAMNodeEntity.Policy) {
       levelActor.send({
         type: 'ADD_IAM_POLICY_NODE',
         doc_string: content,
+        account_id: accountId,
       });
     } else {
       levelActor.send({
         type: StatefulStateMachineEvent.ADDIAMRoleNode,
         doc_string: content,
+        account_id: accountId,
       });
     }
 

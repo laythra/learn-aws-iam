@@ -3,12 +3,17 @@ import { Node, XYPosition, Viewport } from 'reactflow';
 import { theme } from '@/theme';
 import { IAMAnyNodeData } from '@/types';
 
+// TODO: Use an enum
 const VALID_INITIAL_POSITIONS = [
   'center',
   'top-center',
   'bottom-center',
   'left-center',
   'right-center',
+  'top-left',
+  'top-right',
+  'bottom-left',
+  'bottom-right',
 ];
 
 const BETWEEN_NODES_SPACING = 20;
@@ -102,6 +107,38 @@ export function getNodeWithInitialPosition(
       };
     case 'right-center':
       x = window.innerWidth - sidePanelWidth - nodeWidth - BETWEEN_NODES_SPACING;
+
+      return {
+        ...node,
+        position: { x, y },
+      };
+    case 'top-left':
+      x = BETWEEN_NODES_SPACING;
+      y = theme.sizes.navbarHeightInPixels + BETWEEN_NODES_SPACING;
+
+      return {
+        ...node,
+        position: { x, y },
+      };
+    case 'top-right':
+      x = window.innerWidth - sidePanelWidth - nodeWidth - BETWEEN_NODES_SPACING;
+      y = theme.sizes.navbarHeightInPixels + BETWEEN_NODES_SPACING;
+
+      return {
+        ...node,
+        position: { x, y },
+      };
+    case 'bottom-left':
+      x = BETWEEN_NODES_SPACING;
+      y = window.innerHeight - theme.sizes.iamNodeHeightInPixels - BETWEEN_NODES_SPACING;
+
+      return {
+        ...node,
+        position: { x, y },
+      };
+    case 'bottom-right':
+      x = window.innerWidth - sidePanelWidth - nodeWidth - BETWEEN_NODES_SPACING;
+      y = window.innerHeight - theme.sizes.iamNodeHeightInPixels - BETWEEN_NODES_SPACING;
 
       return {
         ...node,

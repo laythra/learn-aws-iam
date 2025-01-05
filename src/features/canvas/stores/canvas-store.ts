@@ -24,6 +24,7 @@ type CanvasStoreEvents = {
   hoverOverEdge: { edgeId?: string };
   setNodes: { nodes: Node[] };
   setEdges: { edges: Edge[] };
+  updateNodePosition: { nodeId: string; position: { x: number; y: number } };
 };
 
 export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStoreEvents>(produce, {
@@ -46,6 +47,12 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
     },
     setEdges: (context: CanvasStoreState, event: { edges: Edge[] }) => {
       context.edges = event.edges;
+    },
+    updateNodePosition(
+      context: CanvasStoreState,
+      event: { nodeId: string; position: { x: number; y: number } }
+    ) {
+      context.nodes.find(nd => nd.id === event.nodeId)!.position = event.position;
     },
   },
 });
