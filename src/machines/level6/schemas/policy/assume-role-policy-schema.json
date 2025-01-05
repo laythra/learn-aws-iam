@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ]
+    },
+    "Statement": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "Effect",
+          "Action",
+          "Resource"
+        ],
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "const": "Allow"
+          },
+          "Action": {
+            "oneOf": [
+              {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "sts:AssumeRole"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 1
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "sts:AssumeRole"
+                ]
+              }
+            ]
+          },
+          "Resource": {
+            "type": "string",
+            "const": "arn:aws:iam::258376635577:role/finance-reports-read-role"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
