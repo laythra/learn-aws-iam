@@ -13,6 +13,10 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@heroicons/react/16/solid';
+import Markdown from 'react-markdown';
+
+import { remarkChakra } from '@/utils/markdown/chakra-markdown';
+import { components as markdownComponents } from '@/utils/markdown/components';
 
 interface TutorialPopoverProps {
   isOpen: boolean;
@@ -56,7 +60,9 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
         {showCloseButton && <PopoverCloseButton onClick={onCloseClick} />}
         {description && (
           <PopoverBody>
-            <Text>{description}</Text>
+            <Markdown components={markdownComponents} rehypePlugins={[remarkChakra]}>
+              {description}
+            </Markdown>
           </PopoverBody>
         )}
         {showNextButton && (
