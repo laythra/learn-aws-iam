@@ -5,7 +5,8 @@ export enum NodeCreationFinishEvent {
 }
 
 export enum EdgeConnectionFinishEvent {
-  PolicyAttachedToUser = 'POLICY_ATTACHED_TO_USER',
+  PolicyAttachedToTutorialUser = 'POLICY_ATTACHED_TO_TUTORIAL_USER',
+  PolicyAttachedToCreatedUser = 'POLICY_ATTACHED_TO_CREATED_USER',
 }
 
 export interface FinishEventMap {

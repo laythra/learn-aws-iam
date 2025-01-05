@@ -20,7 +20,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   POPUP_TUTORIAL_MESSAGES,
   [],
   [],
-  []
+  EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level1_state_machine',
   initial: 'inside_tutorial',
@@ -38,7 +38,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     edges: [],
     level_objectives: LEVEL_OBJECTIVES,
     policy_creation_objectives: [],
-    edges_connection_objectives: EDGE_CONNECTION_OBJECTIVES,
+    edges_connection_objectives: [],
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
@@ -96,54 +96,70 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   },
   states: {
     inside_tutorial: {
-      entry: assign({
-        nodes: INITIAL_TUTORIAL_NODES,
-        user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
-        state_name: 'inside_tutorial',
-      }),
+      entry: [
+        assign({
+          nodes: INITIAL_TUTORIAL_NODES,
+          user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
+        }),
+        'next_edge_connection_objectives',
+      ],
       initial: 'welcoming_message',
       onDone: 'inside_level',
       states: {
         welcoming_message: {
-          entry: assign({
-            show_popups: true,
-            popup_content: POPUP_TUTORIAL_MESSAGES[0],
-          }),
+          entry: 'next_popup',
           on: {
             NEXT_POPUP: {
               actions: 'hide_popups',
-              target: 'iam_policy_onboarding_popover',
+              target: 'tutorial_popover1',
             },
           },
         },
-        iam_policy_onboarding_popover: {
-          entry: assign({
-            popover_content: POPOVER_TUTORIAL_MESSAGES[0],
-            show_popovers: true,
-          }),
+        tutorial_popover1: {
+          entry: 'next_popover',
           on: {
-            NEXT_POPOVER: {
-              target: 's3_bucket_onboarding_popover',
-            },
+            NEXT_POPOVER: 'tutorial_popover2',
           },
-          exit: 'hide_popovers',
         },
-        s3_bucket_onboarding_popover: {
-          entry: assign({
-            popover_content: POPOVER_TUTORIAL_MESSAGES[1],
-            show_popovers: true,
-          }),
+        tutorial_popover2: {
+          entry: 'next_popover',
           on: {
-            NEXT_POPOVER: {
-              target: 'create_user_popover',
-            },
+            NEXT_POPOVER: 'tutorial_popover3',
+          },
+        },
+        tutorial_popover3: {
+          entry: 'next_popover',
+          on: {
+            NEXT_POPOVER: 'tutorial_popover4',
+          },
+        },
+        tutorial_popover4: {
+          entry: 'next_popover',
+          on: {
+            NEXT_POPOVER: 'tutorial_popover5',
+          },
+        },
+        tutorial_popover5: {
+          entry: 'next_popover',
+          on: {
+            NEXT_POPOVER: 'attach_policy_to_tutorial_user',
+          },
+        },
+        attach_policy_to_tutorial_user: {
+          entry: 'hide_popovers',
+          on: {
+            [EdgeConnectionFinishEvent.PolicyAttachedToTutorialUser]:
+              'policy_attached_to_tutorial_user_popover',
+          },
+        },
+        policy_attached_to_tutorial_user_popover: {
+          entry: 'next_popover',
+          on: {
+            NEXT_POPOVER: 'create_user_popover',
           },
         },
         create_user_popover: {
-          entry: assign({
-            popover_content: POPOVER_TUTORIAL_MESSAGES[2],
-            show_popovers: true,
-          }),
+          entry: 'next_popover',
           on: {
             CREATE_IAM_IDENTITY_POPUP_OPENED: {
               target: 'add_your_name_popover',
@@ -151,10 +167,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         add_your_name_popover: {
-          entry: assign({
-            popover_content: POPOVER_TUTORIAL_MESSAGES[3],
-            show_popovers: true,
-          }),
+          entry: 'next_popover',
           on: {
             [NodeCreationFinishEvent.USER_NODE_CREATED]: {
               actions: [
@@ -163,35 +176,18 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
                   params: { id: LevelObjectiveID.CreateIAMUser, finished: true },
                 },
               ],
-              target: 'iam_user_popover',
+              target: 'user_created_popover',
             },
           },
         },
-        iam_user_popover: {
-          entry: assign({
-            popover_content: POPOVER_TUTORIAL_MESSAGES[4],
-            show_popovers: true,
-          }),
+        user_created_popover: {
+          entry: 'next_popover',
           on: {
-            NEXT_POPOVER: {
-              target: 'iam_policy_popover',
-              actions: 'next_popover',
-            },
-          },
-        },
-        iam_policy_popover: {
-          entry: assign({
-            popover_content: POPOVER_TUTORIAL_MESSAGES[5],
-            show_popovers: true,
-          }),
-          on: {
-            NEXT_POPOVER: {
-              target: 'tutorial_completed',
-              actions: 'next_popover',
-            },
+            NEXT_POPOVER: 'tutorial_completed',
           },
         },
         tutorial_completed: {
+          entry: 'hide_popovers',
           type: 'final',
         },
       },
@@ -199,14 +195,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     inside_level: {
       onDone: 'finished_level',
       initial: 'connect_iam_policy_to_user',
-      entry: assign({
-        show_popovers: false,
-        state_name: 'inside_level',
-      }),
+      entry: 'next_edge_connection_objectives',
       states: {
         connect_iam_policy_to_user: {
           on: {
-            [EdgeConnectionFinishEvent.PolicyAttachedToUser]: {
+            [EdgeConnectionFinishEvent.PolicyAttachedToCreatedUser]: {
               target: 'policy_attached',
               actions: [
                 {
@@ -218,10 +211,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         policy_attached: {
-          entry: assign({
-            show_popovers: true,
-            popover_content: POPOVER_TUTORIAL_MESSAGES[6],
-          }),
+          entry: 'next_popover',
           on: {
             NEXT_POPOVER: 'completed',
           },
