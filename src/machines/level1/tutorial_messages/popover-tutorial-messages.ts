@@ -1,6 +1,6 @@
 import { PolicyNodeID, ResourceNodeID, UserNodeID } from '../types/node-id-enums';
 import type { PopoverTutorialMessage } from '@/machines/types';
-import { PopoverElementID } from '@/theme';
+import { ElementID } from '@/config/element-ids';
 
 const POPOVER_MSG1 = `
   This is an **IAM user**.
@@ -101,14 +101,14 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'top',
   },
   {
-    element_id: PopoverElementID.NewEntityBtn,
+    element_id: ElementID.NewEntityBtn,
     popover_title: 'Creating your IAM User',
     popover_content: POPOVER_MSG7,
     show_next_button: false,
     show_close_button: false,
   },
   {
-    element_id: PopoverElementID.IAMIdentityNameInput,
+    element_id: ElementID.IAMIdentityNameInput,
     popover_title: POPOVER_MSG8,
     popover_content: ``,
     show_next_button: false,

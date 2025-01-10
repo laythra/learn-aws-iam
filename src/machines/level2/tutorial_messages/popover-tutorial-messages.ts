@@ -1,10 +1,10 @@
 import { GroupNodeID, UserNodeID } from '../types/node-id-enums';
 import type { PopoverTutorialMessage } from '@/machines/types';
-import { PopoverElementID } from '@/theme';
+import { ElementID } from '@/config/element-ids';
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
-    element_id: PopoverElementID.NewEntityBtn,
+    element_id: ElementID.NewEntityBtn,
     popover_title: 'IAM Groups',
     popover_content: `Let's create an IAM group`,
     show_next_button: false,
@@ -12,7 +12,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'top',
   },
   {
-    element_id: PopoverElementID.IAMIdentitySelectorTypeForCreation,
+    element_id: ElementID.IAMIdentitySelectorTypeForCreation,
     popover_title: `Select the group type`,
     popover_content: ``,
     show_next_button: false,
@@ -20,7 +20,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'top',
   },
   {
-    element_id: PopoverElementID.IAMIdentityNameInput,
+    element_id: ElementID.IAMIdentityNameInput,
     popover_title: `It goes without saying, but each group needs a name`,
     popover_content: ``,
     show_next_button: false,

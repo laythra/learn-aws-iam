@@ -1,6 +1,7 @@
 import { Box, Flex, HStack, Text } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
 
+import { ElementID } from '@/config/element-ids';
 import { NewEntityButtonWithPopover } from '@/features/iam_entities';
 import { PopoverElementID } from '@/theme';
 import { CustomTheme } from '@/types';

@@ -1,6 +1,6 @@
 import { PolicyNodeID } from '../types/node-id-enums';
 import type { PopoverTutorialMessage } from '@/machines/types';
-import { PopoverElementID } from '@/theme';
+import { ElementID } from '@/config/element-ids';
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
@@ -12,7 +12,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'top',
   },
   {
-    element_id: PopoverElementID.NewEntityBtn,
+    element_id: ElementID.NewEntityBtn,
     popover_title: 'Your first Customer Managed Policy',
     popover_content: `Let's create your first Customer Managed Policy!`,
     show_next_button: false,

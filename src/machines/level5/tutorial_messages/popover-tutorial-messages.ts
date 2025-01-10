@@ -1,6 +1,6 @@
 import { PolicyNodeID, ResourceNodeID, RoleNodeID, UserNodeID } from '../types/node-id-enums';
 import type { PopoverTutorialMessage } from '@/machines/types';
-import { PopoverElementID } from '@/theme';
+import { ElementID } from '@/config/element-ids';
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
@@ -33,7 +33,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'top',
   },
   {
-    element_id: PopoverElementID.NewEntityBtn,
+    element_id: ElementID.NewEntityBtn,
     popover_title: "Let's create another Role",
     popover_content: 'We want to create a new role that allows read access to S3',
     show_next_button: false,

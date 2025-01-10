@@ -24,7 +24,7 @@ import { EventFrom } from 'xstate';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { TutorialGuardedButton, WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { PopoverElementID } from '@/theme';
+import { ElementID } from '@/config/element-ids';
 import { IAMIdentityEntity, IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
@@ -85,10 +85,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
         <ModalHeader>
           <Flex justifyContent='space-between'>
             <Text>New {_.upperFirst(iamIdentityEntity)}</Text>
-            <WithPopoverBox
-              elementid={PopoverElementID.IAMIdentitySelectorTypeForCreation}
-              fontSize='8px'
-            >
+            <WithPopoverBox elementid={ElementID.IAMIdentitySelectorTypeForCreation} fontSize='8px'>
               <Tabs onChange={handleTabChange} variant='soft-rounded' size='sm'>
                 <TabList>
                   <Tab>User</Tab>
@@ -104,7 +101,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
               {iamIdentityEntity === IAMNodeEntity.User ? 'User Name' : 'Group Name'}
             </FormLabel>
             <WithPopoverInput
-              elementid={PopoverElementID.IAMIdentityNameInput}
+              elementid={ElementID.IAMIdentityNameInput}
               value={getNameFieldVal()}
               onChange={handleNameChange}
             />
