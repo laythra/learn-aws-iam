@@ -1,4 +1,13 @@
-import { Button, MenuItem, ModalContent, Input, Select, Box, IconButton } from '@chakra-ui/react';
+import {
+  Button,
+  MenuItem,
+  ModalContent,
+  Input,
+  Select,
+  Box,
+  IconButton,
+  MenuButton,
+} from '@chakra-ui/react';
 import type {
   ButtonProps,
   MenuItemProps,
@@ -7,10 +16,12 @@ import type {
   SelectProps,
   BoxProps,
   IconButtonProps,
+  MenuButtonProps,
 } from '@chakra-ui/react';
 
 import { withPopover } from '@/decorators/withPopover';
 import { withStatemachineEvent } from '@/decorators/withStatemachineEvent';
+import { withTutorialGuard } from '@/decorators/withTutorialGuard';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const WithPopoverButton = withPopover<ButtonProps & { elementid: string }>(Button);
@@ -29,3 +40,8 @@ export const WithStateMachineEventIconButton = withStatemachineEvent<
 export const WithStateMachineEventButton = withStatemachineEvent<
   ButtonProps & { event: StatelessStateMachineEvent }
 >(Button);
+
+export const TutorialGuardedButton = withTutorialGuard<ButtonProps & { id: string }>(Button);
+export const TutorialGuardedMenuButton = withTutorialGuard<
+  MenuButtonProps & { id: string } & IconButtonProps
+>(MenuButton);
