@@ -20,7 +20,7 @@ interface UseCanvasOptions {}
 interface UseCanvasReturn {
   rfInstance: ReactFlowInstance | undefined;
   setRfInstance: (instance: ReactFlowInstance) => void;
-  nodesState: Node[];
+  nodesState: Node<IAMAnyNodeData>[];
   edgesState: Edge[];
   onConnect: (params: Connection) => void;
   onEdgeDelete: (targetEdges: Edge[]) => void;

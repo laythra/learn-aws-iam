@@ -9,8 +9,10 @@ import {
   applyEdgeChanges,
 } from 'reactflow';
 
+import { IAMAnyNodeData } from '@/types';
+
 type CanvasStoreState = {
-  nodes: Node[];
+  nodes: Node<IAMAnyNodeData>[];
   edges: Edge[];
   selectedEdgeId?: string;
   selectedNodeId?: string;
@@ -22,7 +24,7 @@ type CanvasStoreEvents = {
   changeEdgesState: { changes: EdgeChange[] };
   selectEdge: { edgeId?: string };
   hoverOverEdge: { edgeId?: string };
-  setNodes: { nodes: Node[] };
+  setNodes: { nodes: Node<IAMAnyNodeData>[] };
   setEdges: { edges: Edge[] };
   updateNodePosition: { nodeId: string; position: { x: number; y: number } };
 };
@@ -42,7 +44,7 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
     selectEdge: (context: CanvasStoreState, event: { edgeId?: string }) => {
       context.selectedEdgeId = event.edgeId;
     },
-    setNodes: (context: CanvasStoreState, event: { nodes: Node[] }) => {
+    setNodes: (context: CanvasStoreState, event: { nodes: Node<IAMAnyNodeData>[] }) => {
       context.nodes = event.nodes;
     },
     setEdges: (context: CanvasStoreState, event: { edges: Edge[] }) => {

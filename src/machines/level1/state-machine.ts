@@ -11,6 +11,7 @@ import {
   FinishEventMap,
   NodeCreationFinishEvent,
 } from './types/finish-event-enums';
+import { UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -116,7 +117,12 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         tutorial_popover1: {
-          entry: 'next_popover',
+          entry: [
+            'next_popover',
+            assign({
+              highlighted_element_id: UserNodeID.TutorialUser,
+            }),
+          ],
           on: {
             NEXT_POPOVER: 'tutorial_popover2',
           },

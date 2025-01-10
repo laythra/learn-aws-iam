@@ -154,7 +154,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             show_popovers: false,
           }),
           after: {
-            0: 'create_your_custom_policy_popover',
+            3000: 'create_your_custom_policy_popover',
           },
         },
         create_your_custom_policy_popover: {

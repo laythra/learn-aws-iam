@@ -9,7 +9,7 @@ const TUTORIAL_USER_NODES: Partial<IAMUserNodeData>[] = [
   {
     id: UserNodeID.FinanceUser,
     label: UserNodeID.FinanceUser,
-    initial_position: 'top-right',
+    initial_position: 'top-center',
     image: IAMNodeImage.User,
   },
 ];
