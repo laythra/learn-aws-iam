@@ -1,3 +1,4 @@
+import { DOMKeyframesDefinition, DynamicAnimationOptions } from 'framer-motion';
 import { HandleProps } from 'reactflow';
 
 export enum AccessLevel {
@@ -76,6 +77,13 @@ interface IAMNodeData {
    * mainly used for multi-account scenarios
    */
   account_id?: string;
+  /**
+   * Defines animations to play for the node
+   */
+  animations?: Record<
+    string,
+    { keyframes: DOMKeyframesDefinition; options: DynamicAnimationOptions }
+  >;
 }
 
 export interface IAMUserNodeData extends IAMNodeData {

@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { Position, type HandleProps, type Node } from 'reactflow';
 
+import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
 import { type IAMUserNodeData, IAMNodeEntity, IAMNodeImage } from '@/types';
 
 export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
@@ -22,6 +23,7 @@ export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
     associated_policies: [],
     initial_position: 'top-center',
     associated_roles: [],
+    animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
   },
 };
 

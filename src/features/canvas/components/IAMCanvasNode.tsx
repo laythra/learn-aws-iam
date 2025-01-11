@@ -1,11 +1,14 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
+import { useAnimate } from 'framer-motion';
+import _ from 'lodash';
 import { Handle } from 'reactflow';
 
 import IAMNodeInfoButton from './IAMNodeInfoButton';
 import { IAMNodeContext } from './IAMNodeProvider';
+import { ShimmerBackground } from './ShimmerBackground';
 import { WithPopoverBox } from '@/components/Decorated';
 import { type IAMAnyNodeData, type CustomTheme, IAMNodeEntity } from '@/types';
 import { loadLocalImage } from '@/utils/image-loader';
@@ -31,6 +34,9 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
 
   // TODO: Move selected node id state to an xstate store instead
   const { setSelectedNodeId, selectedNodeId } = useContext(IAMNodeContext);
+  const [scope, animate] = useAnimate();
+  const playedAnimationsRef = useRef<Set<string>>(new Set());
+
   const theme = useTheme<CustomTheme>();
 
   const handleClick = (): void => {
@@ -39,9 +45,26 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
 
   const isSelected = selectedNodeId === id;
 
+  useEffect(() => {
+    // Fetch animations that haven't been played yet
+    const animationsToPlay = _.pickBy(
+      data.animations,
+      (_value, key) => !playedAnimationsRef.current.has(key)
+    );
+
+    // Play animations
+    Object.entries(animationsToPlay).forEach(([key, { keyframes, options }]) => {
+      animate('.shimmer', keyframes, options).then(() => {
+        playedAnimationsRef.current.add(key);
+      });
+    });
+  }, [data.animations]);
+
   return (
     <>
       <Flex
+        ref={scope}
+        id={id}
         direction='column'
         justifyContent='center'
         alignItems='center'
@@ -57,6 +80,7 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
         borderColor={isSelected ? 'blue.500' : 'gray.200'}
         onClick={handleClick}
       >
+        <ShimmerBackground className='shimmer' />
         {handles.map(handle => (
           <Handle key={handle.id} {...handle} />
         ))}
