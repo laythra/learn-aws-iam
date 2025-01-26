@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Box } from '@chakra-ui/react';
-import ReactFlow from 'reactflow';
+import ReactFlow, { ConnectionMode } from 'reactflow';
 
 import IAMCanvasEdge from './IAMCanvasEdge';
 import IAMCanvasNode from './IAMCanvasNode';
@@ -36,6 +36,7 @@ const Canvas: React.FC = () => {
         onInit={rfi => setRfInstance(rfi)}
         nodes={nodesState}
         edges={edgesState}
+        connectionMode={ConnectionMode.Loose}
         onConnect={onConnect}
         onEdgesDelete={onEdgeDelete}
         nodeTypes={nodeTypes}

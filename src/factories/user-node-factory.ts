@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { Position, type HandleProps, type Node } from 'reactflow';
 
 import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
-import { type IAMUserNodeData, IAMNodeEntity, IAMNodeImage } from '@/types';
+import { type IAMUserNodeData, HandleID, IAMNodeEntity, IAMNodeImage } from '@/types';
 
 export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
   id: 'iam_user',
@@ -14,10 +14,10 @@ export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
     label: 'IAM User',
     entity: IAMNodeEntity.User,
     handles: [
-      { id: Position.Top, type: 'source', position: Position.Top },
-      { id: Position.Right, type: 'source', position: Position.Right },
-      { id: Position.Left, type: 'source', position: Position.Left },
-      { id: Position.Bottom, type: 'target', position: Position.Bottom },
+      { id: HandleID.Top, type: 'source', position: Position.Top },
+      { id: HandleID.Right, type: 'source', position: Position.Right },
+      { id: HandleID.Bottom, type: 'source', position: Position.Bottom },
+      { id: HandleID.Left, type: 'source', position: Position.Left },
     ] as HandleProps[],
     image: IAMNodeImage.User,
     associated_policies: [],

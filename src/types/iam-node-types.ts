@@ -1,6 +1,13 @@
 import { DOMKeyframesDefinition, DynamicAnimationOptions } from 'framer-motion';
 import { HandleProps } from 'reactflow';
 
+export enum HandleID {
+  Top = 'top',
+  Right = 'right',
+  Bottom = 'bottom',
+  Left = 'left',
+}
+
 export enum AccessLevel {
   Read = 'Read',
   Write = 'Write',

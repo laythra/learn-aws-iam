@@ -1,7 +1,14 @@
-import _ from 'lodash';
+import _, { get } from 'lodash';
 import { type Node, type HandleProps, Position } from 'reactflow';
 
-import { IAMResourceNodeData, IAMNodeImage, IAMNodeEntity, IAMNodeResourceEntity } from '@/types';
+import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
+import {
+  IAMResourceNodeData,
+  IAMNodeImage,
+  IAMNodeEntity,
+  IAMNodeResourceEntity,
+  HandleID,
+} from '@/types';
 
 const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
   id: 'iam_resources',
@@ -13,14 +20,15 @@ const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
     label: 'IAM Resource',
     entity: IAMNodeEntity.Resource,
     handles: [
-      { id: Position.Top, type: 'source', position: Position.Top },
-      { id: Position.Right, type: 'target', position: Position.Right },
-      { id: Position.Bottom, type: 'target', position: Position.Bottom },
-      { id: Position.Left, type: 'target', position: Position.Left },
+      { id: HandleID.Top, type: 'source', position: Position.Top },
+      { id: HandleID.Right, type: 'source', position: Position.Right },
+      { id: HandleID.Bottom, type: 'source', position: Position.Bottom },
+      { id: HandleID.Left, type: 'source', position: Position.Left },
     ] as HandleProps[],
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,
     associated_roles: [],
+    animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
   },
 };
 
