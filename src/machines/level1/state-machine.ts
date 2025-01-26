@@ -14,6 +14,7 @@ import {
 import { UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { ElementID } from '@/config/element-ids';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
@@ -35,7 +36,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     show_popovers: false,
     show_popups: false,
     nodes: [],
-    metadata_keys: {},
     edges: [],
     level_objectives: LEVEL_OBJECTIVES,
     policy_creation_objectives: [],
@@ -103,8 +103,18 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
         }),
         'next_edge_connection_objectives',
+        {
+          type: 'update_tutorial_state_options',
+          params: {
+            tutorial_state_options: {
+              in_tutorial_state: true,
+              disable_edges_creation: true,
+              whitelisted_element_ids: [],
+            },
+          },
+        },
       ],
-      initial: 'welcoming_message',
+      initial: 'tutorial_popover1',
       onDone: 'inside_level',
       states: {
         welcoming_message: {
@@ -154,8 +164,18 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         attach_policy_to_tutorial_user: {
           entry: 'hide_popovers',
           on: {
-            [EdgeConnectionFinishEvent.PolicyAttachedToTutorialUser]:
-              'policy_attached_to_tutorial_user_popover',
+            [EdgeConnectionFinishEvent.PolicyAttachedToTutorialUser]: {
+              target: 'policy_attached_to_tutorial_user_popover',
+              actions: [
+                {
+                  type: 'change_objective_progress',
+                  params: {
+                    id: LevelObjectiveID.ConnectionTutorialPolicyToTutorialUser,
+                    finished: true,
+                  },
+                },
+              ],
+            },
           },
         },
         policy_attached_to_tutorial_user_popover: {
@@ -165,7 +185,17 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         create_user_popover: {
-          entry: 'next_popover',
+          entry: [
+            'next_popover',
+            {
+              type: 'update_tutorial_state_options',
+              params: {
+                tutorial_state_options: {
+                  whitelisted_element_ids: [ElementID.NewEntityBtn],
+                },
+              },
+            },
+          ],
           on: {
             CREATE_IAM_IDENTITY_POPUP_OPENED: {
               target: 'add_your_name_popover',

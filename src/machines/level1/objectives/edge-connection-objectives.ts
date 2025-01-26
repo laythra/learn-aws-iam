@@ -14,7 +14,8 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.PolicyAttachedToTutorialUser,
       established_edge_hovering_label: AccessLevel.Read,
-      established_edge_target_handle: 'top',
+      established_edge_target_handle: 'bottom',
+      established_edge_source_handle: 'top',
     },
   ],
   [
@@ -26,7 +27,8 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.PolicyAttachedToCreatedUser,
       established_edge_hovering_label: AccessLevel.Read,
-      established_edge_target_handle: 'top',
+      established_edge_target_handle: 'bottom',
+      established_edge_source_handle: 'top',
     },
   ],
 ];

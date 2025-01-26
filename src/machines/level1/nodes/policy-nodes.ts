@@ -3,7 +3,7 @@ import { type Node } from 'reactflow';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/policy-node-factory';
 import type { IAMPolicyNodeData } from '@/types';
-import { AccessLevel, IAMNodeImage } from '@/types';
+import { AccessLevel, HandleID, IAMNodeImage } from '@/types';
 
 const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   {
@@ -14,7 +14,8 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
     granted_accesses: [
       {
         target_node: ResourceNodeID.PublicImagesS3Bucket,
-        target_handle: 'right',
+        target_handle: 'top',
+        source_handle: 'bottom',
         access_level: AccessLevel.Read,
       },
     ],
