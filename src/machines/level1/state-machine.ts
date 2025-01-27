@@ -103,14 +103,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
         }),
         'next_edge_connection_objectives',
+        'disable_edges_management_ability',
         {
-          type: 'update_tutorial_state_options',
+          type: 'update_whitelisted_element_ids',
           params: {
-            tutorial_state_options: {
-              in_tutorial_state: true,
-              disable_edges_creation: true,
-              whitelisted_element_ids: [],
-            },
+            whitelisted_element_ids: [],
           },
         },
       ],
@@ -162,7 +159,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         attach_policy_to_tutorial_user: {
-          entry: 'hide_popovers',
+          entry: ['hide_popovers', 'enable_edges_management_ability'],
           on: {
             [EdgeConnectionFinishEvent.PolicyAttachedToTutorialUser]: {
               target: 'policy_attached_to_tutorial_user_popover',
@@ -187,12 +184,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         create_user_popover: {
           entry: [
             'next_popover',
+            'disable_edges_management_ability',
             {
-              type: 'update_tutorial_state_options',
+              type: 'update_whitelisted_element_ids',
               params: {
-                tutorial_state_options: {
-                  whitelisted_element_ids: [ElementID.NewEntityBtn],
-                },
+                whitelisted_element_ids: [ElementID.NewEntityBtn, ElementID.CreateEntitiesMenuItem],
               },
             },
           ],
@@ -231,7 +227,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     inside_level: {
       onDone: 'finished_level',
       initial: 'connect_iam_policy_to_user',
-      entry: 'next_edge_connection_objectives',
+      entry: ['next_edge_connection_objectives', 'enable_edges_management_ability'],
       states: {
         connect_iam_policy_to_user: {
           on: {
@@ -240,7 +236,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
               actions: [
                 {
                   type: 'change_objective_progress',
-                  params: { id: 'enable_reading_from_bucket', finished: true },
+                  params: { id: LevelObjectiveID.GrantIAMUserReadAccessToS3Bucket, finished: true },
                 },
               ],
             },

@@ -41,7 +41,17 @@ export const WithStateMachineEventButton = withStatemachineEvent<
   ButtonProps & { event: StatelessStateMachineEvent }
 >(Button);
 
-export const TutorialGuardedButton = withTutorialGuard<ButtonProps & { id: string }>(Button);
+export const TutorialGuardedButton = withTutorialGuard<ButtonProps & { elementid: string }>(Button);
 export const TutorialGuardedMenuButton = withTutorialGuard<
-  MenuButtonProps & { id: string } & IconButtonProps
+  MenuButtonProps & { elementid: string } & IconButtonProps
 >(MenuButton);
+
+export const MenuItemWithStateMachineEvent = withStatemachineEvent<
+  MenuItemProps & { event: StatelessStateMachineEvent }
+>(MenuItem);
+export const MenuItemWithEventAndPopover = withPopover<
+  MenuItemProps & { event: StatelessStateMachineEvent } & { elementid: string }
+>(MenuItemWithStateMachineEvent);
+export const GuardedMenuItemWithEventAndPopover = withTutorialGuard<
+  MenuItemProps & { event: StatelessStateMachineEvent } & { elementid: string }
+>(MenuItemWithEventAndPopover);

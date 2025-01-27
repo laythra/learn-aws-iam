@@ -22,7 +22,7 @@ import _ from 'lodash';
 import { EventFrom } from 'xstate';
 
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
-import { TutorialGuardedButton, WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
+import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { ElementID } from '@/config/element-ids';
 import { IAMIdentityEntity, IAMNodeEntity } from '@/types';

@@ -1,6 +1,6 @@
 import React, { forwardRef, ForwardRefExoticComponent, PropsWithoutRef } from 'react';
 
-import { As, Box, Tooltip } from '@chakra-ui/react';
+import { Tooltip } from '@chakra-ui/react';
 import _ from 'lodash';
 
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
@@ -12,36 +12,37 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
  * @returns The wrapped component with a guard.
  */
 export const withTutorialGuard = <
-  T extends { isDisabled?: boolean; id: string },
+  T extends { isDisabled?: boolean; elementid: string },
   TRef = HTMLElement,
 >(
   WrappedComponent: React.FC<T>
 ): ForwardRefExoticComponent<PropsWithoutRef<T> & React.RefAttributes<TRef>> => {
-  const TutorialGuardedComponent = forwardRef<TRef, T>(({ isDisabled, id, ...props }, ref) => {
-    const [inTutorialState, whitelistedElementIds] = LevelsProgressionContext.useSelector(
-      state => [state.context.in_tutorial_state, state.context.whitelisted_element_ids],
-      _.isEqual
-    );
+  const TutorialGuardedComponent = forwardRef<TRef, T>(
+    ({ isDisabled, elementid, ...props }, ref) => {
+      const [inTutorialState, whitelistedElementIds] = LevelsProgressionContext.useSelector(
+        state => [state.context.in_tutorial_state, state.context.whitelisted_element_ids],
+        _.isEqual
+      );
 
-    const forceDisable = inTutorialState && !whitelistedElementIds?.includes(id);
-    console.log('Is disabled: ', isDisabled);
+      const forceDisable = inTutorialState && !whitelistedElementIds?.includes(elementid);
 
-    return (
-      <>
-        <Tooltip
-          label={forceDisable ? 'This utility is blocked during the tutorial.' : undefined}
-          isDisabled={!forceDisable}
-        >
-          <WrappedComponent
-            {...(props as T)}
-            id={id}
-            isDisabled={isDisabled || forceDisable}
-            ref={ref}
-          />
-        </Tooltip>
-      </>
-    );
-  });
+      return (
+        <>
+          <Tooltip
+            label={forceDisable ? 'This utility is blocked during the tutorial.' : undefined}
+            isDisabled={!forceDisable}
+          >
+            <WrappedComponent
+              {...(props as T)}
+              id={elementid}
+              isDisabled={isDisabled || forceDisable}
+              ref={ref}
+            />
+          </Tooltip>
+        </>
+      );
+    }
+  );
 
   TutorialGuardedComponent.displayName = `TutorialGuardedComponent(${
     WrappedComponent.displayName || WrappedComponent.name

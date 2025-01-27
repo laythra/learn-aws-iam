@@ -64,6 +64,8 @@ export function attachUserToGroup<TLevelObjectiveID, TFinishEventMap extends Bas
   });
 }
 
+// Responsible for establishing edges between a user and other nodes
+// when a policy node has been attached to the user node
 function updatePolicyToUserConnectionEdges<
   TLevelObjectiveID,
   TFinishEventMap extends BaseFinishEventMap,
@@ -108,6 +110,7 @@ function updatePolicyToUserConnectionEdges<
         source: userNode.id,
         target: accessInfo.target_node,
         targetHandle: accessInfo.target_handle,
+        sourceHandle: accessInfo.source_handle,
         data: { hovering_label: accessInfo.access_level },
       });
 
@@ -252,6 +255,7 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
       newEdgeData = {
         ...newEdgeData,
         targetHandle: objective.established_edge_target_handle,
+        sourceHandle: objective.established_edge_source_handle,
         data: {
           hovering_label: objective.established_edge_hovering_label,
         },
