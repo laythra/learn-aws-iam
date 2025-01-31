@@ -23,7 +23,6 @@ import type {
   IAMRoleCreationObjective,
   PopoverTutorialMessage,
   PopupTutorialMessage,
-  TutorialStateOptions,
 } from '@/machines/types';
 import type {
   GenericContext,

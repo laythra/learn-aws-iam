@@ -89,7 +89,7 @@ interface IAMNodeData {
    */
   animations?: Record<
     string,
-    { keyframes: DOMKeyframesDefinition; options: DynamicAnimationOptions }
+    { element_class: string; keyframes: DOMKeyframesDefinition; options: DynamicAnimationOptions }[]
   >;
 }
 
@@ -135,6 +135,12 @@ export type IAMAnyNodeData =
   | IAMPolicyNodeData
   | IAMResourceNodeData
   | IAMRoleNodeData;
+
+export type IAMNodeAnimationConfig = {
+  element_class: string;
+  keyframes: DOMKeyframesDefinition;
+  options: DynamicAnimationOptions;
+}[];
 
 export interface IAMEdgeData {
   source_node_data?: IAMAnyNodeData;
