@@ -10,7 +10,7 @@ import { CanvasStore } from '../stores/canvas-store';
 import { edgeConnectionHandlers } from '../utils/edges-creation';
 import { getNodeWithInitialPosition } from '../utils/nodes-position';
 import {
-  currentLevelStateMachine,
+  getCurrentLevelStateMachine,
   LevelsProgressionContext,
 } from '@/components/providers/LevelsProgressionProvider';
 import { CustomTheme, IAMAnyNodeData, IAMEdgeData } from '@/types';
@@ -56,7 +56,6 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const sidePanelWidth = sidePanelOpened ? window.innerWidth * 0.2 : 0;
 
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance>();
-  const [playedAnimations, setPlayedAnimations] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     CanvasStore.send({ type: 'setEdges', edges });
@@ -136,8 +135,9 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         return;
       }
 
+      const currentStateMachine = getCurrentLevelStateMachine();
       levelActor.send({ type: connectionEventName, sourceNode, targetNode } as EventFromLogic<
-        typeof currentLevelStateMachine
+        typeof currentStateMachine
       >);
     },
     [nodes, edgesManagementDisabled]
@@ -147,6 +147,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     levelActor.send({ type: 'DELETE_EDGE', edge: targetEdges[0] });
   }, []);
 
+  // TODO: Save flow state to local storage?
   // useEffect(() => {
   //   if (rfInstance && levelFinished) {
   //     const flowState = rfInstance.toObject();

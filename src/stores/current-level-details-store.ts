@@ -1,5 +1,7 @@
 import { createStore } from '@xstate/store';
 
+import storage from '@/utils/storage';
+
 type CurrentLevelDetailsState = {
   levelNumber: number;
 };
@@ -16,11 +18,12 @@ type CurrentLevelDetailsEvents = {
 
 export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
   {
-    levelNumber: 1,
+    levelNumber: storage.getKey('currentLevel') ? parseInt(storage.getKey('currentLevel')!) : 1,
   },
   {
-    setLevelNumber: (_context: CurrentLevelDetailsState, event: { levelNumber: number }) => ({
-      levelNumber: event.levelNumber,
-    }),
+    setLevelNumber: (_context: CurrentLevelDetailsState, event: { levelNumber: number }) => {
+      storage.setKey('currentLevel', event.levelNumber.toString());
+      return { levelNumber: event.levelNumber };
+    },
   }
 );

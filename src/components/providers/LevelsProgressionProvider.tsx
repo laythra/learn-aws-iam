@@ -21,13 +21,7 @@ const LEVELS_STATE_MACHINES = {
   6: leve6StateMachine,
 };
 
-const savedCurrentLevelNumber = parseInt('1') as keyof typeof LEVELS_STATE_MACHINES;
 type LevelNumber = keyof typeof LEVELS_STATE_MACHINES;
-interface CurrentLevelDetailsContextType {
-  currentLevelNumber: LevelNumber;
-  setCurrentLevelNumber: Dispatch<SetStateAction<LevelNumber>>;
-}
-
 type ActorLogicType =
   | typeof level1StateMachine
   | typeof level2StateMachine
@@ -45,11 +39,6 @@ export const levelActors: {
     [levelNumber]: createActorContext(stateMachine),
   }),
   {}
-);
-
-export const currentLevelStateMachine = LEVELS_STATE_MACHINES[savedCurrentLevelNumber];
-export const CurrentLevelDetailsContext = createContext<CurrentLevelDetailsContextType | undefined>(
-  undefined
 );
 
 interface LevelsProgressionProviderProps {
@@ -72,6 +61,12 @@ export const LevelsProgressionContext = (): ReturnType<
 > => {
   const levelNumber = CurrentLevelDetailsStore.getSnapshot().context.levelNumber;
   return levelActors[levelNumber];
+};
+type LevelStateMachineType = (typeof LEVELS_STATE_MACHINES)[keyof typeof LEVELS_STATE_MACHINES];
+
+export const getCurrentLevelStateMachine = (): LevelStateMachineType => {
+  const levelNumber = CurrentLevelDetailsStore.getSnapshot().context.levelNumber as LevelNumber;
+  return LEVELS_STATE_MACHINES[levelNumber];
 };
 
 export default LevelsProgressionProvider;
