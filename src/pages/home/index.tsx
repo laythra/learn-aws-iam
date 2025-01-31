@@ -12,8 +12,7 @@ import MultiAccountCanvas from '@/features/canvas/components/MultiAccountCanvas'
 
 const Home: React.FC = () => {
   const useMultiAccountCanvas = LevelsProgressionContext().useSelector(
-    state => state.context.use_multi_account_canvas,
-    _.isEqual
+    state => state.context.use_multi_account_canvas
   );
   return (
     <Flex direction='row' h='100vh' w='100vw'>
