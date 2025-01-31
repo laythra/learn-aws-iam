@@ -6,8 +6,8 @@ import { LevelsProgressionContext } from '../providers/LevelsProgressionProvider
 interface SidePanelToggleButtonProps {}
 
 const SidePanelToggleButton: React.FC<SidePanelToggleButtonProps> = () => {
-  const isOpen = LevelsProgressionContext.useSelector(state => state.context.side_panel_open);
-  const levelActor = LevelsProgressionContext.useActorRef();
+  const isOpen = LevelsProgressionContext().useSelector(state => state.context.side_panel_open);
+  const levelActor = LevelsProgressionContext().useActorRef();
 
   const icon = isOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />;
 

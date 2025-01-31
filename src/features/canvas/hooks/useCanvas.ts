@@ -36,7 +36,7 @@ interface UseCanvasReturn {
 export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const theme = useTheme<CustomTheme>();
   const [nodes, edges, sidePanelOpened, edgesManagementDisabled] =
-    LevelsProgressionContext.useSelector(
+    LevelsProgressionContext().useSelector(
       state => [
         state.context.nodes,
         state.context.edges,
@@ -52,7 +52,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     _.isEqual
   );
 
-  const levelActor = LevelsProgressionContext.useActorRef();
+  const levelActor = LevelsProgressionContext().useActorRef();
   const sidePanelWidth = sidePanelOpened ? window.innerWidth * 0.2 : 0;
 
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance>();

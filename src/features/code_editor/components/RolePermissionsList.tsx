@@ -20,7 +20,7 @@ import { IAMNodeEntity } from '@/types';
 interface RolePermissionsListProps {}
 
 export const RolePermissionsList: React.FC<RolePermissionsListProps> = () => {
-  const nodes = LevelsProgressionContext.useSelector(state => state.context.nodes, _.isEqual);
+  const nodes = LevelsProgressionContext().useSelector(state => state.context.nodes, _.isEqual);
   const policyNodes = nodes.filter(node => node.data.entity === IAMNodeEntity.Policy);
 
   const updateSelectedPolicies = (policyId: string, isChecked: boolean): void => {

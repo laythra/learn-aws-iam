@@ -16,7 +16,7 @@ export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({
   nodeId,
   selectedIAMEntity,
 }) => {
-  const levelActor = LevelsProgressionContext.useActorRef();
+  const levelActor = LevelsProgressionContext().useActorRef();
   const { errors, warnings, isValidating } = useSelector(
     codeEditorStateStore,
     state => _.pick(state.context, ['errors', 'warnings', 'isValidating']),

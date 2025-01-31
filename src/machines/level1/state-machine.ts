@@ -15,6 +15,7 @@ import { UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { ElementID } from '@/config/element-ids';
+import CurrentLevelDetailsStore from '@/stores/current-level-details-store';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
@@ -111,7 +112,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
       ],
-      initial: 'tutorial_popover1',
+      initial: 'welcoming_message',
       onDone: 'inside_level',
       states: {
         welcoming_message: {
@@ -255,10 +256,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       },
     },
     finished_level: {
-      entry: assign({
-        state_name: 'finished_level',
-        level_finished: true,
-      }),
+      entry: [
+        assign({
+          state_name: 'finished_level',
+          level_finished: true,
+        }),
+        () => CurrentLevelDetailsStore.send({ type: 'setLevelNumber', levelNumber: 2 }),
+      ],
       type: 'final',
     },
   },

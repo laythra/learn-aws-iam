@@ -31,7 +31,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   selectedIAMEntity,
 }) => {
   const [policyCreationObjectives, roleCreationObjectives, multiAccount] =
-    LevelsProgressionContext.useSelector(
+    LevelsProgressionContext().useSelector(
       state => [
         state.context.policy_creation_objectives,
         state.context.role_creation_objectives,

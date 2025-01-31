@@ -34,7 +34,7 @@ import {
 interface IdentityCreationPopupProps {}
 
 export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () => {
-  const levelActor = LevelsProgressionContext.useActorRef();
+  const levelActor = LevelsProgressionContext().useActorRef();
 
   const { closeIdentityCreator, isIdentityCreatorOpen } = useIdentityCreator();
   const [userName, setUserName] = useState('');

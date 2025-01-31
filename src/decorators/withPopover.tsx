@@ -15,8 +15,8 @@ export const withPopover = <T extends { elementid: string }, R = HTMLElement>(
   WrappedComponent: React.FC<T>
 ): ForwardRefExoticComponent<PropsWithoutRef<T> & React.RefAttributes<R>> => {
   const WithPopover = forwardRef<R, T>((props, ref) => {
-    const machineActor = LevelsProgressionContext.useActorRef();
-    const [showPopovers, popoverContent] = LevelsProgressionContext.useSelector(
+    const machineActor = LevelsProgressionContext().useActorRef();
+    const [showPopovers, popoverContent] = LevelsProgressionContext().useSelector(
       state => [state.context.show_popovers, state.context.popover_content],
       _.isEqual
     );

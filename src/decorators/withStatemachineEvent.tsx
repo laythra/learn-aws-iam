@@ -24,7 +24,7 @@ export const withStatemachineEvent = <
   WrappedComponent: React.FC<TEvent>
 ): ForwardRefExoticComponent<PropsWithoutRef<TEvent> & React.RefAttributes<TRef>> => {
   const WithStatemachineEvent = forwardRef<TRef, TEvent>((props, ref) => {
-    const machineActor = LevelsProgressionContext.useActorRef();
+    const machineActor = LevelsProgressionContext().useActorRef();
 
     const emitEventToStateMachine = (): void => {
       machineActor.send({ type: props.event });

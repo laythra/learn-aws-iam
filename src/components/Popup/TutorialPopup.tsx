@@ -22,8 +22,8 @@ interface TutorialPopupProps {}
 
 export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
   const theme = useTheme<CustomTheme>();
-  const levelActor = LevelsProgressionContext.useActorRef();
-  const [showPopups, popupContent] = LevelsProgressionContext.useSelector(
+  const levelActor = LevelsProgressionContext().useActorRef();
+  const [showPopups, popupContent] = LevelsProgressionContext().useSelector(
     state => [state.context.show_popups, state.context.popup_content],
     _.isEqual
   );

@@ -9,7 +9,7 @@ import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';
 
 const RightSidePanel: React.FC = () => {
-  const [levelObjectives, isSidePanelOpen] = LevelsProgressionContext.useSelector(
+  const [levelObjectives, isSidePanelOpen] = LevelsProgressionContext().useSelector(
     state => [state.context.level_objectives, state.context.side_panel_open],
     _.isEqual
   );

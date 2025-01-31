@@ -19,7 +19,7 @@ export const withTutorialGuard = <
 ): ForwardRefExoticComponent<PropsWithoutRef<T> & React.RefAttributes<TRef>> => {
   const TutorialGuardedComponent = forwardRef<TRef, T>(
     ({ isDisabled, elementid, ...props }, ref) => {
-      const [inTutorialState, whitelistedElementIds] = LevelsProgressionContext.useSelector(
+      const [inTutorialState, whitelistedElementIds] = LevelsProgressionContext().useSelector(
         state => [state.context.in_tutorial_state, state.context.whitelisted_element_ids],
         _.isEqual
       );

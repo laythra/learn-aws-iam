@@ -18,7 +18,7 @@ interface NewEntityButtonProps {}
 
 export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   const { openIdentityCreator } = useIdentityCreator();
-  const levelActor = LevelsProgressionContext.useActorRef();
+  const levelActor = LevelsProgressionContext().useActorRef();
 
   const hidePopovers = (): void => {
     levelActor.send({ type: 'HIDE_POPOVERS' });
