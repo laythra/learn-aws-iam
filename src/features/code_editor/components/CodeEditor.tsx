@@ -22,10 +22,9 @@ import { CodeEditorCreate } from './Create/CodeEditorCreate';
 import { CreateSubmitButton } from './Create/CreateSubmitButton';
 import { CodeEditorEdit } from './Edit/CodeEditorEdit';
 import { EditSubmitButton } from './Edit/EditSubmitButton';
-import { RolePermissionsList } from './RolePermissionsList';
 import codeEditorStateStore from '../stores/code-editor-state-store';
 import CodeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
-import { CustomTheme, IAMNodeEntity } from '@/types';
+import { CustomTheme } from '@/types';
 
 interface CodeEditorProps {}
 
@@ -70,7 +69,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
             ) : (
               <CodeEditorEdit nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
             )}
-            {/* {selectedIAMEntity === IAMNodeEntity.Role && <RolePermissionsList />} */}
             <CodeEditorErrorsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
             {_.isEmpty(errors[selectedIAMEntity][nodeId]) && (
               <CodeEditorWarningsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />

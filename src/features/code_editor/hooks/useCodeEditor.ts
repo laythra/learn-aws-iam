@@ -1,5 +1,3 @@
-import { on } from 'events';
-
 import { useEffect, MutableRefObject } from 'react';
 
 import { json } from '@codemirror/lang-json';
@@ -83,7 +81,7 @@ export function useCodeEditor({
         initialContent
       );
     }
-  }, [selectedIAMEntity]);
+  }, [selectedIAMEntity, editorView.current]);
 
   const onCreateEditor = (view: EditorView): void => {
     editorView.current = view;
