@@ -14,6 +14,9 @@ import {
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { resolveInitialEdges } from '../utils/initial-edges-resolver';
+import { ElementID } from '@/config/element-ids';
+import CurrentLevelDetailsStore from '@/stores/current-level-details-store';
+import { IAMNodeEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
@@ -43,6 +46,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
+    identity_creation_popup_default_value: IAMNodeEntity.Group,
+    in_tutorial_state: true,
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -83,11 +88,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         show_popovers: true,
       }),
     },
-    HIDE_POPOVERS: {
-      actions: assign({
-        show_popovers: false,
-      }),
-    },
+    HIDE_POPOVERS: { actions: 'hide_popovers' },
     TOGGLE_SIDE_PANEL: {
       actions: assign({
         side_panel_open: ({ context }) => !context.side_panel_open,
@@ -144,22 +145,33 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       entry: 'next_popup',
       on: {
         NEXT_POPUP: {
+          target: 'current_user_permissions_popover',
+        },
+      },
+    },
+    current_user_permissions_popover: {
+      entry: 'next_popover',
+      on: {
+        NEXT_POPOVER: {
           target: 'create_group_popover',
         },
       },
     },
     create_group_popover: {
-      entry: 'next_popover',
+      entry: [
+        'next_popover',
+        {
+          type: 'update_whitelisted_element_ids',
+          params: {
+            whitelisted_element_ids: [ElementID.NewEntityBtn, ElementID.CreateEntitiesMenuItem],
+          },
+        },
+        assign({
+          edges: [],
+        }),
+      ],
       on: {
         CREATE_IAM_IDENTITY_POPUP_OPENED: {
-          target: 'select_group_type_popover',
-        },
-      },
-    },
-    select_group_type_popover: {
-      entry: 'next_popover',
-      on: {
-        CREATE_IAM_IDENTITY_TAB_CHANGED: {
           target: 'add_group_name_popover',
         },
       },
@@ -182,7 +194,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       entry: [
         'next_popover',
         assign({
-          show_popovers: true,
           edges_connection_objectives: EDGE_CONNECTION_OBJECTIVES[0],
           edges: [],
         }),
@@ -273,7 +284,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     },
     attach_your_user_to_group: {
       initial: 'first_user_attached_popover',
-      onDone: 'finished_level',
+      onDone: 'finished_level_popover',
       entry: [
         {
           type: 'add_new_level_objective',
@@ -314,18 +325,31 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             },
           },
         },
+        level_finished_popup: {
+          entry: 'next_popup',
+          on: {
+            NEXT_POPUP: 'level_finished',
+          },
+        },
         level_finished: {
           type: 'final',
         },
       },
     },
+    finished_level_popover: {
+      entry: 'next_popover',
+      on: {
+        NEXT_POPOVER: 'finished_level',
+      },
+    },
     finished_level: {
-      entry: assign({
-        state_name: 'finished_level',
-        level_finished: true,
-        popover_content: POPOVER_TUTORIAL_MESSAGES[6],
-        show_popovers: true,
-      }),
+      entry: [
+        assign({
+          state_name: 'finished_level',
+          level_finished: true,
+        }),
+        () => CurrentLevelDetailsStore.send({ type: 'incrementLevelNumber' }),
+      ],
       type: 'final',
     },
   },
