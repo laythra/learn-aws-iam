@@ -36,10 +36,13 @@ interface IdentityCreationPopupProps {}
 export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () => {
   const levelActor = LevelsProgressionContext().useActorRef();
 
-  const { closeIdentityCreator, isIdentityCreatorOpen } = useIdentityCreator();
+  const { closeIdentityCreator, isIdentityCreatorOpen, defaultSelectedIdentity } =
+    useIdentityCreator();
+
   const [userName, setUserName] = useState('');
   const [groupName, setGroupName] = useState('');
-  const [iamIdentityEntity, setIamIdentityEntity] = useState<IAMIdentityEntity>(IAMNodeEntity.User);
+  const [iamIdentityEntity, setIamIdentityEntity] =
+    useState<IAMIdentityEntity>(defaultSelectedIdentity);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (iamIdentityEntity === IAMNodeEntity.User) {
@@ -72,9 +75,9 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
 
   useEffect(() => {
     if (isIdentityCreatorOpen) {
-      levelActor.send({ type: 'CREATE_IAM_IDENTITY_POPUP_OPENED' } as EventFrom<
-        typeof levelActor.logic
-      >);
+      levelActor.send({
+        type: StatelessStateMachineEvent.CreateIAMIdentityPopupOpened,
+      } as EventFrom<typeof levelActor.logic>);
     }
   }, [isIdentityCreatorOpen]);
 
@@ -86,7 +89,12 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
           <Flex justifyContent='space-between'>
             <Text>New {_.upperFirst(iamIdentityEntity)}</Text>
             <WithPopoverBox elementid={ElementID.IAMIdentitySelectorTypeForCreation} fontSize='8px'>
-              <Tabs onChange={handleTabChange} variant='soft-rounded' size='sm'>
+              <Tabs
+                onChange={handleTabChange}
+                variant='soft-rounded'
+                size='sm'
+                index={iamIdentityEntity === IAMNodeEntity.User ? 0 : 1}
+              >
                 <TabList>
                   <Tab>User</Tab>
                   <Tab>Group</Tab>
@@ -109,11 +117,6 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
           </FormControl>
 
           <Divider my={4} />
-
-          {/* <PoliciesList
-            attachedPolicies={attachedPolicies}
-            setAttachedPolicies={setAttachedPolicies}
-          /> */}
         </ModalBody>
         <ModalFooter>
           <Button colorScheme='blue' mr={3} onClick={submit}>
