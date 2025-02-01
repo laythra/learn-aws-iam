@@ -10,6 +10,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
@@ -48,6 +49,15 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
           {popupContent.image && (
             <Box borderRadius={16} borderWidth='2px' borderColor='gray.200'>
               <Image src={popupContent.image} borderRadius={16} />
+            </Box>
+          )}
+          {popupContent.lottie_animation && (
+            <Box height='250px' width='250px' position='absolute' right='0' bottom='0'>
+              <DotLottieReact
+                src={`lottie/${popupContent.lottie_animation}.lottie`}
+                loop={false}
+                autoplay
+              />
             </Box>
           )}
         </ModalBody>

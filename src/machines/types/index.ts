@@ -72,6 +72,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   whitelisted_element_ids?: string[];
   edges_management_disabled?: boolean;
   animations?: Record<string, DynamicAnimationOptions>;
+  identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -159,6 +160,7 @@ export type PopupTutorialMessage = {
   title: string;
   content: string;
   image?: string;
+  lottie_animation?: string;
 };
 
 export type LevelObjective<TObjectiveID, TFinishEventMap extends BaseFinishEventMap> = {
