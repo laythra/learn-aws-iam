@@ -1,4 +1,5 @@
 export enum UserNodeID {
+  TutorialUser = 'TutorialUser',
   FirstUser = 'FirstUser',
 }
 

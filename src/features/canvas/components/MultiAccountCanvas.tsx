@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import { Box, Text, Divider, useTheme } from '@chakra-ui/react';
 import _ from 'lodash';
-import ReactFlow, { Node } from 'reactflow';
+import ReactFlow, { ConnectionMode, Node } from 'reactflow';
 
 import IAMCanvasEdge from './IAMCanvasEdge';
 import IAMCanvasNode from './IAMCanvasNode';
@@ -101,6 +101,7 @@ const MultiAccountCanvas: React.FC = () => {
         preventScrolling={true}
         panOnDrag={false}
         panOnScroll={false}
+        connectionMode={ConnectionMode.Loose}
         nodeExtent={[
           [0, 0],
           [window.innerWidth - sidePanelWidth, window.innerHeight],

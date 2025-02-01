@@ -1,14 +1,21 @@
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import useModal from '@/hooks/useModal';
+import { IAMNodeEntity } from '@/types';
 
 interface IAMIdentityCreatorContextState {
   closeIdentityCreator: () => void;
   openIdentityCreator: () => void;
   isIdentityCreatorOpen: boolean;
+  defaultSelectedIdentity: IAMNodeEntity.User | IAMNodeEntity.Group;
 }
 
 const MODAL_ID = 'iam-identity-manager';
 
 export const useIdentityCreator = (): IAMIdentityCreatorContextState => {
+  const defaultSelectedIdentity = LevelsProgressionContext().useSelector(
+    state => state.context.identity_creation_popup_default_value || IAMNodeEntity.User
+  );
+
   const context = useModal();
 
   const closeIdentityCreator = (): void => context.closeModal(MODAL_ID);
@@ -19,5 +26,6 @@ export const useIdentityCreator = (): IAMIdentityCreatorContextState => {
     closeIdentityCreator,
     openIdentityCreator,
     isIdentityCreatorOpen,
+    defaultSelectedIdentity,
   };
 };

@@ -6,6 +6,12 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
   {
     type: ObjectiveType.LEVEL_OBJECTIVE,
     finished: false,
+    id: LevelObjectiveID.ConnectionTutorialPolicyToTutorialUser,
+    label: 'Connect `public-images` policy to `Laith` **IAM User**',
+  },
+  {
+    type: ObjectiveType.LEVEL_OBJECTIVE,
+    finished: false,
     id: LevelObjectiveID.CreateIAMUser,
     label: 'Create an IAM user',
   },

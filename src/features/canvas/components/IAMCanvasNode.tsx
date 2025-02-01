@@ -1,18 +1,29 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
+import { useAnimate } from 'framer-motion';
+import _ from 'lodash';
 import { Handle } from 'reactflow';
 
 import IAMNodeInfoButton from './IAMNodeInfoButton';
 import { IAMNodeContext } from './IAMNodeProvider';
+import { ShimmerBackground } from './ShimmerBackground';
+import { ShimmeringLight } from './ShimmeringLight';
 import { WithPopoverBox } from '@/components/Decorated';
+import { NODE_ANIMATION_ID } from '@/config/node-animations';
 import { type IAMAnyNodeData, type CustomTheme, IAMNodeEntity } from '@/types';
 import { loadLocalImage } from '@/utils/image-loader';
 
 export interface IAMCanvasNodeProps {
   data: IAMAnyNodeData;
   id: string;
+}
+
+enum AnimationState {
+  Pending,
+  Playing,
+  Finished,
 }
 
 /**
@@ -24,13 +35,16 @@ export interface IAMCanvasNodeProps {
  * @param `data` The node data passed from React Flow.
  */
 const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
-  const { entity, label, handles, image, content } = data;
+  const { entity, label, handles, image, content, animations } = data;
   const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_policy;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
   const isEditable = data.entity === IAMNodeEntity.Role || data.entity === IAMNodeEntity.Policy;
 
   // TODO: Move selected node id state to an xstate store instead
   const { setSelectedNodeId, selectedNodeId } = useContext(IAMNodeContext);
+  const [animationsState, setAnimationsState] = useState<Record<string, AnimationState>>({});
+  const [scope, animate] = useAnimate();
+
   const theme = useTheme<CustomTheme>();
 
   const handleClick = (): void => {
@@ -39,9 +53,48 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
 
   const isSelected = selectedNodeId === id;
 
+  useEffect(() => {
+    // TODO: Figure out a better way to handle animations
+    const playAnimations = async (): Promise<void> => {
+      if (!data.animations) return;
+
+      // Fetch animations that haven't been played yet
+      const animationsToPlay = _.pickBy(data.animations, (value, key) => !animationsState[key]);
+
+      if (Object.keys(animationsToPlay).length > 0) {
+        setAnimationsState(currentState => ({
+          ...currentState,
+          ...Object.fromEntries(
+            Object.keys(animationsToPlay).map(key => [key, AnimationState.Playing])
+          ),
+        }));
+      }
+
+      // Play animations
+      for (const pendingAnimations of Object.values(animationsToPlay)) {
+        await Promise.all(
+          pendingAnimations.map(({ element_class, keyframes, options }) =>
+            animate(element_class, keyframes, options)
+          )
+        );
+      }
+
+      setAnimationsState(currentState => ({
+        ...currentState,
+        ...Object.fromEntries(
+          Object.keys(animationsToPlay).map(key => [key, AnimationState.Finished])
+        ),
+      }));
+    };
+
+    playAnimations();
+  }, [animations]);
+
   return (
     <>
       <Flex
+        ref={scope}
+        id={id}
         direction='column'
         justifyContent='center'
         alignItems='center'
@@ -57,6 +110,7 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
         borderColor={isSelected ? 'blue.500' : 'gray.200'}
         onClick={handleClick}
       >
+        <ShimmerBackground className='shimmer' />
         {handles.map(handle => (
           <Handle key={handle.id} {...handle} />
         ))}

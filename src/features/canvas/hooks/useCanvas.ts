@@ -10,7 +10,7 @@ import { CanvasStore } from '../stores/canvas-store';
 import { edgeConnectionHandlers } from '../utils/edges-creation';
 import { getNodeWithInitialPosition } from '../utils/nodes-position';
 import {
-  currentLevelStateMachine,
+  getCurrentLevelStateMachine,
   LevelsProgressionContext,
 } from '@/components/providers/LevelsProgressionProvider';
 import { CustomTheme, IAMAnyNodeData, IAMEdgeData } from '@/types';
@@ -20,19 +20,31 @@ interface UseCanvasOptions {}
 interface UseCanvasReturn {
   rfInstance: ReactFlowInstance | undefined;
   setRfInstance: (instance: ReactFlowInstance) => void;
-  nodesState: Node[];
+  nodesState: Node<IAMAnyNodeData>[];
   edgesState: Edge[];
   onConnect: (params: Connection) => void;
   onEdgeDelete: (targetEdges: Edge[]) => void;
   sidePanelWidth: number;
+  disabledEdgesCreation: boolean;
 }
 
+/**
+ * A hook that's responsible for managing the canvas state, which includes nodes, edges, and the ReactFlow instance.
+ * Used in both Canvas.tsx and MultiAccountCanvas.tsx
+ *  @returns {UseCanvasReturn} Object containing canvas state and handlers.
+ */
 export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const theme = useTheme<CustomTheme>();
-  const [nodes, edges, sidePanelOpened] = LevelsProgressionContext.useSelector(
-    state => [state.context.nodes, state.context.edges, state.context.side_panel_open],
-    _.isEqual
-  );
+  const [nodes, edges, sidePanelOpened, edgesManagementDisabled] =
+    LevelsProgressionContext().useSelector(
+      state => [
+        state.context.nodes,
+        state.context.edges,
+        state.context.side_panel_open,
+        state.context.edges_management_disabled,
+      ],
+      _.isEqual
+    );
 
   const [nodesState, edgesState] = useSelector(
     CanvasStore,
@@ -40,7 +52,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     _.isEqual
   );
 
-  const levelActor = LevelsProgressionContext.useActorRef();
+  const levelActor = LevelsProgressionContext().useActorRef();
   const sidePanelWidth = sidePanelOpened ? window.innerWidth * 0.2 : 0;
 
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance>();
@@ -59,11 +71,13 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
       return nodesGroup.map((node, nodeIndex) => {
         const existingNode = _.find(nodesState, { id: node.id });
 
+        // Ensures existing nodes' position remains unchanged
+        // since the user might have moved them and we don't want to override that
         if (existingNode) {
           return {
             ...existingNode,
             data: { ...existingNode.data, ...node.data },
-            position: existingNode.position, // Ensure position remains unchanged
+            position: existingNode.position,
           };
         }
 
@@ -107,6 +121,10 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         return;
       }
 
+      if (edgesManagementDisabled) {
+        return;
+      }
+
       const sourceNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.source });
       const targetNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.target });
 
@@ -117,17 +135,19 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         return;
       }
 
+      const currentStateMachine = getCurrentLevelStateMachine();
       levelActor.send({ type: connectionEventName, sourceNode, targetNode } as EventFromLogic<
-        typeof currentLevelStateMachine
+        typeof currentStateMachine
       >);
     },
-    [nodes]
+    [nodes, edgesManagementDisabled]
   );
 
   const onEdgeDelete = useCallback((targetEdges: Edge<IAMEdgeData>[]) => {
     levelActor.send({ type: 'DELETE_EDGE', edge: targetEdges[0] });
   }, []);
 
+  // TODO: Save flow state to local storage?
   // useEffect(() => {
   //   if (rfInstance && levelFinished) {
   //     const flowState = rfInstance.toObject();
@@ -143,5 +163,6 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     onConnect,
     onEdgeDelete,
     sidePanelWidth,
+    disabledEdgesCreation: edgesManagementDisabled ?? false,
   };
 }

@@ -14,7 +14,7 @@ export const PoliciesList: React.FC<PoliciesListProps> = ({
   attachedPolicies,
   setAttachedPolicies,
 }) => {
-  const createdNodes = LevelsProgressionContext.useSelector(state => state.context.nodes);
+  const createdNodes = LevelsProgressionContext().useSelector(state => state.context.nodes);
   const policies = createdNodes.filter(
     node => node.data.entity === IAMNodeEntity.Policy
   ) as Node<IAMPolicyNodeData>[];

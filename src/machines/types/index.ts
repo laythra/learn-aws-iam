@@ -1,5 +1,6 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
 import { Schema, ValidateFunction } from 'ajv';
+import { DynamicAnimationOptions } from 'framer-motion';
 import type { Edge, Node } from 'reactflow';
 
 import type {
@@ -66,6 +67,12 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   state_name: string;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
   use_multi_account_canvas?: boolean;
+  highlighted_element_id?: string;
+  in_tutorial_state?: boolean;
+  whitelisted_element_ids?: string[];
+  edges_management_disabled?: boolean;
+  animations?: Record<string, DynamicAnimationOptions>;
+  identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -153,6 +160,7 @@ export type PopupTutorialMessage = {
   title: string;
   content: string;
   image?: string;
+  lottie_animation?: string;
 };
 
 export type LevelObjective<TObjectiveID, TFinishEventMap extends BaseFinishEventMap> = {
@@ -174,6 +182,7 @@ export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> 
   readonly is_finished: boolean;
   readonly established_edge_hovering_label: AccessLevel | string;
   readonly established_edge_target_handle?: string;
+  readonly established_edge_source_handle?: string;
 };
 
 // TODO: Make the following interface only responsible for creating Policy creation objectives

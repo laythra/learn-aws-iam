@@ -26,7 +26,7 @@ const VALIDATION_ERROR_WARNING =
 const CONTENT_UNCHANGED_WARNING = 'You have not made any changes to the policy.';
 
 export const CodeEditorEdit: React.FC<CodeEditorWindowProps> = ({ nodeId, selectedIAMEntity }) => {
-  const [policyEditObjectives, nodes] = LevelsProgressionContext.useSelector(
+  const [policyEditObjectives, nodes] = LevelsProgressionContext().useSelector(
     state => [state.context.policy_edit_objectives, state.context.nodes],
     _.isEqual
   );

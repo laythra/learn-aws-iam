@@ -1,4 +1,12 @@
+import { DOMKeyframesDefinition, DynamicAnimationOptions } from 'framer-motion';
 import { HandleProps } from 'reactflow';
+
+export enum HandleID {
+  Top = 'top',
+  Right = 'right',
+  Bottom = 'bottom',
+  Left = 'left',
+}
 
 export enum AccessLevel {
   Read = 'Read',
@@ -76,6 +84,13 @@ interface IAMNodeData {
    * mainly used for multi-account scenarios
    */
   account_id?: string;
+  /**
+   * Defines animations to play for the node
+   */
+  animations?: Record<
+    string,
+    { element_class: string; keyframes: DOMKeyframesDefinition; options: DynamicAnimationOptions }[]
+  >;
 }
 
 export interface IAMUserNodeData extends IAMNodeData {
@@ -120,6 +135,12 @@ export type IAMAnyNodeData =
   | IAMPolicyNodeData
   | IAMResourceNodeData
   | IAMRoleNodeData;
+
+export type IAMNodeAnimationConfig = {
+  element_class: string;
+  keyframes: DOMKeyframesDefinition;
+  options: DynamicAnimationOptions;
+}[];
 
 export interface IAMEdgeData {
   source_node_data?: IAMAnyNodeData;

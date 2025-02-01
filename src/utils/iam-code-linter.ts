@@ -89,7 +89,8 @@ export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
       isJSONValid(
         docString,
         policyObjective.validate_function ?? GENERIC_VALIDATION_FNS[policyObjective.entity]
-      ) && policyObjective.account_id === accountId
+      ) &&
+      (policyObjective.account_id === accountId || !policyObjective.account_id)
   );
 };
 
@@ -105,7 +106,8 @@ export const findAnyValidRole = <TFinishEventMap extends BaseFinishEventMap>(
       isJSONValid(
         docString,
         roleObjective.validate_function ?? GENERIC_VALIDATION_FNS[IAMNodeEntity.Role]
-      ) && roleObjective.account_id === accountId
+      ) &&
+      (roleObjective.account_id === accountId || !roleObjective.account_id)
   );
 };
 

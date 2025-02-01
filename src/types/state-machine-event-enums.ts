@@ -2,14 +2,15 @@
  */
 
 /**
-  * Defines events that are not accompanied by any data, and are used to trigger state machine transitions.
-    Can be used from any component to trigger a state machine transition.
-  *
-*/
+ * Defines events that are not accompanied by any data, and are used to trigger state machine transitions.
+ * * Can be used from any component to trigger a state machine transition.
+ *
+ */
 export enum StatelessStateMachineEvent {
   IAMNodeContentOpened = 'IAM_NODE_CONTENT_OPENED',
   CreateIAMIdentityTabChanged = 'CREATE_IAM_IDENTITY_TAB_CHANGED',
   CreateIAMPolicyRoleWindowOpened = 'CREATE_IAM_POLICY_ROLE_WINDOW_OPENED',
+  CreateIAMIdentityPopupOpened = 'CREATE_IAM_IDENTITY_POPUP_OPENED',
 }
 
 // /**

@@ -1,0 +1,35 @@
+import { createStore } from '@xstate/store';
+
+import storage from '@/utils/storage';
+
+type CurrentLevelDetailsState = {
+  levelNumber: number;
+};
+
+type CurrentLevelDetailsEvents = {
+  setLevelNumber: { levelNumber: number };
+  incrementLevelNumber: unknown;
+};
+
+/*
+ * A simple store that holds the current information about the level the user is currently on.
+ * Currently only holds the level number.
+ * Each level's state machine is responsible for updating this store when the level is completed.
+ */
+
+export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
+  {
+    levelNumber: storage.getKey('currentLevel') ? parseInt(storage.getKey('currentLevel')!) : 1,
+  },
+  {
+    setLevelNumber: (_context: CurrentLevelDetailsState, event: { levelNumber: number }) => {
+      storage.setKey('currentLevel', event.levelNumber.toString());
+      return { levelNumber: event.levelNumber };
+    },
+    incrementLevelNumber: (context: CurrentLevelDetailsState) => {
+      const nextLevel = context.levelNumber + 1;
+      storage.setKey('currentLevel', nextLevel.toString());
+      return { levelNumber: nextLevel };
+    },
+  }
+);

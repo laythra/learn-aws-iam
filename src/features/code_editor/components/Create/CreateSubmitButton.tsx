@@ -17,7 +17,7 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
   nodeId,
   selectedIAMEntity,
 }) => {
-  const levelActor = LevelsProgressionContext.useActorRef();
+  const levelActor = LevelsProgressionContext().useActorRef();
   const { errors, isValidating } = useSelector(
     codeEditorStateStore,
     state => _.pick(state.context, ['errors', 'isValidating']),

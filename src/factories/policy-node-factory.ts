@@ -2,7 +2,8 @@ import _ from 'lodash';
 import type { Node, HandleProps } from 'reactflow';
 import { Position } from 'reactflow';
 
-import { IAMPolicyNodeData, IAMNodeImage, IAMNodeEntity } from '@/types';
+import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
+import { IAMPolicyNodeData, IAMNodeImage, IAMNodeEntity, HandleID } from '@/types';
 
 export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
   id: 'iam_policy',
@@ -14,14 +15,19 @@ export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
     label: 'IAM Policy',
     entity: IAMNodeEntity.Policy,
     handles: [
-      { id: Position.Top, type: 'source', position: Position.Top },
-      { id: Position.Right, type: 'source', position: Position.Right },
-      { id: Position.Bottom, type: 'source', position: Position.Bottom },
-      { id: Position.Left, type: 'source', position: Position.Left },
+      { id: HandleID.Top, type: 'source', position: Position.Top },
+      { id: HandleID.Right, type: 'source', position: Position.Right },
+      { id: HandleID.Bottom, type: 'source', position: Position.Bottom },
+      { id: HandleID.Left, type: 'source', position: Position.Left },
     ] as HandleProps[],
     image: IAMNodeImage.Policy,
     initial_position: 'center',
-  } as IAMPolicyNodeData,
+    editable: true,
+    associated_users: [],
+    granted_accesses: [],
+    content: '',
+    animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
+  },
 };
 
 export function createPolicyNode(props: Partial<IAMPolicyNodeData>): Node<IAMPolicyNodeData> {
