@@ -8,6 +8,7 @@ type CurrentLevelDetailsState = {
 
 type CurrentLevelDetailsEvents = {
   setLevelNumber: { levelNumber: number };
+  incrementLevelNumber: unknown;
 };
 
 /*
@@ -24,6 +25,11 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
     setLevelNumber: (_context: CurrentLevelDetailsState, event: { levelNumber: number }) => {
       storage.setKey('currentLevel', event.levelNumber.toString());
       return { levelNumber: event.levelNumber };
+    },
+    incrementLevelNumber: (context: CurrentLevelDetailsState) => {
+      const nextLevel = context.levelNumber + 1;
+      storage.setKey('currentLevel', nextLevel.toString());
+      return { levelNumber: nextLevel };
     },
   }
 );
