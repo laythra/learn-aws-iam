@@ -15,6 +15,7 @@ import {
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { resolveInitialEdges } from '../utils/initial-edges-resolver';
+import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -123,6 +124,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           nodes: INITIAL_TUTORIAL_NODES,
           level_objectives: LEVEL_OBJECTIVES[0],
         }),
+        'enable_tutorial_state',
       ],
       states: {
         tutorial_popup1: {
@@ -158,7 +160,20 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         create_your_custom_policy_popover: {
-          entry: ['next_popover', 'next_policy_creation_objectives', 'show_side_panel'],
+          entry: [
+            'next_popover',
+            'next_policy_creation_objectives',
+            'show_side_panel',
+            {
+              type: 'update_whitelisted_element_ids',
+              params: {
+                whitelisted_element_ids: [
+                  ElementID.NewEntityBtn,
+                  ElementID.CreateRolesAndPoliciesMenuItem,
+                ],
+              },
+            },
+          ],
           on: {
             [NodeCreationFinishEvent.S3_READ_POLICY_CREATED]: {
               actions: [
@@ -188,6 +203,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       entry: [
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
         'next_policy_creation_objectives',
+        'disable_tutorial_state',
         assign({
           edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
           nodes: INITIAL_IN_LEVEL_NODES,
@@ -215,11 +231,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           exit: 'hide_popups',
         },
         create_and_attach_policies: {
-          entry: [
-            'next_policy_creation_objectives',
-            'next_edge_connection_objectives',
-            'toggle_side_panel',
-          ],
+          entry: ['next_policy_creation_objectives', 'next_edge_connection_objectives'],
           type: 'parallel',
           onDone: 'create_and_attach_policies_completed',
           states: {

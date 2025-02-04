@@ -39,15 +39,25 @@
             }
           },
           "Resource": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 1,
-            "uniqueItems": true,
-            "items": {
-              "enum": [
-                "arn:aws:s3:::public-assets/*"
-              ]
-            }
+            "oneOf": [
+              {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "arn:aws:s3:::public-assets/*"
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "arn:aws:s3:::public-assets/*"
+                ]
+              }
+            ]
           }
         }
       }

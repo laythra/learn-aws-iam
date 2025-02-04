@@ -11,7 +11,7 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
     label: PolicyNodeID.S3ReadAccess,
     content: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
     initial_position: 'center',
-    editable: true,
+    editable: false,
   },
 ];
 
