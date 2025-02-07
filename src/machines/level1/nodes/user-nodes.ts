@@ -11,6 +11,7 @@ const TUTORIAL_POLICY_NODES: Partial<IAMUserNodeData>[] = [
     label: 'Laith',
     initial_position: 'center',
     image: IAMNodeImage.User,
+    arn: 'arn:aws:iam::123456789012:user/Laith',
   },
 ];
 

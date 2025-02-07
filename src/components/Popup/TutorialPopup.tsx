@@ -14,6 +14,7 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
+import { GoToNextLevelButton } from './GoToNextLevelButton';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { CustomTheme } from '@/types';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
@@ -63,9 +64,13 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
         </ModalBody>
 
         <ModalFooter>
-          <Button onClick={handleNextPopup} colorScheme='cyan'>
-            Next
-          </Button>
+          {popupContent.go_to_next_level_button ? (
+            <GoToNextLevelButton />
+          ) : (
+            <Button onClick={handleNextPopup} colorScheme='cyan'>
+              Next
+            </Button>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>
