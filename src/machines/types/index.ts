@@ -55,6 +55,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   next_role_creation_objectives_index?: number;
   next_popover_index: number;
   next_popup_index: number;
+  next_fixed_popover_index: number;
   nodes: Node<IAMAnyNodeData>[];
   policy_creation_objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[];
   policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
@@ -63,6 +64,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   role_creation_objectives: IAMRoleCreationObjective<TBaseFinishEventMap>[];
   show_popovers: boolean;
   show_popups: boolean;
+  show_fixed_popovers: boolean;
   side_panel_open?: boolean;
   state_name: string;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
@@ -73,6 +75,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   edges_management_disabled?: boolean;
   animations?: Record<string, DynamicAnimationOptions>;
   identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
+  fixed_popover_messages: FixedPopoverMessage[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -82,6 +85,7 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
         | 'NEXT'
         | 'NEXT_POPOVER'
         | 'NEXT_POPUP'
+        | 'NEXT_FIXED_POPOVER'
         | 'IAM_POLICY_CONNECTED'
         | 'IAM_USER_CREATED'
         | 'IAM_GROUP_CREATED'
@@ -89,6 +93,7 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
         | 'COMPLETE'
         | 'CREATE_USER_POPUP_OPENED'
         | 'HIDE_POPOVERS'
+        | 'HIDE_FIXED_POPOVERS'
         | 'CREATE_POLICY_POPUP_OPENED'
         | 'CREATE_IAM_IDENTITY_POPUP_OPENED'
         | 'IAM_USER_ATTACHED_TO_GROUP'
@@ -147,6 +152,14 @@ export type GenericInsideLevelMetadata = {
   entity_targets?: IAMNodeEntity[];
 };
 
+export type FixedPopoverMessage = {
+  popover_title: string;
+  popover_content: string;
+  show_next_button: boolean;
+  show_close_button: boolean;
+  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+};
+
 export type PopoverTutorialMessage = {
   element_id: string;
   popover_title: string;
@@ -161,6 +174,7 @@ export type PopupTutorialMessage = {
   content: string;
   image?: string;
   lottie_animation?: string;
+  go_to_next_level_button?: boolean;
 };
 
 export type LevelObjective<TObjectiveID, TFinishEventMap extends BaseFinishEventMap> = {

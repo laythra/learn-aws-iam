@@ -36,11 +36,12 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     level_number: 1,
     next_popover_index: 0,
     next_popup_index: 0,
+    next_fixed_popover_index: 0,
     state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
+    show_fixed_popovers: false,
     nodes: [],
-    metadata_keys: {},
     edges: [],
     level_objectives: [],
     policy_creation_objectives: [],
@@ -48,6 +49,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
+    fixed_popover_messages: [],
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {

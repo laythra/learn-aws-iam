@@ -16,6 +16,7 @@ import {
 import { UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { FIXED_POPOVER_MESSAGES } from '../level2/tutorial_messages/fixed-popover-messages';
 import { ElementID } from '@/config/element-ids';
 import CurrentLevelDetailsStore from '@/stores/current-level-details-store';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -35,9 +36,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     level_number: 1,
     next_popover_index: 0,
     next_popup_index: 0,
+    next_fixed_popover_index: 0,
     state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
+    show_fixed_popovers: false,
     nodes: [],
     edges: [],
     level_objectives: LEVEL_OBJECTIVES,
@@ -46,6 +49,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
+    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {

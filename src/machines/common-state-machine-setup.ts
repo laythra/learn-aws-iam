@@ -225,6 +225,16 @@ export const createStateMachineSetup = <
         next_popup_index: ({ context }) => context.next_popup_index + 1,
         show_popovers: false,
       }),
+      show_fixed_popover: assign({
+        show_fixed_popovers: ({ context }) =>
+          context.next_fixed_popover_index < context.fixed_popover_messages.length,
+      }),
+      hide_fixed_popovers: assign({ show_fixed_popovers: false }),
+      next_fixed_popover: assign({
+        next_fixed_popover_index: ({ context }) => context.next_fixed_popover_index + 1,
+        show_fixed_popovers: ({ context }) =>
+          context.next_fixed_popover_index < context.fixed_popover_messages.length,
+      }),
       next_policy_creation_objectives: assign({
         policy_creation_objectives: ({ context }) =>
           policyCreationObjectives[context.next_policy_creation_objectives_index ?? 0],
