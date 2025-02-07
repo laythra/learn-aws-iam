@@ -23,6 +23,7 @@ import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 interface IAMNodeInfoButtonProps {
   nodeId: string;
   label: string;
+  editable?: boolean;
   verboseDescription?: string;
   codeDescription?: string;
   placement?: PlacementWithLogical;
@@ -33,6 +34,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
   label,
   verboseDescription,
   codeDescription,
+  editable = false,
   placement = 'end-end',
 }) => {
   return (
@@ -42,9 +44,6 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
           event={StatelessStateMachineEvent.IAMNodeContentOpened}
           aria-label='info'
           icon={<CodeBracketIcon />}
-          position='absolute'
-          top={1}
-          right={1}
           variant='ghost'
           opacity={0.5}
           height='16px'
@@ -62,8 +61,8 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
         </PopoverHeader>
         <PopoverCloseButton />
         <PopoverBody textAlign='left'>
-          {codeDescription && (
-            <Code width='100%' whiteSpace='pre-wrap' position='relative'>
+          <Code width='100%' whiteSpace='pre-wrap' position='relative'>
+            {editable && (
               <Tooltip label='Edit' aria-label='Edit' placement='top'>
                 <IconButton
                   onClick={() =>
@@ -87,9 +86,9 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
                   _hover={{ bg: 'gray.200', opacity: 1 }}
                 />
               </Tooltip>
-              {codeDescription}
-            </Code>
-          )}
+            )}
+            {codeDescription}
+          </Code>
           {verboseDescription && <Text>{verboseDescription}</Text>}
         </PopoverBody>
       </PopoverContent>
