@@ -6,6 +6,7 @@ import { useAnimate } from 'framer-motion';
 import _ from 'lodash';
 import { Handle } from 'reactflow';
 
+import IAMNodeARNButton from './IAMNodeARNButton';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
 import { IAMNodeContext } from './IAMNodeProvider';
 import { ShimmerBackground } from './ShimmerBackground';
@@ -35,10 +36,9 @@ enum AnimationState {
  * @param `data` The node data passed from React Flow.
  */
 const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
-  const { entity, label, handles, image, content, animations } = data;
+  const { entity, label, handles, image, content, animations, arn } = data;
   const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_policy;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
-  const isEditable = data.entity === IAMNodeEntity.Role || data.entity === IAMNodeEntity.Policy;
 
   // TODO: Move selected node id state to an xstate store instead
   const { setSelectedNodeId, selectedNodeId } = useContext(IAMNodeContext);
@@ -144,22 +144,25 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
                 </Tooltip>
               )}
             </HStack>
-            <Text fontSize='14px' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
-              {resourceType || entity}
-            </Text>
+            <Tooltip label={arn}>
+              <Text fontSize='14px' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
+                {resourceType || entity}
+              </Text>
+            </Tooltip>
           </Box>
         </Flex>
       </Flex>
-      {isEditable && ( // TODO: Show info button even if not editable
-        <Box>
+      <HStack position='absolute' top={1} right={2}>
+        {arn && <IAMNodeARNButton arn={arn} placement='top-end' />}
+        {content && (
           <IAMNodeInfoButton
             nodeId={id}
             label={label}
             codeDescription={content}
             placement='top-end'
           />
-        </Box>
-      )}
+        )}
+      </HStack>
     </>
   );
 };
