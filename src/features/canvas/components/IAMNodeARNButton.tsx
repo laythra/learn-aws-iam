@@ -38,7 +38,7 @@ const IAMNodeARNButton: React.FC<IAMNodeARNButtonProps> = ({ arn, placement = 'e
     <Popover placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0}>
       <PopoverTrigger>
         <WithStateMachineEventIconButton
-          event={StatelessStateMachineEvent.IAMNodeContentOpened}
+          event={StatelessStateMachineEvent.IAMNodeARNCopied}
           aria-label='arn'
           icon={<IdentificationIcon />}
           variant='ghost'
