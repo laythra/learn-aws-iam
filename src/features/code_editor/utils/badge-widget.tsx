@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { createRoot } from 'react-dom/client';
 
 import { HelpBadge } from '@/machines/types';
+import { theme } from '@/theme';
 
 class BadgeWidget extends WidgetType {
   content: string;
@@ -22,9 +23,9 @@ class BadgeWidget extends WidgetType {
     const root = createRoot(badgeElement);
 
     // TODO: Defining the ChakraProvider here is a hack to get the Badge component to render properly
-    // We need to get it to use the global top level ChakraProvider instead
+    // We need to get it to use the global top level ChakraProvider instead. maybe use a portal?
     root.render(
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <Badge colorScheme={this.color}>{this.content}</Badge>
       </ChakraProvider>
     );
@@ -65,6 +66,12 @@ export const badgeExtension = StateField.define<DecorationSet>({
 
 type Json = { [key: string]: Json } | Json[] | string | number | boolean | object | null;
 
+/**
+ * gets the line number for a given path in a JSON object
+ * @param json gets the line number for a given path in a JSON object
+ * @param path the path to the value in the JSON object, ie. `Statement[0].Action[0]`
+ * @returns the line number for the path in the JSON object
+ */
 function getLineNumberForPath(json: Json, path: string): number | null {
   const resolvedValue = _.get(json, path);
   if (!resolvedValue) {
