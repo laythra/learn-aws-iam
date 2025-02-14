@@ -199,39 +199,40 @@ export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> 
   readonly established_edge_source_handle?: string;
 };
 
-// TODO: Make the following interface only responsible for creating Policy creation objectives
-export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
-  readonly type: ObjectiveType.POLICY_CREATION_OBJECTIVE;
+interface BaseCreationObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+  TEventType extends keyof TFinishEventMap,
+> {
   readonly entity_id: string;
-  readonly entity: IAMScriptableEntity;
+  readonly entity: unknown;
   readonly json_schema: Schema;
-  readonly description?: string;
   readonly initial_code: object;
-  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE];
   readonly validate_inside_code_editor: boolean;
-  readonly granted_accesses: PolicyGrantedAccess[];
   readonly validate_function?: ValidateFunction;
+  readonly on_finish_event: TFinishEventMap[TEventType];
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
   readonly account_id?: AccountID;
   readonly created_node_initial_position?: string;
+  readonly description?: string;
 }
 
-export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
+export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>
+  extends BaseCreationObjective<TFinishEventMap, ObjectiveType.POLICY_CREATION_OBJECTIVE> {
+  readonly type: ObjectiveType.POLICY_CREATION_OBJECTIVE;
+  readonly initial_position?: string;
+  readonly granted_accesses: PolicyGrantedAccess[];
+  // Override the `entity` type here
+  readonly entity: IAMScriptableEntity;
+}
+
+export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap>
+  extends BaseCreationObjective<TFinishEventMap, ObjectiveType.ROLE_CREATION_OBJECTIVE> {
   readonly type: ObjectiveType.ROLE_CREATION_OBJECTIVE;
-  readonly entity_id: string;
-  readonly entity: IAMNodeEntity.Role;
-  readonly json_schema: Schema;
-  readonly initial_code: object;
-  readonly validate_inside_code_editor: boolean;
   readonly required_policies: string[];
   readonly required_principles: string[];
-  readonly validate_function?: ValidateFunction;
-  readonly on_finish_event: TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE];
-  readonly help_badges?: HelpBadge[];
-  readonly limit_new_lines?: boolean;
-  readonly account_id?: AccountID;
-  readonly created_node_initial_position?: string;
+  // Override the `entity` type here
+  readonly entity: IAMNodeEntity.Role;
 }
 
 export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {
