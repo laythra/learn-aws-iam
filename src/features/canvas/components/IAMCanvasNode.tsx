@@ -35,7 +35,7 @@ enum AnimationState {
  * @param `data` The node data passed from React Flow.
  */
 const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
-  const { entity, label, handles, image, content, animations, arn } = data;
+  const { entity, label, handles, image, content, animations } = data;
   const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_policy;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
   const [selectedNodeId, openedNodeId] = useSelector(

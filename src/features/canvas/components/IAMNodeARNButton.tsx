@@ -38,7 +38,7 @@ const IAMNodeARNButton: React.FC<IAMNodeARNButtonProps> = ({ arn, placement = 'e
     <Popover placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0}>
       <PopoverTrigger>
         <WithStateMachineEventIconButton
-          event={StatelessStateMachineEvent.IAMNodeARNCopied}
+          event={StatelessStateMachineEvent.IAMNodeARNOpened}
           aria-label='arn'
           icon={<IdentificationIcon />}
           variant='ghost'
@@ -77,7 +77,6 @@ const IAMNodeARNButton: React.FC<IAMNodeARNButtonProps> = ({ arn, placement = 'e
             />
           </Tooltip>
         </PopoverHeader>
-        {/* <PopoverCloseButton /> */}
       </PopoverContent>
     </Popover>
   );

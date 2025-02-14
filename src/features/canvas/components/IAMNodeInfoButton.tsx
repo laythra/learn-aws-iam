@@ -17,7 +17,10 @@ import {
 import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { WithStateMachineEventIconButton } from '@/components/Decorated';
+import {
+  WithStateMachineEventIconButton,
+  WithStateMachineEventPopoverCloseButton,
+} from '@/components/Decorated';
 import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -63,8 +66,9 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
             {label}
           </Text>
         </PopoverHeader>
-        <PopoverCloseButton
+        <WithStateMachineEventPopoverCloseButton
           onClick={() => CanvasStore.send({ type: 'updateOpenedNodeId', nodeId: '-' })}
+          event={StatelessStateMachineEvent.IAMNodeContentClosed}
         />
         <PopoverBody textAlign='left'>
           <Code width='100%' whiteSpace='pre-wrap' position='relative'>
