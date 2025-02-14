@@ -183,6 +183,7 @@ export type LevelObjective<TObjectiveID, TFinishEventMap extends BaseFinishEvent
   label: string;
   finished: boolean;
   on_finish_event?: TFinishEventMap[ObjectiveType.LEVEL_OBJECTIVE];
+  hint_text?: string;
 };
 
 export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> = {
