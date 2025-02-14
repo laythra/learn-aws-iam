@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 import { useCodeEditor } from '../../hooks/useCodeEditor';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
+import { CodeEditorObjectiveDescriptionBox } from '../CodeEditorObjectiveDescriptionBox';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
 import {
@@ -132,6 +133,10 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
         extensions={extensions}
         onCreateEditor={onCreateEditor}
       />
+
+      {objectiveToValidate?.description && (
+        <CodeEditorObjectiveDescriptionBox objectiveDescription={objectiveToValidate.description} />
+      )}
     </>
   );
 };
