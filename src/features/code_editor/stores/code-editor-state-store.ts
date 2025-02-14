@@ -20,6 +20,8 @@ type CodeEditorEvents = {
   selectPolicy: { policyId: string };
   deselectPolicy: { policyId: string };
   setSelectedAccount: { selectedAccountId: AccountID };
+  showHelpPopup: { type: string; entity: IAMScriptableEntity };
+  hideHelpPopup: { type: string };
 };
 
 export type CodeEditorState = {
@@ -31,6 +33,10 @@ export type CodeEditorState = {
   isCodeEditorInitialized: boolean;
   selectedPolicies: string[];
   selectedAccountId?: AccountID;
+  helpPopupInfo: {
+    isOpen: boolean;
+    entity: IAMScriptableEntity;
+  };
 };
 
 export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produce, {
@@ -42,6 +48,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     isCodeEditorInitialized: false,
     selectedPolicies: [],
     selectedAccountId: AccountID.Originating,
+    helpPopupInfo: { isOpen: false, entity: IAMNodeEntity.Policy },
   },
   on: {
     setErrorsAndWarnings: (
@@ -98,6 +105,19 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     setSelectedAccount: (context: CodeEditorState, event: { selectedAccountId: AccountID }) => {
       context.isValidating = true;
       context.selectedAccountId = event.selectedAccountId;
+    },
+    showHelpPopup: (context: CodeEditorState, event: { entity: IAMScriptableEntity }) => {
+      console.log('showHelpPopup', event.entity);
+      context.helpPopupInfo = {
+        isOpen: true,
+        entity: event.entity,
+      };
+    },
+    hideHelpPopup: (context: CodeEditorState) => {
+      context.helpPopupInfo = {
+        isOpen: false,
+        entity: IAMNodeEntity.Policy,
+      };
     },
   },
 });

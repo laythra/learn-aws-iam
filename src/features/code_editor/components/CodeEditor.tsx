@@ -17,6 +17,7 @@ import _ from 'lodash';
 
 import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
 import { CodeEditorHeader } from './CodeEditorHeader';
+import { CodeEditorHelpPopup } from './CodeEditorHelpPopup';
 import { CodeEditorWarningsBox } from './CodeEditorWarningsBox';
 import { CodeEditorCreate } from './Create/CodeEditorCreate';
 import { CreateSubmitButton } from './Create/CreateSubmitButton';
@@ -52,40 +53,46 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
   };
 
   return (
-    <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor} id='modal_content'>
-      <ModalOverlay />
-      <ModalContent
-        maxW={theme.sizes.modalsMaxWidthInPixels}
-        maxH={theme.sizes.codeEditorMaxHeightInPixels}
-      >
-        <ModalHeader>
-          <CodeEditorHeader codeEditorMode={codeEditorMode} selectedIAMEntity={selectedIAMEntity} />
-        </ModalHeader>
-        <ModalBody>
-          <VStack align='stretch' spacing={4}>
-            <Heading size='md'>Code</Heading>
+    <>
+      <CodeEditorHelpPopup />
+      <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor} id='modal_content'>
+        <ModalOverlay />
+        <ModalContent
+          maxW={theme.sizes.modalsMaxWidthInPixels}
+          maxH={theme.sizes.codeEditorMaxHeightInPixels}
+        >
+          <ModalHeader>
+            <CodeEditorHeader
+              codeEditorMode={codeEditorMode}
+              selectedIAMEntity={selectedIAMEntity}
+            />
+          </ModalHeader>
+          <ModalBody>
+            <VStack align='stretch' spacing={4}>
+              <Heading size='md'>Code</Heading>
+              {codeEditorMode === CodeEditorMode.Create ? (
+                <CodeEditorCreate nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+              ) : (
+                <CodeEditorEdit nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+              )}
+              <CodeEditorErrorsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+              {_.isEmpty(errors[selectedIAMEntity][nodeId]) && (
+                <CodeEditorWarningsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+              )}
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
             {codeEditorMode === CodeEditorMode.Create ? (
-              <CodeEditorCreate nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+              <CreateSubmitButton nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
             ) : (
-              <CodeEditorEdit nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+              <EditSubmitButton nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
             )}
-            <CodeEditorErrorsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
-            {_.isEmpty(errors[selectedIAMEntity][nodeId]) && (
-              <CodeEditorWarningsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
-            )}
-          </VStack>
-        </ModalBody>
-        <ModalFooter>
-          {codeEditorMode === CodeEditorMode.Create ? (
-            <CreateSubmitButton nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
-          ) : (
-            <EditSubmitButton nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
-          )}
-          <Button variant='ghost' onClick={closeCodeEditor}>
-            Cancel
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+            <Button variant='ghost' onClick={closeCodeEditor}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
