@@ -128,7 +128,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
 
           validateChange();
         }}
-        height='200px'
+        height='250px'
         extensions={extensions}
         onCreateEditor={onCreateEditor}
       />
