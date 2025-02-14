@@ -1,4 +1,5 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, HStack, Text } from '@chakra-ui/react';
+import { ExclamationCircleIcon } from '@heroicons/react/16/solid';
 import { useSelector } from '@xstate/store/react';
 
 import codeEditorStateStore from '../stores/code-editor-state-store';
@@ -22,11 +23,12 @@ export const CodeEditorErrorsBox: React.FC<CodeEditorErrorsBoxProps> = ({
     return null;
   } else {
     return (
-      <Box>
-        <Text color='red.500' fontSize='lg'>
+      <HStack spacing={3} align='center' borderRadius='lg' p={2.5} w='fit-content'>
+        <Box w='12px' h='12px' bg='red.500' borderRadius='full' boxShadow='0 0 4px red' />
+        <Text color='red.500' fontSize='md' fontWeight='medium'>
           {errors[0].message}
         </Text>
-      </Box>
+      </HStack>
     );
   }
 };
