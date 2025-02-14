@@ -16,7 +16,6 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { resolveInitialEdges } from '../utils/initial-edges-resolver';
 import { ElementID } from '@/config/element-ids';
-import CurrentLevelDetailsStore from '@/stores/current-level-details-store';
 import { IAMNodeEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -25,7 +24,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   POPUP_TUTORIAL_MESSAGES,
   [],
   [],
-  []
+  EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level2_state_machine',
   initial: 'tutorial_popup1',
@@ -50,6 +49,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     role_creation_objectives: [],
     identity_creation_popup_default_value: IAMNodeEntity.Group,
     in_tutorial_state: true,
+    edges_management_disabled: true,
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
   },
   on: {
@@ -165,6 +165,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     create_group_popover: {
       entry: [
         'next_popover',
+        'show_side_panel',
         {
           type: 'update_whitelisted_element_ids',
           params: {
@@ -198,8 +199,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     attach_nodes_to_group_tooltip: {
       entry: [
         'next_popover',
+        'enable_edges_management_ability',
+        'next_edge_connection_objectives',
         assign({
-          edges_connection_objectives: EDGE_CONNECTION_OBJECTIVES[0],
           edges: [],
         }),
       ],

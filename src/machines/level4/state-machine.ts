@@ -9,11 +9,6 @@ import { FinishEventMap, NodeEditFinishEvent } from './types/finish-event-enums'
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { resolveInitialEdges } from '../utils/initial-edges-resolver';
-import { TEMPLATE_GROUP_NODE } from '@/factories/group-node-factory';
-import { TEMPLATE_POLICY_NODE } from '@/factories/policy-node-factory';
-import { TEMPLATE_USER_NODE } from '@/factories/user-node-factory';
-import { theme } from '@/theme';
-import { IAMNodeEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
