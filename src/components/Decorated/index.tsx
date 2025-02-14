@@ -7,6 +7,8 @@ import {
   Box,
   IconButton,
   MenuButton,
+  Text,
+  PopoverCloseButton,
 } from '@chakra-ui/react';
 import type {
   ButtonProps,
@@ -17,6 +19,8 @@ import type {
   BoxProps,
   IconButtonProps,
   MenuButtonProps,
+  TextProps,
+  PopoverCloseButtonProps,
 } from '@chakra-ui/react';
 
 import { withPopover } from '@/decorators/withPopover';
@@ -32,6 +36,7 @@ export const WithPopoverModalContent = withPopover<ModalContentProps & { element
 export const WithPopoverInput = withPopover<InputProps & { elementid: string }>(Input);
 export const WithPopoverSelect = withPopover<SelectProps & { elementid: string }>(Select);
 export const WithPopoverBox = withPopover<BoxProps & { elementid: string }>(Box);
+export const WithPopoverText = withPopover<TextProps & { elementid: string }>(Text);
 
 export const WithStateMachineEventIconButton = withStatemachineEvent<
   IconButtonProps & { event: StatelessStateMachineEvent }
@@ -40,6 +45,10 @@ export const WithStateMachineEventIconButton = withStatemachineEvent<
 export const WithStateMachineEventButton = withStatemachineEvent<
   ButtonProps & { event: StatelessStateMachineEvent }
 >(Button);
+
+export const WithStateMachineEventPopoverCloseButton = withStatemachineEvent<
+  PopoverCloseButtonProps & { event: StatelessStateMachineEvent }
+>(PopoverCloseButton);
 
 export const TutorialGuardedButton = withTutorialGuard<ButtonProps & { elementid: string }>(Button);
 export const TutorialGuardedMenuButton = withTutorialGuard<

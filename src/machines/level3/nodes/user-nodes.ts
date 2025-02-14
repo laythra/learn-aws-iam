@@ -7,7 +7,6 @@ const USER_NODES: Partial<IAMUserNodeData>[] = [
     id: UserNodeID.User1,
     label: 'Laith',
     initial_position: 'left-center',
-    arn: 'arn:aws:iam::123456789012:user/Laith',
   },
   {
     id: UserNodeID.User2,

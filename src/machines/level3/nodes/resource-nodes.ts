@@ -5,9 +5,19 @@ import { createResourceNode } from '@/factories/resource-node-factory';
 import type { IAMResourceNodeData } from '@/types';
 import { IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 
+const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
+  {
+    id: ResourceNodeID.PublicImagesS3Bucket,
+    label: 'public-images',
+    initial_position: 'bottom-center',
+    image: IAMNodeImage.S3Bucket,
+    resource_type: IAMNodeResourceEntity.S3Bucket,
+  },
+];
+
 const RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
   {
-    id: ResourceNodeID.S3Bucket,
+    id: ResourceNodeID.PublicImagesS3Bucket,
     label: 'public-assets',
     initial_position: 'top-center',
     image: IAMNodeImage.S3Bucket,
@@ -28,6 +38,8 @@ const RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
     resource_type: IAMNodeResourceEntity.DynamoDBTable,
   },
 ];
+export const INITIAL_TUTORIAL_RESOURCE_NODES: Node<IAMResourceNodeData>[] =
+  TUTORIAL_RESOURCE_NODES.map(createResourceNode);
 
 export const INITIAL_RESOURCE_NODES: Node<IAMResourceNodeData>[] =
   RESOURCE_NODES.map(createResourceNode);

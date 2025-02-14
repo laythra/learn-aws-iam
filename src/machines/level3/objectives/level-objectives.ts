@@ -8,7 +8,6 @@ const OBJECTIVE_MSG1 = `
 
 const OBJECTIVE_MSG2 = `
   **Frontend Team**: Allow Read/Write access to S3 bucket \`public-assets\`
-  (hint: the arn is \`arn:aws:s3:::public-assets\`)
 `;
 
 const OBJECTIVE_MSG3 = `

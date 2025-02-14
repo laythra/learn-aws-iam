@@ -8,6 +8,7 @@
  */
 export enum StatelessStateMachineEvent {
   IAMNodeContentOpened = 'IAM_NODE_CONTENT_OPENED',
+  IAMNodeContentClosed = 'IAM_NODE_CONTENT_CLOSED',
   IAMNodeARNOpened = 'IAM_NODE_ARN_OPENED',
   CreateIAMIdentityTabChanged = 'CREATE_IAM_IDENTITY_TAB_CHANGED',
   CreateIAMPolicyRoleWindowOpened = 'CREATE_IAM_POLICY_ROLE_WINDOW_OPENED',
