@@ -45,6 +45,7 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
       });
     }
 
+    codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });
     codeEditorPopupStore.send({ type: 'close' });
   };
 

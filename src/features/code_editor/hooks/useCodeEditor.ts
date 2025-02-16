@@ -1,4 +1,4 @@
-import { useEffect, MutableRefObject } from 'react';
+import { useEffect, MutableRefObject, useState } from 'react';
 
 import { json } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
@@ -50,6 +50,8 @@ export function useCodeEditor({
     _.isEqual
   );
 
+  const [editorViewState, setEditorViewState] = useState<EditorView | null>(null);
+
   const validateFunction =
     objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity];
 
@@ -57,7 +59,6 @@ export function useCodeEditor({
     if (!editorView.current) return;
 
     const lintingErrors = getLintingErrors(editorView.current, validateFunction);
-
     codeEditorStateStore.send({
       type: 'setErrorsAndWarnings',
       warnings: getWarnings(),
@@ -73,27 +74,17 @@ export function useCodeEditor({
   }, 500);
 
   useEffect(() => {
-    if (editorView.current) {
-      validateChange();
-      InitializeBadgeWidgets(
-        editorView.current,
-        objectiveToValidate?.help_badges ?? [],
-        initialContent
-      );
-    }
-  }, [selectedIAMEntity, editorView.current]);
+    if (!editorViewState) return;
+
+    validateChange();
+    InitializeBadgeWidgets(editorViewState, objectiveToValidate?.help_badges ?? [], initialContent);
+  }, [editorViewState]);
 
   const onCreateEditor = (view: EditorView): void => {
+    setEditorViewState(view);
     editorView.current = view;
 
     validateChange();
-
-    codeEditorStateStore.send({
-      type: 'initializeCodeEditor',
-      nodeId,
-      content: JSON.stringify(initialContent, null, 2),
-      entity: selectedIAMEntity,
-    });
   };
 
   const getContent = (): string => {

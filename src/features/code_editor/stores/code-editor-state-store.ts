@@ -107,7 +107,6 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
       context.selectedAccountId = event.selectedAccountId;
     },
     showHelpPopup: (context: CodeEditorState, event: { entity: IAMScriptableEntity }) => {
-      console.log('showHelpPopup', event.entity);
       context.helpPopupInfo = {
         isOpen: true,
         entity: event.entity,

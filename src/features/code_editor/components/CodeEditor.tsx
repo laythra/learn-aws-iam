@@ -49,7 +49,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
 
   const closeCodeEditor = (): void => {
     CodeEditorPopupStore.send({ type: 'close' });
-    codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });
   };
 
   return (

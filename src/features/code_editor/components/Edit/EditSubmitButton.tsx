@@ -5,7 +5,7 @@ import _ from 'lodash';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import codeEditorPopupStore from '@/stores/code-editor-popup-store';
-import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
+import { IAMScriptableEntity } from '@/types';
 
 interface EditSubmitButtonProps {
   nodeId: string;
@@ -31,6 +31,8 @@ export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({
     const content = codeEditorStateStore.getSnapshot().context.content[selectedIAMEntity][nodeId];
 
     levelActor.send({ type: 'UPDATE_IAM_POLICY_NODE', doc_string: content, node_id: nodeId });
+
+    codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });
     codeEditorPopupStore.send({ type: 'close' });
   };
 
