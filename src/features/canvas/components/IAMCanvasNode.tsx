@@ -146,11 +146,9 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
                 </Tooltip>
               )}
             </HStack>
-            <Tooltip label={arn}>
-              <Text fontSize='14px' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
-                {resourceType || entity}
-              </Text>
-            </Tooltip>
+            <Text fontSize='14px' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
+              {resourceType || entity}
+            </Text>
           </Box>
         </Flex>
       </Flex>
