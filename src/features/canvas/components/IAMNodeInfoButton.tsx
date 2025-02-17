@@ -43,6 +43,16 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
   editable = false,
   placement = 'end-end',
 }) => {
+  const handleContentButtonClick = (): void => {
+    const isContentOpened = CanvasStore.getSnapshot().context.openedNodeId === nodeId;
+
+    if (isContentOpened) {
+      CanvasStore.send({ type: 'updateOpenedNodeId', nodeId: '-' });
+    } else {
+      CanvasStore.send({ type: 'updateOpenedNodeId', nodeId });
+    }
+  };
+
   return (
     <Popover placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0} isOpen={opened}>
       <PopoverTrigger>
@@ -55,7 +65,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
           height='16px'
           width='16px'
           minWidth='auto'
-          onClick={() => CanvasStore.send({ type: 'updateOpenedNodeId', nodeId })}
+          onClick={handleContentButtonClick}
           _hover={{ bg: 'gray.200', opacity: 1 }}
         />
       </PopoverTrigger>
