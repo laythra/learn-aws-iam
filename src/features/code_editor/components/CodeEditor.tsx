@@ -68,13 +68,12 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
           </ModalHeader>
           <ModalBody>
             <VStack align='stretch' spacing={4}>
-              <Heading size='md'>Code</Heading>
               {codeEditorMode === CodeEditorMode.Create ? (
                 <CodeEditorCreate nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
               ) : (
                 <CodeEditorEdit nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
               )}
-              <CodeEditorErrorsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+              {/* <CodeEditorErrorsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} /> */}
               {_.isEmpty(errors[selectedIAMEntity][nodeId]) && (
                 <CodeEditorWarningsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
               )}

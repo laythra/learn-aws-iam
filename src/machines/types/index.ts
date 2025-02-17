@@ -111,8 +111,9 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: StatefulStateMachineEvent.ADDIAMRoleNode;
       doc_string: string;
       account_id?: AccountID;
+      label: string;
     }
-  | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string; account_id?: AccountID }
+  | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string; label: string; account_id?: AccountID }
   | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
   | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
   | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }

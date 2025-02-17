@@ -18,17 +18,20 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
   selectedIAMEntity,
 }) => {
   const levelActor = LevelsProgressionContext().useActorRef();
-  const { errors, isValidating } = useSelector(
+  const [codeErrors, labelError, isValidating] = useSelector(
     codeEditorStateStore,
-    state => _.pick(state.context, ['errors', 'isValidating']),
+    state => [state.context.errors, state.context.labelError, state.context.isValidating],
     _.isEqual
   );
 
-  const isButtonDisabled = !_.isEmpty(errors[selectedIAMEntity][nodeId]);
+  const isButtonDisabled =
+    !_.isEmpty(codeErrors[selectedIAMEntity][nodeId]) || labelError !== undefined;
 
   const submit = (): void => {
-    const content = codeEditorStateStore.getSnapshot().context.content[selectedIAMEntity][nodeId];
-    const accountId = codeEditorStateStore.getSnapshot().context.selectedAccountId;
+    const codeEditorStateContext = codeEditorStateStore.getSnapshot().context;
+    const content = codeEditorStateContext.content[selectedIAMEntity][nodeId];
+    const accountId = codeEditorStateContext.selectedAccountId;
+    const label = codeEditorStateContext.label!;
 
     // TODO: Create policies and roles through the same state machine event
     if (selectedIAMEntity == IAMNodeEntity.Policy) {
@@ -36,12 +39,14 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
         type: 'ADD_IAM_POLICY_NODE',
         doc_string: content,
         account_id: accountId,
+        label,
       });
     } else {
       levelActor.send({
         type: StatefulStateMachineEvent.ADDIAMRoleNode,
         doc_string: content,
         account_id: accountId,
+        label,
       });
     }
 

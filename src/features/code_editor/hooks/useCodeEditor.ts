@@ -1,7 +1,7 @@
 import { useEffect, MutableRefObject, useState } from 'react';
 
 import { json } from '@codemirror/lang-json';
-import { linter } from '@codemirror/lint';
+import { Diagnostic, linter } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import { Extension } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store/react';
@@ -9,6 +9,7 @@ import _ from 'lodash';
 
 import codeEditorStateStore from '../stores/code-editor-state-store';
 import { badgeExtension, InitializeBadgeWidgets } from '../utils/badge-widget';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import {
   BaseFinishEventMap,
   IAMPolicyCreationObjective,
@@ -35,6 +36,7 @@ interface UseCodeEditorReturn {
   validateChange: () => void;
   getContent: () => string;
   extensions: Extension[];
+  validateNodeLabel: (label: string) => void;
 }
 
 export function useCodeEditor({
@@ -44,6 +46,7 @@ export function useCodeEditor({
   initialContent,
   getWarnings,
 }: UseCodeEditorOptions): UseCodeEditorReturn {
+  const levelActor = LevelsProgressionContext().useActorRef();
   const { selectedIAMEntity, content } = useSelector(
     codeEditorStateStore,
     state => _.pick(state.context, ['selectedIAMEntity', 'content']),
@@ -55,12 +58,12 @@ export function useCodeEditor({
   const validateFunction =
     objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity];
 
-  const setErrorsAndWarnings = (): void => {
+  const setCodeErrorsAndWarnings = (): void => {
     if (!editorView.current) return;
 
     const lintingErrors = getLintingErrors(editorView.current, validateFunction);
     codeEditorStateStore.send({
-      type: 'setErrorsAndWarnings',
+      type: 'setCodeErrorsAndWarnings',
       warnings: getWarnings(),
       errors: lintingErrors,
       nodeId,
@@ -69,7 +72,7 @@ export function useCodeEditor({
   };
 
   const validateChange = _.debounce(() => {
-    setErrorsAndWarnings();
+    setCodeErrorsAndWarnings();
     codeEditorStateStore.send({ type: 'setIsValidating', payload: false });
   }, 500);
 
@@ -78,7 +81,7 @@ export function useCodeEditor({
 
     validateChange();
     InitializeBadgeWidgets(editorViewState, objectiveToValidate?.help_badges ?? [], initialContent);
-  }, [editorViewState]);
+  }, [editorViewState, selectedIAMEntity]);
 
   const onCreateEditor = (view: EditorView): void => {
     setEditorViewState(view);
@@ -91,6 +94,27 @@ export function useCodeEditor({
     return content[selectedIAMEntity][nodeId];
   };
 
+  const validateNodeLabel = _.debounce((label: string): void => {
+    const existinglabels = levelActor.getSnapshot().context.nodes.map(node => node.data.label);
+    let error: string | undefined = undefined;
+
+    if (existinglabels.includes(label)) {
+      error = 'label already exists';
+    } else if (label.length < 1 || label.length > 64) {
+      error = 'Must be between 1 and 64 characters';
+    } else if (!/^[a-zA-Z0-9]/.test(label)) {
+      error = 'Must start with a letter or number';
+    } else if (!/^[a-zA-Z0-9+=,.@_-]+$/.test(label)) {
+      error = 'Only letters, numbers, and +=,.@-_ are allowed';
+    }
+
+    codeEditorStateStore.send({
+      type: 'setNodeLabelError',
+      error,
+      isValidating: false,
+    });
+  }, 500);
+
   const extensions = [
     json(),
     linter(view => getLintingErrors(view, validateFunction)),
@@ -102,5 +126,6 @@ export function useCodeEditor({
     validateChange,
     getContent,
     extensions,
+    validateNodeLabel,
   };
 }

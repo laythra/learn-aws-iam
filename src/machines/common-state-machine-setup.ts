@@ -171,12 +171,16 @@ export const createStateMachineSetup = <
       add_policy_node: enqueueActions(
         (
           { context, enqueue },
-          { docString, accountId }: { docString: string; accountId?: AccountID }
+          {
+            docString,
+            label,
+            accountId,
+          }: { docString: string; accountId?: AccountID; label: string }
         ) => {
           const [updatedNodes, sideEffectsEvents] = createIAMPolicyNode<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, docString, accountId);
+          >(context, docString, label, accountId);
 
           enqueue.assign({ nodes: updatedNodes });
           sideEffectsEvents.forEach(event => {
@@ -200,12 +204,16 @@ export const createStateMachineSetup = <
       add_role_node: enqueueActions(
         (
           { context, enqueue },
-          { docString, accountId }: { docString: string; accountId?: AccountID }
+          {
+            docString,
+            label,
+            accountId,
+          }: { docString: string; label: string; accountId?: AccountID }
         ) => {
           const [updatedNodes, sideEffectsEvents] = createIAMRoleNode<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, docString, accountId);
+          >(context, docString, label, accountId);
 
           enqueue.assign({ nodes: updatedNodes });
           sideEffectsEvents.forEach(event => {

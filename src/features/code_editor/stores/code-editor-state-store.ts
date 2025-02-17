@@ -6,7 +6,7 @@ import { AccountID } from '@/machines/types';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 
 type CodeEditorEvents = {
-  setErrorsAndWarnings: {
+  setCodeErrorsAndWarnings: {
     errors: Diagnostic[];
     warnings: string[];
     nodeId: string;
@@ -22,6 +22,8 @@ type CodeEditorEvents = {
   setSelectedAccount: { selectedAccountId: AccountID };
   showHelpPopup: { type: string; entity: IAMScriptableEntity };
   hideHelpPopup: { type: string };
+  setNodeLabel: { label: string };
+  setNodeLabelError: { error: string | undefined; isValidating: boolean };
 };
 
 export type CodeEditorState = {
@@ -37,6 +39,8 @@ export type CodeEditorState = {
     isOpen: boolean;
     entity: IAMScriptableEntity;
   };
+  label?: string;
+  labelError: string | undefined;
 };
 
 export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produce, {
@@ -49,9 +53,10 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     selectedPolicies: [],
     selectedAccountId: AccountID.Originating,
     helpPopupInfo: { isOpen: false, entity: IAMNodeEntity.Policy },
+    labelError: undefined,
   },
   on: {
-    setErrorsAndWarnings: (
+    setCodeErrorsAndWarnings: (
       context: CodeEditorState,
       event: {
         errors: Diagnostic[];
@@ -93,6 +98,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
       context.errors = { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} };
       context.warnings = { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} };
       context.content = { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} };
+      context.labelError = undefined;
     },
     selectPolicy: (context: CodeEditorState, event: { policyId: string }) => {
       context.selectedPolicies.push(event.policyId);
@@ -117,6 +123,17 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
         isOpen: false,
         entity: IAMNodeEntity.Policy,
       };
+    },
+    setNodeLabel: (context: CodeEditorState, event: { label: string }) => {
+      context.isValidating = true;
+      context.label = event.label;
+    },
+    setNodeLabelError: (
+      context: CodeEditorState,
+      event: { error: string | undefined; isValidating: boolean }
+    ) => {
+      context.labelError = event.error;
+      context.isValidating = event.isValidating;
     },
   },
 });

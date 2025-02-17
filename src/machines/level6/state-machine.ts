@@ -63,7 +63,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       actions: [
         {
           type: 'add_role_node',
-          params: ({ event }) => ({ docString: event.doc_string, accountId: event.account_id }),
+          params: ({ event }) => ({
+            docString: event.doc_string,
+            accountId: event.account_id,
+            label: event.label,
+          }),
         },
       ],
     },
@@ -82,7 +86,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       actions: [
         {
           type: 'add_policy_node',
-          params: ({ event }) => ({ docString: event.doc_string, accountId: event.account_id }),
+          params: ({ event }) => ({
+            docString: event.doc_string,
+            accountId: event.account_id,
+            label: event.label,
+          }),
         },
       ],
     },

@@ -62,7 +62,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       actions: [
         {
           type: 'add_role_node',
-          params: ({ event }) => ({ docString: event.doc_string }),
+          params: ({ event }) => ({ docString: event.doc_string, label: event.label }),
         },
       ],
     },
