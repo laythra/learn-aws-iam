@@ -4,22 +4,22 @@ import type { IAMUserNodeData } from '@/types';
 
 const USER_NODES: Partial<IAMUserNodeData>[] = [
   {
-    id: UserNodeID.User1,
+    id: UserNodeID.Laith,
     label: 'Laith',
     initial_position: 'left-center',
   },
   {
-    id: UserNodeID.User2,
+    id: UserNodeID.Ali,
     label: 'Ali',
     initial_position: 'left-center',
   },
   {
-    id: UserNodeID.User3,
+    id: UserNodeID.Mohammad,
     label: 'Mohammad',
     initial_position: 'right-center',
   },
   {
-    id: UserNodeID.User4,
+    id: UserNodeID.Khalid,
     label: 'Khalid',
     initial_position: 'right-center',
   },

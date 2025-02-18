@@ -1,6 +1,8 @@
 import { assign } from 'xstate';
 
 import { INITIAL_TUTORIAL_NODES } from './nodes';
+import { INITIAL_TUTORIAL_RESOURCE_NODES } from './nodes/resource-nodes';
+import { INITIAL_TUTORIAL_USER_NODES } from './nodes/user-nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { USER_GROUP_CREATION_OBJECTIVES } from './objectives/user-group-creation-objectives';
@@ -14,6 +16,7 @@ import {
 import { UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { FIXED_POPOVER_MESSAGES } from '../level2/tutorial_messages/fixed-popover-messages';
 import { ElementID } from '@/config/element-ids';
 import CurrentLevelDetailsStore from '@/stores/current-level-details-store';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -33,9 +36,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     level_number: 1,
     next_popover_index: 0,
     next_popup_index: 0,
+    next_fixed_popover_index: 0,
     state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
+    show_fixed_popovers: false,
     nodes: [],
     edges: [],
     level_objectives: LEVEL_OBJECTIVES,
@@ -44,6 +49,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
+    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -100,7 +106,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     inside_tutorial: {
       entry: [
         assign({
-          nodes: INITIAL_TUTORIAL_NODES,
+          nodes: INITIAL_TUTORIAL_USER_NODES,
           user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
         }),
         'next_edge_connection_objectives',
@@ -113,7 +119,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
       initial: 'welcoming_message',
-      onDone: 'inside_level',
+      onDone: 'finished_level',
       states: {
         welcoming_message: {
           entry: 'next_popup',
@@ -146,12 +152,16 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           on: {
             NEXT_POPOVER: 'tutorial_popover4',
           },
+          exit: assign({
+            nodes: [...INITIAL_TUTORIAL_USER_NODES, ...INITIAL_TUTORIAL_RESOURCE_NODES],
+          }),
         },
         tutorial_popover4: {
           entry: 'next_popover',
           on: {
             NEXT_POPOVER: 'tutorial_popover5',
           },
+          exit: assign({ nodes: INITIAL_TUTORIAL_NODES }),
         },
         tutorial_popover5: {
           entry: 'next_popover',
@@ -160,7 +170,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         attach_policy_to_tutorial_user: {
-          entry: ['hide_popovers', 'enable_edges_management_ability'],
+          entry: ['next_popover', 'enable_edges_management_ability'],
           on: {
             [EdgeConnectionFinishEvent.PolicyAttachedToTutorialUser]: {
               target: 'policy_attached_to_tutorial_user_popover',
@@ -185,7 +195,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         create_user_popover: {
           entry: [
             'next_popover',
-            'disable_edges_management_ability',
             {
               type: 'update_whitelisted_element_ids',
               params: {
@@ -209,42 +218,32 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
                   params: { id: LevelObjectiveID.CreateIAMUser, finished: true },
                 },
               ],
-              target: 'user_created_popover',
+              target: 'connect_iam_policy_to_user',
             },
           },
         },
-        user_created_popover: {
-          entry: 'next_popover',
-          on: {
-            NEXT_POPOVER: 'tutorial_completed',
-          },
-        },
-        tutorial_completed: {
-          entry: 'hide_popovers',
-          type: 'final',
-        },
-      },
-    },
-    inside_level: {
-      onDone: 'finished_level',
-      initial: 'connect_iam_policy_to_user',
-      entry: ['next_edge_connection_objectives', 'enable_edges_management_ability'],
-      states: {
         connect_iam_policy_to_user: {
+          entry: ['next_popover', 'next_edge_connection_objectives'],
           on: {
             [EdgeConnectionFinishEvent.PolicyAttachedToCreatedUser]: {
-              target: 'policy_attached',
               actions: [
                 {
                   type: 'change_objective_progress',
                   params: { id: LevelObjectiveID.GrantIAMUserReadAccessToS3Bucket, finished: true },
                 },
               ],
+              target: 'policy_attached',
             },
           },
         },
         policy_attached: {
           entry: 'next_popover',
+          on: {
+            NEXT_POPOVER: 'level_objectives_popover',
+          },
+        },
+        level_objectives_popover: {
+          entry: ['show_side_panel', 'next_popover'],
           on: {
             NEXT_POPOVER: 'completed',
           },
@@ -256,14 +255,24 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       },
     },
     finished_level: {
+      initial: 'finished_level_popup',
       entry: [
         assign({
-          state_name: 'finished_level',
           level_finished: true,
         }),
-        () => CurrentLevelDetailsStore.send({ type: 'setLevelNumber', levelNumber: 2 }),
       ],
-      type: 'final',
+      states: {
+        finished_level_popup: {
+          entry: 'next_popup',
+          on: {
+            NEXT_POPUP: 'finished_level',
+          },
+        },
+        finished_level: {
+          type: 'final',
+          entry: () => CurrentLevelDetailsStore.send({ type: 'setLevelNumber', levelNumber: 2 }),
+        },
+      },
     },
   },
 });

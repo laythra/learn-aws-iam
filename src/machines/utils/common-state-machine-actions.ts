@@ -395,6 +395,7 @@ export function changeLevelObjectiveProgress<
 export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   docString: string,
+  label: string,
   accountId?: AccountID
 ): [Node[], TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][]] {
   const targetValidPolicy = findAnyValidPolicy(
@@ -408,7 +409,7 @@ export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends B
     const newPolicyNode = createPolicyNode({
       id: targetValidPolicy?.entity_id ?? new Date().getTime().toString(),
       content: docString,
-      label: targetValidPolicy?.entity_id ?? IAMNodeEntity.Policy,
+      label: label,
       unnecessary_policy: targetValidPolicy === undefined,
       granted_accesses: targetValidPolicy?.granted_accesses ?? [],
       initial_position: targetValidPolicy?.created_node_initial_position ?? 'center',
@@ -569,6 +570,7 @@ export function createIAMUserGroupNode<
 export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   docString: string,
+  label: string,
   accountId?: AccountID
 ): [Node[], TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][]] {
   const targetValidRole = findAnyValidRole(context.role_creation_objectives, docString, accountId);
@@ -578,7 +580,7 @@ export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends Bas
     const newRoleNode = createRoleNode({
       id: targetValidRole?.entity_id ?? new Date().getTime().toString(),
       content: docString,
-      label: targetValidRole?.entity_id ?? IAMNodeEntity.Role,
+      label,
       initial_position: targetValidRole?.created_node_initial_position ?? 'center',
       associated_policies: [],
       editable: true,

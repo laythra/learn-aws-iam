@@ -33,9 +33,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     level_number: 6,
     next_popover_index: 0,
     next_popup_index: 0,
+    next_fixed_popover_index: 0,
     state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
+    show_fixed_popovers: false,
     nodes: [],
     edges: [],
     level_objectives: [],
@@ -46,6 +48,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     role_creation_objectives: [],
     use_multi_account_canvas: true,
     side_panel_open: false,
+    fixed_popover_messages: [],
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -60,7 +63,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       actions: [
         {
           type: 'add_role_node',
-          params: ({ event }) => ({ docString: event.doc_string, accountId: event.account_id }),
+          params: ({ event }) => ({
+            docString: event.doc_string,
+            accountId: event.account_id,
+            label: event.label,
+          }),
         },
       ],
     },
@@ -79,7 +86,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       actions: [
         {
           type: 'add_policy_node',
-          params: ({ event }) => ({ docString: event.doc_string, accountId: event.account_id }),
+          params: ({ event }) => ({
+            docString: event.doc_string,
+            accountId: event.account_id,
+            label: event.label,
+          }),
         },
       ],
     },

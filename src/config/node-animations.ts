@@ -15,7 +15,7 @@ const NODE_ANIMATIONS: Record<NODE_ANIMATION_ID, IAMNodeAnimationConfig> = {
     {
       element_class: '.shimmer',
       keyframes: { x: ['-100%', '100%'] },
-      options: { duration: 1.5, repeat: 1, ease: 'easeOut' },
+      options: { duration: 2.5, repeat: 4, ease: 'easeOut' },
     },
   ],
   [NODE_ANIMATION_ID.ShimmeringLight]: [
@@ -27,8 +27,8 @@ const NODE_ANIMATIONS: Record<NODE_ANIMATION_ID, IAMNodeAnimationConfig> = {
         scaleX: [1, 4, 1, 4, 1, 0, 0],
       },
       options: {
-        duration: 2,
-        repeat: 1,
+        duration: 3,
+        repeat: 4,
         ease: 'linear',
       },
     },

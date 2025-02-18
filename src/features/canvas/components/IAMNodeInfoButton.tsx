@@ -8,7 +8,6 @@ import {
   PopoverArrow,
   PopoverHeader,
   PopoverBody,
-  PopoverCloseButton,
   IconButton,
   type PlacementWithLogical,
   Code,
@@ -16,13 +15,19 @@ import {
 } from '@chakra-ui/react';
 import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
-import { WithStateMachineEventIconButton } from '@/components/Decorated';
+import { CanvasStore } from '../stores/canvas-store';
+import {
+  WithStateMachineEventIconButton,
+  WithStateMachineEventPopoverCloseButton,
+} from '@/components/Decorated';
 import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface IAMNodeInfoButtonProps {
   nodeId: string;
   label: string;
+  opened: boolean;
+  editable?: boolean;
   verboseDescription?: string;
   codeDescription?: string;
   placement?: PlacementWithLogical;
@@ -31,25 +36,35 @@ interface IAMNodeInfoButtonProps {
 const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
   nodeId,
   label,
+  opened,
   verboseDescription,
   codeDescription,
+  editable = false,
   placement = 'end-end',
 }) => {
+  const handleContentButtonClick = (): void => {
+    const isContentOpened = CanvasStore.getSnapshot().context.openedNodeId === nodeId;
+
+    if (isContentOpened) {
+      CanvasStore.send({ type: 'updateOpenedNodeId', nodeId: '-' });
+    } else {
+      CanvasStore.send({ type: 'updateOpenedNodeId', nodeId });
+    }
+  };
+
   return (
-    <Popover placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0}>
+    <Popover placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0} isOpen={opened}>
       <PopoverTrigger>
         <WithStateMachineEventIconButton
           event={StatelessStateMachineEvent.IAMNodeContentOpened}
           aria-label='info'
           icon={<CodeBracketIcon />}
-          position='absolute'
-          top={1}
-          right={1}
           variant='ghost'
           opacity={0.5}
           height='16px'
           width='16px'
           minWidth='auto'
+          onClick={handleContentButtonClick}
           _hover={{ bg: 'gray.200', opacity: 1 }}
         />
       </PopoverTrigger>
@@ -60,10 +75,13 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
             {label}
           </Text>
         </PopoverHeader>
-        <PopoverCloseButton />
+        <WithStateMachineEventPopoverCloseButton
+          onClick={() => CanvasStore.send({ type: 'updateOpenedNodeId', nodeId: '-' })}
+          event={StatelessStateMachineEvent.IAMNodeContentClosed}
+        />
         <PopoverBody textAlign='left'>
-          {codeDescription && (
-            <Code width='100%' whiteSpace='pre-wrap' position='relative'>
+          <Code width='100%' whiteSpace='pre-wrap' position='relative'>
+            {editable && (
               <Tooltip label='Edit' aria-label='Edit' placement='top'>
                 <IconButton
                   onClick={() =>
@@ -87,9 +105,9 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
                   _hover={{ bg: 'gray.200', opacity: 1 }}
                 />
               </Tooltip>
-              {codeDescription}
-            </Code>
-          )}
+            )}
+            {codeDescription}
+          </Code>
           {verboseDescription && <Text>{verboseDescription}</Text>}
         </PopoverBody>
       </PopoverContent>

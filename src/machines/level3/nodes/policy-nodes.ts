@@ -8,10 +8,10 @@ import { IAMPolicyNodeData } from '@/types';
 const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   {
     id: PolicyNodeID.S3ReadAccess,
-    label: PolicyNodeID.S3ReadAccess,
+    label: 'S3ReadAccess',
     content: JSON.stringify(MANAGED_POLICIES.AWSS3ReadOnlyAccess, null, 2),
     initial_position: 'center',
-    editable: true,
+    editable: false,
   },
 ];
 

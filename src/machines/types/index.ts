@@ -55,6 +55,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   next_role_creation_objectives_index?: number;
   next_popover_index: number;
   next_popup_index: number;
+  next_fixed_popover_index: number;
   nodes: Node<IAMAnyNodeData>[];
   policy_creation_objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[];
   policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
@@ -63,6 +64,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   role_creation_objectives: IAMRoleCreationObjective<TBaseFinishEventMap>[];
   show_popovers: boolean;
   show_popups: boolean;
+  show_fixed_popovers: boolean;
   side_panel_open?: boolean;
   state_name: string;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
@@ -73,6 +75,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   edges_management_disabled?: boolean;
   animations?: Record<string, DynamicAnimationOptions>;
   identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
+  fixed_popover_messages: FixedPopoverMessage[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -82,6 +85,7 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
         | 'NEXT'
         | 'NEXT_POPOVER'
         | 'NEXT_POPUP'
+        | 'NEXT_FIXED_POPOVER'
         | 'IAM_POLICY_CONNECTED'
         | 'IAM_USER_CREATED'
         | 'IAM_GROUP_CREATED'
@@ -89,6 +93,7 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
         | 'COMPLETE'
         | 'CREATE_USER_POPUP_OPENED'
         | 'HIDE_POPOVERS'
+        | 'HIDE_FIXED_POPOVERS'
         | 'CREATE_POLICY_POPUP_OPENED'
         | 'CREATE_IAM_IDENTITY_POPUP_OPENED'
         | 'IAM_USER_ATTACHED_TO_GROUP'
@@ -106,8 +111,9 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: StatefulStateMachineEvent.ADDIAMRoleNode;
       doc_string: string;
       account_id?: AccountID;
+      label: string;
     }
-  | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string; account_id?: AccountID }
+  | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string; label: string; account_id?: AccountID }
   | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
   | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
   | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }
@@ -147,6 +153,14 @@ export type GenericInsideLevelMetadata = {
   entity_targets?: IAMNodeEntity[];
 };
 
+export type FixedPopoverMessage = {
+  popover_title: string;
+  popover_content: string;
+  show_next_button: boolean;
+  show_close_button: boolean;
+  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+};
+
 export type PopoverTutorialMessage = {
   element_id: string;
   popover_title: string;
@@ -161,6 +175,7 @@ export type PopupTutorialMessage = {
   content: string;
   image?: string;
   lottie_animation?: string;
+  go_to_next_level_button?: boolean;
 };
 
 export type LevelObjective<TObjectiveID, TFinishEventMap extends BaseFinishEventMap> = {
@@ -169,6 +184,7 @@ export type LevelObjective<TObjectiveID, TFinishEventMap extends BaseFinishEvent
   label: string;
   finished: boolean;
   on_finish_event?: TFinishEventMap[ObjectiveType.LEVEL_OBJECTIVE];
+  hint_text?: string;
 };
 
 export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> = {
@@ -185,39 +201,40 @@ export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> 
   readonly established_edge_source_handle?: string;
 };
 
-// TODO: Make the following interface only responsible for creating Policy creation objectives
-export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
-  readonly type: ObjectiveType.POLICY_CREATION_OBJECTIVE;
+interface BaseCreationObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+  TEventType extends keyof TFinishEventMap,
+> {
   readonly entity_id: string;
-  readonly entity: IAMScriptableEntity;
+  readonly entity: unknown;
   readonly json_schema: Schema;
-  readonly description?: string;
   readonly initial_code: object;
-  readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE];
   readonly validate_inside_code_editor: boolean;
-  readonly granted_accesses: PolicyGrantedAccess[];
   readonly validate_function?: ValidateFunction;
+  readonly on_finish_event: TFinishEventMap[TEventType];
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
   readonly account_id?: AccountID;
   readonly created_node_initial_position?: string;
+  readonly description?: string;
 }
 
-export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
+export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>
+  extends BaseCreationObjective<TFinishEventMap, ObjectiveType.POLICY_CREATION_OBJECTIVE> {
+  readonly type: ObjectiveType.POLICY_CREATION_OBJECTIVE;
+  readonly initial_position?: string;
+  readonly granted_accesses: PolicyGrantedAccess[];
+  // Override the `entity` type here
+  readonly entity: IAMScriptableEntity;
+}
+
+export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap>
+  extends BaseCreationObjective<TFinishEventMap, ObjectiveType.ROLE_CREATION_OBJECTIVE> {
   readonly type: ObjectiveType.ROLE_CREATION_OBJECTIVE;
-  readonly entity_id: string;
-  readonly entity: IAMNodeEntity.Role;
-  readonly json_schema: Schema;
-  readonly initial_code: object;
-  readonly validate_inside_code_editor: boolean;
   readonly required_policies: string[];
   readonly required_principles: string[];
-  readonly validate_function?: ValidateFunction;
-  readonly on_finish_event: TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE];
-  readonly help_badges?: HelpBadge[];
-  readonly limit_new_lines?: boolean;
-  readonly account_id?: AccountID;
-  readonly created_node_initial_position?: string;
+  // Override the `entity` type here
+  readonly entity: IAMNodeEntity.Role;
 }
 
 export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {

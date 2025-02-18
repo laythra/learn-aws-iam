@@ -5,4 +5,5 @@ export enum ElementID {
   IAMPolicyRoleSelectorTypeForCreation = 'iam-policy-role-selector-type-for-creation',
   CreateEntitiesMenuItem = 'create-entities-menu-item',
   CreateRolesAndPoliciesMenuItem = 'create-roles-and-policies-menu-item',
+  ObjectivesSidePanel = 'objectives-side-panel',
 }

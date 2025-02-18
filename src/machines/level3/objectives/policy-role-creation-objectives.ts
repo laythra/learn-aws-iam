@@ -10,6 +10,11 @@ import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
+const OBJECTIVE_DESCRIPTION1 = `
+  *HINT: The policy should grant read access to **all** objects within the S3 bucket.
+    You can achieve this using wildcards, e.g., \`your_arn/*\`.*
+`;
+
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
   [
     {
@@ -17,10 +22,9 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       entity_id: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadPolicySchema,
+      created_node_initial_position: 'top-left',
       initial_code: INITIAL_POLICIES.S3ReadAccess,
-      description:
-        'Create a policy that allows read/write access\
-          to the S3 bucket: public-assets',
+      description: OBJECTIVE_DESCRIPTION1,
       on_finish_event: NodeCreationFinishEvent.S3_READ_POLICY_CREATED,
       validate_inside_code_editor: true,
       granted_accesses: [],
@@ -51,12 +55,12 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       entity_id: PolicyNodeID.S3ReadWriteAcces,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadWritePolicySchema,
-      initial_code: INITIAL_POLICIES.S3ReadAccess,
+      initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: NodeCreationFinishEvent.S3_READ_WRITE_POLICY_CREATED,
       validate_inside_code_editor: false,
       granted_accesses: [
         {
-          target_node: ResourceNodeID.S3Bucket,
+          target_node: ResourceNodeID.PublicImagesS3Bucket,
           access_level: AccessLevel.ReadWrite,
           target_handle: 'bottom',
         },

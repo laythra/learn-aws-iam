@@ -7,13 +7,13 @@ const GROUP_NODES: Partial<IAMGroupNodeData>[] = [
     id: GroupNodeID.FrontendGroup,
     label: 'frontend-team',
     initial_position: 'center',
-    associated_users: [UserNodeID.User1, UserNodeID.User2],
+    associated_users: [UserNodeID.Laith, UserNodeID.Ali],
   },
   {
     id: GroupNodeID.BackendGroup,
     label: 'backend-team',
     initial_position: 'center',
-    associated_users: [UserNodeID.User3, UserNodeID.User4],
+    associated_users: [UserNodeID.Mohammad, UserNodeID.Khalid],
   },
 ];
 

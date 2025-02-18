@@ -8,7 +8,7 @@ import { IAMNodeImage } from '@/types';
 const USER_NODES: Partial<IAMUserNodeData>[] = [
   {
     id: UserNodeID.FirstUser,
-    label: UserNodeID.FirstUser,
+    label: 'Kyouma',
     initial_position: 'center',
     image: IAMNodeImage.User,
     associated_policies: [

@@ -3,8 +3,11 @@ import { CheckBadgeIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
+import SidePanelObjectiveHintButton from './SidePanelObjectiveHintButton';
+import { WithPopoverBox } from '../Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import SidePanel from '@/components/SidePanels/SidePanel';
+import { ElementID } from '@/config/element-ids';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';
 
@@ -35,7 +38,7 @@ const RightSidePanel: React.FC = () => {
             Level Progress
           </Text>
           <Divider my={2} />
-          <Box mt={2} overflowY='auto'>
+          <WithPopoverBox mt={2} overflowY='auto' elementid={ElementID.ObjectivesSidePanel}>
             <List spacing={3}>
               {Object.values(levelObjectives).map((objective, index) => {
                 return (
@@ -51,12 +54,15 @@ const RightSidePanel: React.FC = () => {
                       <Markdown components={components} rehypePlugins={[remarkChakra]}>
                         {objective.label}
                       </Markdown>
+                      {objective.hint_text && (
+                        <SidePanelObjectiveHintButton hint={objective.hint_text} />
+                      )}
                     </HStack>
                   </ListItem>
                 );
               })}
             </List>
-          </Box>
+          </WithPopoverBox>
         </Flex>
       </Flex>
     </SidePanel>

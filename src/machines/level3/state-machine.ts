@@ -1,10 +1,12 @@
 import { assign } from 'xstate';
 
-import { INITIAL_TUTORIAL_NODES } from './nodes';
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
+import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/policy-nodes';
+import { INITIAL_TUTORIAL_RESOURCE_NODES } from './nodes/resource-nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-role-creation-objectives';
+import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import {
@@ -15,6 +17,7 @@ import {
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { resolveInitialEdges } from '../utils/initial-edges-resolver';
+import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -35,11 +38,12 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     level_number: 1,
     next_popover_index: 0,
     next_popup_index: 0,
+    next_fixed_popover_index: 0,
     state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
+    show_fixed_popovers: false,
     nodes: [],
-    metadata_keys: {},
     edges: [],
     level_objectives: [],
     policy_creation_objectives: [],
@@ -47,6 +51,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
+    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -61,7 +66,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       actions: [
         {
           type: 'add_policy_node',
-          params: ({ event }) => ({ docString: event.doc_string }),
+          params: ({ event }) => ({ docString: event.doc_string, label: event.label }),
         },
       ],
     },
@@ -95,11 +100,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         show_popovers: true,
       }),
     },
-    HIDE_POPOVERS: {
-      actions: assign({
-        show_popovers: false,
-      }),
-    },
+    HIDE_POPOVERS: { actions: 'hide_popovers' },
+    HIDE_FIXED_POPOVERS: { actions: 'hide_fixed_popovers' },
+    NEXT_FIXED_POPOVER: { actions: 'next_fixed_popover' },
     TOGGLE_SIDE_PANEL: {
       actions: assign({
         side_panel_open: ({ context }) => !context.side_panel_open,
@@ -120,9 +123,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       onDone: 'inside_level',
       entry: [
         assign({
-          nodes: INITIAL_TUTORIAL_NODES,
+          nodes: INITIAL_TUTORIAL_POLICY_NODES,
           level_objectives: LEVEL_OBJECTIVES[0],
         }),
+        'enable_tutorial_state',
       ],
       states: {
         tutorial_popup1: {
@@ -146,19 +150,67 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         aws_managed_policy_popover: {
           entry: 'next_popover',
           on: {
-            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'view_policy_content',
+            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'fixed_popover1',
           },
         },
-        view_policy_content: {
-          entry: assign({
-            show_popovers: false,
-          }),
-          after: {
-            3000: 'create_your_custom_policy_popover',
+        fixed_popover1: {
+          entry: ['hide_popovers', 'show_fixed_popover'],
+          on: {
+            [StatelessStateMachineEvent.IAMNodeContentClosed]: 'fixed_popover2',
+          },
+        },
+        fixed_popover2: {
+          entry: 'next_fixed_popover',
+          on: {
+            NEXT_FIXED_POPOVER: 'fixed_popover3',
+          },
+        },
+        fixed_popover3: {
+          entry: 'next_fixed_popover',
+          on: {
+            NEXT_FIXED_POPOVER: 'fixed_popover4',
+          },
+        },
+        fixed_popover4: {
+          entry: 'next_fixed_popover',
+          on: {
+            NEXT_FIXED_POPOVER: 's3_bucket_popover',
+          },
+        },
+        s3_bucket_popover: {
+          entry: [
+            'hide_fixed_popovers',
+            'next_popover',
+            assign({
+              nodes: [...INITIAL_TUTORIAL_POLICY_NODES, ...INITIAL_TUTORIAL_RESOURCE_NODES],
+            }),
+          ],
+          on: {
+            IAM_NODE_ARN_OPENED: 'copy_arn',
+          },
+        },
+        copy_arn: {
+          entry: 'hide_popovers',
+          on: {
+            IAM_NODE_ARN_COPIED: 'create_your_custom_policy_popover',
           },
         },
         create_your_custom_policy_popover: {
-          entry: ['next_popover', 'next_policy_creation_objectives', 'show_side_panel'],
+          entry: [
+            'hide_fixed_popovers',
+            'next_popover',
+            'next_policy_creation_objectives',
+            'show_side_panel',
+            {
+              type: 'update_whitelisted_element_ids',
+              params: {
+                whitelisted_element_ids: [
+                  ElementID.NewEntityBtn,
+                  ElementID.CreateRolesAndPoliciesMenuItem,
+                ],
+              },
+            },
+          ],
           on: {
             [NodeCreationFinishEvent.S3_READ_POLICY_CREATED]: {
               actions: [
@@ -187,11 +239,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       initial: 'popup1',
       entry: [
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
-        'next_policy_creation_objectives',
+        'disable_tutorial_state',
+        'show_side_panel',
         assign({
           edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
           nodes: INITIAL_IN_LEVEL_NODES,
-          side_panel_open: false,
         }),
       ],
       states: {
@@ -204,21 +256,15 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         popup2: {
           entry: 'next_popup',
           on: {
-            NEXT_POPUP: 'popup3',
-          },
-        },
-        popup3: {
-          entry: ['next_popup', 'show_side_panel'],
-          on: {
             NEXT_POPUP: 'create_and_attach_policies',
           },
-          exit: 'hide_popups',
         },
         create_and_attach_policies: {
           entry: [
+            'hide_popups',
+            'next_popover',
             'next_policy_creation_objectives',
             'next_edge_connection_objectives',
-            'toggle_side_panel',
           ],
           type: 'parallel',
           onDone: 'create_and_attach_policies_completed',

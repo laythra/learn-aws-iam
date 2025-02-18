@@ -1,4 +1,4 @@
-import _, { get } from 'lodash';
+import _ from 'lodash';
 import { type Node, type HandleProps, Position } from 'reactflow';
 
 import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';

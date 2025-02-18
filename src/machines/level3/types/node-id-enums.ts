@@ -1,24 +1,24 @@
 export enum PolicyNodeID {
-  S3ReadAccess = 'S3_read_access',
-  S3ReadWriteAcces = 'S3_read_write_access',
-  DynamoDBReadWriteAccess = 'DynamoDB_read_write_access',
-  CloudfrontReadAccess = 'Cloudfront_read_access',
+  S3ReadAccess = 'arn:aws:iam::123456789012:policy/S3_read_access',
+  S3ReadWriteAcces = 'arn:aws:iam::123456789012:policy/S3_read_write_access',
+  DynamoDBReadWriteAccess = 'arn:aws:iam::123456789012:policy/DynamoDB_read_write_access',
+  CloudfrontReadAccess = 'arn:aws:iam::123456789012:policy/Cloudfront_read_access',
 }
 
 export enum GroupNodeID {
-  FrontendGroup = 'iam_group_1',
-  BackendGroup = 'iam_group_2',
+  FrontendGroup = 'arn:aws:iam::123456789012:group/frontend_group',
+  BackendGroup = 'arn:aws:iam::123456789012:group/backend_group',
 }
 
 export enum UserNodeID {
-  User1 = 'Laith',
-  User2 = 'Ali',
-  User3 = 'Mohammed',
-  User4 = 'Khalid',
+  Laith = 'arn:aws:iam::123456789012:user/Laith',
+  Ali = 'arn:aws:iam::123456789012:user/Ali',
+  Mohammad = 'arn:aws:iam::123456789012:user/Mohammad',
+  Khalid = 'arn:aws:iam::123456789012:user/Khalid',
 }
 
 export enum ResourceNodeID {
-  S3Bucket = 'iam_resource_1',
-  CloudFront = 'iam_resource_2',
-  DynamoDBTable = 'iam_resource_3',
+  PublicImagesS3Bucket = 'arn:aws:s3:::public-assets',
+  CloudFront = 'arn:aws:cloudfront::123456789012:distribution/E1A2B3C4D5E6F7',
+  DynamoDBTable = 'arn:aws:dynamodb:us-east-1:123456789012:table/user-profiles',
 }

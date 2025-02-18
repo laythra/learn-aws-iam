@@ -3,6 +3,7 @@ import React from 'react';
 import { Flex, Box } from '@chakra-ui/react';
 
 import { Navbar } from '@/components/Navbar';
+import { FixedPopover } from '@/components/Popover/FixedPopover';
 import { TutorialPopup } from '@/components/Popup/TutorialPopup';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import RightSidePanel from '@/components/SidePanels/RightSidePanel';
@@ -21,6 +22,7 @@ const Home: React.FC = () => {
         <Navbar />
         {useMultiAccountCanvas ? <MultiAccountCanvas /> : <Canvas />}
       </Box>
+      <FixedPopover />
       <RightSidePanelToggleButton />
       <RightSidePanel />
     </Flex>

@@ -6,7 +6,7 @@ import { AccountID } from '@/machines/types';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 
 type CodeEditorEvents = {
-  setErrorsAndWarnings: {
+  setCodeErrorsAndWarnings: {
     errors: Diagnostic[];
     warnings: string[];
     nodeId: string;
@@ -20,6 +20,10 @@ type CodeEditorEvents = {
   selectPolicy: { policyId: string };
   deselectPolicy: { policyId: string };
   setSelectedAccount: { selectedAccountId: AccountID };
+  showHelpPopup: { type: string; entity: IAMScriptableEntity };
+  hideHelpPopup: { type: string };
+  setNodeLabel: { label: string };
+  setNodeLabelError: { error: string | undefined; isValidating: boolean };
 };
 
 export type CodeEditorState = {
@@ -31,6 +35,12 @@ export type CodeEditorState = {
   isCodeEditorInitialized: boolean;
   selectedPolicies: string[];
   selectedAccountId?: AccountID;
+  helpPopupInfo: {
+    isOpen: boolean;
+    entity: IAMScriptableEntity;
+  };
+  label?: string;
+  labelError: string | undefined;
 };
 
 export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produce, {
@@ -42,9 +52,11 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     isCodeEditorInitialized: false,
     selectedPolicies: [],
     selectedAccountId: AccountID.Originating,
+    helpPopupInfo: { isOpen: false, entity: IAMNodeEntity.Policy },
+    labelError: undefined,
   },
   on: {
-    setErrorsAndWarnings: (
+    setCodeErrorsAndWarnings: (
       context: CodeEditorState,
       event: {
         errors: Diagnostic[];
@@ -86,6 +98,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
       context.errors = { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} };
       context.warnings = { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} };
       context.content = { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} };
+      context.labelError = undefined;
     },
     selectPolicy: (context: CodeEditorState, event: { policyId: string }) => {
       context.selectedPolicies.push(event.policyId);
@@ -98,6 +111,29 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     setSelectedAccount: (context: CodeEditorState, event: { selectedAccountId: AccountID }) => {
       context.isValidating = true;
       context.selectedAccountId = event.selectedAccountId;
+    },
+    showHelpPopup: (context: CodeEditorState, event: { entity: IAMScriptableEntity }) => {
+      context.helpPopupInfo = {
+        isOpen: true,
+        entity: event.entity,
+      };
+    },
+    hideHelpPopup: (context: CodeEditorState) => {
+      context.helpPopupInfo = {
+        isOpen: false,
+        entity: IAMNodeEntity.Policy,
+      };
+    },
+    setNodeLabel: (context: CodeEditorState, event: { label: string }) => {
+      context.isValidating = true;
+      context.label = event.label;
+    },
+    setNodeLabelError: (
+      context: CodeEditorState,
+      event: { error: string | undefined; isValidating: boolean }
+    ) => {
+      context.labelError = event.error;
+      context.isValidating = event.isValidating;
     },
   },
 });

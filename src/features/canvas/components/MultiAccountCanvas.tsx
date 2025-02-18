@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 
 import { Box, Text, Divider, useTheme } from '@chakra-ui/react';
-import _ from 'lodash';
 import ReactFlow, { ConnectionMode, Node } from 'reactflow';
 
 import IAMCanvasEdge from './IAMCanvasEdge';

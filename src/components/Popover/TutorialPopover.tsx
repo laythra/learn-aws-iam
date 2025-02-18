@@ -5,16 +5,13 @@ import {
   PopoverArrow,
   PopoverHeader,
   PopoverBody,
-  Icon,
-  Button,
   Box,
   PopoverCloseButton,
   type PlacementWithLogical,
-  Text,
 } from '@chakra-ui/react';
-import { ArrowRightIcon } from '@heroicons/react/16/solid';
 import Markdown from 'react-markdown';
 
+import { PopoverNextButton } from './PopoverNextButton';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
 
@@ -65,17 +62,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
             </Markdown>
           </PopoverBody>
         )}
-        {showNextButton && (
-          <Box display='flex' justifyContent='flex-end' pt={3} pr={1} pb={1}>
-            <Button
-              rightIcon={<Icon as={ArrowRightIcon} verticalAlign='middle' />}
-              variant='solid'
-              onClick={onNextClick}
-            >
-              Next
-            </Button>
-          </Box>
-        )}
+        {showNextButton && <PopoverNextButton onNextClick={onNextClick} />}
       </PopoverContent>
     </Popover>
   );

@@ -1,12 +1,13 @@
 import React, { useRef, useEffect } from 'react';
 
-import { Select } from '@chakra-ui/react';
+import { Select, Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
 import { useCodeEditor } from '../../hooks/useCodeEditor';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
+import { CodeEditorObjectiveDescriptionBox } from '../CodeEditorObjectiveDescriptionBox';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
 import {
@@ -40,9 +41,10 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       _.isEqual
     );
 
-  const selectedAccountId = useSelector(
+  const [selectedAccountId, errors, labelError] = useSelector(
     codeEditorStateStore,
-    state => state.context.selectedAccountId
+    state => [state.context.selectedAccountId, state.context.errors, state.context.labelError],
+    _.isEqual
   );
 
   const editorView = useRef<EditorView | null>(null);
@@ -84,17 +86,22 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     }
   };
 
-  const { onCreateEditor, validateChange, getContent, extensions } = useCodeEditor({
-    nodeId,
-    editorView,
-    getWarnings,
-    objectiveToValidate,
-    initialContent: initialContent,
-  });
+  const { onCreateEditor, validateChange, getContent, extensions, validateNodeLabel } =
+    useCodeEditor({
+      nodeId,
+      editorView,
+      getWarnings,
+      objectiveToValidate,
+      initialContent: initialContent,
+    });
 
   useEffect(() => {
     validateChange();
   }, [selectedAccountId]);
+
+  useEffect(() => {
+    validateNodeLabel('');
+  }, []);
 
   return (
     <>
@@ -116,22 +123,50 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
           <option value={AccountID.Originating}>Originating Account</option>
         </Select>
       )}
-      <CodeMirror
-        value={getContent() ?? JSON.stringify(initialContent, null, 2)}
-        onChange={newContent => {
-          codeEditorStateStore.send({
-            type: 'setContent',
-            content: newContent,
-            nodeId,
-            entity: selectedIAMEntity,
-          });
 
-          validateChange();
-        }}
-        height='200px'
-        extensions={extensions}
-        onCreateEditor={onCreateEditor}
-      />
+      <FormControl isInvalid={labelError !== undefined}>
+        <FormLabel fontWeight='semibold'>{selectedIAMEntity} Name</FormLabel>
+        <Input
+          placeholder='Any descriptive name you prefer...'
+          onChange={newName => {
+            codeEditorStateStore.send({
+              type: 'setNodeLabel',
+              label: newName.target.value,
+            });
+
+            validateNodeLabel(newName.target.value);
+          }}
+        />
+        <FormErrorMessage>{labelError}</FormErrorMessage>
+      </FormControl>
+
+      <FormControl isInvalid={errors[selectedIAMEntity][nodeId]?.length > 0}>
+        <FormLabel fontWeight='semibold' mt={4}>
+          Code
+        </FormLabel>
+        <CodeMirror
+          value={getContent() ?? JSON.stringify(initialContent, null, 2)}
+          onChange={newContent => {
+            codeEditorStateStore.send({
+              type: 'setContent',
+              content: newContent,
+              nodeId,
+              entity: selectedIAMEntity,
+            });
+
+            validateChange();
+          }}
+          height='250px'
+          extensions={extensions}
+          onCreateEditor={onCreateEditor}
+        />
+
+        <FormErrorMessage>{errors[selectedIAMEntity][nodeId]?.[0]?.message}</FormErrorMessage>
+      </FormControl>
+
+      {objectiveToValidate?.description && (
+        <CodeEditorObjectiveDescriptionBox objectiveDescription={objectiveToValidate.description} />
+      )}
     </>
   );
 };

@@ -171,12 +171,16 @@ export const createStateMachineSetup = <
       add_policy_node: enqueueActions(
         (
           { context, enqueue },
-          { docString, accountId }: { docString: string; accountId?: AccountID }
+          {
+            docString,
+            label,
+            accountId,
+          }: { docString: string; accountId?: AccountID; label: string }
         ) => {
           const [updatedNodes, sideEffectsEvents] = createIAMPolicyNode<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, docString, accountId);
+          >(context, docString, label, accountId);
 
           enqueue.assign({ nodes: updatedNodes });
           sideEffectsEvents.forEach(event => {
@@ -200,12 +204,16 @@ export const createStateMachineSetup = <
       add_role_node: enqueueActions(
         (
           { context, enqueue },
-          { docString, accountId }: { docString: string; accountId?: AccountID }
+          {
+            docString,
+            label,
+            accountId,
+          }: { docString: string; label: string; accountId?: AccountID }
         ) => {
           const [updatedNodes, sideEffectsEvents] = createIAMRoleNode<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, docString, accountId);
+          >(context, docString, label, accountId);
 
           enqueue.assign({ nodes: updatedNodes });
           sideEffectsEvents.forEach(event => {
@@ -224,6 +232,16 @@ export const createStateMachineSetup = <
         show_popups: ({ context }) => context.next_popup_index < popupTutorialMessages.length,
         next_popup_index: ({ context }) => context.next_popup_index + 1,
         show_popovers: false,
+      }),
+      show_fixed_popover: assign({
+        show_fixed_popovers: ({ context }) =>
+          context.next_fixed_popover_index < context.fixed_popover_messages.length,
+      }),
+      hide_fixed_popovers: assign({ show_fixed_popovers: false }),
+      next_fixed_popover: assign({
+        next_fixed_popover_index: ({ context }) => context.next_fixed_popover_index + 1,
+        show_fixed_popovers: ({ context }) =>
+          context.next_fixed_popover_index < context.fixed_popover_messages.length,
       }),
       next_policy_creation_objectives: assign({
         policy_creation_objectives: ({ context }) =>
@@ -277,7 +295,7 @@ export const createStateMachineSetup = <
       disable_tutorial_state: assign({ in_tutorial_state: false }),
       update_whitelisted_element_ids: assign({
         whitelisted_element_ids: (
-          { context },
+          {},
           { whitelisted_element_ids }: { whitelisted_element_ids: string[] }
         ) => whitelisted_element_ids,
         in_tutorial_state: true,

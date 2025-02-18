@@ -1,6 +1,6 @@
-import { PolicyNodeID, ResourceNodeID, RoleNodeID, UserNodeID } from '../types/node-id-enums';
-import type { PopoverTutorialMessage } from '@/machines/types';
+import { ResourceNodeID, RoleNodeID, UserNodeID } from '../types/node-id-enums';
 import { ElementID } from '@/config/element-ids';
+import type { PopoverTutorialMessage } from '@/machines/types';
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {

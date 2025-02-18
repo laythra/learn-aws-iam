@@ -1,5 +1,3 @@
-import { type Node } from 'reactflow';
-
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/policy-node-factory';

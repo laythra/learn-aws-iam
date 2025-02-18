@@ -17,6 +17,7 @@ type CanvasStoreState = {
   selectedEdgeId?: string;
   selectedNodeId?: string;
   hoveredOverEdgeId?: string;
+  openedNodeId?: string;
 };
 
 type CanvasStoreEvents = {
@@ -27,6 +28,8 @@ type CanvasStoreEvents = {
   setNodes: { nodes: Node<IAMAnyNodeData>[] };
   setEdges: { edges: Edge[] };
   updateNodePosition: { nodeId: string; position: { x: number; y: number } };
+  updateSelectedNodeId: { nodeId: string };
+  updateOpenedNodeId: { nodeId: string };
 };
 
 export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStoreEvents>(produce, {
@@ -55,6 +58,12 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
       event: { nodeId: string; position: { x: number; y: number } }
     ) {
       context.nodes.find(nd => nd.id === event.nodeId)!.position = event.position;
+    },
+    updateSelectedNodeId(context: CanvasStoreState, event: { nodeId: string }) {
+      context.selectedNodeId = event.nodeId;
+    },
+    updateOpenedNodeId(context: CanvasStoreState, event: { nodeId: string }) {
+      context.openedNodeId = event.nodeId;
     },
   },
 });

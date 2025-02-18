@@ -1,17 +1,17 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
+import { useSelector } from '@xstate/store/react';
 import { useAnimate } from 'framer-motion';
 import _ from 'lodash';
 import { Handle } from 'reactflow';
 
+import IAMNodeARNButton from './IAMNodeARNButton';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
-import { IAMNodeContext } from './IAMNodeProvider';
 import { ShimmerBackground } from './ShimmerBackground';
-import { ShimmeringLight } from './ShimmeringLight';
+import { CanvasStore } from '../stores/canvas-store';
 import { WithPopoverBox } from '@/components/Decorated';
-import { NODE_ANIMATION_ID } from '@/config/node-animations';
 import { type IAMAnyNodeData, type CustomTheme, IAMNodeEntity } from '@/types';
 import { loadLocalImage } from '@/utils/image-loader';
 
@@ -38,17 +38,19 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
   const { entity, label, handles, image, content, animations } = data;
   const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_policy;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
-  const isEditable = data.entity === IAMNodeEntity.Role || data.entity === IAMNodeEntity.Policy;
+  const [selectedNodeId, openedNodeId] = useSelector(
+    CanvasStore,
+    state => [state.context.selectedNodeId, state.context.openedNodeId],
+    _.isEqual
+  );
 
-  // TODO: Move selected node id state to an xstate store instead
-  const { setSelectedNodeId, selectedNodeId } = useContext(IAMNodeContext);
   const [animationsState, setAnimationsState] = useState<Record<string, AnimationState>>({});
   const [scope, animate] = useAnimate();
 
   const theme = useTheme<CustomTheme>();
 
   const handleClick = (): void => {
-    setSelectedNodeId(id);
+    CanvasStore.send({ type: 'updateSelectedNodeId', nodeId: id });
   };
 
   const isSelected = selectedNodeId === id;
@@ -150,16 +152,18 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
           </Box>
         </Flex>
       </Flex>
-      {isEditable && ( // TODO: Show info button even if not editable
-        <Box>
+      <HStack position='absolute' top={1} right={2}>
+        {<IAMNodeARNButton arn={id} placement='top-end' />}
+        {content && (
           <IAMNodeInfoButton
             nodeId={id}
+            opened={openedNodeId === id}
             label={label}
             codeDescription={content}
             placement='top-end'
           />
-        </Box>
-      )}
+        )}
+      </HStack>
     </>
   );
 };

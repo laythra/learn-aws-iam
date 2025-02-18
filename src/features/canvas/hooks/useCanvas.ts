@@ -64,6 +64,27 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   useEffect(() => {
     if (!rfInstance) return;
 
+    const nodeWidth = theme.sizes.iamNodeWidthInPixels;
+    const sidePanelPos = rfInstance.screenToFlowPosition({
+      x: window.innerWidth - sidePanelWidth,
+      y: 0,
+    });
+
+    const newNodesState = nodesState.map(node => {
+      if (node.position.x + nodeWidth >= sidePanelPos.x) {
+        const newNodePosX = sidePanelPos.x - 10 - nodeWidth;
+        return { ...node, position: { ...node.position, x: newNodePosX } };
+      }
+
+      return node;
+    });
+
+    CanvasStore.send({ type: 'setNodes', nodes: newNodesState });
+  }, [sidePanelOpened]);
+
+  useEffect(() => {
+    if (!rfInstance) return;
+
     const reactFlowViewport = rfInstance.getViewport();
     const nodeGroups = _.groupBy(nodes, 'data.initial_position');
 
@@ -93,27 +114,6 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
 
     CanvasStore.send({ type: 'setNodes', nodes: newNodes });
   }, [nodes, rfInstance]);
-
-  useEffect(() => {
-    if (!rfInstance) return;
-
-    const nodeWidth = theme.sizes.iamNodeWidthInPixels;
-    const sidePanelPos = rfInstance.screenToFlowPosition({
-      x: window.innerWidth - sidePanelWidth,
-      y: 0,
-    });
-
-    const newNodesState = nodesState.map(node => {
-      if (node.position.x + nodeWidth >= sidePanelPos.x) {
-        const newNodePosX = sidePanelPos.x - 10 - nodeWidth;
-        return { ...node, position: { ...node.position, x: newNodePosX } };
-      }
-
-      return node;
-    });
-
-    CanvasStore.send({ type: 'setNodes', nodes: newNodesState });
-  }, [sidePanelOpened]);
 
   const onConnect = useCallback(
     (params: Connection) => {
