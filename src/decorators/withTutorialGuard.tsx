@@ -26,6 +26,10 @@ export const withTutorialGuard = <
 
       const forceDisable = inTutorialState && !whitelistedElementIds?.includes(elementid);
 
+      if (forceDisable) {
+        return null;
+      }
+
       return (
         <>
           <Tooltip
