@@ -10,12 +10,10 @@ import {
   Button,
   useTheme,
   VStack,
-  Heading,
 } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
-import { CodeEditorErrorsBox } from './CodeEditorErrorsBox';
 import { CodeEditorHeader } from './CodeEditorHeader';
 import { CodeEditorHelpPopup } from './CodeEditorHelpPopup';
 import { CodeEditorWarningsBox } from './CodeEditorWarningsBox';

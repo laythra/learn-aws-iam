@@ -10,11 +10,10 @@ import {
   PopoverTrigger,
   Text,
 } from '@chakra-ui/react';
-import { CheckBadgeIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { InformationCircleIcon } from '@heroicons/react/24/solid';
-import _ from 'lodash';
 import Markdown from 'react-markdown';
 
+import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';
 
 interface SidePanelObjectiveHintButtonProps {
@@ -29,7 +28,7 @@ const SidePanelObjectiveHintButton: React.FC<SidePanelObjectiveHintButtonProps> 
           Hint
         </Button>
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent boxShadow='dark-lg'>
         <PopoverArrow />
         <PopoverCloseButton />
         <PopoverHeader fontWeight='semibold'>
@@ -38,8 +37,10 @@ const SidePanelObjectiveHintButton: React.FC<SidePanelObjectiveHintButtonProps> 
             <Text> Hint </Text>
           </HStack>
         </PopoverHeader>
-        <PopoverBody>
-          <Markdown components={components}>{hint}</Markdown>
+        <PopoverBody maxH='200px' overflowY='auto'>
+          <Markdown components={components} rehypePlugins={[remarkChakra]}>
+            {hint}
+          </Markdown>
         </PopoverBody>
       </PopoverContent>
     </Popover>

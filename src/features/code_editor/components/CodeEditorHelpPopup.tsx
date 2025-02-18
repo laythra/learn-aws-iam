@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
-import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import codeEditorStateStore from '../stores/code-editor-state-store';

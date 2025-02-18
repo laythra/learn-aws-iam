@@ -1,14 +1,4 @@
-import {
-  Text,
-  Flex,
-  Divider,
-  Box,
-  List,
-  ListItem,
-  ListIcon,
-  HStack,
-  Button,
-} from '@chakra-ui/react';
+import { Text, Flex, Divider, Box, List, ListItem, ListIcon, HStack } from '@chakra-ui/react';
 import { CheckBadgeIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import _ from 'lodash';
 import Markdown from 'react-markdown';
@@ -18,7 +8,6 @@ import { WithPopoverBox } from '../Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import SidePanel from '@/components/SidePanels/SidePanel';
 import { ElementID } from '@/config/element-ids';
-import { LevelObjective } from '@/machines/types';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';
 

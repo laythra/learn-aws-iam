@@ -1,7 +1,5 @@
 import { Flex, Box, Collapse, useTheme } from '@chakra-ui/react';
 
-import { ElementID } from '@/config/element-ids';
-
 interface SidePanelProps {
   children: React.ReactNode;
   isOpen: boolean;

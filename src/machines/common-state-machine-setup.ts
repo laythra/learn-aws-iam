@@ -295,7 +295,7 @@ export const createStateMachineSetup = <
       disable_tutorial_state: assign({ in_tutorial_state: false }),
       update_whitelisted_element_ids: assign({
         whitelisted_element_ids: (
-          { context },
+          {},
           { whitelisted_element_ids }: { whitelisted_element_ids: string[] }
         ) => whitelisted_element_ids,
         in_tutorial_state: true,

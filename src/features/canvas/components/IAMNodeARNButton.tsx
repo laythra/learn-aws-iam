@@ -5,7 +5,6 @@ import {
   Text,
   PopoverTrigger,
   PopoverContent,
-  PopoverArrow,
   PopoverHeader,
   type PlacementWithLogical,
   Tooltip,

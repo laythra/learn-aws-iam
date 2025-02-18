@@ -1,4 +1,4 @@
-import { HandleProps, Position, type Node } from 'reactflow';
+import { type Node } from 'reactflow';
 
 import { ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/resource-node-factory';

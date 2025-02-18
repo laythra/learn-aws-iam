@@ -8,7 +8,6 @@ import {
   PopoverArrow,
   PopoverHeader,
   PopoverBody,
-  PopoverCloseButton,
   IconButton,
   type PlacementWithLogical,
   Code,

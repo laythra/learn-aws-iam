@@ -1,7 +1,7 @@
 import { useEffect, MutableRefObject, useState } from 'react';
 
 import { json } from '@codemirror/lang-json';
-import { Diagnostic, linter } from '@codemirror/lint';
+import { linter } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import { Extension } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store/react';

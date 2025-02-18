@@ -41,14 +41,9 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       _.isEqual
     );
 
-  const [selectedAccountId, errors, warnings, labelError] = useSelector(
+  const [selectedAccountId, errors, labelError] = useSelector(
     codeEditorStateStore,
-    state => [
-      state.context.selectedAccountId,
-      state.context.errors,
-      state.context.warnings,
-      state.context.labelError,
-    ],
+    state => [state.context.selectedAccountId, state.context.errors, state.context.labelError],
     _.isEqual
   );
 

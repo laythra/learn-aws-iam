@@ -1,4 +1,4 @@
-import { Box, HStack, Text } from '@chakra-ui/react';
+import { Box, HStack } from '@chakra-ui/react';
 import Markdown from 'react-markdown';
 
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
