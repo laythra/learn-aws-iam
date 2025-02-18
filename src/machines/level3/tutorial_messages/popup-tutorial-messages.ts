@@ -44,19 +44,18 @@ Policies whether **AWS Managed** or **Customer Managed** have the same structure
 `;
 
 const POPUP_MSG_4 = `
-You are a DevOps engineer responsible for managing the IAM policies for a small startup you work at.
-|lg
+You are a DevOps engineer responsible for managing the **IAM policies**
+ for the tiny startup you work at.|lg
 
 \\
 The company you work for has only two teams, the **Frontend** and **Backend** teams.
 * **Frontend Team**:
-  - Requires ***read/write*** access to specific \`S3\`
-buckets for storing static assets, ie., images.
-  - They also require a read access to specific \`CloudFront Distributions\` for monitoring the
+  - Requires ***read/write*** access to specific **S3 buckets**
+   for storing static assets, ie., images.
+  - They also require a read access to specific **CloudFront Distributions** for monitoring the
 assets content delivery.
 * **Backend Team**:
-  * Requires full access access to specific \`DynamoDB\` tables
-  * Requires invoke access to specific \`Lambda\` functions
+  * Requires full access access to specific **DynamoDB** tables
 `;
 
 const POPUP_MSG_5 = `

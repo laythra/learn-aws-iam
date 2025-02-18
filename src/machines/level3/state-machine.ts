@@ -1,6 +1,5 @@
 import { assign } from 'xstate';
 
-import { INITIAL_TUTORIAL_NODES } from './nodes';
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/policy-nodes';
 import { INITIAL_TUTORIAL_RESOURCE_NODES } from './nodes/resource-nodes';
@@ -32,7 +31,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level3_state_machine',
-  initial: 'inside_level',
+  initial: 'inside_tutorial',
   context: {
     level_title: 'Customer Managed Policies',
     level_description: 'Customer managed policies!',

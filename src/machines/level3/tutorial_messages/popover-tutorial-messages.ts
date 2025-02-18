@@ -7,8 +7,8 @@ const POPOVER_MSG1 = `
 `;
 
 const POPOVER_MSG2 = `
-  This is an **S3 Bucket**. View and Copy the \`ARN\` by clicking
-  on the top-left icon -Remember, the \`ARN\` is a unique identifier for an AWS resource-.
+  This is an **S3 Bucket**. View and copy the **ARN** by clicking the top-right icon.
+  Remember, the **ARN** uniquely identifies an AWS resource.
 `;
 
 const POPOVER_MSG3 = `
@@ -21,8 +21,7 @@ const POPOVER_MSG4 = `
 `;
 
 const POPOVER_MSG5 = `
-  In case you hadn't noticed, the list of objectives you need
-  to complete is on the right side panel
+  You can view some hints and tips on the right side panel.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
