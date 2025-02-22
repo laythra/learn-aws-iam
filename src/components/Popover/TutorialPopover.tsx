@@ -25,7 +25,6 @@ interface TutorialPopoverProps {
   placement?: PlacementWithLogical;
   onNextClick: () => void;
   onCloseClick: () => void;
-  onPopoverClose: () => void;
   containerRef?: React.RefObject<HTMLElement>;
 }
 
@@ -39,16 +38,9 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
   placement = 'auto',
   onNextClick,
   onCloseClick,
-  onPopoverClose,
 }) => {
   return (
-    <Popover
-      isOpen={isOpen}
-      placement={placement}
-      closeOnBlur={true}
-      isLazy={true}
-      onClose={onPopoverClose}
-    >
+    <Popover isOpen={isOpen} placement={placement} closeOnBlur={true} isLazy={true}>
       <PopoverTrigger>
         <Box>{children}</Box>
       </PopoverTrigger>
