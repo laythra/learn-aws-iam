@@ -216,7 +216,7 @@ interface BaseCreationObjective<
   readonly limit_new_lines?: boolean;
   readonly account_id?: AccountID;
   readonly created_node_initial_position?: string;
-  readonly description?: string;
+  readonly callout_message?: string;
 }
 
 export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>
@@ -245,10 +245,10 @@ export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventM
   readonly allow_new_lines?: boolean;
 
   /**
-   * Optional description for the IAM Policy/Role Edit Objective.
+   * Optional callout_message for the IAM Policy/Role Edit Objective.
    * Used to help the user understand what they need to do when editing the IAM Policy/Role.
    */
-  readonly description?: string;
+  readonly callout_message?: string;
 
   readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_EDIT_OBJECTIVE];
   readonly validate_function: ValidateFunction;

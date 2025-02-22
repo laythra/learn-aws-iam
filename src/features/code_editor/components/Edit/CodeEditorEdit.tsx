@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
 import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
@@ -8,7 +8,8 @@ import _ from 'lodash';
 import { useCodeEditor } from '../../hooks/useCodeEditor';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { CodeEditorErrorsBox } from '../CodeEditorErrorsBox';
-import { CodeEditorObjectiveDescriptionBox } from '../CodeEditorObjectiveDescriptionBox';
+import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
+import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorWarningsBox } from '../CodeEditorWarningsBox';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import {
@@ -109,8 +110,8 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
         <CodeEditorWarningsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
       )}
 
-      {objectiveToValidate?.description && (
-        <CodeEditorObjectiveDescriptionBox objectiveDescription={objectiveToValidate.description} />
+      {objectiveToValidate?.callout_message && (
+        <CodeEditorObjectiveCallout calloutMessage={objectiveToValidate.callout_message} />
       )}
     </>
   );

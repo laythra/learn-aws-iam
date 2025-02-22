@@ -23,12 +23,10 @@ export const CodeEditorErrorsBox: React.FC<CodeEditorerrorsBoxProps> = ({
     return null;
   } else {
     return (
-      <>
-        <HStack color='red.600'>
-          <ExclamationCircleIcon height='1em' width='1em' />
-          <Text fontWeight='semibold'>{errors[0].message}</Text>
-        </HStack>
-      </>
+      <HStack color='red.600'>
+        <ExclamationCircleIcon height='1em' width='1em' />
+        <Text fontWeight='semibold'>{errors[0].message}</Text>
+      </HStack>
     );
   }
 };
