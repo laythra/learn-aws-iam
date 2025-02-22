@@ -1,11 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
+import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import CodeMirror from '@uiw/react-codemirror';
 import _ from 'lodash';
 
 import { useCodeEditor } from '../../hooks/useCodeEditor';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
+import { CodeEditorErrorsBox } from '../CodeEditorErrorsBox';
+import { CodeEditorObjectiveDescriptionBox } from '../CodeEditorObjectiveDescriptionBox';
+import { CodeEditorWarningsBox } from '../CodeEditorWarningsBox';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import {
   BaseFinishEventMap,
@@ -15,9 +19,11 @@ import {
 import { IAMNodeEntity } from '@/types';
 import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/utils/iam-code-linter';
 
-interface CodeEditorWindowProps {
+interface CodeEditorEditProps {
   nodeId: string;
   selectedIAMEntity: IAMNodeEntity;
+  errors: Diagnostic[];
+  warnings: string[];
 }
 
 const VALIDATION_ERROR_WARNING =
@@ -25,7 +31,12 @@ const VALIDATION_ERROR_WARNING =
 
 const CONTENT_UNCHANGED_WARNING = 'You have not made any changes to the policy.';
 
-export const CodeEditorEdit: React.FC<CodeEditorWindowProps> = ({ nodeId, selectedIAMEntity }) => {
+export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
+  nodeId,
+  selectedIAMEntity,
+  errors,
+  warnings,
+}) => {
   const [policyEditObjectives, nodes] = LevelsProgressionContext().useSelector(
     state => [state.context.policy_edit_objectives, state.context.nodes],
     _.isEqual
@@ -76,22 +87,32 @@ export const CodeEditorEdit: React.FC<CodeEditorWindowProps> = ({ nodeId, select
   });
 
   return (
-    <CodeMirror
-      // The content won't be loaded into the store until the editor is initialized
-      value={getContent() ?? selectedNode.data.content}
-      onChange={newContent => {
-        codeEditorStateStore.send({
-          type: 'setContent',
-          content: newContent,
-          nodeId,
-          entity: selectedIAMEntity,
-        });
-        validateChange();
-      }}
-      height='200px'
-      extensions={extensions}
-      onCreateEditor={onCreateEditor}
-    />
+    <>
+      <CodeMirror
+        // The content won't be loaded into the store until the editor is initialized
+        value={getContent() ?? selectedNode.data.content}
+        onChange={newContent => {
+          codeEditorStateStore.send({
+            type: 'setContent',
+            content: newContent,
+            nodeId,
+            entity: selectedIAMEntity,
+          });
+          validateChange();
+        }}
+        height='250px'
+        extensions={extensions}
+        onCreateEditor={onCreateEditor}
+      />
+      <CodeEditorErrorsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+      {_.isEmpty(errors) && (
+        <CodeEditorWarningsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+      )}
+
+      {objectiveToValidate?.description && (
+        <CodeEditorObjectiveDescriptionBox objectiveDescription={objectiveToValidate.description} />
+      )}
+    </>
   );
 };
 

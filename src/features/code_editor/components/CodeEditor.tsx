@@ -16,7 +16,6 @@ import _ from 'lodash';
 
 import { CodeEditorHeader } from './CodeEditorHeader';
 import { CodeEditorHelpPopup } from './CodeEditorHelpPopup';
-import { CodeEditorWarningsBox } from './CodeEditorWarningsBox';
 import { CodeEditorCreate } from './Create/CodeEditorCreate';
 import { CreateSubmitButton } from './Create/CreateSubmitButton';
 import { CodeEditorEdit } from './Edit/CodeEditorEdit';
@@ -36,9 +35,9 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     _.isEqual
   );
 
-  const { selectedIAMEntity, errors } = useSelector(
+  const [selectedIAMEntity, errors, warnings] = useSelector(
     codeEditorStateStore,
-    state => _.pick(state.context, ['selectedIAMEntity', 'errors']),
+    state => [state.context.selectedIAMEntity, state.context.errors, state.context.warnings],
     _.isEqual
   );
 
@@ -62,6 +61,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
             <CodeEditorHeader
               codeEditorMode={codeEditorMode}
               selectedIAMEntity={selectedIAMEntity}
+              nodeId={nodeId}
             />
           </ModalHeader>
           <ModalBody>
@@ -69,11 +69,12 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
               {codeEditorMode === CodeEditorMode.Create ? (
                 <CodeEditorCreate nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
               ) : (
-                <CodeEditorEdit nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
-              )}
-              {/* <CodeEditorErrorsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} /> */}
-              {_.isEmpty(errors[selectedIAMEntity][nodeId]) && (
-                <CodeEditorWarningsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+                <CodeEditorEdit
+                  nodeId={nodeId}
+                  selectedIAMEntity={selectedIAMEntity}
+                  errors={errors[selectedIAMEntity][nodeId]}
+                  warnings={warnings[selectedIAMEntity][nodeId]}
+                />
               )}
             </VStack>
           </ModalBody>

@@ -24,12 +24,10 @@ export const CodeEditorWarningsBox: React.FC<CodeEditorWarningsBoxProps> = ({
   } else {
     return (
       <>
-        {warnings.map(warning => (
-          <HStack key={warning} color='yellow.600'>
-            <ExclamationCircleIcon height='1em' width='1em' />
-            <Text fontWeight='semibold'>{warning}</Text>
-          </HStack>
-        ))}
+        <HStack color='yellow.600'>
+          <ExclamationCircleIcon height='1em' width='1em' />
+          <Text fontWeight='semibold'>{warnings[0]}</Text>
+        </HStack>
       </>
     );
   }
