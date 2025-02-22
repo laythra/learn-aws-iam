@@ -18,7 +18,16 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
   nodeId,
 }) => {
   if (codeEditorMode === CodeEditorMode.Edit) {
-    return <Text>Edit {_.upperFirst(selectedIAMEntity)}</Text>;
+    const selectedNode = CanvasStore.getSnapshot().context.nodes.find(node => node.id === nodeId)!;
+
+    return (
+      <HStack justifyContent='space-between'>
+        <Text>
+          Edit {_.upperFirst(selectedIAMEntity)}: {selectedNode.data.label}
+        </Text>
+        <CodeEditorHelpButton />
+      </HStack>
+    );
   }
 
   const setSelectedIAMEntity = (entity: IAMScriptableEntity): void => {
