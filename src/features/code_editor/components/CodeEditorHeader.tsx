@@ -1,18 +1,21 @@
-import { Flex, HStack, IconButton, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
-import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid';
+import { Flex, HStack, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import _ from 'lodash';
 
+import CodeEditorHelpButton from './CodeEditorHelpButton';
 import codeEditorStateStore from '../stores/code-editor-state-store';
+import { CanvasStore } from '@/features/canvas/stores/canvas-store';
 import { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 interface CodeEditorHeaderProps {
   selectedIAMEntity: IAMScriptableEntity;
   codeEditorMode: CodeEditorMode;
+  nodeId: string;
 }
 
 export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
   selectedIAMEntity,
   codeEditorMode,
+  nodeId,
 }) => {
   if (codeEditorMode === CodeEditorMode.Edit) {
     return <Text>Edit {_.upperFirst(selectedIAMEntity)}</Text>;
@@ -22,22 +25,12 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
     codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: entity });
   };
 
-  const showPolicyHelpPopup = (): void => {
-    codeEditorStateStore.send({ type: 'showHelpPopup', entity: IAMNodeEntity.Policy });
-  };
-
   return (
     <Flex justifyContent='space-between'>
       <Text>New {_.upperFirst(selectedIAMEntity)}</Text>
 
       <HStack>
-        <IconButton
-          icon={<QuestionMarkCircleIcon />}
-          aria-label='Help'
-          size='xs'
-          variant='ghost'
-          onClick={showPolicyHelpPopup}
-        />
+        <CodeEditorHelpButton />
         <Tabs
           index={selectedIAMEntity === IAMNodeEntity.Policy ? 0 : 1}
           onChange={index =>
