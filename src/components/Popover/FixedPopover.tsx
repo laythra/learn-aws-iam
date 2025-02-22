@@ -54,6 +54,7 @@ export const FixedPopover: React.FC<FixedPopover> = () => {
           bottom={bottomPos}
           left={leftPos}
           right={rightPos}
+          w='400px'
         >
           <PopoverHeader
             fontWeight='semibold'
