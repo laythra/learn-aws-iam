@@ -10,6 +10,7 @@ import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { CodeEditorErrorsBox } from '../CodeEditorErrorsBox';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
+import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { CodeEditorWarningsBox } from '../CodeEditorWarningsBox';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import {
@@ -105,9 +106,13 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
         extensions={extensions}
         onCreateEditor={onCreateEditor}
       />
-      <CodeEditorErrorsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
-      {_.isEmpty(errors) && (
-        <CodeEditorWarningsBox nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+
+      {!_.isEmpty(errors) && <CodeEditorProgressStatus message={errors[0].message} level='error' />}
+      {!_.isEmpty(warnings) && _.isEmpty(errors) && (
+        <CodeEditorProgressStatus message={warnings[0]} level='warning' />
+      )}
+      {_.isEmpty(errors) && _.isEmpty(warnings) && (
+        <CodeEditorProgressStatus message='You got it right!' level='success' />
       )}
 
       {objectiveToValidate?.callout_message && (

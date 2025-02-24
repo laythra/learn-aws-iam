@@ -67,6 +67,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
           <ModalBody>
             <VStack align='stretch' spacing={4}>
               {codeEditorMode === CodeEditorMode.Create ? (
+                // Send errors and warnings to the CodeEditorCreate component from here!
                 <CodeEditorCreate nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
               ) : (
                 <CodeEditorEdit
