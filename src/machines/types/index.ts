@@ -264,6 +264,7 @@ export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventM
   readonly resources_to_revoke: string[];
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
+  readonly hint_messages?: { title: string; content: string }[];
 }
 
 export interface IAMTrustPolicyEditObject<TFinishEventMap extends BaseFinishEventMap> {

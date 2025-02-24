@@ -113,6 +113,9 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
       {objectiveToValidate?.callout_message && (
         <CodeEditorObjectiveCallout calloutMessage={objectiveToValidate.callout_message} />
       )}
+      {objectiveToValidate?.hint_messages && (
+        <CodeEditorObjectiveHints objectiveHints={objectiveToValidate?.hint_messages} />
+      )}
     </>
   );
 };
