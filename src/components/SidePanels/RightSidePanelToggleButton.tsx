@@ -1,7 +1,10 @@
-import { IconButton } from '@chakra-ui/react';
+import { Box, IconButton } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 
+import AnimatedRedDot from '../Animated/AnimatedRedDot';
 import { LevelsProgressionContext } from '../providers/LevelsProgressionProvider';
+import { ElementID } from '@/config/element-ids';
+import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 
 interface SidePanelToggleButtonProps {}
 
@@ -15,19 +18,24 @@ const SidePanelToggleButton: React.FC<SidePanelToggleButtonProps> = () => {
     levelActor.send({ type: 'TOGGLE_SIDE_PANEL' });
   };
 
+  const { isOn: isRedDotOn } = useAnimatedRedDot({
+    elementId: ElementID.RightSidePanelToggleButton,
+  });
+
   return (
-    <IconButton
-      aria-label='Toggle right panel'
-      position='fixed'
-      top='50%'
-      right={isOpen ? '300px' : '0px'}
-      transform='translateY(-50%)'
-      colorScheme='gray'
-      variant='ghost'
-      onClick={toggleSidePanel}
-      size='sm'
-      icon={icon}
-    />
+    <Box position='fixed' top='50%' right={isOpen ? '300px' : '0px'} transform='translateY(-50%)'>
+      <Box position='relative' display='inline-block'>
+        <IconButton
+          aria-label='Toggle right panel'
+          colorScheme='gray'
+          variant='ghost'
+          onClick={toggleSidePanel}
+          size='sm'
+          icon={icon}
+        />
+        {isRedDotOn && <AnimatedRedDot />}
+      </Box>
+    </Box>
   );
 };
 

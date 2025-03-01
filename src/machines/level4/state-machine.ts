@@ -125,9 +125,16 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       }),
     },
     TOGGLE_SIDE_PANEL: {
-      actions: assign({
-        side_panel_open: ({ context }) => !context.side_panel_open,
-      }),
+      actions: [
+        'toggle_side_panel',
+        {
+          type: 'update_red_dot_visibility',
+          params: {
+            elementIds: [ElementID.RightSidePanelToggleButton],
+            isVisible: false,
+          },
+        },
+      ],
     },
   },
   states: {
@@ -177,7 +184,19 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         tutorial_finished: {
-          entry: ['next_popover'],
+          entry: [
+            'next_popover',
+            {
+              type: 'update_red_dot_visibility',
+              params: {
+                elementIds: [
+                  ElementID.RightSidePanelToggleButton,
+                  ElementID.IAMNodeContentEditButton,
+                ],
+                isVisible: true,
+              },
+            },
+          ],
           type: 'final',
         },
       },

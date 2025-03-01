@@ -10,6 +10,7 @@ import {
   LevelObjective,
   ObjectiveType,
 } from '../types';
+import { ElementID } from '@/config/element-ids';
 import { createEdge } from '@/factories/edge-factory';
 import { createGroupNode } from '@/factories/group-node-factory';
 import { createPolicyNode } from '@/factories/policy-node-factory';
@@ -637,4 +638,19 @@ export function updateRoleToEntityConnectionEdges<
     [...context.edges, ...getEdgesEstablishedThroughRoleNode(context, roleNode), newCreatedEdge],
     sideEffectsEvents,
   ];
+}
+
+export function getElementsWithRedDot<
+  TLevelObjectiveID,
+  TFinishEventMap extends BaseFinishEventMap,
+>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  elementIds: ElementID[],
+  isRedDotVisible: boolean
+): ElementID[] {
+  if (isRedDotVisible) {
+    return _.uniq([...(context.elements_with_animated_red_dot ?? []), ...elementIds]);
+  } else {
+    return _.difference(context.elements_with_animated_red_dot ?? [], elementIds);
+  }
 }

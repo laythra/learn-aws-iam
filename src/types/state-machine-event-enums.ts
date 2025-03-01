@@ -14,6 +14,7 @@ export enum StatelessStateMachineEvent {
   CreateIAMPolicyRoleWindowOpened = 'CREATE_IAM_POLICY_ROLE_WINDOW_OPENED',
   CreateIAMIdentityPopupOpened = 'CREATE_IAM_IDENTITY_POPUP_OPENED',
   IAMNodeARNCopied = 'IAM_NODE_ARN_COPIED',
+  IAMNodeTutorialPopoverClosed = 'IAM_NODE_TUTORIAL_POPOVER_CLOSED',
 }
 
 // /**

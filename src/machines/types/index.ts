@@ -3,6 +3,7 @@ import { Schema, ValidateFunction } from 'ajv';
 import { DynamicAnimationOptions } from 'framer-motion';
 import type { Edge, Node } from 'reactflow';
 
+import { ElementID } from '@/config/element-ids';
 import type {
   AccessLevel,
   CreatableIAMNodeEntity,
@@ -76,6 +77,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   animations?: Record<string, DynamicAnimationOptions>;
   identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
   fixed_popover_messages: FixedPopoverMessage[];
+  elements_with_animated_red_dot?: ElementID[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -141,7 +143,8 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       sourceNode: Node<IAMRoleNodeData>;
       targetNode: Node<IAMUserNodeData>;
     }
-  | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage };
+  | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage }
+  | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };
 
 export type GenericInsideLevelMetadata = {
   connection_targets?: {
