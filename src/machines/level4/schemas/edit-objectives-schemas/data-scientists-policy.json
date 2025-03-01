@@ -19,12 +19,21 @@
               "const": "Allow"
             },
             "Action": {
-              "type": "string",
-              "const": "dynamodb:GetItem"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "dynamodb:GetItem",
+                  "dynamodb:PutItem"
+                ],
+                "uniqueItems": true,
+                "minItems": 2,
+                "maxItems": 2
+              }
             },
             "Resource": {
               "type": "string",
-              "const": "*"
+              "const": "arn:aws:dynamodb:us-east-1:123456789012:table/analytics-data"
             }
           },
           "required": [
@@ -42,12 +51,21 @@
               "const": "Allow"
             },
             "Action": {
-              "type": "string",
-              "const": "s3:Get*"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "s3:GetObject",
+                  "s3:PutObject"
+                ]
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "uniqueItems": true
             },
             "Resource": {
               "type": "string",
-              "const": "arn:aws:s3:::securecorp-data/*"
+              "const": "arn:aws:s3:::timeshift-assets/*"
             }
           },
           "required": [

@@ -1,12 +1,10 @@
 import type { Node } from 'reactflow';
 
-import { policyToUserAssocations } from './initial-associations';
 import { DATA_SCIENTISTS_POLICY_DOCUMENT } from '../policy_role_documents/data-scientists-policy';
 import { DEVELOPERS_POLICY_DOCUMENT } from '../policy_role_documents/developers-policy';
 import { INTERNS_POLICY_DOCUMENT } from '../policy_role_documents/interns-policy';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/policy-node-factory';
-import { attachUsersToPolicies } from '@/machines/utils/association-manager';
 import { AccessLevel, IAMPolicyNodeData } from '@/types';
 
 const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
@@ -17,13 +15,8 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
     granted_accesses: [
       {
         target_node: ResourceNodeID.CustomerDataDynamoTable,
-        target_handle: 'top',
-        access_level: AccessLevel.ReadWrite,
-      },
-      {
-        target_node: ResourceNodeID.AnalyticsDataDynanoTable,
-        target_handle: 'top',
-        access_level: AccessLevel.ReadWrite,
+        target_handle: 'bottom',
+        access_level: AccessLevel.Full,
       },
     ],
     initial_position: 'bottom-center',
@@ -37,12 +30,12 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
     granted_accesses: [
       {
         target_node: ResourceNodeID.CustomerDataDynamoTable,
-        target_handle: 'top',
+        target_handle: 'bottom',
         access_level: AccessLevel.ReadWrite,
       },
       {
         target_node: ResourceNodeID.AnalyticsDataDynanoTable,
-        target_handle: 'top',
+        target_handle: 'bottom',
         access_level: AccessLevel.ReadWrite,
       },
     ],
@@ -59,9 +52,5 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   },
 ];
 
-export const INITIAL_IN_LEVEL_POLICY_NODES: Node<IAMPolicyNodeData>[] = attachUsersToPolicies(
-  IN_LEVEL_POLICY_NODES.map(createPolicyNode),
-  policyToUserAssocations
-);
-
-export const INITIAL_POLICY_NODES: Node<IAMPolicyNodeData>[] = INITIAL_IN_LEVEL_POLICY_NODES;
+export const INITIAL_IN_LEVEL_POLICY_NODES: Node<IAMPolicyNodeData>[] =
+  IN_LEVEL_POLICY_NODES.map(createPolicyNode);

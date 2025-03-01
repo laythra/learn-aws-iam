@@ -4,13 +4,13 @@ export const DEVELOPERS_POLICY_DOCUMENT = JSON.stringify(
     Statement: [
       {
         Effect: 'Allow',
-        Action: 'dynamodb:*Item',
-        Resource: '*',
-        Condition: {
-          StringEqualsIfExists: {
-            'dynamodb:LeadingKeys': '${aws:username}',
-          },
-        },
+        Action: 'dynamodb:*',
+        Resource: 'arn:aws:dynamodb:us-east-1:123456789012:table/customer-data',
+      },
+      {
+        Effect: 'Allow',
+        Action: ['s3:GetObject', 's3:PutObject'],
+        Resource: 'arn:aws:s3:::timeshift-assets',
       },
     ],
   },

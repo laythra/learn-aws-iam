@@ -37,7 +37,7 @@
             },
             "Resource": {
               "type": "string",
-              "const": "arn:aws:s3:::securecorp-logs/*"
+              "const": "arn:aws:s3:::timeshift-assets/*"
             }
           },
           "required": [

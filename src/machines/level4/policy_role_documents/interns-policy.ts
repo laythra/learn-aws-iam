@@ -15,7 +15,7 @@ export const INTERNS_POLICY_DOCUMENT = JSON.stringify(
       {
         Effect: 'Allow',
         Action: ['s3:GetObject'],
-        Resource: 'arn:aws:s3:::securecorp-logs/*',
+        Resource: 'arn:aws:s3:::timeshift-assets/*',
       },
     ],
   },

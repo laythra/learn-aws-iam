@@ -1,20 +1,19 @@
 export enum PolicyNodeID {
-  DeveloperPolicy = 'DeveloperPolicy',
-  DataScientistPolicy = 'DataScientistPolicy',
-  InternPolicy = 'InternPolicy',
+  DeveloperPolicy = 'arn:aws:iam::123456789012:policy/devloper-policy',
+  DataScientistPolicy = 'arn:aws:iam::123456789012:policy/data-scientist-policy',
+  InternPolicy = 'arn:aws:iam::123456789012:policy/intern-policy',
 }
 
 export enum UserNodeID {
-  Developer1 = 'Developer #1',
-  Developer2 = 'Developer #2',
-  DataScientist1 = 'Data Scientist #1',
-  Intern1 = 'Intern #1',
-  Intern2 = 'Intern #2',
+  Developer1 = 'arn:aws:iam::123456789012:user/omar',
+  Developer2 = 'arn:aws:iam::123456789012:user/sara',
+  DataScientist1 = 'arn:aws:iam::123456789012:user/ahmad',
+  Intern1 = 'arn:aws:iam::123456789012:user/layla',
+  Intern2 = 'arn:aws:iam::123456789012:user/mohammad',
 }
 
 export enum ResourceNodeID {
-  CustomerDataDynamoTable = 'CustomerData',
-  AnalyticsDataDynanoTable = 'AnalyticsData',
-  SecureCorpDataS3Bucket = 'timeshift-assets',
-  SecureCorpLogsS3Bucket = 'timeshift-db-backups',
+  CustomerDataDynamoTable = 'arn:aws:dynamodb:us-east-1:123456789012:table/customer-data',
+  AnalyticsDataDynanoTable = 'arn:aws:dynamodb:us-east-1:123456789012:table/analytics-data',
+  TimeshiftAssetsS3Bucket = 'arn:aws:s3:::timeshift-assets',
 }

@@ -7,6 +7,59 @@ import { IAMPolicyEditObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
+const OBJECTIVE_CALLOUT_MSG = `
+  IAM offers hundreds of actions across AWS services.
+  Covering all of them isn’t practical, so we’ll focus on the most important ones.
+  If you want to explore the full list, check [here](https://github.com/TryTryAgain/aws-iam-actions-list/blob/master/all-actions.txt)
+`;
+
+const OBJECTIVE_CALLOUT_MSG2 = `
+  This policy is using the \`Condition\` directive which we haven't covered yet.
+  It's used to specify when a policy is in effect.
+  In this case, it's denying all types of actions if the user is not using MFA
+`;
+
+const OBJECTIVE1_HINT_MSG1 = `
+  Developers Should:
+  - Have read/write access to the \`CustomerData\` **DynamoDB Table**.
+  - Have read/write access to the \`timeshift-assets\` **S3 Bucket** Objects.
+`;
+
+const OBJECTIVE1_HINT_MSG2 = `
+  The first action concerning the **DynamoDB Table** here is way too permissive.
+  We just want to grant read/write access to the \`CustomerData\` **DynamoDB Table**.
+`;
+
+const OBJECTIVE1_HINT_MSG3 = `
+  While the second action concerning the *timeshift-assets* **S3 Bucket** may look correct,
+  There's a subtle issue with the resource being targeted. it's operating on the bucket itself,
+  not the objects within the bucket.
+`;
+
+const OBJECTIVE2_HINT_MSG1 = `
+  Data Scientists Should:
+  - Have read/write access to the \`AnalyticsData\` **DynamoDB Table**.
+  - Have read/write access to the \`timeshift-assets\` **S3 Bucket** Objects.
+`;
+
+const OBJECTIVE2_HINT_MSG2 = `
+  The resource is using the wildcard (\`*\`), causing the action to be way too permissive.
+`;
+
+const OBJECTIVE2_HINT_MSG3 = `
+  There's a statement item missing in the policy.
+  It should be granting read/write access to the \`timeshift-assets\` **S3 Bucket** Objects.
+`;
+
+const OBJECTIVE3_HINT_MSG1 = `
+  Interns Should:
+  - Have *read* access to the \`CustomerData\` **DynamoDB Table**.
+`;
+
+const OBJECTIVE3_HINT_MSG2 = `
+  Clearly, there's something preventing the statement specifying the read access to take effect.
+`;
+
 export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] = [
   [
     {
@@ -14,6 +67,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
       entity_id: PolicyNodeID.DeveloperPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: developersPolicy,
+      callout_message: OBJECTIVE_CALLOUT_MSG,
       on_finish_event: NodeEditFinishEvent.DEVELOPER_POLICY_EDITED,
       resources_to_grant: {
         [ResourceNodeID.AnalyticsDataDynanoTable]: AccessLevel.Read,
@@ -23,6 +77,20 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
         ResourceNodeID.CustomerDataDynamoTable,
       ],
       validate_function: AJV_COMPILER.compile(developersPolicy),
+      hint_messages: [
+        {
+          title: 'Level Objective',
+          content: OBJECTIVE1_HINT_MSG1,
+        },
+        {
+          title: 'Hint #1',
+          content: OBJECTIVE1_HINT_MSG2,
+        },
+        {
+          title: 'Hint #2',
+          content: OBJECTIVE1_HINT_MSG3,
+        },
+      ],
     },
     {
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
@@ -30,28 +98,49 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
       entity: IAMNodeEntity.Policy,
       json_schema: dataScientistsPolicy,
       on_finish_event: NodeEditFinishEvent.DATA_SCIENTIST_POLICY_EDITED,
+      callout_message: OBJECTIVE_CALLOUT_MSG,
       resources_to_grant: {
-        [ResourceNodeID.AnalyticsDataDynanoTable]: AccessLevel.Read,
-        [ResourceNodeID.CustomerDataDynamoTable]: AccessLevel.Read,
-        [ResourceNodeID.SecureCorpDataS3Bucket]: AccessLevel.Read,
+        [ResourceNodeID.TimeshiftAssetsS3Bucket]: AccessLevel.ReadWrite,
       },
-      resources_to_revoke: [
-        ResourceNodeID.AnalyticsDataDynanoTable,
-        ResourceNodeID.CustomerDataDynamoTable,
-      ],
+      resources_to_revoke: [ResourceNodeID.AnalyticsDataDynanoTable],
       validate_function: AJV_COMPILER.compile(dataScientistsPolicy),
+      hint_messages: [
+        {
+          title: 'Level Objective',
+          content: OBJECTIVE2_HINT_MSG1,
+        },
+        {
+          title: 'Hint #1',
+          content: OBJECTIVE2_HINT_MSG2,
+        },
+        {
+          title: 'Hint #2',
+          content: OBJECTIVE2_HINT_MSG3,
+        },
+      ],
     },
     {
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       entity_id: PolicyNodeID.InternPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: internsPolicy,
-      on_finish_event: NodeEditFinishEvent.DEVELOPER_POLICY_EDITED,
+      on_finish_event: NodeEditFinishEvent.INTERN_POLICY_EDITED,
+      callout_message: OBJECTIVE_CALLOUT_MSG2,
       resources_to_grant: {
-        [ResourceNodeID.SecureCorpLogsS3Bucket]: AccessLevel.Read,
+        [ResourceNodeID.TimeshiftAssetsS3Bucket]: AccessLevel.Read,
       },
       resources_to_revoke: [],
       validate_function: AJV_COMPILER.compile(internsPolicy),
+      hint_messages: [
+        {
+          title: 'Level Objective',
+          content: OBJECTIVE3_HINT_MSG1,
+        },
+        {
+          title: 'Hint #1',
+          content: OBJECTIVE3_HINT_MSG2,
+        },
+      ],
     },
   ],
 ];
