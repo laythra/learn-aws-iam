@@ -10,9 +10,9 @@ import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
-const OBJECTIVE_DESCRIPTION1 = `
-  *HINT: The policy should grant read access to **all** objects within the S3 bucket.
-    You can achieve this using wildcards, e.g., \`your_arn/*\`.*
+const CALLOUT_MESSAGE1 = `
+  We can grant read access to objects within an S3 bucket using wildcards.
+  Such as \`arn:aws:s3:::your_bucket_name/*\`
 `;
 
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
@@ -24,7 +24,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       json_schema: s3ReadPolicySchema,
       created_node_initial_position: 'top-left',
       initial_code: INITIAL_POLICIES.S3ReadAccess,
-      description: OBJECTIVE_DESCRIPTION1,
+      callout_message: CALLOUT_MESSAGE1,
       on_finish_event: NodeCreationFinishEvent.S3_READ_POLICY_CREATED,
       validate_inside_code_editor: true,
       granted_accesses: [],

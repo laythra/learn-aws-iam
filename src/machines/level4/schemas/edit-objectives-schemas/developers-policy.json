@@ -8,8 +8,8 @@
     },
     "Statement": {
       "type": "array",
-      "minItems": 1,
-      "maxItems": 1,
+      "minItems": 2,
+      "maxItems": 2,
       "items": [
         {
           "type": "object",
@@ -19,12 +19,53 @@
               "const": "Allow"
             },
             "Action": {
-              "type": "string",
-              "const": "dynamodb:GetItem"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "dynamodb:GetItem",
+                  "dynamodb:PutItem"
+                ],
+                "uniqueItems": true,
+                "minItems": 2,
+                "maxItems": 2
+              }
             },
             "Resource": {
               "type": "string",
-              "const": "arn:aws:dynamodb:us-west-2:123456789012:table/developers"
+              "const": "arn:aws:dynamodb:us-east-1:123456789012:table/customer-data"
+            }
+          },
+          "required": [
+            "Effect",
+            "Action",
+            "Resource"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Effect": {
+              "type": "string",
+              "const": "Allow"
+            },
+            "Action": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "s3:GetObject",
+                  "s3:PutObject"
+                ]
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "uniqueItems": true
+            },
+            "Resource": {
+              "type": "string",
+              "const": "arn:aws:s3:::timeshift-assets/*"
             }
           },
           "required": [

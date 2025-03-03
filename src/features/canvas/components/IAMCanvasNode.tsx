@@ -161,6 +161,7 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
             label={label}
             codeDescription={content}
             placement='top-end'
+            editable={data.entity === IAMNodeEntity.Policy && data.editable}
           />
         )}
       </HStack>

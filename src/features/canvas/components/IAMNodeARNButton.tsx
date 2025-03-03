@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { IdentificationIcon, ClipboardDocumentIcon } from '@heroicons/react/20/solid';
 
+import { CanvasStore } from '../stores/canvas-store';
 import { WithStateMachineEventIconButton } from '@/components/Decorated';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -33,8 +34,18 @@ const IAMNodeARNButton: React.FC<IAMNodeARNButtonProps> = ({ arn, placement = 'e
     });
   };
 
+  const closeOpenedNode = (): void => {
+    CanvasStore.send({ type: 'updateOpenedNodeId', nodeId: '-' });
+  };
+
   return (
-    <Popover placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0}>
+    <Popover
+      placement={placement}
+      closeOnBlur={true}
+      isLazy={true}
+      closeDelay={0}
+      onOpen={closeOpenedNode}
+    >
       <PopoverTrigger>
         <WithStateMachineEventIconButton
           event={StatelessStateMachineEvent.IAMNodeARNOpened}

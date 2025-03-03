@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { memo } from 'react';
 
 import {
@@ -12,14 +13,18 @@ import {
   type PlacementWithLogical,
   Code,
   Tooltip,
+  Box,
 } from '@chakra-ui/react';
 import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 
 import { CanvasStore } from '../stores/canvas-store';
+import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
 import {
-  WithStateMachineEventIconButton,
+  GuardedIconButtonWithStateMachineEvent,
   WithStateMachineEventPopoverCloseButton,
 } from '@/components/Decorated';
+import { ElementID } from '@/config/element-ids';
+import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -42,7 +47,8 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
   editable = false,
   placement = 'end-end',
 }) => {
-  const handleContentButtonClick = (): void => {
+  const popoverContentRef = useRef<HTMLDivElement>(null);
+  const toggleNodeContentPopover = (): void => {
     const isContentOpened = CanvasStore.getSnapshot().context.openedNodeId === nodeId;
 
     if (isContentOpened) {
@@ -52,10 +58,33 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
     }
   };
 
+  const { isOn: isRedDotOn } = useAnimatedRedDot({
+    elementId: ElementID.IAMNodeContentEditButton,
+  });
+
+  // Prevent scrolling on the popover content from zooming in/out the canvas
+  useEffect(() => {
+    const handleWheel = (event: WheelEvent): void => {
+      event.stopPropagation();
+    };
+
+    const popoverContent = popoverContentRef.current;
+    if (popoverContent) {
+      popoverContent.addEventListener('wheel', handleWheel);
+    }
+
+    return () => {
+      if (popoverContent) {
+        popoverContent.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, []);
+
   return (
     <Popover placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0} isOpen={opened}>
       <PopoverTrigger>
-        <WithStateMachineEventIconButton
+        <GuardedIconButtonWithStateMachineEvent
+          elementid={ElementID.IAMNodeContentButton}
           event={StatelessStateMachineEvent.IAMNodeContentOpened}
           aria-label='info'
           icon={<CodeBracketIcon />}
@@ -64,11 +93,11 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
           height='16px'
           width='16px'
           minWidth='auto'
-          onClick={handleContentButtonClick}
+          onClick={toggleNodeContentPopover}
           _hover={{ bg: 'gray.200', opacity: 1 }}
         />
       </PopoverTrigger>
-      <PopoverContent w='500px' overflowY='auto'>
+      <PopoverContent w='500px' overflow='auto' h='300px' ref={popoverContentRef}>
         <PopoverArrow />
         <PopoverHeader textAlign='left' display='flex' alignItems='center'>
           <Text fontSize='16px' fontWeight='700'>
@@ -82,29 +111,31 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
         <PopoverBody textAlign='left'>
           <Code width='100%' whiteSpace='pre-wrap' position='relative'>
             {editable && (
-              <Tooltip label='Edit' aria-label='Edit' placement='top'>
-                <IconButton
-                  onClick={() =>
-                    codeEditorPopupStore.send({
-                      type: 'open',
-                      mode: CodeEditorMode.Edit,
-                      selectedNodeId: nodeId,
-                    })
-                  }
-                  ml={1}
-                  aria-label='edit'
-                  icon={<PencilSquareIcon />}
-                  variant='ghost'
-                  minWidth='auto'
-                  height='20px'
-                  width='20px'
-                  position='absolute'
-                  top={2}
-                  right={2}
-                  opacity={0.5}
-                  _hover={{ bg: 'gray.200', opacity: 1 }}
-                />
-              </Tooltip>
+              <Box position='absolute' top={2} right={2}>
+                <Tooltip label='Edit' aria-label='Edit' placement='top'>
+                  <IconButton
+                    onClick={() => {
+                      codeEditorPopupStore.send({
+                        type: 'open',
+                        mode: CodeEditorMode.Edit,
+                        selectedNodeId: nodeId,
+                      });
+
+                      toggleNodeContentPopover();
+                    }}
+                    ml={1}
+                    aria-label='edit'
+                    icon={<PencilSquareIcon />}
+                    variant='ghost'
+                    minWidth='auto'
+                    height='20px'
+                    width='20px'
+                    opacity={0.5}
+                    _hover={{ bg: 'gray.200', opacity: 1 }}
+                  />
+                </Tooltip>
+                {isRedDotOn && <AnimatedRedDot />}
+              </Box>
             )}
             {codeDescription}
           </Code>

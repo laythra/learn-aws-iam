@@ -15,7 +15,9 @@ import {
   createIAMRoleNode,
   attachRoleToEntity,
   updateRoleToEntityConnectionEdges,
+  getElementsWithRedDot,
 } from './utils/common-state-machine-actions';
+import { ElementID } from '@/config/element-ids';
 import type {
   AccountID,
   BaseFinishEventMap,
@@ -299,6 +301,14 @@ export const createStateMachineSetup = <
           { whitelisted_element_ids }: { whitelisted_element_ids: string[] }
         ) => whitelisted_element_ids,
         in_tutorial_state: true,
+      }),
+      update_red_dot_visibility: assign({
+        elements_with_animated_red_dot: (
+          { context },
+          { elementIds, isVisible }: { elementIds: ElementID[]; isVisible: boolean }
+        ) => {
+          return getElementsWithRedDot(context, elementIds, isVisible);
+        },
       }),
     },
   });

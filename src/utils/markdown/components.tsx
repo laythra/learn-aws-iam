@@ -98,7 +98,14 @@ export const components: Components = {
     const { children, href } = props;
     return (
       <Tooltip label={href} aria-label='link'>
-        {children}
+        <a
+          {...props}
+          target='_blank'
+          rel='noopener noreferrer'
+          style={{ color: 'blue', textDecoration: 'underline' }}
+        >
+          {children}
+        </a>
       </Tooltip>
     );
   },

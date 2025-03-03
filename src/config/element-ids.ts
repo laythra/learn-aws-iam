@@ -6,4 +6,7 @@ export enum ElementID {
   CreateEntitiesMenuItem = 'create-entities-menu-item',
   CreateRolesAndPoliciesMenuItem = 'create-roles-and-policies-menu-item',
   ObjectivesSidePanel = 'objectives-side-panel',
+  IAMNodeContentButton = 'iam-node-content-button',
+  IAMNodeContentEditButton = 'iam-node-content-edit-button',
+  RightSidePanelToggleButton = 'right-side-panel-toggle-button',
 }

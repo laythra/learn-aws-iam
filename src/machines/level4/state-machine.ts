@@ -3,13 +3,18 @@ import { assign } from 'xstate';
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_EDIT_OBJECTIVES } from './objectives/policy-role-edit-objectives';
+import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import { FinishEventMap, NodeEditFinishEvent } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { resolveInitialEdges } from '../utils/initial-edges-resolver';
-import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
+import { ElementID } from '@/config/element-ids';
+import {
+  StatefulStateMachineEvent,
+  StatelessStateMachineEvent,
+} from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
@@ -23,7 +28,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   context: {
     level_title: 'IAM Groups',
     level_description: 'Scaling your IAM setup with groups',
-    level_number: 1,
+    level_number: 4,
     next_popover_index: 0,
     next_popup_index: 0,
     next_fixed_popover_index: 0,
@@ -40,7 +45,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
-    fixed_popover_messages: [],
+    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
+    in_tutorial_state: true,
+    whitelisted_element_ids: [],
   },
   on: {
     [StatefulStateMachineEvent.AttachPolicyToEntity]: {
@@ -118,9 +125,16 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       }),
     },
     TOGGLE_SIDE_PANEL: {
-      actions: assign({
-        side_panel_open: ({ context }) => !context.side_panel_open,
-      }),
+      actions: [
+        'toggle_side_panel',
+        {
+          type: 'update_red_dot_visibility',
+          params: {
+            elementIds: [ElementID.RightSidePanelToggleButton],
+            isVisible: false,
+          },
+        },
+      ],
     },
   },
   states: {
@@ -135,48 +149,68 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         popup1: {
           entry: 'next_popup',
           on: {
-            NEXT_POPUP: 'popup2',
+            NEXT_POPUP: 'fixed_popover1',
           },
         },
-        popup2: {
-          entry: 'next_popup',
+        fixed_popover1: {
+          entry: ['hide_popups', 'show_fixed_popover'],
           on: {
-            NEXT_POPUP: 'popup3',
+            NEXT_FIXED_POPOVER: 'fixed_popover2',
           },
         },
-        popup3: {
-          entry: 'next_popup',
+        fixed_popover2: {
+          entry: 'next_fixed_popover',
           on: {
-            NEXT_POPUP: 'popup4',
+            NEXT_FIXED_POPOVER: 'fixed_popover3',
           },
-          exit: 'hide_popups',
         },
-        popup4: {
-          entry: 'next_popup',
+        fixed_popover3: {
+          entry: 'next_fixed_popover',
           on: {
-            NEXT_POPUP: 'popup5',
+            NEXT_FIXED_POPOVER: 'popover1',
           },
-          exit: 'hide_popups',
         },
-        popup5: {
-          entry: ['next_popup', 'toggle_side_panel'],
+        popover1: {
+          entry: [
+            'hide_fixed_popovers',
+            'next_popover',
+            {
+              type: 'update_whitelisted_element_ids',
+              params: { whitelisted_element_ids: [ElementID.IAMNodeContentButton] },
+            },
+          ],
           on: {
-            NEXT_POPUP: 'tutorial_finished',
+            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'tutorial_finished',
           },
-          exit: 'hide_popups',
         },
         tutorial_finished: {
+          entry: [
+            'next_popover',
+            {
+              type: 'update_red_dot_visibility',
+              params: {
+                elementIds: [
+                  ElementID.RightSidePanelToggleButton,
+                  ElementID.IAMNodeContentEditButton,
+                ],
+                isVisible: true,
+              },
+            },
+          ],
           type: 'final',
         },
       },
     },
     inside_level: {
       type: 'parallel',
-      entry: assign({
-        nodes: INITIAL_IN_LEVEL_NODES,
-        edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
-        policy_edit_objectives: POLICY_EDIT_OBJECTIVES[0],
-      }),
+      entry: [
+        assign({
+          nodes: INITIAL_IN_LEVEL_NODES,
+          edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
+          policy_edit_objectives: POLICY_EDIT_OBJECTIVES[0],
+        }),
+        'disable_tutorial_state',
+      ],
       states: {
         fix_developer_policy: {
           initial: 'editing_in_progress',

@@ -10,27 +10,27 @@ import type { IAMUserNodeData } from '@/types';
 const IN_LEVEL_USER_NODES: Partial<IAMUserNodeData>[] = [
   {
     id: UserNodeID.Developer1,
-    label: UserNodeID.Developer1,
+    label: 'Omar',
     initial_position: 'center',
   },
   {
     id: UserNodeID.Developer2,
-    label: UserNodeID.Developer2,
+    label: 'Sara',
     initial_position: 'center',
   },
   {
     id: UserNodeID.DataScientist1,
-    label: UserNodeID.DataScientist1,
+    label: 'Ahmad',
     initial_position: 'center',
   },
   {
     id: UserNodeID.Intern1,
-    label: UserNodeID.Intern1,
+    label: 'Layla',
     initial_position: 'center',
   },
   {
     id: UserNodeID.Intern2,
-    label: UserNodeID.Intern2,
+    label: 'Mohammad',
     initial_position: 'center',
   },
 ];

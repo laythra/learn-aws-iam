@@ -4,7 +4,7 @@ export const DATA_SCIENTISTS_POLICY_DOCUMENT = JSON.stringify(
     Statement: [
       {
         Effect: 'Allow',
-        Action: 'dynamodb:*Item',
+        Action: ['dynamodb:GetItem', 'dynamodb:PutItem'],
         Resource: '*',
       },
     ],
