@@ -112,7 +112,6 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
           <Code width='100%' whiteSpace='pre-wrap' position='relative'>
             {editable && (
               <Box position='absolute' top={2} right={2}>
-                {isRedDotOn && <AnimatedRedDot />}
                 <Tooltip label='Edit' aria-label='Edit' placement='top'>
                   <IconButton
                     onClick={() => {
@@ -135,6 +134,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
                     _hover={{ bg: 'gray.200', opacity: 1 }}
                   />
                 </Tooltip>
+                {isRedDotOn && <AnimatedRedDot />}
               </Box>
             )}
             {codeDescription}

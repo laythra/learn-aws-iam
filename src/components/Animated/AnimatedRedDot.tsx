@@ -19,8 +19,7 @@ const AnimatedRedDot: React.FC<AnimatedRedDotProps> = ({ placement = 'top-left',
     <Box position='absolute' top={top} right={right} left={left} bottom={bottom}>
       <MotionDiv
         animate={{
-          scale: [1, 1.5, 1], // Expands and contracts
-          opacity: [1, 0.6, 1], // Fades slightly
+          scale: [1, 2, 1],
         }}
         transition={{
           duration: 2,
