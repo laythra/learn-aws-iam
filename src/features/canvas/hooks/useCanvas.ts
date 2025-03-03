@@ -8,7 +8,7 @@ import { EventFromLogic } from 'xstate';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { edgeConnectionHandlers } from '../utils/edges-creation';
-import { getNodeWithInitialPosition } from '../utils/nodes-position';
+import { getNodeInitialPosition } from '../utils/nodes-position';
 import {
   getCurrentLevelStateMachine,
   LevelsProgressionContext,
@@ -102,13 +102,15 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
           };
         }
 
-        return getNodeWithInitialPosition(
+        const initialPosition = getNodeInitialPosition(
           node,
           reactFlowViewport,
           nodesGroup.length,
           nodeIndex,
           sidePanelWidth
         );
+
+        return { ...node, position: initialPosition };
       });
     });
 
