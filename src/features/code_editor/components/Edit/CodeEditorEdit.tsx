@@ -29,7 +29,7 @@ interface CodeEditorEditProps {
 }
 
 const VALIDATION_ERROR_WARNING =
-  'Your changes have adverse effects, please review before submitting.';
+  'Your changes do not satisfy the requirements. Please review before submitting.';
 
 const CONTENT_UNCHANGED_WARNING = 'You have not made any changes to the policy.';
 
