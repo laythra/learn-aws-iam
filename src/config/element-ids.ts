@@ -9,4 +9,5 @@ export enum ElementID {
   IAMNodeContentButton = 'iam-node-content-button',
   IAMNodeContentEditButton = 'iam-node-content-edit-button',
   RightSidePanelToggleButton = 'right-side-panel-toggle-button',
+  IAMNodeContentCloseButton = 'iam-node-content-close-button',
 }
