@@ -58,8 +58,8 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
     }
   };
 
-  const { isOn: isRedDotOn } = useAnimatedRedDot({
-    elementId: ElementID.IAMNodeContentEditButton,
+  const { isRedDotOn } = useAnimatedRedDot({
+    elementIds: [ElementID.IAMNodeContentEditButton],
   });
 
   // Prevent scrolling on the popover content from zooming in/out the canvas
@@ -134,7 +134,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
                     _hover={{ bg: 'gray.200', opacity: 1 }}
                   />
                 </Tooltip>
-                {isRedDotOn && <AnimatedRedDot />}
+                {isRedDotOn[ElementID.IAMNodeContentEditButton] && <AnimatedRedDot />}
               </Box>
             )}
             {codeDescription}

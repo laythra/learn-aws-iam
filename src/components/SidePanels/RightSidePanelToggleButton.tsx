@@ -18,8 +18,8 @@ const SidePanelToggleButton: React.FC<SidePanelToggleButtonProps> = () => {
     levelActor.send({ type: 'TOGGLE_SIDE_PANEL' });
   };
 
-  const { isOn: isRedDotOn } = useAnimatedRedDot({
-    elementId: ElementID.RightSidePanelToggleButton,
+  const { isRedDotOn } = useAnimatedRedDot({
+    elementIds: [ElementID.RightSidePanelToggleButton],
   });
 
   return (
@@ -33,7 +33,7 @@ const SidePanelToggleButton: React.FC<SidePanelToggleButtonProps> = () => {
           size='sm'
           icon={icon}
         />
-        {isRedDotOn && <AnimatedRedDot />}
+        {isRedDotOn[ElementID.RightSidePanelToggleButton] && <AnimatedRedDot />}
       </Box>
     </Box>
   );
