@@ -25,7 +25,7 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
         <Text>
           Edit {_.upperFirst(selectedIAMEntity)}: {selectedNode.data.label}
         </Text>
-        <CodeEditorHelpButton />
+        <CodeEditorHelpButton selectedEntity={selectedNode.data.entity as IAMScriptableEntity} />
       </HStack>
     );
   }
@@ -39,7 +39,7 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
       <Text>New {_.upperFirst(selectedIAMEntity)}</Text>
 
       <HStack>
-        <CodeEditorHelpButton />
+        <CodeEditorHelpButton selectedEntity={selectedIAMEntity} />
         <Tabs
           index={selectedIAMEntity === IAMNodeEntity.Policy ? 0 : 1}
           onChange={index =>
