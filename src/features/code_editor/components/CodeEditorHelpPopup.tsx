@@ -72,6 +72,13 @@ a regular IAM user or even an AWS account
   ],
 }|fullwidth,
 ~~~
+
+&nbsp;
+
+The Principal can take the following formats:|lg
+* **AWS service**:  \`{ "Service": "ec2.amazonaws.com" }\`
+* **IAM User**:  \`{ "AWS": "arn:aws:iam::123456789012:user/FinanceUser" }\`
+* **AWS Account**:  \`{ "AWS": "arn:aws:iam::123456789012:root" }\`
 `;
 
 interface CodeEditorHelpPopup {}
@@ -105,7 +112,7 @@ export const CodeEditorHelpPopup: React.FC<CodeEditorHelpPopup> = () => {
           <Text>{headerTitle}</Text>
         </ModalHeader>
 
-        <ModalBody>
+        <ModalBody maxH='400px' overflowY='auto'>
           <Markdown components={components} rehypePlugins={[remarkChakra]}>
             {helpPopupContent}
           </Markdown>
