@@ -53,6 +53,9 @@ export function getNodeInitialPosition(
   if (['center', 'top-center', 'bottom-center'].includes(initial_position)) {
     const totalWidth = numNodes * nodeWidth + (numNodes - 1) * BETWEEN_NODES_SPACING;
     x = center.x - totalWidth / 2 + nodeIndex * (nodeWidth + BETWEEN_NODES_SPACING);
+  } else {
+    const totalHeight = numNodes * nodeHeight + (numNodes - 1) * BETWEEN_NODES_SPACING;
+    y = center.y - totalHeight / 2 + nodeIndex * (nodeHeight + BETWEEN_NODES_SPACING);
   }
 
   // Override x or y based on the specific initial_position
