@@ -283,7 +283,13 @@ export const createStateMachineSetup = <
         ) => popover_content,
         show_popovers: true,
       }),
-      toggle_side_panel: assign({ side_panel_open: ({ context }) => !context.side_panel_open }),
+      toggle_side_panel: assign({
+        side_panel_open: ({ context }) => !context.side_panel_open,
+        elements_with_animated_red_dot: ({ context }) =>
+          context.elements_with_animated_red_dot?.filter(
+            element => element != ElementID.RightSidePanelToggleButton
+          ),
+      }),
       show_side_panel: assign({ side_panel_open: true }),
       next_edge_connection_objectives: assign({
         edges_connection_objectives: ({ context }) =>
