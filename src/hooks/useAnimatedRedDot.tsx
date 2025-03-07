@@ -2,7 +2,7 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
 import { ElementID } from '@/config/element-ids';
 
 interface AnimateRedDotContext {
-  isRedDotOn: Record<ElementID, boolean>;
+  isRedDotEnabledForElement: (elementId: ElementID) => boolean;
 }
 
 interface UseAnimatedRedDotOptions {
@@ -16,7 +16,7 @@ export const useAnimatedRedDot = ({
     state => state.context.elements_with_animated_red_dot ?? []
   );
 
-  const isOn = elementIds.reduce(
+  const elementsWithRedDotEnabled = elementIds.reduce(
     (memo, elementId) => {
       memo[elementId] = redDotComponents.includes(elementId);
       return memo;
@@ -24,5 +24,9 @@ export const useAnimatedRedDot = ({
     {} as Record<ElementID, boolean>
   );
 
-  return { isRedDotOn: isOn };
+  const isRedDotEnabledForElement = (elementId: ElementID): boolean => {
+    return elementsWithRedDotEnabled[elementId];
+  };
+
+  return { isRedDotEnabledForElement };
 };

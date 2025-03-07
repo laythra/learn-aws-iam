@@ -58,7 +58,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
     }
   };
 
-  const { isRedDotOn } = useAnimatedRedDot({
+  const { isRedDotEnabledForElement } = useAnimatedRedDot({
     elementIds: [ElementID.IAMNodeContentEditButton],
   });
 
@@ -134,7 +134,9 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
                     _hover={{ bg: 'gray.200', opacity: 1 }}
                   />
                 </Tooltip>
-                {isRedDotOn[ElementID.IAMNodeContentEditButton] && <AnimatedRedDot />}
+                {isRedDotEnabledForElement(ElementID.IAMNodeContentEditButton) && (
+                  <AnimatedRedDot />
+                )}
               </Box>
             )}
             {codeDescription}
