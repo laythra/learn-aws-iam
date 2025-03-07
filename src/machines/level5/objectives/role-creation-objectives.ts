@@ -9,6 +9,39 @@ import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types';
 import { IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
+const HINT_MSG1 = `
+  Grant the **EC2 Instance** write access into the **S3 Bucket** \`users-certificates\`
+`;
+
+const HINT_MSG2 = `
+  Grant the **Lambda Function** full read access
+  from the **S3 Bucket** \`users-certificates\`
+`;
+
+const CALLOUT_MSG1 = `
+  Not really relevant to this objective,
+  but an **IAM Role** is also a principal. Such that it can assume other roles.
+`;
+
+const CALLOUT_MSG2 = `
+  The \`Principal\` part of the **Trust Policy** can take other
+  formats aside from the principal's ARN string literal.
+
+  For example: **\`"Principal": {"Service": "ec2.amazonaws.com"}\`**
+  is a valid principal and allows any EC2 service to assume the role.
+`;
+
+const HINT_MESSAGES = [
+  {
+    title: 'Objective #1',
+    content: HINT_MSG1,
+  },
+  {
+    title: 'Objective #2',
+    content: HINT_MSG2,
+  },
+];
+
 export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[][] = [
   [
     {
@@ -19,6 +52,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       initial_code: INITIAL_TRUST_POLICIES.TUTORIAL_ROLE_TRUST_POLICY2,
       on_finish_event: RoleCreationFinishEvent.TUTORIAL_ROLE_CREATED,
       validate_inside_code_editor: true,
+      callout_message: CALLOUT_MSG1,
       help_badges: [
         {
           path: 'Statement[0].Effect',
@@ -49,11 +83,13 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       json_schema: ec2RoleSchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: RoleCreationFinishEvent.EC2_ROLE_CREATED,
-      validate_inside_code_editor: false,
+      validate_inside_code_editor: true,
       help_badges: [],
       validate_function: AJV_COMPILER.compile(ec2RoleSchema),
       required_policies: [],
       required_principles: [],
+      hint_messages: HINT_MESSAGES,
+      callout_message: CALLOUT_MSG2,
     },
     {
       type: ObjectiveType.ROLE_CREATION_OBJECTIVE,
@@ -62,7 +98,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       json_schema: lambdaRoleSchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: RoleCreationFinishEvent.LAMBDA_ROLE_CREATED,
-      validate_inside_code_editor: false,
+      validate_inside_code_editor: true,
       help_badges: [],
       validate_function: AJV_COMPILER.compile(lambdaRoleSchema),
       required_policies: [],
