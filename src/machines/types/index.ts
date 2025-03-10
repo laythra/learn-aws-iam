@@ -134,6 +134,11 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       targetNode: Node<IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData>;
     }
   | {
+      type: 'CONNECT_NODES';
+      sourceNode: Node<IAMAnyNodeData>;
+      targetNode: Node<IAMAnyNodeData>;
+    }
+  | {
       type: 'ATTACH_USER_TO_GROUP';
       sourceNode: Node<IAMUserNodeData>;
       targetNode: Node<IAMGroupNodeData>;
@@ -220,6 +225,7 @@ interface BaseCreationObjective<
   readonly account_id?: AccountID;
   readonly created_node_initial_position?: string;
   readonly callout_message?: string;
+  readonly hint_messages?: { title: string; content: string }[];
 }
 
 export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>

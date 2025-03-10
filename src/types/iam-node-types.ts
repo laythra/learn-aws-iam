@@ -136,6 +136,10 @@ export type IAMAnyNodeData =
   | IAMResourceNodeData
   | IAMRoleNodeData;
 
+export type IAMNodeWithPolicies = IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData;
+export type IAMNodeWithUsers = IAMGroupNodeData | IAMRoleNodeData;
+export type IAMNodeWithRoles = IAMUserNodeData;
+
 export type IAMNodeAnimationConfig = {
   element_class: string;
   keyframes: DOMKeyframesDefinition;

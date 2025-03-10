@@ -75,12 +75,12 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
-    [StatefulStateMachineEvent.AttachRoleToEntity]: {
+    [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {
-          type: 'attach_role_to_entity',
+          type: 'connect_nodes',
           params: ({ event }) => ({
-            roleNode: event.sourceNode,
+            sourceNode: event.sourceNode,
             targetNode: event.targetNode,
           }),
         },
@@ -117,14 +117,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     },
     TOGGLE_SIDE_PANEL: {
       actions: 'toggle_side_panel',
-    },
-    ATTACH_POLICY_TO_ENTITY: {
-      actions: [
-        {
-          type: 'attach_policy_to_entity',
-          params: ({ event }) => ({ policyNode: event.sourceNode, entityNode: event.targetNode }),
-        },
-      ],
     },
   },
   states: {

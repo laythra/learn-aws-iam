@@ -2,6 +2,7 @@ import _ from 'lodash';
 import type { Node, HandleProps } from 'reactflow';
 import { Position } from 'reactflow';
 
+import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
 import { IAMNodeImage, IAMNodeEntity, IAMRoleNodeData } from '@/types';
 
 export const TEMPLATE_ROLE_NODE: Node<IAMRoleNodeData> = {
@@ -25,7 +26,8 @@ export const TEMPLATE_ROLE_NODE: Node<IAMRoleNodeData> = {
     associated_users: [],
     associated_policies: [],
     associated_resources: [],
-    trust_policy_content: '',
+    // trust_policy_content: '',
+    animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
   },
 };
 

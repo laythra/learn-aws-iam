@@ -4,16 +4,13 @@ import { useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 import { Edge, ReactFlowInstance, Node, Connection } from 'reactflow';
-import { EventFromLogic } from 'xstate';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { edgeConnectionHandlers } from '../utils/edges-creation';
+import { isValidConnection } from '../utils/edges-creation';
 import { getNodeInitialPosition } from '../utils/nodes-position';
-import {
-  getCurrentLevelStateMachine,
-  LevelsProgressionContext,
-} from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { CustomTheme, IAMAnyNodeData, IAMEdgeData } from '@/types';
+import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface UseCanvasOptions {}
 
@@ -119,28 +116,27 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
 
   const onConnect = useCallback(
     (params: Connection) => {
-      if (params.source === params.target || !params.source || !params.target) {
+      if (
+        params.source === params.target ||
+        !params.source ||
+        !params.target ||
+        edgesManagementDisabled
+      ) {
         return;
       }
 
-      if (edgesManagementDisabled) {
+      const sourceNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.source })!;
+      const targetNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.target })!;
+
+      if (!isValidConnection(sourceNode, targetNode)) {
         return;
       }
 
-      const sourceNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.source });
-      const targetNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.target });
-
-      const connectionHandlerKey = `${sourceNode?.data.entity}-${targetNode?.data.entity}`;
-      const connectionEventName = edgeConnectionHandlers[connectionHandlerKey];
-
-      if (!connectionEventName) {
-        return;
-      }
-
-      const currentStateMachine = getCurrentLevelStateMachine();
-      levelActor.send({ type: connectionEventName, sourceNode, targetNode } as EventFromLogic<
-        typeof currentStateMachine
-      >);
+      levelActor.send({
+        type: StatefulStateMachineEvent.ConnectNodes,
+        sourceNode,
+        targetNode,
+      });
     },
     [nodes, edgesManagementDisabled]
   );

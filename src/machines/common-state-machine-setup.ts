@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import type { Node } from 'reactflow';
 import { setup, enqueueActions, assign } from 'xstate';
 
@@ -8,15 +7,11 @@ import {
   createIAMPolicyNode,
   changeLevelObjectiveProgress,
   createIAMUserGroupNode,
-  attachPolicyToEntity,
-  updatePolicyToEntityConnectionEdges,
-  attachUserToGroup,
-  updateUserToGroupConnectionEdges,
   createIAMRoleNode,
-  attachRoleToEntity,
-  updateRoleToEntityConnectionEdges,
   getElementsWithRedDot,
 } from './utils/common-state-machine-actions';
+import { updateConnectionEdges } from './utils/edges-creation-state-machine-actions';
+import { connectNodes } from './utils/nodes-connection-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
 import type {
   AccountID,
@@ -32,15 +27,7 @@ import type {
   LevelObjective,
   IAMPolicyCreationObjective,
 } from '@/machines/types';
-import {
-  IAMAnyNodeData,
-  IAMGroupNodeData,
-  IAMNodeEntity,
-  IAMPolicyNodeData,
-  IAMResourceNodeData,
-  IAMRoleNodeData,
-  IAMUserNodeData,
-} from '@/types';
+import { IAMAnyNodeData, IAMGroupNodeData, IAMNodeEntity, IAMUserNodeData } from '@/types';
 
 /**
  * Defines a common state machine setup for all levels
@@ -76,77 +63,26 @@ export const createStateMachineSetup = <
       events: GenericEventData<TFinishEventMap>;
     },
     actions: {
-      attach_policy_to_entity: enqueueActions(
+      connect_nodes: enqueueActions(
         (
           { context, enqueue },
           {
-            entityNode,
-            policyNode,
-          }: {
-            entityNode: Node<IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData>;
-            policyNode: Node<IAMPolicyNodeData>;
-          }
-        ) => {
-          const updatedNodes = attachPolicyToEntity(context, policyNode, entityNode);
-          const updatedNode = updatedNodes.find(node => node.id === entityNode.id)!;
-          const [updatedEdges, sideEffectsEvents] = updatePolicyToEntityConnectionEdges<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, policyNode, updatedNode);
-
-          enqueue.assign({ nodes: updatedNodes, edges: _.uniqBy(updatedEdges, 'id') });
-          sideEffectsEvents.forEach(event => {
-            enqueue.raise({ type: event });
-          });
-        }
-      ),
-      attach_role_to_entity: enqueueActions(
-        (
-          { context, enqueue },
-          {
+            sourceNode,
             targetNode,
-            roleNode,
           }: {
-            targetNode: Node<IAMUserNodeData | IAMResourceNodeData>;
-            roleNode: Node<IAMRoleNodeData>;
+            sourceNode: Node<IAMAnyNodeData>;
+            targetNode: Node<IAMAnyNodeData>;
           }
         ) => {
-          const updatedNodes = attachRoleToEntity(context, roleNode, targetNode);
-          const updatedRoleNode = updatedNodes.find(node => node.id === roleNode.id)!;
-          const updatedTargetNode = updatedNodes.find(node => node.id === targetNode.id)!;
+          const updatedNodes = connectNodes(context, sourceNode, targetNode);
+          const { edges, events } = updateConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
+            context,
+            sourceNode,
+            targetNode
+          );
 
-          const [updatedEdges, sideEffectsEvents] = updateRoleToEntityConnectionEdges<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, updatedRoleNode, updatedTargetNode);
-
-          enqueue.assign({ nodes: updatedNodes, edges: _.uniqBy(updatedEdges, 'id') });
-          sideEffectsEvents.forEach(event => {
-            enqueue.raise({ type: event });
-          });
-        }
-      ),
-      attach_user_to_group: enqueueActions(
-        (
-          { context, enqueue },
-          {
-            userNode,
-            groupNode,
-          }: {
-            userNode: Node<IAMUserNodeData>;
-            groupNode: Node<IAMGroupNodeData>;
-          }
-        ) => {
-          const updatedNodes = attachUserToGroup(context, userNode, groupNode);
-          const [updatedEdges, sideEffectsEvents] = updateUserToGroupConnectionEdges<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, userNode, groupNode);
-
-          enqueue.assign({ nodes: updatedNodes, edges: _.uniqBy(updatedEdges, 'id') });
-          sideEffectsEvents.forEach(event => {
-            enqueue.raise({ type: event });
-          });
+          enqueue.assign({ nodes: updatedNodes, edges: [...context.edges, ...edges] });
+          events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
       add_iam_user_group_node: enqueueActions(
