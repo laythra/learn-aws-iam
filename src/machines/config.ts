@@ -13,4 +13,14 @@ export const MANAGED_POLICIES = {
     Version: '2012-10-17',
     Statement: [],
   },
+  EmptyTrustPolicy: {
+    Version: '2012-10-17',
+    Statement: [
+      {
+        Effect: 'Allow',
+        Principal: '...',
+        Action: 'sts:AssumeRole',
+      },
+    ],
+  },
 };

@@ -118,6 +118,14 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     TOGGLE_SIDE_PANEL: {
       actions: 'toggle_side_panel',
     },
+    [StatefulStateMachineEvent.DeleteEdge]: {
+      actions: [
+        {
+          type: 'delete_edge',
+          params: ({ event }) => ({ edge: event.edge }),
+        },
+      ],
+    },
   },
   states: {
     inside_tutorial: {
@@ -277,7 +285,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         }),
         {
           type: 'update_red_dot_visibility',
-          params: { elementIds: [ElementID.RightSidePanelToggleButton], isVisible: true },
+          params: {
+            elementIds: [ElementID.RightSidePanelToggleButton, ElementID.CodeEditorHelpButton],
+            isVisible: true,
+          },
         },
         'next_edge_connection_objectives',
         'next_role_creation_objectives',

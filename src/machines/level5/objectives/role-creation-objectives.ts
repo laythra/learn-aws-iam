@@ -27,7 +27,7 @@ const CALLOUT_MSG2 = `
   The \`Principal\` part of the **Trust Policy** can take other
   formats aside from the principal's ARN string literal.
 
-  For example: **\`"Principal": {"Service": "ec2.amazonaws.com"}\`**
+  For example: {"Service": "ec2.amazonaws.com"}
   is a valid principal and allows any EC2 service to assume the role.
 `;
 
@@ -81,7 +81,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       entity_id: RoleNodeID.EC2Role,
       entity: IAMNodeEntity.Role,
       json_schema: ec2RoleSchema,
-      initial_code: MANAGED_POLICIES.EmptyPolicy,
+      initial_code: MANAGED_POLICIES.EmptyTrustPolicy,
       on_finish_event: RoleCreationFinishEvent.EC2_ROLE_CREATED,
       validate_inside_code_editor: true,
       help_badges: [],
@@ -96,7 +96,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       entity_id: RoleNodeID.LambdaRole,
       entity: IAMNodeEntity.Role,
       json_schema: lambdaRoleSchema,
-      initial_code: MANAGED_POLICIES.EmptyPolicy,
+      initial_code: MANAGED_POLICIES.EmptyTrustPolicy,
       on_finish_event: RoleCreationFinishEvent.LAMBDA_ROLE_CREATED,
       validate_inside_code_editor: true,
       help_badges: [],

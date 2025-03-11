@@ -125,16 +125,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       }),
     },
     TOGGLE_SIDE_PANEL: {
-      actions: [
-        'toggle_side_panel',
-        {
-          type: 'update_red_dot_visibility',
-          params: {
-            elementIds: [ElementID.RightSidePanelToggleButton],
-            isVisible: false,
-          },
-        },
-      ],
+      actions: 'toggle_side_panel',
     },
   },
   states: {
