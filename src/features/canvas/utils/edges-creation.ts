@@ -17,7 +17,7 @@ export const isValidConnection = (
   sourceNode: Node<IAMAnyNodeData>,
   targetNode: Node<IAMAnyNodeData>
 ): boolean => {
-  const connectionKey = `${sourceNode}-${targetNode}`;
+  const connectionKey = `${sourceNode.data.entity}-${targetNode.data.entity}`;
 
   return VALID_CONNECTIONS.has(connectionKey);
 };

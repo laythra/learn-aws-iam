@@ -32,6 +32,7 @@ interface UseCanvasReturn {
  */
 export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const theme = useTheme<CustomTheme>();
+  const toast = useToast();
   const [nodes, edges, sidePanelOpened, edgesManagementDisabled] =
     LevelsProgressionContext().useSelector(
       state => [
@@ -114,6 +115,15 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     CanvasStore.send({ type: 'setNodes', nodes: newNodes });
   }, [nodes, rfInstance]);
 
+  const showInvalidConnectionToast = useCallback(() => {
+    toast({
+      title: 'Invalid Connection',
+      status: 'error',
+      duration: 3000,
+      isClosable: true,
+    });
+  }, []);
+
   const onConnect = useCallback(
     (params: Connection) => {
       if (
@@ -129,6 +139,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
       const targetNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.target })!;
 
       if (!isValidConnection(sourceNode, targetNode)) {
+        showInvalidConnectionToast();
         return;
       }
 
