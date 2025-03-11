@@ -1,5 +1,7 @@
-import { Box } from '@chakra-ui/react';
+import { Box, useTheme } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+
+import { CustomTheme } from '@/types';
 
 const MotionDiv = motion(Box);
 
@@ -9,6 +11,7 @@ interface AnimatedRedDotProps {
 }
 
 const AnimatedRedDot: React.FC<AnimatedRedDotProps> = ({ placement = 'top-left', offset = 5 }) => {
+  const theme = useTheme<CustomTheme>();
   const offsetPx = `${offset}px`;
   const top = placement?.includes('top') ? offsetPx : 'auto';
   const right = placement?.includes('right') ? offsetPx : 'auto';
@@ -16,7 +19,14 @@ const AnimatedRedDot: React.FC<AnimatedRedDotProps> = ({ placement = 'top-left',
   const bottom = placement?.includes('bottom') ? offsetPx : 'auto';
 
   return (
-    <Box position='absolute' top={top} right={right} left={left} bottom={bottom}>
+    <Box
+      position='absolute'
+      top={top}
+      right={right}
+      left={left}
+      bottom={bottom}
+      zIndex={theme.zIndices.overlay}
+    >
       <MotionDiv
         animate={{
           scale: [1, 2, 1],
