@@ -1,9 +1,12 @@
 import React from 'react';
 
-import { IconButton } from '@chakra-ui/react';
+import { Box, IconButton } from '@chakra-ui/react';
 import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid';
 
 import codeEditorStateStore from '../stores/code-editor-state-store';
+import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
+import { ElementID } from '@/config/element-ids';
+import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import { IAMScriptableEntity } from '@/types';
 
 interface CodeEditorHelpButtonProps {
@@ -14,14 +17,23 @@ const CodeEditorHelpButton: React.FC<CodeEditorHelpButtonProps> = ({ selectedEnt
     codeEditorStateStore.send({ type: 'showHelpPopup', entity: selectedEntity });
   };
 
+  const { isRedDotEnabledForElement } = useAnimatedRedDot({
+    elementIds: [ElementID.CodeEditorHelpButton],
+  });
+
   return (
-    <IconButton
-      icon={<QuestionMarkCircleIcon />}
-      aria-label='Help'
-      size='xs'
-      variant='ghost'
-      onClick={showPolicyHelpPopup}
-    />
+    <Box position='relative'>
+      <IconButton
+        icon={<QuestionMarkCircleIcon />}
+        aria-label='Help'
+        size='xs'
+        variant='ghost'
+        onClick={showPolicyHelpPopup}
+      />
+      {isRedDotEnabledForElement(ElementID.CodeEditorHelpButton) && (
+        <AnimatedRedDot placement='bottom-left' offset={3} />
+      )}
+    </Box>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 
 import { Select, Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
+import { Diagnostic } from '@codemirror/lint';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
@@ -9,6 +10,7 @@ import { useCodeEditor } from '../../hooks/useCodeEditor';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
+import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, BaseFinishEventMap } from '@/machines/types';
@@ -17,7 +19,9 @@ import { findAnyValidPolicy, findAnyValidRole } from '@/utils/iam-code-linter';
 
 interface CodeEditorCreateProps {
   nodeId: string;
-  selectedIAMEntity: IAMScriptableEntity;
+  selectedIAMEntity: IAMNodeEntity;
+  errors: Diagnostic[];
+  warnings: string[];
 }
 
 const NO_MATCHING_POLICY_WARNING = 'This policy does not achieve any of the objectives.';
@@ -26,6 +30,8 @@ const NO_MATCHING_ROLE_WARNING = 'This role does not achieve any of the objectiv
 export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   nodeId,
   selectedIAMEntity,
+  errors,
+  warnings,
 }) => {
   const [policyCreationObjectives, roleCreationObjectives, multiAccount] =
     LevelsProgressionContext().useSelector(
@@ -37,9 +43,9 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       _.isEqual
     );
 
-  const [selectedAccountId, errors, labelError] = useSelector(
+  const [selectedAccountId, labelError] = useSelector(
     codeEditorStateStore,
-    state => [state.context.selectedAccountId, state.context.errors, state.context.labelError],
+    state => [state.context.selectedAccountId, state.context.labelError],
     _.isEqual
   );
 
@@ -125,7 +131,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
         <FormErrorMessage>{labelError}</FormErrorMessage>
       </FormControl>
 
-      <FormControl isInvalid={errors[selectedIAMEntity][nodeId]?.length > 0}>
+      <FormControl>
         <FormLabel fontWeight='semibold' mt={4}>
           Code
         </FormLabel>
@@ -136,7 +142,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
               type: 'setContent',
               content: newContent,
               nodeId,
-              entity: selectedIAMEntity,
+              entity: selectedIAMEntity as IAMScriptableEntity,
             });
 
             validateChange();
@@ -145,10 +151,14 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
           extensions={extensions}
           onCreateEditor={onCreateEditor}
         />
-
-        <FormErrorMessage>{errors[selectedIAMEntity][nodeId]?.[0]?.message}</FormErrorMessage>
       </FormControl>
-
+      {!_.isEmpty(errors) && <CodeEditorProgressStatus message={errors[0].message} level='error' />}
+      {!_.isEmpty(warnings) && _.isEmpty(errors) && (
+        <CodeEditorProgressStatus message={warnings[0]} level='warning' />
+      )}
+      {_.isEmpty(errors) && _.isEmpty(warnings) && (
+        <CodeEditorProgressStatus message='You got it right!' level='success' />
+      )}
       {objectiveToValidate?.callout_message && (
         <CodeEditorObjectiveCallout calloutMessage={objectiveToValidate.callout_message} />
       )}

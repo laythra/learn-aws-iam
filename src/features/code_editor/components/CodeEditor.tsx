@@ -40,7 +40,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     _.isEqual
   );
 
-  const [selectedIAMEntity, errors, warnings] = useSelector(
+  const [selectedIAMEntity, errorsMap, warningsMap] = useSelector(
     codeEditorStateStore,
     state => [state.context.selectedIAMEntity, state.context.errors, state.context.warnings],
     _.isEqual
@@ -48,6 +48,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
 
   const newNodeId = useRef(new Date().getTime().toString());
   const nodeId = selectedNodeId ?? newNodeId.current;
+  const errors = errorsMap[selectedIAMEntity][nodeId];
+  const warnings = warningsMap[selectedIAMEntity][nodeId];
 
   const closeCodeEditor = (): void => {
     CodeEditorPopupStore.send({ type: 'close' });
@@ -81,24 +83,24 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
           <ModalBody>
             <CodeEditorHelpPopup />
             <VStack align='stretch' spacing={4}>
-              {codeEditorMode === CodeEditorMode.Create ? (
-                // Send errors and warnings to the CodeEditorCreate component from here!
-                <CodeEditorCreate nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
-              ) : (
-                <CodeEditorEdit
-                  nodeId={nodeId}
-                  selectedIAMEntity={selectedIAMEntity}
-                  errors={errors[selectedIAMEntity][nodeId]}
-                  warnings={warnings[selectedIAMEntity][nodeId]}
-                />
+              {React.createElement(
+                codeEditorMode === CodeEditorMode.Create ? CodeEditorCreate : CodeEditorEdit,
+                {
+                  nodeId,
+                  selectedIAMEntity,
+                  errors,
+                  warnings,
+                }
               )}
             </VStack>
           </ModalBody>
           <ModalFooter>
-            {codeEditorMode === CodeEditorMode.Create ? (
-              <CreateSubmitButton nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
-            ) : (
-              <EditSubmitButton nodeId={nodeId} selectedIAMEntity={selectedIAMEntity} />
+            {React.createElement(
+              codeEditorMode === CodeEditorMode.Create ? CreateSubmitButton : EditSubmitButton,
+              {
+                nodeId,
+                selectedIAMEntity,
+              }
             )}
             <Button variant='ghost' onClick={closeCodeEditor}>
               Cancel
