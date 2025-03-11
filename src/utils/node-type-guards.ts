@@ -27,6 +27,9 @@ export function isNodeOfEntity<E extends IAMNodeEntity>(
   return node.data.entity === expected;
 }
 
-export function isNodeOfAnyEntity(node: Node<IAMAnyNodeData>, expected: IAMNodeEntity[]): boolean {
-  return expected.includes(node.data.entity);
+export function isNodeOfAnyEntity<T extends IAMNodeEntity>(
+  node: Node<IAMAnyNodeData>,
+  expected: T[]
+): node is Node<Extract<IAMAnyNodeData, { entity: T }>> {
+  return expected.some(entity => node.data.entity === entity);
 }

@@ -1,3 +1,4 @@
+import { Edge } from 'react-flow-renderer';
 import type { Node } from 'reactflow';
 import { setup, enqueueActions, assign } from 'xstate';
 
@@ -11,6 +12,7 @@ import {
   getElementsWithRedDot,
 } from './utils/common-state-machine-actions';
 import { updateConnectionEdges } from './utils/edges-creation-state-machine-actions';
+import { deleteConnectionEdge } from './utils/edges-deletion-state-machine-actions';
 import { connectNodes } from './utils/nodes-connection-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
 import type {
@@ -27,7 +29,13 @@ import type {
   LevelObjective,
   IAMPolicyCreationObjective,
 } from '@/machines/types';
-import { IAMAnyNodeData, IAMGroupNodeData, IAMNodeEntity, IAMUserNodeData } from '@/types';
+import {
+  IAMAnyNodeData,
+  IAMEdgeData,
+  IAMGroupNodeData,
+  IAMNodeEntity,
+  IAMUserNodeData,
+} from '@/types';
 
 /**
  * Defines a common state machine setup for all levels
@@ -85,6 +93,14 @@ export const createStateMachineSetup = <
           events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
+      delete_edge: enqueueActions(({ context, enqueue }, { edge }: { edge: Edge<IAMEdgeData> }) => {
+        const { updatedNodes, updatedEdges } = deleteConnectionEdge<
+          TLevelObjectiveID,
+          TFinishEventMap
+        >(context, edge);
+
+        enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+      }),
       add_iam_user_group_node: enqueueActions(
         (
           { context, enqueue },

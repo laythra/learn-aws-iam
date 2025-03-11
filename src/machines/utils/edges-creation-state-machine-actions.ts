@@ -51,7 +51,7 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
         ...newEdgeData,
         targetHandle: objective.established_edge_target_handle,
         sourceHandle: objective.established_edge_source_handle,
-        deletable: false, // Once an objective is finished, its associated edge should not be deletable
+        deletable: true, // Once an objective is finished, its associated edge should not be deletable
         data: {
           hovering_label: objective.established_edge_hovering_label,
         },
@@ -69,10 +69,17 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
   return { edge: newEdge, events: sideEffectsEvents };
 }
 
-// Helper: Create edges based on granted accesses
+/**
+ * returns an array of edges created from the granted accesses of a policy
+ * @param sourceId The id of the source node, from which the edge will be created
+ * @param grantedAccesses The granted accesses of the policy
+ * @param parentEdgeId The id of the parent edge that was responsible for the creation of these edges
+ * @returns An array of edges
+ */
 function createEdgesFromGrantedAccesses(
   sourceId: string,
-  grantedAccesses: PolicyGrantedAccess[]
+  grantedAccesses: PolicyGrantedAccess[],
+  parentEdgeId: string
 ): Edge<IAMEdgeData>[] {
   return grantedAccesses.map(access =>
     createEdge({
@@ -80,7 +87,7 @@ function createEdgesFromGrantedAccesses(
       target: access.target_node,
       targetHandle: access.target_handle,
       sourceHandle: access.source_handle,
-      data: { hovering_label: access.access_level },
+      data: { hovering_label: access.access_level, parentEdgeId },
     })
   );
 }
@@ -97,7 +104,8 @@ const connectionStrategies = {
     const { edge: baseEdge, events } = createEdgeWithEvents(context, policyNode, userNode);
     const resourceEdges = createEdgesFromGrantedAccesses(
       userNode.id,
-      policyNode.data.granted_accesses
+      policyNode.data.granted_accesses,
+      baseEdge.id
     );
 
     return { edges: [baseEdge, ...resourceEdges], events };
@@ -110,7 +118,7 @@ const connectionStrategies = {
   ) => {
     const { edge: baseEdge, events } = createEdgeWithEvents(context, policyNode, groupNode);
     const userEdges = groupNode.data.associated_users.flatMap(userId =>
-      createEdgesFromGrantedAccesses(userId, policyNode.data.granted_accesses)
+      createEdgesFromGrantedAccesses(userId, policyNode.data.granted_accesses, baseEdge.id)
     );
     return { edges: [baseEdge, ...userEdges], events };
   },
@@ -122,10 +130,10 @@ const connectionStrategies = {
   ) => {
     const { edge: baseEdge, events } = createEdgeWithEvents(context, policyNode, roleNode);
     const usersToResourcesEdges = roleNode.data.associated_users.flatMap(userId =>
-      createEdgesFromGrantedAccesses(userId, policyNode.data.granted_accesses)
+      createEdgesFromGrantedAccesses(userId, policyNode.data.granted_accesses, baseEdge.id)
     );
     const resourcesToResourcesEdges = roleNode.data.associated_resources.flatMap(resourceId =>
-      createEdgesFromGrantedAccesses(resourceId, policyNode.data.granted_accesses)
+      createEdgesFromGrantedAccesses(resourceId, policyNode.data.granted_accesses, baseEdge.id)
     );
 
     return { edges: [baseEdge, ...usersToResourcesEdges, ...resourcesToResourcesEdges], events };
@@ -141,7 +149,11 @@ const connectionStrategies = {
 
     const userToResourceEdges = groupNode.data.associated_policies.flatMap(policyId => {
       const policyNode = nodeById[policyId] as Node<IAMPolicyNodeData>;
-      return createEdgesFromGrantedAccesses(userNode.id, policyNode.data.granted_accesses);
+      return createEdgesFromGrantedAccesses(
+        userNode.id,
+        policyNode.data.granted_accesses,
+        baseEdge.id
+      );
     });
 
     return { edges: [baseEdge, ...userToResourceEdges], events };
@@ -156,7 +168,11 @@ const connectionStrategies = {
 
     const userToResourceNodes = roleNode.data.associated_policies.flatMap(policyId => {
       const policyNode = nodeById[policyId] as Node<IAMPolicyNodeData>;
-      return createEdgesFromGrantedAccesses(userNode.id, policyNode.data.granted_accesses);
+      return createEdgesFromGrantedAccesses(
+        userNode.id,
+        policyNode.data.granted_accesses,
+        baseEdge.id
+      );
     });
 
     return { edges: [baseEdge, ...userToResourceNodes], events };

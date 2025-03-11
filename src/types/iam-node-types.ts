@@ -150,6 +150,11 @@ export interface IAMEdgeData {
   source_node_data?: IAMAnyNodeData;
   target_node_data?: IAMAnyNodeData;
   hovering_label?: AccessLevel | string;
+  /**
+   * The ID of the edge that was resposible for the creation of this edge
+   * mainly used for deleting edges, such that deleting an edge will also delete its children
+   */
+  parentEdgeId?: string;
 }
 
 export type IAMNodeDataMapping = {

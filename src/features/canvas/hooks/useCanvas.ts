@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useTheme } from '@chakra-ui/react';
+import { useTheme, useToast } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 import { Edge, ReactFlowInstance, Node, Connection } from 'reactflow';
@@ -142,7 +142,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   );
 
   const onEdgeDelete = useCallback((targetEdges: Edge<IAMEdgeData>[]) => {
-    levelActor.send({ type: 'DELETE_EDGE', edge: targetEdges[0] });
+    levelActor.send({ type: StatefulStateMachineEvent.DeleteEdge, edge: targetEdges[0] });
   }, []);
 
   // TODO: Save flow state to local storage?
