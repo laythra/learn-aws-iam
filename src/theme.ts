@@ -14,5 +14,6 @@ export const theme: CustomTheme = extendTheme({
     modalsMaxWidthInPixels: 720,
     navbarHeightInPixels: 65,
     codeEditorHeightInPixels: 500,
+    sidePanelWidthInPixels: window.innerWidth * 0.2,
   },
 }) as CustomTheme;

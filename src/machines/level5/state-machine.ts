@@ -279,9 +279,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         remove_unnecessary_edges_and_nodes: {
-          entry: () => {
-            alert('Remove unnecessary edges and nodes to progress the level');
-          },
+          entry: 'show_unncessary_edges_or_nodes_warning',
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
             target: 'tutorial_finished',
@@ -310,6 +308,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
         'next_edge_connection_objectives',
         'next_role_creation_objectives',
+        'hide_unncessary_edges_or_nodes_warning',
       ],
       initial: 'inside_level_popup1',
       states: {
@@ -454,9 +453,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         remove_unnecessary_edges_and_nodes: {
-          entry: () => {
-            alert('Remove unnecessary edges and nodes to progress the level');
-          },
+          entry: 'show_unncessary_edges_or_nodes_warning',
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
             target: 'level_finished_popup',

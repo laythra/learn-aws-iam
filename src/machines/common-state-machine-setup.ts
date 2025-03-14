@@ -284,6 +284,12 @@ export const createStateMachineSetup = <
           return getElementsWithRedDot(context, elementIds, isVisible);
         },
       }),
+      show_unncessary_edges_or_nodes_warning: assign({
+        show_unncessary_edges_or_nodes_warning: true,
+      }),
+      hide_unncessary_edges_or_nodes_warning: assign({
+        show_unncessary_edges_or_nodes_warning: false,
+      }),
     },
   });
 };

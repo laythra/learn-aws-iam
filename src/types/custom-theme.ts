@@ -7,6 +7,7 @@ export interface CustomTheme extends Theme {
     modalsMaxWidthInPixels: number;
     navbarHeightInPixels: number;
     codeEditorMaxHeightInPixels: number;
+    sidePanelWidthInPixels: number;
   };
   fonts: Theme['fonts'] & {
     heading: string;

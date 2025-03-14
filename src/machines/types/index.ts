@@ -78,6 +78,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
   fixed_popover_messages: FixedPopoverMessage[];
   elements_with_animated_red_dot?: ElementID[];
+  show_unncessary_edges_or_nodes_warning?: boolean;
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine

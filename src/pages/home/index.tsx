@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Flex, Box, useTheme, CustomThemeTypings } from '@chakra-ui/react';
+import { Flex, Box, useTheme } from '@chakra-ui/react';
 
 import { Navbar } from '@/components/Navbar';
 import { FixedPopover } from '@/components/Popover/FixedPopover';
@@ -8,6 +8,7 @@ import { TutorialPopup } from '@/components/Popup/TutorialPopup';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import RightSidePanel from '@/components/SidePanels/RightSidePanel';
 import RightSidePanelToggleButton from '@/components/SidePanels/RightSidePanelToggleButton';
+import { UnnecessaryEdgesNodesWarning } from '@/components/UnnecessaryEdgesNodesWarning';
 import Canvas from '@/features/canvas/components/Canvas';
 import MultiAccountCanvas from '@/features/canvas/components/MultiAccountCanvas';
 import { CustomTheme } from '@/types';
@@ -25,6 +26,7 @@ const Home: React.FC = () => {
         {useMultiAccountCanvas ? <MultiAccountCanvas /> : <Canvas />}
       </Box>
       <FixedPopover />
+      <UnnecessaryEdgesNodesWarning />
       <RightSidePanelToggleButton />
       <RightSidePanel />
     </Flex>
