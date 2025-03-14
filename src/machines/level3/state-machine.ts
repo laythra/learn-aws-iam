@@ -108,11 +108,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         side_panel_open: ({ context }) => !context.side_panel_open,
       }),
     },
-    [StatefulStateMachineEvent.AttachPolicyToEntity]: {
+    [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {
-          type: 'attach_policy_to_entity',
-          params: ({ event }) => ({ policyNode: event.sourceNode, entityNode: event.targetNode }),
+          type: 'connect_nodes',
+          params: ({ event }) => ({ sourceNode: event.sourceNode, targetNode: event.targetNode }),
         },
       ],
     },
@@ -148,13 +148,31 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         aws_managed_policy_popover: {
-          entry: 'next_popover',
+          entry: [
+            'next_popover',
+            {
+              type: 'update_whitelisted_element_ids',
+              params: {
+                whitelisted_element_ids: [ElementID.IAMNodeContentButton],
+              },
+            },
+          ],
           on: {
             [StatelessStateMachineEvent.IAMNodeContentOpened]: 'fixed_popover1',
           },
         },
         fixed_popover1: {
-          entry: ['hide_popovers', 'show_fixed_popover'],
+          entry: [
+            'hide_popovers',
+            'show_fixed_popover',
+            {
+              type: 'update_red_dot_visibility',
+              params: {
+                elementIds: [ElementID.IAMNodeContentCloseButton],
+                isVisible: true,
+              },
+            },
+          ],
           on: {
             [StatelessStateMachineEvent.IAMNodeContentClosed]: 'fixed_popover2',
           },

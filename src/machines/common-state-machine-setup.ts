@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { Edge } from 'react-flow-renderer';
 import type { Node } from 'reactflow';
 import { setup, enqueueActions, assign } from 'xstate';
 
@@ -8,15 +9,12 @@ import {
   createIAMPolicyNode,
   changeLevelObjectiveProgress,
   createIAMUserGroupNode,
-  attachPolicyToEntity,
-  updatePolicyToEntityConnectionEdges,
-  attachUserToGroup,
-  updateUserToGroupConnectionEdges,
   createIAMRoleNode,
-  attachRoleToEntity,
-  updateRoleToEntityConnectionEdges,
   getElementsWithRedDot,
 } from './utils/common-state-machine-actions';
+import { updateConnectionEdges } from './utils/edges-creation-state-machine-actions';
+import { deleteConnectionEdge } from './utils/edges-deletion-state-machine-actions';
+import { connectNodes } from './utils/nodes-connection-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
 import type {
   AccountID,
@@ -34,11 +32,9 @@ import type {
 } from '@/machines/types';
 import {
   IAMAnyNodeData,
+  IAMEdgeData,
   IAMGroupNodeData,
   IAMNodeEntity,
-  IAMPolicyNodeData,
-  IAMResourceNodeData,
-  IAMRoleNodeData,
   IAMUserNodeData,
 } from '@/types';
 
@@ -75,80 +71,52 @@ export const createStateMachineSetup = <
       context: GenericContext<TLevelObjectiveID, TFinishEventMap>;
       events: GenericEventData<TFinishEventMap>;
     },
+    guards: {
+      no_unnecessary_edges: ({ context }) => {
+        return context.edges.every(edge => !edge.data?.unnecessary_edge);
+      },
+      no_unnecessary_nodes: ({ context }) => {
+        return context.nodes.every(edge => !edge.data?.unnecessary_node);
+      },
+    },
     actions: {
-      attach_policy_to_entity: enqueueActions(
+      connect_nodes: enqueueActions(
         (
           { context, enqueue },
           {
-            entityNode,
-            policyNode,
-          }: {
-            entityNode: Node<IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData>;
-            policyNode: Node<IAMPolicyNodeData>;
-          }
-        ) => {
-          const updatedNodes = attachPolicyToEntity(context, policyNode, entityNode);
-          const updatedNode = updatedNodes.find(node => node.id === entityNode.id)!;
-          const [updatedEdges, sideEffectsEvents] = updatePolicyToEntityConnectionEdges<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, policyNode, updatedNode);
-
-          enqueue.assign({ nodes: updatedNodes, edges: _.uniqBy(updatedEdges, 'id') });
-          sideEffectsEvents.forEach(event => {
-            enqueue.raise({ type: event });
-          });
-        }
-      ),
-      attach_role_to_entity: enqueueActions(
-        (
-          { context, enqueue },
-          {
+            sourceNode,
             targetNode,
-            roleNode,
           }: {
-            targetNode: Node<IAMUserNodeData | IAMResourceNodeData>;
-            roleNode: Node<IAMRoleNodeData>;
+            sourceNode: Node<IAMAnyNodeData>;
+            targetNode: Node<IAMAnyNodeData>;
           }
         ) => {
-          const updatedNodes = attachRoleToEntity(context, roleNode, targetNode);
-          const updatedRoleNode = updatedNodes.find(node => node.id === roleNode.id)!;
-          const updatedTargetNode = updatedNodes.find(node => node.id === targetNode.id)!;
+          const updatedNodes = connectNodes(context, sourceNode, targetNode);
+          const { edges, events } = updateConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
+            context,
+            sourceNode,
+            targetNode
+          );
 
-          const [updatedEdges, sideEffectsEvents] = updateRoleToEntityConnectionEdges<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, updatedRoleNode, updatedTargetNode);
+          // Sorting here ensures that the unnecessary edges are the edges
+          // that would get eliminated by the uniqBy function
+          const updatedEdges = _.chain([...context.edges, ...edges])
+            .sortBy(e => e.data?.unnecessary_edge)
+            .uniqBy('id')
+            .value();
 
-          enqueue.assign({ nodes: updatedNodes, edges: _.uniqBy(updatedEdges, 'id') });
-          sideEffectsEvents.forEach(event => {
-            enqueue.raise({ type: event });
-          });
+          enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+          events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
-      attach_user_to_group: enqueueActions(
-        (
-          { context, enqueue },
-          {
-            userNode,
-            groupNode,
-          }: {
-            userNode: Node<IAMUserNodeData>;
-            groupNode: Node<IAMGroupNodeData>;
-          }
-        ) => {
-          const updatedNodes = attachUserToGroup(context, userNode, groupNode);
-          const [updatedEdges, sideEffectsEvents] = updateUserToGroupConnectionEdges<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, userNode, groupNode);
+      delete_edge: enqueueActions(({ context, enqueue }, { edge }: { edge: Edge<IAMEdgeData> }) => {
+        const { updatedNodes, updatedEdges } = deleteConnectionEdge<
+          TLevelObjectiveID,
+          TFinishEventMap
+        >(context, edge);
 
-          enqueue.assign({ nodes: updatedNodes, edges: _.uniqBy(updatedEdges, 'id') });
-          sideEffectsEvents.forEach(event => {
-            enqueue.raise({ type: event });
-          });
-        }
-      ),
+        enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+      }),
       add_iam_user_group_node: enqueueActions(
         (
           { context, enqueue },
@@ -283,7 +251,13 @@ export const createStateMachineSetup = <
         ) => popover_content,
         show_popovers: true,
       }),
-      toggle_side_panel: assign({ side_panel_open: ({ context }) => !context.side_panel_open }),
+      toggle_side_panel: assign({
+        side_panel_open: ({ context }) => !context.side_panel_open,
+        elements_with_animated_red_dot: ({ context }) =>
+          context.elements_with_animated_red_dot?.filter(
+            element => element != ElementID.RightSidePanelToggleButton
+          ),
+      }),
       show_side_panel: assign({ side_panel_open: true }),
       next_edge_connection_objectives: assign({
         edges_connection_objectives: ({ context }) =>

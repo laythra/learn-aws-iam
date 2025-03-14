@@ -1,18 +1,23 @@
-import { IAMNodeEntity } from '@/types';
-import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
+import { Node } from 'reactflow';
 
-const policyToUserConnectionKey = `${IAMNodeEntity.Policy}-${IAMNodeEntity.User}`;
-const policyToGroupConnectionKey = `${IAMNodeEntity.Policy}-${IAMNodeEntity.Group}`;
-const userToGroupConnectionKey = `${IAMNodeEntity.User}-${IAMNodeEntity.Group}`;
-const roleToUserConnectionKey = `${IAMNodeEntity.Role}-${IAMNodeEntity.User}`;
-const policyToRoleConnectionKey = `${IAMNodeEntity.Policy}-${IAMNodeEntity.Role}`;
-const roleToResourceConnectionKey = `${IAMNodeEntity.Role}-${IAMNodeEntity.Resource}`;
+import { IAMAnyNodeData, IAMNodeEntity } from '@/types';
 
-export const edgeConnectionHandlers: Record<string, string> = {
-  [policyToUserConnectionKey]: StatefulStateMachineEvent.AttachPolicyToEntity,
-  [policyToGroupConnectionKey]: StatefulStateMachineEvent.AttachPolicyToEntity,
-  [policyToRoleConnectionKey]: StatefulStateMachineEvent.AttachPolicyToEntity,
-  [userToGroupConnectionKey]: 'ATTACH_USER_TO_GROUP',
-  [roleToUserConnectionKey]: StatefulStateMachineEvent.AttachRoleToEntity,
-  [roleToResourceConnectionKey]: StatefulStateMachineEvent.AttachRoleToEntity,
+const VALID_CONNECTIONS = new Set<string>(
+  [
+    [IAMNodeEntity.Policy, IAMNodeEntity.User],
+    [IAMNodeEntity.Policy, IAMNodeEntity.Group],
+    [IAMNodeEntity.User, IAMNodeEntity.Group],
+    [IAMNodeEntity.Role, IAMNodeEntity.User],
+    [IAMNodeEntity.Policy, IAMNodeEntity.Role],
+    [IAMNodeEntity.Role, IAMNodeEntity.Resource],
+  ].map(([source, target]) => `${source}-${target}`)
+);
+
+export const isValidConnection = (
+  sourceNode: Node<IAMAnyNodeData>,
+  targetNode: Node<IAMAnyNodeData>
+): boolean => {
+  const connectionKey = `${sourceNode.data.entity}-${targetNode.data.entity}`;
+
+  return VALID_CONNECTIONS.has(connectionKey);
 };

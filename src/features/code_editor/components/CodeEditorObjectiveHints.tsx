@@ -20,9 +20,9 @@ export const CodeEditorObjectiveHints: React.FC<CodeEditorObjectiveHintsProps> =
   objectiveHints,
 }) => {
   return (
-    <Accordion allowToggle defaultIndex={0}>
-      {objectiveHints.map((hint, index) => (
-        <AccordionItem key={index}>
+    <Accordion allowMultiple>
+      {objectiveHints.map(hint => (
+        <AccordionItem key={hint.title}>
           <AccordionButton>
             <Box as='span' flex='1' textAlign='left' fontWeight='semibold'>
               {_.upperFirst(hint.title)}

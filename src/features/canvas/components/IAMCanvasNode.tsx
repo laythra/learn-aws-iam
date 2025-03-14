@@ -36,7 +36,7 @@ enum AnimationState {
  */
 const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const { entity, label, handles, image, content, animations } = data;
-  const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_policy;
+  const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_node;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
   const [selectedNodeId, openedNodeId] = useSelector(
     CanvasStore,

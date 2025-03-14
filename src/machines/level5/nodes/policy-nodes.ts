@@ -13,8 +13,9 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
     granted_accesses: [
       {
         target_node: ResourceNodeID.BillingAndCostManagement,
-        target_handle: 'right',
+        target_handle: 'bottom',
         access_level: AccessLevel.Read,
+        source_handle: 'top',
       },
     ],
   },

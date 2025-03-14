@@ -50,11 +50,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     whitelisted_element_ids: [],
   },
   on: {
-    [StatefulStateMachineEvent.AttachPolicyToEntity]: {
+    [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {
-          type: 'attach_policy_to_entity',
-          params: ({ event }) => ({ policyNode: event.sourceNode, entityNode: event.targetNode }),
+          type: 'connect_nodes',
+          params: ({ event }) => ({ sourceNode: event.sourceNode, targetNode: event.targetNode }),
         },
       ],
     },
@@ -125,16 +125,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       }),
     },
     TOGGLE_SIDE_PANEL: {
-      actions: [
-        'toggle_side_panel',
-        {
-          type: 'update_red_dot_visibility',
-          params: {
-            elementIds: [ElementID.RightSidePanelToggleButton],
-            isVisible: false,
-          },
-        },
-      ],
+      actions: 'toggle_side_panel',
     },
   },
   states: {

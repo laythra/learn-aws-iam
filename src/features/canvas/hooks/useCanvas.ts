@@ -1,19 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useTheme } from '@chakra-ui/react';
+import { useTheme, useToast } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 import { Edge, ReactFlowInstance, Node, Connection } from 'reactflow';
-import { EventFromLogic } from 'xstate';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { edgeConnectionHandlers } from '../utils/edges-creation';
-import { getNodeWithInitialPosition } from '../utils/nodes-position';
-import {
-  getCurrentLevelStateMachine,
-  LevelsProgressionContext,
-} from '@/components/providers/LevelsProgressionProvider';
+import { isValidConnection } from '../utils/edges-creation';
+import { getNodeInitialPosition } from '../utils/nodes-position';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { CustomTheme, IAMAnyNodeData, IAMEdgeData } from '@/types';
+import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface UseCanvasOptions {}
 
@@ -35,6 +32,7 @@ interface UseCanvasReturn {
  */
 export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const theme = useTheme<CustomTheme>();
+  const toast = useToast();
   const [nodes, edges, sidePanelOpened, edgesManagementDisabled] =
     LevelsProgressionContext().useSelector(
       state => [
@@ -102,49 +100,60 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
           };
         }
 
-        return getNodeWithInitialPosition(
+        const initialPosition = getNodeInitialPosition(
           node,
           reactFlowViewport,
           nodesGroup.length,
           nodeIndex,
           sidePanelWidth
         );
+
+        return { ...node, position: initialPosition };
       });
     });
 
     CanvasStore.send({ type: 'setNodes', nodes: newNodes });
   }, [nodes, rfInstance]);
 
+  const showInvalidConnectionToast = useCallback(() => {
+    toast({
+      title: 'Invalid Connection',
+      status: 'error',
+      duration: 3000,
+      isClosable: true,
+    });
+  }, []);
+
   const onConnect = useCallback(
     (params: Connection) => {
-      if (params.source === params.target || !params.source || !params.target) {
+      if (
+        params.source === params.target ||
+        !params.source ||
+        !params.target ||
+        edgesManagementDisabled
+      ) {
         return;
       }
 
-      if (edgesManagementDisabled) {
+      const sourceNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.source })!;
+      const targetNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.target })!;
+
+      if (!isValidConnection(sourceNode, targetNode)) {
+        showInvalidConnectionToast();
         return;
       }
 
-      const sourceNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.source });
-      const targetNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.target });
-
-      const connectionHandlerKey = `${sourceNode?.data.entity}-${targetNode?.data.entity}`;
-      const connectionEventName = edgeConnectionHandlers[connectionHandlerKey];
-
-      if (!connectionEventName) {
-        return;
-      }
-
-      const currentStateMachine = getCurrentLevelStateMachine();
-      levelActor.send({ type: connectionEventName, sourceNode, targetNode } as EventFromLogic<
-        typeof currentStateMachine
-      >);
+      levelActor.send({
+        type: StatefulStateMachineEvent.ConnectNodes,
+        sourceNode,
+        targetNode,
+      });
     },
     [nodes, edgesManagementDisabled]
   );
 
   const onEdgeDelete = useCallback((targetEdges: Edge<IAMEdgeData>[]) => {
-    levelActor.send({ type: 'DELETE_EDGE', edge: targetEdges[0] });
+    levelActor.send({ type: StatefulStateMachineEvent.DeleteEdge, edge: targetEdges[0] });
   }, []);
 
   // TODO: Save flow state to local storage?

@@ -43,7 +43,7 @@ export enum ObjectiveType {
 export type BaseFinishEventMap = Record<ObjectiveType, string>;
 
 export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
-  edges: Edge[];
+  edges: Edge<IAMEdgeData>[];
   edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
   level_description: string;
   level_finished?: boolean;
@@ -119,7 +119,6 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
   | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
   | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
   | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }
-  | { type: 'DELETE_EDGE'; edge: Edge<IAMEdgeData> }
   | { type: 'SET_EDGES'; edges: Edge<IAMEdgeData>[] }
   | { type: 'SET_NODES'; nodes: Node[] }
   | { type: 'UPDATE_USER_POLICY_EDGES'; node: Node }
@@ -132,6 +131,15 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: StatefulStateMachineEvent.AttachPolicyToEntity;
       sourceNode: Node<IAMPolicyNodeData>;
       targetNode: Node<IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData>;
+    }
+  | {
+      type: StatefulStateMachineEvent.ConnectNodes;
+      sourceNode: Node<IAMAnyNodeData>;
+      targetNode: Node<IAMAnyNodeData>;
+    }
+  | {
+      type: StatefulStateMachineEvent.DeleteEdge;
+      edge: Edge<IAMEdgeData>;
     }
   | {
       type: 'ATTACH_USER_TO_GROUP';
@@ -220,6 +228,7 @@ interface BaseCreationObjective<
   readonly account_id?: AccountID;
   readonly created_node_initial_position?: string;
   readonly callout_message?: string;
+  readonly hint_messages?: { title: string; content: string }[];
 }
 
 export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>

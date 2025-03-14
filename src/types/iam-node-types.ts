@@ -91,6 +91,10 @@ interface IAMNodeData {
     string,
     { element_class: string; keyframes: DOMKeyframesDefinition; options: DynamicAnimationOptions }[]
   >;
+  /**
+   * Defines whether the node is required for the user to complete the level
+   */
+  unnecessary_node?: boolean;
 }
 
 export interface IAMUserNodeData extends IAMNodeData {
@@ -108,7 +112,6 @@ export interface IAMGroupNodeData extends IAMNodeData {
 export interface IAMPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
   editable: boolean;
-  unnecessary_policy?: boolean;
   associated_users: string[]; // Do we use this?
   granted_accesses: PolicyGrantedAccess[];
   content: string;
@@ -136,6 +139,10 @@ export type IAMAnyNodeData =
   | IAMResourceNodeData
   | IAMRoleNodeData;
 
+export type IAMNodeWithPolicies = IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData;
+export type IAMNodeWithUsers = IAMGroupNodeData | IAMRoleNodeData;
+export type IAMNodeWithRoles = IAMUserNodeData;
+
 export type IAMNodeAnimationConfig = {
   element_class: string;
   keyframes: DOMKeyframesDefinition;
@@ -146,6 +153,17 @@ export interface IAMEdgeData {
   source_node_data?: IAMAnyNodeData;
   target_node_data?: IAMAnyNodeData;
   hovering_label?: AccessLevel | string;
+  /**
+   * The ID of the edge that was resposible for the creation of this edge
+   * mainly used for deleting edges, such that deleting an edge will also delete its children
+   */
+  parent_edge_id?: string;
+  achieved_objective_id?: number;
+  color: string;
+  hovering_color: string;
+  stroke_width: number;
+  label_always_visible: boolean;
+  unnecessary_edge?: boolean;
 }
 
 export type IAMNodeDataMapping = {

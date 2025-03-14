@@ -99,19 +99,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         side_panel_open: ({ context }) => !context.side_panel_open,
       }),
     },
-    [StatefulStateMachineEvent.AttachPolicyToEntity]: {
+    [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {
-          type: 'attach_policy_to_entity',
-          params: ({ event }) => ({ policyNode: event.sourceNode, entityNode: event.targetNode }),
-        },
-      ],
-    },
-    ATTACH_USER_TO_GROUP: {
-      actions: [
-        {
-          type: 'attach_user_to_group',
-          params: ({ event }) => ({ userNode: event.sourceNode, groupNode: event.targetNode }),
+          type: 'connect_nodes',
+          params: ({ event }) => ({ sourceNode: event.sourceNode, targetNode: event.targetNode }),
         },
       ],
     },

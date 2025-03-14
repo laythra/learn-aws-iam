@@ -27,4 +27,6 @@ export enum StatefulStateMachineEvent {
   ADDIAMRoleNode = 'ADD_IAM_ROLE_NODE',
   AttachRoleToEntity = 'ATTACH_ROLE_TO_ENTITY',
   AttachPolicyToEntity = 'ATTACH_POLICY_TO_ENTITY',
+  ConnectNodes = 'CONNECT_NODES',
+  DeleteEdge = 'DELETE_EDGE',
 }
