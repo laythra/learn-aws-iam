@@ -15,20 +15,13 @@ import {
   IAMGroupNodeData,
   IAMNodeEntity,
   IAMPolicyNodeData,
+  IAMResourceNodeData,
   IAMRoleNodeData,
   IAMUserNodeData,
   PolicyGrantedAccess,
 } from '@/types';
-import { getEdgeName } from '@/utils/names';
+import { getEdgeName, getEdgeLabel } from '@/utils/names';
 import { isNodeOfEntity } from '@/utils/node-type-guards';
-
-const EDGE_LABELS: { [key: string]: string } = {
-  [`${IAMNodeEntity.Policy}-${IAMNodeEntity.User}`]: 'Attached to',
-  [`${IAMNodeEntity.Policy}-${IAMNodeEntity.Group}`]: 'Belongs to',
-  [`${IAMNodeEntity.User}-${IAMNodeEntity.Group}`]: 'Attached to',
-  [`${IAMNodeEntity.Role}-${IAMNodeEntity.User}`]: 'Assumed By',
-  [`${IAMNodeEntity.Role}-${IAMNodeEntity.Resource}`]: 'Assumed By',
-};
 
 function isEdgeConnectionObjectiveFinished<TFinishEventMap extends BaseFinishEventMap>(
   objective: EdgeConnectionObjective<TFinishEventMap>,
@@ -51,7 +44,7 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
 ): { edge: Edge; events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] } {
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] = [];
   const insideTutorial = context.in_tutorial_state;
-  const edgeLabel = EDGE_LABELS[`${sourceNode.data.entity}-${targetNode.data.entity}`];
+  const edgeLabel = getEdgeLabel(sourceNode.data.entity, targetNode.data.entity);
   let validEdge: Edge<IAMEdgeData> | undefined = undefined;
 
   const invalidEdge = createEdge({
@@ -115,7 +108,7 @@ function createEdgesFromGrantedAccesses(
       target: access.target_node,
       targetHandle: access.target_handle,
       sourceHandle: access.source_handle,
-      data: { hovering_label: access.access_level, parentEdgeId },
+      data: { hovering_label: access.access_level, parent_edge_id: parentEdgeId },
       deletable: false,
     })
   );
@@ -206,6 +199,26 @@ const connectionStrategies = {
 
     return { edges: [baseEdge, ...userToResourceNodes], events };
   },
+
+  roleToResource: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+    context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+    roleNode: Node<IAMRoleNodeData>,
+    resourceNode: Node<IAMResourceNodeData>
+  ) => {
+    const { edge: baseEdge, events } = createEdgeWithEvents(context, roleNode, resourceNode);
+    const nodeById = _.keyBy(context.nodes, 'id');
+
+    const resourceToResourceEdges = roleNode.data.associated_policies.flatMap(policyId => {
+      const policyNode = nodeById[policyId] as Node<IAMPolicyNodeData>;
+      return createEdgesFromGrantedAccesses(
+        resourceNode.id,
+        policyNode.data.granted_accesses,
+        baseEdge.id
+      );
+    });
+
+    return { edges: [baseEdge, ...resourceToResourceEdges], events };
+  },
 } as const;
 
 // --- Generic Connection Updater ---
@@ -246,6 +259,11 @@ export function updateConnectionEdges<
     isNodeOfEntity(targetNode, IAMNodeEntity.User)
   ) {
     return connectionStrategies.roleToUser(context, sourceNode, targetNode);
+  } else if (
+    isNodeOfEntity(sourceNode, IAMNodeEntity.Role) &&
+    isNodeOfEntity(targetNode, IAMNodeEntity.Resource)
+  ) {
+    return connectionStrategies.roleToResource(context, sourceNode, targetNode);
   }
 
   throw new Error('Unsupported connection type');

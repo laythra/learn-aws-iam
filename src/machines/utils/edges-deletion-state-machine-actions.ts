@@ -81,7 +81,7 @@ export function deleteConnectionEdge<TLevelObjectiveID, TFinishEventMap extends 
 ): { updatedEdges: Edge<IAMEdgeData>[]; updatedNodes: Node<IAMAnyNodeData>[] } {
   const updatedNodes = updateNodeAssociationsOnEdgeDeletion(context, edgeToDelete);
   const updatedEdges = context.edges.filter(
-    edge => edge.id !== edgeToDelete.id && edge.data?.parentEdgeId !== edgeToDelete.id
+    edge => edge.id !== edgeToDelete.id && edge.data?.parent_edge_id !== edgeToDelete.id
   );
 
   return { updatedEdges, updatedNodes };

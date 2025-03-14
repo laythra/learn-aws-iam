@@ -81,7 +81,7 @@ export function connectNodes<TLevelObjectiveID, TFinishEventMap extends BaseFini
     );
   } else if (
     isNodeOfEntity(sourceNode, IAMNodeEntity.Role) &&
-    isNodeOfAnyEntity(targetNode, [IAMNodeEntity.User])
+    isNodeOfAnyEntity(targetNode, [IAMNodeEntity.User, IAMNodeEntity.Resource])
   ) {
     return associationStrategies.roleToEntity(
       context,
