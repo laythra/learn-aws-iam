@@ -59,7 +59,7 @@ export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends B
       id: targetValidPolicy?.entity_id ?? new Date().getTime().toString(),
       content: docString,
       label: label,
-      unnecessary_policy: targetValidPolicy === undefined,
+      unnecessary_node: targetValidPolicy === undefined,
       granted_accesses: targetValidPolicy?.granted_accesses ?? [],
       initial_position: targetValidPolicy?.created_node_initial_position ?? 'center',
       account_id: accountId,

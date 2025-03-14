@@ -91,6 +91,10 @@ interface IAMNodeData {
     string,
     { element_class: string; keyframes: DOMKeyframesDefinition; options: DynamicAnimationOptions }[]
   >;
+  /**
+   * Defines whether the node is required for the user to complete the level
+   */
+  unnecessary_node?: boolean;
 }
 
 export interface IAMUserNodeData extends IAMNodeData {
@@ -108,7 +112,6 @@ export interface IAMGroupNodeData extends IAMNodeData {
 export interface IAMPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
   editable: boolean;
-  unnecessary_policy?: boolean;
   associated_users: string[]; // Do we use this?
   granted_accesses: PolicyGrantedAccess[];
   content: string;
