@@ -1,4 +1,4 @@
-import { assign } from 'xstate';
+import { and, assign, not, or } from 'xstate';
 
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
@@ -266,7 +266,25 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         tutorial_finished_fixed_popover1: {
           entry: ['hide_popovers', 'next_fixed_popover'],
           on: {
-            NEXT_FIXED_POPOVER: 'tutorial_finished',
+            NEXT_FIXED_POPOVER: [
+              {
+                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
+                target: 'remove_unnecessary_edges_and_nodes',
+              },
+              {
+                guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+                target: 'tutorial_finished',
+              },
+            ],
+          },
+        },
+        remove_unnecessary_edges_and_nodes: {
+          entry: () => {
+            alert('Remove unnecessary edges and nodes to progress the level');
+          },
+          always: {
+            guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+            target: 'tutorial_finished',
           },
         },
         tutorial_finished: {
@@ -298,10 +316,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         inside_level_popup1: {
           entry: ['hide_fixed_popovers', 'next_popup'],
           on: {
-            NEXT_POPUP: 'inside_level_popup2',
+            NEXT_POPUP: 'inside_level_fixed_popover1',
           },
         },
-        inside_level_popup2: {
+        inside_level_fixed_popover1: {
           entry: ['hide_popups', 'next_fixed_popover'],
           on: {
             NEXT_FIXED_POPOVER: 'create_role_and_policy',
@@ -423,7 +441,25 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         level_finished_popover: {
           entry: 'next_popover',
           on: {
-            NEXT_POPOVER: 'level_finished_popup',
+            NEXT_POPOVER: [
+              {
+                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
+                target: 'remove_unnecessary_edges_and_nodes',
+              },
+              {
+                guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+                target: 'level_finished_popup',
+              },
+            ],
+          },
+        },
+        remove_unnecessary_edges_and_nodes: {
+          entry: () => {
+            alert('Remove unnecessary edges and nodes to progress the level');
+          },
+          always: {
+            guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+            target: 'level_finished_popup',
           },
         },
         level_finished_popup: {

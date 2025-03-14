@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Edge } from 'react-flow-renderer';
 import type { Node } from 'reactflow';
 import { setup, enqueueActions, assign } from 'xstate';
@@ -70,6 +71,14 @@ export const createStateMachineSetup = <
       context: GenericContext<TLevelObjectiveID, TFinishEventMap>;
       events: GenericEventData<TFinishEventMap>;
     },
+    guards: {
+      no_unnecessary_edges: ({ context }) => {
+        return context.edges.every(edge => !edge.data?.unnecessary_edge);
+      },
+      no_unnecessary_nodes: ({ context }) => {
+        return context.nodes.every(edge => !edge.data?.unnecessary_node);
+      },
+    },
     actions: {
       connect_nodes: enqueueActions(
         (
@@ -89,7 +98,14 @@ export const createStateMachineSetup = <
             targetNode
           );
 
-          enqueue.assign({ nodes: updatedNodes, edges: [...context.edges, ...edges] });
+          // Sorting here ensures that the unnecessary edges are the edges
+          // that would get eliminated by the uniqBy function
+          const updatedEdges = _.chain([...context.edges, ...edges])
+            .sortBy(e => e.data?.unnecessary_edge)
+            .uniqBy('id')
+            .value();
+
+          enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
           events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
