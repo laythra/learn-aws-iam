@@ -26,7 +26,7 @@ export const TEMPLATE_ROLE_NODE: Node<IAMRoleNodeData> = {
     associated_users: [],
     associated_policies: [],
     associated_resources: [],
-    // trust_policy_content: '',
+    trust_policy_content: '',
     animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
   },
 };

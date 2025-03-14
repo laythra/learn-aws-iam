@@ -1,8 +1,18 @@
+import _ from 'lodash';
 import type { Edge } from 'reactflow';
 
+import { theme } from '@/theme';
 import { IAMEdgeData } from '@/types';
-import { PartialWithRequired } from '@/types/common';
 import { getEdgeName } from '@/utils/names';
+
+type EdgeBaseProps = Omit<Edge<IAMEdgeData>, 'data'>;
+type RequiredEdgeProps = Pick<EdgeBaseProps, 'source' | 'target'>;
+type OptionalEdgeProps = Partial<Omit<EdgeBaseProps, 'source' | 'target'>>;
+
+export type CreateEdgeProps = RequiredEdgeProps &
+  OptionalEdgeProps & {
+    data?: Partial<IAMEdgeData>;
+  };
 
 const EDGE_TEMPLATE: Edge<IAMEdgeData> = {
   id: 'template_edge',
@@ -11,19 +21,19 @@ const EDGE_TEMPLATE: Edge<IAMEdgeData> = {
   sourceHandle: 'top',
   targetHandle: 'bottom',
   focusable: true,
-  deletable: false,
+  deletable: true,
   markerEnd: 'arrow',
   animated: true,
   type: 'iam_default',
-  style: { stroke: '#f6ab6c' },
+  data: {
+    color: theme.colors.black,
+    stroke_width: 1,
+    hovering_color: theme.colors.blue[500],
+    hovering_label: 'Attached to',
+    label_always_visible: false,
+  },
 };
 
-export const createEdge = (
-  props: PartialWithRequired<Edge<IAMEdgeData>, 'source' | 'target'>
-): Edge<IAMEdgeData> => {
-  return {
-    ...EDGE_TEMPLATE,
-    ...props,
-    id: getEdgeName(props.source, props.target),
-  };
+export const createEdge = (props: CreateEdgeProps): Edge<IAMEdgeData> => {
+  return _.merge({}, EDGE_TEMPLATE, props, { id: getEdgeName(props.source, props.target) });
 };

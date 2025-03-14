@@ -1,4 +1,4 @@
-import _, { create } from 'lodash';
+import _ from 'lodash';
 import { Edge, Node } from 'reactflow';
 
 import {
@@ -7,7 +7,8 @@ import {
   GenericContext,
   ObjectiveType,
 } from '../types';
-import { createEdge } from '@/factories/edge-factory';
+import { createEdge, CreateEdgeProps } from '@/factories/edge-factory';
+import { theme } from '@/theme';
 import {
   IAMAnyNodeData,
   IAMEdgeData,
@@ -18,8 +19,16 @@ import {
   IAMUserNodeData,
   PolicyGrantedAccess,
 } from '@/types';
-import { PartialWithRequired } from '@/types/common';
+import { getEdgeName } from '@/utils/names';
 import { isNodeOfEntity } from '@/utils/node-type-guards';
+
+const EDGE_LABELS: { [key: string]: string } = {
+  [`${IAMNodeEntity.Policy}-${IAMNodeEntity.User}`]: 'Attached to',
+  [`${IAMNodeEntity.Policy}-${IAMNodeEntity.Group}`]: 'Belongs to',
+  [`${IAMNodeEntity.User}-${IAMNodeEntity.Group}`]: 'Attached to',
+  [`${IAMNodeEntity.Role}-${IAMNodeEntity.User}`]: 'Assumed By',
+  [`${IAMNodeEntity.Role}-${IAMNodeEntity.Resource}`]: 'Assumed By',
+};
 
 function isEdgeConnectionObjectiveFinished<TFinishEventMap extends BaseFinishEventMap>(
   objective: EdgeConnectionObjective<TFinishEventMap>,
@@ -28,45 +37,64 @@ function isEdgeConnectionObjectiveFinished<TFinishEventMap extends BaseFinishEve
   return _.differenceBy(objective.required_edges, establishedEdges, 'id').length === 0;
 }
 
+function isEdgeConnectionValid<TFinishEventMap extends BaseFinishEventMap>(
+  objective: EdgeConnectionObjective<TFinishEventMap>,
+  newEdgeId: string
+): boolean {
+  return objective.required_edges.some(edge => edge.id === newEdgeId);
+}
+
 function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   sourceNode: Node<IAMAnyNodeData>,
   targetNode: Node<IAMAnyNodeData>
 ): { edge: Edge; events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] } {
-  let newEdgeData: PartialWithRequired<Edge<IAMEdgeData>, 'source' | 'target'> = {
+  const sideEffectsEvents: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] = [];
+  const insideTutorial = context.in_tutorial_state;
+  const edgeLabel = EDGE_LABELS[`${sourceNode.data.entity}-${targetNode.data.entity}`];
+  let validEdge: Edge<IAMEdgeData> | undefined = undefined;
+
+  const invalidEdge = createEdge({
     source: sourceNode.id,
     target: targetNode.id,
+    animated: true,
     data: {
-      hovering_label: 'Attached to',
+      hovering_label: insideTutorial ? 'Invalid Connection' : edgeLabel,
+      hovering_color: insideTutorial ? theme.colors.red[500] : theme.colors.blue[500],
+      color: insideTutorial ? theme.colors.yellow[500] : theme.colors.black,
+      unnecessary_edge: true,
+      label_always_visible: true,
     },
-  };
-
-  let newEdge: Edge<IAMEdgeData>;
-  const sideEffectsEvents: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] = [];
+  });
 
   context.edges_connection_objectives
     .filter(objective => !objective.is_finished)
     .forEach(objective => {
-      newEdgeData = {
-        ...newEdgeData,
+      if (!isEdgeConnectionValid(objective, getEdgeName(sourceNode.id, targetNode.id))) {
+        return;
+      }
+
+      const newEdgeData: CreateEdgeProps = {
+        source: sourceNode.id,
+        target: targetNode.id,
         targetHandle: objective.established_edge_target_handle,
         sourceHandle: objective.established_edge_source_handle,
-        deletable: true, // Once an objective is finished, its associated edge should not be deletable
+        deletable: true,
         data: {
-          hovering_label: objective.established_edge_hovering_label,
+          hovering_label: edgeLabel,
         },
       };
 
-      newEdge = createEdge(newEdgeData);
-
-      if (!isEdgeConnectionObjectiveFinished(objective, [...context.edges, newEdge])) {
-        return;
+      validEdge = createEdge(newEdgeData);
+      if (isEdgeConnectionObjectiveFinished(objective, [...context.edges, validEdge])) {
+        sideEffectsEvents.push(objective.on_finish_event);
       }
-      sideEffectsEvents.push(objective.on_finish_event);
     });
 
-  newEdge ??= createEdge(newEdgeData);
-  return { edge: newEdge, events: sideEffectsEvents };
+  return {
+    edge: validEdge ?? invalidEdge,
+    events: sideEffectsEvents,
+  };
 }
 
 /**
@@ -88,6 +116,7 @@ function createEdgesFromGrantedAccesses(
       targetHandle: access.target_handle,
       sourceHandle: access.source_handle,
       data: { hovering_label: access.access_level, parentEdgeId },
+      deletable: false,
     })
   );
 }

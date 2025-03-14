@@ -133,5 +133,6 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: 'Coming up next',
     content: POPUP_MSG7,
+    go_to_next_level_button: true,
   },
 ];

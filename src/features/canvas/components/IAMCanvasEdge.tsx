@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { Box } from '@chakra-ui/react';
+import { Box, useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 import { getBezierPath, EdgeLabelRenderer, EdgeProps, BaseEdge } from 'reactflow';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { IAMEdgeData } from '@/types';
+import { CustomTheme, IAMEdgeData } from '@/types';
 
 const IAMCanvasEdge: React.FC<EdgeProps<IAMEdgeData>> = ({
   id,
@@ -18,6 +18,7 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdgeData>> = ({
   targetPosition,
   data,
 }) => {
+  const theme = useTheme<CustomTheme>();
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -33,9 +34,12 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdgeData>> = ({
     _.isEqual
   );
 
+  const edgeColor = data?.color || theme.colors.black;
+  const edgeHoverColor = data?.hovering_color || theme.colors.blue[500];
+  const strokeWidth = data?.stroke_width || 1;
   const highlightEdge = clickedEdgeId === id || hoveredOverEdgeId === id;
-  const edgeStrokeColor = highlightEdge ? '#3b82f6' : '#000'; // Blue when hovered, black otherwise
-  const edgeStrokeWidth = highlightEdge ? 3 : 1; // Thicker when hovered
+  const edgeStrokeColor = highlightEdge ? edgeHoverColor : edgeColor; // Blue when hovered, black otherwise
+  const edgeStrokeWidth = highlightEdge ? strokeWidth + 2 : strokeWidth; // Thicker when hovered
 
   return (
     <>
@@ -49,7 +53,7 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdgeData>> = ({
         />
       </g>
       <EdgeLabelRenderer>
-        {highlightEdge && (
+        {(highlightEdge || data?.label_always_visible) && (
           <Box
             style={{
               position: 'absolute',

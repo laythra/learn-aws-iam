@@ -157,7 +157,13 @@ export interface IAMEdgeData {
    * The ID of the edge that was resposible for the creation of this edge
    * mainly used for deleting edges, such that deleting an edge will also delete its children
    */
-  parentEdgeId?: string;
+  parent_edge_id?: string;
+  achieved_objective_id?: number;
+  color: string;
+  hovering_color: string;
+  stroke_width: number;
+  label_always_visible: boolean;
+  unnecessary_edge?: boolean;
 }
 
 export type IAMNodeDataMapping = {

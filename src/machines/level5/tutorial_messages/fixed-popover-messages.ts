@@ -30,8 +30,8 @@ const FIXED_POPOVER_MSG6 = `
   As the IAM Security Specialist at ***Timeshift Labs***,
   you have some exciting challenges ahead:
 
-  * Grant the **EC2 instance** the necessary means to write into the S3 bucket
-  * Grant the **Lambda Function** the necessary means to read from the S3 bucket
+  * Grant the **EC2 instance** the necessary means to *write* into the **S3 bucket**
+  * Grant the **Lambda Function** the necessary means to *read* from the **S3 bucket**
 
   Remember, regular **IAM Policies** won't work here, so let's get creative with **IAM Roles**!
 `;
