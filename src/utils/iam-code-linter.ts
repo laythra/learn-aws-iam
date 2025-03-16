@@ -105,7 +105,6 @@ export const findAnyValidRole = <TFinishEventMap extends BaseFinishEventMap>(
   accountId?: AccountID
 ): IAMRoleCreationObjective<TFinishEventMap> | undefined => {
   roleObjectives = _.orderBy(roleObjectives, 'validate_inside_code_editor', 'desc');
-  debugger;
   return roleObjectives.find(roleObjective => {
     if (roleObjective.finished) return false;
 

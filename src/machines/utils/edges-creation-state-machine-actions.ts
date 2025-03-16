@@ -51,6 +51,7 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
     source: sourceNode.id,
     target: targetNode.id,
     animated: true,
+    deletable: true,
     data: {
       hovering_label: insideTutorial ? 'Invalid Connection' : edgeLabel,
       hovering_color: insideTutorial ? theme.colors.red[500] : theme.colors.blue[500],
@@ -72,7 +73,7 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
         target: targetNode.id,
         targetHandle: objective.established_edge_target_handle,
         sourceHandle: objective.established_edge_source_handle,
-        deletable: true,
+        deletable: false,
         data: {
           hovering_label: edgeLabel,
         },

@@ -2,6 +2,7 @@ import assumeRolePolicySchema from '../schemas/policy/assume-role-policy-schema.
 import dynamodbReadPolicySchema from '../schemas/policy/dynamodb-read-policy-schema.json';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { createPolicyCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
@@ -43,5 +44,5 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       account_id: AccountID.Originating,
       created_node_initial_position: 'right-center',
     },
-  ],
+  ].map(objective => createPolicyCreationObjective(objective)),
 ];

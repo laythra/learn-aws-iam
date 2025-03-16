@@ -5,6 +5,7 @@ import s3ReadPolicySchema from '../schemas/policy/s3-read-policy-schema.json';
 import s3ReadWritePolicySchema from '../schemas/policy/s3-read-write-policy-schema.json';
 import { FinishEventMap, NodeCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { createPolicyCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
@@ -48,7 +49,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       ],
       limit_new_lines: true,
     },
-  ],
+  ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
@@ -101,5 +102,5 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       ],
       validate_function: AJV_COMPILER.compile(dynamoReadWritePolicySchema),
     },
-  ],
+  ].map(objective => createPolicyCreationObjective(objective)),
 ];

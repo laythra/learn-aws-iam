@@ -180,12 +180,12 @@ export const createStateMachineSetup = <
             accountId,
           }: { docString: string; label: string; accountId?: AccountID }
         ) => {
-          const [updatedNodes, sideEffectsEvents] = createIAMRoleNode<
+          const [updatedNodes, updatedObjectives, sideEffectsEvents] = createIAMRoleNode<
             TLevelObjectiveID,
             TFinishEventMap
           >(context, docString, label, accountId);
 
-          enqueue.assign({ nodes: updatedNodes });
+          enqueue.assign({ nodes: updatedNodes, role_creation_objectives: updatedObjectives });
           sideEffectsEvents.forEach(event => {
             enqueue.raise({ type: event });
           });
