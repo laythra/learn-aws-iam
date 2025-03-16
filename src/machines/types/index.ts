@@ -213,10 +213,11 @@ export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> 
   readonly established_edge_source_handle?: string;
 };
 
-interface BaseCreationObjective<
+export interface BaseCreationObjective<
   TFinishEventMap extends BaseFinishEventMap,
   TEventType extends keyof TFinishEventMap,
 > {
+  id: string;
   readonly entity_id: string;
   readonly entity: unknown;
   readonly json_schema: Schema;
@@ -230,6 +231,7 @@ interface BaseCreationObjective<
   readonly created_node_initial_position?: string;
   readonly callout_message?: string;
   readonly hint_messages?: { title: string; content: string }[];
+  finished: boolean;
 }
 
 export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>

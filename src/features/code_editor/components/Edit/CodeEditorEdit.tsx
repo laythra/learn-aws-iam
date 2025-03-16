@@ -84,6 +84,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
     editorView,
     getWarnings,
     initialContent: JSON.parse(selectedNode.data.content ?? '{}'),
+    objectivesToValidate: [],
   });
 
   return (

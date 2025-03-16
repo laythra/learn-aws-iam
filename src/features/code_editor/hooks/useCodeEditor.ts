@@ -24,11 +24,11 @@ interface UseCodeEditorOptions {
   editorView: MutableRefObject<EditorView | null>;
   initialContent: object;
   getWarnings: () => string[];
-  objectiveToValidate?:
-    | IAMPolicyCreationObjective<BaseFinishEventMap>
-    | IAMRoleCreationObjective<BaseFinishEventMap>
-    | IAMPolicyEditObjective<BaseFinishEventMap>
-    | IAMTrustPolicyEditObject<BaseFinishEventMap>;
+  objectivesToValidate:
+    | IAMPolicyCreationObjective<BaseFinishEventMap>[]
+    | IAMRoleCreationObjective<BaseFinishEventMap>[]
+    | IAMPolicyEditObjective<BaseFinishEventMap>[]
+    | IAMTrustPolicyEditObject<BaseFinishEventMap>[];
 }
 
 interface UseCodeEditorReturn {
@@ -42,7 +42,7 @@ interface UseCodeEditorReturn {
 export function useCodeEditor({
   nodeId,
   editorView,
-  objectiveToValidate,
+  objectivesToValidate,
   initialContent,
   getWarnings,
 }: UseCodeEditorOptions): UseCodeEditorReturn {
@@ -55,17 +55,25 @@ export function useCodeEditor({
 
   const [editorViewState, setEditorViewState] = useState<EditorView | null>(null);
 
-  const validateFunction =
-    objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity];
+  const validateFns = objectivesToValidate?.map(obj => obj.validate_function) ?? [
+    GENERIC_VALIDATION_FNS[selectedIAMEntity],
+  ];
 
   const setCodeErrorsAndWarnings = (): void => {
     if (!editorView.current) return;
 
-    const lintingErrors = getLintingErrors(editorView.current, validateFunction);
+    const lintingErrors = validateFns.flatMap(validateFn =>
+      getLintingErrors(editorView.current!, validateFn!)
+    );
+    const allErrors = _.uniqBy(lintingErrors, 'from');
+    const hasErrors = validateFns.every(
+      validateFn => getLintingErrors(editorView.current!, validateFn!).length > 0
+    );
+
     codeEditorStateStore.send({
       type: 'setCodeErrorsAndWarnings',
       warnings: getWarnings(),
-      errors: lintingErrors,
+      errors: hasErrors ? allErrors : [],
       nodeId,
       entity: selectedIAMEntity,
     });
@@ -80,7 +88,11 @@ export function useCodeEditor({
     if (!editorViewState) return;
 
     validateChange();
-    InitializeBadgeWidgets(editorViewState, objectiveToValidate?.help_badges ?? [], initialContent);
+    InitializeBadgeWidgets(
+      editorViewState,
+      objectivesToValidate[0]?.help_badges ?? [],
+      initialContent
+    );
   }, [editorViewState, selectedIAMEntity]);
 
   const onCreateEditor = (view: EditorView): void => {
@@ -117,7 +129,7 @@ export function useCodeEditor({
 
   const extensions = [
     json(),
-    linter(view => getLintingErrors(view, validateFunction)),
+    linter(view => validateFns.flatMap(validateFn => getLintingErrors(view, validateFn!))),
     badgeExtension,
   ];
 
