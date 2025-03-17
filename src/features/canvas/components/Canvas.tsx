@@ -1,16 +1,12 @@
 import React from 'react';
 
-import { Box, calc, useTheme } from '@chakra-ui/react';
 import ReactFlow, { Background, BackgroundVariant, ConnectionMode } from 'reactflow';
 
 import IAMCanvasEdge from './IAMCanvasEdge';
 import IAMCanvasNode from './IAMCanvasNode';
 import { useCanvas } from '../hooks/useCanvas';
 import { CanvasStore } from '../stores/canvas-store';
-import DotsPattern from '@/assets/images/dots_pattern.svg';
-
 import 'reactflow/dist/style.css';
-import { CustomTheme } from '@/types';
 
 const nodeTypes = {
   iam_default: IAMCanvasNode,
@@ -21,7 +17,6 @@ const edgeTypes = {
 };
 
 const Canvas: React.FC = () => {
-  const theme = useTheme<CustomTheme>();
   const { nodesState, edgesState, onConnect, onEdgeDelete, setRfInstance } = useCanvas({});
 
   return (

@@ -63,19 +63,6 @@ Meaning the principal can assume the role.
 `;
 
 const POPUP_MSG4 = `
-  You might be curious about the distinction between granting access to a user
-  via an **IAM role** versus using a traditional **IAM policy**.
-
-  There are a few key differences that are too boring to list here, but here's a summary:
-  * **IAM Roles** provide temporary credentials to trusted entities,
-  unlike policies which are permanently attached
-  * **IAM Roles** solve use cases not possible with policies,
-  like cross-account access, or service-to-service access
-
-  For this part of the level, we'll using **IAM roles** to establish service-to-service access.
-`;
-
-const POPUP_MSG5 = `
   We're back at ***Timeshift Labs***, where we're integrating a new simple image processing system
   that's mainly used for generating important metadata related to the images the users upload.|lg
 
@@ -86,17 +73,7 @@ const POPUP_MSG5 = `
   and will run to generate important metadata related to the uploaded image.|lg
 `;
 
-const POPUP_MSG6 = `
-  As the IAM Security Specialist at ***Timeshift Labs***,
-  you have some exciting challenges ahead:
-
-  * Grant the **EC2 instance** the necessary permissions to write into the S3 bucket
-  * Grant the **Lambda Function** the necessary permissions to read from the S3 bucket
-
-  Remember, regular IAM policies won't work here, so let's get creative with IAM roles!
-`;
-
-const POPUP_MSG7 = `
+const POPUP_MSG5 = `
   Using *IAM roles* is paramount when it comes to
   establishing Service-To-Service communication inside your AWS account.
 
@@ -118,21 +95,13 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     title: 'IAM Roles Trust Policies',
     content: POPUP_MSG3,
   },
-  // {
-  //   title: 'IAM Roles vs Policies',
-  //   content: POPUP_MSG4,
-  // },
   {
     title: 'Service-to-Service access with IAM Roles',
-    content: POPUP_MSG5,
-  },
-  {
-    title: 'Your Mission',
-    content: POPUP_MSG6,
+    content: POPUP_MSG4,
   },
   {
     title: 'Coming up next',
-    content: POPUP_MSG7,
+    content: POPUP_MSG5,
     go_to_next_level_button: true,
   },
 ];

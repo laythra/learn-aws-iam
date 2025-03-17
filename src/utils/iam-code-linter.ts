@@ -84,14 +84,18 @@ export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
 ): IAMPolicyCreationObjective<TFinishEventMap> | undefined => {
   policyObjectives = _.orderBy(policyObjectives, 'validate_inside_code_editor', 'desc');
 
-  return policyObjectives.find(
-    policyObjective =>
+  return policyObjectives.find(policyObjective => {
+    if (policyObjective.finished) return false;
+
+    const validAccountId = policyObjective.account_id === accountId || !policyObjective.account_id;
+
+    return (
       isJSONValid(
         docString,
-        policyObjective.validate_function ?? GENERIC_VALIDATION_FNS[policyObjective.entity]
-      ) &&
-      (policyObjective.account_id === accountId || !policyObjective.account_id)
-  );
+        policyObjective.validate_function ?? GENERIC_VALIDATION_FNS[IAMNodeEntity.Policy]
+      ) && validAccountId
+    );
+  });
 };
 
 // TODO: The feels like it doesn't belong here. Move it
@@ -101,14 +105,17 @@ export const findAnyValidRole = <TFinishEventMap extends BaseFinishEventMap>(
   accountId?: AccountID
 ): IAMRoleCreationObjective<TFinishEventMap> | undefined => {
   roleObjectives = _.orderBy(roleObjectives, 'validate_inside_code_editor', 'desc');
-  return roleObjectives.find(
-    roleObjective =>
+  return roleObjectives.find(roleObjective => {
+    if (roleObjective.finished) return false;
+
+    const validAccountId = roleObjective.account_id === accountId || !roleObjective.account_id;
+    return (
       isJSONValid(
         docString,
         roleObjective.validate_function ?? GENERIC_VALIDATION_FNS[IAMNodeEntity.Role]
-      ) &&
-      (roleObjective.account_id === accountId || !roleObjective.account_id)
-  );
+      ) && validAccountId
+    );
+  });
 };
 
 export const getLintingErrors = (

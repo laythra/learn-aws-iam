@@ -6,6 +6,8 @@ import {
   AccountID,
   BaseFinishEventMap,
   GenericContext,
+  IAMPolicyCreationObjective,
+  IAMRoleCreationObjective,
   IAMUserGroupCreationObjective,
   LevelObjective,
   ObjectiveType,
@@ -201,8 +203,7 @@ export function createIAMUserGroupNode<
     draftNodes.push(newNode);
   });
 
-  let updatedObjectives: IAMUserGroupCreationObjective<TFinishEventMap>[] =
-    context.user_group_creation_objectives;
+  let updatedObjectives = context.user_group_creation_objectives;
 
   if (targetObjective) {
     updatedObjectives = produce(context.user_group_creation_objectives, draftObjectives => {
@@ -221,28 +222,44 @@ export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends Bas
   docString: string,
   label: string,
   accountId?: AccountID
-): [Node[], TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][]] {
-  const targetValidRole = findAnyValidRole(context.role_creation_objectives, docString, accountId);
+): [
+  Node[],
+  IAMRoleCreationObjective<TFinishEventMap>[],
+  TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][],
+] {
+  const targetValidObjective = findAnyValidRole(
+    context.role_creation_objectives,
+    docString,
+    accountId
+  );
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
 
   const newNodes = produce(context.nodes, draftNodes => {
     const newRoleNode = createRoleNode({
-      id: targetValidRole?.entity_id ?? new Date().getTime().toString(),
+      id: targetValidObjective?.entity_id ?? new Date().getTime().toString(),
       content: docString,
       label,
-      initial_position: targetValidRole?.created_node_initial_position ?? 'center',
+      initial_position: targetValidObjective?.created_node_initial_position ?? 'center',
       associated_policies: [],
       editable: true,
       account_id: accountId,
     });
 
     draftNodes.push(newRoleNode);
-    if (targetValidRole) {
-      sideEffectsEvents.push(targetValidRole.on_finish_event);
+    if (targetValidObjective) {
+      sideEffectsEvents.push(targetValidObjective.on_finish_event);
     }
   });
 
-  return [newNodes, sideEffectsEvents];
+  let updatedObjectives = context.role_creation_objectives;
+
+  if (targetValidObjective) {
+    updatedObjectives = produce(context.role_creation_objectives, draftObjectives => {
+      draftObjectives.find(objective => objective.id === targetValidObjective.id)!.finished = true;
+    });
+  }
+
+  return [newNodes, updatedObjectives, sideEffectsEvents];
 }
 
 export function getElementsWithRedDot<

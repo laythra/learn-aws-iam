@@ -5,7 +5,6 @@ import CodeEditorHelpButton from './CodeEditorHelpButton';
 import codeEditorStateStore from '../stores/code-editor-state-store';
 import { ElementID } from '@/config/element-ids';
 import { CanvasStore } from '@/features/canvas/stores/canvas-store';
-import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import { useDisableInTutorial } from '@/hooks/useDisableInTutorial';
 import { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';

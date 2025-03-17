@@ -50,13 +50,19 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   );
 
   const editorView = useRef<EditorView | null>(null);
-  const targetObjectives =
-    selectedIAMEntity === IAMNodeEntity.Policy ? policyCreationObjectives : roleCreationObjectives;
-  const objectiveToValidate = targetObjectives.find(
-    objective => objective.validate_inside_code_editor
+  const unfinishedPolicyCreationObjectives = policyCreationObjectives.filter(
+    objective => objective.validate_inside_code_editor && !objective.finished
+  );
+  const unfinishedRoleCreationObjectives = roleCreationObjectives.filter(
+    objective => objective.validate_inside_code_editor && !objective.finished
   );
 
-  const initialContent = objectiveToValidate?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
+  const objectiveToTargetInEditor =
+    selectedIAMEntity === IAMNodeEntity.Policy
+      ? unfinishedPolicyCreationObjectives[0]
+      : unfinishedRoleCreationObjectives[0];
+
+  const initialContent = objectiveToTargetInEditor?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
   const getWarnings = (): string[] => {
     if (selectedIAMEntity === IAMNodeEntity.Policy) {
       const anyValidPolicy = findAnyValidPolicy<BaseFinishEventMap>(
@@ -82,7 +88,10 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       nodeId,
       editorView,
       getWarnings,
-      objectiveToValidate,
+      objectivesToValidate:
+        selectedIAMEntity == IAMNodeEntity.Policy
+          ? unfinishedPolicyCreationObjectives
+          : unfinishedRoleCreationObjectives,
       initialContent: initialContent,
     });
 
@@ -159,11 +168,11 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       {_.isEmpty(errors) && _.isEmpty(warnings) && (
         <CodeEditorProgressStatus message='You got it right!' level='success' />
       )}
-      {objectiveToValidate?.callout_message && (
-        <CodeEditorObjectiveCallout calloutMessage={objectiveToValidate.callout_message} />
+      {objectiveToTargetInEditor?.callout_message && (
+        <CodeEditorObjectiveCallout calloutMessage={objectiveToTargetInEditor.callout_message} />
       )}
-      {objectiveToValidate?.hint_messages && (
-        <CodeEditorObjectiveHints objectiveHints={objectiveToValidate?.hint_messages} />
+      {objectiveToTargetInEditor?.hint_messages && (
+        <CodeEditorObjectiveHints objectiveHints={objectiveToTargetInEditor?.hint_messages} />
       )}
     </>
   );

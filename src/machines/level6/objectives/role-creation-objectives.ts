@@ -1,6 +1,7 @@
 import dynamodbRoleTrustPolicy from '../schemas/role/dynamodb-role-trust-policy-schema.json';
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { RoleNodeID } from '../types/node-id-enums';
+import { createRoleCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, IAMRoleCreationObjective, ObjectiveType } from '@/machines/types';
 import { IAMNodeEntity } from '@/types';
@@ -23,5 +24,5 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       created_node_initial_position: 'left-center',
       account_id: AccountID.Destination,
     },
-  ],
+  ].map(objective => createRoleCreationObjective(objective)),
 ];

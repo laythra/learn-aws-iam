@@ -4,6 +4,7 @@ import financeAuditorPolicySchema from '../schemas/role/finance-auditor-role-sch
 import lambdaRoleSchema from '../schemas/role/lambda-role-schema.json';
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { RoleNodeID } from '../types/node-id-enums';
+import { createRoleCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types';
 import { IAMNodeEntity } from '@/types';
@@ -74,7 +75,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       required_policies: [],
       required_principles: [],
     },
-  ],
+  ].map(objective => createRoleCreationObjective(objective)),
   [
     {
       type: ObjectiveType.ROLE_CREATION_OBJECTIVE,
@@ -103,6 +104,8 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       validate_function: AJV_COMPILER.compile(lambdaRoleSchema),
       required_policies: [],
       required_principles: [],
+      hint_messages: HINT_MESSAGES,
+      callout_message: CALLOUT_MSG2,
     },
-  ],
+  ].map(objective => createRoleCreationObjective(objective)),
 ];

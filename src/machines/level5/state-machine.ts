@@ -1,4 +1,4 @@
-import { and, assign, not, or } from 'xstate';
+import { and, assign, not } from 'xstate';
 
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
