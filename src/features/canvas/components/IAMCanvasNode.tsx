@@ -7,12 +7,13 @@ import { useAnimate } from 'framer-motion';
 import _ from 'lodash';
 import { Handle } from 'reactflow';
 
-import IAMNodeARNButton from './IAMNodeARNButton';
+import ARNIconButton from './ARNIconButton';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
 import { ShimmerBackground } from './ShimmerBackground';
 import { CanvasStore } from '../stores/canvas-store';
 import { WithPopoverBox } from '@/components/Decorated';
 import { type IAMAnyNodeData, type CustomTheme, IAMNodeEntity } from '@/types';
+import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 import { loadLocalImage } from '@/utils/image-loader';
 
 export interface IAMCanvasNodeProps {
@@ -153,7 +154,12 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
         </Flex>
       </Flex>
       <HStack position='absolute' top={1} right={2}>
-        {<IAMNodeARNButton arn={id} placement='top-end' />}
+        <ARNIconButton
+          arn={id}
+          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          placement='top-end'
+        />
         {content && (
           <IAMNodeInfoButton
             nodeId={id}

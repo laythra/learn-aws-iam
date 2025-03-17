@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
 
-import { Box, Text, Divider, useTheme } from '@chakra-ui/react';
+import { Box, Text, Divider, useTheme, IconButton } from '@chakra-ui/react';
 import ReactFlow, { ConnectionMode, Node } from 'reactflow';
 
+import ARNIconButton from './ARNIconButton';
 import IAMCanvasEdge from './IAMCanvasEdge';
 import IAMCanvasNode from './IAMCanvasNode';
 import { useCanvas } from '../hooks/useCanvas';
@@ -12,6 +13,7 @@ import { AccountID } from '@/machines/types';
 import { CustomTheme, IAMAnyNodeData } from '@/types';
 
 import 'reactflow/dist/style.css';
+import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 const nodeTypes = {
   iam_default: IAMCanvasNode,
@@ -124,26 +126,40 @@ const MultiAccountCanvas: React.FC = () => {
 
       <Text
         position='absolute'
-        top={theme.sizes.navbarHeightInPixels + 10}
-        left={8}
+        top={4}
+        left={4}
         p={2}
         bg='gray.100'
         borderRadius='md'
         fontWeight={700}
       >
         Destination Account
+        <ARNIconButton
+          arn='arn:aws:iam::123456789012:user/secure.corp'
+          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          placement='bottom-end'
+          ml={2}
+        />
       </Text>
 
       <Text
         position='absolute'
-        top={theme.sizes.navbarHeightInPixels + 10}
-        right={8}
+        top={4}
+        right={4}
         p={2}
         bg='gray.100'
         borderRadius='md'
         fontWeight={700}
       >
         Originating Account
+        <ARNIconButton
+          arn='arn:aws:iam::123456789012:user/secure.corp'
+          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          placement='bottom-end'
+          ml={2}
+        />
       </Text>
     </Box>
   );
