@@ -15,7 +15,7 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, BaseFinishEventMap } from '@/machines/types';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
-import { findAnyValidPolicy, findAnyValidRole } from '@/utils/iam-code-linter';
+import { findAnyValidPolicy, findAnyValidRole, getLintingErrors } from '@/utils/iam-code-linter';
 
 interface CodeEditorCreateProps {
   nodeId: string;
@@ -64,18 +64,20 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
 
   const initialContent = objectiveToTargetInEditor?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
   const getWarnings = (): string[] => {
+    if (!editorView.current) return [];
+
     if (selectedIAMEntity === IAMNodeEntity.Policy) {
       const anyValidPolicy = findAnyValidPolicy<BaseFinishEventMap>(
-        policyCreationObjectives,
-        editorView.current!.state.doc.toString(),
+        unfinishedPolicyCreationObjectives,
+        editorView.current.state.doc.toString(),
         selectedAccountId
       );
 
       return anyValidPolicy ? [] : [NO_MATCHING_POLICY_WARNING];
     } else {
       const anyValidRole = findAnyValidRole<BaseFinishEventMap>(
-        roleCreationObjectives,
-        editorView.current!.state.doc.toString(),
+        unfinishedRoleCreationObjectives,
+        editorView.current.state.doc.toString(),
         selectedAccountId
       );
 

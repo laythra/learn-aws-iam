@@ -42,7 +42,7 @@
               "AWS": {
                 "type": "string",
                 "enum": [
-                  "arn:aws:iam::472578417785:role/richard"
+                  "arn:aws:iam::123456789012:user/richard"
                 ]
               }
             }

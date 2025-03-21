@@ -9,8 +9,8 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: PolicyNodeID.DynamoDBTableReadAccess,
-          target: RoleNodeID.DynamoDBReadRole,
+          source: PolicyNodeID.TrustingAccountFinanceReportsReadPolicy,
+          target: RoleNodeID.TrustingAccountDynamoDBReadRole,
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.DYNAMODB_READ_POLICY_ATTACHED_TO_READ_ROLE,
@@ -22,8 +22,8 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: PolicyNodeID.AssumeRolePolicy,
-          target: UserNodeID.OriginatingAccountAuditorUser,
+          source: PolicyNodeID.TrustedAccountAssumeRolePolicy,
+          target: UserNodeID.TrustedAccountIAMUser,
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.ASSUME_ROLE_POLICY_ATTACHED_TO_IAM_USER,
@@ -31,17 +31,15 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       established_edge_hovering_label: 'Assumed by',
       established_edge_target_handle: 'bottom',
     },
-  ],
-  [
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: RoleNodeID.DynamoDBReadRole,
-          target: UserNodeID.OriginatingAccountAuditorUser,
+          source: UserNodeID.TrustedAccountIAMUser,
+          target: RoleNodeID.TrustingAccountDynamoDBReadRole,
         }),
       ],
-      on_finish_event: EdgeConnectionFinishEvent.DYNANODB_READ_ROLE_ATTACHED_TO_IAM_USER,
+      on_finish_event: EdgeConnectionFinishEvent.IAM_USER_ATTACHED_TO_DYNAMO_READ_ROLE,
       is_finished: false,
       established_edge_hovering_label: 'Assumed By',
       established_edge_target_handle: 'bottom',

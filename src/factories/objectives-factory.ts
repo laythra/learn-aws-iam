@@ -10,6 +10,14 @@ import {
 import trustPolicySchema from '@/schemas/aws-iam-role-trust-policy-schema.json';
 import { IAMNodeEntity } from '@/types';
 
+export type RoleCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> = Partial<
+  Omit<IAMRoleCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'>
+>;
+
+export type PolicyCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> = Partial<
+  Omit<IAMPolicyCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'>
+>;
+
 function getTemplateRoleCreationObjectiveAttributes<
   TFinishEventMap extends BaseFinishEventMap,
 >(): Omit<IAMRoleCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'> {
@@ -18,7 +26,7 @@ function getTemplateRoleCreationObjectiveAttributes<
     required_principles: [],
     entity_id: '-',
     json_schema: trustPolicySchema,
-    initial_code: MANAGED_POLICIES.EmptyPolicy,
+    initial_code: MANAGED_POLICIES.EmptyTrustPolicy,
     on_finish_event: '',
     validate_inside_code_editor: true,
   };
@@ -30,7 +38,7 @@ function getTemplatePolicyCreationObjectiveAttributes<
   return {
     entity_id: '-',
     json_schema: trustPolicySchema,
-    initial_code: MANAGED_POLICIES.EmptyPolicy,
+    initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
     on_finish_event: '',
     validate_inside_code_editor: true,
     granted_accesses: [],
@@ -38,7 +46,7 @@ function getTemplatePolicyCreationObjectiveAttributes<
 }
 
 export function createRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
-  props: Omit<IAMRoleCreationObjective<TFinishEventMap>, 'finished' | 'id' | 'type' | 'entity'>
+  props: RoleCreationObjectiveInput<TFinishEventMap>
 ): IAMRoleCreationObjective<TFinishEventMap> {
   return {
     finished: false,
@@ -51,7 +59,7 @@ export function createRoleCreationObjective<TFinishEventMap extends BaseFinishEv
 }
 
 export function createPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
-  props: Omit<IAMPolicyCreationObjective<TFinishEventMap>, 'finished' | 'id' | 'type' | 'entity'>
+  props: PolicyCreationObjectiveInput<TFinishEventMap>
 ): IAMPolicyCreationObjective<TFinishEventMap> {
   return {
     finished: false,

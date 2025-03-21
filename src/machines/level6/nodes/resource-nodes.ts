@@ -8,7 +8,7 @@ import { IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 
 const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
   {
-    id: ResourceNodeID.FirstAccountDynamoDBTable,
+    id: ResourceNodeID.TrustingAccountDynamoDBTable,
     label: 'FinanceReports',
     initial_position: 'left-center',
     image: IAMNodeImage.Database,

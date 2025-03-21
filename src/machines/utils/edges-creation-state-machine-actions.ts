@@ -181,12 +181,12 @@ const connectionStrategies = {
 
     return { edges: [baseEdge, ...userToResourceEdges], events };
   },
-  roleToUser: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+  userToRole: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-    roleNode: Node<IAMRoleNodeData>,
-    userNode: Node<IAMUserNodeData>
+    userNode: Node<IAMUserNodeData>,
+    roleNode: Node<IAMRoleNodeData>
   ) => {
-    const { edge: baseEdge, events } = createEdgeWithEvents(context, roleNode, userNode);
+    const { edge: baseEdge, events } = createEdgeWithEvents(context, userNode, roleNode);
     const nodeById = _.keyBy(context.nodes, 'id');
 
     const userToResourceNodes = roleNode.data.associated_policies.flatMap(policyId => {
@@ -256,10 +256,10 @@ export function updateConnectionEdges<
   ) {
     return connectionStrategies.userToGroup(context, sourceNode, targetNode);
   } else if (
-    isNodeOfEntity(sourceNode, IAMNodeEntity.Role) &&
-    isNodeOfEntity(targetNode, IAMNodeEntity.User)
+    isNodeOfEntity(sourceNode, IAMNodeEntity.User) &&
+    isNodeOfEntity(targetNode, IAMNodeEntity.Role)
   ) {
-    return connectionStrategies.roleToUser(context, sourceNode, targetNode);
+    return connectionStrategies.userToRole(context, sourceNode, targetNode);
   } else if (
     isNodeOfEntity(sourceNode, IAMNodeEntity.Role) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.Resource)

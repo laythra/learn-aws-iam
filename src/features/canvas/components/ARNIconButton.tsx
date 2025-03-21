@@ -9,6 +9,7 @@ import {
   type PlacementWithLogical,
   Tooltip,
   useToast,
+  ChakraProps,
 } from '@chakra-ui/react';
 import { IdentificationIcon, ClipboardDocumentIcon } from '@heroicons/react/20/solid';
 
@@ -16,12 +17,20 @@ import { CanvasStore } from '../stores/canvas-store';
 import { WithStateMachineEventIconButton } from '@/components/Decorated';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
-interface IAMNodeARNButtonProps {
+interface ARNIconButtonProps extends ChakraProps {
   arn: string;
+  onOpenEvent: StatelessStateMachineEvent;
+  onCopyEvent: StatelessStateMachineEvent;
   placement?: PlacementWithLogical;
 }
 
-const IAMNodeARNButton: React.FC<IAMNodeARNButtonProps> = ({ arn, placement = 'end-end' }) => {
+const ARNIconButton: React.FC<ARNIconButtonProps> = ({
+  arn,
+  onOpenEvent,
+  onCopyEvent,
+  placement = 'end-end',
+  ...styleProps
+}) => {
   const toast = useToast();
 
   const copyToClipboard = (): void => {
@@ -48,7 +57,7 @@ const IAMNodeARNButton: React.FC<IAMNodeARNButtonProps> = ({ arn, placement = 'e
     >
       <PopoverTrigger>
         <WithStateMachineEventIconButton
-          event={StatelessStateMachineEvent.IAMNodeARNOpened}
+          event={onOpenEvent}
           aria-label='arn'
           icon={<IdentificationIcon />}
           variant='ghost'
@@ -57,6 +66,7 @@ const IAMNodeARNButton: React.FC<IAMNodeARNButtonProps> = ({ arn, placement = 'e
           width='16px'
           minWidth='auto'
           _hover={{ bg: 'gray.200', opacity: 1 }}
+          {...styleProps}
         />
       </PopoverTrigger>
       <PopoverContent width='auto'>
@@ -72,7 +82,7 @@ const IAMNodeARNButton: React.FC<IAMNodeARNButtonProps> = ({ arn, placement = 'e
           </Text>
           <Tooltip label='Copy To Clipboard'>
             <WithStateMachineEventIconButton
-              event={StatelessStateMachineEvent.IAMNodeARNCopied}
+              event={onCopyEvent}
               h='16px'
               w='16px'
               aria-label='copy arn'
@@ -92,4 +102,4 @@ const IAMNodeARNButton: React.FC<IAMNodeARNButtonProps> = ({ arn, placement = 'e
   );
 };
 
-export default memo(IAMNodeARNButton);
+export default memo(ARNIconButton);
