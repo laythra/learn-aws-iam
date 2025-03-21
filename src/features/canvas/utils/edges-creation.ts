@@ -7,7 +7,7 @@ const VALID_CONNECTIONS = new Set<string>(
     [IAMNodeEntity.Policy, IAMNodeEntity.User],
     [IAMNodeEntity.Policy, IAMNodeEntity.Group],
     [IAMNodeEntity.User, IAMNodeEntity.Group],
-    [IAMNodeEntity.Role, IAMNodeEntity.User],
+    [IAMNodeEntity.User, IAMNodeEntity.Role],
     [IAMNodeEntity.Policy, IAMNodeEntity.Role],
     [IAMNodeEntity.Role, IAMNodeEntity.Resource],
   ].map(([source, target]) => `${source}-${target}`)
