@@ -12,16 +12,15 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
   [
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.DynamoDBTableReadAccess,
+      entity_id: PolicyNodeID.TrustingAccountFinanceReportsReadPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: dynamodbReadPolicySchema,
-      initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: PolicyCreationFinishEvent.DYNAMODB_READ_POLICY_CREATED,
-      validate_inside_code_editor: false,
+      validate_inside_code_editor: true,
       granted_accesses: [
         {
           access_level: AccessLevel.Read,
-          target_node: ResourceNodeID.FirstAccountDynamoDBTable,
+          target_node: ResourceNodeID.TrustingAccountDynamoDBTable,
           target_handle: 'right',
         },
       ],
@@ -32,12 +31,11 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
     },
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.AssumeRolePolicy,
+      entity_id: PolicyNodeID.TrustedAccountAssumeRolePolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: assumeRolePolicySchema,
-      initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: PolicyCreationFinishEvent.ASSUME_ROLE_POLICY_CREATED,
-      validate_inside_code_editor: false,
+      validate_inside_code_editor: true,
       granted_accesses: [],
       validate_function: AJV_COMPILER.compile(assumeRolePolicySchema),
       limit_new_lines: false,

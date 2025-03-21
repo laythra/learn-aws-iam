@@ -3,22 +3,48 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/machines/types';
 
 const Objective1Description = `
-  Create an IAM policy inside the destination account \`258376635577\`
-  which allows read access to the DynamoDB table \`FinanceReports\`
+  Create an **IAM Role** to be assumed by the **IAM User** \`Richard\`.
 `;
 
 const Objective2Description = `
-  Create a role to be assumed by the IAM user \`richard\` in the account \`472578417785\`
+  Create a **Permission Policy** which should allow anyone assuming the **IAM Role**
+  from the previous step to read from the **DynamoDB table** \`FinanceReports\`
 `;
 
 const Objective3Description = `
-  Create an IAM policy which allows the IAM user \`richard\` in the account \`472578417785\`
-  to assume the role created in the previous objective inside the account \`258376635577\`
+  Create an **IAM Policy** in the *Originating Account* which should allow
+  the **IAM User** \`Richard\` to assume the **IAM Role** in the *Destination Account*
 `;
 
 const Objective4Description = `
-  Grant read access to the IAM user \`richard\` in the account \`472578417785\`
-  to the DynamoDB table \`FinanceReports\`
+  Grant the **IAM User** **Read** access to the **DynamoDB Table** \`FinanceReports\`
+`;
+
+const OBJECTIVE1_HINT = `
+  The **IAM Role** Should have the **IAM User** \`Richard\` as the **Trusted Entity**.
+
+  This **Role** will ultimately allow its principles to access the **DynamoDB Table**.
+
+  Where should the **Role** be created? In the *Originating Account* or the *Destination Account*?
+`;
+
+const OBJECTIVE2_HINT = `
+  Which of these actions do you believe is necessary to achieve full *read access*?
+  - \`dynamodb:GetItem\`
+  - \`dynamodb:Query\`
+  - \`dynamodb:Scan\`
+  - \`dynamodb:DescribeTable\`
+  - \`dynamodb:ConditionCheckItem\`
+`;
+
+const OBJECTIVE3_HINT = `
+  Use the action: \`sts:AssumeRole\` to achieve this.
+`;
+
+const OBJECTIVE4_HINT = `
+  There's one connection that's going to originate from
+  the *Trusted Account* to the *Trusting Account*.
+  Which one is it?
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [
@@ -26,26 +52,30 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.CREATE_DESTINATION_POLICY,
+      id: LevelObjectiveID.CREATE_IAM_USER_ROLE,
       label: Objective1Description,
+      hint_text: OBJECTIVE1_HINT,
     },
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.CREATE_IAM_USER_ROLE,
+      id: LevelObjectiveID.CREATE_DESTINATION_POLICY,
       label: Objective2Description,
+      hint_text: OBJECTIVE2_HINT,
     },
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
       id: LevelObjectiveID.CREATE_IAM_POLICY_FOR_ASSUMING_ROLE,
       label: Objective3Description,
+      hint_text: OBJECTIVE3_HINT,
     },
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
       id: LevelObjectiveID.GRANT_READ_ACCESS_TO_THIRD_PARTY_USER,
       label: Objective4Description,
+      hint_text: OBJECTIVE4_HINT,
     },
   ],
 ];

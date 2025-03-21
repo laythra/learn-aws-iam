@@ -51,7 +51,7 @@
           },
           "Resource": {
             "type": "string",
-            "const": "arn:aws:iam::258376635577:role/finance-reports-read-role"
+            "const": "arn:aws:iam::123456789012:role/finance-reports-read-role"
           }
         },
         "additionalProperties": false
