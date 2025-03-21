@@ -133,9 +133,9 @@ const MultiAccountCanvas: React.FC = () => {
         borderRadius='md'
         fontWeight={700}
       >
-        Destination Account
+        Destination Account (Trusting Account)
         <ARNIconButton
-          arn='arn:aws:iam::123456789012:user/secure.corp'
+          arn='arn:aws:iam::123456789012:user/secure-corp'
           onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           placement='bottom-end'
@@ -152,9 +152,9 @@ const MultiAccountCanvas: React.FC = () => {
         borderRadius='md'
         fontWeight={700}
       >
-        Originating Account
+        Originating Account (Trusted Account)
         <ARNIconButton
-          arn='arn:aws:iam::123456789012:user/secure.corp'
+          arn='arn:aws:iam::987654321098:user/financial-auditing-corp'
           onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           placement='bottom-end'
