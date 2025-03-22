@@ -19,16 +19,18 @@ export const useDisableInTutorial = ({
     _.isEqual
   );
 
-  const disabledElements = elementIds.reduce(
+  const enabledElements = elementIds.reduce(
     (memo, elementId) => {
-      memo[elementId] = (inTutorialState && !shownElementIds?.includes(elementId)) ?? false;
+      memo[elementId] = shownElementIds?.includes(elementId) ?? false;
       return memo;
     },
     {} as Record<ElementID, boolean>
   );
 
   const isElementEnabled = (elementId: ElementID): boolean => {
-    return !disabledElements[elementId];
+    if (!inTutorialState) return true;
+
+    return enabledElements[elementId];
   };
 
   return { isElementEnabled };
