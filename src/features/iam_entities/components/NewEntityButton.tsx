@@ -1,8 +1,9 @@
-import { IconButton, Menu, MenuList } from '@chakra-ui/react';
+import { Box, IconButton, Menu, MenuList } from '@chakra-ui/react';
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
 
 import { IdentityCreationPopup } from './IdentityCreationPopup';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
+import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
 import {
   GuardedMenuItemWithEventAndPopover,
   TutorialGuardedMenuButton,
@@ -11,6 +12,7 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
 import { ElementID } from '@/config/element-ids';
 import { withPopover } from '@/decorators/withPopover';
 import { CodeEditor } from '@/features/code_editor';
+import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -19,6 +21,9 @@ interface NewEntityButtonProps {}
 export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   const { openIdentityCreator } = useIdentityCreator();
   const levelActor = LevelsProgressionContext().useActorRef();
+  const { isRedDotEnabledForElement: isRedDotEnabled } = useAnimatedRedDot({
+    elementIds: [ElementID.NewEntityBtn],
+  });
 
   const hidePopovers = (): void => {
     levelActor.send({ type: 'HIDE_POPOVERS' });
@@ -33,18 +38,21 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
       <CodeEditor />
       <IdentityCreationPopup />
       <Menu>
-        <TutorialGuardedMenuButton
-          elementid={ElementID.NewEntityBtn}
-          as={IconButton}
-          size='sm'
-          aria-label='New'
-          icon={<PlusCircleIcon />}
-          onClick={hidePopovers}
-          color={'purple.600'}
-          _hover={{ color: 'purple.500' }}
-          _active={{ color: 'purple.600' }}
-          bg='transparent'
-        />
+        <Box position='relative'>
+          <TutorialGuardedMenuButton
+            elementid={ElementID.NewEntityBtn}
+            as={IconButton}
+            size='sm'
+            aria-label='New'
+            icon={<PlusCircleIcon />}
+            onClick={hidePopovers}
+            color={'purple.600'}
+            _hover={{ color: 'purple.500' }}
+            _active={{ color: 'purple.600' }}
+            bg='transparent'
+          />
+          {isRedDotEnabled(ElementID.NewEntityBtn) && <AnimatedRedDot />}
+        </Box>
         <MenuList>
           <GuardedMenuItemWithEventAndPopover
             elementid={ElementID.CreateEntitiesMenuItem}
