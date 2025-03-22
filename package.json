@@ -1,6 +1,7 @@
 {
   "name": "iam_project_that_i_hope_kicks_off",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
@@ -66,7 +67,6 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
-    "@vite/vite": "^7.1.0",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
@@ -74,6 +74,8 @@
     "eslint-plugin-prettier": "^5.1.2",
     "eslint-plugin-react": "^7.33.2",
     "prettier": "^3.1.1",
-    "vite": "^6.2.2"
-  }
+    "vite": "^6.2.2",
+    "vite-plugin-checker": "^0.9.1"
+  },
+  "packageManager": "yarn@4.7.0"
 }
