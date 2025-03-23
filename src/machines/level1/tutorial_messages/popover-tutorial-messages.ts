@@ -53,7 +53,7 @@ const POPOVER_MSG10 = `
 `;
 
 const POPOVER_MSG11 = `
-  By the way, you can always check your objectives on the left side of the screen.
+  By the way, you can always check your objectives on the right side of the screen.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [

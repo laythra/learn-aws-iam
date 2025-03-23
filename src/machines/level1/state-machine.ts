@@ -18,7 +18,6 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { FIXED_POPOVER_MESSAGES } from '../level2/tutorial_messages/fixed-popover-messages';
 import { ElementID } from '@/config/element-ids';
-import CurrentLevelDetailsStore from '@/stores/current-level-details-store';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
@@ -50,6 +49,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     user_group_creation_objectives: [],
     role_creation_objectives: [],
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
+    nodes_connnections: [],
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -115,6 +115,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           type: 'update_whitelisted_element_ids',
           params: {
             whitelisted_element_ids: [],
+          },
+        },
+        {
+          type: 'update_red_dot_visibility',
+          params: {
+            isVisible: true,
+            elementIds: [ElementID.RightSidePanelToggleButton],
           },
         },
       ],
@@ -201,6 +208,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
                 whitelisted_element_ids: [ElementID.NewEntityBtn, ElementID.CreateEntitiesMenuItem],
               },
             },
+            {
+              type: 'update_red_dot_visibility',
+              params: {
+                isVisible: true,
+                elementIds: [ElementID.NewEntityBtn],
+              },
+            },
           ],
           on: {
             CREATE_IAM_IDENTITY_POPUP_OPENED: {
@@ -230,6 +244,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
                 {
                   type: 'change_objective_progress',
                   params: { id: LevelObjectiveID.GrantIAMUserReadAccessToS3Bucket, finished: true },
+                },
+                {
+                  type: 'update_red_dot_visibility',
+                  params: {
+                    isVisible: false,
+                    elementIds: [ElementID.NewEntityBtn],
+                  },
                 },
               ],
               target: 'policy_attached',
@@ -270,7 +291,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
         finished_level: {
           type: 'final',
-          entry: () => CurrentLevelDetailsStore.send({ type: 'setLevelNumber', levelNumber: 2 }),
         },
       },
     },

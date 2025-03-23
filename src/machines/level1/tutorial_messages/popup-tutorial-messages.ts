@@ -1,18 +1,19 @@
 import { PopupTutorialMessage } from '@/machines/types';
 
 const POPUP_MSG1 = `
-  This interactive tutorial is the most comprehensive guide
-  to **AWS Identity and Access Management (IAM)**.
+  This interactive tutorial is a practical journey through
+  ***AWS Identity and Access Management (IAM)***—starting with
+  the basics and progressing to more advanced concepts.|lg
 
-  Whether you're a beginner or experienced,
-  you'll gain hands-on experience with detailed explanations and challenges.|lg
+  It’s not a complete reference to everything ***IAM*** can do,
+  but it covers the core ideas you’ll need to tackle real-world scenarios with confidence.|lg
 
-  You'll learn to create **users**, manage **permissions**,
-  and craft policies while solving real-world scenarios.|lg
+  You’ll create **users**, manage **permissions**, and craft **policies**,
+  all while working through interactive challenges and clear explanations.
 
-  Each level builds on essential **IAM** concepts, helping you grow your skills step by step.|lg
+  Each level builds on key *IAM* concepts, helping you sharpen your skills step by step.
 
-  Jump in and master **AWS IAM** the interactive way!|lg
+  Jump in and explore *AWS IAM* the interactive way.
 `;
 
 const POPUP_MSG2 = `
