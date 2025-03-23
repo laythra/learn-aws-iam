@@ -25,6 +25,7 @@ import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { ElementID } from '@/config/element-ids';
+import { useDisableInTutorial } from '@/hooks/useDisableInTutorial';
 import { IAMIdentityEntity, IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
@@ -38,6 +39,10 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
 
   const { closeIdentityCreator, isIdentityCreatorOpen, defaultSelectedIdentity } =
     useIdentityCreator();
+
+  const { isElementEnabled } = useDisableInTutorial({
+    elementIds: [ElementID.IdentityCreationPopupGroupTab, ElementID.IdentityCreationPopupUserTab],
+  });
 
   const [userName, setUserName] = useState('');
   const [groupName, setGroupName] = useState('');
@@ -81,6 +86,14 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
     }
   }, [isIdentityCreatorOpen]);
 
+  useEffect(() => {
+    if (isElementEnabled(ElementID.IdentityCreationPopupUserTab)) {
+      setIamIdentityEntity(IAMNodeEntity.User);
+    } else if (isElementEnabled(ElementID.IdentityCreationPopupGroupTab)) {
+      setIamIdentityEntity(IAMNodeEntity.Group);
+    }
+  }, [isElementEnabled]);
+
   return (
     <Modal isOpen={isIdentityCreatorOpen} onClose={closeIdentityCreator}>
       <ModalOverlay />
@@ -96,8 +109,12 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
                 index={iamIdentityEntity === IAMNodeEntity.User ? 0 : 1}
               >
                 <TabList>
-                  <Tab>User</Tab>
-                  <Tab>Group</Tab>
+                  <Tab isDisabled={!isElementEnabled(ElementID.IdentityCreationPopupUserTab)}>
+                    {IAMNodeEntity.User}
+                  </Tab>
+                  <Tab isDisabled={!isElementEnabled(ElementID.IdentityCreationPopupGroupTab)}>
+                    {IAMNodeEntity.Group}
+                  </Tab>
                 </TabList>
               </Tabs>
             </WithPopoverBox>

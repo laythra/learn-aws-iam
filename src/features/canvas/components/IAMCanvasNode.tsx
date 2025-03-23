@@ -14,6 +14,7 @@ import { CanvasStore } from '../stores/canvas-store';
 import { WithPopoverBox } from '@/components/Decorated';
 import { type IAMAnyNodeData, type CustomTheme, IAMNodeEntity } from '@/types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
+import { generateArn } from '@/utils/arn-generator';
 import { loadLocalImage } from '@/utils/image-loader';
 
 export interface IAMCanvasNodeProps {
@@ -148,15 +149,15 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
               )}
             </HStack>
             <Text fontSize='14px' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
-              {resourceType || entity}
+              {entity == IAMNodeEntity.Resource ? resourceType : entity}
             </Text>
           </Box>
         </Flex>
       </Flex>
       <HStack position='absolute' top={1} right={2}>
         <ARNIconButton
-          arn={id}
-          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          arn={generateArn(resourceType || entity, label, data.account_id)}
+          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           placement='top-end'
         />

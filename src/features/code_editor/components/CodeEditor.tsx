@@ -63,8 +63,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     }
   }, [isElementEnabled]);
 
-  console.log('The selected IAM Entity is: ' + selectedIAMEntity);
-
   return (
     <>
       <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor} id='modal_content'>
