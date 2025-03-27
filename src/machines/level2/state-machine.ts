@@ -1,5 +1,6 @@
-import { assign } from 'xstate';
+import { and, assign, not } from 'xstate';
 
+import { INITIAL_CONNECTIONS } from './initial-connections';
 import { INITIAL_LEVEL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { HIDDEN_LEVEL_OBJECTIVES, LEVEL_OBJECTIVES } from './objectives/level-objectives';
@@ -14,7 +15,6 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { resolveInitialEdges } from '../utils/initial-edges-resolver';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -51,6 +51,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     in_tutorial_state: true,
     edges_management_disabled: true,
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
+    nodes_connnections: [],
+    initial_node_connections: INITIAL_CONNECTIONS,
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -65,13 +67,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       actions: [
         assign({
           edges: ({ context, event }) => [...context.edges, event.edge],
-        }),
-      ],
-    },
-    DELETE_EDGE: {
-      actions: [
-        assign({
-          edges: ({ context, event }) => context.edges.filter(edge => edge.id !== event.edge.id),
         }),
       ],
     },
@@ -107,12 +102,30 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
+    [StatefulStateMachineEvent.DeleteEdge]: {
+      actions: [
+        {
+          type: 'delete_edge',
+          params: ({ event }) => ({ edge: event.edge }),
+        },
+      ],
+    },
+    [StatefulStateMachineEvent.DeleteNode]: {
+      actions: [
+        {
+          type: 'delete_node',
+          params: ({ event }) => ({ node: event.node }),
+        },
+      ],
+    },
   },
-  entry: assign({
-    nodes: INITIAL_LEVEL_NODES,
-    edges: resolveInitialEdges(INITIAL_LEVEL_NODES),
-    user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
-  }),
+  entry: [
+    assign({
+      nodes: INITIAL_LEVEL_NODES,
+      user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
+    }),
+    'resolve_initial_edges',
+  ],
   states: {
     tutorial_popup1: {
       entry: 'next_popup',
@@ -158,15 +171,17 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       entry: [
         'next_popover',
         'show_side_panel',
+        'clear_edges',
         {
           type: 'update_whitelisted_element_ids',
           params: {
-            whitelisted_element_ids: [ElementID.NewEntityBtn, ElementID.CreateEntitiesMenuItem],
+            whitelisted_element_ids: [
+              ElementID.NewEntityBtn,
+              ElementID.CreateEntitiesMenuItem,
+              ElementID.IdentityCreationPopupGroupTab,
+            ],
           },
         },
-        assign({
-          edges: [],
-        }),
       ],
       on: {
         CREATE_IAM_IDENTITY_POPUP_OPENED: {
@@ -189,27 +204,34 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       },
     },
     attach_nodes_to_group_tooltip: {
-      entry: [
-        'next_popover',
-        'enable_edges_management_ability',
-        'next_edge_connection_objectives',
-        assign({
-          edges: [],
-        }),
-      ],
+      entry: ['next_popover', 'enable_edges_management_ability', 'next_edge_connection_objectives'],
       always: 'attach_nodes_to_group',
     },
     attach_nodes_to_group: {
       type: 'parallel',
-      onDone: {
-        actions: [
-          {
-            type: 'change_objective_progress',
-            params: { id: LevelObjectiveID.MakeScalingEasier, finished: true },
-          },
-        ],
-        target: 'attach_your_user_to_group',
-      },
+      entry: ['clear_edges', 'enable_edges_management_ability'],
+      onDone: [
+        {
+          guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
+          actions: [
+            {
+              type: 'change_objective_progress',
+              params: { id: LevelObjectiveID.MakeScalingEasier, finished: true },
+            },
+          ],
+          target: 'remove_unnecessary_edges_and_nodes',
+        },
+        {
+          guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+          actions: [
+            {
+              type: 'change_objective_progress',
+              params: { id: LevelObjectiveID.MakeScalingEasier, finished: true },
+            },
+          ],
+          target: 'attach_your_user_to_group',
+        },
+      ],
       states: {
         attach_users: {
           initial: 'in_progress',
@@ -281,10 +303,18 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       },
     },
+    remove_unnecessary_edges_and_nodes: {
+      entry: 'show_unncessary_edges_or_nodes_warning',
+      always: {
+        guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+        target: 'attach_your_user_to_group',
+      },
+    },
     attach_your_user_to_group: {
       initial: 'first_user_attached_popover',
       onDone: 'finished_level_popover',
       entry: [
+        'hide_unncessary_edges_or_nodes_warning',
         {
           type: 'add_new_level_objective',
           params: { objectives: HIDDEN_LEVEL_OBJECTIVES },
@@ -304,7 +334,14 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         create_your_user: {
-          entry: 'hide_popovers',
+          entry: [
+            'disable_tutorial_state',
+            'hide_popovers',
+            {
+              type: 'update_red_dot_visibility',
+              params: { isVisible: true, elementIds: [ElementID.NewEntityBtn] },
+            },
+          ],
           on: {
             [UserGroupCreationFinishEvent.UserCreated]: {
               target: 'attach_to_group',
@@ -320,17 +357,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
                   params: { id: LevelObjectiveID.AttachUserToGroup, finished: true },
                 },
               ],
-              target: 'level_finished',
+              target: 'user_attached',
             },
           },
         },
-        level_finished_popup: {
-          entry: 'next_popup',
-          on: {
-            NEXT_POPUP: 'level_finished',
-          },
-        },
-        level_finished: {
+        user_attached: {
           type: 'final',
         },
       },
@@ -338,22 +369,27 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     finished_level_popover: {
       entry: 'next_popover',
       on: {
-        NEXT_POPOVER: 'finished_level',
+        NEXT_POPOVER: [
+          {
+            guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+            target: 'level_complete',
+          },
+          {
+            guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
+            target: 'remove_unnecessary_edges_and_nodes_final',
+          },
+        ],
       },
     },
-    finished_level: {
-      initial: 'finished_level_popup',
-      entry: [
-        assign({
-          level_finished: true,
-        }),
-      ],
-      states: {
-        finished_level_popup: {
-          entry: 'next_popup',
-          type: 'final',
-        },
+    remove_unnecessary_edges_and_nodes_final: {
+      entry: ['show_unncessary_edges_or_nodes_warning', 'hide_popovers'],
+      always: {
+        guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+        target: 'level_complete',
       },
+    },
+    level_complete: {
+      entry: ['hide_unncessary_edges_or_nodes_warning', 'next_popup'],
     },
   },
 });

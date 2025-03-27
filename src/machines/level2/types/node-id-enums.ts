@@ -1,20 +1,22 @@
-export enum UserNodeID {
-  FirstUser = 'FirstUser',
-  SecondUser = 'SecondUser',
-}
+import { uniqueId } from 'lodash';
 
-export enum GroupNodeID {
-  FirstGroup = 'FirstGroup',
-}
+export const UserNodeID = {
+  FirstUser: uniqueId('user-'),
+  SecondUser: uniqueId('user-'),
+} as const;
 
-export enum ResourceNodeID {
-  S3Bucket = 'S3Bucket',
-  DynamoDBTable = 'DynamoDBTable',
-  EC2Instance = 'EC2Instance',
-}
+export const GroupNodeID = {
+  FirstGroup: uniqueId('group-'),
+} as const;
 
-export enum PolicyNodeID {
-  PolicyNode1 = 'PolicyNode1',
-  PolicyNode2 = 'PolicyNode2',
-  PolicyNode3 = 'PolicyNode3',
-}
+export const ResourceNodeID = {
+  S3Bucket: uniqueId('resource-s3bucket-'),
+  DynamoDBTable: uniqueId('resource-dynamodbtable-'),
+  EC2Instance: uniqueId('resource-ec2instance-'),
+} as const;
+
+export const PolicyNodeID = {
+  PolicyNode1: uniqueId('policy-'),
+  PolicyNode2: uniqueId('policy-'),
+  PolicyNode3: uniqueId('policy-'),
+} as const;

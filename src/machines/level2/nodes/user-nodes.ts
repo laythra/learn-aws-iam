@@ -11,11 +11,11 @@ const USER_NODES: Partial<IAMUserNodeData>[] = [
     label: 'Kyouma',
     initial_position: 'center',
     image: IAMNodeImage.User,
-    associated_policies: [
-      PolicyNodeID.PolicyNode1,
-      PolicyNodeID.PolicyNode2,
-      PolicyNodeID.PolicyNode3,
-    ],
+    // associated_policies: [
+    //   PolicyNodeID.PolicyNode1,
+    //   PolicyNodeID.PolicyNode2,
+    //   PolicyNodeID.PolicyNode3,
+    // ],
   },
 ];
 
