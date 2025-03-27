@@ -99,20 +99,15 @@ interface IAMNodeData {
 
 export interface IAMUserNodeData extends IAMNodeData {
   entity: IAMNodeEntity.User;
-  associated_policies: string[];
-  associated_roles: string[];
 }
 
 export interface IAMGroupNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Group;
-  associated_users: string[];
-  associated_policies: string[];
 }
 
 export interface IAMPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
   editable: boolean;
-  associated_users: string[]; // Do we use this?
   granted_accesses: PolicyGrantedAccess[];
   content: string;
 }
@@ -120,9 +115,6 @@ export interface IAMPolicyNodeData extends IAMNodeData {
 export interface IAMRoleNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Role;
   editable: boolean;
-  associated_users: string[];
-  associated_policies: string[];
-  associated_resources: string[];
   trust_policy_content: string;
 }
 

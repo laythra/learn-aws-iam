@@ -79,20 +79,18 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
   };
 
   useEffect(() => {
-    if (isIdentityCreatorOpen) {
-      levelActor.send({
-        type: StatelessStateMachineEvent.CreateIAMIdentityPopupOpened,
-      } as EventFrom<typeof levelActor.logic>);
-    }
-  }, [isIdentityCreatorOpen]);
+    if (!isIdentityCreatorOpen) return;
 
-  useEffect(() => {
+    levelActor.send({
+      type: StatelessStateMachineEvent.CreateIAMIdentityPopupOpened,
+    } as EventFrom<typeof levelActor.logic>);
+
     if (isElementEnabled(ElementID.IdentityCreationPopupUserTab)) {
       setIamIdentityEntity(IAMNodeEntity.User);
     } else if (isElementEnabled(ElementID.IdentityCreationPopupGroupTab)) {
       setIamIdentityEntity(IAMNodeEntity.Group);
     }
-  }, [isElementEnabled]);
+  }, [isIdentityCreatorOpen]);
 
   return (
     <Modal isOpen={isIdentityCreatorOpen} onClose={closeIdentityCreator}>

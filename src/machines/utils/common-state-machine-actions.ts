@@ -1,19 +1,17 @@
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
-import { Node, Edge } from 'reactflow';
+import { Node } from 'reactflow';
 
 import {
   AccountID,
   BaseFinishEventMap,
   GenericContext,
-  IAMPolicyCreationObjective,
   IAMRoleCreationObjective,
   IAMUserGroupCreationObjective,
   LevelObjective,
   ObjectiveType,
 } from '../types';
 import { ElementID } from '@/config/element-ids';
-import { createEdge } from '@/factories/edge-factory';
 import { createGroupNode } from '@/factories/group-node-factory';
 import { createPolicyNode } from '@/factories/policy-node-factory';
 import { createRoleNode } from '@/factories/role-node-factory';
@@ -25,7 +23,7 @@ import {
   type IAMUserNodeData,
 } from '@/types';
 import { findAnyValidPolicy, findAnyValidRole, isJSONValid } from '@/utils/iam-code-linter';
-import { getEdgeName } from '@/utils/names';
+import { isNodeOfEntity } from '@/utils/node-type-guards';
 
 export function changeLevelObjectiveProgress<
   TLevelObjectiveID,
@@ -93,57 +91,34 @@ export function editIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends Bas
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   nodeId: string,
   docString: string
-): [Node[], Edge[], TFinishEventMap[ObjectiveType.POLICY_EDIT_OBJECTIVE][]] {
+): {
+  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
+  nodeEditFinishEvents: TFinishEventMap[ObjectiveType.POLICY_EDIT_OBJECTIVE][];
+} {
   const targetEditObjective = context.policy_edit_objectives.find(
     objective => objective.entity_id === nodeId
   );
 
   if (!targetEditObjective || !isJSONValid(docString, targetEditObjective.validate_function)) {
-    return [context.nodes, context.edges, []];
+    return { updatedContext: context, nodeEditFinishEvents: [] };
   }
 
-  const updatedNodes = produce(context.nodes, draftNodes => {
-    const targetNode = draftNodes.find(
-      node => node.id === nodeId && node.data.entity === IAMNodeEntity.Policy
+  const updatedContext = produce(context, draftContext => {
+    const targetNode = draftContext.nodes.find(
+      node => node.id === nodeId && isNodeOfEntity(node, IAMNodeEntity.Policy)
     ) as WritableDraft<Node<IAMPolicyNodeData>>;
+
     if (!targetNode) return;
 
     targetNode.data.content = docString;
     targetNode.data.editable = false;
+    targetNode.data.granted_accesses = targetEditObjective.resources_to_grant;
   });
 
-  const affectedUsers = context.nodes.filter(
-    node =>
-      node.data.entity === IAMNodeEntity.User && node.data.associated_policies.includes(nodeId)
-  );
-
-  const edgesToRemove = _.flatMap(affectedUsers, userNode => {
-    return targetEditObjective.resources_to_revoke.map(resourceId =>
-      getEdgeName(userNode.id, resourceId)
-    );
-  });
-
-  const edgesToAdd = _.flatMap(
-    targetEditObjective.resources_to_grant,
-    (accessLevel, resourceId) => {
-      return affectedUsers.map(userNode =>
-        createEdge({
-          source: userNode.id,
-          target: resourceId,
-          data: {
-            hovering_label: accessLevel,
-          },
-        })
-      );
-    }
-  );
-
-  const newEdges = _.chain(context.edges)
-    .reject(edge => edgesToRemove.includes(edge.id))
-    .concat(edgesToAdd)
-    .value();
-
-  return [updatedNodes, newEdges, [targetEditObjective.on_finish_event]];
+  return {
+    updatedContext,
+    nodeEditFinishEvents: [targetEditObjective.on_finish_event],
+  };
 }
 
 /**
@@ -197,6 +172,7 @@ export function createIAMUserGroupNode<
     newNode = creationFunc({
       id: targetObjective?.entity_id ?? new Date().getTime().toString(),
       initial_position: targetObjective?.initial_position ?? 'center',
+      unnecessary_node: targetObjective === undefined,
       ...props,
     });
 
@@ -240,9 +216,9 @@ export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends Bas
       content: docString,
       label,
       initial_position: targetValidObjective?.created_node_initial_position ?? 'center',
-      associated_policies: [],
       editable: true,
       account_id: accountId,
+      unnecessary_node: targetValidObjective === undefined,
     });
 
     draftNodes.push(newRoleNode);

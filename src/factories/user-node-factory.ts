@@ -20,9 +20,7 @@ export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
       { id: HandleID.Left, type: 'source', position: Position.Left },
     ] as HandleProps[],
     image: IAMNodeImage.User,
-    associated_policies: [],
     initial_position: 'top-center',
-    associated_roles: [],
     animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
   },
 };

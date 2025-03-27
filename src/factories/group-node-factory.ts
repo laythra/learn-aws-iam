@@ -20,10 +20,8 @@ export const TEMPLATE_GROUP_NODE: Node<IAMGroupNodeData> = {
       { id: Position.Bottom, type: 'target', position: Position.Bottom },
     ] as HandleProps[],
     image: IAMNodeImage.Group,
-    associated_policies: [],
-    associated_users: [],
     initial_position: 'bottom-center',
-  } as IAMGroupNodeData,
+  },
 };
 
 export function createGroupNode(props: Partial<IAMGroupNodeData>): Node<IAMGroupNodeData> {

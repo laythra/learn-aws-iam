@@ -21,13 +21,14 @@ interface UseCanvasReturn {
   edgesState: Edge[];
   onConnect: (params: Connection) => void;
   onEdgeDelete: (targetEdges: Edge[]) => void;
+  onNodeDelete: (targetNodes: Node<IAMAnyNodeData>[]) => void;
   sidePanelWidth: number;
   disabledEdgesCreation: boolean;
 }
 
 /**
  * A hook that's responsible for managing the canvas state, which includes nodes, edges, and the ReactFlow instance.
- * Used in both Canvas.tsx and MultiAccountCanvas.tsx
+ * Used in both Canvas and MultiAccountCanvas
  *  @returns {UseCanvasReturn} Object containing canvas state and handlers.
  */
 export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
@@ -156,6 +157,10 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     levelActor.send({ type: StatefulStateMachineEvent.DeleteEdge, edge: targetEdges[0] });
   }, []);
 
+  const onNodeDelete = useCallback((targetNodes: Node<IAMAnyNodeData>[]) => {
+    levelActor.send({ type: StatefulStateMachineEvent.DeleteNode, node: targetNodes[0] });
+  }, []);
+
   // TODO: Save flow state to local storage?
   // useEffect(() => {
   //   if (rfInstance && levelFinished) {
@@ -171,6 +176,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     edgesState,
     onConnect,
     onEdgeDelete,
+    onNodeDelete,
     sidePanelWidth,
     disabledEdgesCreation: edgesManagementDisabled ?? false,
   };

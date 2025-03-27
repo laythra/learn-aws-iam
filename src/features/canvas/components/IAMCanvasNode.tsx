@@ -135,9 +135,9 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
                   {label}
                 </Text>
               </Tooltip>
-              {isAnUnecessaryPolicy && (
+              {data.unnecessary_node && (
                 <Tooltip
-                  label={`This ${entity} does not serve any purpose`}
+                  label={`This ${entity} does not serve any purpose, click to remove it.`}
                   aria-label='A tooltip'
                   cursor='help'
                   placement='top'
