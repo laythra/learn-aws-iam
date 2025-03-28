@@ -61,6 +61,8 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
     },
     updateSelectedNodeId(context: CanvasStoreState, event: { nodeId: string }) {
       context.selectedNodeId = event.nodeId;
+      context.nodes.forEach(node => (node.zIndex = 0));
+      context.nodes.find(node => node.id == event.nodeId)!.zIndex = 10000;
     },
     updateOpenedNodeId(context: CanvasStoreState, event: { nodeId: string }) {
       context.openedNodeId = event.nodeId;
