@@ -29,6 +29,7 @@ function getTemplateRoleCreationObjectiveAttributes<
     initial_code: MANAGED_POLICIES.EmptyTrustPolicy,
     on_finish_event: '',
     validate_inside_code_editor: true,
+    initial_edges: [],
   };
 }
 
@@ -42,6 +43,7 @@ function getTemplatePolicyCreationObjectiveAttributes<
     on_finish_event: '',
     validate_inside_code_editor: true,
     granted_accesses: [],
+    initial_edges: [],
   };
 }
 

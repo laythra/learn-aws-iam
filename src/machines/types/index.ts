@@ -242,6 +242,7 @@ export interface BaseCreationObjective<
   readonly created_node_initial_position?: string;
   readonly callout_message?: string;
   readonly hint_messages?: { title: string; content: string }[];
+  readonly initial_edges: Edge<IAMEdgeData>[];
   finished: boolean;
 }
 
@@ -323,6 +324,6 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
 };
 
 export enum AccountID {
-  Originating = 'originating',
-  Destination = 'destination',
+  Originating = '123456789012',
+  Destination = '987654321098',
 }

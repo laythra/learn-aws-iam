@@ -6,7 +6,6 @@ import { useSelector } from '@xstate/store/react';
 import { useAnimate } from 'framer-motion';
 import _ from 'lodash';
 import { Handle } from 'reactflow';
-import { parseCommandLine } from 'typescript';
 
 import ARNIconButton from './ARNIconButton';
 import IAMNodeInfoButton from './IAMNodeInfoButton';

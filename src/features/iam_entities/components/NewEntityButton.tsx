@@ -46,9 +46,9 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
             aria-label='New'
             icon={<PlusCircleIcon />}
             onClick={hidePopovers}
-            color={'purple.600'}
-            _hover={{ color: 'purple.500' }}
-            _active={{ color: 'purple.600' }}
+            color={'blue.500'}
+            _hover={{ color: 'blue.500' }}
+            _active={{ color: 'blue.600' }}
             bg='transparent'
           />
           {isRedDotEnabled(ElementID.NewEntityBtn) && <AnimatedRedDot />}

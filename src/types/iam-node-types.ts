@@ -1,5 +1,5 @@
 import { DOMKeyframesDefinition, DynamicAnimationOptions } from 'framer-motion';
-import { HandleProps } from 'reactflow';
+import { Edge, HandleProps } from 'reactflow';
 
 export enum HandleID {
   Top = 'top',
@@ -109,6 +109,7 @@ export interface IAMPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
   editable: boolean;
   granted_accesses: PolicyGrantedAccess[];
+  initial_edges?: Edge<IAMEdgeData>[];
   content: string;
 }
 
@@ -157,6 +158,10 @@ export interface IAMEdgeData {
   label_always_visible: boolean;
   unnecessary_edge?: boolean;
 }
+
+export type PartialEdge = Omit<Partial<Edge<IAMEdgeData>>, 'data'> & {
+  data?: Partial<IAMEdgeData>;
+};
 
 export type IAMNodeDataMapping = {
   iam_user: IAMUserNodeData;

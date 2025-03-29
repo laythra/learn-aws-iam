@@ -1,3 +1,4 @@
+import { DeepPartial } from '@chakra-ui/react';
 import { produce } from 'immer';
 import _ from 'lodash';
 import { Edge, Node } from 'reactflow';
@@ -21,6 +22,7 @@ import {
   IAMResourceNodeData,
   IAMRoleNodeData,
   IAMUserNodeData,
+  PartialEdge,
   PolicyGrantedAccess,
 } from '@/types';
 import { getEdgeName, getEdgeLabel } from '@/utils/names';
@@ -44,27 +46,31 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   sourceNode: Node<IAMAnyNodeData>,
   targetNode: Node<IAMAnyNodeData>,
-  options?: Partial<Edge>
+  options?: PartialEdge
 ): { edge: Edge; events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] } {
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] = [];
   const insideTutorial = context.in_tutorial_state;
   const edgeLabel = getEdgeLabel(sourceNode.data.entity, targetNode.data.entity);
   let validEdge: Edge<IAMEdgeData> | undefined = undefined;
 
-  const invalidEdge = createEdge({
-    source: sourceNode.id,
-    target: targetNode.id,
-    animated: true,
-    deletable: true,
-    data: {
-      hovering_label: insideTutorial ? 'Invalid Connection' : edgeLabel,
-      hovering_color: insideTutorial ? theme.colors.red[500] : theme.colors.blue[500],
-      color: insideTutorial ? theme.colors.yellow[500] : theme.colors.black,
-      unnecessary_edge: true,
-      label_always_visible: true,
-    },
-    ...options,
-  });
+  const invalidEdge = createEdge(
+    _.merge(
+      {
+        source: sourceNode.id,
+        target: targetNode.id,
+        animated: true,
+        deletable: true,
+        data: {
+          hovering_label: insideTutorial ? 'Invalid Connection' : edgeLabel,
+          hovering_color: insideTutorial ? theme.colors.red[500] : theme.colors.blue[500],
+          color: insideTutorial ? theme.colors.yellow[500] : theme.colors.black,
+          unnecessary_edge: true,
+          label_always_visible: true,
+        },
+      },
+      options
+    )
+  );
 
   context.edges_connection_objectives
     .filter(objective => !objective.is_finished)
@@ -145,13 +151,35 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   source: Node<IAMAnyNodeData>,
   target: Node<IAMAnyNodeData>,
+  isInitialEdge: boolean,
   options: Partial<Edge>,
   computeExtraEdges: (baseEdgeId: string) => Edge<IAMEdgeData>[]
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][];
 } {
-  const { edge: baseEdge, events } = createEdgeWithEvents(context, source, target, options);
+  let baseEdge: Edge<IAMEdgeData>;
+  let events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][];
+
+  if (isInitialEdge) {
+    baseEdge = createEdge({
+      source: source.id,
+      target: target.id,
+      animated: true,
+      deletable: false,
+      data: {
+        hovering_label: getEdgeLabel(source.data.entity, target.data.entity),
+        hovering_color: theme.colors.blue[500],
+        color: theme.colors.black,
+        label_always_visible: true,
+      },
+    });
+
+    events = [];
+  } else {
+    ({ edge: baseEdge, events } = createEdgeWithEvents(context, source, target, options));
+  }
+
   const extraEdges = computeExtraEdges(baseEdge.id);
 
   const updatedContext = produce(context, draft => {
@@ -180,9 +208,10 @@ const connectionStrategies = {
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
     policyNode: Node<IAMPolicyNodeData>,
     userNode: Node<IAMUserNodeData>,
-    options: Partial<Edge> = {}
+    isInitialEdge: boolean,
+    options: PartialEdge
   ) =>
-    applyStrategy(context, policyNode, userNode, options, baseEdgeId =>
+    applyStrategy(context, policyNode, userNode, isInitialEdge, options, baseEdgeId =>
       createEdgesFromGrantedAccesses(userNode.id, policyNode.data.granted_accesses, baseEdgeId)
     ),
 
@@ -190,14 +219,15 @@ const connectionStrategies = {
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
     policyNode: Node<IAMPolicyNodeData>,
     groupNode: Node<IAMGroupNodeData>,
-    options: Partial<Edge> = {}
+    isInitialEdge: boolean,
+    options: Partial<Edge>
   ) => {
     const userConnections = filterConnections(
       context.nodes_connnections,
       groupNode.id,
       IAMNodeEntity.User
     );
-    return applyStrategy(context, policyNode, groupNode, options, baseEdgeId =>
+    return applyStrategy(context, policyNode, groupNode, isInitialEdge, options, baseEdgeId =>
       userConnections.flatMap(connection =>
         createEdgesFromGrantedAccesses(
           connection.from.id,
@@ -212,6 +242,7 @@ const connectionStrategies = {
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
     policyNode: Node<IAMPolicyNodeData>,
     roleNode: Node<IAMRoleNodeData>,
+    isInitialEdge: boolean,
     options: Partial<Edge> = {}
   ) => {
     const userConnections = filterConnections(
@@ -224,7 +255,7 @@ const connectionStrategies = {
       roleNode.id,
       IAMNodeEntity.Resource
     );
-    return applyStrategy(context, policyNode, roleNode, options, baseEdgeId => {
+    return applyStrategy(context, policyNode, roleNode, isInitialEdge, options, baseEdgeId => {
       const userEdges = userConnections.flatMap(connection =>
         createEdgesFromGrantedAccesses(
           connection.from.id,
@@ -247,6 +278,7 @@ const connectionStrategies = {
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
     userNode: Node<IAMUserNodeData>,
     groupNode: Node<IAMGroupNodeData>,
+    isInitialEdge: boolean,
     options: Partial<Edge> = {}
   ) => {
     const policyConnections = filterConnections(
@@ -254,7 +286,7 @@ const connectionStrategies = {
       groupNode.id,
       IAMNodeEntity.Policy
     );
-    return applyStrategy(context, userNode, groupNode, options, baseEdgeId =>
+    return applyStrategy(context, userNode, groupNode, isInitialEdge, options, baseEdgeId =>
       policyConnections.flatMap(connection =>
         createEdgesFromGrantedAccesses(
           userNode.id,
@@ -269,6 +301,7 @@ const connectionStrategies = {
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
     userNode: Node<IAMUserNodeData>,
     roleNode: Node<IAMRoleNodeData>,
+    isInitialEdge: boolean,
     options: Partial<Edge> = {}
   ) => {
     const policyConnections = filterConnections(
@@ -276,7 +309,7 @@ const connectionStrategies = {
       roleNode.id,
       IAMNodeEntity.Policy
     );
-    return applyStrategy(context, userNode, roleNode, options, baseEdgeId =>
+    return applyStrategy(context, userNode, roleNode, isInitialEdge, options, baseEdgeId =>
       policyConnections.flatMap(connection =>
         createEdgesFromGrantedAccesses(
           userNode.id,
@@ -291,6 +324,7 @@ const connectionStrategies = {
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
     roleNode: Node<IAMRoleNodeData>,
     resourceNode: Node<IAMResourceNodeData>,
+    isInitialEdge: boolean,
     options: Partial<Edge> = {}
   ) => {
     const policyConnections = filterConnections(
@@ -298,7 +332,7 @@ const connectionStrategies = {
       roleNode.id,
       IAMNodeEntity.Policy
     );
-    return applyStrategy(context, roleNode, resourceNode, options, baseEdgeId =>
+    return applyStrategy(context, roleNode, resourceNode, isInitialEdge, options, baseEdgeId =>
       policyConnections.flatMap(connection =>
         createEdgesFromGrantedAccesses(
           resourceNode.id,
@@ -306,6 +340,22 @@ const connectionStrategies = {
           baseEdgeId
         )
       )
+    );
+  },
+  anyToAny: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+    context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+    policyNode: Node<IAMAnyNodeData>,
+    resourceNode: Node<IAMAnyNodeData>,
+    isInitialEdge: boolean,
+    options: Partial<Edge> = {}
+  ) => {
+    return applyStrategy(
+      context,
+      policyNode,
+      resourceNode,
+      isInitialEdge,
+      options,
+      _baseEdge => []
     );
   },
 } as const;
@@ -319,7 +369,8 @@ export function updateConnectionEdges<
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   sourceNode: Node<IAMAnyNodeData>,
   targetNode: Node<IAMAnyNodeData>,
-  options: Partial<Edge> = {}
+  isInitialEdge: boolean = false,
+  options: PartialEdge = {}
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][];
@@ -328,35 +379,65 @@ export function updateConnectionEdges<
     isNodeOfEntity(sourceNode, IAMNodeEntity.Policy) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.User)
   ) {
-    return connectionStrategies.policyToUser(context, sourceNode, targetNode, options);
+    return connectionStrategies.policyToUser(
+      context,
+      sourceNode,
+      targetNode,
+      isInitialEdge,
+      options
+    );
   } else if (
     isNodeOfEntity(sourceNode, IAMNodeEntity.Policy) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.Group)
   ) {
-    return connectionStrategies.policyToGroup(context, sourceNode, targetNode, options);
+    return connectionStrategies.policyToGroup(
+      context,
+      sourceNode,
+      targetNode,
+      isInitialEdge,
+      options
+    );
   } else if (
     isNodeOfEntity(sourceNode, IAMNodeEntity.Policy) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.Role)
   ) {
-    return connectionStrategies.policyToRole(context, sourceNode, targetNode, options);
+    return connectionStrategies.policyToRole(
+      context,
+      sourceNode,
+      targetNode,
+      isInitialEdge,
+      options
+    );
   } else if (
     isNodeOfEntity(sourceNode, IAMNodeEntity.User) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.Group)
   ) {
-    return connectionStrategies.userToGroup(context, sourceNode, targetNode, options);
+    return connectionStrategies.userToGroup(
+      context,
+      sourceNode,
+      targetNode,
+      isInitialEdge,
+      options
+    );
   } else if (
     isNodeOfEntity(sourceNode, IAMNodeEntity.User) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.Role)
   ) {
-    return connectionStrategies.userToRole(context, sourceNode, targetNode, options);
+    return connectionStrategies.userToRole(context, sourceNode, targetNode, isInitialEdge, options);
   } else if (
     isNodeOfEntity(sourceNode, IAMNodeEntity.Role) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.Resource)
   ) {
-    return connectionStrategies.roleToResource(context, sourceNode, targetNode, options);
+    return connectionStrategies.roleToResource(
+      context,
+      sourceNode,
+      targetNode,
+      isInitialEdge,
+      options
+    );
   }
 
-  throw new Error('Unsupported connection type');
+  return connectionStrategies.anyToAny(context, sourceNode, targetNode, isInitialEdge, options);
 }
 
 export function refreshPolicyConnections<

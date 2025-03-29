@@ -20,7 +20,7 @@ export function resolveInitialEdges<TLevelObjectiveID, TFinishEventMap extends B
       updatedContext,
       nodeById[connection.from],
       nodeById[connection.to],
-      { deletable: false }
+      true
     ));
   });
 

@@ -15,7 +15,7 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, BaseFinishEventMap } from '@/machines/types';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
-import { findAnyValidPolicy, findAnyValidRole, getLintingErrors } from '@/utils/iam-code-linter';
+import { findAnyValidPolicy, findAnyValidRole } from '@/utils/iam-code-linter';
 
 interface CodeEditorCreateProps {
   nodeId: string;

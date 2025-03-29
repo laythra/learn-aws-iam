@@ -76,7 +76,6 @@ function getLineNumberForPath(json: Json, path: string): number | null {
   const resolvedValue = _.get(json, path);
   if (!resolvedValue) {
     throw new Error('Path does not exist');
-    return null;
   }
 
   const jsonString = JSON.stringify(json, null, 2);

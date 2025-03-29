@@ -27,6 +27,7 @@ export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
     granted_accesses: [],
     content: '',
     animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
+    initial_edges: [],
   },
 };
 
