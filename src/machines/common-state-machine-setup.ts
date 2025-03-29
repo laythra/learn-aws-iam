@@ -6,7 +6,6 @@ import { setup, enqueueActions, assign } from 'xstate';
 import {
   editIAMPolicyNode,
   editObjectiveState,
-  createIAMPolicyNode,
   changeLevelObjectiveProgress,
   createIAMUserGroupNode,
   createIAMRoleNode,
@@ -18,6 +17,7 @@ import {
 } from './utils/edges-creation-state-machine-actions';
 import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-actions';
 import { resolveInitialEdges } from './utils/initial-edges-resolver';
+import { createPermissionPolicy } from './utils/nodes-creation-state-machine-actions';
 import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
 import type {
@@ -173,13 +173,21 @@ export const createStateMachineSetup = <
             accountId,
           }: { docString: string; accountId?: AccountID; label: string }
         ) => {
-          const [updatedNodes, sideEffectsEvents] = createIAMPolicyNode<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, docString, label, accountId);
+          const createPermissionPolicyResult = createPermissionPolicy(
+            context,
+            docString,
+            label,
+            accountId
+          );
 
-          enqueue.assign({ nodes: updatedNodes });
-          sideEffectsEvents.forEach(event => {
+          const { updatedContext } = createPermissionPolicyResult;
+          enqueue.assign({
+            nodes: updatedContext.nodes,
+            edges: updatedContext.edges,
+            nodes_connnections: updatedContext.nodes_connnections,
+          });
+
+          createPermissionPolicyResult.events.forEach(event => {
             enqueue.raise({ type: event });
           });
         }
@@ -339,6 +347,12 @@ export const createStateMachineSetup = <
           edges: initialEdgesConfig.edges,
           nodes_connnections: initialEdgesConfig.nodes_connections,
         });
+      }),
+      assign_nodes: assign({
+        nodes: ({ context }, { nodes }: { nodes: Node<IAMAnyNodeData>[] }) => nodes,
+      }),
+      set_mutli_account_canvas: assign({
+        use_multi_account_canvas: true,
       }),
     },
   });
