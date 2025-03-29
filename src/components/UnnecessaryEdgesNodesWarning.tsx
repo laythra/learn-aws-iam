@@ -18,9 +18,9 @@ export const UnnecessaryEdgesNodesWarning: React.FC = () => {
       <Popover isOpen={anyInvalidEdgesOrNodes}>
         <PopoverContent position='fixed' top={`${topPos}px`} right={`${rightPos}px`} w='auto'>
           <PopoverHeader fontWeight='semibold' fontSize='16px' color={theme.colors.red[700]}>
-            You Have Unnecessary Edges In The Canvas
+            You Have Unnecessary Edges or Nodes In The Canvas
             <br />
-            Delete them by clicking on the edges and pressing the delete key
+            Delete them by clicking on the edge/node and press the delete key
           </PopoverHeader>
         </PopoverContent>
       </Popover>
