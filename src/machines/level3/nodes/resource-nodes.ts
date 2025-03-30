@@ -25,7 +25,7 @@ const RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
   },
   {
     id: ResourceNodeID.CloudFront,
-    label: 'E1234567890ABC',
+    label: 'E1A2B3C4D5E6F7',
     initial_position: 'top-center',
     image: IAMNodeImage.CDN,
     resource_type: IAMNodeResourceEntity.CloudFront,

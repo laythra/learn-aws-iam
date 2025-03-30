@@ -20,7 +20,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
   [
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.S3ReadWriteAcces,
+      entity_id: PolicyNodeID.S3ReadWritePolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadPolicySchema,
       created_node_initial_position: 'top-left',
@@ -53,12 +53,12 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
   [
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.S3ReadWriteAcces,
+      entity_id: PolicyNodeID.S3ReadWritePolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadWritePolicySchema,
-      initial_code: MANAGED_POLICIES.EmptyPolicy,
+      initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.S3_READ_WRITE_POLICY_CREATED,
-      validate_inside_code_editor: false,
+      validate_inside_code_editor: true,
       granted_accesses: [
         {
           target_node: ResourceNodeID.PublicImagesS3Bucket,
@@ -70,12 +70,12 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
     },
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.CloudfrontReadAccess,
+      entity_id: PolicyNodeID.CloudFrontReadPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: cloudfrontReadPolicySchema,
-      initial_code: MANAGED_POLICIES.EmptyPolicy,
+      initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED,
-      validate_inside_code_editor: false,
+      validate_inside_code_editor: true,
       granted_accesses: [
         {
           target_node: ResourceNodeID.CloudFront,
@@ -87,12 +87,12 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
     },
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.DynamoDBReadWriteAccess,
+      entity_id: PolicyNodeID.DynamoDBReadWritePolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: dynamoReadWritePolicySchema,
-      initial_code: MANAGED_POLICIES.EmptyPolicy,
+      initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CREATED,
-      validate_inside_code_editor: false,
+      validate_inside_code_editor: true,
       granted_accesses: [
         {
           target_node: ResourceNodeID.CloudFront,

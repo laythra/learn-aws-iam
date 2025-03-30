@@ -31,15 +31,15 @@ Policies whether **AWS Managed** or **Customer Managed** have the same structure
 
 ~~~js
 {
-  Version: '2012-10-17',
+  Version: "2012-10-17",
   Statement: [
     {
       "Effect": "Allow", ::badge[ALLOWS SPECIFIED ACTIONS]::
-      "Action": ['s3:Get*', 's3:List*'], ::badge[LISTING ALL OBJECTS AND BUCKETS]::
-      "Resource": '*', ::badge[ALL S3 BUCKETS]::
-    },
-  ],
-}|fullwidth,
+      "Action": ["s3:Get*", "s3:List*"], ::badge[LISTING ALL OBJECTS AND BUCKETS]::
+      "Resource": "*" ::badge[ALL S3 BUCKETS]::
+    }
+  ]
+}|fullwidth
 ~~~
 `;
 
@@ -100,5 +100,6 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: '🎉',
     content: POPUP_MSG_7,
+    go_to_next_level_button: true,
   },
 ];
