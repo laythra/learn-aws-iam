@@ -2,7 +2,6 @@ import { memo } from 'react';
 
 import {
   Popover,
-  Text,
   PopoverTrigger,
   PopoverContent,
   PopoverHeader,

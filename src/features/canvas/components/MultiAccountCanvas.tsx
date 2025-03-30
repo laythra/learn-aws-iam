@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-import { Box, Text, Divider, useTheme, IconButton } from '@chakra-ui/react';
+import { Box, Divider, useTheme, Flex } from '@chakra-ui/react';
 import ReactFlow, { ConnectionMode, Node } from 'reactflow';
 
 import ARNIconButton from './ARNIconButton';
@@ -11,7 +11,6 @@ import { CanvasStore } from '../stores/canvas-store';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import { AccountID } from '@/machines/types';
 import { CustomTheme, IAMAnyNodeData } from '@/types';
-
 import 'reactflow/dist/style.css';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -121,7 +120,7 @@ const MultiAccountCanvas: React.FC = () => {
         borderStyle='dashed'
       />
 
-      <Text
+      <Flex
         position='absolute'
         top={4}
         left={4}
@@ -129,18 +128,20 @@ const MultiAccountCanvas: React.FC = () => {
         bg='gray.100'
         borderRadius='md'
         fontWeight={700}
+        alignItems='center'
+        gap={2}
       >
         Trusting Account
         <ARNIconButton
           arn={AccountID.Trusting}
-          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           placement='bottom-end'
           ml={2}
         />
-      </Text>
+      </Flex>
 
-      <Text
+      <Flex
         position='absolute'
         top={4}
         right={4}
@@ -148,16 +149,18 @@ const MultiAccountCanvas: React.FC = () => {
         bg='gray.100'
         borderRadius='md'
         fontWeight={700}
+        alignItems='center'
+        gap={2}
       >
         Trusted Account
         <ARNIconButton
           arn={AccountID.Trusted}
-          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           placement='bottom-end'
           ml={2}
         />
-      </Text>
+      </Flex>
     </Box>
   );
 };
