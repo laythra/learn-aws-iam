@@ -5,30 +5,22 @@ import { linter } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import { Extension } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store/react';
+import { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 
 import codeEditorStateStore from '../stores/code-editor-state-store';
 import { badgeExtension, InitializeBadgeWidgets } from '../utils/badge-widget';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import {
-  BaseFinishEventMap,
-  IAMPolicyCreationObjective,
-  IAMPolicyEditObjective,
-  IAMRoleCreationObjective,
-  IAMTrustPolicyEditObject,
-} from '@/machines/types';
-import { GENERIC_VALIDATION_FNS, getLintingErrors } from '@/utils/iam-code-linter';
+import { HelpBadge } from '@/machines/types';
+import { getLintingErrors } from '@/utils/iam-code-linter';
 
 interface UseCodeEditorOptions {
   nodeId: string;
   editorView: MutableRefObject<EditorView | null>;
   initialContent: object;
   getWarnings: () => string[];
-  objectivesToValidate:
-    | IAMPolicyCreationObjective<BaseFinishEventMap>[]
-    | IAMRoleCreationObjective<BaseFinishEventMap>[]
-    | IAMPolicyEditObjective<BaseFinishEventMap>[]
-    | IAMTrustPolicyEditObject<BaseFinishEventMap>[];
+  validateFns: ValidateFunction[];
+  helpBadges: HelpBadge[];
 }
 
 interface UseCodeEditorReturn {
@@ -42,8 +34,9 @@ interface UseCodeEditorReturn {
 export function useCodeEditor({
   nodeId,
   editorView,
-  objectivesToValidate,
   initialContent,
+  validateFns,
+  helpBadges,
   getWarnings,
 }: UseCodeEditorOptions): UseCodeEditorReturn {
   const levelActor = LevelsProgressionContext().useActorRef();
@@ -54,10 +47,6 @@ export function useCodeEditor({
   );
 
   const [editorViewState, setEditorViewState] = useState<EditorView | null>(null);
-
-  const validateFns = objectivesToValidate?.map(obj => obj.validate_function) ?? [
-    GENERIC_VALIDATION_FNS[selectedIAMEntity],
-  ];
 
   const setCodeErrorsAndWarnings = (): void => {
     if (!editorView.current) return;
@@ -88,11 +77,7 @@ export function useCodeEditor({
     if (!editorViewState) return;
 
     validateChange();
-    InitializeBadgeWidgets(
-      editorViewState,
-      objectivesToValidate[0]?.help_badges ?? [],
-      initialContent
-    );
+    InitializeBadgeWidgets(editorViewState, helpBadges, initialContent);
   }, [editorViewState, selectedIAMEntity]);
 
   const onCreateEditor = (view: EditorView): void => {

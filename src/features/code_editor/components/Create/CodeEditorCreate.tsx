@@ -15,11 +15,15 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, BaseFinishEventMap } from '@/machines/types';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
-import { findAnyValidPolicy, findAnyValidRole } from '@/utils/iam-code-linter';
+import {
+  findAnyValidPolicy,
+  findAnyValidRole,
+  GENERIC_VALIDATION_FNS,
+} from '@/utils/iam-code-linter';
 
 interface CodeEditorCreateProps {
   nodeId: string;
-  selectedIAMEntity: IAMNodeEntity;
+  selectedIAMEntity: IAMScriptableEntity;
   errors: Diagnostic[];
   warnings: string[];
 }
@@ -85,16 +89,21 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     }
   };
 
+  const validateFns =
+    selectedIAMEntity == IAMNodeEntity.Policy
+      ? unfinishedPolicyCreationObjectives.filterMap(obj => obj.validate_function)
+      : unfinishedRoleCreationObjectives.filterMap(obj => obj.validate_function);
+
   const { onCreateEditor, validateChange, getContent, extensions, validateNodeLabel } =
     useCodeEditor({
       nodeId,
       editorView,
       getWarnings,
-      objectivesToValidate:
-        selectedIAMEntity == IAMNodeEntity.Policy
-          ? unfinishedPolicyCreationObjectives
-          : unfinishedRoleCreationObjectives,
       initialContent: initialContent,
+      validateFns: _.isEmpty(validateFns)
+        ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]]
+        : validateFns,
+      helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
     });
 
   useEffect(() => {
