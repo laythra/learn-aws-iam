@@ -21,6 +21,8 @@ const arnStrategies: Record<string, ArnGenerator> = {
     `arn:aws:dynamodb:${region}:${accountId}:table/${resourceName}`,
   [IAMNodeResourceEntity.CloudFront]: (resourceName, accountId) =>
     `arn:aws:cloudfront::${accountId}:distribution/${resourceName}`,
+  [IAMNodeResourceEntity.Billing]: (resourceName, accountId) =>
+    `arn:aws:budgets::${accountId}:budget/${resourceName}`,
 };
 
 export function generateArn(
