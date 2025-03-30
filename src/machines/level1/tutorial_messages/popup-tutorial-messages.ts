@@ -11,9 +11,9 @@ const POPUP_MSG1 = `
   You’ll create **users**, manage **permissions**, and craft **policies**,
   all while working through interactive challenges and clear explanations.
 
-  Each level builds on key *IAM* concepts, helping you sharpen your skills step by step.
+  Each level builds on key IAM concepts, helping you sharpen your skills step by step.
 
-  Jump in and explore *AWS IAM* the interactive way.
+  Jump in and explore AWS IAM the interactive way.
 `;
 
 const POPUP_MSG2 = `

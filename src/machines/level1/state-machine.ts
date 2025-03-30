@@ -205,7 +205,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             {
               type: 'update_whitelisted_element_ids',
               params: {
-                whitelisted_element_ids: [ElementID.NewEntityBtn, ElementID.CreateEntitiesMenuItem],
+                whitelisted_element_ids: [
+                  ElementID.NewEntityBtn,
+                  ElementID.CreateEntitiesMenuItem,
+                  ElementID.IdentityCreationPopupUserTab,
+                ],
               },
             },
             {
