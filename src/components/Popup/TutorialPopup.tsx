@@ -67,7 +67,7 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
           {popupContent.go_to_next_level_button ? (
             <GoToNextLevelButton />
           ) : (
-            <Button onClick={handleNextPopup} colorScheme='cyan'>
+            <Button onClick={handleNextPopup} colorScheme='blue'>
               Next
             </Button>
           )}
