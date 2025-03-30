@@ -34,6 +34,12 @@ You are tasked with the following points:
 **Edit** the **IAM policies** to ensure that the above hierarchy is enforced.
 `;
 
+const FIXED_POPOVER_MSG4 = `
+  Permissions are now sorted out!
+  Developers, Data Scientists, and Interns have the correct permissions,
+  you should be a master at defining permissions by now!
+`;
+
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
   {
     popover_title: 'Your Task as an IAM specialist',
@@ -50,8 +56,15 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
     show_next_button: true,
   },
   {
-    popover_title: 'ARNs',
+    popover_title: 'Your Task as an IAM specialist',
     popover_content: FIXED_POPOVER_MSG3,
+    position: 'top-left',
+    show_close_button: false,
+    show_next_button: true,
+  },
+  {
+    popover_title: 'Permissions Sorted Out 🔥',
+    popover_content: FIXED_POPOVER_MSG4,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,

@@ -8,14 +8,14 @@ import { IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
   {
     id: ResourceNodeID.CustomerDataDynamoTable,
-    label: 'CustomerData',
+    label: 'customer-data',
     initial_position: 'top-center',
     image: IAMNodeImage.Database,
     resource_type: IAMNodeResourceEntity.DynamoDBTable,
   },
   {
-    id: ResourceNodeID.AnalyticsDataDynanoTable,
-    label: 'AnalyticsData',
+    id: ResourceNodeID.AnalyticsDataDynamoTable,
+    label: 'analytics-data',
     initial_position: 'top-center',
     image: IAMNodeImage.Database,
     resource_type: IAMNodeResourceEntity.DynamoDBTable,

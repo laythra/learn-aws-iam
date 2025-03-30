@@ -1,6 +1,7 @@
-import { assign } from 'xstate';
+import { and, assign, not } from 'xstate';
 
-import { INITIAL_IN_LEVEL_NODES } from './nodes';
+import { INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
+import { INITIAL_TUTORIAL_NODES } from './nodes';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_EDIT_OBJECTIVES } from './objectives/policy-role-edit-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
@@ -9,7 +10,6 @@ import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-mess
 import { FinishEventMap, NodeEditFinishEvent } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { resolveInitialEdges } from '../utils/initial-edges-resolver';
 import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
@@ -48,24 +48,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     in_tutorial_state: true,
     whitelisted_element_ids: [],
+    nodes_connnections: [],
+    dependency_map: {},
   },
   on: {
-    [StatefulStateMachineEvent.ConnectNodes]: {
-      actions: [
-        {
-          type: 'connect_nodes',
-          params: ({ event }) => ({ sourceNode: event.sourceNode, targetNode: event.targetNode }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
-      actions: [
-        {
-          type: 'add_iam_user_group_node',
-          params: ({ event }) => ({ nodeType: event.node_entity, params: event.node_data }),
-        },
-      ],
-    },
     ADD_IAM_POLICY_NODE: {
       actions: [
         {
@@ -96,13 +82,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         }),
       ],
     },
-    DELETE_EDGE: {
-      actions: [
-        assign({
-          edges: ({ context, event }) => context.edges.filter(edge => edge.id !== event.edge.id),
-        }),
-      ],
-    },
     SET_NODES: {
       actions: assign({
         nodes: ({ event }) => event.nodes,
@@ -127,15 +106,50 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     TOGGLE_SIDE_PANEL: {
       actions: 'toggle_side_panel',
     },
+    [StatefulStateMachineEvent.ConnectNodes]: {
+      actions: [
+        {
+          type: 'connect_nodes',
+          params: ({ event }) => ({ sourceNode: event.sourceNode, targetNode: event.targetNode }),
+        },
+      ],
+    },
+    [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
+      actions: [
+        {
+          type: 'add_iam_user_group_node',
+          params: ({ event }) => ({ nodeType: event.node_entity, params: event.node_data }),
+        },
+      ],
+    },
+    [StatefulStateMachineEvent.DeleteEdge]: {
+      actions: [
+        {
+          type: 'delete_edge',
+          params: ({ event }) => ({ edge: event.edge }),
+        },
+      ],
+    },
+    [StatefulStateMachineEvent.DeleteNode]: {
+      actions: [
+        {
+          type: 'delete_node',
+          params: ({ event }) => ({ node: event.node }),
+        },
+      ],
+    },
   },
   states: {
     inside_tutorial: {
       initial: 'popup1',
       onDone: 'inside_level',
-      entry: assign({
-        nodes: INITIAL_IN_LEVEL_NODES,
-        edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
-      }),
+      entry: [
+        { type: 'assign_nodes', params: { nodes: INITIAL_TUTORIAL_NODES } },
+        assign({
+          initial_node_connections: INITIAL_TUTORIAL_CONNECTIONS,
+        }),
+        'resolve_initial_edges',
+      ],
       states: {
         popup1: {
           entry: 'next_popup',
@@ -167,7 +181,12 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             'next_popover',
             {
               type: 'update_whitelisted_element_ids',
-              params: { whitelisted_element_ids: [ElementID.IAMNodeContentButton] },
+              params: {
+                whitelisted_element_ids: [
+                  ElementID.IAMNodeContentButton,
+                  ElementID.CodeEditorPolicyTab,
+                ],
+              },
             },
           ],
           on: {
@@ -193,78 +212,108 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       },
     },
     inside_level: {
-      type: 'parallel',
+      initial: 'fix_permission_policies',
       entry: [
+        'disable_tutorial_state',
         assign({
-          nodes: INITIAL_IN_LEVEL_NODES,
-          edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
           policy_edit_objectives: POLICY_EDIT_OBJECTIVES[0],
         }),
-        'disable_tutorial_state',
       ],
       states: {
-        fix_developer_policy: {
-          initial: 'editing_in_progress',
+        fix_permission_policies: {
+          type: 'parallel',
+          onDone: 'editing_finished_fixed_popover',
           states: {
-            editing_in_progress: {
-              on: {
-                [NodeEditFinishEvent.DEVELOPER_POLICY_EDITED]: {
-                  target: 'completed',
-                  actions: [
-                    {
-                      type: 'finish_level_objective',
-                      params: { id: LevelObjectiveID.DeveloperAnalyticsDataReadAccess },
+            fix_developer_policy: {
+              initial: 'editing_in_progress',
+              states: {
+                editing_in_progress: {
+                  on: {
+                    [NodeEditFinishEvent.DEVELOPER_POLICY_EDITED]: {
+                      target: 'completed',
+                      actions: [
+                        {
+                          type: 'finish_level_objective',
+                          params: { id: LevelObjectiveID.DeveloperAnalyticsDataReadAccess },
+                        },
+                      ],
                     },
-                  ],
+                  },
+                },
+                completed: {
+                  type: 'final',
                 },
               },
             },
-            completed: {
-              type: 'final',
+            fix_data_scientist_policy: {
+              initial: 'editing_in_progress',
+              states: {
+                editing_in_progress: {
+                  on: {
+                    [NodeEditFinishEvent.DATA_SCIENTIST_POLICY_EDITED]: {
+                      target: 'completed',
+                      actions: [
+                        {
+                          type: 'finish_level_objective',
+                          params: { id: LevelObjectiveID.DataScientistS3ReadWriteAccess },
+                        },
+                      ],
+                    },
+                  },
+                },
+                completed: {
+                  type: 'final',
+                },
+              },
+            },
+            fix_interns_policy: {
+              initial: 'editing_in_progress',
+              states: {
+                editing_in_progress: {
+                  on: {
+                    [NodeEditFinishEvent.INTERN_POLICY_EDITED]: {
+                      target: 'completed',
+                      actions: [
+                        {
+                          type: 'finish_level_objective',
+                          params: { id: LevelObjectiveID.InternS3ReadAccess },
+                        },
+                      ],
+                    },
+                  },
+                },
+                completed: {
+                  type: 'final',
+                },
+              },
             },
           },
         },
-        fix_data_scientist_policy: {
-          initial: 'editing_in_progress',
-          states: {
-            editing_in_progress: {
-              on: {
-                [NodeEditFinishEvent.DATA_SCIENTIST_POLICY_EDITED]: {
-                  target: 'completed',
-                  actions: [
-                    {
-                      type: 'finish_level_objective',
-                      params: { id: LevelObjectiveID.DataScientistS3ReadWriteAccess },
-                    },
-                  ],
-                },
+        editing_finished_fixed_popover: {
+          entry: 'next_fixed_popover',
+          on: {
+            NEXT_FIXED_POPOVER: [
+              {
+                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
+                target: 'remove_unnecessary_edges_and_nodes',
               },
-            },
-            completed: {
-              type: 'final',
-            },
+              {
+                guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+                target: 'level_finished',
+              },
+            ],
           },
         },
-        fix_interns_policy: {
-          initial: 'editing_in_progress',
-          states: {
-            editing_in_progress: {
-              on: {
-                [NodeEditFinishEvent.INTERN_POLICY_EDITED]: {
-                  target: 'completed',
-                  actions: [
-                    {
-                      type: 'finish_level_objective',
-                      params: { id: LevelObjectiveID.InternS3ReadAccess },
-                    },
-                  ],
-                },
-              },
-            },
-            completed: {
-              type: 'final',
-            },
+        remove_unnecessary_edges_and_nodes: {
+          entry: ['show_unncessary_edges_or_nodes_warning', 'hide_popovers'],
+          always: {
+            guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+            target: 'level_finished',
           },
+        },
+        level_finished: {
+          entry: 'next_popup',
+          type: 'final',
         },
       },
     },

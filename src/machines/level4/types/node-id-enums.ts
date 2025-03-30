@@ -1,19 +1,21 @@
-export enum PolicyNodeID {
-  DeveloperPolicy = 'arn:aws:iam::123456789012:policy/devloper-policy',
-  DataScientistPolicy = 'arn:aws:iam::123456789012:policy/data-scientist-policy',
-  InternPolicy = 'arn:aws:iam::123456789012:policy/intern-policy',
-}
+import { uniqueId } from 'lodash';
 
-export enum UserNodeID {
-  Developer1 = 'arn:aws:iam::123456789012:user/omar',
-  Developer2 = 'arn:aws:iam::123456789012:user/sara',
-  DataScientist1 = 'arn:aws:iam::123456789012:user/ahmad',
-  Intern1 = 'arn:aws:iam::123456789012:user/layla',
-  Intern2 = 'arn:aws:iam::123456789012:user/mohammad',
-}
+export const PolicyNodeID = {
+  DeveloperPolicy: uniqueId('policy-'),
+  DataScientistPolicy: uniqueId('policy-'),
+  InternPolicy: uniqueId('policy-'),
+} as const;
 
-export enum ResourceNodeID {
-  CustomerDataDynamoTable = 'arn:aws:dynamodb:us-east-1:123456789012:table/customer-data',
-  AnalyticsDataDynanoTable = 'arn:aws:dynamodb:us-east-1:123456789012:table/analytics-data',
-  TimeshiftAssetsS3Bucket = 'arn:aws:s3:::timeshift-assets',
-}
+export const UserNodeID = {
+  Developer1: uniqueId('user-'),
+  Developer2: uniqueId('user-'),
+  DataScientist1: uniqueId('user-'),
+  Intern1: uniqueId('user-'),
+  Intern2: uniqueId('user-'),
+} as const;
+
+export const ResourceNodeID = {
+  CustomerDataDynamoTable: uniqueId('resource-dynamodb-'),
+  AnalyticsDataDynamoTable: uniqueId('resource-dynamodb-'),
+  TimeshiftAssetsS3Bucket: uniqueId('resource-s3bucket-'),
+} as const;
