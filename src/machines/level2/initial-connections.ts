@@ -1,4 +1,4 @@
-import { GroupNodeID, PolicyNodeID, UserNodeID } from './types/node-id-enums';
+import { PolicyNodeID, UserNodeID } from './types/node-id-enums';
 
 export const INITIAL_CONNECTIONS: { from: string; to: string }[] = [
   {
