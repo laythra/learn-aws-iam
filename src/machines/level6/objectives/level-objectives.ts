@@ -3,29 +3,29 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/machines/types';
 
 const Objective1Description = `
-  Create an **IAM Role** to be assumed by the **IAM User** \`Richard\`.
+  Create an **IAM Role** to be assumed by the **IAM User** \`omar\`.
 `;
 
 const Objective2Description = `
   Create a **Permission Policy** which should allow anyone assuming the **IAM Role**
-  from the previous step to read from the **DynamoDB table** \`FinanceReports\`
+  from the previous step to read from the **DynamoDB table** \`finance-reports\`
 `;
 
 const Objective3Description = `
-  Create an **IAM Policy** in the *Originating Account* which should allow
-  the **IAM User** \`Richard\` to assume the **IAM Role** in the *Destination Account*
+  Create an **IAM Policy** in the *Trusted Account* which should allow
+  the **IAM User** \`omar\` to assume the **IAM Role** in the *Trusting Account*
 `;
 
 const Objective4Description = `
-  Grant the **IAM User** **Read** access to the **DynamoDB Table** \`FinanceReports\`
+  Grant the \`omar\` *Read* access to the **DynamoDB Table** \`finance-reports\`
 `;
 
 const OBJECTIVE1_HINT = `
-  The **IAM Role** Should have the **IAM User** \`Richard\` as the **Trusted Entity**.
+  The **IAM Role** Should have the **IAM User** \`omar\` as the **Trusted Entity**.
 
   This **Role** will ultimately allow its principles to access the **DynamoDB Table**.
 
-  Where should the **Role** be created? In the *Originating Account* or the *Destination Account*?
+  Where should the **Role** be created? In the *Trusted Account* or the *Trusting Account*?
 `;
 
 const OBJECTIVE2_HINT = `

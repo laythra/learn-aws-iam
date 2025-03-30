@@ -6,15 +6,21 @@ import { setup, enqueueActions, assign } from 'xstate';
 import {
   editIAMPolicyNode,
   editObjectiveState,
-  createIAMPolicyNode,
   changeLevelObjectiveProgress,
-  createIAMUserGroupNode,
   createIAMRoleNode,
   getElementsWithRedDot,
 } from './utils/common-state-machine-actions';
-import { updateConnectionEdges } from './utils/edges-creation-state-machine-actions';
-import { deleteConnectionEdge } from './utils/edges-deletion-state-machine-actions';
-import { connectNodes } from './utils/nodes-connection-state-machine-actions';
+import {
+  refreshPolicyConnections,
+  updateConnectionEdges,
+} from './utils/edges-creation-state-machine-actions';
+import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-actions';
+import { resolveInitialEdges } from './utils/initial-edges-resolver';
+import {
+  createPermissionPolicy,
+  createUserGroupNode,
+} from './utils/nodes-creation-state-machine-actions';
+import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
 import type {
   AccountID,
@@ -35,8 +41,10 @@ import {
   IAMEdgeData,
   IAMGroupNodeData,
   IAMNodeEntity,
+  IAMPolicyNodeData,
   IAMUserNodeData,
 } from '@/types';
+import { getEdgeName } from '@/utils/names';
 
 /**
  * Defines a common state machine setup for all levels
@@ -91,32 +99,52 @@ export const createStateMachineSetup = <
             targetNode: Node<IAMAnyNodeData>;
           }
         ) => {
-          const updatedNodes = connectNodes(context, sourceNode, targetNode);
-          const { edges, events } = updateConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
-            context,
-            sourceNode,
-            targetNode
-          );
+          const { updatedContext, events } = updateConnectionEdges<
+            TLevelObjectiveID,
+            TFinishEventMap
+          >(context, sourceNode, targetNode);
 
-          // Sorting here ensures that the unnecessary edges are the edges
-          // that would get eliminated by the uniqBy function
-          const updatedEdges = _.chain([...context.edges, ...edges])
+          const updatedEdges = _.chain(updatedContext.edges)
             .sortBy(e => e.data?.unnecessary_edge)
             .uniqBy('id')
             .value();
 
-          enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+          enqueue.assign({
+            nodes_connnections: updatedContext.nodes_connnections,
+            edges: updatedEdges,
+          });
+
           events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
       delete_edge: enqueueActions(({ context, enqueue }, { edge }: { edge: Edge<IAMEdgeData> }) => {
-        const { updatedNodes, updatedEdges } = deleteConnectionEdge<
-          TLevelObjectiveID,
-          TFinishEventMap
-        >(context, edge);
+        const { updatedContext } = deleteConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
+          context,
+          [edge.id]
+        );
 
-        enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
+        enqueue.assign({ edges: updatedContext.edges });
       }),
+      delete_node: enqueueActions(
+        ({ context, enqueue }, { node }: { node: Node<IAMAnyNodeData> }) => {
+          let { updatedContext } = deleteNode<TLevelObjectiveID, TFinishEventMap>(context, node);
+
+          const edgesToDelete = updatedContext.nodes_connnections
+            .filter(connection => connection.from.id === node.id || connection.to.id === node.id)
+            .map(connection => getEdgeName(connection.from.id, connection.to.id));
+
+          ({ updatedContext } = deleteConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
+            updatedContext,
+            edgesToDelete
+          ));
+
+          enqueue.assign({
+            nodes: updatedContext.nodes,
+            edges: updatedContext.edges,
+            nodes_connnections: updatedContext.nodes_connnections,
+          });
+        }
+      ),
       add_iam_user_group_node: enqueueActions(
         (
           { context, enqueue },
@@ -128,14 +156,12 @@ export const createStateMachineSetup = <
             params: Partial<IAMUserNodeData> | Partial<IAMGroupNodeData>;
           }
         ) => {
-          const [updatedNodes, updatedObjectives, sideEffectsEvents] = createIAMUserGroupNode<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, nodeType, params);
+          const { updatedContext, events } = createUserGroupNode(context, nodeType, params);
 
-          enqueue.assign({ nodes: updatedNodes });
-          enqueue.assign({ user_group_creation_objectives: updatedObjectives });
-          sideEffectsEvents.forEach(event => enqueue.raise({ type: event }));
+          enqueue.assign({
+            nodes: updatedContext.nodes,
+          });
+          events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
       add_policy_node: enqueueActions(
@@ -147,26 +173,48 @@ export const createStateMachineSetup = <
             accountId,
           }: { docString: string; accountId?: AccountID; label: string }
         ) => {
-          const [updatedNodes, sideEffectsEvents] = createIAMPolicyNode<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, docString, label, accountId);
+          const createPermissionPolicyResult = createPermissionPolicy(
+            context,
+            docString,
+            label,
+            accountId
+          );
 
-          enqueue.assign({ nodes: updatedNodes });
-          sideEffectsEvents.forEach(event => {
+          const { updatedContext } = createPermissionPolicyResult;
+          enqueue.assign({
+            nodes: updatedContext.nodes,
+            edges: updatedContext.edges,
+            nodes_connnections: updatedContext.nodes_connnections,
+          });
+
+          createPermissionPolicyResult.events.forEach(event => {
             enqueue.raise({ type: event });
           });
         }
       ),
       update_iam_policy_node: enqueueActions(
         ({ context, enqueue }, { docString, nodeId }: { docString: string; nodeId: string }) => {
-          const [updatedNodes, updatedEdges, sideEffectsEvents] = editIAMPolicyNode<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, nodeId, docString);
+          const editPolicyResult = editIAMPolicyNode<TLevelObjectiveID, TFinishEventMap>(
+            context,
+            nodeId,
+            docString
+          );
 
-          enqueue.assign({ nodes: updatedNodes, edges: updatedEdges });
-          sideEffectsEvents.forEach(event => {
+          let { updatedContext } = editPolicyResult;
+          const nodeEditFinishEvents = editPolicyResult.nodeEditFinishEvents;
+
+          ({ updatedContext } = refreshPolicyConnections(
+            updatedContext,
+            updatedContext.nodes.find(node => node.id === nodeId) as Node<IAMPolicyNodeData>
+          ));
+
+          enqueue.assign({
+            nodes: updatedContext.nodes,
+            edges: updatedContext.edges,
+            nodes_connnections: updatedContext.nodes_connnections,
+          });
+
+          nodeEditFinishEvents.forEach(event => {
             enqueue.raise({ type: event });
           });
         }
@@ -289,6 +337,22 @@ export const createStateMachineSetup = <
       }),
       hide_unncessary_edges_or_nodes_warning: assign({
         show_unncessary_edges_or_nodes_warning: false,
+      }),
+      clear_edges: assign({ edges: [] }),
+      clear_nodes: assign({ nodes: [] }),
+      resolve_initial_edges: enqueueActions(({ context, enqueue }) => {
+        const initialEdgesConfig = resolveInitialEdges(context);
+
+        enqueue.assign({
+          edges: initialEdgesConfig.edges,
+          nodes_connnections: initialEdgesConfig.nodes_connections,
+        });
+      }),
+      assign_nodes: assign({
+        nodes: ({ context }, { nodes }: { nodes: Node<IAMAnyNodeData>[] }) => nodes,
+      }),
+      set_mutli_account_canvas: assign({
+        use_multi_account_canvas: true,
       }),
     },
   });

@@ -1,12 +1,14 @@
-export enum UserNodeID {
-  TutorialUser = 'TutorialUser',
-  FirstUser = 'FirstUser',
-}
+import _ from 'lodash';
 
-export enum ResourceNodeID {
-  PublicImagesS3Bucket = 'PublicImagesS3Bucket',
-}
+export const UserNodeID = {
+  TutorialUser: _.uniqueId('user-'),
+  FirstUser: _.uniqueId('user-'),
+};
 
-export enum PolicyNodeID {
-  S3ReadPolicy = 'S3ReadPolicy',
-}
+export const ResourceNodeID = {
+  PublicImagesS3Bucket: _.uniqueId('resource-s3bucket-'),
+};
+
+export const PolicyNodeID = {
+  S3ReadPolicy: _.uniqueId('policy-'),
+};

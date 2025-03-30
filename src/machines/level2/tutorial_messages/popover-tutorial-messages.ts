@@ -5,31 +5,31 @@ import type { PopoverTutorialMessage } from '@/machines/types';
 const POPOVER_MSG1 = `
   Notice how this user has a bunch of **IAM Policies** attached to it.
 
-  We would like to simplify this by creating an IAM group.
+  We would like to simplify this by creating an **IAM Group**.
 
   Click *NEXT* to begin anew.
 `;
 
 const POPOVER_MSG2 = `
-  Let's create an IAM group
+  Let's create an **IAM Group**
 `;
 
 const POPOVER_MSG4 = `
-  Remember, you can attach policies and users to your IAM group.
+  Remember, you can attach policies and users to your **IAM Group**.
 `;
 
 const POPOVER_MSG5 = `
-  Notice how the IAM user inherited the policies attached to the group.
+  Notice how the **IAM User** inherited the policies attached to the **group**.
 `;
 
 const POPOVER_MSG6 = `
-  Let's scale things more by adding another user to the group.
+  Let's scale things more by adding another **user** to the **group**.
   Simply create a new user and attach it to the group.
 `;
 
 const POPOVER_MSG7 = `
-  Your new user directly inherited the policies attached to the group in one go.
-  Adding team members is now a breeze! no need to attach policies to each user individually.
+  Your new user directly inherited the **policies** attached to the **group** in one go.
+  Adding team members is now a breeze! no need to attach **policies** to each **user** individually.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
@@ -39,7 +39,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_content: POPOVER_MSG1,
     show_next_button: true,
     show_close_button: false,
-    popover_placement: 'top',
+    popover_placement: 'right',
   },
   {
     element_id: ElementID.NewEntityBtn,

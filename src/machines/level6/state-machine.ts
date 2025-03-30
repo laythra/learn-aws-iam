@@ -50,6 +50,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     use_multi_account_canvas: true,
     side_panel_open: false,
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
+    nodes_connnections: [],
+    dependency_map: {},
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -175,13 +177,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     },
     inside_level: {
       initial: 'entities_creation',
-      entry: [
-        'disable_tutorial_state',
-        {
-          type: 'update_red_dot_visibility',
-          params: { isVisible: true, elementIds: [ElementID.NewEntityBtn] },
-        },
-      ],
+      entry: ['disable_tutorial_state'],
       states: {
         entities_creation: {
           entry: [

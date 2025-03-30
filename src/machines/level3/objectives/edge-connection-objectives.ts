@@ -9,7 +9,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
-        createEdge({ source: PolicyNodeID.S3ReadWriteAcces, target: GroupNodeID.FrontendGroup }),
+        createEdge({ source: PolicyNodeID.S3ReadWritePolicy, target: GroupNodeID.FrontendGroup }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.S3_READ_WRITE_POLICY_CONNECTED,
       is_finished: false,
@@ -19,7 +19,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: PolicyNodeID.CloudfrontReadAccess,
+          source: PolicyNodeID.CloudFrontReadPolicy,
           target: GroupNodeID.FrontendGroup,
         }),
       ],
@@ -31,7 +31,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: PolicyNodeID.DynamoDBReadWriteAccess,
+          source: PolicyNodeID.DynamoDBReadWritePolicy,
           target: GroupNodeID.BackendGroup,
         }),
       ],

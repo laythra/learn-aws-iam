@@ -1,5 +1,6 @@
 import { Box, IconButton, Menu, MenuList } from '@chakra-ui/react';
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
+import _ from 'lodash';
 
 import { IdentityCreationPopup } from './IdentityCreationPopup';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
@@ -24,6 +25,16 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   const { isRedDotEnabledForElement: isRedDotEnabled } = useAnimatedRedDot({
     elementIds: [ElementID.NewEntityBtn],
   });
+  const [showPopovers, popoverContent] = LevelsProgressionContext().useSelector(
+    state => [state.context.show_popovers, state.context.popover_content],
+    _.isEqual
+  );
+
+  // Clicking on the NewEntityBtn will close any open popover
+  // and break the flow causing the user to get stuck
+  // If a popover with a `Next` button is open, we disable the NewEntityBtn
+  const disableEntityButton = showPopovers && popoverContent?.show_next_button;
+
 
   const hidePopovers = (): void => {
     levelActor.send({ type: 'HIDE_POPOVERS' });
@@ -41,17 +52,19 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
         <Box position='relative'>
           <TutorialGuardedMenuButton
             elementid={ElementID.NewEntityBtn}
+            isDisabled={disableEntityButton}
             as={IconButton}
             size='sm'
             aria-label='New'
             icon={<PlusCircleIcon />}
             onClick={hidePopovers}
-            color={'purple.600'}
-            _hover={{ color: 'purple.500' }}
-            _active={{ color: 'purple.600' }}
+            color={'blue.500'}
+            _hover={{ color: 'blue.500' }}
+            _active={{ color: 'blue.600' }}
             bg='transparent'
           />
-          {isRedDotEnabled(ElementID.NewEntityBtn) && <AnimatedRedDot />}
+
+          {!disableEntityButton && isRedDotEnabled(ElementID.NewEntityBtn) && <AnimatedRedDot />}
         </Box>
         <MenuList>
           <GuardedMenuItemWithEventAndPopover

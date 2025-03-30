@@ -47,14 +47,14 @@
                 "uniqueItems": true,
                 "items": {
                   "enum": [
-                    "arn:aws:s3:::public-assets/*"
+                    "arn:aws:s3:::public-images/*"
                   ]
                 }
               },
               {
                 "type": "string",
                 "enum": [
-                  "arn:aws:s3:::public-assets/*"
+                  "arn:aws:s3:::public-images/*"
                 ]
               }
             ]

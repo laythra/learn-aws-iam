@@ -8,7 +8,7 @@ import { AccessLevel, IAMNodeImage } from '@/types';
 const POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   {
     id: PolicyNodeID.PolicyNode1,
-    label: PolicyNodeID.PolicyNode1,
+    label: 'S3ReadPolicy',
     initial_position: 'bottom-center',
     image: IAMNodeImage.Policy,
     granted_accesses: [
@@ -21,7 +21,7 @@ const POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   },
   {
     id: PolicyNodeID.PolicyNode2,
-    label: PolicyNodeID.PolicyNode2,
+    label: 'DynamoDBReadPolicy',
     initial_position: 'bottom-center',
     image: IAMNodeImage.Policy,
     granted_accesses: [
@@ -34,7 +34,7 @@ const POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   },
   {
     id: PolicyNodeID.PolicyNode3,
-    label: PolicyNodeID.PolicyNode3,
+    label: 'EC2ReadPolicy',
     initial_position: 'bottom-center',
     image: IAMNodeImage.Policy,
     granted_accesses: [

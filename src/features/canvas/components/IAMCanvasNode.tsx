@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
@@ -12,8 +12,10 @@ import IAMNodeInfoButton from './IAMNodeInfoButton';
 import { ShimmerBackground } from './ShimmerBackground';
 import { CanvasStore } from '../stores/canvas-store';
 import { WithPopoverBox } from '@/components/Decorated';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { type IAMAnyNodeData, type CustomTheme, IAMNodeEntity } from '@/types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
+import { generateArn } from '@/utils/arn-generator';
 import { loadLocalImage } from '@/utils/image-loader';
 
 export interface IAMCanvasNodeProps {
@@ -37,7 +39,6 @@ enum AnimationState {
  */
 const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const { entity, label, handles, image, content, animations } = data;
-  const isAnUnecessaryPolicy = data.entity === IAMNodeEntity.Policy && data.unnecessary_node;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
   const [selectedNodeId, openedNodeId] = useSelector(
     CanvasStore,
@@ -134,9 +135,9 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
                   {label}
                 </Text>
               </Tooltip>
-              {isAnUnecessaryPolicy && (
+              {data.unnecessary_node && (
                 <Tooltip
-                  label={`This ${entity} does not serve any purpose`}
+                  label={`This ${entity} does not serve any purpose, click to remove it.`}
                   aria-label='A tooltip'
                   cursor='help'
                   placement='top'
@@ -148,15 +149,15 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
               )}
             </HStack>
             <Text fontSize='14px' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
-              {resourceType || entity}
+              {entity == IAMNodeEntity.Resource ? resourceType : entity}
             </Text>
           </Box>
         </Flex>
       </Flex>
       <HStack position='absolute' top={1} right={2}>
         <ARNIconButton
-          arn={id}
-          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          arn={generateArn(resourceType || entity, label, data.account_id)}
+          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           placement='top-end'
         />
@@ -176,8 +177,19 @@ const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) 
 };
 
 const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const withPopoverElementId = LevelsProgressionContext().useSelector(
+    state => state.context.popover_content?.element_id
+  );
+
+  useEffect(() => {
+    if (withPopoverElementId == id) {
+      CanvasStore.send({ type: 'updateSelectedNodeId', nodeId: id });
+    }
+  }, [withPopoverElementId]);
+
   return (
-    <WithPopoverBox elementid={id}>
+    <WithPopoverBox elementid={id} ref={ref}>
       <WithElementidIAMCanvasNode data={data} id={id} />
     </WithPopoverBox>
   );

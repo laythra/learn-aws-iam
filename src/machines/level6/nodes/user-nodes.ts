@@ -9,10 +9,10 @@ import { IAMNodeImage } from '@/types';
 const IN_LEVEL_USER_NODES: Partial<IAMUserNodeData>[] = [
   {
     id: UserNodeID.TrustedAccountIAMUser,
-    label: 'Richard',
+    label: 'omar',
     initial_position: 'right-center',
     image: IAMNodeImage.User,
-    account_id: AccountID.Originating,
+    account_id: AccountID.Trusted,
   },
 ];
 

@@ -29,4 +29,5 @@ export enum StatefulStateMachineEvent {
   AttachPolicyToEntity = 'ATTACH_POLICY_TO_ENTITY',
   ConnectNodes = 'CONNECT_NODES',
   DeleteEdge = 'DELETE_EDGE',
+  DeleteNode = 'DELETE_NODE',
 }

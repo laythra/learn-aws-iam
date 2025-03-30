@@ -41,6 +41,11 @@ export enum ObjectiveType {
 }
 
 export type BaseFinishEventMap = Record<ObjectiveType, string>;
+export type NodeConnection = {
+  from: Node<IAMAnyNodeData>;
+  to: Node<IAMAnyNodeData>;
+  parent_edge_id?: string;
+};
 
 export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
   edges: Edge<IAMEdgeData>[];
@@ -79,6 +84,8 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   fixed_popover_messages: FixedPopoverMessage[];
   elements_with_animated_red_dot?: ElementID[];
   show_unncessary_edges_or_nodes_warning?: boolean;
+  nodes_connnections: NodeConnection[];
+  initial_node_connections?: { from: string; to: string }[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -151,6 +158,10 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: StatefulStateMachineEvent.AttachRoleToEntity;
       sourceNode: Node<IAMRoleNodeData>;
       targetNode: Node<IAMUserNodeData>;
+    }
+  | {
+      type: StatefulStateMachineEvent.DeleteNode;
+      node: Node<IAMAnyNodeData>;
     }
   | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage }
   | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };
@@ -231,6 +242,7 @@ export interface BaseCreationObjective<
   readonly created_node_initial_position?: string;
   readonly callout_message?: string;
   readonly hint_messages?: { title: string; content: string }[];
+  readonly initial_edges: Edge<IAMEdgeData>[];
   finished: boolean;
 }
 
@@ -271,7 +283,7 @@ export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventM
   /**
    * Resources to grant to the users/groups associated with the IAM Policy/Role.
    */
-  readonly resources_to_grant: Record<string, AccessLevel>;
+  readonly resources_to_grant: PolicyGrantedAccess[];
 
   /**
    * Resources to revoke from the users/groups associated with the IAM Policy/Role.
@@ -312,6 +324,6 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
 };
 
 export enum AccountID {
-  Originating = 'originating',
-  Destination = 'destination',
+  Trusting = '123456789012',
+  Trusted = '987654321098',
 }

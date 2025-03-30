@@ -1,5 +1,6 @@
-import { assign } from 'xstate';
+import { and, assign, not } from 'xstate';
 
+import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/policy-nodes';
 import { INITIAL_TUTORIAL_RESOURCE_NODES } from './nodes/resource-nodes';
@@ -16,7 +17,6 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { resolveInitialEdges } from '../utils/initial-edges-resolver';
 import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
@@ -34,8 +34,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   initial: 'inside_tutorial',
   context: {
     level_title: 'Customer Managed Policies',
-    level_description: 'Customer managed policies!',
-    level_number: 1,
+    level_description: 'Customer managed policies FTW',
+    level_number: 3,
     next_popover_index: 0,
     next_popup_index: 0,
     next_fixed_popover_index: 0,
@@ -52,6 +52,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     user_group_creation_objectives: [],
     role_creation_objectives: [],
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
+    nodes_connnections: [],
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -74,13 +75,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       actions: [
         assign({
           edges: ({ context, event }) => [...context.edges, event.edge],
-        }),
-      ],
-    },
-    DELETE_EDGE: {
-      actions: [
-        assign({
-          edges: ({ context, event }) => context.edges.filter(edge => edge.id !== event.edge.id),
         }),
       ],
     },
@@ -113,6 +107,22 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         {
           type: 'connect_nodes',
           params: ({ event }) => ({ sourceNode: event.sourceNode, targetNode: event.targetNode }),
+        },
+      ],
+    },
+    [StatefulStateMachineEvent.DeleteEdge]: {
+      actions: [
+        {
+          type: 'delete_edge',
+          params: ({ event }) => ({ edge: event.edge }),
+        },
+      ],
+    },
+    [StatefulStateMachineEvent.DeleteNode]: {
+      actions: [
+        {
+          type: 'delete_node',
+          params: ({ event }) => ({ node: event.node }),
         },
       ],
     },
@@ -210,22 +220,30 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         copy_arn: {
           entry: 'hide_popovers',
           on: {
-            IAM_NODE_ARN_COPIED: 'create_your_custom_policy_popover',
+            [StatelessStateMachineEvent.IAMNodeARNCopied]: 'create_your_custom_policy_popover',
           },
         },
         create_your_custom_policy_popover: {
           entry: [
             'hide_fixed_popovers',
             'next_popover',
-            'next_policy_creation_objectives',
             'show_side_panel',
+            'next_policy_creation_objectives',
             {
               type: 'update_whitelisted_element_ids',
               params: {
                 whitelisted_element_ids: [
                   ElementID.NewEntityBtn,
                   ElementID.CreateRolesAndPoliciesMenuItem,
+                  ElementID.CodeEditorPolicyTab,
                 ],
+              },
+            },
+            {
+              type: 'update_red_dot_visibility',
+              params: {
+                elementIds: [ElementID.NewEntityBtn, ElementID.CreateRolesAndPoliciesMenuItem],
+                isVisible: true,
               },
             },
           ],
@@ -257,12 +275,14 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       initial: 'popup1',
       entry: [
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
+        { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
+        'resolve_initial_edges',
         'disable_tutorial_state',
         'show_side_panel',
         assign({
-          edges: resolveInitialEdges(INITIAL_IN_LEVEL_NODES),
-          nodes: INITIAL_IN_LEVEL_NODES,
+          initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
         }),
+        'resolve_initial_edges',
       ],
       states: {
         popup1: {
@@ -285,7 +305,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             'next_edge_connection_objectives',
           ],
           type: 'parallel',
-          onDone: 'create_and_attach_policies_completed',
+          onDone: 'policies_and_edges_created',
           states: {
             create_s3_read_write_policy: {
               initial: 'creation_in_progress',
@@ -370,7 +390,28 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             },
           },
         },
-        create_and_attach_policies_completed: {
+        policies_and_edges_created: {
+          on: {
+            NEXT_FIXED_POPOVER: [
+              {
+                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
+                target: 'remove_unnecessary_edges_and_nodes',
+              },
+              {
+                guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+                target: 'level_finished',
+              },
+            ],
+          },
+        },
+        remove_unnecessary_edges_and_nodes: {
+          entry: ['show_unncessary_edges_or_nodes_warning', 'hide_popovers'],
+          always: {
+            guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+            target: 'level_finished',
+          },
+        },
+        level_finished: {
           type: 'final',
           entry: 'next_popup',
         },

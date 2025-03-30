@@ -10,6 +10,7 @@ export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
   position: { x: 0, y: 0 },
   type: 'iam_default',
   draggable: true,
+  deletable: false,
   data: {
     id: 'iam_policy',
     label: 'IAM Policy',
@@ -23,13 +24,18 @@ export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
     image: IAMNodeImage.Policy,
     initial_position: 'center',
     editable: true,
-    associated_users: [],
     granted_accesses: [],
     content: '',
     animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
+    initial_edges: [],
   },
 };
 
 export function createPolicyNode(props: Partial<IAMPolicyNodeData>): Node<IAMPolicyNodeData> {
-  return _.merge({}, TEMPLATE_POLICY_NODE, { data: props }, { id: props.id });
+  return _.merge(
+    {},
+    TEMPLATE_POLICY_NODE,
+    { data: props },
+    { id: props.id, deletable: props.unnecessary_node }
+  );
 }

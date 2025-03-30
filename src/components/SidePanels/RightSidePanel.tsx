@@ -27,9 +27,7 @@ const RightSidePanel: React.FC = () => {
 
           <Divider my={2} />
           <Box mt={2} overflowY='auto'>
-            <Text>
-              This levels objective is to create a simple IAM user and attach a policy to it
-            </Text>
+            <Text>LEVEL OBJECTIVE SHOULD SHOW UP HERE</Text>
           </Box>
         </Flex>
 

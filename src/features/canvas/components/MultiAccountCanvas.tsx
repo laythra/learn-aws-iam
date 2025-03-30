@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-import { Box, Text, Divider, useTheme, IconButton } from '@chakra-ui/react';
+import { Box, Divider, useTheme, Flex } from '@chakra-ui/react';
 import ReactFlow, { ConnectionMode, Node } from 'reactflow';
 
 import ARNIconButton from './ARNIconButton';
@@ -11,7 +11,6 @@ import { CanvasStore } from '../stores/canvas-store';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import { AccountID } from '@/machines/types';
 import { CustomTheme, IAMAnyNodeData } from '@/types';
-
 import 'reactflow/dist/style.css';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -49,7 +48,7 @@ const MultiAccountCanvas: React.FC = () => {
 
     if (
       node.position.x + theme.sizes.iamNodeWidthInPixels >= midpointInFlowCoords.x &&
-      node.data.account_id === AccountID.Destination
+      node.data.account_id === AccountID.Trusting
     ) {
       const clampedX = midpointInFlowCoords.x - theme.sizes.iamNodeWidthInPixels - 10;
       CanvasStore.send({
@@ -59,10 +58,7 @@ const MultiAccountCanvas: React.FC = () => {
       });
     }
 
-    if (
-      node.position.x <= midpointInFlowCoords.x &&
-      node.data.account_id === AccountID.Originating
-    ) {
+    if (node.position.x <= midpointInFlowCoords.x && node.data.account_id === AccountID.Trusted) {
       const clampedX = midpointInFlowCoords.x + 10;
       CanvasStore.send({
         type: 'updateNodePosition',
@@ -124,7 +120,7 @@ const MultiAccountCanvas: React.FC = () => {
         borderStyle='dashed'
       />
 
-      <Text
+      <Flex
         position='absolute'
         top={4}
         left={4}
@@ -132,18 +128,20 @@ const MultiAccountCanvas: React.FC = () => {
         bg='gray.100'
         borderRadius='md'
         fontWeight={700}
+        alignItems='center'
+        gap={2}
       >
-        Destination Account (Trusting Account)
+        Trusting Account
         <ARNIconButton
-          arn='arn:aws:iam::123456789012:user/secure-corp'
-          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          arn={AccountID.Trusting}
+          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           placement='bottom-end'
           ml={2}
         />
-      </Text>
+      </Flex>
 
-      <Text
+      <Flex
         position='absolute'
         top={4}
         right={4}
@@ -151,16 +149,18 @@ const MultiAccountCanvas: React.FC = () => {
         bg='gray.100'
         borderRadius='md'
         fontWeight={700}
+        alignItems='center'
+        gap={2}
       >
-        Originating Account (Trusted Account)
+        Trusted Account
         <ARNIconButton
-          arn='arn:aws:iam::987654321098:user/financial-auditing-corp'
-          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+          arn={AccountID.Trusted}
+          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           placement='bottom-end'
           ml={2}
         />
-      </Text>
+      </Flex>
     </Box>
   );
 };

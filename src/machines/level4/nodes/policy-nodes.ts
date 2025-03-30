@@ -21,7 +21,6 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
     ],
     initial_position: 'bottom-center',
     editable: true,
-    // TODO: Add associated users IDs
   },
   {
     id: PolicyNodeID.DataScientistPolicy,
@@ -34,7 +33,7 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
         access_level: AccessLevel.ReadWrite,
       },
       {
-        target_node: ResourceNodeID.AnalyticsDataDynanoTable,
+        target_node: ResourceNodeID.AnalyticsDataDynamoTable,
         target_handle: 'bottom',
         access_level: AccessLevel.ReadWrite,
       },

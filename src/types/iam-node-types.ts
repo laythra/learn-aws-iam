@@ -1,5 +1,5 @@
 import { DOMKeyframesDefinition, DynamicAnimationOptions } from 'framer-motion';
-import { HandleProps } from 'reactflow';
+import { Edge, HandleProps } from 'reactflow';
 
 export enum HandleID {
   Top = 'top',
@@ -99,30 +99,23 @@ interface IAMNodeData {
 
 export interface IAMUserNodeData extends IAMNodeData {
   entity: IAMNodeEntity.User;
-  associated_policies: string[];
-  associated_roles: string[];
 }
 
 export interface IAMGroupNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Group;
-  associated_users: string[];
-  associated_policies: string[];
 }
 
 export interface IAMPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
   editable: boolean;
-  associated_users: string[]; // Do we use this?
   granted_accesses: PolicyGrantedAccess[];
+  initial_edges?: Edge<IAMEdgeData>[];
   content: string;
 }
 
 export interface IAMRoleNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Role;
   editable: boolean;
-  associated_users: string[];
-  associated_policies: string[];
-  associated_resources: string[];
   trust_policy_content: string;
 }
 
@@ -165,6 +158,10 @@ export interface IAMEdgeData {
   label_always_visible: boolean;
   unnecessary_edge?: boolean;
 }
+
+export type PartialEdge = Omit<Partial<Edge<IAMEdgeData>>, 'data'> & {
+  data?: Partial<IAMEdgeData>;
+};
 
 export type IAMNodeDataMapping = {
   iam_user: IAMUserNodeData;

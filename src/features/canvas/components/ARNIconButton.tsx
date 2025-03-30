@@ -2,7 +2,6 @@ import { memo } from 'react';
 
 import {
   Popover,
-  Text,
   PopoverTrigger,
   PopoverContent,
   PopoverHeader,
@@ -76,10 +75,10 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
           flexWrap='wrap'
           alignItems='center'
           justifyContent='space-between'
+          fontSize='12px'
+          fontWeight='600'
         >
-          <Text fontSize='12px' fontWeight='600'>
-            {arn}
-          </Text>
+          {arn}
           <Tooltip label='Copy To Clipboard'>
             <WithStateMachineEventIconButton
               event={onCopyEvent}

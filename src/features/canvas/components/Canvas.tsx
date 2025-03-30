@@ -17,7 +17,8 @@ const edgeTypes = {
 };
 
 const Canvas: React.FC = () => {
-  const { nodesState, edgesState, onConnect, onEdgeDelete, setRfInstance } = useCanvas({});
+  const { nodesState, edgesState, onConnect, onEdgeDelete, onNodeDelete, setRfInstance } =
+    useCanvas({});
 
   return (
     <ReactFlow
@@ -29,6 +30,7 @@ const Canvas: React.FC = () => {
       connectionMode={ConnectionMode.Loose}
       onConnect={onConnect}
       onEdgesDelete={onEdgeDelete}
+      onNodesDelete={onNodeDelete}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       onEdgeMouseEnter={(_e, edge) => CanvasStore.send({ type: 'hoverOverEdge', edgeId: edge.id })}

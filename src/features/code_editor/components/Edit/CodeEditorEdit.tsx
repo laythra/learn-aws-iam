@@ -16,12 +16,12 @@ import {
   IAMPolicyEditObjective,
   IAMTrustPolicyEditObject,
 } from '@/machines/types';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/utils/iam-code-linter';
 
 interface CodeEditorEditProps {
   nodeId: string;
-  selectedIAMEntity: IAMNodeEntity;
+  selectedIAMEntity: IAMScriptableEntity;
   errors: Diagnostic[];
   warnings: string[];
 }
@@ -84,7 +84,10 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
     editorView,
     getWarnings,
     initialContent: JSON.parse(selectedNode.data.content ?? '{}'),
-    objectivesToValidate: [],
+    validateFns: [
+      objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity],
+    ],
+    helpBadges: objectiveToValidate?.help_badges ?? [],
   });
 
   return (

@@ -9,6 +9,7 @@ export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
   position: { x: 0, y: 0 },
   type: 'iam_default',
   draggable: true,
+  deletable: false,
   data: {
     id: 'iam_user',
     label: 'IAM User',
@@ -20,9 +21,7 @@ export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
       { id: HandleID.Left, type: 'source', position: Position.Left },
     ] as HandleProps[],
     image: IAMNodeImage.User,
-    associated_policies: [],
     initial_position: 'top-center',
-    associated_roles: [],
     animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
   },
 };
@@ -30,5 +29,10 @@ export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
 export function createUserNode(props: Partial<IAMUserNodeData>): Node<IAMUserNodeData> {
   props.id ||= Date.now().toString();
 
-  return _.merge({}, TEMPLATE_USER_NODE, { data: props }, { id: props.id });
+  return _.merge(
+    {},
+    TEMPLATE_USER_NODE,
+    { data: props },
+    { id: props.id, deletable: props.unnecessary_node }
+  );
 }

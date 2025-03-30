@@ -1,6 +1,6 @@
 import { type Node } from 'reactflow';
 
-import { PolicyNodeID, UserNodeID } from '../types/node-id-enums';
+import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/user-node-factory';
 import type { IAMUserNodeData } from '@/types';
 import { IAMNodeImage } from '@/types';
@@ -11,11 +11,6 @@ const USER_NODES: Partial<IAMUserNodeData>[] = [
     label: 'Kyouma',
     initial_position: 'center',
     image: IAMNodeImage.User,
-    associated_policies: [
-      PolicyNodeID.PolicyNode1,
-      PolicyNodeID.PolicyNode2,
-      PolicyNodeID.PolicyNode3,
-    ],
   },
 ];
 

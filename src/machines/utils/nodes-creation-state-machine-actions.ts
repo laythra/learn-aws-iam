@@ -1,0 +1,108 @@
+import { produce } from 'immer';
+import _, { update } from 'lodash';
+import { Node } from 'reactflow';
+
+import { updateConnectionEdges } from './edges-creation-state-machine-actions';
+import {
+  AccountID,
+  BaseFinishEventMap,
+  GenericContext,
+  IAMUserGroupCreationObjective,
+  ObjectiveType,
+} from '../types';
+import { createGroupNode } from '@/factories/group-node-factory';
+import { createPolicyNode } from '@/factories/policy-node-factory';
+import { createUserNode } from '@/factories/user-node-factory';
+import { IAMGroupNodeData, IAMNodeEntity, IAMPolicyNodeData, IAMUserNodeData } from '@/types';
+import { findAnyValidPolicy } from '@/utils/iam-code-linter';
+
+function isResourceBasePolicy(docString: string): boolean {
+  return docString.includes('Principal');
+}
+
+export function createPermissionPolicy<
+  TLevelObjectiveID,
+  TFinishEventMap extends BaseFinishEventMap,
+>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  docString: string,
+  label: string,
+  accountId?: AccountID
+): {
+  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
+  events: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][];
+} {
+  const targetValidObjective = findAnyValidPolicy(
+    context.policy_creation_objectives,
+    docString,
+    accountId
+  );
+
+  const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
+  const newPolicyNode = createPolicyNode({
+    id: targetValidObjective?.entity_id ?? new Date().getTime().toString(),
+    content: docString,
+    label: label,
+    unnecessary_node: targetValidObjective === undefined,
+    granted_accesses: targetValidObjective?.granted_accesses ?? [],
+    initial_position: targetValidObjective?.created_node_initial_position ?? 'center',
+    account_id: accountId,
+    editable: true,
+  });
+
+  let updatedContext = produce(context, draftContext => {
+    draftContext.nodes.push(newPolicyNode);
+  });
+
+  const nodeById = _.keyBy(updatedContext.nodes, 'id');
+
+  if (targetValidObjective) {
+    targetValidObjective.initial_edges?.forEach(edge => {
+      ({ updatedContext } = updateConnectionEdges(
+        updatedContext,
+        nodeById[edge.source],
+        nodeById[edge.target],
+        true,
+        { data: edge.data }
+      ));
+    });
+
+    sideEffectsEvents.push(targetValidObjective.on_finish_event);
+  }
+
+  return { updatedContext, events: sideEffectsEvents };
+}
+
+export function createUserGroupNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  nodeType: IAMNodeEntity.Group | IAMNodeEntity.User,
+  props: Omit<Partial<IAMGroupNodeData>, 'entity'> | Omit<Partial<IAMUserNodeData>, 'entity'>
+): {
+  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
+  events: TFinishEventMap[ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE][];
+} {
+  let events: TFinishEventMap[ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE][] = [];
+  const updatedContext = produce(context, draftContext => {
+    const targetObjective = draftContext.user_group_creation_objectives.find(
+      objective => objective.entity_to_create === nodeType && !objective.finished
+    );
+    const creationFunc = nodeType === IAMNodeEntity.Group ? createGroupNode : createUserNode;
+    const newNode = creationFunc({
+      id: targetObjective?.entity_id ?? _.uniqueId('node_'),
+      initial_position: targetObjective?.initial_position ?? 'center',
+      unnecessary_node: targetObjective === undefined,
+      ...props,
+    });
+
+    draftContext.nodes.push(newNode);
+    if (targetObjective) {
+      targetObjective.finished = true;
+      events = [targetObjective.on_finish_event];
+    }
+  });
+
+  return {
+    updatedContext,
+    events,
+  };
+}

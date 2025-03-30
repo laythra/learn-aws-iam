@@ -9,26 +9,26 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: RoleNodeID.FinanceAuditorRole,
-          target: UserNodeID.FinanceUser,
+          source: UserNodeID.FinanceUser,
+          target: RoleNodeID.FinanceAuditorRole,
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.TUTORIAL_ROLE1_ATTACHED_TO_USER,
       is_finished: false,
-      established_edge_hovering_label: 'Assumed by',
+      established_edge_hovering_label: 'Assumes',
       established_edge_target_handle: 'bottom',
     },
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: RoleNodeID.S3ReadAccessRole,
-          target: UserNodeID.FinanceUser,
+          source: UserNodeID.FinanceUser,
+          target: RoleNodeID.S3ReadAccessRole,
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.TUTORIAL_ROLE2_ATTACHED_TO_USER,
       is_finished: false,
-      established_edge_hovering_label: 'Assumed by',
+      established_edge_hovering_label: 'Assumes',
       established_edge_target_handle: 'bottom',
     },
     {
@@ -76,8 +76,8 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: RoleNodeID.LambdaRole,
-          target: ResourceNodeID.LambdaFunction,
+          source: ResourceNodeID.LambdaFunction,
+          target: RoleNodeID.LambdaRole,
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.LAMBDA_ROLE_ATTACHED_TO_LAMBDA_FUNCTION,
@@ -89,8 +89,8 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: RoleNodeID.EC2Role,
-          target: ResourceNodeID.TimeshiftLabsEC2Instance,
+          source: ResourceNodeID.TimeshiftLabsEC2Instance,
+          target: RoleNodeID.EC2Role,
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.EC2_ROLE_ATTACHED_TO_EC2_INSTANCE,
