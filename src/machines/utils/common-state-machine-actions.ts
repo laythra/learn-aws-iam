@@ -50,6 +50,7 @@ export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends B
   const targetValidPolicy = findAnyValidPolicy(
     context.policy_creation_objectives,
     docString,
+    context.nodes,
     accountId
   );
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
@@ -154,6 +155,7 @@ export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends Bas
   const targetValidObjective = findAnyValidRole(
     context.role_creation_objectives,
     docString,
+    context.nodes,
     accountId
   );
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];

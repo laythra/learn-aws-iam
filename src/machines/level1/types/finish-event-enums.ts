@@ -1,4 +1,4 @@
-import { ObjectiveType } from '@/machines/types';
+import { BaseFinishEventMap, ObjectiveType } from '@/machines/types';
 
 export enum NodeCreationFinishEvent {
   USER_NODE_CREATED = 'USER_NODE_CREATED',
@@ -9,7 +9,7 @@ export enum EdgeConnectionFinishEvent {
   PolicyAttachedToCreatedUser = 'POLICY_ATTACHED_TO_CREATED_USER',
 }
 
-export interface FinishEventMap {
+export interface FinishEventMap extends BaseFinishEventMap {
   [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: NodeCreationFinishEvent;
   [ObjectiveType.POLICY_CREATION_OBJECTIVE]: never;
   [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: EdgeConnectionFinishEvent;

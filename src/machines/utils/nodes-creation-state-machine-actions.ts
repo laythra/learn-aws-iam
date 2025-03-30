@@ -35,6 +35,7 @@ export function createPermissionPolicy<
   const targetValidObjective = findAnyValidPolicy(
     context.policy_creation_objectives,
     docString,
+    context.nodes,
     accountId
   );
 
