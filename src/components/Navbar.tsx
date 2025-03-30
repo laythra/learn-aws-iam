@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
           IAM Project
         </Text>
         <HStack spacing={4}>
-          {(process.env.REACT_APP_ENV || 'development') === 'development' && ( // TODO: REMOVE THIS! Something hacky for dev purposes only.
+          {(import.meta.env.VITE_APP_ENV || 'development') === 'development' && ( // TODO: REMOVE THIS! Something hacky for dev purposes only.
             <HStack>
               <Text>{JSON.stringify(value)}</Text>
               <Input
