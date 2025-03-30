@@ -20,8 +20,8 @@ const HINT_MSG2 = `
 `;
 
 const CALLOUT_MSG1 = `
-  Not really relevant to this objective,
-  but an **IAM Role** is also a principal. Such that it can assume other roles.
+  What you're creating now is called a **Trust Policy**.
+  It's a special type of policy that defines which entities can assume the role.
 `;
 
 const CALLOUT_MSG2 = `

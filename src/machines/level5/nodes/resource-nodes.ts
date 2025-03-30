@@ -8,7 +8,7 @@ import { IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
   {
     id: ResourceNodeID.BillingAndCostManagement,
-    label: 'Billing and Cost Management',
+    label: 'monthly-spend-budget',
     initial_position: 'right-center',
     image: IAMNodeImage.Billing,
     resource_type: IAMNodeResourceEntity.Billing,

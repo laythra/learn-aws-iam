@@ -42,7 +42,7 @@
               "AWS": {
                 "type": "string",
                 "enum": [
-                  "arn:aws:iam::123456789012:user/FinanceUser"
+                  "arn:aws:iam::123456789012:user/finance-user"
                 ]
               }
             }

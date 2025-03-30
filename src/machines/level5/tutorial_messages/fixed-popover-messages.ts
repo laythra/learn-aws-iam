@@ -36,6 +36,12 @@ const FIXED_POPOVER_MSG6 = `
   Remember, regular **IAM Policies** won't work here, so let's get creative with **IAM Roles**!
 `;
 
+const FIXED_POPOVER_MSG7 = `
+  The S3 bucket is now accessible to the EC2 instance and Lambda function.
+  The EC2 instance can write to the S3 bucket,
+  and the Lambda function can read from it to generate the required metadata
+`;
+
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
   {
     popover_title: 'Attach role to user',
@@ -61,6 +67,13 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
   {
     popover_title: 'Your Mission!',
     popover_content: FIXED_POPOVER_MSG6,
+    position: 'top-left',
+    show_close_button: false,
+    show_next_button: true,
+  },
+  {
+    popover_title: 'Service-to-Service Access has been established 🫡',
+    popover_content: FIXED_POPOVER_MSG7,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
