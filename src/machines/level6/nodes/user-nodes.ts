@@ -12,7 +12,7 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNodeData>[] = [
     label: 'Richard',
     initial_position: 'right-center',
     image: IAMNodeImage.User,
-    account_id: AccountID.Originating,
+    account_id: AccountID.Trusted,
   },
 ];
 

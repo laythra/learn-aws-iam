@@ -324,6 +324,6 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
 };
 
 export enum AccountID {
-  Originating = '123456789012',
-  Destination = '987654321098',
+  Trusting = '123456789012',
+  Trusted = '987654321098',
 }

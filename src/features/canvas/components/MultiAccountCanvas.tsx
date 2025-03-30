@@ -49,7 +49,7 @@ const MultiAccountCanvas: React.FC = () => {
 
     if (
       node.position.x + theme.sizes.iamNodeWidthInPixels >= midpointInFlowCoords.x &&
-      node.data.account_id === AccountID.Destination
+      node.data.account_id === AccountID.Trusting
     ) {
       const clampedX = midpointInFlowCoords.x - theme.sizes.iamNodeWidthInPixels - 10;
       CanvasStore.send({
@@ -59,10 +59,7 @@ const MultiAccountCanvas: React.FC = () => {
       });
     }
 
-    if (
-      node.position.x <= midpointInFlowCoords.x &&
-      node.data.account_id === AccountID.Originating
-    ) {
+    if (node.position.x <= midpointInFlowCoords.x && node.data.account_id === AccountID.Trusted) {
       const clampedX = midpointInFlowCoords.x + 10;
       CanvasStore.send({
         type: 'updateNodePosition',
@@ -133,9 +130,9 @@ const MultiAccountCanvas: React.FC = () => {
         borderRadius='md'
         fontWeight={700}
       >
-        Destination Account (Trusting Account)
+        Trusting Account
         <ARNIconButton
-          arn='arn:aws:iam::123456789012:user/secure-corp'
+          arn={AccountID.Trusting}
           onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           placement='bottom-end'
@@ -152,9 +149,9 @@ const MultiAccountCanvas: React.FC = () => {
         borderRadius='md'
         fontWeight={700}
       >
-        Originating Account (Trusted Account)
+        Trusted Account
         <ARNIconButton
-          arn='arn:aws:iam::987654321098:user/financial-auditing-corp'
+          arn={AccountID.Trusted}
           onCopyEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
           placement='bottom-end'

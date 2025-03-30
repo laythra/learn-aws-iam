@@ -24,7 +24,7 @@ export const ROLE_CREATION_OBJECTIVES_RAW_DATA: RoleCreationObjectiveInput<Finis
       validate_inside_code_editor: true,
       validate_function: AJV_COMPILER.compile(dynamodbRoleTrustPolicy),
       created_node_initial_position: 'left-center',
-      account_id: AccountID.Destination,
+      account_id: AccountID.Trusting,
       callout_message: CALLOUT_MESSAGE1,
     },
   ],

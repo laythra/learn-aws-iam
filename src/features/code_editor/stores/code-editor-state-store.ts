@@ -51,7 +51,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     selectedIAMEntity: IAMNodeEntity.Policy,
     isCodeEditorInitialized: false,
     selectedPolicies: [],
-    selectedAccountId: AccountID.Originating,
+    selectedAccountId: AccountID.Trusted,
     helpPopupInfo: { isOpen: false, entity: IAMNodeEntity.Policy },
     labelError: undefined,
   },

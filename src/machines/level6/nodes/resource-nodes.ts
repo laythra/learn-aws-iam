@@ -13,7 +13,7 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
     initial_position: 'left-center',
     image: IAMNodeImage.Database,
     resource_type: IAMNodeResourceEntity.DynamoDBTable,
-    account_id: AccountID.Destination,
+    account_id: AccountID.Trusting,
   },
 ];
 

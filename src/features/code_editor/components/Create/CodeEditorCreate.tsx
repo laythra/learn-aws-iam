@@ -121,8 +121,8 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
             });
           }}
         >
-          <option value={AccountID.Destination}>Destination Account</option>
-          <option value={AccountID.Originating}>Originating Account</option>
+          <option value={AccountID.Trusting}>Trusting Account</option>
+          <option value={AccountID.Trusted}>Trusted Account</option>
         </Select>
       )}
 

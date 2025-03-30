@@ -26,7 +26,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       ],
       validate_function: AJV_COMPILER.compile(dynamodbReadPolicySchema),
       limit_new_lines: false,
-      account_id: AccountID.Destination,
+      account_id: AccountID.Trusting,
       created_node_initial_position: 'left-center',
     },
     {
@@ -39,7 +39,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       granted_accesses: [],
       validate_function: AJV_COMPILER.compile(assumeRolePolicySchema),
       limit_new_lines: false,
-      account_id: AccountID.Originating,
+      account_id: AccountID.Trusted,
       created_node_initial_position: 'right-center',
     },
   ].map(objective => createPolicyCreationObjective(objective)),
