@@ -15,6 +15,7 @@ const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
   position: { x: 0, y: 0 },
   type: 'iam_default',
   draggable: true,
+  deletable: false,
   data: {
     id: 'iam_group',
     label: 'IAM Resource',
@@ -33,5 +34,10 @@ const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
 };
 
 export function createResourceNode(props: Partial<IAMResourceNodeData>): Node<IAMResourceNodeData> {
-  return _.merge({}, TEMPLATE_RESOURCE_NODE, { data: props }, { id: props.id });
+  return _.merge(
+    {},
+    TEMPLATE_RESOURCE_NODE,
+    { data: props },
+    { id: props.id, deletable: props.unnecessary_node }
+  );
 }

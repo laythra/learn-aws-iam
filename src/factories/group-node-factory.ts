@@ -9,6 +9,7 @@ export const TEMPLATE_GROUP_NODE: Node<IAMGroupNodeData> = {
   position: { x: 0, y: 0 },
   type: 'iam_default',
   draggable: true,
+  deletable: false,
   data: {
     id: 'iam_group',
     label: 'IAM Group',
@@ -25,5 +26,10 @@ export const TEMPLATE_GROUP_NODE: Node<IAMGroupNodeData> = {
 };
 
 export function createGroupNode(props: Partial<IAMGroupNodeData>): Node<IAMGroupNodeData> {
-  return _.merge({}, TEMPLATE_GROUP_NODE, { data: props }, { id: props.id });
+  return _.merge(
+    {},
+    TEMPLATE_GROUP_NODE,
+    { data: props },
+    { id: props.id, deletable: props.unnecessary_node }
+  );
 }
