@@ -7,7 +7,6 @@ import {
   editIAMPolicyNode,
   editObjectiveState,
   changeLevelObjectiveProgress,
-  createIAMUserGroupNode,
   createIAMRoleNode,
   getElementsWithRedDot,
 } from './utils/common-state-machine-actions';
@@ -17,7 +16,10 @@ import {
 } from './utils/edges-creation-state-machine-actions';
 import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-actions';
 import { resolveInitialEdges } from './utils/initial-edges-resolver';
-import { createPermissionPolicy } from './utils/nodes-creation-state-machine-actions';
+import {
+  createPermissionPolicy,
+  createUserGroupNode,
+} from './utils/nodes-creation-state-machine-actions';
 import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
 import type {
@@ -154,14 +156,12 @@ export const createStateMachineSetup = <
             params: Partial<IAMUserNodeData> | Partial<IAMGroupNodeData>;
           }
         ) => {
-          const [updatedNodes, updatedObjectives, sideEffectsEvents] = createIAMUserGroupNode<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, nodeType, params);
+          const { updatedContext, events } = createUserGroupNode(context, nodeType, params);
 
-          enqueue.assign({ nodes: updatedNodes });
-          enqueue.assign({ user_group_creation_objectives: updatedObjectives });
-          sideEffectsEvents.forEach(event => enqueue.raise({ type: event }));
+          enqueue.assign({
+            nodes: updatedContext.nodes,
+          });
+          events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
       add_policy_node: enqueueActions(

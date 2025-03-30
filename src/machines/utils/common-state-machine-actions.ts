@@ -141,58 +141,6 @@ export function editObjectiveState<TLevelObjectiveID, TFinishEventMap extends Ba
   });
 }
 
-/**
- * Creates a new IAM user/group node and checks if an associated user/group creation objective is finished.
- * If the user/group creation objective is finished, the `on_finish_event` is pushed to the `finishEvents` array.
- * @param context The current state machine context
- * @param nodeType The type of the new node to create, either a user or group
- * @param props The properties of the new user/group node
- * @returns A tuple containing the updated nodes and finish events.
- */
-export function createIAMUserGroupNode<
-  TLevelObjectiveID,
-  TFinishEventMap extends BaseFinishEventMap,
->(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  nodeType: IAMNodeEntity.Group | IAMNodeEntity.User,
-  props: Omit<Partial<IAMGroupNodeData>, 'entity'> | Omit<Partial<IAMUserNodeData>, 'entity'>
-): [
-  Node[],
-  IAMUserGroupCreationObjective<TFinishEventMap>[],
-  TFinishEventMap[ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE][],
-] {
-  const targetObjective = context.user_group_creation_objectives.find(
-    objective => objective.entity_to_create === nodeType && !objective.finished
-  );
-
-  let newNode: Node<IAMGroupNodeData> | Node<IAMUserNodeData>;
-  const newNodes = produce(context.nodes, draftNodes => {
-    const creationFunc = nodeType === IAMNodeEntity.Group ? createGroupNode : createUserNode;
-
-    newNode = creationFunc({
-      id: targetObjective?.entity_id ?? new Date().getTime().toString(),
-      initial_position: targetObjective?.initial_position ?? 'center',
-      unnecessary_node: targetObjective === undefined,
-      ...props,
-    });
-
-    draftNodes.push(newNode);
-  });
-
-  let updatedObjectives = context.user_group_creation_objectives;
-
-  if (targetObjective) {
-    updatedObjectives = produce(context.user_group_creation_objectives, draftObjectives => {
-      draftObjectives.find(
-        objective => objective.entity_id === targetObjective.entity_id
-      )!.finished = true;
-    });
-  }
-
-  const finishEvents = targetObjective ? [targetObjective.on_finish_event] : [];
-  return [newNodes, updatedObjectives, finishEvents];
-}
-
 export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   docString: string,

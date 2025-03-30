@@ -171,8 +171,9 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
         hovering_label: getEdgeLabel(source.data.entity, target.data.entity),
         hovering_color: theme.colors.blue[500],
         color: theme.colors.black,
-        label_always_visible: true,
+        label_always_visible: false,
       },
+      ...options,
     });
 
     events = [];
