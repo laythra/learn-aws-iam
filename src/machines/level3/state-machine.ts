@@ -97,11 +97,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     HIDE_POPOVERS: { actions: 'hide_popovers' },
     HIDE_FIXED_POPOVERS: { actions: 'hide_fixed_popovers' },
     NEXT_FIXED_POPOVER: { actions: 'next_fixed_popover' },
-    TOGGLE_SIDE_PANEL: {
-      actions: assign({
-        side_panel_open: ({ context }) => !context.side_panel_open,
-      }),
-    },
+    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
     [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {
