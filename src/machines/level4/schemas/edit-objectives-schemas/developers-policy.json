@@ -21,15 +21,14 @@
             "Action": {
               "type": "array",
               "items": {
-                "type": "string",
                 "enum": [
                   "dynamodb:GetItem",
                   "dynamodb:PutItem"
-                ],
-                "uniqueItems": true,
-                "minItems": 2,
-                "maxItems": 2
-              }
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 2,
+              "maxItems": 2
             },
             "Resource": {
               "type": "string",
