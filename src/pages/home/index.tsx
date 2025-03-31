@@ -7,7 +7,6 @@ import { FixedPopover } from '@/components/Popover/FixedPopover';
 import { TutorialPopup } from '@/components/Popup/TutorialPopup';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import RightSidePanel from '@/components/SidePanels/RightSidePanel';
-import RightSidePanelToggleButton from '@/components/SidePanels/RightSidePanelToggleButton';
 import { UnnecessaryEdgesNodesWarning } from '@/components/UnnecessaryEdgesNodesWarning';
 import Canvas from '@/features/canvas/components/Canvas';
 import MultiAccountCanvas from '@/features/canvas/components/MultiAccountCanvas';
@@ -27,7 +26,6 @@ const Home: React.FC = () => {
       </Box>
       <FixedPopover />
       <UnnecessaryEdgesNodesWarning />
-      <RightSidePanelToggleButton />
       <RightSidePanel />
     </Flex>
   );
