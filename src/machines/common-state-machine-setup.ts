@@ -84,7 +84,7 @@ export const createStateMachineSetup = <
         return context.edges.every(edge => !edge.data?.unnecessary_edge);
       },
       no_unnecessary_nodes: ({ context }) => {
-        return context.nodes.every(edge => !edge.data?.unnecessary_node);
+        return context.nodes.every(node => !node.data?.unnecessary_node);
       },
     },
     actions: {

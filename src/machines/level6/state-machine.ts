@@ -16,7 +16,6 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { ElementID } from '@/config/element-ids';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
@@ -309,7 +308,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         remove_unnecessary_edges_and_nodes: {
-          entry: 'show_unncessary_edges_or_nodes_warning',
+          entry: ['hide_popovers', 'show_unncessary_edges_or_nodes_warning'],
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
             target: 'level_finished_popup',
@@ -317,6 +316,12 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
         level_finished_popup: {
           entry: ['hide_popovers', 'next_popup'],
+          on: {
+            NEXT_POPUP: 'tutorial_finished_popup',
+          },
+        },
+        tutorial_finished_popup: {
+          entry: ['next_popup'],
         },
       },
     },
