@@ -13,6 +13,7 @@ import { badgeExtension, InitializeBadgeWidgets } from '../utils/badge-widget';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { HelpBadge } from '@/machines/types';
 import { getLintingErrors } from '@/utils/iam-code-linter';
+import { validateIAMName } from '@/utils/names';
 
 interface UseCodeEditorOptions {
   nodeId: string;
@@ -93,17 +94,7 @@ export function useCodeEditor({
 
   const validateNodeLabel = _.debounce((label: string): void => {
     const existinglabels = levelActor.getSnapshot().context.nodes.map(node => node.data.label);
-    let error: string | undefined = undefined;
-
-    if (existinglabels.includes(label)) {
-      error = 'label already exists';
-    } else if (label.length < 1 || label.length > 64) {
-      error = 'Must be between 1 and 64 characters';
-    } else if (!/^[a-zA-Z0-9]/.test(label)) {
-      error = 'Must start with a letter or number';
-    } else if (!/^[a-zA-Z0-9+=,.@_-]+$/.test(label)) {
-      error = 'Only letters, numbers, and +=,.@-_ are allowed';
-    }
+    const error = validateIAMName(label, existinglabels, 64);
 
     codeEditorStateStore.send({
       type: 'setNodeLabelError',
