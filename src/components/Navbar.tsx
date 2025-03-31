@@ -1,12 +1,15 @@
 import React from 'react';
 
-import { Box, Button, Flex, HStack, Input, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, IconButton, Input, Text } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
+import { Bars3Icon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
+import AnimatedRedDot from './Animated/AnimatedRedDot';
 import { LevelsProgressionContext } from './providers/LevelsProgressionProvider';
 import { ElementID } from '@/config/element-ids';
 import { NewEntityButtonWithPopover } from '@/features/iam_entities';
+import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import currentLevelDetailsStore from '@/stores/current-level-details-store';
 import { CustomTheme } from '@/types';
 
@@ -14,12 +17,21 @@ interface NavbarProps {}
 
 export const Navbar: React.FC<NavbarProps> = () => {
   const theme = useTheme<CustomTheme>();
+  const levelActor = LevelsProgressionContext().useActorRef();
   const [value, levelNumber] = LevelsProgressionContext().useSelector(
     state => [state.value, state.context.level_number],
     _.isEqual
   );
 
+  const { isRedDotEnabledForElement } = useAnimatedRedDot({
+    elementIds: [ElementID.RightSidePanelToggleButton],
+  });
+
   const [pseudoLevelNumber, setPseudoLevelNumber] = React.useState<number>(levelNumber);
+
+  const toggleSidePanel = (): void => {
+    levelActor.send({ type: 'TOGGLE_SIDE_PANEL' });
+  };
 
   return (
     <Box
@@ -62,7 +74,23 @@ export const Navbar: React.FC<NavbarProps> = () => {
           <Text fontSize='lg' fontWeight='bold' color='black'>
             Level {levelNumber}/10
           </Text>
+
           <NewEntityButtonWithPopover elementid={ElementID.NewEntityBtn} />
+          <Box position='relative'>
+            <IconButton
+              onClick={toggleSidePanel}
+              icon={<Bars3Icon />}
+              aria-label='side-panel-button'
+              color={'blue.500'}
+              _hover={{ color: 'blue.500' }}
+              _active={{ color: 'blue.600' }}
+              bg='transparent'
+              size='xs'
+            />
+            {isRedDotEnabledForElement(ElementID.RightSidePanelToggleButton) && (
+              <AnimatedRedDot offset={3} />
+            )}
+          </Box>
         </HStack>
       </Flex>
     </Box>
