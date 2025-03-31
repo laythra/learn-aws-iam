@@ -235,6 +235,7 @@ export interface BaseCreationObjective<
   readonly initial_code: object;
   readonly validate_inside_code_editor: boolean;
   readonly validate_function?: ValidateFunction;
+  readonly get_validate_function?: (nodes: Node<IAMAnyNodeData>[]) => ValidateFunction | undefined;
   readonly on_finish_event: TFinishEventMap[TEventType];
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;

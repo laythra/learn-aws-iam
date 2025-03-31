@@ -35,6 +35,16 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       entity: IAMNodeEntity.Policy,
       on_finish_event: PolicyCreationFinishEvent.ASSUME_ROLE_POLICY_CREATED,
       validate_inside_code_editor: true,
+      get_validate_function: nodes => {
+        const roleNode = nodes.find(
+          node => node.data.id === RoleNodeID.TrustingAccountDynamoDBReadRole
+        );
+
+        if (!roleNode) return;
+
+        const roleArn = generateArn(IAMNodeEntity.Role, roleNode.data.label);
+        return AJV_COMPILER.compile(generateAssumeRolePolicySchema(roleArn));
+      },
       granted_accesses: [],
       limit_new_lines: false,
       account_id: AccountID.Trusted,

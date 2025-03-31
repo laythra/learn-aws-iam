@@ -37,12 +37,13 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   errors,
   warnings,
 }) => {
-  const [policyCreationObjectives, roleCreationObjectives, multiAccount] =
+  const [policyCreationObjectives, roleCreationObjectives, multiAccount, nodes] =
     LevelsProgressionContext().useSelector(
       state => [
         state.context.policy_creation_objectives,
         state.context.role_creation_objectives,
         state.context.use_multi_account_canvas,
+        state.context.nodes,
       ],
       _.isEqual
     );
@@ -74,6 +75,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       const anyValidPolicy = findAnyValidPolicy<BaseFinishEventMap>(
         unfinishedPolicyCreationObjectives,
         editorView.current.state.doc.toString(),
+        nodes,
         selectedAccountId
       );
 
@@ -82,6 +84,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       const anyValidRole = findAnyValidRole<BaseFinishEventMap>(
         unfinishedRoleCreationObjectives,
         editorView.current.state.doc.toString(),
+        nodes,
         selectedAccountId
       );
 
@@ -89,10 +92,14 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     }
   };
 
-  const validateFns =
-    selectedIAMEntity == IAMNodeEntity.Policy
-      ? unfinishedPolicyCreationObjectives.filterMap(obj => obj.validate_function)
-      : unfinishedRoleCreationObjectives.filterMap(obj => obj.validate_function);
+  const targetUnfinishedObjectives =
+    selectedIAMEntity === IAMNodeEntity.Policy
+      ? unfinishedPolicyCreationObjectives
+      : unfinishedRoleCreationObjectives;
+
+  const validateFns = targetUnfinishedObjectives.filterMap(
+    obj => obj.get_validate_function?.(nodes) ?? obj.validate_function
+  );
 
   const { onCreateEditor, validateChange, getContent, extensions, validateNodeLabel } =
     useCodeEditor({

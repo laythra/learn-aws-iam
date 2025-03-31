@@ -2,6 +2,7 @@ import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import Ajv, { ValidateFunction } from 'ajv';
 import _ from 'lodash';
+import { Node } from 'reactflow';
 
 import {
   AccountID,
@@ -12,7 +13,7 @@ import {
 import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
 import iamRoleTurstPolicySchema from '@/schemas/aws-iam-role-trust-policy-schema.json';
 import sharedConditionSchema from '@/schemas/shared-condition-schema.json';
-import { IAMNodeEntity } from '@/types';
+import { IAMAnyNodeData, IAMNodeEntity } from '@/types';
 
 interface LintConfig {
   validateFunction: ValidateFunction;
@@ -26,6 +27,19 @@ export const AJV_COMPILER = new Ajv({
 export const GENERIC_VALIDATION_FNS = {
   [IAMNodeEntity.Policy]: AJV_COMPILER.compile(iamPolicySchema),
   [IAMNodeEntity.Role]: AJV_COMPILER.compile(iamRoleTurstPolicySchema),
+};
+
+export const getObjectiveValidationFunction = (
+  objective:
+    | IAMPolicyCreationObjective<BaseFinishEventMap>
+    | IAMRoleCreationObjective<BaseFinishEventMap>,
+  nodes: Node<IAMAnyNodeData>[]
+): ValidateFunction => {
+  return (
+    objective.get_validate_function?.(nodes) ??
+    objective.validate_function ??
+    GENERIC_VALIDATION_FNS[objective.entity]
+  );
 };
 
 function lint(
@@ -80,6 +94,7 @@ export const isJSONValid = (docString: string, validateFunction: ValidateFunctio
 export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
   policyObjectives: IAMPolicyCreationObjective<TFinishEventMap>[],
   docString: string,
+  nodes: Node<IAMAnyNodeData>[],
   accountId?: AccountID
 ): IAMPolicyCreationObjective<TFinishEventMap> | undefined => {
   policyObjectives = _.orderBy(policyObjectives, 'validate_inside_code_editor', 'desc');
@@ -88,13 +103,9 @@ export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
     if (policyObjective.finished) return false;
 
     const validAccountId = policyObjective.account_id === accountId || !policyObjective.account_id;
+    const validateFn = getObjectiveValidationFunction(policyObjective, nodes);
 
-    return (
-      isJSONValid(
-        docString,
-        policyObjective.validate_function ?? GENERIC_VALIDATION_FNS[IAMNodeEntity.Policy]
-      ) && validAccountId
-    );
+    return isJSONValid(docString, validateFn) && validAccountId;
   });
 };
 
@@ -102,6 +113,7 @@ export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
 export const findAnyValidRole = <TFinishEventMap extends BaseFinishEventMap>(
   roleObjectives: IAMRoleCreationObjective<TFinishEventMap>[],
   docString: string,
+  nodes: Node<IAMAnyNodeData>[],
   accountId?: AccountID
 ): IAMRoleCreationObjective<TFinishEventMap> | undefined => {
   roleObjectives = _.orderBy(roleObjectives, 'validate_inside_code_editor', 'desc');
@@ -109,12 +121,8 @@ export const findAnyValidRole = <TFinishEventMap extends BaseFinishEventMap>(
     if (roleObjective.finished) return false;
 
     const validAccountId = roleObjective.account_id === accountId || !roleObjective.account_id;
-    return (
-      isJSONValid(
-        docString,
-        roleObjective.validate_function ?? GENERIC_VALIDATION_FNS[IAMNodeEntity.Role]
-      ) && validAccountId
-    );
+    const validateFn = getObjectiveValidationFunction(roleObjective, nodes);
+    return isJSONValid(docString, validateFn) && validAccountId;
   });
 };
 
