@@ -21,3 +21,23 @@ export function getEdgeName(source: string, target: string): string {
 export function getEdgeLabel(sourceEntity: IAMNodeEntity, targetEntity: IAMNodeEntity): string {
   return EDGE_LABELS[`${sourceEntity}-${targetEntity}`] || 'Attached To';
 }
+
+export const validateIAMName = (
+  name: string,
+  existingNames: string[],
+  maxLength: number = 64 // default for users/groups/roles
+): string | undefined => {
+  if (existingNames.includes(name)) {
+    return 'Name is already in use';
+  }
+  if (name.length < 1 || name.length > maxLength) {
+    return `Name must be between 1 and ${maxLength} characters long`;
+  }
+  if (!/^[a-zA-Z0-9]/.test(name)) {
+    return 'Name must start with a letter or number';
+  }
+  if (!/^[a-zA-Z0-9+=,.@_-]+$/.test(name)) {
+    return 'Name can only contain letters, numbers, and the characters +=,.@_-';
+  }
+  return undefined;
+};

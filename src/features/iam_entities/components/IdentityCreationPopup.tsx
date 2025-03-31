@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   Modal,
@@ -12,14 +12,12 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  FormHelperText,
   Divider,
   TabList,
   Tabs,
   Tab,
 } from '@chakra-ui/react';
 import _ from 'lodash';
-import { EventFrom } from 'xstate';
 
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
@@ -31,6 +29,7 @@ import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
+import { validateIAMName } from '@/utils/names';
 
 interface IdentityCreationPopupProps {}
 
@@ -44,20 +43,43 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
     elementIds: [ElementID.IdentityCreationPopupGroupTab, ElementID.IdentityCreationPopupUserTab],
   });
 
-  const [userName, setUserName] = useState('');
-  const [groupName, setGroupName] = useState('');
   const [iamIdentityEntity, setIamIdentityEntity] =
     useState<IAMIdentityEntity>(defaultSelectedIdentity);
 
+  const [formState, setFormState] = useState<
+    Record<IAMIdentityEntity, { name: string; isValidating: boolean; error?: string }>
+  >({
+    [IAMNodeEntity.User]: { name: '', isValidating: false },
+    [IAMNodeEntity.Group]: { name: '', isValidating: false },
+  });
+
+  const debouncedValidate = useMemo(
+    () =>
+      _.debounce((name: string, entity: IAMIdentityEntity) => {
+        const existingNames = levelActor.getSnapshot().context.nodes.map(n => n.data.label);
+        const error = validateIAMName(name, existingNames, 64);
+
+        setFormState(prev => ({
+          ...prev,
+          [entity]: { ...prev[entity], isValidating: false, error },
+        }));
+      }, 500),
+    [levelActor]
+  );
+
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (iamIdentityEntity === IAMNodeEntity.User) {
-      setUserName(e.target.value);
-    } else {
-      setGroupName(e.target.value);
-    }
+    const name = e.target.value;
+
+    setFormState(prev => ({
+      ...prev,
+      [iamIdentityEntity]: { name, error: prev[iamIdentityEntity].error, isValidating: true },
+    }));
+
+    debouncedValidate(name, iamIdentityEntity);
   };
 
   const handleTabChange = (index: number): void => {
+    iamIdentityEntity;
     const newEntity = index === 0 ? IAMNodeEntity.User : IAMNodeEntity.Group;
     levelActor.send({ type: StatelessStateMachineEvent.CreateIAMIdentityTabChanged });
 
@@ -65,7 +87,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
   };
 
   const getNameFieldVal = (): string => {
-    return iamIdentityEntity === IAMNodeEntity.User ? userName : groupName;
+    return formState[iamIdentityEntity].name;
   };
 
   const submit = (): void => {
@@ -83,7 +105,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
 
     levelActor.send({
       type: StatelessStateMachineEvent.CreateIAMIdentityPopupOpened,
-    } as EventFrom<typeof levelActor.logic>);
+    });
 
     if (isElementEnabled(ElementID.IdentityCreationPopupUserTab)) {
       setIamIdentityEntity(IAMNodeEntity.User);
@@ -91,6 +113,12 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
       setIamIdentityEntity(IAMNodeEntity.Group);
     }
   }, [isIdentityCreatorOpen]);
+
+  useEffect(() => {
+    handleNameChange({
+      target: { value: getNameFieldVal() },
+    } as React.ChangeEvent<HTMLInputElement>);
+  }, []);
 
   return (
     <Modal isOpen={isIdentityCreatorOpen} onClose={closeIdentityCreator}>
@@ -128,13 +156,25 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
               value={getNameFieldVal()}
               onChange={handleNameChange}
             />
-            <FormHelperText>This could be any name you like...</FormHelperText>
+            {!_.isEmpty(formState[iamIdentityEntity]['error']) && (
+              <Text color='red.500' fontSize='sm'>
+                {formState[iamIdentityEntity]['error']}
+              </Text>
+            )}
           </FormControl>
 
           <Divider my={4} />
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme='blue' mr={3} onClick={submit}>
+          <Button
+            colorScheme='blue'
+            mr={3}
+            onClick={submit}
+            isDisabled={
+              formState[iamIdentityEntity]['isValidating'] ||
+              !_.isEmpty(formState[iamIdentityEntity]['error'])
+            }
+          >
             submit
           </Button>
           <Button variant='ghost' onClick={closeIdentityCreator}>
