@@ -1,11 +1,11 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { ReactFlowProvider } from 'reactflow';
 
+import CanvasContainer from './features/canvas/components/CanvasContainer';
 import IAMNodeProvider from './features/canvas/components/IAMNodeProvider';
 import { theme } from './theme';
 import ModalProvider from '@/components/ModalProvider';
 import LevelsProgressionProvider from '@/components/providers/LevelsProgressionProvider';
-import Home from '@/pages/home';
 
 const App: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ const App: React.FC = () => {
         <ModalProvider>
           <LevelsProgressionProvider>
             <ReactFlowProvider>
-              <Home />
+              <CanvasContainer />
             </ReactFlowProvider>
           </LevelsProgressionProvider>
         </ModalProvider>
