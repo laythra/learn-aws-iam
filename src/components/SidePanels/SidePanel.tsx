@@ -1,4 +1,4 @@
-import { Flex, Box, Collapse, useTheme } from '@chakra-ui/react';
+import { Flex, Box, useTheme } from '@chakra-ui/react';
 
 interface SidePanelProps {
   children: React.ReactNode;
@@ -7,7 +7,8 @@ interface SidePanelProps {
 
 const SidePanel: React.FC<SidePanelProps> = ({ children, isOpen }) => {
   const theme = useTheme();
-  const flexBasis = isOpen ? '20%' : '0%';
+  const openWidth = { base: '50%', md: '30%', lg: '25%', xl: '20%' };
+  const width = isOpen ? openWidth : '0%';
 
   return (
     <Flex
@@ -16,15 +17,19 @@ const SidePanel: React.FC<SidePanelProps> = ({ children, isOpen }) => {
       direction='row-reverse'
       flexGrow={0}
       flexShrink={0}
-      flexBasis={flexBasis}
+      width={width}
+      transition='width 0.3s ease-in-out'
+      overflow='hidden'
     >
-      <Collapse in style={{ overflow: 'hidden' }}>
-        {isOpen && (
-          <Box h='100%' overflowY='auto'>
-            <Box m={4}>{children}</Box>
-          </Box>
-        )}
-      </Collapse>
+      <Box
+        h='100%'
+        overflowY='auto'
+        opacity={isOpen ? 1 : 0}
+        transition='opacity 0.1s ease-in-out'
+        pointerEvents={isOpen ? 'auto' : 'none'}
+      >
+        <Box m={4}>{children}</Box>
+      </Box>
     </Flex>
   );
 };
