@@ -88,11 +88,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         show_popovers: false,
       }),
     },
-    TOGGLE_SIDE_PANEL: {
-      actions: assign({
-        side_panel_open: ({ context }) => !context.side_panel_open,
-      }),
-    },
+    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
     [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {

@@ -89,9 +89,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         show_popovers: false,
       }),
     },
-    TOGGLE_SIDE_PANEL: {
-      actions: 'toggle_side_panel',
-    },
+    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [
         {
