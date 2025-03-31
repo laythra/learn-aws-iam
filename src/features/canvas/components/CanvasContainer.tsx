@@ -2,17 +2,19 @@ import React from 'react';
 
 import { Flex, Box, useTheme } from '@chakra-ui/react';
 
+import Canvas from './Canvas';
+import MultiAccountCanvas from './MultiAccountCanvas';
 import { Navbar } from '@/components/Navbar';
 import { FixedPopover } from '@/components/Popover/FixedPopover';
 import { TutorialPopup } from '@/components/Popup/TutorialPopup';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import RightSidePanel from '@/components/SidePanels/RightSidePanel';
 import { UnnecessaryEdgesNodesWarning } from '@/components/UnnecessaryEdgesNodesWarning';
-import Canvas from '@/features/canvas/components/Canvas';
-import MultiAccountCanvas from '@/features/canvas/components/MultiAccountCanvas';
 import { CustomTheme } from '@/types';
 
-const Home: React.FC = () => {
+interface CanvasContainerProps {}
+
+const CanvasContainer: React.FC<CanvasContainerProps> = () => {
   const theme = useTheme<CustomTheme>();
   const useMultiAccountCanvas = LevelsProgressionContext().useSelector(
     state => state.context.use_multi_account_canvas
@@ -31,4 +33,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default CanvasContainer;
