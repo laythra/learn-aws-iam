@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Edge } from 'react-flow-renderer';
+import { Edge } from 'reactflow';
 import type { Node } from 'reactflow';
 import { setup, enqueueActions, assign } from 'xstate';
 
