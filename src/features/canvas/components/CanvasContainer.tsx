@@ -6,6 +6,7 @@ import Canvas from './Canvas';
 import MultiAccountCanvas from './MultiAccountCanvas';
 import { Navbar } from '@/components/Navbar';
 import { FixedPopover } from '@/components/Popover/FixedPopover';
+import { MobileWarningPopup } from '@/components/Popup/MobileWarningPopup';
 import { TutorialPopup } from '@/components/Popup/TutorialPopup';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import RightSidePanel from '@/components/SidePanels/RightSidePanel';
@@ -22,6 +23,7 @@ const CanvasContainer: React.FC<CanvasContainerProps> = () => {
   return (
     <Flex direction='row' h='100vh' w='100vw'>
       <TutorialPopup />
+      <MobileWarningPopup />
       <Navbar />
       <Box h='100vh' w='100%' pt={theme.sizes.navbarHeightInPixels}>
         {useMultiAccountCanvas ? <MultiAccountCanvas /> : <Canvas />}
