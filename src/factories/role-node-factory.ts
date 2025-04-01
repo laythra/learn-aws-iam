@@ -1,15 +1,15 @@
+import type { HandleProps } from '@xyflow/react';
+import { Position } from '@xyflow/react';
 import _ from 'lodash';
-import type { Node, HandleProps } from 'reactflow';
-import { Position } from 'reactflow';
 
 import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
-import { IAMNodeImage, IAMNodeEntity, IAMRoleNodeData } from '@/types';
+import { IAMNodeImage, IAMNodeEntity, IAMRoleNode } from '@/types';
 
-export const TEMPLATE_ROLE_NODE: Node<IAMRoleNodeData> = {
+export const TEMPLATE_ROLE_NODE: IAMRoleNode = {
   id: 'iam_role',
   position: { x: 0, y: 0 },
-  type: 'iam_default',
   draggable: true,
+  type: 'role',
   data: {
     id: 'iam_role',
     label: 'IAM Role',
@@ -28,6 +28,6 @@ export const TEMPLATE_ROLE_NODE: Node<IAMRoleNodeData> = {
   },
 };
 
-export function createRoleNode(props: Partial<IAMRoleNodeData>): Node<IAMRoleNodeData> {
+export function createRoleNode(props: Partial<IAMRoleNode['data']>): IAMRoleNode {
   return _.merge({}, TEMPLATE_ROLE_NODE, { data: props }, { id: props.id });
 }

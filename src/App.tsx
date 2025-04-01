@@ -1,5 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { ReactFlowProvider } from 'reactflow';
+import { ReactFlowProvider } from '@xyflow/react';
 
 import CanvasContainer from './features/canvas/components/CanvasContainer';
 import IAMNodeProvider from './features/canvas/components/IAMNodeProvider';

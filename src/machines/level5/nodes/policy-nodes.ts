@@ -1,10 +1,10 @@
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/policy-node-factory';
-import type { IAMPolicyNodeData } from '@/types';
+import type { IAMPolicyNode } from '@/types';
 import { AccessLevel, IAMNodeImage } from '@/types';
 
-const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
+const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.BillingPolicy,
     label: 'billing-read-policy',
@@ -34,7 +34,7 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   },
 ];
 
-const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
+const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.UsersCertificatesS3ReadPolicy,
     label: 'users-certs-s3-read',

@@ -14,6 +14,7 @@ import { IdentificationIcon, ClipboardDocumentIcon } from '@heroicons/react/20/s
 
 import { CanvasStore } from '../stores/canvas-store';
 import { WithStateMachineEventIconButton } from '@/components/Decorated';
+import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface ARNIconButtonProps extends ChakraProps {
@@ -31,8 +32,10 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
   ...styleProps
 }) => {
   const toast = useToast();
+  const levelActor = LevelsProgressionContext().useActorRef();
 
   const copyToClipboard = (): void => {
+    console.log(levelActor.getSnapshot().value);
     navigator.clipboard.writeText(arn);
     toast({
       title: 'ARN copied to clipboard',

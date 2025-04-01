@@ -1,13 +1,13 @@
+import { Position, type HandleProps } from '@xyflow/react';
 import _ from 'lodash';
-import { Position, type HandleProps, type Node } from 'reactflow';
 
 import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
-import { type IAMUserNodeData, HandleID, IAMNodeEntity, IAMNodeImage } from '@/types';
+import { HandleID, IAMNodeEntity, IAMNodeImage, IAMUserNode } from '@/types';
 
-export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
+export const TEMPLATE_USER_NODE: IAMUserNode = {
   id: 'iam_user',
   position: { x: 0, y: 0 },
-  type: 'iam_default',
+  type: 'user',
   draggable: true,
   deletable: false,
   data: {
@@ -26,7 +26,7 @@ export const TEMPLATE_USER_NODE: Node<IAMUserNodeData> = {
   },
 };
 
-export function createUserNode(props: Partial<IAMUserNodeData>): Node<IAMUserNodeData> {
+export function createUserNode(props: Partial<IAMUserNode['data']>): IAMUserNode {
   props.id ||= Date.now().toString();
 
   return _.merge(

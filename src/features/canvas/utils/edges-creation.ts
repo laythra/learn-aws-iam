@@ -1,6 +1,5 @@
-import { Node } from 'reactflow';
-
-import { IAMAnyNodeData, IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types';
+import { IAMAnyNode } from '@/types/iam-node-types';
 
 const VALID_CONNECTIONS = new Set<string>(
   [
@@ -14,10 +13,7 @@ const VALID_CONNECTIONS = new Set<string>(
   ].map(([source, target]) => `${source}-${target}`)
 );
 
-export const isValidConnection = (
-  sourceNode: Node<IAMAnyNodeData>,
-  targetNode: Node<IAMAnyNodeData>
-): boolean => {
+export const isValidConnection = (sourceNode: IAMAnyNode, targetNode: IAMAnyNode): boolean => {
   const connectionKey = `${sourceNode.data.entity}-${targetNode.data.entity}`;
 
   return VALID_CONNECTIONS.has(connectionKey);

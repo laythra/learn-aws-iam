@@ -1,11 +1,10 @@
 import _ from 'lodash';
-import { type Node } from 'reactflow';
 
 import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/user-node-factory';
-import type { IAMUserNodeData } from '@/types';
+import type { IAMUserNode } from '@/types';
 
-const IN_LEVEL_USER_NODES: Partial<IAMUserNodeData>[] = [
+const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.Developer1,
     label: 'Omar',
@@ -33,8 +32,6 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNodeData>[] = [
   },
 ];
 
-// TODO: Get rid of defining association in this way, and define them manually in the above array instead
-export const INITIAL_IN_LEVEL_USER_NODES: Node<IAMUserNodeData>[] =
-  IN_LEVEL_USER_NODES.map(createUserNode);
+export const INITIAL_IN_LEVEL_USER_NODES: IAMUserNode[] = IN_LEVEL_USER_NODES.map(createUserNode);
 
 export const groupedByIdUsers = _.keyBy(INITIAL_IN_LEVEL_USER_NODES, 'id');

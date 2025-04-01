@@ -100,6 +100,8 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
     closeIdentityCreator();
   };
 
+  console.log('Here');
+
   useEffect(() => {
     if (!isIdentityCreatorOpen) return;
 

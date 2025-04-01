@@ -1,7 +1,5 @@
 import { template } from 'lodash';
 
-import { generateArn } from '@/utils/arn-generator';
-
 const assumeRolePolicySchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',

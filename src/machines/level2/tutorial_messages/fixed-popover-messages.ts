@@ -8,7 +8,7 @@ const POPUP_MSG_1 = `
 `;
 
 const POPUP_MSG_2 = `
-  If we wanted to add a bunch of new **IAM Users** to our account,
+  If we wanted to add a bunch of new **IAM Users** to our account, ha
   we'd have to attach the same **policies** to each **user** individually.
   This can be a bit cumbersome.
 `;

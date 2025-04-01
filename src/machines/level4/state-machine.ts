@@ -49,7 +49,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     in_tutorial_state: true,
     whitelisted_element_ids: [],
     nodes_connnections: [],
-    dependency_map: {},
   },
   on: {
     ADD_IAM_POLICY_NODE: {

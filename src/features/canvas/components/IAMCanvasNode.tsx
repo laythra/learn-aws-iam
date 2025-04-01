@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
+import { Handle } from '@xyflow/react';
 import { useAnimate } from 'framer-motion';
 import _ from 'lodash';
-import { Handle } from 'reactflow';
 
 import ARNIconButton from './ARNIconButton';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
@@ -13,13 +13,13 @@ import { ShimmerBackground } from './ShimmerBackground';
 import { CanvasStore } from '../stores/canvas-store';
 import { WithPopoverBox } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { type IAMAnyNodeData, type CustomTheme, IAMNodeEntity } from '@/types';
+import { type CustomTheme, IAMAnyNode, IAMNodeEntity } from '@/types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 import { generateArn } from '@/utils/arn-generator';
 import { loadLocalImage } from '@/utils/image-loader';
 
 export interface IAMCanvasNodeProps {
-  data: IAMAnyNodeData;
+  data: IAMAnyNode['data'];
   id: string;
 }
 
@@ -37,7 +37,7 @@ enum AnimationState {
  * @param `id` The unique identifier of the node.
  * @param `data` The node data passed from React Flow.
  */
-const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
+export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const { entity, label, handles, image, content, animations } = data;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
   const [selectedNodeId, openedNodeId] = useSelector(

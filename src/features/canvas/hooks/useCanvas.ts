@@ -2,26 +2,27 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { useTheme, useToast } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
+import { ReactFlowInstance, Connection } from '@xyflow/react';
 import _ from 'lodash';
-import { Edge, ReactFlowInstance, Node, Connection } from 'reactflow';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { isValidConnection } from '../utils/edges-creation';
 import { getNodeInitialPosition } from '../utils/nodes-position';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { CustomTheme, IAMAnyNodeData, IAMEdgeData } from '@/types';
+import { CustomTheme } from '@/types';
+import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface UseCanvasOptions {}
 
 interface UseCanvasReturn {
-  rfInstance: ReactFlowInstance | undefined;
-  setRfInstance: (instance: ReactFlowInstance) => void;
-  nodesState: Node<IAMAnyNodeData>[];
-  edgesState: Edge[];
+  rfInstance: ReactFlowInstance<IAMAnyNode, IAMEdge> | undefined;
+  setRfInstance: (instance: ReactFlowInstance<IAMAnyNode, IAMEdge>) => void;
+  nodesState: IAMAnyNode[];
+  edgesState: IAMEdge[];
   onConnect: (params: Connection) => void;
-  onEdgeDelete: (targetEdges: Edge[]) => void;
-  onNodeDelete: (targetNodes: Node<IAMAnyNodeData>[]) => void;
+  onEdgeDelete: (targetEdges: IAMEdge[]) => void;
+  onNodeDelete: (targetNodes: IAMAnyNode[]) => void;
   sidePanelWidth: number;
   disabledEdgesCreation: boolean;
 }
@@ -54,7 +55,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const levelActor = LevelsProgressionContext().useActorRef();
   const sidePanelWidth = sidePanelOpened ? window.innerWidth * 0.2 : 0;
 
-  const [rfInstance, setRfInstance] = useState<ReactFlowInstance>();
+  const [rfInstance, setRfInstance] = useState<ReactFlowInstance<IAMAnyNode, IAMEdge>>();
 
   useEffect(() => {
     CanvasStore.send({ type: 'setEdges', edges });
@@ -111,7 +112,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
 
         return { ...node, position: initialPosition };
       });
-    });
+    }) as IAMAnyNode[];
 
     CanvasStore.send({ type: 'setNodes', nodes: newNodes });
   }, [nodes, rfInstance]);
@@ -136,8 +137,8 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         return;
       }
 
-      const sourceNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.source })!;
-      const targetNode = _.find<Node<IAMAnyNodeData>>(nodes, { id: params.target })!;
+      const sourceNode = _.find<IAMAnyNode>(nodes, { id: params.source })!;
+      const targetNode = _.find<IAMAnyNode>(nodes, { id: params.target })!;
 
       if (!isValidConnection(sourceNode, targetNode)) {
         showInvalidConnectionToast();
@@ -153,11 +154,11 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     [nodes, edgesManagementDisabled]
   );
 
-  const onEdgeDelete = useCallback((targetEdges: Edge<IAMEdgeData>[]) => {
+  const onEdgeDelete = useCallback((targetEdges: IAMEdge[]) => {
     levelActor.send({ type: StatefulStateMachineEvent.DeleteEdge, edge: targetEdges[0] });
   }, []);
 
-  const onNodeDelete = useCallback((targetNodes: Node<IAMAnyNodeData>[]) => {
+  const onNodeDelete = useCallback((targetNodes: IAMAnyNode[]) => {
     levelActor.send({ type: StatefulStateMachineEvent.DeleteNode, node: targetNodes[0] });
   }, []);
 

@@ -1,19 +1,23 @@
 import React from 'react';
 
-import ReactFlow, { Background, BackgroundVariant, ConnectionMode } from 'reactflow';
+import { ReactFlow, Background, BackgroundVariant, ConnectionMode } from '@xyflow/react';
 
 import IAMCanvasEdge from './IAMCanvasEdge';
 import IAMCanvasNode from './IAMCanvasNode';
 import { useCanvas } from '../hooks/useCanvas';
 import { CanvasStore } from '../stores/canvas-store';
-import 'reactflow/dist/style.css';
+import '@xyflow/react/dist/style.css';
 
 const nodeTypes = {
-  iam_default: IAMCanvasNode,
+  policy: IAMCanvasNode,
+  user: IAMCanvasNode,
+  iam_group: IAMCanvasNode,
+  role: IAMCanvasNode,
+  resource: IAMCanvasNode,
 };
 
 const edgeTypes = {
-  iam_default: IAMCanvasEdge,
+  default: IAMCanvasEdge,
 };
 
 const Canvas: React.FC = () => {

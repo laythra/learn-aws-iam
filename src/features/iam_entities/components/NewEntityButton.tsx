@@ -35,7 +35,6 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   // If a popover with a `Next` button is open, we disable the NewEntityBtn
   const disableEntityButton = showPopovers && popoverContent?.show_next_button;
 
-
   const hidePopovers = (): void => {
     levelActor.send({ type: 'HIDE_POPOVERS' });
   };

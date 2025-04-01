@@ -1,27 +1,19 @@
+import { Node } from '@xyflow/react';
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
-import { Node } from 'reactflow';
 
 import {
   AccountID,
   BaseFinishEventMap,
   GenericContext,
   IAMRoleCreationObjective,
-  IAMUserGroupCreationObjective,
   LevelObjective,
   ObjectiveType,
 } from '../types';
 import { ElementID } from '@/config/element-ids';
-import { createGroupNode } from '@/factories/group-node-factory';
 import { createPolicyNode } from '@/factories/policy-node-factory';
 import { createRoleNode } from '@/factories/role-node-factory';
-import { createUserNode } from '@/factories/user-node-factory';
-import {
-  IAMGroupNodeData,
-  IAMNodeEntity,
-  type IAMPolicyNodeData,
-  type IAMUserNodeData,
-} from '@/types';
+import { IAMAnyNode, IAMNodeEntity, IAMPolicyNode, IAMRoleNode } from '@/types';
 import { findAnyValidPolicy, findAnyValidRole, isJSONValid } from '@/utils/iam-code-linter';
 import { isNodeOfEntity } from '@/utils/node-type-guards';
 
@@ -67,7 +59,7 @@ export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends B
       editable: true,
     });
 
-    draftNodes.push(newPolicyNode);
+    draftNodes.push(newPolicyNode as WritableDraft<IAMPolicyNode>);
     if (targetValidPolicy) {
       sideEffectsEvents.push(targetValidPolicy.on_finish_event);
     }
@@ -107,7 +99,7 @@ export function editIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends Bas
   const updatedContext = produce(context, draftContext => {
     const targetNode = draftContext.nodes.find(
       node => node.id === nodeId && isNodeOfEntity(node, IAMNodeEntity.Policy)
-    ) as WritableDraft<Node<IAMPolicyNodeData>>;
+    ) as WritableDraft<IAMPolicyNode>;
 
     if (!targetNode) return;
 
@@ -148,7 +140,7 @@ export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends Bas
   label: string,
   accountId?: AccountID
 ): [
-  Node[],
+  IAMAnyNode[],
   IAMRoleCreationObjective<TFinishEventMap>[],
   TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][],
 ] {
@@ -171,7 +163,7 @@ export function createIAMRoleNode<TLevelObjectiveID, TFinishEventMap extends Bas
       unnecessary_node: targetValidObjective === undefined,
     });
 
-    draftNodes.push(newRoleNode);
+    draftNodes.push(newRoleNode as WritableDraft<IAMRoleNode>);
     if (targetValidObjective) {
       sideEffectsEvents.push(targetValidObjective.on_finish_event);
     }

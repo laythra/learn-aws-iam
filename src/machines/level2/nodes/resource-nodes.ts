@@ -1,11 +1,9 @@
-import { type Node } from 'reactflow';
-
 import { ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/resource-node-factory';
-import type { IAMResourceNodeData } from '@/types';
+import type { IAMResourceNode } from '@/types';
 import { IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 
-const RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
+const RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.S3Bucket,
     label: 'public-images',
@@ -29,5 +27,4 @@ const RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
   },
 ];
 
-export const INITIAL_RESOURCE_NODES: Node<IAMResourceNodeData>[] =
-  RESOURCE_NODES.map(createResourceNode);
+export const INITIAL_RESOURCE_NODES: IAMResourceNode[] = RESOURCE_NODES.map(createResourceNode);

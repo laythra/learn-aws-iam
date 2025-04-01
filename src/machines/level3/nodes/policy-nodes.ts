@@ -1,11 +1,9 @@
-import type { Node } from 'reactflow';
-
 import { PolicyNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/policy-node-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { IAMPolicyNodeData } from '@/types';
+import { IAMPolicyNode } from '@/types';
 
-const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
+const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.S3ReadPolicy,
     label: 'S3ReadAccess',
@@ -15,5 +13,5 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   },
 ];
 
-export const INITIAL_TUTORIAL_POLICY_NODES: Node<IAMPolicyNodeData>[] =
+export const INITIAL_TUTORIAL_POLICY_NODES: IAMPolicyNode[] =
   TUTORIAL_POLICY_NODES.map(createPolicyNode);

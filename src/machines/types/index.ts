@@ -1,24 +1,23 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
+import type { Edge, Node } from '@xyflow/react';
 import { Schema, ValidateFunction } from 'ajv';
 import { DynamicAnimationOptions } from 'framer-motion';
-import type { Edge, Node } from 'reactflow';
 
 import { ElementID } from '@/config/element-ids';
 import type {
   AccessLevel,
   CreatableIAMNodeEntity,
-  IAMPolicyNodeData,
-  IAMRoleNodeData,
+  IAMAnyNode,
+  IAMEdge,
+  IAMGroupNode,
+  IAMNodeWithPolicies,
+  IAMPolicyNode,
+  IAMRoleNode,
   IAMScriptableEntity,
+  IAMUserNode,
   PolicyGrantedAccess,
 } from '@/types';
-import {
-  IAMAnyNodeData,
-  IAMEdgeData,
-  IAMGroupNodeData,
-  IAMNodeEntity,
-  IAMUserNodeData,
-} from '@/types';
+import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -42,13 +41,13 @@ export enum ObjectiveType {
 
 export type BaseFinishEventMap = Record<ObjectiveType, string>;
 export type NodeConnection = {
-  from: Node<IAMAnyNodeData>;
-  to: Node<IAMAnyNodeData>;
+  from: IAMAnyNode;
+  to: IAMAnyNode;
   parent_edge_id?: string;
 };
 
 export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
-  edges: Edge<IAMEdgeData>[];
+  edges: IAMEdge[];
   edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
   level_description: string;
   level_finished?: boolean;
@@ -62,7 +61,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   next_popover_index: number;
   next_popup_index: number;
   next_fixed_popover_index: number;
-  nodes: Node<IAMAnyNodeData>[];
+  nodes: IAMAnyNode[];
   policy_creation_objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[];
   policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
   popover_content?: PopoverTutorialMessage;
@@ -78,6 +77,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   highlighted_element_id?: string;
   in_tutorial_state?: boolean;
   whitelisted_element_ids?: string[];
+  blocked_element_ids?: string[];
   edges_management_disabled?: boolean;
   animations?: Record<string, DynamicAnimationOptions>;
   identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
@@ -115,7 +115,7 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
   | {
       type: StatefulStateMachineEvent.AddIAMUserGroupNode;
       node_entity: IAMNodeEntity.Group | IAMNodeEntity.User;
-      node_data: Partial<IAMUserNodeData> | Partial<IAMGroupNodeData>;
+      node_data: Partial<IAMUserNode['data']> | Partial<IAMGroupNode['data']>;
     }
   | {
       type: StatefulStateMachineEvent.ADDIAMRoleNode;
@@ -125,43 +125,43 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
     }
   | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string; label: string; account_id?: AccountID }
   | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
-  | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNodeData, 'entity'>> }
-  | { type: 'ADD_EDGE'; edge: Edge<IAMEdgeData> }
-  | { type: 'SET_EDGES'; edges: Edge<IAMEdgeData>[] }
-  | { type: 'SET_NODES'; nodes: Node[] }
+  | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNode['data'], 'entity'>> }
+  | { type: 'ADD_EDGE'; edge: IAMEdge }
+  | { type: 'SET_EDGES'; edges: IAMEdge[] }
+  | { type: 'SET_NODES'; nodes: IAMAnyNode[] }
   | { type: 'UPDATE_USER_POLICY_EDGES'; node: Node }
   | {
       type: 'ATTACH_POLICY_TO_USER';
-      sourceNode: Node<IAMPolicyNodeData>;
-      targetNode: Node<IAMUserNodeData>;
+      sourceNode: IAMPolicyNode;
+      targetNode: IAMUserNode;
     }
   | {
       type: StatefulStateMachineEvent.AttachPolicyToEntity;
-      sourceNode: Node<IAMPolicyNodeData>;
-      targetNode: Node<IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData>;
+      sourceNode: IAMPolicyNode;
+      targetNode: IAMNodeWithPolicies;
     }
   | {
       type: StatefulStateMachineEvent.ConnectNodes;
-      sourceNode: Node<IAMAnyNodeData>;
-      targetNode: Node<IAMAnyNodeData>;
+      sourceNode: IAMAnyNode;
+      targetNode: IAMAnyNode;
     }
   | {
       type: StatefulStateMachineEvent.DeleteEdge;
-      edge: Edge<IAMEdgeData>;
+      edge: IAMEdge;
     }
   | {
       type: 'ATTACH_USER_TO_GROUP';
-      sourceNode: Node<IAMUserNodeData>;
-      targetNode: Node<IAMGroupNodeData>;
+      sourceNode: IAMUserNode;
+      targetNode: IAMGroupNode;
     }
   | {
       type: StatefulStateMachineEvent.AttachRoleToEntity;
-      sourceNode: Node<IAMRoleNodeData>;
-      targetNode: Node<IAMUserNodeData>;
+      sourceNode: IAMRoleNode;
+      targetNode: IAMUserNode;
     }
   | {
       type: StatefulStateMachineEvent.DeleteNode;
-      node: Node<IAMAnyNodeData>;
+      node: IAMAnyNode;
     }
   | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage }
   | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };
@@ -169,8 +169,8 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
 export type GenericInsideLevelMetadata = {
   connection_targets?: {
     // What this basically means, is that achieving all required_edges will unlock all locked_edges
-    required_edges: Edge[];
-    locked_edges: Edge[];
+    required_edges: IAMEdge[];
+    locked_edges: IAMEdge[];
   }[];
   // What this basically means, is that the user must create all entity_targets to this stage, very simple
   entity_targets?: IAMNodeEntity[];
@@ -235,7 +235,7 @@ export interface BaseCreationObjective<
   readonly initial_code: object;
   readonly validate_inside_code_editor: boolean;
   readonly validate_function?: ValidateFunction;
-  readonly get_validate_function?: (nodes: Node<IAMAnyNodeData>[]) => ValidateFunction | undefined;
+  readonly get_validate_function?: (nodes: IAMAnyNode[]) => ValidateFunction | undefined;
   readonly on_finish_event: TFinishEventMap[TEventType];
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
@@ -243,7 +243,7 @@ export interface BaseCreationObjective<
   readonly created_node_initial_position?: string;
   readonly callout_message?: string;
   readonly hint_messages?: { title: string; content: string }[];
-  readonly initial_edges: Edge<IAMEdgeData>[];
+  readonly initial_edges: IAMEdge[];
   finished: boolean;
 }
 

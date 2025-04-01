@@ -58,7 +58,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     role_creation_objectives: [],
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
-    dependency_map: {},
   },
   on: {
     ADD_EDGE: {

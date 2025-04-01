@@ -1,19 +1,17 @@
 import { createStoreWithProducer } from '@xstate/store';
-import { produce } from 'immer';
 import {
-  type Node,
-  type Edge,
   type NodeChange,
   type EdgeChange,
   applyNodeChanges,
   applyEdgeChanges,
-} from 'reactflow';
+} from '@xyflow/react';
+import { produce } from 'immer';
 
-import { IAMAnyNodeData } from '@/types';
+import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 type CanvasStoreState = {
-  nodes: Node<IAMAnyNodeData>[];
-  edges: Edge[];
+  nodes: IAMAnyNode[];
+  edges: IAMEdge[];
   selectedEdgeId?: string;
   selectedNodeId?: string;
   hoveredOverEdgeId?: string;
@@ -21,12 +19,12 @@ type CanvasStoreState = {
 };
 
 type CanvasStoreEvents = {
-  changeNodesState: { changes: NodeChange[] };
-  changeEdgesState: { changes: EdgeChange[] };
+  changeNodesState: { changes: NodeChange<IAMAnyNode>[] };
+  changeEdgesState: { changes: EdgeChange<IAMEdge>[] };
   selectEdge: { edgeId?: string };
   hoverOverEdge: { edgeId?: string };
-  setNodes: { nodes: Node<IAMAnyNodeData>[] };
-  setEdges: { edges: Edge[] };
+  setNodes: { nodes: IAMAnyNode[] };
+  setEdges: { edges: IAMEdge[] };
   updateNodePosition: { nodeId: string; position: { x: number; y: number } };
   updateSelectedNodeId: { nodeId: string };
   updateOpenedNodeId: { nodeId: string };
@@ -35,10 +33,10 @@ type CanvasStoreEvents = {
 export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStoreEvents>(produce, {
   context: { nodes: [], edges: [] },
   on: {
-    changeNodesState: (context: CanvasStoreState, event: { changes: NodeChange[] }) => {
+    changeNodesState: (context: CanvasStoreState, event: { changes: NodeChange<IAMAnyNode>[] }) => {
       context.nodes = applyNodeChanges(event.changes, context.nodes);
     },
-    changeEdgesState: (context: CanvasStoreState, event: { changes: EdgeChange[] }) => {
+    changeEdgesState: (context: CanvasStoreState, event: { changes: EdgeChange<IAMEdge>[] }) => {
       context.edges = applyEdgeChanges(event.changes, context.edges);
     },
     hoverOverEdge: (context: CanvasStoreState, event: { edgeId?: string }) => {
@@ -47,10 +45,10 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
     selectEdge: (context: CanvasStoreState, event: { edgeId?: string }) => {
       context.selectedEdgeId = event.edgeId;
     },
-    setNodes: (context: CanvasStoreState, event: { nodes: Node<IAMAnyNodeData>[] }) => {
+    setNodes: (context: CanvasStoreState, event: { nodes: IAMAnyNode[] }) => {
       context.nodes = event.nodes;
     },
-    setEdges: (context: CanvasStoreState, event: { edges: Edge[] }) => {
+    setEdges: (context: CanvasStoreState, event: { edges: IAMEdge[] }) => {
       context.edges = event.edges;
     },
     updateNodePosition(

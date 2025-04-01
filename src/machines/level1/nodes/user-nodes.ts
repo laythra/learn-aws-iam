@@ -1,11 +1,9 @@
-import { type Node } from 'reactflow';
-
 import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/user-node-factory';
-import type { IAMUserNodeData } from '@/types';
+import type { IAMUserNode } from '@/types';
 import { IAMNodeImage } from '@/types';
 
-const TUTORIAL_POLICY_NODES: Partial<IAMUserNodeData>[] = [
+const TUTORIAL_POLICY_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.TutorialUser,
     label: 'Laith',
@@ -14,5 +12,4 @@ const TUTORIAL_POLICY_NODES: Partial<IAMUserNodeData>[] = [
   },
 ];
 
-export const INITIAL_TUTORIAL_USER_NODES: Node<IAMUserNodeData>[] =
-  TUTORIAL_POLICY_NODES.map(createUserNode);
+export const INITIAL_TUTORIAL_USER_NODES: IAMUserNode[] = TUTORIAL_POLICY_NODES.map(createUserNode);

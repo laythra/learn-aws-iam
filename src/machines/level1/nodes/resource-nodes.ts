@@ -1,11 +1,11 @@
-import { HandleProps, Position, type Node } from 'reactflow';
+import { HandleProps, Position } from '@xyflow/react';
 
 import { ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/resource-node-factory';
-import type { IAMResourceNodeData } from '@/types';
+import type { IAMResourceNode } from '@/types';
 import { IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 
-const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
+const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.PublicImagesS3Bucket,
     label: 'public-images',
@@ -16,5 +16,5 @@ const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
   },
 ];
 
-export const INITIAL_TUTORIAL_RESOURCE_NODES: Node<IAMResourceNodeData>[] =
+export const INITIAL_TUTORIAL_RESOURCE_NODES: IAMResourceNode[] =
   TUTORIAL_RESOURCE_NODES.map(createResourceNode);

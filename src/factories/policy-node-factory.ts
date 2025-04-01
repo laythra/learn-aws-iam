@@ -1,14 +1,14 @@
+import type { HandleProps } from '@xyflow/react';
+import { Position } from '@xyflow/react';
 import _ from 'lodash';
-import type { Node, HandleProps } from 'reactflow';
-import { Position } from 'reactflow';
 
 import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
-import { IAMPolicyNodeData, IAMNodeImage, IAMNodeEntity, HandleID } from '@/types';
+import { IAMNodeImage, IAMNodeEntity, HandleID, IAMPolicyNode } from '@/types';
 
-export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
+export const TEMPLATE_POLICY_NODE: IAMPolicyNode = {
   id: 'iam_policy',
   position: { x: 0, y: 0 },
-  type: 'iam_default',
+  type: 'policy',
   draggable: true,
   deletable: false,
   data: {
@@ -31,7 +31,7 @@ export const TEMPLATE_POLICY_NODE: Node<IAMPolicyNodeData> = {
   },
 };
 
-export function createPolicyNode(props: Partial<IAMPolicyNodeData>): Node<IAMPolicyNodeData> {
+export function createPolicyNode(props: Partial<IAMPolicyNode['data']>): IAMPolicyNode {
   return _.merge(
     {},
     TEMPLATE_POLICY_NODE,
