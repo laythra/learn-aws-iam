@@ -34,12 +34,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   initial: 'inside_tutorial',
   context: {
     level_title: 'Customer Managed Policies',
-    level_description: 'Customer managed policies FTW',
+    level_description: `
+      Write custom IAM policies and attach them directly to users, groups, or resources.
+    `,
     level_number: 3,
     next_popover_index: 0,
     next_popup_index: 0,
     next_fixed_popover_index: 0,
-    state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,

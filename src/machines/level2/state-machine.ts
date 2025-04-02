@@ -30,12 +30,14 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   initial: 'tutorial_popup1',
   context: {
     level_title: 'IAM Groups',
-    level_description: 'Scaling your IAM setup with groups',
+    level_description: `
+      Organize and manage users more efficiently
+      by using IAM Groups to assign shared permissions.
+    `,
     level_number: 2,
     next_popover_index: 0,
     next_popup_index: 0,
     next_fixed_popover_index: 0,
-    state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,

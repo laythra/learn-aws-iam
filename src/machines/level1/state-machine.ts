@@ -30,13 +30,15 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   id: 'level1_state_machine',
   initial: 'inside_tutorial',
   context: {
-    level_title: 'IAM Basics',
-    level_description: 'Learn about Identity and Access Management',
+    level_title: 'IAM Introduction',
+    level_description: `
+      Learn the fundamentals of IAM by creating users,
+      attaching managed policies, and granting them access to specific AWS resources.
+    `,
     level_number: 1,
     next_popover_index: 0,
     next_popup_index: 0,
     next_fixed_popover_index: 0,
-    state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,

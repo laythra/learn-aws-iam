@@ -71,7 +71,6 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   show_popups: boolean;
   show_fixed_popovers: boolean;
   side_panel_open?: boolean;
-  state_name: string;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
   use_multi_account_canvas?: boolean;
   highlighted_element_id?: string;

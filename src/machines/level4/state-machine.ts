@@ -26,13 +26,16 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   id: 'level4_state_machine',
   initial: 'inside_tutorial',
   context: {
-    level_title: 'IAM Groups',
-    level_description: 'Scaling your IAM setup with groups',
+    level_title: 'Policy Mastery Exam',
+    level_description: `
+      Prove your skills by applying everything you've learned. Design,
+      connect, and refine IAM entities to meet
+      real-world access requirements in this final challenge.
+    `,
     level_number: 4,
     next_popover_index: 0,
     next_popup_index: 0,
     next_fixed_popover_index: 0,
-    state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
