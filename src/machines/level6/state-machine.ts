@@ -28,8 +28,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   id: 'level6_state_machine',
   initial: 'inside_tutorial',
   context: {
-    level_title: 'IAM Roles',
-    level_description: 'IAM Roles',
+    level_title: 'Cross Account Access',
+    level_description: `
+      Learn how to grant access across AWS accounts by
+      creating trust relationships and assigning cross-account roles.
+    `,
     level_number: 6,
     next_popover_index: 0,
     next_popup_index: 0,

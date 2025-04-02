@@ -32,13 +32,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   initial: 'inside_tutorial',
   context: {
     level_title: 'IAM Roles',
-    level_description: 'IAM Roles',
+    level_description: `
+      Understand IAM Roles and how to use them to enable
+      secure service-to-service communication within your AWS environment.
+    `,
     level_number: 5,
-    // next_popover_index: 8,
-    // next_popup_index: 3,
-    // next_fixed_popover_index: 2,
-    // next_role_creation_objectives_index: 1,
-    // next_edges_connection_objectives_index: 1,
     next_popover_index: 0,
     next_popup_index: 0,
     next_fixed_popover_index: 0,
