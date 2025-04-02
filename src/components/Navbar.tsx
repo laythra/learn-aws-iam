@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box, Button, Flex, HStack, IconButton, Input, Text } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
-import { Bars3Icon } from '@heroicons/react/16/solid';
+import { Bars3Icon, InformationCircleIcon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
 import AnimatedRedDot from './Animated/AnimatedRedDot';
@@ -18,8 +18,13 @@ interface NavbarProps {}
 export const Navbar: React.FC<NavbarProps> = () => {
   const theme = useTheme<CustomTheme>();
   const levelActor = LevelsProgressionContext().useActorRef();
-  const [value, levelNumber] = LevelsProgressionContext().useSelector(
-    state => [state.value, state.context.level_number],
+  const [value, levelNumber, levelTitle, levelDescription] = LevelsProgressionContext().useSelector(
+    state => [
+      state.value,
+      state.context.level_number,
+      state.context.level_title,
+      state.context.level_description,
+    ],
     _.isEqual
   );
 
@@ -46,8 +51,8 @@ export const Navbar: React.FC<NavbarProps> = () => {
       zIndex={theme.zIndices.docked}
     >
       <Flex alignItems='center' justifyContent='space-between'>
-        <Text fontSize='xl' fontWeight='bold' color='black'>
-          IAM Project
+        <Text fontSize='xl' fontWeight='bold' color='black' isTruncated>
+          Learn AWS IAM
         </Text>
         <HStack spacing={4}>
           {(import.meta.env.VITE_APP_ENV || 'development') === 'development' && ( // TODO: REMOVE THIS! Something hacky for dev purposes only.
@@ -71,9 +76,14 @@ export const Navbar: React.FC<NavbarProps> = () => {
               </Button>
             </HStack>
           )}
-          <Text fontSize='lg' fontWeight='bold' color='black'>
-            Level {levelNumber}/10
-          </Text>
+          <HStack spacing={2}>
+            <Text fontSize='lg' fontWeight='bold' color='black'>
+              Level {levelNumber}
+            </Text>
+            <Text fontSize='lg' fontWeight='semibold' color='gray.600'>
+              | {levelTitle}
+            </Text>
+          </HStack>
 
           <NewEntityButtonWithPopover elementid={ElementID.NewEntityBtn} />
           <Box position='relative'>
@@ -81,7 +91,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
               onClick={toggleSidePanel}
               icon={<Bars3Icon />}
               aria-label='side-panel-button'
-              color={'blue.500'}
+              color='gray.600'
               _hover={{ color: 'blue.500' }}
               _active={{ color: 'blue.600' }}
               bg='transparent'
