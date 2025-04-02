@@ -1,12 +1,10 @@
-import { type Node } from 'reactflow';
-
 import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/user-node-factory';
 import { AccountID } from '@/machines/types';
-import type { IAMUserNodeData } from '@/types';
+import type { IAMUserNode } from '@/types';
 import { IAMNodeImage } from '@/types';
 
-const IN_LEVEL_USER_NODES: Partial<IAMUserNodeData>[] = [
+const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.TrustedAccountIAMUser,
     label: 'omar',
@@ -16,5 +14,4 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNodeData>[] = [
   },
 ];
 
-export const INITIAL_IN_LEVEL_USER_NODES: Node<IAMUserNodeData>[] =
-  IN_LEVEL_USER_NODES.map(createUserNode);
+export const INITIAL_IN_LEVEL_USER_NODES: IAMUserNode[] = IN_LEVEL_USER_NODES.map(createUserNode);

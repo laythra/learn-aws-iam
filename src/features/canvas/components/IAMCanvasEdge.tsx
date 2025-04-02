@@ -2,13 +2,13 @@ import React from 'react';
 
 import { Box, useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
+import { getBezierPath, EdgeLabelRenderer, EdgeProps, BaseEdge } from '@xyflow/react';
 import _ from 'lodash';
-import { getBezierPath, EdgeLabelRenderer, EdgeProps, BaseEdge } from 'reactflow';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { CustomTheme, IAMEdgeData } from '@/types';
+import { CustomTheme, IAMEdge } from '@/types';
 
-const IAMCanvasEdge: React.FC<EdgeProps<IAMEdgeData>> = ({
+const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
   id,
   sourceX,
   sourceY,

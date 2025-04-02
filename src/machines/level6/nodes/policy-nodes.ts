@@ -1,6 +1,6 @@
 import { createPolicyNode } from '@/factories/policy-node-factory';
-import type { IAMPolicyNodeData } from '@/types';
+import type { IAMPolicyNode } from '@/types';
 
-const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [];
+const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [];
 
 export const INITIAL_IN_LEVEL_POLICY_NODES = IN_LEVEL_POLICY_NODES.map(createPolicyNode);

@@ -1,12 +1,10 @@
-import { type Node } from 'reactflow';
-
 import { ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/resource-node-factory';
 import { AccountID } from '@/machines/types';
-import type { IAMResourceNodeData } from '@/types';
+import type { IAMResourceNode } from '@/types';
 import { IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 
-const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
+const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.TrustingAccountDynamoDBTable,
     label: 'finance-reports',
@@ -17,5 +15,5 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNodeData>[] = [
   },
 ];
 
-export const INITIAL_IN_LEVEL_RESOURCE_NODES: Node<IAMResourceNodeData>[] =
+export const INITIAL_IN_LEVEL_RESOURCE_NODES: IAMResourceNode[] =
   IN_LEVEL_RESOURCE_NODES.map(createResourceNode);

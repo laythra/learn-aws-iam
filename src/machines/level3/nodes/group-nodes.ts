@@ -1,8 +1,8 @@
 import { GroupNodeID } from '../types/node-id-enums';
 import { createGroupNode } from '@/factories/group-node-factory';
-import type { IAMGroupNodeData } from '@/types';
+import { IAMGroupNode } from '@/types';
 
-const GROUP_NODES: Partial<IAMGroupNodeData>[] = [
+const GROUP_NODES: Partial<IAMGroupNode['data']>[] = [
   {
     id: GroupNodeID.FrontendGroup,
     label: 'frontend-team',

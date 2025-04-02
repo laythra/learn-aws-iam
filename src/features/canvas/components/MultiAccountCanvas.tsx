@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 
 import { Box, Divider, useTheme, Flex } from '@chakra-ui/react';
-import ReactFlow, { ConnectionMode, Node } from 'reactflow';
+import { ReactFlow, ConnectionMode } from '@xyflow/react';
 
 import ARNIconButton from './ARNIconButton';
 import IAMCanvasEdge from './IAMCanvasEdge';
@@ -10,16 +10,21 @@ import { useCanvas } from '../hooks/useCanvas';
 import { CanvasStore } from '../stores/canvas-store';
 import DotsPattern from '@/assets/images/dots_pattern.svg';
 import { AccountID } from '@/machines/types';
-import { CustomTheme, IAMAnyNodeData } from '@/types';
-import 'reactflow/dist/style.css';
+import { CustomTheme } from '@/types';
+import { IAMAnyNode } from '@/types/iam-node-types';
+import '@xyflow/react/dist/style.css';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 const nodeTypes = {
-  iam_default: IAMCanvasNode,
+  policy: IAMCanvasNode,
+  user: IAMCanvasNode,
+  iam_group: IAMCanvasNode,
+  role: IAMCanvasNode,
+  resource: IAMCanvasNode,
 };
 
 const edgeTypes = {
-  iam_default: IAMCanvasEdge,
+  default: IAMCanvasEdge,
 };
 
 const MultiAccountCanvas: React.FC = () => {
@@ -35,7 +40,7 @@ const MultiAccountCanvas: React.FC = () => {
   const theme = useTheme<CustomTheme>();
   const canvasWrapperRef = useRef<HTMLDivElement>(null);
 
-  const onNodeDragStop = (_event: React.MouseEvent, node: Node<IAMAnyNodeData>): void => {
+  const onNodeDragStop = (_event: React.MouseEvent, node: IAMAnyNode): void => {
     if (!rfInstance || !canvasWrapperRef.current) return;
 
     const { width } = canvasWrapperRef.current.getBoundingClientRect();

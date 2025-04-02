@@ -1,7 +1,5 @@
-import { DeepPartial } from '@chakra-ui/react';
-import { produce } from 'immer';
+import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
-import { Edge, Node } from 'reactflow';
 
 import { deleteConnectionEdges } from './edges-deletion-state-machine-actions';
 import {
@@ -13,24 +11,22 @@ import {
 } from '../types';
 import { createEdge, CreateEdgeProps } from '@/factories/edge-factory';
 import { theme } from '@/theme';
+import { IAMNodeEntity, PartialEdge, PolicyGrantedAccess } from '@/types';
 import {
-  IAMAnyNodeData,
-  IAMEdgeData,
-  IAMGroupNodeData,
-  IAMNodeEntity,
-  IAMPolicyNodeData,
-  IAMResourceNodeData,
-  IAMRoleNodeData,
-  IAMUserNodeData,
-  PartialEdge,
-  PolicyGrantedAccess,
-} from '@/types';
+  IAMAnyNode,
+  IAMEdge,
+  IAMGroupNode,
+  IAMPolicyNode,
+  IAMResourceNode,
+  IAMRoleNode,
+  IAMUserNode,
+} from '@/types/iam-node-types';
 import { getEdgeName, getEdgeLabel } from '@/utils/names';
-import { isNodeOfAnyEntity, isNodeOfEntity } from '@/utils/node-type-guards';
+import { isNodeOfAnyEntity, isNodeOfEntity, NodeByEntity } from '@/utils/node-type-guards';
 
 function isEdgeConnectionObjectiveFinished<TFinishEventMap extends BaseFinishEventMap>(
   objective: EdgeConnectionObjective<TFinishEventMap>,
-  establishedEdges: Edge<IAMEdgeData>[]
+  establishedEdges: IAMEdge[]
 ): boolean {
   return _.differenceBy(objective.required_edges, establishedEdges, 'id').length === 0;
 }
@@ -44,14 +40,14 @@ function isEdgeConnectionValid<TFinishEventMap extends BaseFinishEventMap>(
 
 function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  sourceNode: Node<IAMAnyNodeData>,
-  targetNode: Node<IAMAnyNodeData>,
+  sourceNode: IAMAnyNode,
+  targetNode: IAMAnyNode,
   options?: PartialEdge
-): { edge: Edge; events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] } {
+): { edge: IAMEdge; events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] } {
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] = [];
   const insideTutorial = context.in_tutorial_state;
   const edgeLabel = getEdgeLabel(sourceNode.data.entity, targetNode.data.entity);
-  let validEdge: Edge<IAMEdgeData> | undefined = undefined;
+  let validEdge: IAMEdge | undefined = undefined;
 
   const invalidEdge = createEdge(
     _.merge(
@@ -113,7 +109,7 @@ function createEdgesFromGrantedAccesses(
   sourceId: string,
   grantedAccesses: PolicyGrantedAccess[],
   parentEdgeId: string
-): Edge<IAMEdgeData>[] {
+): IAMEdge[] {
   return grantedAccesses.map(access =>
     createEdge({
       source: sourceId,
@@ -128,19 +124,19 @@ function createEdgesFromGrantedAccesses(
 
 function updateNodeConnectionsMap<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  newEdge: Edge<IAMEdgeData>,
-  newEdges: Edge<IAMEdgeData>[]
+  newEdge: IAMEdge,
+  newEdges: IAMEdge[]
 ): NodeConnection[] {
   return produce(context.nodes_connnections, draftConnections => {
     const nodesById = _.keyBy(context.nodes, 'id');
-    const sourceNode = nodesById[newEdge.source];
-    const targetNode = nodesById[newEdge.target];
+    const sourceNode = nodesById[newEdge.source] as WritableDraft<IAMAnyNode>;
+    const targetNode = nodesById[newEdge.target] as WritableDraft<IAMAnyNode>;
 
     draftConnections.push({ from: sourceNode, to: targetNode });
     newEdges.forEach(edge => {
       draftConnections.push({
-        from: nodesById[edge.source],
-        to: nodesById[edge.target],
+        from: nodesById[edge.source] as WritableDraft<IAMAnyNode>,
+        to: nodesById[edge.target] as WritableDraft<IAMAnyNode>,
         parent_edge_id: newEdge.id,
       });
     });
@@ -149,16 +145,16 @@ function updateNodeConnectionsMap<TLevelObjectiveID, TFinishEventMap extends Bas
 
 function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  source: Node<IAMAnyNodeData>,
-  target: Node<IAMAnyNodeData>,
+  source: IAMAnyNode,
+  target: IAMAnyNode,
   isInitialEdge: boolean,
-  options: Partial<Edge>,
-  computeExtraEdges: (baseEdgeId: string) => Edge<IAMEdgeData>[]
+  options: PartialEdge,
+  computeExtraEdges: (baseEdgeId: string) => IAMEdge[]
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][];
 } {
-  let baseEdge: Edge<IAMEdgeData>;
+  let baseEdge: IAMEdge;
   let events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][];
 
   if (isInitialEdge) {
@@ -181,11 +177,15 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
     ({ edge: baseEdge, events } = createEdgeWithEvents(context, source, target, options));
   }
 
-  const extraEdges = computeExtraEdges(baseEdge.id);
+  const extraEdges = computeExtraEdges(baseEdge.id) as WritableDraft<IAMEdge>[];
 
   const updatedContext = produce(context, draft => {
-    draft.edges.push(baseEdge, ...extraEdges);
-    draft.nodes_connnections = updateNodeConnectionsMap(context, baseEdge, extraEdges);
+    draft.edges.push(baseEdge as WritableDraft<IAMEdge>, ...extraEdges);
+    draft.nodes_connnections = updateNodeConnectionsMap(
+      context,
+      baseEdge,
+      extraEdges
+    ) as WritableDraft<NodeConnection[]>;
   });
 
   return { updatedContext, events };
@@ -195,11 +195,9 @@ function filterConnections<T extends IAMNodeEntity>(
   nodeConnections: NodeConnection[],
   targetId: string,
   entity: T
-): Array<NodeConnection & { from: Node<Extract<IAMAnyNodeData, { entity: T }>> }> {
+): Array<NodeConnection & { from: NodeByEntity[T] }> {
   return nodeConnections.filter(
-    (
-      connection
-    ): connection is NodeConnection & { from: Node<Extract<IAMAnyNodeData, { entity: T }>> } =>
+    (connection): connection is NodeConnection & { from: NodeByEntity[T] } =>
       connection.to.id === targetId && isNodeOfAnyEntity(connection.from, [entity])
   );
 }
@@ -207,8 +205,8 @@ function filterConnections<T extends IAMNodeEntity>(
 const connectionStrategies = {
   policyToUser: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-    policyNode: Node<IAMPolicyNodeData>,
-    userNode: Node<IAMUserNodeData>,
+    policyNode: IAMPolicyNode,
+    userNode: IAMUserNode,
     isInitialEdge: boolean,
     options: PartialEdge
   ) =>
@@ -218,10 +216,10 @@ const connectionStrategies = {
 
   policyToGroup: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-    policyNode: Node<IAMPolicyNodeData>,
-    groupNode: Node<IAMGroupNodeData>,
+    policyNode: IAMPolicyNode,
+    groupNode: IAMGroupNode,
     isInitialEdge: boolean,
-    options: Partial<Edge>
+    options: PartialEdge
   ) => {
     const userConnections = filterConnections(
       context.nodes_connnections,
@@ -241,10 +239,10 @@ const connectionStrategies = {
 
   policyToRole: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-    policyNode: Node<IAMPolicyNodeData>,
-    roleNode: Node<IAMRoleNodeData>,
+    policyNode: IAMPolicyNode,
+    roleNode: IAMRoleNode,
     isInitialEdge: boolean,
-    options: Partial<Edge> = {}
+    options: PartialEdge = {}
   ) => {
     const userConnections = filterConnections(
       context.nodes_connnections,
@@ -277,10 +275,10 @@ const connectionStrategies = {
 
   userToGroup: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-    userNode: Node<IAMUserNodeData>,
-    groupNode: Node<IAMGroupNodeData>,
+    userNode: IAMUserNode,
+    groupNode: IAMGroupNode,
     isInitialEdge: boolean,
-    options: Partial<Edge> = {}
+    options: PartialEdge = {}
   ) => {
     const policyConnections = filterConnections(
       context.nodes_connnections,
@@ -300,10 +298,10 @@ const connectionStrategies = {
 
   userToRole: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-    userNode: Node<IAMUserNodeData>,
-    roleNode: Node<IAMRoleNodeData>,
+    userNode: IAMUserNode,
+    roleNode: IAMRoleNode,
     isInitialEdge: boolean,
-    options: Partial<Edge> = {}
+    options: PartialEdge = {}
   ) => {
     const policyConnections = filterConnections(
       context.nodes_connnections,
@@ -323,10 +321,10 @@ const connectionStrategies = {
 
   roleToResource: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-    roleNode: Node<IAMRoleNodeData>,
-    resourceNode: Node<IAMResourceNodeData>,
+    roleNode: IAMRoleNode,
+    resourceNode: IAMResourceNode,
     isInitialEdge: boolean,
-    options: Partial<Edge> = {}
+    options: PartialEdge = {}
   ) => {
     const policyConnections = filterConnections(
       context.nodes_connnections,
@@ -345,10 +343,10 @@ const connectionStrategies = {
   },
   anyToAny: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-    policyNode: Node<IAMAnyNodeData>,
-    resourceNode: Node<IAMAnyNodeData>,
+    policyNode: IAMAnyNode,
+    resourceNode: IAMAnyNode,
     isInitialEdge: boolean,
-    options: Partial<Edge> = {}
+    options: PartialEdge = {}
   ) => {
     return applyStrategy(
       context,
@@ -368,8 +366,8 @@ export function updateConnectionEdges<
   TFinishEventMap extends BaseFinishEventMap,
 >(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  sourceNode: Node<IAMAnyNodeData>,
-  targetNode: Node<IAMAnyNodeData>,
+  sourceNode: IAMAnyNode,
+  targetNode: IAMAnyNode,
   isInitialEdge: boolean = false,
   options: PartialEdge = {}
 ): {
@@ -446,7 +444,7 @@ export function refreshPolicyConnections<
   TFinishEventMap extends BaseFinishEventMap,
 >(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  policyNode: Node<IAMPolicyNodeData>
+  policyNode: IAMPolicyNode
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
 } {

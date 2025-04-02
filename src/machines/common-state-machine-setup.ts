@@ -1,6 +1,4 @@
 import _ from 'lodash';
-import { Edge } from 'react-flow-renderer';
-import type { Node } from 'reactflow';
 import { setup, enqueueActions, assign } from 'xstate';
 
 import {
@@ -36,14 +34,14 @@ import type {
   LevelObjective,
   IAMPolicyCreationObjective,
 } from '@/machines/types';
+import { IAMNodeEntity } from '@/types';
 import {
-  IAMAnyNodeData,
-  IAMEdgeData,
-  IAMGroupNodeData,
-  IAMNodeEntity,
-  IAMPolicyNodeData,
-  IAMUserNodeData,
-} from '@/types';
+  IAMAnyNode,
+  IAMEdge,
+  IAMGroupNode,
+  IAMPolicyNode,
+  IAMUserNode,
+} from '@/types/iam-node-types';
 import { getEdgeName } from '@/utils/names';
 
 /**
@@ -95,8 +93,8 @@ export const createStateMachineSetup = <
             sourceNode,
             targetNode,
           }: {
-            sourceNode: Node<IAMAnyNodeData>;
-            targetNode: Node<IAMAnyNodeData>;
+            sourceNode: IAMAnyNode;
+            targetNode: IAMAnyNode;
           }
         ) => {
           const { updatedContext, events } = updateConnectionEdges<
@@ -117,7 +115,7 @@ export const createStateMachineSetup = <
           events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
-      delete_edge: enqueueActions(({ context, enqueue }, { edge }: { edge: Edge<IAMEdgeData> }) => {
+      delete_edge: enqueueActions(({ context, enqueue }, { edge }: { edge: IAMEdge }) => {
         const { updatedContext } = deleteConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
           context,
           [edge.id]
@@ -125,26 +123,24 @@ export const createStateMachineSetup = <
 
         enqueue.assign({ edges: updatedContext.edges });
       }),
-      delete_node: enqueueActions(
-        ({ context, enqueue }, { node }: { node: Node<IAMAnyNodeData> }) => {
-          let { updatedContext } = deleteNode<TLevelObjectiveID, TFinishEventMap>(context, node);
+      delete_node: enqueueActions(({ context, enqueue }, { node }: { node: IAMAnyNode }) => {
+        let { updatedContext } = deleteNode<TLevelObjectiveID, TFinishEventMap>(context, node);
 
-          const edgesToDelete = updatedContext.nodes_connnections
-            .filter(connection => connection.from.id === node.id || connection.to.id === node.id)
-            .map(connection => getEdgeName(connection.from.id, connection.to.id));
+        const edgesToDelete = updatedContext.nodes_connnections
+          .filter(connection => connection.from.id === node.id || connection.to.id === node.id)
+          .map(connection => getEdgeName(connection.from.id, connection.to.id));
 
-          ({ updatedContext } = deleteConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
-            updatedContext,
-            edgesToDelete
-          ));
+        ({ updatedContext } = deleteConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
+          updatedContext,
+          edgesToDelete
+        ));
 
-          enqueue.assign({
-            nodes: updatedContext.nodes,
-            edges: updatedContext.edges,
-            nodes_connnections: updatedContext.nodes_connnections,
-          });
-        }
-      ),
+        enqueue.assign({
+          nodes: updatedContext.nodes,
+          edges: updatedContext.edges,
+          nodes_connnections: updatedContext.nodes_connnections,
+        });
+      }),
       add_iam_user_group_node: enqueueActions(
         (
           { context, enqueue },
@@ -153,7 +149,7 @@ export const createStateMachineSetup = <
             params,
           }: {
             nodeType: IAMNodeEntity.Group | IAMNodeEntity.User;
-            params: Partial<IAMUserNodeData> | Partial<IAMGroupNodeData>;
+            params: Partial<IAMUserNode['data']> | Partial<IAMGroupNode['data']>;
           }
         ) => {
           const { updatedContext, events } = createUserGroupNode(context, nodeType, params);
@@ -205,7 +201,7 @@ export const createStateMachineSetup = <
 
           ({ updatedContext } = refreshPolicyConnections(
             updatedContext,
-            updatedContext.nodes.find(node => node.id === nodeId) as Node<IAMPolicyNodeData>
+            updatedContext.nodes.find(node => node.id === nodeId) as IAMPolicyNode
           ));
 
           enqueue.assign({
@@ -290,7 +286,7 @@ export const createStateMachineSetup = <
           editObjectiveState(context, id, true),
       }),
       add_iam_node: assign({
-        nodes: ({ context }, { node }: { node: Node<IAMAnyNodeData> }) => [...context.nodes, node],
+        nodes: ({ context }, { node }: { node: IAMAnyNode }) => [...context.nodes, node],
       }),
       show_popover: assign({
         popover_content: (
@@ -349,7 +345,7 @@ export const createStateMachineSetup = <
         });
       }),
       assign_nodes: assign({
-        nodes: ({ context }, { nodes }: { nodes: Node<IAMAnyNodeData>[] }) => nodes,
+        nodes: (__, { nodes }: { nodes: IAMAnyNode[] }) => nodes,
       }),
       set_mutli_account_canvas: assign({
         use_multi_account_canvas: true,

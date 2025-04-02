@@ -1,8 +1,8 @@
+import type { Edge } from '@xyflow/react';
 import _ from 'lodash';
-import type { Edge } from 'reactflow';
 
 import { theme } from '@/theme';
-import { IAMEdgeData } from '@/types';
+import { IAMEdge, IAMEdgeData } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
 type EdgeBaseProps = Omit<Edge<IAMEdgeData>, 'data'>;
@@ -14,7 +14,7 @@ export type CreateEdgeProps = RequiredEdgeProps &
     data?: Partial<IAMEdgeData>;
   };
 
-const EDGE_TEMPLATE: Edge<IAMEdgeData> = {
+const EDGE_TEMPLATE: IAMEdge = {
   id: 'template_edge',
   source: 'template_source',
   target: 'template_target',
@@ -24,8 +24,9 @@ const EDGE_TEMPLATE: Edge<IAMEdgeData> = {
   deletable: true,
   markerEnd: 'arrow',
   animated: true,
-  type: 'iam_default',
+  type: 'default',
   data: {
+    type: 'default',
     color: theme.colors.black,
     stroke_width: 1,
     hovering_color: theme.colors.blue[500],
@@ -34,6 +35,6 @@ const EDGE_TEMPLATE: Edge<IAMEdgeData> = {
   },
 };
 
-export const createEdge = (props: CreateEdgeProps): Edge<IAMEdgeData> => {
+export const createEdge = (props: CreateEdgeProps): IAMEdge => {
   return _.merge({}, EDGE_TEMPLATE, props, { id: getEdgeName(props.source, props.target) });
 };

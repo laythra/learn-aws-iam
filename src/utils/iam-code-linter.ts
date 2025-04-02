@@ -2,7 +2,6 @@ import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import Ajv, { ValidateFunction } from 'ajv';
 import _ from 'lodash';
-import { Node } from 'reactflow';
 
 import {
   AccountID,
@@ -13,7 +12,8 @@ import {
 import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
 import iamRoleTurstPolicySchema from '@/schemas/aws-iam-role-trust-policy-schema.json';
 import sharedConditionSchema from '@/schemas/shared-condition-schema.json';
-import { IAMAnyNodeData, IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types';
+import { IAMAnyNode } from '@/types/iam-node-types';
 
 interface LintConfig {
   validateFunction: ValidateFunction;
@@ -33,7 +33,7 @@ export const getObjectiveValidationFunction = (
   objective:
     | IAMPolicyCreationObjective<BaseFinishEventMap>
     | IAMRoleCreationObjective<BaseFinishEventMap>,
-  nodes: Node<IAMAnyNodeData>[]
+  nodes: IAMAnyNode[]
 ): ValidateFunction => {
   return (
     objective.get_validate_function?.(nodes) ??
@@ -94,7 +94,7 @@ export const isJSONValid = (docString: string, validateFunction: ValidateFunctio
 export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
   policyObjectives: IAMPolicyCreationObjective<TFinishEventMap>[],
   docString: string,
-  nodes: Node<IAMAnyNodeData>[],
+  nodes: IAMAnyNode[],
   accountId?: AccountID
 ): IAMPolicyCreationObjective<TFinishEventMap> | undefined => {
   policyObjectives = _.orderBy(policyObjectives, 'validate_inside_code_editor', 'desc');
@@ -113,7 +113,7 @@ export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
 export const findAnyValidRole = <TFinishEventMap extends BaseFinishEventMap>(
   roleObjectives: IAMRoleCreationObjective<TFinishEventMap>[],
   docString: string,
-  nodes: Node<IAMAnyNodeData>[],
+  nodes: IAMAnyNode[],
   accountId?: AccountID
 ): IAMRoleCreationObjective<TFinishEventMap> | undefined => {
   roleObjectives = _.orderBy(roleObjectives, 'validate_inside_code_editor', 'desc');

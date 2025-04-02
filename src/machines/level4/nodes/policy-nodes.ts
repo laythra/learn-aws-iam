@@ -1,13 +1,11 @@
-import type { Node } from 'reactflow';
-
 import { DATA_SCIENTISTS_POLICY_DOCUMENT } from '../policy_role_documents/data-scientists-policy';
 import { DEVELOPERS_POLICY_DOCUMENT } from '../policy_role_documents/developers-policy';
 import { INTERNS_POLICY_DOCUMENT } from '../policy_role_documents/interns-policy';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/policy-node-factory';
-import { AccessLevel, IAMPolicyNodeData } from '@/types';
+import { AccessLevel, IAMPolicyNode } from '@/types';
 
-const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
+const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.DeveloperPolicy,
     label: 'developers-access',
@@ -51,5 +49,5 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNodeData>[] = [
   },
 ];
 
-export const INITIAL_IN_LEVEL_POLICY_NODES: Node<IAMPolicyNodeData>[] =
+export const INITIAL_IN_LEVEL_POLICY_NODES: IAMPolicyNode[] =
   IN_LEVEL_POLICY_NODES.map(createPolicyNode);

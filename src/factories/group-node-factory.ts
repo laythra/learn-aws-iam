@@ -1,13 +1,14 @@
+import type { HandleProps } from '@xyflow/react';
+import { Position } from '@xyflow/react';
 import _ from 'lodash';
-import type { Node, HandleProps } from 'reactflow';
-import { Position } from 'reactflow';
 
-import { IAMGroupNodeData, IAMNodeImage, IAMNodeEntity } from '@/types';
+import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
+import { IAMNodeImage, IAMNodeEntity, IAMGroupNode, HandleID } from '@/types';
 
-export const TEMPLATE_GROUP_NODE: Node<IAMGroupNodeData> = {
+export const TEMPLATE_GROUP_NODE: IAMGroupNode = {
   id: 'iam_group',
   position: { x: 0, y: 0 },
-  type: 'iam_default',
+  type: 'iam_group',
   draggable: true,
   deletable: false,
   data: {
@@ -15,17 +16,18 @@ export const TEMPLATE_GROUP_NODE: Node<IAMGroupNodeData> = {
     label: 'IAM Group',
     entity: IAMNodeEntity.Group,
     handles: [
-      { id: Position.Top, type: 'source', position: Position.Top },
-      { id: Position.Right, type: 'source', position: Position.Right },
-      { id: Position.Left, type: 'source', position: Position.Left },
-      { id: Position.Bottom, type: 'target', position: Position.Bottom },
+      { id: HandleID.Top, type: 'source', position: Position.Top },
+      { id: HandleID.Right, type: 'source', position: Position.Right },
+      { id: HandleID.Bottom, type: 'source', position: Position.Bottom },
+      { id: HandleID.Left, type: 'source', position: Position.Left },
     ] as HandleProps[],
     image: IAMNodeImage.Group,
     initial_position: 'bottom-center',
+    animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
   },
 };
 
-export function createGroupNode(props: Partial<IAMGroupNodeData>): Node<IAMGroupNodeData> {
+export function createGroupNode(props: Partial<IAMGroupNode['data']>): IAMGroupNode {
   return _.merge(
     {},
     TEMPLATE_GROUP_NODE,

@@ -1,24 +1,13 @@
-import { produce } from 'immer';
-import _, { update } from 'lodash';
-import { Node } from 'reactflow';
+import { produce, WritableDraft } from 'immer';
+import _ from 'lodash';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
-import {
-  AccountID,
-  BaseFinishEventMap,
-  GenericContext,
-  IAMUserGroupCreationObjective,
-  ObjectiveType,
-} from '../types';
+import { AccountID, BaseFinishEventMap, GenericContext, ObjectiveType } from '../types';
 import { createGroupNode } from '@/factories/group-node-factory';
 import { createPolicyNode } from '@/factories/policy-node-factory';
 import { createUserNode } from '@/factories/user-node-factory';
-import { IAMGroupNodeData, IAMNodeEntity, IAMPolicyNodeData, IAMUserNodeData } from '@/types';
+import { IAMGroupNode, IAMNodeEntity, IAMPolicyNode, IAMUserNode } from '@/types';
 import { findAnyValidPolicy } from '@/utils/iam-code-linter';
-
-function isResourceBasePolicy(docString: string): boolean {
-  return docString.includes('Principal');
-}
 
 export function createPermissionPolicy<
   TLevelObjectiveID,
@@ -52,7 +41,7 @@ export function createPermissionPolicy<
   });
 
   let updatedContext = produce(context, draftContext => {
-    draftContext.nodes.push(newPolicyNode);
+    draftContext.nodes.push(newPolicyNode as WritableDraft<IAMPolicyNode>);
   });
 
   const nodeById = _.keyBy(updatedContext.nodes, 'id');
@@ -77,7 +66,9 @@ export function createPermissionPolicy<
 export function createUserGroupNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   nodeType: IAMNodeEntity.Group | IAMNodeEntity.User,
-  props: Omit<Partial<IAMGroupNodeData>, 'entity'> | Omit<Partial<IAMUserNodeData>, 'entity'>
+  props:
+    | Omit<Partial<IAMGroupNode['data']>, 'entity'>
+    | Omit<Partial<IAMUserNode['data']>, 'entity'>
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE][];
@@ -95,7 +86,7 @@ export function createUserGroupNode<TLevelObjectiveID, TFinishEventMap extends B
       ...props,
     });
 
-    draftContext.nodes.push(newNode);
+    draftContext.nodes.push(newNode as WritableDraft<IAMGroupNode | IAMUserNode>);
     if (targetObjective) {
       targetObjective.finished = true;
       events = [targetObjective.on_finish_event];

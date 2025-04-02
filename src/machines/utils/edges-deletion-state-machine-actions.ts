@@ -1,5 +1,4 @@
 import { produce } from 'immer';
-import _ from 'lodash';
 
 import { BaseFinishEventMap, GenericContext } from '../types';
 import { getEdgeName } from '@/utils/names';
@@ -24,20 +23,19 @@ export function deleteConnectionEdges<
     const deletedEdges: string[] = [];
 
     function deleteEdge(edgeId: string): void {
-      console.log("The edge id we're about to delete is: " + edgeId);
       const dependents = nodesConnections
         .filter(connection => connection.parent_edge_id === edgeId)
         .map(connection => getEdgeName(connection.from.id, connection.to.id));
 
       dependents.forEach(edge => deleteEdge(edge));
       deletedEdges.push(edgeId);
-      draftContext.nodes_connnections = nodesConnections.filter(
-        connection => getEdgeName(connection.from.id, connection.to.id) !== edgeId
-      );
     }
 
     edgesToDelete.forEach(deleteEdge);
     draftContext.edges = draftContext.edges.filter(edge => !deletedEdges.includes(edge.id));
+    draftContext.nodes_connnections = nodesConnections.filter(
+      connection => !deletedEdges.includes(getEdgeName(connection.from.id, connection.to.id))
+    );
   });
 
   return { updatedContext };

@@ -1,11 +1,7 @@
 import { produce } from 'immer';
-import _ from 'lodash';
-import { Edge, Node } from 'reactflow';
 
 import { BaseFinishEventMap, GenericContext } from '../types';
-import { createEdge } from '@/factories/edge-factory';
-import { IAMAnyNodeData, IAMEdgeData } from '@/types';
-import { getEdgeName } from '@/utils/names';
+import { IAMAnyNode } from '@/types/iam-node-types';
 
 /**
  * Deletes an edge from the context and all its children
@@ -17,7 +13,7 @@ import { getEdgeName } from '@/utils/names';
  */
 export function deleteNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  nodeToDelete: Node<IAMAnyNodeData>
+  nodeToDelete: IAMAnyNode
 ): { updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap> } {
   const updatedContext = produce(context, draftContext => {
     draftContext.nodes = draftContext.nodes.filter(node => node.id !== nodeToDelete.id);

@@ -1,9 +1,6 @@
-import { type Node } from 'reactflow';
-
 import { createRoleNode } from '@/factories/role-node-factory';
-import type { IAMRoleNodeData } from '@/types';
+import type { IAMRoleNode } from '@/types';
 
-const TUTORIAL_ROLE_NODES: Partial<IAMRoleNodeData>[] = [];
+const TUTORIAL_ROLE_NODES: Partial<IAMRoleNode['data']>[] = [];
 
-export const INITIAL_TUTORIAL_ROLE_NODES: Node<IAMRoleNodeData>[] =
-  TUTORIAL_ROLE_NODES.map(createRoleNode);
+export const INITIAL_TUTORIAL_ROLE_NODES: IAMRoleNode[] = TUTORIAL_ROLE_NODES.map(createRoleNode);

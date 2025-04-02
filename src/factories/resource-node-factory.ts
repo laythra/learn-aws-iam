@@ -1,20 +1,20 @@
+import { type HandleProps, Position } from '@xyflow/react';
 import _ from 'lodash';
-import { type Node, type HandleProps, Position } from 'reactflow';
 
 import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
 import {
-  IAMResourceNodeData,
   IAMNodeImage,
   IAMNodeEntity,
   IAMNodeResourceEntity,
   HandleID,
+  IAMResourceNode,
 } from '@/types';
 
-const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
-  id: 'iam_resources',
+const TEMPLATE_RESOURCE_NODE: IAMResourceNode = {
+  id: 'iam_resource',
   position: { x: 0, y: 0 },
-  type: 'iam_default',
   draggable: true,
+  type: 'resource',
   deletable: false,
   data: {
     id: 'iam_group',
@@ -33,7 +33,7 @@ const TEMPLATE_RESOURCE_NODE: Node<IAMResourceNodeData> = {
   },
 };
 
-export function createResourceNode(props: Partial<IAMResourceNodeData>): Node<IAMResourceNodeData> {
+export function createResourceNode(props: Partial<IAMResourceNode['data']>): IAMResourceNode {
   return _.merge(
     {},
     TEMPLATE_RESOURCE_NODE,

@@ -1,7 +1,7 @@
-import { Node, XYPosition, Viewport } from 'reactflow';
+import { XYPosition, Viewport } from '@xyflow/react';
 
 import { theme } from '@/theme';
-import { IAMAnyNodeData } from '@/types';
+import { IAMAnyNode } from '@/types/iam-node-types';
 
 const VALID_INITIAL_POSITIONS = [
   'center',
@@ -27,7 +27,7 @@ function getCenterCoordinates(viewport: Viewport, sidePanelWidth: number): XYPos
 }
 
 export function getNodeInitialPosition(
-  node: Node<IAMAnyNodeData>,
+  node: IAMAnyNode,
   viewport: Viewport,
   numNodes: number,
   nodeIndex: number,

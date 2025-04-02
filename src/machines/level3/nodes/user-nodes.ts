@@ -1,8 +1,8 @@
 import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/user-node-factory';
-import type { IAMUserNodeData } from '@/types';
+import type { IAMUserNode } from '@/types';
 
-const USER_NODES: Partial<IAMUserNodeData>[] = [
+const USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.Laith,
     label: 'Laith',

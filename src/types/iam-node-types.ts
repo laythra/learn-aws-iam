@@ -1,5 +1,5 @@
+import { Edge, HandleProps, Node } from '@xyflow/react';
 import { DOMKeyframesDefinition, DynamicAnimationOptions } from 'framer-motion';
-import { Edge, HandleProps } from 'reactflow';
 
 export enum HandleID {
   Top = 'top',
@@ -64,7 +64,7 @@ export interface PolicyGrantedAccess {
  *
  * Should not be used directly
  */
-interface IAMNodeData {
+interface IAMNodeData extends Record<string, unknown> {
   id: string;
   label: string;
   entity: IAMNodeEntity;
@@ -97,15 +97,15 @@ interface IAMNodeData {
   unnecessary_node?: boolean;
 }
 
-export interface IAMUserNodeData extends IAMNodeData {
+interface IAMUserNodeData extends IAMNodeData {
   entity: IAMNodeEntity.User;
 }
 
-export interface IAMGroupNodeData extends IAMNodeData {
+interface IAMGroupNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Group;
 }
 
-export interface IAMPolicyNodeData extends IAMNodeData {
+interface IAMPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
   editable: boolean;
   granted_accesses: PolicyGrantedAccess[];
@@ -113,28 +113,32 @@ export interface IAMPolicyNodeData extends IAMNodeData {
   content: string;
 }
 
-export interface IAMRoleNodeData extends IAMNodeData {
+interface IAMRoleNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Role;
   editable: boolean;
   trust_policy_content: string;
 }
 
-export interface IAMResourceNodeData extends IAMNodeData {
+interface IAMResourceNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Resource;
   resource_type: IAMNodeResourceEntity;
   associated_roles: string[];
 }
 
-export type IAMAnyNodeData =
-  | IAMUserNodeData
-  | IAMGroupNodeData
-  | IAMPolicyNodeData
-  | IAMResourceNodeData
-  | IAMRoleNodeData;
+export type IAMUserNode = Node<IAMUserNodeData, 'user'>;
+// Using 'group' as the type causes react-flow to render the node improperly for some reason
+export type IAMGroupNode = Node<IAMGroupNodeData, 'iam_group'>;
+export type IAMPolicyNode = Node<IAMPolicyNodeData, 'policy'>;
+export type IAMResourceNode = Node<IAMResourceNodeData, 'resource'>;
+export type IAMRoleNode = Node<IAMRoleNodeData, 'role'>;
 
-export type IAMNodeWithPolicies = IAMUserNodeData | IAMGroupNodeData | IAMRoleNodeData;
-export type IAMNodeWithUsers = IAMGroupNodeData | IAMRoleNodeData;
-export type IAMNodeWithRoles = IAMUserNodeData;
+export type IAMAnyNode = IAMUserNode | IAMGroupNode | IAMPolicyNode | IAMResourceNode | IAMRoleNode;
+
+export type IAMEdge = Edge<IAMEdgeData, 'default'>;
+
+export type IAMNodeWithPolicies = IAMUserNode | IAMGroupNode | IAMRoleNode;
+export type IAMNodeWithUsers = IAMGroupNode | IAMRoleNode;
+export type IAMNodeWithRoles = IAMUserNode;
 
 export type IAMNodeAnimationConfig = {
   element_class: string;
@@ -142,10 +146,11 @@ export type IAMNodeAnimationConfig = {
   options: DynamicAnimationOptions;
 }[];
 
-export interface IAMEdgeData {
-  source_node_data?: IAMAnyNodeData;
-  target_node_data?: IAMAnyNodeData;
+export interface IAMEdgeData extends Record<string, unknown> {
+  source_node_data?: IAMAnyNode;
+  target_node_data?: IAMAnyNode;
   hovering_label?: AccessLevel | string;
+  type: 'default';
   /**
    * The ID of the edge that was resposible for the creation of this edge
    * mainly used for deleting edges, such that deleting an edge will also delete its children
@@ -159,8 +164,8 @@ export interface IAMEdgeData {
   unnecessary_edge?: boolean;
 }
 
-export type PartialEdge = Omit<Partial<Edge<IAMEdgeData>>, 'data'> & {
-  data?: Partial<IAMEdgeData>;
+export type PartialEdge = Omit<Partial<IAMEdge>, 'data'> & {
+  data?: Partial<IAMEdge['data']>;
 };
 
 export type IAMNodeDataMapping = {
