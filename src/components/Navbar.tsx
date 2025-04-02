@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box, Button, Flex, HStack, IconButton, Input, Text } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
-import { Bars3Icon, InformationCircleIcon } from '@heroicons/react/16/solid';
+import { Bars3Icon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
 import AnimatedRedDot from './Animated/AnimatedRedDot';
