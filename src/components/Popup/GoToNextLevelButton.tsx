@@ -4,15 +4,22 @@ import { motion } from 'framer-motion';
 import CurrentLevelDetailsStore from '@/stores/current-level-details-store';
 
 const MotionButton = motion(Button);
+const LAST_LEVEL_NUMBER = 6;
 interface GoToNextLevelButtonProps {}
 
 export const GoToNextLevelButton: React.FC<GoToNextLevelButtonProps> = () => {
+  const finishedLastLevel = (): boolean => {
+    const finishedLevelNumber = CurrentLevelDetailsStore.getSnapshot().context.levelNumber;
+    return finishedLevelNumber == LAST_LEVEL_NUMBER;
+  };
+
   const goToNextLevel = (): void => {
     const currentLevelNumber = CurrentLevelDetailsStore.getSnapshot().context.levelNumber;
+    const nextLevelNumber = finishedLastLevel() ? 1 : currentLevelNumber + 1;
 
     CurrentLevelDetailsStore.send({
       type: 'setLevelNumber',
-      levelNumber: currentLevelNumber + 1,
+      levelNumber: nextLevelNumber,
     });
   };
 
@@ -33,7 +40,7 @@ export const GoToNextLevelButton: React.FC<GoToNextLevelButtonProps> = () => {
       _hover={{ bg: 'purple.600' }} // Chakra's default hover effect
       _focus={{ boxShadow: 'none' }} // Removes the blue border
     >
-      Go To Next Level 🚀
+      {finishedLastLevel() ? `Back to level 1 ⏪` : `Go to next level 🚀`}
     </MotionButton>
   );
 };
