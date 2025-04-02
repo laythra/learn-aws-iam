@@ -12,10 +12,10 @@ describe('nodes-deletion-state-machine-actions', () => {
       nodes: [mockNode],
     });
 
-    expect(context.nodes.length).toHaveLength(1);
+    expect(context.nodes).toHaveLength(1);
 
     const { updatedContext } = deleteNode(context, mockNode);
 
-    expect(updatedContext.nodes.length).haveLength(0);
+    expect(updatedContext.nodes).toHaveLength(0);
   });
 });
