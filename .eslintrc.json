@@ -14,7 +14,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "react", "import"],
+  "plugins": ["@typescript-eslint", "react", "import", "unused-imports"],
   "rules": {
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": ["error"],
@@ -27,10 +27,7 @@
         "allowExpressions": true
       }
     ],
-    "max-len": [
-      "warn",
-      { "code": 100, "ignoreComments": true, "ignoreUrls": true }
-    ],
+    "max-len": ["warn", { "code": 100, "ignoreComments": true, "ignoreUrls": true }],
     "import/prefer-default-export": "off",
     "react/prop-types": "off",
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
@@ -56,7 +53,16 @@
     ],
     "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }],
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": ["warn"]
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "unused-imports/no-unused-imports": "warn"
     // "no-restricted-imports": [
     //   "error",
     //   {
