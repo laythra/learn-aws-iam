@@ -4,6 +4,7 @@ import { Flex, Box, useTheme } from '@chakra-ui/react';
 
 import Canvas from './Canvas';
 import MultiAccountCanvas from './MultiAccountCanvas';
+import { GithubCorner } from '@/components/GithubCorner';
 import { Navbar } from '@/components/Navbar';
 import { FixedPopover } from '@/components/Popover/FixedPopover';
 import { MobileWarningPopup } from '@/components/Popup/MobileWarningPopup';
@@ -22,6 +23,7 @@ const CanvasContainer: React.FC<CanvasContainerProps> = () => {
   );
   return (
     <Flex direction='row' h='100vh' w='100vw'>
+      <GithubCorner />
       <TutorialPopup />
       <MobileWarningPopup />
       <Navbar />
