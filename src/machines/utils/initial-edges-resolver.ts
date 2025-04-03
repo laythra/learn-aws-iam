@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
 import { BaseFinishEventMap, GenericContext, NodeConnection } from '../types';
-import { IAMEdge } from '@/types';
+import { HandleID, IAMEdge } from '@/types';
 
 export function resolveInitialEdges<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>
@@ -19,7 +19,11 @@ export function resolveInitialEdges<TLevelObjectiveID, TFinishEventMap extends B
       updatedContext,
       nodeById[connection.from],
       nodeById[connection.to],
-      true
+      true,
+      {
+        targetHandle: connection.target_handle ?? HandleID.Bottom,
+        sourceHandle: connection.source_handle ?? HandleID.Top,
+      }
     ));
   });
 
