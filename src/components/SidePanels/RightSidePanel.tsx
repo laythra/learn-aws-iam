@@ -1,5 +1,19 @@
-import { Text, Flex, Divider, Box, List, ListItem, ListIcon, HStack } from '@chakra-ui/react';
-import { CheckBadgeIcon, XCircleIcon } from '@heroicons/react/20/solid';
+import {
+  Text,
+  Flex,
+  Divider,
+  List,
+  ListItem,
+  ListIcon,
+  HStack,
+  IconButton,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+} from '@chakra-ui/react';
+import { CheckBadgeIcon, InformationCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
@@ -12,29 +26,41 @@ import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';
 
 const RightSidePanel: React.FC = () => {
-  const [levelObjectives, isSidePanelOpen] = LevelsProgressionContext().useSelector(
-    state => [state.context.level_objectives, state.context.side_panel_open],
-    _.isEqual
-  );
+  const [levelObjectives, isSidePanelOpen, levelDescription] =
+    LevelsProgressionContext().useSelector(
+      state => [
+        state.context.level_objectives,
+        state.context.side_panel_open,
+        state.context.level_description,
+      ],
+      _.isEqual
+    );
 
   return (
     <SidePanel isOpen={isSidePanelOpen ?? false}>
       <Flex direction='column' alignItems='center' justifyContent='center' height='100vh'>
-        <Flex direction='column' alignItems='center' height='25%'>
-          <Text fontSize='lg' fontWeight='bold' p={1}>
-            Level Objective
-          </Text>
-
-          <Divider my={2} />
-          <Box mt={2} overflowY='auto'>
-            <Text>LEVEL OBJECTIVE SHOULD SHOW UP HERE</Text>
-          </Box>
-        </Flex>
-
-        <Flex direction='column' alignItems='center' height='75%' marginTop={4} width='100%'>
-          <Text fontSize='lg' fontWeight='bold' p={1}>
-            Level Progress
-          </Text>
+        <Flex direction='column' alignItems='center' width='100%' overflowY='auto' flex={1}>
+          <HStack alignItems='center'>
+            <Text fontSize='lg' fontWeight='bold' p={1}>
+              Level Progress
+            </Text>
+            <Popover>
+              <PopoverTrigger>
+                <IconButton
+                  icon={<InformationCircleIcon />}
+                  aria-label='info-button'
+                  size='xs'
+                  bg='transparent'
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverHeader fontWeight='bold'>Level Objective</PopoverHeader>
+                <PopoverBody color='gray.600' fontWeight='semibold'>
+                  {levelDescription}
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </HStack>
           <Divider my={2} />
           <WithPopoverBox mt={2} overflowY='auto' elementid={ElementID.ObjectivesSidePanel}>
             <List spacing={3}>
