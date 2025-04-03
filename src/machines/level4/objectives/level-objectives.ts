@@ -11,7 +11,7 @@ and *read/write* access to the \`timeshift-assets\` **S3 Bucket** Objects
 const LEVEL_OBJECTIVE2 = `
 **Data Scientists** should be able to read/write objects
 from/to the \`timeshift-assets\` **S3 Bucket**
-and read/write to the \`AnalyticsData\` **DynamoDB Table**
+and read/write to the \`analytics-data\` **DynamoDB Table**
 `;
 
 const LEVEL_OBJECTIVE3 = `

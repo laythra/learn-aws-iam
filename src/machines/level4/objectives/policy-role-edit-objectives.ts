@@ -84,10 +84,12 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           target_handle: 'bottom',
           source_handle: 'top',
         },
-      ],
-      resources_to_revoke: [
-        ResourceNodeID.AnalyticsDataDynamoTable,
-        ResourceNodeID.CustomerDataDynamoTable,
+        {
+          access_level: AccessLevel.ReadWrite,
+          target_node: ResourceNodeID.CustomerDataDynamoTable,
+          target_handle: 'bottom',
+          source_handle: 'top',
+        },
       ],
       validate_function: AJV_COMPILER.compile(developersPolicy),
       hint_messages: [
@@ -123,8 +125,13 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           target_handle: 'bottom',
           source_handle: 'top',
         },
+        {
+          access_level: AccessLevel.ReadWrite,
+          target_node: ResourceNodeID.AnalyticsDataDynamoTable,
+          target_handle: 'bottom',
+          source_handle: 'top',
+        },
       ],
-      resources_to_revoke: [ResourceNodeID.AnalyticsDataDynamoTable],
       validate_function: AJV_COMPILER.compile(dataScientistsPolicy),
       hint_messages: [
         {
@@ -151,12 +158,11 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
       resources_to_grant: [
         {
           access_level: AccessLevel.Read,
-          target_node: ResourceNodeID.CustomerDataDynamoTable,
+          target_node: ResourceNodeID.TimeshiftAssetsS3Bucket,
           target_handle: 'bottom',
           source_handle: 'top',
         },
       ],
-      resources_to_revoke: [],
       validate_function: AJV_COMPILER.compile(internsPolicy),
       hint_messages: [
         {
