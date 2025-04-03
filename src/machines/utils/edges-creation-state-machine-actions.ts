@@ -449,7 +449,7 @@ export function refreshPolicyConnections<
 } {
   const nodeById = _.keyBy(context.nodes, 'id');
   const edgesToDelete = context.edges.filter(edge => {
-    edge.source == policyNode.id;
+    return edge.source == policyNode.id;
   });
 
   let { updatedContext } = deleteConnectionEdges(
@@ -458,7 +458,12 @@ export function refreshPolicyConnections<
   );
 
   edgesToDelete.forEach(edge => {
-    ({ updatedContext } = updateConnectionEdges(updatedContext, policyNode, nodeById[edge.target]));
+    ({ updatedContext } = updateConnectionEdges(
+      updatedContext,
+      policyNode,
+      nodeById[edge.target],
+      true
+    ));
   });
 
   return { updatedContext };
