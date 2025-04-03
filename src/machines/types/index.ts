@@ -129,8 +129,12 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       account_id?: AccountID;
       label: string;
     }
+  | {
+      type: StatefulStateMachineEvent.EditIAMPolicyNode;
+      node_id: string;
+      doc_string: string;
+    }
   | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string; label: string; account_id?: AccountID }
-  | { type: 'UPDATE_IAM_POLICY_NODE'; doc_string: string; node_id: string }
   | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNode['data'], 'entity'>> }
   | { type: 'ADD_EDGE'; edge: IAMEdge }
   | { type: 'SET_EDGES'; edges: IAMEdge[] }
@@ -292,10 +296,6 @@ export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventM
    */
   readonly resources_to_grant: PolicyGrantedAccess[];
 
-  /**
-   * Resources to revoke from the users/groups associated with the IAM Policy/Role.
-   */
-  readonly resources_to_revoke: string[];
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
   readonly hint_messages?: { title: string; content: string }[];
