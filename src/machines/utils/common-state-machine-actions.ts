@@ -1,4 +1,3 @@
-import { Node } from '@xyflow/react';
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
@@ -11,10 +10,9 @@ import {
   ObjectiveType,
 } from '../types';
 import { ElementID } from '@/config/element-ids';
-import { createPolicyNode } from '@/factories/policy-node-factory';
 import { createRoleNode } from '@/factories/role-node-factory';
 import { IAMAnyNode, IAMNodeEntity, IAMPolicyNode, IAMRoleNode } from '@/types';
-import { findAnyValidPolicy, findAnyValidRole, isJSONValid } from '@/utils/iam-code-linter';
+import { findAnyValidRole, isJSONValid } from '@/utils/iam-code-linter';
 import { isNodeOfEntity } from '@/utils/node-type-guards';
 
 export function changeLevelObjectiveProgress<
@@ -31,41 +29,6 @@ export function changeLevelObjectiveProgress<
 
     targetObjective.finished = finished;
   });
-}
-
-export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  docString: string,
-  label: string,
-  accountId?: AccountID
-): [Node[], TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][]] {
-  const targetValidPolicy = findAnyValidPolicy(
-    context.policy_creation_objectives,
-    docString,
-    context.nodes,
-    accountId
-  );
-  const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
-
-  const newNodes = produce(context.nodes, draftNodes => {
-    const newPolicyNode = createPolicyNode({
-      id: targetValidPolicy?.entity_id ?? new Date().getTime().toString(),
-      content: docString,
-      label: label,
-      unnecessary_node: targetValidPolicy === undefined,
-      granted_accesses: targetValidPolicy?.granted_accesses ?? [],
-      initial_position: targetValidPolicy?.created_node_initial_position ?? 'center',
-      account_id: accountId,
-      editable: true,
-    });
-
-    draftNodes.push(newPolicyNode as WritableDraft<IAMPolicyNode>);
-    if (targetValidPolicy) {
-      sideEffectsEvents.push(targetValidPolicy.on_finish_event);
-    }
-  });
-
-  return [newNodes, sideEffectsEvents];
 }
 /**
  * Edits the IAM Policy and checks if an associated edit objective is finished.
