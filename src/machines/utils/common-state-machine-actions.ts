@@ -11,9 +11,8 @@ import {
 } from '../types';
 import { ElementID } from '@/config/element-ids';
 import { createRoleNode } from '@/factories/role-node-factory';
-import { IAMAnyNode, IAMNodeEntity, IAMPolicyNode, IAMRoleNode } from '@/types';
-import { findAnyValidRole, isJSONValid } from '@/utils/iam-code-linter';
-import { isNodeOfEntity } from '@/utils/node-type-guards';
+import { IAMAnyNode, IAMRoleNode } from '@/types';
+import { findAnyValidRole } from '@/utils/iam-code-linter';
 
 export function changeLevelObjectiveProgress<
   TLevelObjectiveID,
@@ -29,52 +28,6 @@ export function changeLevelObjectiveProgress<
 
     targetObjective.finished = finished;
   });
-}
-/**
- * Edits the IAM Policy and checks if an associated edit objective is finished.
- *
- * If the edit objective is finished, the following happens:
- * - The objective's `on_finish_event` is pushed to the `nodeEditFinishEvents` array to be triggered.
- * - All associated users and groups have their edges updated according to the finished objective's
- *   `granted_accesses` and `revoked_accesses` properties.
- *
- * @template TEditFinishEvent - An enum representing the edit finish event.
- * @param context The current state machine context
- * @param nodeId The node ID of the policy being edited
- * @returns Updated array of node edit finish events.
- */
-export function editIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  nodeId: string,
-  docString: string
-): {
-  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
-  nodeEditFinishEvents: TFinishEventMap[ObjectiveType.POLICY_EDIT_OBJECTIVE][];
-} {
-  const targetEditObjective = context.policy_edit_objectives.find(
-    objective => objective.entity_id === nodeId
-  );
-
-  if (!targetEditObjective || !isJSONValid(docString, targetEditObjective.validate_function)) {
-    return { updatedContext: context, nodeEditFinishEvents: [] };
-  }
-
-  const updatedContext = produce(context, draftContext => {
-    const targetNode = draftContext.nodes.find(
-      node => node.id === nodeId && isNodeOfEntity(node, IAMNodeEntity.Policy)
-    ) as WritableDraft<IAMPolicyNode>;
-
-    if (!targetNode) return;
-
-    targetNode.data.content = docString;
-    targetNode.data.editable = false;
-    targetNode.data.granted_accesses = targetEditObjective.resources_to_grant;
-  });
-
-  return {
-    updatedContext,
-    nodeEditFinishEvents: [targetEditObjective.on_finish_event],
-  };
 }
 
 /**
