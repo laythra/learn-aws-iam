@@ -13,7 +13,6 @@ export function createMockContext<
     level_number: 1,
     level_title: 'IAM MOCK',
     policy_edit_objectives: [],
-    state_name: 'initial',
     nodes: [] as IAMAnyNode[],
     edges: [] as IAMEdge[],
     nodes_connnections: [],

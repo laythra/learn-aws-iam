@@ -64,7 +64,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
-    ADD_IAM_POLICY_NODE: {
+    [StatefulStateMachineEvent.AddIAMPolicyNode]: {
       actions: [
         {
           type: 'add_policy_node',
@@ -72,32 +72,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
-    ADD_EDGE: {
-      actions: [
-        assign({
-          edges: ({ context, event }) => [...context.edges, event.edge],
-        }),
-      ],
-    },
-    SET_NODES: {
-      actions: assign({
-        nodes: ({ event }) => event.nodes,
-      }),
-    },
-    SET_EDGES: {
-      actions: assign({
-        edges: ({ event }) => event.edges,
-      }),
-    },
-    SHOW_POPOVER: {
-      actions: assign({
-        popover_content: ({ event }) => event.popover_content,
-        show_popovers: true,
-      }),
-    },
-    HIDE_POPOVERS: { actions: 'hide_popovers' },
-    HIDE_FIXED_POPOVERS: { actions: 'hide_fixed_popovers' },
-    NEXT_FIXED_POPOVER: { actions: 'next_fixed_popover' },
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
     [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
@@ -388,6 +362,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         policies_and_edges_created: {
+          entry: 'next_fixed_popover',
           on: {
             NEXT_FIXED_POPOVER: [
               {
