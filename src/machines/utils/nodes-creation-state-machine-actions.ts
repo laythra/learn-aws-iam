@@ -30,14 +30,14 @@ export function createPermissionPolicy<
 
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
   const newPolicyNode = createPolicyNode({
-    id: targetValidObjective?.entity_id ?? new Date().getTime().toString(),
+    id: targetValidObjective?.entity_id ?? _.uniqueId('policy-'),
     content: docString,
     label: label,
     unnecessary_node: targetValidObjective === undefined,
     granted_accesses: targetValidObjective?.granted_accesses ?? [],
     initial_position: targetValidObjective?.created_node_initial_position ?? 'center',
     account_id: accountId,
-    editable: true,
+    editable: false,
   });
 
   let updatedContext = produce(context, draftContext => {

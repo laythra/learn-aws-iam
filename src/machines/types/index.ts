@@ -7,6 +7,7 @@ import { ElementID } from '@/config/element-ids';
 import type {
   AccessLevel,
   CreatableIAMNodeEntity,
+  HandleID,
   IAMAnyNode,
   IAMEdge,
   IAMGroupNode,
@@ -44,6 +45,12 @@ export type NodeConnection = {
   from: IAMAnyNode;
   to: IAMAnyNode;
   parent_edge_id?: string;
+};
+export type InitialNodeConnection = {
+  from: string;
+  to: string;
+  source_handle?: HandleID;
+  target_handle?: HandleID;
 };
 
 export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
@@ -84,7 +91,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   elements_with_animated_red_dot?: ElementID[];
   show_unncessary_edges_or_nodes_warning?: boolean;
   nodes_connnections: NodeConnection[];
-  initial_node_connections?: { from: string; to: string }[];
+  initial_node_connections?: InitialNodeConnection[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine

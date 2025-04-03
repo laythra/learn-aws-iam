@@ -1,4 +1,3 @@
-import { Node } from '@xyflow/react';
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
@@ -11,11 +10,9 @@ import {
   ObjectiveType,
 } from '../types';
 import { ElementID } from '@/config/element-ids';
-import { createPolicyNode } from '@/factories/policy-node-factory';
 import { createRoleNode } from '@/factories/role-node-factory';
-import { IAMAnyNode, IAMNodeEntity, IAMPolicyNode, IAMRoleNode } from '@/types';
-import { findAnyValidPolicy, findAnyValidRole, isJSONValid } from '@/utils/iam-code-linter';
-import { isNodeOfEntity } from '@/utils/node-type-guards';
+import { IAMAnyNode, IAMRoleNode } from '@/types';
+import { findAnyValidRole } from '@/utils/iam-code-linter';
 
 export function changeLevelObjectiveProgress<
   TLevelObjectiveID,
@@ -31,87 +28,6 @@ export function changeLevelObjectiveProgress<
 
     targetObjective.finished = finished;
   });
-}
-
-export function createIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  docString: string,
-  label: string,
-  accountId?: AccountID
-): [Node[], TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][]] {
-  const targetValidPolicy = findAnyValidPolicy(
-    context.policy_creation_objectives,
-    docString,
-    context.nodes,
-    accountId
-  );
-  const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
-
-  const newNodes = produce(context.nodes, draftNodes => {
-    const newPolicyNode = createPolicyNode({
-      id: targetValidPolicy?.entity_id ?? new Date().getTime().toString(),
-      content: docString,
-      label: label,
-      unnecessary_node: targetValidPolicy === undefined,
-      granted_accesses: targetValidPolicy?.granted_accesses ?? [],
-      initial_position: targetValidPolicy?.created_node_initial_position ?? 'center',
-      account_id: accountId,
-      editable: true,
-    });
-
-    draftNodes.push(newPolicyNode as WritableDraft<IAMPolicyNode>);
-    if (targetValidPolicy) {
-      sideEffectsEvents.push(targetValidPolicy.on_finish_event);
-    }
-  });
-
-  return [newNodes, sideEffectsEvents];
-}
-/**
- * Edits the IAM Policy and checks if an associated edit objective is finished.
- *
- * If the edit objective is finished, the following happens:
- * - The objective's `on_finish_event` is pushed to the `nodeEditFinishEvents` array to be triggered.
- * - All associated users and groups have their edges updated according to the finished objective's
- *   `granted_accesses` and `revoked_accesses` properties.
- *
- * @template TEditFinishEvent - An enum representing the edit finish event.
- * @param context The current state machine context
- * @param nodeId The node ID of the policy being edited
- * @returns Updated array of node edit finish events.
- */
-export function editIAMPolicyNode<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  nodeId: string,
-  docString: string
-): {
-  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
-  nodeEditFinishEvents: TFinishEventMap[ObjectiveType.POLICY_EDIT_OBJECTIVE][];
-} {
-  const targetEditObjective = context.policy_edit_objectives.find(
-    objective => objective.entity_id === nodeId
-  );
-
-  if (!targetEditObjective || !isJSONValid(docString, targetEditObjective.validate_function)) {
-    return { updatedContext: context, nodeEditFinishEvents: [] };
-  }
-
-  const updatedContext = produce(context, draftContext => {
-    const targetNode = draftContext.nodes.find(
-      node => node.id === nodeId && isNodeOfEntity(node, IAMNodeEntity.Policy)
-    ) as WritableDraft<IAMPolicyNode>;
-
-    if (!targetNode) return;
-
-    targetNode.data.content = docString;
-    targetNode.data.editable = false;
-    targetNode.data.granted_accesses = targetEditObjective.resources_to_grant;
-  });
-
-  return {
-    updatedContext,
-    nodeEditFinishEvents: [targetEditObjective.on_finish_event],
-  };
 }
 
 /**

@@ -27,8 +27,6 @@ export const TEMPLATE_USER_NODE: IAMUserNode = {
 };
 
 export function createUserNode(props: Partial<IAMUserNode['data']>): IAMUserNode {
-  props.id ||= Date.now().toString();
-
   return _.merge(
     {},
     TEMPLATE_USER_NODE,
