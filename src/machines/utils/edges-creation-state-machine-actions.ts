@@ -45,7 +45,6 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
   options?: PartialEdge
 ): { edge: IAMEdge; events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] } {
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][] = [];
-  const insideTutorial = context.in_tutorial_state;
   const edgeLabel = getEdgeLabel(sourceNode.data.entity, targetNode.data.entity);
   let validEdge: IAMEdge | undefined = undefined;
 
@@ -57,9 +56,9 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
         animated: true,
         deletable: true,
         data: {
-          hovering_label: insideTutorial ? 'Invalid Connection' : edgeLabel,
-          hovering_color: insideTutorial ? theme.colors.red[500] : theme.colors.blue[500],
-          color: insideTutorial ? theme.colors.yellow[500] : theme.colors.black,
+          hovering_label: 'Invalid Connection',
+          hovering_color: theme.colors.red[500],
+          color: theme.colors.yellow[500],
           unnecessary_edge: true,
           label_always_visible: true,
         },
