@@ -6,6 +6,7 @@ import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import codeEditorPopupStore from '@/stores/code-editor-popup-store';
 import { IAMScriptableEntity } from '@/types';
+import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface EditSubmitButtonProps {
   nodeId: string;
@@ -30,7 +31,11 @@ export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({
   const submit = (): void => {
     const content = codeEditorStateStore.getSnapshot().context.content[selectedIAMEntity][nodeId];
 
-    levelActor.send({ type: 'UPDATE_IAM_POLICY_NODE', doc_string: content, node_id: nodeId });
+    levelActor.send({
+      type: StatefulStateMachineEvent.EditIAMPolicyNode,
+      doc_string: content,
+      node_id: nodeId,
+    });
 
     codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });
     codeEditorPopupStore.send({ type: 'close' });
