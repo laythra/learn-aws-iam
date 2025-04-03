@@ -54,58 +54,21 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     nodes_connnections: [],
   },
   on: {
-    ADD_IAM_POLICY_NODE: {
+    [StatefulStateMachineEvent.EditIAMPolicyNode]: {
       actions: [
         {
-          type: 'add_policy_node',
-          params: ({ event }) => ({ docString: event.doc_string, label: event.label }),
-        },
-      ],
-    },
-    UPDATE_IAM_POLICY_NODE: {
-      actions: [
-        {
-          type: 'update_iam_policy_node',
+          type: 'edit_policy_node',
           params: ({ event }) => ({ nodeId: event.node_id, docString: event.doc_string }),
         },
       ],
     },
-    ADD_IAM_GROUP_NODE: {
-      actions: [
-        assign({
-          nodes: ({ context, event }) => [...context.nodes, event.node],
-        }),
-      ],
-    },
-    ADD_EDGE: {
-      actions: [
-        assign({
-          edges: ({ context, event }) => [...context.edges, event.edge],
-        }),
-      ],
-    },
-    SET_NODES: {
-      actions: assign({
-        nodes: ({ event }) => event.nodes,
-      }),
-    },
-    SET_EDGES: {
-      actions: assign({
-        edges: ({ event }) => event.edges,
-      }),
-    },
-    SHOW_POPOVER: {
-      actions: assign({
-        popover_content: ({ event }) => event.popover_content,
-        show_popovers: true,
-      }),
-    },
-    HIDE_POPOVERS: {
-      actions: assign({
-        show_popovers: false,
-      }),
-    },
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
+    [StatefulStateMachineEvent.AddIAMPolicyNode]: {
+      actions: {
+        type: 'add_policy_node',
+        params: ({ event }) => ({ docString: event.doc_string, label: event.label }),
+      },
+    },
     [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {

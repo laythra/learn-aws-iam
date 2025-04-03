@@ -2,16 +2,12 @@ import _ from 'lodash';
 import { setup, enqueueActions, assign } from 'xstate';
 
 import {
-  editIAMPolicyNode,
   editObjectiveState,
   changeLevelObjectiveProgress,
   createIAMRoleNode,
   getElementsWithRedDot,
 } from './utils/common-state-machine-actions';
-import {
-  refreshPolicyConnections,
-  updateConnectionEdges,
-} from './utils/edges-creation-state-machine-actions';
+import { updateConnectionEdges } from './utils/edges-creation-state-machine-actions';
 import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-actions';
 import { resolveInitialEdges } from './utils/initial-edges-resolver';
 import {
@@ -19,6 +15,7 @@ import {
   createUserGroupNode,
 } from './utils/nodes-creation-state-machine-actions';
 import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
+import { editPermissionPolicy } from './utils/nodes-editing-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
 import type {
   AccountID,
@@ -35,13 +32,7 @@ import type {
   IAMPolicyCreationObjective,
 } from '@/machines/types';
 import { IAMNodeEntity } from '@/types';
-import {
-  IAMAnyNode,
-  IAMEdge,
-  IAMGroupNode,
-  IAMPolicyNode,
-  IAMUserNode,
-} from '@/types/iam-node-types';
+import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 import { getEdgeName } from '@/utils/names';
 
 /**
@@ -177,6 +168,7 @@ export const createStateMachineSetup = <
           );
 
           const { updatedContext } = createPermissionPolicyResult;
+
           enqueue.assign({
             nodes: updatedContext.nodes,
             edges: updatedContext.edges,
@@ -188,21 +180,15 @@ export const createStateMachineSetup = <
           });
         }
       ),
-      update_iam_policy_node: enqueueActions(
+      edit_policy_node: enqueueActions(
         ({ context, enqueue }, { docString, nodeId }: { docString: string; nodeId: string }) => {
-          const editPolicyResult = editIAMPolicyNode<TLevelObjectiveID, TFinishEventMap>(
+          const editPolicyResult = editPermissionPolicy<TLevelObjectiveID, TFinishEventMap>(
             context,
             nodeId,
             docString
           );
 
-          let { updatedContext } = editPolicyResult;
-          const nodeEditFinishEvents = editPolicyResult.nodeEditFinishEvents;
-
-          ({ updatedContext } = refreshPolicyConnections(
-            updatedContext,
-            updatedContext.nodes.find(node => node.id === nodeId) as IAMPolicyNode
-          ));
+          const { updatedContext } = editPolicyResult;
 
           enqueue.assign({
             nodes: updatedContext.nodes,
@@ -210,7 +196,7 @@ export const createStateMachineSetup = <
             nodes_connnections: updatedContext.nodes_connnections,
           });
 
-          nodeEditFinishEvents.forEach(event => {
+          editPolicyResult.events.forEach(event => {
             enqueue.raise({ type: event });
           });
         }

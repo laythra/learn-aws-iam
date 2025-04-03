@@ -58,34 +58,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     nodes_connnections: [],
   },
   on: {
-    ADD_EDGE: {
-      actions: assign({
-        edges: ({ context, event }) => [...context.edges, event.edge],
-      }),
-    },
-    SET_NODES: {
-      actions: assign({
-        nodes: ({ event }) => event.nodes,
-      }),
-    },
-    SET_EDGES: {
-      actions: [
-        assign({
-          edges: ({ event }) => event.edges,
-        }),
-      ],
-    },
-    SHOW_POPOVER: {
-      actions: assign({
-        popover_content: ({ event }) => event.popover_content,
-        show_popovers: true,
-      }),
-    },
-    HIDE_POPOVERS: {
-      actions: assign({
-        show_popovers: false,
-      }),
-    },
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [

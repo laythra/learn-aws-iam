@@ -36,8 +36,22 @@
               ]
             },
             "Resource": {
-              "type": "string",
-              "const": "arn:aws:s3:::timeshift-assets/*"
+              "oneOf": [
+                {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "const": "arn:aws:s3:::timeshift-assets/*"
+                  }
+                },
+                {
+                  "type": "string",
+                  "const": "arn:aws:s3:::timeshift-assets/*"
+                }
+              ]
             }
           },
           "required": [
