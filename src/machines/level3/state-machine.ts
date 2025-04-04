@@ -72,7 +72,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
-    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
     [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {
@@ -97,6 +96,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
+    [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
+    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
   },
   states: {
     inside_tutorial: {

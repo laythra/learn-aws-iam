@@ -17,7 +17,10 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
-import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
+import {
+  StatefulStateMachineEvent,
+  StatelessStateMachineEvent,
+} from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
@@ -65,33 +68,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
-    ADD_EDGE: {
-      actions: [
-        assign({
-          edges: ({ context, event }) => [...context.edges, event.edge],
-        }),
-      ],
-    },
-    SET_NODES: {
-      actions: assign({
-        nodes: ({ event }) => event.nodes,
-      }),
-    },
-    SET_EDGES: {
-      actions: assign({
-        edges: ({ event }) => event.edges,
-      }),
-    },
-    SHOW_POPOVER: {
-      actions: assign({
-        popover_content: ({ event }) => event.popover_content,
-        show_popovers: true,
-      }),
-    },
-    HIDE_POPOVERS: { actions: 'hide_popovers' },
-    HIDE_FIXED_POPOVERS: { actions: 'hide_fixed_popovers' },
-    NEXT_FIXED_POPOVER: { actions: 'next_fixed_popover' },
-    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
     [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {
@@ -116,6 +92,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
+    [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
+    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
   },
   entry: [
     assign({

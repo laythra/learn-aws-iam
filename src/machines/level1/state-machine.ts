@@ -18,7 +18,10 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { FIXED_POPOVER_MESSAGES } from '../level2/tutorial_messages/fixed-popover-messages';
 import { ElementID } from '@/config/element-ids';
-import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
+import {
+  StatefulStateMachineEvent,
+  StatelessStateMachineEvent,
+} from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
@@ -70,6 +73,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
+    [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
   },
   states: {

@@ -58,7 +58,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     nodes_connnections: [],
   },
   on: {
-    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [
         {
@@ -102,6 +101,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
+    [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
+    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
   },
   states: {
     inside_tutorial: {

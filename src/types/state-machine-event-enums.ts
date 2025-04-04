@@ -15,6 +15,7 @@ export enum StatelessStateMachineEvent {
   CreateIAMIdentityPopupOpened = 'CREATE_IAM_IDENTITY_POPUP_OPENED',
   IAMNodeARNCopied = 'IAM_NODE_ARN_COPIED',
   IAMNodeTutorialPopoverClosed = 'IAM_NODE_TUTORIAL_POPOVER_CLOSED',
+  HidePopovers = 'HIDE_POPOVERS',
 }
 
 // /**

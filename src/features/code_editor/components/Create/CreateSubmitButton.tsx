@@ -36,7 +36,7 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
     // TODO: Create policies and roles through the same state machine event
     if (selectedIAMEntity == IAMNodeEntity.Policy) {
       levelActor.send({
-        type: 'ADD_IAM_POLICY_NODE',
+        type: StatefulStateMachineEvent.AddIAMPolicyNode,
         doc_string: content,
         account_id: accountId,
         label,
