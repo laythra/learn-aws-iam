@@ -161,8 +161,6 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
               </Text>
             )}
           </FormControl>
-
-          <Divider my={4} />
         </ModalBody>
         <ModalFooter>
           <Button
