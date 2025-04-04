@@ -21,15 +21,27 @@ const HINT_MSG2 = `
 
 const CALLOUT_MSG1 = `
   What you're creating now is called a **Trust Policy**.
-  It's a special type of policy that defines which entities can assume the role.
+  It's another type of policy that defines which IAM entities can assume the role.
+
+  a trust policy can be attached to one role at time,
+  so it's embedded in the role itself
 `;
 
 const CALLOUT_MSG2 = `
-  The \`Principal\` part of the **Trust Policy** can take other
-  formats aside from the principal's ARN string literal.
+  The \`Principal\` field in a **Trust Policy** supports multiple formats:
 
-  For example: {"Service": "ec2.amazonaws.com"}
-  is a valid principal and allows any EC2 service to assume the role.
+  - **IAM principals**:
+    \`{ "AWS": "<iam_user_or_role_arn>" }\`
+    – Grants access to a specific IAM user, role, or account.
+
+  - **Service principals**:
+    \`{ "Service": "lambda.amazonaws.com" }\`
+    – Grants access to an AWS service.
+      This pattern works for **any AWS service**, e.g. \`ec2.amazonaws.com\`,
+      \`ecs.amazonaws.com\`, etc.
+
+    These formats allow you to define **who can assume the role**
+    — whether it's a human, an application, or an AWS service.
 `;
 
 const HINT_MESSAGES = [

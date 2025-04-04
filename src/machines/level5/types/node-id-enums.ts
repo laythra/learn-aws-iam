@@ -8,7 +8,7 @@ export const ResourceNodeID = {
   BillingAndCostManagement: uniqueId('resource-billing-'),
   FinanceS3Bucket: uniqueId('resource-s3bucket-'),
   LambdaFunction: uniqueId('resource-lambda-'),
-  UsersCertificatesS3Bucket: uniqueId('resource-s3bucket-'),
+  ChatImagesS3Bucket: uniqueId('resource-s3bucket-'),
   TimeshiftLabsEC2Instance: uniqueId('resource-ec2-'),
 } as const;
 
@@ -22,6 +22,6 @@ export const RoleNodeID = {
 export const PolicyNodeID = {
   BillingPolicy: uniqueId('policy-'),
   S3ReadPolicy: uniqueId('policy-'),
-  UsersCertificatesS3WritePolicy: uniqueId('policy-'),
-  UsersCertificatesS3ReadPolicy: uniqueId('policy-'),
+  ChatImagesS3WritePolicy: uniqueId('policy-'),
+  ChatImagesS3ReadPolicy: uniqueId('policy-'),
 } as const;
