@@ -24,11 +24,11 @@
                 "enum": [
                   "dynamodb:GetItem",
                   "dynamodb:PutItem"
-                ],
-                "uniqueItems": true
+                ]
               },
               "minItems": 2,
-              "maxItems": 2
+              "maxItems": 2,
+              "uniqueItems": true
             },
             "Resource": {
               "type": "string",
@@ -66,14 +66,14 @@
               "oneOf": [
                 {
                   "type": "array",
-                  "minItems": 1,
-                  "maxItems": 1,
-                  "uniqueItems": true,
                   "items": {
                     "enum": [
                       "arn:aws:s3:::timeshift-assets/*"
                     ]
-                  }
+                  },
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "uniqueItems": true
                 },
                 {
                   "type": "string",
