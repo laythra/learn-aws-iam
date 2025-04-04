@@ -29,8 +29,8 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
     resource_type: IAMNodeResourceEntity.Lambda,
   },
   {
-    id: ResourceNodeID.UsersCertificatesS3Bucket,
-    label: 'user-images',
+    id: ResourceNodeID.ChatImagesS3Bucket,
+    label: 'chat-images',
     initial_position: 'center',
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,

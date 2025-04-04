@@ -36,14 +36,14 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
 
 const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
-    id: PolicyNodeID.UsersCertificatesS3ReadPolicy,
-    label: 'users-certs-s3-read',
+    id: PolicyNodeID.ChatImagesS3ReadPolicy,
+    label: 'chat-images-s3-read',
     initial_position: 'bottom-center',
     image: IAMNodeImage.Policy,
     content: JSON.stringify(INITIAL_POLICIES.S3_READ_POLICY, null, 2),
     granted_accesses: [
       {
-        target_node: ResourceNodeID.UsersCertificatesS3Bucket,
+        target_node: ResourceNodeID.ChatImagesS3Bucket,
         target_handle: 'bottom',
         access_level: AccessLevel.Read,
         source_handle: 'top',
@@ -51,14 +51,14 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
     ],
   },
   {
-    id: PolicyNodeID.UsersCertificatesS3WritePolicy,
-    label: 'users-certs-s3-write',
+    id: PolicyNodeID.ChatImagesS3WritePolicy,
+    label: 'chat-images-s3-write',
     initial_position: 'bottom-center',
     image: IAMNodeImage.Policy,
     content: JSON.stringify(INITIAL_POLICIES.S3_WRITE_POLICY, null, 2),
     granted_accesses: [
       {
-        target_node: ResourceNodeID.UsersCertificatesS3Bucket,
+        target_node: ResourceNodeID.ChatImagesS3Bucket,
         target_handle: 'bottom',
         access_level: AccessLevel.Write,
         source_handle: 'top',

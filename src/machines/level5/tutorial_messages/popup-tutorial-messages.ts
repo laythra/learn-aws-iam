@@ -13,64 +13,80 @@ const POPUP_MSG1 = `
 `;
 
 const POPUP_MSG2 = `
-Unlike **IAM Users** or **Groups**, roles are not permanently assigned to any entity.
-Instead, they are assumed temporarily
-by trusted principals such as **IAM Users**, **Applications**, and **AWS Services**.
+Unlike **IAM Users** or **Groups**, roles aren’t permanently assigned to a specific entity.
+Instead, they are **temporarily assumed** by trusted principals
+like **IAM Users**, **applications**, or **AWS services**.
 
-An IAM Role functions through two policies:
+An IAM Role operates using two key policies:
 
-* **Trust Policy** – Defines who can assume the role.
-* **Identity-based Policy** – Defines what actions the role can perform once assumed.
+* **Trust Policy** – Specifies **who is allowed to assume** the role.
+* **Permissions Policy** – Specifies **what actions the role can perform** once assumed.
 
-This separation makes IAM Roles flexible and secure, allowing controlled, temporary access.
+This separation of responsibilities makes roles both flexible and secure,
+enabling *controlled, time-limited access* to AWS resources.
 `;
 
 const POPUP_MSG3 = `
-Each **IAM role** has a **Trust Policy** that specifies who can assume it.
+Every **IAM Role** has a **Trust Policy** that defines **who can assume it**.
 
+A **Trust Policy** uses the **same IAM policy language** you're already familiar with —
+statements, actions, effects — but with one key difference:
+it introduces the **\`Principal\`** element.
 
-A **Trust Policy** is merely an **IAM Policy** which follows a specific format.
-It defines the trusted entities that can assume the role.
-The basic structure of **Trust Policies**
-should be easy to digest now that we've covered the basics:
-- **Principal**: The entity that is allowed to assume the role. It can be an:
-    - AWS service
-    - IAM User
-    - AWS Account
-    - IAM Role (IAM Roles are principals entities too!)
+Why is this new field needed?
 
-- **Effect**: Whether the \`Principal\` is allowed or denied the access
+Regular **permission policies** (like those attached to users or groups) don't need a \`Principal\`,
+because it's **implicitly understood** — the principal is the entity the policy is attached to.
 
-- **Action**: The action the \`Principal\` is allowed (or denied) to perform,
-Usually it's \`sts:AssumeRole\` in the context of **Trust Policies**.
-Meaning the principal can assume the role.
+But a **Trust Policy** is evaluated from the *role's* perspective.
+It must explicitly state **which entities (principals)** are trusted to assume it.
 
-~~~js
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow", ::badge[THE PRINCIPAL IS ALLOWED TO ASSUME THE ROLE]::
-      "Principal": {
-       ::badge[THE PRINCIPAL IS AN AWS SERVICE, MAINLY S3 BUCKETS]::
-        "Service": "s3.amazonaws.com"
+Here’s a quick breakdown of a Trust Policy statement:
+
+- **Principal** – The entity allowed to assume the role. This could be an:
+  - AWS Service
+  - IAM User
+  - IAM Role (a role can assume another role, it's called role-chaining but we won't cover it here)
+  - AWS Account
+
+- **Effect** – Typically \`Allow\`, stating that the principal **can assume** the role.
+
+- **Action** – Usually \`sts:AssumeRole\`, indicating the action
+the principal is allowed to perform.
+
+So while the structure mirrors what you've seen before,
+the **intent is reversed**: instead of saying "what can I do?",
+a Trust Policy says "**who do I trust to become me?**"
+
+  ~~~js
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow", ::badge[THE PRINCIPAL IS ALLOWED TO ASSUME THE ROLE]::
+        "Principal": {
+        ::badge[THE PRINCIPAL IS AN AWS SERVICE, MAINLY S3 BUCKETS]::
+          "Service": "s3.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole", ::badge[THE PRINCIPAL CAN ASSUME THIS ROLE]::
       },
-      "Action": "sts:AssumeRole", ::badge[THE PRINCIPAL CAN ASSUME THIS ROLE]::
-    },
-  ],
-}|fullwidth,
-~~~
+    ],
+  }|fullwidth,
+  ~~~
 `;
 
 const POPUP_MSG4 = `
-  We're back at ***Timeshift Labs***, where we're integrating a new simple image processing system
-  that's mainly used for generating important metadata related to the images the users upload.|lg
+  We're back at ***Timeshift Labs***, where we're integrating a new image processing system
+  to generate important metadata for every image users upload.
 
+  &nbsp;
 
-  The end-user will upload the image to the **S3 Bucket**: \`users-certificates\`
-  through our web interface that's hosted on an amazon **EC2 instance**,
-  and a **Lambda Function** will be notified upon this operation
-  and will run to generate important metadata related to the uploaded image.|lg
+  ##### Here's how the flow works:
+  1. The end-user uploads an image to the **S3 Bucket**: \`chat-images\`
+      through our web interface, hosted on an Amazon **EC2 instance**.
+
+  2. A **Lambda function** is automatically triggered by the upload event.
+    It processes the image and generates metadata, which it then stores elsewhere.
 `;
 
 const POPUP_MSG5 = `

@@ -50,7 +50,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: PolicyNodeID.UsersCertificatesS3ReadPolicy,
+          source: PolicyNodeID.ChatImagesS3ReadPolicy,
           target: RoleNodeID.LambdaRole,
         }),
       ],
@@ -63,7 +63,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: PolicyNodeID.UsersCertificatesS3WritePolicy,
+          source: PolicyNodeID.ChatImagesS3WritePolicy,
           target: RoleNodeID.EC2Role,
         }),
       ],
