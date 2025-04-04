@@ -106,6 +106,14 @@ export const components: Components = {
       </Heading>
     );
   },
+  h5: (props: JSX.IntrinsicElements['h5']) => {
+    const { children } = props;
+    return (
+      <Heading as='h5' size='md'>
+        {children}
+      </Heading>
+    );
+  },
   h6: (props: JSX.IntrinsicElements['h6']) => {
     const { children } = props;
     return (
@@ -116,7 +124,11 @@ export const components: Components = {
   },
   ul: (props: JSX.IntrinsicElements['ul']) => {
     const { children } = props;
-    return <UnorderedList py={2}>{children}</UnorderedList>;
+    return <UnorderedList py={1}>{children}</UnorderedList>;
+  },
+  ol: (props: JSX.IntrinsicElements['ol']) => {
+    const { children } = props;
+    return <OrderedList py={1}>{children}</OrderedList>;
   },
   a: (props: JSX.IntrinsicElements['a']) => {
     const { children, href } = props;
