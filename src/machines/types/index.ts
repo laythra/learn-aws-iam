@@ -1,5 +1,5 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
-import type { Edge, Node } from '@xyflow/react';
+import type { Edge } from '@xyflow/react';
 import { Schema, ValidateFunction } from 'ajv';
 import { DynamicAnimationOptions } from 'framer-motion';
 
@@ -11,9 +11,6 @@ import type {
   IAMAnyNode,
   IAMEdge,
   IAMGroupNode,
-  IAMNodeWithPolicies,
-  IAMPolicyNode,
-  IAMRoleNode,
   IAMScriptableEntity,
   IAMUserNode,
   PolicyGrantedAccess,
@@ -83,7 +80,10 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   highlighted_element_id?: string;
   in_tutorial_state?: boolean;
   whitelisted_element_ids?: string[];
-  blocked_element_ids?: string[];
+  /*
+    Defines the list of elements that are always hidden or disabled, regardless of the current state.
+  */
+  restricted_element_ids?: string[];
   edges_management_disabled?: boolean;
   animations?: Record<string, DynamicAnimationOptions>;
   identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
@@ -147,16 +147,6 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       node: IAMAnyNode;
     }
   | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };
-
-export type GenericInsideLevelMetadata = {
-  connection_targets?: {
-    // What this basically means, is that achieving all required_edges will unlock all locked_edges
-    required_edges: IAMEdge[];
-    locked_edges: IAMEdge[];
-  }[];
-  // What this basically means, is that the user must create all entity_targets to this stage, very simple
-  entity_targets?: IAMNodeEntity[];
-};
 
 export type FixedPopoverMessage = {
   popover_title: string;
