@@ -29,5 +29,10 @@ export const TEMPLATE_ROLE_NODE: IAMRoleNode = {
 };
 
 export function createRoleNode(props: Partial<IAMRoleNode['data']>): IAMRoleNode {
-  return _.merge({}, TEMPLATE_ROLE_NODE, { data: props }, { id: props.id });
+  return _.merge(
+    {},
+    TEMPLATE_ROLE_NODE,
+    { data: props },
+    { id: props.id, deletable: props.unnecessary_node }
+  );
 }
