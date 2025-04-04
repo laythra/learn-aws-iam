@@ -60,7 +60,9 @@
                   "enum": [
                     "arn:aws:dynamodb:us-east-1:123456789012:table/user-profiles"
                   ]
-                }
+                },
+                "minItems": 1,
+                "maxItems": 1
               }
             ]
           }

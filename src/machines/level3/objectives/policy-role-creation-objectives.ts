@@ -63,10 +63,12 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         {
           target_node: ResourceNodeID.PublicImagesS3Bucket,
           access_level: AccessLevel.ReadWrite,
-          target_handle: 'bottom',
+          target_handle: 'top',
+          source_handle: 'bottom',
         },
       ],
       validate_function: AJV_COMPILER.compile(s3ReadWritePolicySchema),
+      created_node_initial_position: 'bottom-left',
     },
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
@@ -81,9 +83,11 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
           target_node: ResourceNodeID.CloudFront,
           access_level: AccessLevel.Read,
           target_handle: 'bottom',
+          source_handle: 'top',
         },
       ],
       validate_function: AJV_COMPILER.compile(cloudfrontReadPolicySchema),
+      created_node_initial_position: 'bottom-right',
     },
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
@@ -95,12 +99,14 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       validate_inside_code_editor: true,
       granted_accesses: [
         {
-          target_node: ResourceNodeID.CloudFront,
+          target_node: ResourceNodeID.DynamoDBTable,
           access_level: AccessLevel.Read,
           target_handle: 'bottom',
+          source_handle: 'top',
         },
       ],
       validate_function: AJV_COMPILER.compile(dynamoReadWritePolicySchema),
+      created_node_initial_position: 'bottom-right',
     },
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

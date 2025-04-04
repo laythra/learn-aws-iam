@@ -2,9 +2,9 @@ import { PopupTutorialMessage } from '@/machines/types';
 
 const POPUP_MSG_1 = `
 In the previous level, we covered **IAM Groups** and
-how they are quite simple yet quite powerful in terms of enhancing permissions management scale
+how they are quite simple yet quite powerful in terms of enhancing permissions management scale|lg
 
-This level will tackle **Customer Managed IAM Policies** and **AWS Managed Policies**.
+This level will tackle **Customer Managed IAM Policies** and **AWS Managed Policies**.|lg
 `;
 
 const POPUP_MSG_2 = `
@@ -72,8 +72,13 @@ but not modify financial records unless their job specifically requires it.
 It's not an IAM exclusive concept, but rather a security best practice.
 `;
 
-const POPUP_MSG_7 = `
-Awesome work! You've completed the first set of objectives. 🎉️|lg
+const POPUP_MSG_6 = `
+Your team now has the proper permissions to access the resources they need
+and the principle of least privilege is being followed.|lg
+
+This level was a refreshing overview of everything we've covered so far.
+In the upcoming level, we will start editing customer managed policies
+to achieve the desired permissions setup we want|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
@@ -98,8 +103,8 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG_5,
   },
   {
-    title: '🎉',
-    content: POPUP_MSG_7,
+    title: 'Phenomenal work! 🎉️',
+    content: POPUP_MSG_6,
     go_to_next_level_button: true,
   },
 ];
