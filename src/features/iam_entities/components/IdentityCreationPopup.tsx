@@ -12,7 +12,6 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Divider,
   TabList,
   Tabs,
   Tab,
@@ -100,8 +99,6 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
     closeIdentityCreator();
   };
 
-  console.log('Here');
-
   useEffect(() => {
     if (!isIdentityCreatorOpen) return;
 
@@ -120,7 +117,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
     handleNameChange({
       target: { value: getNameFieldVal() },
     } as React.ChangeEvent<HTMLInputElement>);
-  }, []);
+  }, [isIdentityCreatorOpen, iamIdentityEntity]);
 
   return (
     <Modal isOpen={isIdentityCreatorOpen} onClose={closeIdentityCreator}>
