@@ -102,18 +102,11 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
         | 'NEXT_POPOVER'
         | 'NEXT_POPUP'
         | 'NEXT_FIXED_POPOVER'
-        | 'IAM_POLICY_CONNECTED'
-        | 'IAM_USER_CREATED'
-        | 'IAM_GROUP_CREATED'
-        | 'BEGIN'
-        | 'COMPLETE'
         | 'CREATE_USER_POPUP_OPENED'
         | 'HIDE_POPOVERS'
         | 'HIDE_FIXED_POPOVERS'
         | 'CREATE_POLICY_POPUP_OPENED'
         | 'CREATE_IAM_IDENTITY_POPUP_OPENED'
-        | 'IAM_USER_ATTACHED_TO_GROUP'
-        | 'IAM_POLICY_ATTACHED_TO_GROUP'
         | 'TOGGLE_SIDE_PANEL'
         | StatelessStateMachineEvent
         | (TBaseFinishEventMap[keyof TBaseFinishEventMap] & string);
@@ -134,21 +127,11 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       node_id: string;
       doc_string: string;
     }
-  | { type: 'ADD_IAM_POLICY_NODE'; doc_string: string; label: string; account_id?: AccountID }
-  | { type: 'UPDATE_IAM_NODE'; node_id: string; props: Partial<Omit<IAMAnyNode['data'], 'entity'>> }
-  | { type: 'ADD_EDGE'; edge: IAMEdge }
-  | { type: 'SET_EDGES'; edges: IAMEdge[] }
-  | { type: 'SET_NODES'; nodes: IAMAnyNode[] }
-  | { type: 'UPDATE_USER_POLICY_EDGES'; node: Node }
   | {
-      type: 'ATTACH_POLICY_TO_USER';
-      sourceNode: IAMPolicyNode;
-      targetNode: IAMUserNode;
-    }
-  | {
-      type: StatefulStateMachineEvent.AttachPolicyToEntity;
-      sourceNode: IAMPolicyNode;
-      targetNode: IAMNodeWithPolicies;
+      type: StatefulStateMachineEvent.AddIAMPolicyNode;
+      doc_string: string;
+      label: string;
+      account_id?: AccountID;
     }
   | {
       type: StatefulStateMachineEvent.ConnectNodes;
@@ -160,20 +143,9 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       edge: IAMEdge;
     }
   | {
-      type: 'ATTACH_USER_TO_GROUP';
-      sourceNode: IAMUserNode;
-      targetNode: IAMGroupNode;
-    }
-  | {
-      type: StatefulStateMachineEvent.AttachRoleToEntity;
-      sourceNode: IAMRoleNode;
-      targetNode: IAMUserNode;
-    }
-  | {
       type: StatefulStateMachineEvent.DeleteNode;
       node: IAMAnyNode;
     }
-  | { type: 'SHOW_POPOVER'; popover_content: PopoverTutorialMessage }
   | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };
 
 export type GenericInsideLevelMetadata = {

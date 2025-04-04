@@ -30,13 +30,12 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
     _.isEqual
   );
 
-  // Clicking on the NewEntityBtn will close any open popover
-  // and break the flow causing the user to get stuck
-  // If a popover with a `Next` button is open, we disable the NewEntityBtn
+  // To keep the user focused on a shown tutorial popover,
+  // we disable the button if a popover with a next button is shown.
   const disableEntityButton = showPopovers && popoverContent?.show_next_button;
 
   const hidePopovers = (): void => {
-    levelActor.send({ type: 'HIDE_POPOVERS' });
+    levelActor.send({ type: StatelessStateMachineEvent.HidePopovers });
   };
 
   const openCodeEditor = (): void => {
