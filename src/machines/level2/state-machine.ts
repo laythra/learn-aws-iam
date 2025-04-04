@@ -58,6 +58,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     initial_node_connections: INITIAL_CONNECTIONS,
+    restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {

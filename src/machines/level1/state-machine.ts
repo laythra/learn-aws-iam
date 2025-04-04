@@ -55,6 +55,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     role_creation_objectives: [],
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
+    restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -65,11 +66,38 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
+    [StatefulStateMachineEvent.ADDIAMRoleNode]: {
+      actions: [
+        {
+          type: 'add_role_node',
+          params: ({ event }) => ({ docString: event.doc_string, label: event.label }),
+        },
+      ],
+    },
     [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {
           type: 'connect_nodes',
-          params: ({ event }) => ({ sourceNode: event.sourceNode, targetNode: event.targetNode }),
+          params: ({ event }) => ({
+            sourceNode: event.sourceNode,
+            targetNode: event.targetNode,
+          }),
+        },
+      ],
+    },
+    [StatefulStateMachineEvent.DeleteEdge]: {
+      actions: [
+        {
+          type: 'delete_edge',
+          params: ({ event }) => ({ edge: event.edge }),
+        },
+      ],
+    },
+    [StatefulStateMachineEvent.DeleteNode]: {
+      actions: [
+        {
+          type: 'delete_node',
+          params: ({ event }) => ({ node: event.node }),
         },
       ],
     },
