@@ -1,24 +1,48 @@
 import * as React from 'react';
 
-import { Code, Heading, Text, Tooltip, UnorderedList, Badge } from '@chakra-ui/react';
+import { Code, Heading, Text, Tooltip, UnorderedList, Badge, OrderedList } from '@chakra-ui/react';
 import { chakra } from '@chakra-ui/system';
 import { Components } from 'react-markdown';
 
 export const components: Components = {
   p: ({ children }: JSX.IntrinsicElements['p']) => {
-    let fontSize;
+    let fontColor = 'black';
+    let fontWeight = 'normal';
+    let fontSize = 'md';
+
     const sizeRegex = /\|(xs|sm|md|lg|xl)$/;
+    const weightRegex = /\|weight\((\d+)\)/;
+    const colorRegex = /\|color\((\w+)\)/;
 
     const processedChildren = React.Children.map(children, child => {
-      if (typeof child === 'string' && child.match(sizeRegex)) {
-        fontSize = child.match(sizeRegex)?.[1] || 'md';
-        return child.replace(sizeRegex, '');
+      if (typeof child !== 'string') return child;
+
+      let str = child;
+
+      const colorMatch = str.match(colorRegex);
+      const weightMatch = str.match(weightRegex);
+      const sizeMatch = str.match(sizeRegex);
+
+      if (colorMatch) {
+        fontColor = colorMatch[1] || 'gray';
+        str = str.replace(colorRegex, '');
       }
-      return child;
+
+      if (weightMatch) {
+        fontWeight = weightMatch[1] || 'normal';
+        str = str.replace(weightRegex, '');
+      }
+
+      if (sizeMatch) {
+        fontSize = sizeMatch[1] || 'md';
+        str = str.replace(sizeRegex, '');
+      }
+
+      return str;
     });
 
     return (
-      <Text fontSize={fontSize} py={1}>
+      <Text fontSize={fontSize} py={1} fontWeight={fontWeight} color={fontColor}>
         {processedChildren}
       </Text>
     );
