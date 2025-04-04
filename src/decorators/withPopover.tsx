@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 /**
  * `withPopover` is a decorator that wraps a component with a popover.
@@ -28,7 +29,7 @@ export const withPopover = <T extends { elementid: string }, R = HTMLElement>(
     };
 
     const closePopover = (): void => {
-      machineActor.send({ type: 'HIDE_POPOVERS' });
+      machineActor.send({ type: StatelessStateMachineEvent.HidePopovers });
     };
 
     return (
