@@ -54,6 +54,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     role_creation_objectives: [],
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
+    restricted_element_ids: [ElementID.CodeEditorRoleTab],
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {

@@ -22,7 +22,7 @@ import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { ElementID } from '@/config/element-ids';
-import { useDisableInTutorial } from '@/hooks/useDisableInTutorial';
+import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
 import { IAMIdentityEntity, IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
@@ -38,9 +38,10 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
   const { closeIdentityCreator, isIdentityCreatorOpen, defaultSelectedIdentity } =
     useIdentityCreator();
 
-  const { isElementEnabled } = useDisableInTutorial({
-    elementIds: [ElementID.IdentityCreationPopupGroupTab, ElementID.IdentityCreationPopupUserTab],
-  });
+  const [isUserTabRestricted, isGroupTabRestricted] = useIsElementRestricted([
+    ElementID.IdentityCreationPopupUserTab,
+    ElementID.IdentityCreationPopupGroupTab,
+  ]);
 
   const [iamIdentityEntity, setIamIdentityEntity] =
     useState<IAMIdentityEntity>(defaultSelectedIdentity);
@@ -106,9 +107,9 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
       type: StatelessStateMachineEvent.CreateIAMIdentityPopupOpened,
     });
 
-    if (isElementEnabled(ElementID.IdentityCreationPopupUserTab)) {
+    if (!isUserTabRestricted) {
       setIamIdentityEntity(IAMNodeEntity.User);
-    } else if (isElementEnabled(ElementID.IdentityCreationPopupGroupTab)) {
+    } else if (!isGroupTabRestricted) {
       setIamIdentityEntity(IAMNodeEntity.Group);
     }
   }, [isIdentityCreatorOpen]);
@@ -134,12 +135,8 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
                 index={iamIdentityEntity === IAMNodeEntity.User ? 0 : 1}
               >
                 <TabList>
-                  <Tab isDisabled={!isElementEnabled(ElementID.IdentityCreationPopupUserTab)}>
-                    {IAMNodeEntity.User}
-                  </Tab>
-                  <Tab isDisabled={!isElementEnabled(ElementID.IdentityCreationPopupGroupTab)}>
-                    {IAMNodeEntity.Group}
-                  </Tab>
+                  <Tab isDisabled={isUserTabRestricted}>{IAMNodeEntity.User}</Tab>
+                  <Tab isDisabled={isGroupTabRestricted}>{IAMNodeEntity.Group}</Tab>
                 </TabList>
               </Tabs>
             </WithPopoverBox>

@@ -1,7 +1,6 @@
 import { FinishEventMap } from '../types/finish-event-enums';
 import { LevelObjectiveID } from '../types/objective-enums';
-import type { LevelObjective } from '../types/state-machine-types';
-import { ObjectiveType } from '@/machines/types';
+import { ObjectiveType, type LevelObjective } from '@/machines/types';
 
 const LEVEL_OBJECTIVE1 = `
 **Developers** should have *read/write* access to the \`CustomerData\` **DynamoDB Table**

@@ -5,7 +5,7 @@ import CodeEditorHelpButton from './CodeEditorHelpButton';
 import codeEditorStateStore from '../stores/code-editor-state-store';
 import { ElementID } from '@/config/element-ids';
 import { CanvasStore } from '@/features/canvas/stores/canvas-store';
-import { useDisableInTutorial } from '@/hooks/useDisableInTutorial';
+import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
 import { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 interface CodeEditorHeaderProps {
@@ -36,9 +36,10 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
     codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: entity });
   };
 
-  const { isElementEnabled } = useDisableInTutorial({
-    elementIds: [ElementID.CodeEditorPolicyTab, ElementID.CodeEditorRoleTab],
-  });
+  const [isPolicyTabRestricted, isRoleTabRestricted] = useIsElementRestricted([
+    ElementID.CodeEditorPolicyTab,
+    ElementID.CodeEditorRoleTab,
+  ]);
 
   return (
     <Flex justifyContent='space-between'>
@@ -55,12 +56,8 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
           size='sm'
         >
           <TabList>
-            <Tab isDisabled={!isElementEnabled(ElementID.CodeEditorPolicyTab)}>
-              {IAMNodeEntity.Policy}
-            </Tab>
-            <Tab isDisabled={!isElementEnabled(ElementID.CodeEditorRoleTab)}>
-              {IAMNodeEntity.Role}
-            </Tab>
+            <Tab isDisabled={isPolicyTabRestricted}>{IAMNodeEntity.Policy}</Tab>
+            <Tab isDisabled={isRoleTabRestricted}>{IAMNodeEntity.Role}</Tab>
           </TabList>
         </Tabs>
       </HStack>

@@ -16,6 +16,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -56,6 +57,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     side_panel_open: false,
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
+    restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
     dependency_map: {},
   },
   on: {

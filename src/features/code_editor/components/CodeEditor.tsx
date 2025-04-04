@@ -22,7 +22,7 @@ import { CodeEditorEdit } from './Edit/CodeEditorEdit';
 import { EditSubmitButton } from './Edit/EditSubmitButton';
 import codeEditorStateStore from '../stores/code-editor-state-store';
 import { ElementID } from '@/config/element-ids';
-import { useDisableInTutorial } from '@/hooks/useDisableInTutorial';
+import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
 import CodeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { CustomTheme, IAMNodeEntity } from '@/types';
 
@@ -30,9 +30,10 @@ interface CodeEditorProps {}
 
 export const CodeEditor: React.FC<CodeEditorProps> = () => {
   const theme = useTheme<CustomTheme>();
-  const { isElementEnabled } = useDisableInTutorial({
-    elementIds: [ElementID.CodeEditorPolicyTab, ElementID.CodeEditorRoleTab],
-  });
+  const [isPolicyTabRestricted, isRoleTabRestricted] = useIsElementRestricted([
+    ElementID.CodeEditorPolicyTab,
+    ElementID.CodeEditorRoleTab,
+  ]);
 
   const [isCodeEditorOpen, codeEditorMode, selectedNodeId] = useSelector(
     CodeEditorPopupStore,
@@ -56,12 +57,12 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
   };
 
   useEffect(() => {
-    if (!isElementEnabled(ElementID.CodeEditorPolicyTab)) {
-      codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: IAMNodeEntity.Role });
-    } else if (!isElementEnabled(ElementID.CodeEditorRoleTab)) {
+    if (!isPolicyTabRestricted) {
       codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: IAMNodeEntity.Policy });
+    } else if (!isRoleTabRestricted) {
+      codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: IAMNodeEntity.Role });
     }
-  }, [isElementEnabled]);
+  }, [isPolicyTabRestricted, isRoleTabRestricted]);
 
   return (
     <>

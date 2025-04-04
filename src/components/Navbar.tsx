@@ -18,13 +18,8 @@ interface NavbarProps {}
 export const Navbar: React.FC<NavbarProps> = () => {
   const theme = useTheme<CustomTheme>();
   const levelActor = LevelsProgressionContext().useActorRef();
-  const [value, levelNumber, levelTitle, levelDescription] = LevelsProgressionContext().useSelector(
-    state => [
-      state.value,
-      state.context.level_number,
-      state.context.level_title,
-      state.context.level_description,
-    ],
+  const [value, levelNumber, levelTitle] = LevelsProgressionContext().useSelector(
+    state => [state.value, state.context.level_number, state.context.level_title],
     _.isEqual
   );
 
