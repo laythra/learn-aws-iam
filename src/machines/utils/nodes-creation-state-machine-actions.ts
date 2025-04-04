@@ -5,9 +5,53 @@ import { updateConnectionEdges } from './edges-creation-state-machine-actions';
 import { AccountID, BaseFinishEventMap, GenericContext, ObjectiveType } from '../types';
 import { createGroupNode } from '@/factories/group-node-factory';
 import { createPolicyNode } from '@/factories/policy-node-factory';
+import { createRoleNode } from '@/factories/role-node-factory';
 import { createUserNode } from '@/factories/user-node-factory';
-import { IAMGroupNode, IAMNodeEntity, IAMPolicyNode, IAMUserNode } from '@/types';
-import { findAnyValidPolicy } from '@/utils/iam-code-linter';
+import { IAMGroupNode, IAMNodeEntity, IAMPolicyNode, IAMRoleNode, IAMUserNode } from '@/types';
+import { findAnyValidPolicy, findAnyValidRole } from '@/utils/iam-code-linter';
+
+export function createTrustPolicy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  docString: string,
+  label: string,
+  accountId?: AccountID
+): {
+  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
+  events: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][];
+} {
+  const targetValidObjective = findAnyValidRole(
+    context.role_creation_objectives,
+    docString,
+    context.nodes,
+    accountId
+  );
+
+  const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
+  const newRoleNode = createRoleNode({
+    id: targetValidObjective?.entity_id ?? _.uniqueId('policy-'),
+    content: docString,
+    label: label,
+    unnecessary_node: targetValidObjective === undefined,
+    initial_position: targetValidObjective?.created_node_initial_position ?? 'center',
+    account_id: accountId,
+    editable: false,
+  });
+
+  const updatedContext = produce(context, draftContext => {
+    draftContext.nodes.push(newRoleNode as WritableDraft<IAMRoleNode>);
+    if (targetValidObjective) {
+      draftContext.role_creation_objectives.find(
+        obj => obj.id === targetValidObjective.id
+      )!.finished = true;
+    }
+  });
+
+  if (targetValidObjective) {
+    sideEffectsEvents.push(targetValidObjective.on_finish_event);
+  }
+
+  return { updatedContext, events: sideEffectsEvents };
+}
 
 export function createPermissionPolicy<
   TLevelObjectiveID,

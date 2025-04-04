@@ -4,7 +4,6 @@ import { setup, enqueueActions, assign } from 'xstate';
 import {
   editObjectiveState,
   changeLevelObjectiveProgress,
-  createIAMRoleNode,
   getElementsWithRedDot,
 } from './utils/common-state-machine-actions';
 import { updateConnectionEdges } from './utils/edges-creation-state-machine-actions';
@@ -12,6 +11,7 @@ import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-acti
 import { resolveInitialEdges } from './utils/initial-edges-resolver';
 import {
   createPermissionPolicy,
+  createTrustPolicy,
   createUserGroupNode,
 } from './utils/nodes-creation-state-machine-actions';
 import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
@@ -33,7 +33,6 @@ import type {
 } from '@/machines/types';
 import { IAMNodeEntity } from '@/types';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
-import { getEdgeName } from '@/utils/names';
 
 /**
  * Defines a common state machine setup for all levels
@@ -115,16 +114,7 @@ export const createStateMachineSetup = <
         enqueue.assign({ edges: updatedContext.edges });
       }),
       delete_node: enqueueActions(({ context, enqueue }, { node }: { node: IAMAnyNode }) => {
-        let { updatedContext } = deleteNode<TLevelObjectiveID, TFinishEventMap>(context, node);
-
-        const edgesToDelete = updatedContext.nodes_connnections
-          .filter(connection => connection.from.id === node.id || connection.to.id === node.id)
-          .map(connection => getEdgeName(connection.from.id, connection.to.id));
-
-        ({ updatedContext } = deleteConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
-          updatedContext,
-          edgesToDelete
-        ));
+        const { updatedContext } = deleteNode<TLevelObjectiveID, TFinishEventMap>(context, node);
 
         enqueue.assign({
           nodes: updatedContext.nodes,
@@ -147,6 +137,7 @@ export const createStateMachineSetup = <
 
           enqueue.assign({
             nodes: updatedContext.nodes,
+            user_group_creation_objectives: updatedContext.user_group_creation_objectives,
           });
           events.forEach(event => enqueue.raise({ type: event }));
         }
@@ -210,13 +201,19 @@ export const createStateMachineSetup = <
             accountId,
           }: { docString: string; label: string; accountId?: AccountID }
         ) => {
-          const [updatedNodes, updatedObjectives, sideEffectsEvents] = createIAMRoleNode<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(context, docString, label, accountId);
+          const { updatedContext, events } = createTrustPolicy<TLevelObjectiveID, TFinishEventMap>(
+            context,
+            docString,
+            label,
+            accountId
+          );
 
-          enqueue.assign({ nodes: updatedNodes, role_creation_objectives: updatedObjectives });
-          sideEffectsEvents.forEach(event => {
+          enqueue.assign({
+            nodes: updatedContext.nodes,
+            role_creation_objectives: updatedContext.role_creation_objectives,
+          });
+
+          events.forEach(event => {
             enqueue.raise({ type: event });
           });
         }
