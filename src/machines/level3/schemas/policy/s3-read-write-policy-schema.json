@@ -57,7 +57,9 @@
                   "enum": [
                     "arn:aws:s3:::public-assets/*"
                   ]
-                }
+                },
+                "minItems": 1,
+                "maxItems": 1
               }
             ]
           }
