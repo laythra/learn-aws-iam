@@ -1,5 +1,5 @@
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyNode } from '@/factories/policy-node-factory';
+import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import type { IAMPolicyNode } from '@/types';
 import { AccessLevel, IAMNodeImage } from '@/types';
 
@@ -45,4 +45,6 @@ const POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   },
 ];
 
-export const INITIAL_POLICY_NODES: IAMPolicyNode[] = POLICY_NODES.map(createPolicyNode);
+export const INITIAL_POLICY_NODES: IAMPolicyNode[] = POLICY_NODES.map(nodeData =>
+  createPolicyNode({ dataOverrides: nodeData })
+);

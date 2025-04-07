@@ -2,7 +2,7 @@ import { DATA_SCIENTISTS_POLICY_DOCUMENT } from '../policy_role_documents/data-s
 import { DEVELOPERS_POLICY_DOCUMENT } from '../policy_role_documents/developers-policy';
 import { INTERNS_POLICY_DOCUMENT } from '../policy_role_documents/interns-policy';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyNode } from '@/factories/policy-node-factory';
+import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { AccessLevel, IAMPolicyNode } from '@/types';
 
 const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
@@ -49,5 +49,6 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   },
 ];
 
-export const INITIAL_IN_LEVEL_POLICY_NODES: IAMPolicyNode[] =
-  IN_LEVEL_POLICY_NODES.map(createPolicyNode);
+export const INITIAL_IN_LEVEL_POLICY_NODES: IAMPolicyNode[] = IN_LEVEL_POLICY_NODES.map(nodeData =>
+  createPolicyNode({ dataOverrides: nodeData })
+);

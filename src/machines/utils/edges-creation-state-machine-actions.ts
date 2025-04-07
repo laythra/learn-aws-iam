@@ -16,13 +16,14 @@ import {
   IAMAnyNode,
   IAMEdge,
   IAMGroupNode,
+  IAMNodeMap,
   IAMPolicyNode,
   IAMResourceNode,
   IAMRoleNode,
   IAMUserNode,
 } from '@/types/iam-node-types';
 import { getEdgeName, getEdgeLabel } from '@/utils/names';
-import { isNodeOfAnyEntity, isNodeOfEntity, NodeByEntity } from '@/utils/node-type-guards';
+import { isNodeOfAnyEntity, isNodeOfEntity } from '@/utils/node-type-guards';
 
 function isEdgeConnectionObjectiveFinished<TFinishEventMap extends BaseFinishEventMap>(
   objective: EdgeConnectionObjective<TFinishEventMap>,
@@ -194,9 +195,9 @@ function filterConnections<T extends IAMNodeEntity>(
   nodeConnections: NodeConnection[],
   targetId: string,
   entity: T
-): Array<NodeConnection & { from: NodeByEntity[T] }> {
+): Array<NodeConnection & { from: IAMNodeMap[T] }> {
   return nodeConnections.filter(
-    (connection): connection is NodeConnection & { from: NodeByEntity[T] } =>
+    (connection): connection is NodeConnection & { from: IAMNodeMap[T] } =>
       connection.to.id === targetId && isNodeOfAnyEntity(connection.from, [entity])
   );
 }

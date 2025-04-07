@@ -1,5 +1,5 @@
 import { GroupNodeID } from '../types/node-id-enums';
-import { createGroupNode } from '@/factories/group-node-factory';
+import { createGroupNode } from '@/factories/nodes/group-node-factory';
 import { IAMGroupNode } from '@/types';
 
 const GROUP_NODES: Partial<IAMGroupNode['data']>[] = [
@@ -15,4 +15,6 @@ const GROUP_NODES: Partial<IAMGroupNode['data']>[] = [
   },
 ];
 
-export const INITIAL_GROUP_NODES = GROUP_NODES.map(createGroupNode);
+export const INITIAL_GROUP_NODES = GROUP_NODES.map(nodeData =>
+  createGroupNode({ dataOverrides: nodeData })
+);

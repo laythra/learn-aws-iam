@@ -4,11 +4,11 @@ import { updateConnectionEdges } from './edges-creation-state-machine-actions';
 import { resolveInitialEdges } from './initial-edges-resolver';
 import { NodeConnection } from '../types';
 import { createMockContext } from '@/__test-helpers__/context';
-import { createGroupNode } from '@/factories/group-node-factory';
-import { createPolicyNode } from '@/factories/policy-node-factory';
-import { createResourceNode } from '@/factories/resource-node-factory';
-import { createRoleNode } from '@/factories/role-node-factory';
-import { createUserNode } from '@/factories/user-node-factory';
+import { createGroupNode } from '@/factories/nodes/group-node-factory';
+import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
+import { createResourceNode } from '@/factories/nodes/resource-node-factory';
+import { createRoleNode } from '@/factories/nodes/role-node-factory';
+import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { AccessLevel, IAMAnyNode, IAMEdge } from '@/types';
 import { getEdgeName } from '@/utils/names';
 
@@ -39,7 +39,7 @@ describe('updateConnectionEdges', () => {
   describe('policy → user', () => {
     it('creates only a direct edge when no access is granted', () => {
       const policy = createPolicyNode({});
-      const user = createUserNode({});
+      const user = createUserNode({ dataOverrides: {} });
       const ctx = createEdgeTestContext([], [policy, user]);
 
       const { updatedContext } = updateConnectionEdges(ctx, policy, user);
@@ -57,13 +57,15 @@ describe('updateConnectionEdges', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});
       const policy = createPolicyNode({
-        granted_accesses: [
-          {
-            access_level: AccessLevel.Read,
-            target_node: resource.id,
-            target_handle: 'mock-target-handle',
-          },
-        ],
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
       });
 
       const ctx = createEdgeTestContext([], [policy, user, resource]);
@@ -121,13 +123,15 @@ describe('updateConnectionEdges', () => {
       const user = createUserNode({});
       const group = createGroupNode({});
       const policy = createPolicyNode({
-        granted_accesses: [
-          {
-            access_level: AccessLevel.Read,
-            target_node: resource.id,
-            target_handle: 'mock-target-handle',
-          },
-        ],
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
       });
 
       const ctx = createEdgeTestContext(
@@ -188,13 +192,15 @@ describe('updateConnectionEdges', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});
       const policy = createPolicyNode({
-        granted_accesses: [
-          {
-            access_level: AccessLevel.Read,
-            target_node: resource.id,
-            target_handle: 'mock-target-handle',
-          },
-        ],
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
       });
       const role = createRoleNode({});
       const ctx = createEdgeTestContext(
@@ -255,13 +261,15 @@ describe('updateConnectionEdges', () => {
     it('creates extra (user → resource) edge when attached policies grant access', () => {
       const resource = createResourceNode({});
       const policy = createPolicyNode({
-        granted_accesses: [
-          {
-            access_level: AccessLevel.Read,
-            target_node: resource.id,
-            target_handle: 'mock-target-handle',
-          },
-        ],
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
       });
       const group = createGroupNode({});
       const user = createUserNode({});
@@ -337,13 +345,15 @@ describe('updateConnectionEdges', () => {
       const resource2 = createResourceNode({});
       const role = createRoleNode({});
       const policy = createPolicyNode({
-        granted_accesses: [
-          {
-            access_level: AccessLevel.Read,
-            target_node: resource2.id,
-            target_handle: 'mock-target-handle',
-          },
-        ],
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource2.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
       });
 
       const ctx = createEdgeTestContext(

@@ -21,6 +21,8 @@ export enum IAMNodeEntity {
   Role = 'IAM Role',
   Policy = 'IAM Policy',
   Resource = 'AWS Resource',
+  Account = 'Account',
+  OU = 'Organizational Unit',
 }
 
 export enum IAMNodeResourceEntity {
@@ -44,6 +46,7 @@ export enum IAMNodeImage {
   Role = 'role',
   Billing = 'billing',
   Lambda = 'lambda',
+  OU = 'ou',
 }
 
 export type CreatableIAMNodeEntity =
@@ -69,6 +72,7 @@ interface IAMNodeData extends Record<string, unknown> {
   label: string;
   entity: IAMNodeEntity;
   description?: string;
+  parent_id?: string;
   /**
    * The content of the node, namely a JSON string representing the node's data
    */
@@ -125,14 +129,33 @@ interface IAMResourceNodeData extends IAMNodeData {
   associated_roles: string[];
 }
 
+interface IAMAccountNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.Account;
+}
+interface IAMOUNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.OU;
+}
+
 export type IAMUserNode = Node<IAMUserNodeData, 'user'>;
 // Using 'group' as the type causes react-flow to render the node improperly for some reason
 export type IAMGroupNode = Node<IAMGroupNodeData, 'iam_group'>;
 export type IAMPolicyNode = Node<IAMPolicyNodeData, 'policy'>;
 export type IAMResourceNode = Node<IAMResourceNodeData, 'resource'>;
 export type IAMRoleNode = Node<IAMRoleNodeData, 'role'>;
+export type IAMAccountNode = Node<IAMAccountNodeData, 'account'>;
+export type IAMOUNode = Node<IAMOUNodeData, 'ou'>;
 
-export type IAMAnyNode = IAMUserNode | IAMGroupNode | IAMPolicyNode | IAMResourceNode | IAMRoleNode;
+export type IAMNodeMap = {
+  [IAMNodeEntity.Policy]: IAMPolicyNode;
+  [IAMNodeEntity.User]: IAMUserNode;
+  [IAMNodeEntity.Group]: IAMGroupNode;
+  [IAMNodeEntity.Role]: IAMRoleNode;
+  [IAMNodeEntity.Resource]: IAMResourceNode;
+  [IAMNodeEntity.Account]: IAMAccountNode;
+  [IAMNodeEntity.OU]: IAMOUNode;
+};
+
+export type IAMAnyNode = IAMNodeMap[keyof IAMNodeMap];
 
 export type IAMEdge = Edge<IAMEdgeData, 'default'>;
 

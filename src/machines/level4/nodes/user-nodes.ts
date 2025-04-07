@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { UserNodeID } from '../types/node-id-enums';
-import { createUserNode } from '@/factories/user-node-factory';
+import { createUserNode } from '@/factories/nodes/user-node-factory';
 import type { IAMUserNode } from '@/types';
 
 const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
@@ -32,6 +32,8 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   },
 ];
 
-export const INITIAL_IN_LEVEL_USER_NODES: IAMUserNode[] = IN_LEVEL_USER_NODES.map(createUserNode);
+export const INITIAL_IN_LEVEL_USER_NODES: IAMUserNode[] = IN_LEVEL_USER_NODES.map(nodeData =>
+  createUserNode({ dataOverrides: nodeData })
+);
 
 export const groupedByIdUsers = _.keyBy(INITIAL_IN_LEVEL_USER_NODES, 'id');
