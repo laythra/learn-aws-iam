@@ -21,6 +21,8 @@ export enum IAMNodeEntity {
   Role = 'IAM Role',
   Policy = 'IAM Policy',
   Resource = 'AWS Resource',
+  Account = 'Account',
+  OU = 'Organizational Unit',
 }
 
 export enum IAMNodeResourceEntity {
@@ -44,6 +46,7 @@ export enum IAMNodeImage {
   Role = 'role',
   Billing = 'billing',
   Lambda = 'lambda',
+  OU = 'ou',
 }
 
 export type CreatableIAMNodeEntity =
@@ -69,6 +72,7 @@ interface IAMNodeData extends Record<string, unknown> {
   label: string;
   entity: IAMNodeEntity;
   description?: string;
+  parent_id?: string;
   /**
    * The content of the node, namely a JSON string representing the node's data
    */
@@ -123,6 +127,13 @@ interface IAMResourceNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Resource;
   resource_type: IAMNodeResourceEntity;
   associated_roles: string[];
+}
+
+interface IAMAccountNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.Account;
+}
+interface IAMOUNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.OU;
 }
 
 export type IAMUserNode = Node<IAMUserNodeData, 'user'>;
