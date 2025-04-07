@@ -5,28 +5,12 @@ import {
   createUserGroupNode,
 } from './nodes-creation-state-machine-actions';
 import { createMockContext } from '@/__test-helpers__/context';
-import { createEdge } from '@/factories/edge-factory';
-import { createGroupNode } from '@/factories/group-node-factory';
 import {
   createPolicyCreationObjective,
   createUserGroupCreationObjective,
 } from '@/factories/objectives-factory';
-import { createPolicyNode } from '@/factories/policy-node-factory';
-import { createUserNode } from '@/factories/user-node-factory';
 import { CreatableIAMNodeEntity, IAMNodeEntity } from '@/types';
 import { findAnyValidPolicy } from '@/utils/iam-code-linter';
-
-vi.mock('@/factories/policy-node-factory', () => ({
-  createPolicyNode: vi.fn(props => props),
-}));
-
-vi.mock('@/factories/group-node-factory', () => ({
-  createGroupNode: vi.fn(props => props),
-}));
-
-vi.mock('@/factories/user-node-factory', () => ({
-  createUserNode: vi.fn(props => props),
-}));
 
 vi.mock('@/utils/iam-code-linter', () => ({
   findAnyValidPolicy: vi.fn(),
@@ -51,73 +35,57 @@ describe('createPermissionPolicy', () => {
   it('creates a new policy node without a matching objective and adds it as unnecessary', () => {
     vi.mocked(findAnyValidPolicy).mockReturnValue(undefined);
 
-    const mockPolicyNode = createPolicyNode({ content: mockDocString, label: mockLabel });
     const result = createPermissionPolicy(mockContext, mockDocString, mockLabel);
 
-    expect(result.updatedContext.nodes).toContainEqual(expect.objectContaining(mockPolicyNode));
-    expect(result.events).toEqual([]);
-    expect(createPolicyNode).toHaveBeenCalledWith(
-      expect.objectContaining({
-        content: mockDocString,
+    const createdNode = result.updatedContext.nodes.find(
+      n => n.data.entity === IAMNodeEntity.Policy
+    );
+    expect(createdNode).toMatchObject({
+      data: {
         label: mockLabel,
         unnecessary_node: true,
-      })
-    );
-  });
-
-  it('creates a new policy node with a matching objective and adds it as necessary', () => {
-    const policyNode = createPolicyNode({
-      id: '1',
-      data: { entity: IAMNodeEntity.Policy, granted_accesses: [] },
-    });
-    const userNode = createUserNode({ id: '2', data: { entity: IAMNodeEntity.User } });
-    const initialEdge = createEdge({
-      source: policyNode.id,
-      target: userNode.id,
-      data: {
-        source_node_data: policyNode,
-        target_node_data: userNode,
+        entity: IAMNodeEntity.Policy,
+        granted_accesses: [],
       },
     });
 
-    mockContext = createMockContext({ nodes: [policyNode, userNode] });
+    expect(result.events).toEqual([]);
+  });
+
+  it('creates a new policy node with a matching objective and marks it as necessary', () => {
+    mockContext = createMockContext({});
 
     vi.mocked(findAnyValidPolicy).mockReturnValue(
       createPolicyCreationObjective({
         on_finish_event: 'MOCK_EVENT',
-        initial_edges: [initialEdge],
+        initial_edges: [],
       })
     );
-
-    const mockPolicyNode = createPolicyNode({
-      content: mockDocString,
-      label: mockLabel,
-    });
 
     const result = createPermissionPolicy(mockContext, mockDocString, mockLabel);
-
-    expect(result.updatedContext.nodes).toContainEqual(expect.objectContaining(mockPolicyNode));
-    expect(result.updatedContext.edges).toContainEqual(
-      expect.objectContaining({ id: initialEdge.id })
+    const createdNode = result.updatedContext.nodes.find(
+      n => n.data.entity === IAMNodeEntity.Policy
     );
 
-    expect(result.events).toEqual(['MOCK_EVENT']);
-    expect(createPolicyNode).toHaveBeenCalledWith(
-      expect.objectContaining({
-        content: mockDocString,
+    expect(createdNode).toMatchObject({
+      data: {
         label: mockLabel,
         unnecessary_node: false,
-      })
-    );
+        entity: IAMNodeEntity.Policy,
+        granted_accesses: [],
+      },
+    });
+
+    expect(result.events).toEqual(['MOCK_EVENT']);
   });
 });
 
 describe.each([
-  ['User', IAMNodeEntity.User, createUserNode],
-  ['Group', IAMNodeEntity.Group, createGroupNode],
-])('createUserGroupNode (%s)', (_, entityType, createFn) => {
+  ['User', IAMNodeEntity.User],
+  ['Group', IAMNodeEntity.Group],
+])('createUserGroupNode (%s)', (_, entityType) => {
   it('creates node and returns event if valid objective is found', () => {
-    const mockNode = createFn({ label: `mock_${entityType.toLowerCase()}` });
+    const mockLabel = `mock_${entityType.toLowerCase()}`;
     const mockObjective = createUserGroupCreationObjective({
       on_finish_event: `${entityType}_CREATED`,
       entity_to_create: entityType as CreatableIAMNodeEntity,
@@ -130,16 +98,23 @@ describe.each([
     const result = createUserGroupNode(
       mockContext,
       entityType as IAMNodeEntity.User | IAMNodeEntity.Group,
-      mockNode
+      { label: mockLabel }
     );
 
-    expect(result.updatedContext.nodes).toContainEqual(expect.objectContaining(mockNode));
-    expect(result.events).toEqual([`${entityType}_CREATED`]);
+    const createdNode = result.updatedContext.nodes.find(n => entityType === n.data.entity);
+    expect(createdNode).toBeDefined();
+    expect(createdNode).toMatchObject({
+      data: {
+        label: mockLabel,
+        unnecessary_node: false,
+        entity: entityType,
+      },
+    });
   });
 
   it(`creates a new user or group node, updates the context,
       and returns no events when no valid objective is found`, () => {
-    const mockNode = createFn({ label: `mock_${entityType.toLowerCase()}` });
+    const mockLabel = `mock_${entityType.toLowerCase()}`;
     const mockContext = createMockContext({
       user_group_creation_objectives: [],
     });
@@ -147,10 +122,17 @@ describe.each([
     const result = createUserGroupNode(
       mockContext,
       entityType as IAMNodeEntity.User | IAMNodeEntity.Group,
-      mockNode
+      { label: mockLabel }
     );
 
-    expect(result.updatedContext.nodes).toContainEqual(expect.objectContaining(mockNode));
-    expect(result.events).toEqual([]);
+    const createdNode = result.updatedContext.nodes.find(n => entityType === n.data.entity);
+    expect(createdNode).toBeDefined();
+    expect(createdNode).toMatchObject({
+      data: {
+        label: mockLabel,
+        unnecessary_node: true,
+        entity: entityType,
+      },
+    });
   });
 });

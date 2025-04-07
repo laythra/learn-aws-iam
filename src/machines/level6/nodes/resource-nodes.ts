@@ -1,5 +1,5 @@
 import { ResourceNodeID } from '../types/node-id-enums';
-import { createResourceNode } from '@/factories/resource-node-factory';
+import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { AccountID } from '@/machines/types';
 import type { IAMResourceNode } from '@/types';
 import { IAMNodeImage, IAMNodeResourceEntity } from '@/types';
@@ -15,5 +15,6 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   },
 ];
 
-export const INITIAL_IN_LEVEL_RESOURCE_NODES: IAMResourceNode[] =
-  IN_LEVEL_RESOURCE_NODES.map(createResourceNode);
+export const INITIAL_IN_LEVEL_RESOURCE_NODES: IAMResourceNode[] = IN_LEVEL_RESOURCE_NODES.map(
+  nodeData => createResourceNode({ dataOverrides: nodeData })
+);

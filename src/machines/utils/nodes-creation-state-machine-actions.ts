@@ -3,10 +3,10 @@ import _ from 'lodash';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
 import { AccountID, BaseFinishEventMap, GenericContext, ObjectiveType } from '../types';
-import { createGroupNode } from '@/factories/group-node-factory';
-import { createPolicyNode } from '@/factories/policy-node-factory';
-import { createRoleNode } from '@/factories/role-node-factory';
-import { createUserNode } from '@/factories/user-node-factory';
+import { createGroupNode } from '@/factories/nodes/group-node-factory';
+import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
+import { createRoleNode } from '@/factories/nodes/role-node-factory';
+import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { IAMGroupNode, IAMNodeEntity, IAMPolicyNode, IAMRoleNode, IAMUserNode } from '@/types';
 import { findAnyValidPolicy, findAnyValidRole } from '@/utils/iam-code-linter';
 
@@ -28,13 +28,15 @@ export function createTrustPolicy<TLevelObjectiveID, TFinishEventMap extends Bas
 
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
   const newRoleNode = createRoleNode({
-    id: targetValidObjective?.entity_id ?? _.uniqueId('policy-'),
-    content: docString,
-    label: label,
-    unnecessary_node: targetValidObjective === undefined,
-    initial_position: targetValidObjective?.created_node_initial_position ?? 'center',
-    account_id: accountId,
-    editable: false,
+    dataOverrides: {
+      id: targetValidObjective?.entity_id ?? _.uniqueId('policy-'),
+      content: docString,
+      label: label,
+      unnecessary_node: targetValidObjective === undefined,
+      initial_position: targetValidObjective?.created_node_initial_position ?? 'center',
+      account_id: accountId,
+      editable: false,
+    },
   });
 
   const updatedContext = produce(context, draftContext => {
@@ -74,14 +76,16 @@ export function createPermissionPolicy<
 
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
   const newPolicyNode = createPolicyNode({
-    id: targetValidObjective?.entity_id ?? _.uniqueId('policy-'),
-    content: docString,
-    label: label,
-    unnecessary_node: targetValidObjective === undefined,
-    granted_accesses: targetValidObjective?.granted_accesses ?? [],
-    initial_position: targetValidObjective?.created_node_initial_position ?? 'center',
-    account_id: accountId,
-    editable: false,
+    dataOverrides: {
+      id: targetValidObjective?.entity_id ?? _.uniqueId('policy-'),
+      content: docString,
+      label: label,
+      unnecessary_node: targetValidObjective === undefined,
+      granted_accesses: targetValidObjective?.granted_accesses ?? [],
+      initial_position: targetValidObjective?.created_node_initial_position ?? 'center',
+      account_id: accountId,
+      editable: false,
+    },
   });
 
   let updatedContext = produce(context, draftContext => {
@@ -124,10 +128,12 @@ export function createUserGroupNode<TLevelObjectiveID, TFinishEventMap extends B
     );
     const creationFunc = nodeType === IAMNodeEntity.Group ? createGroupNode : createUserNode;
     const newNode = creationFunc({
-      id: targetObjective?.entity_id ?? _.uniqueId('node_'),
-      initial_position: targetObjective?.initial_position ?? 'center',
-      unnecessary_node: targetObjective === undefined,
-      ...props,
+      dataOverrides: {
+        id: targetObjective?.entity_id ?? _.uniqueId('node_'),
+        initial_position: targetObjective?.initial_position ?? 'center',
+        unnecessary_node: targetObjective === undefined,
+        ...props,
+      },
     });
 
     draftContext.nodes.push(newNode as WritableDraft<IAMGroupNode | IAMUserNode>);

@@ -131,8 +131,20 @@ export type IAMGroupNode = Node<IAMGroupNodeData, 'iam_group'>;
 export type IAMPolicyNode = Node<IAMPolicyNodeData, 'policy'>;
 export type IAMResourceNode = Node<IAMResourceNodeData, 'resource'>;
 export type IAMRoleNode = Node<IAMRoleNodeData, 'role'>;
+export type IAMAccountNode = Node<IAMAccountNodeData, 'account'>;
+export type IAMOUNode = Node<IAMOUNodeData, 'ou'>;
 
-export type IAMAnyNode = IAMUserNode | IAMGroupNode | IAMPolicyNode | IAMResourceNode | IAMRoleNode;
+export type IAMNodeMap = {
+  [IAMNodeEntity.Policy]: IAMPolicyNode;
+  [IAMNodeEntity.User]: IAMUserNode;
+  [IAMNodeEntity.Group]: IAMGroupNode;
+  [IAMNodeEntity.Role]: IAMRoleNode;
+  [IAMNodeEntity.Resource]: IAMResourceNode;
+  [IAMNodeEntity.Account]: IAMAccountNode;
+  [IAMNodeEntity.OU]: IAMOUNode;
+};
+
+export type IAMAnyNode = IAMNodeMap[keyof IAMNodeMap];
 
 export type IAMEdge = Edge<IAMEdgeData, 'default'>;
 

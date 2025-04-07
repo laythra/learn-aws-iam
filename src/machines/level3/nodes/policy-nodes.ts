@@ -1,5 +1,5 @@
 import { PolicyNodeID } from '../types/node-id-enums';
-import { createPolicyNode } from '@/factories/policy-node-factory';
+import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMPolicyNode } from '@/types';
 
@@ -13,5 +13,6 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   },
 ];
 
-export const INITIAL_TUTORIAL_POLICY_NODES: IAMPolicyNode[] =
-  TUTORIAL_POLICY_NODES.map(createPolicyNode);
+export const INITIAL_TUTORIAL_POLICY_NODES: IAMPolicyNode[] = TUTORIAL_POLICY_NODES.map(nodeData =>
+  createPolicyNode({ dataOverrides: nodeData })
+);

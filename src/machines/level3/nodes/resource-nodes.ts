@@ -1,5 +1,5 @@
 import { ResourceNodeID } from '../types/node-id-enums';
-import { createResourceNode } from '@/factories/resource-node-factory';
+import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import type { IAMResourceNode } from '@/types';
 import { IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 
@@ -36,7 +36,10 @@ const RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
     resource_type: IAMNodeResourceEntity.DynamoDBTable,
   },
 ];
-export const INITIAL_TUTORIAL_RESOURCE_NODES: IAMResourceNode[] =
-  TUTORIAL_RESOURCE_NODES.map(createResourceNode);
+export const INITIAL_TUTORIAL_RESOURCE_NODES: IAMResourceNode[] = TUTORIAL_RESOURCE_NODES.map(
+  nodeData => createResourceNode({ dataOverrides: nodeData })
+);
 
-export const INITIAL_RESOURCE_NODES: IAMResourceNode[] = RESOURCE_NODES.map(createResourceNode);
+export const INITIAL_RESOURCE_NODES: IAMResourceNode[] = RESOURCE_NODES.map(nodeData =>
+  createResourceNode({ dataOverrides: nodeData })
+);

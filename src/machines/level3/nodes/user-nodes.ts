@@ -1,5 +1,5 @@
 import { UserNodeID } from '../types/node-id-enums';
-import { createUserNode } from '@/factories/user-node-factory';
+import { createUserNode } from '@/factories/nodes/user-node-factory';
 import type { IAMUserNode } from '@/types';
 
 const USER_NODES: Partial<IAMUserNode['data']>[] = [
@@ -25,4 +25,6 @@ const USER_NODES: Partial<IAMUserNode['data']>[] = [
   },
 ];
 
-export const INITIAL_USER_NODES = USER_NODES.map(createUserNode);
+export const INITIAL_USER_NODES = USER_NODES.map(nodeData =>
+  createUserNode({ dataOverrides: nodeData })
+);
