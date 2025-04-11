@@ -18,36 +18,28 @@ export const withTutorialGuard = <
 >(
   WrappedComponent: React.FC<T>
 ): ForwardRefExoticComponent<PropsWithoutRef<T> & React.RefAttributes<TRef>> => {
-  const TutorialGuardedComponent = forwardRef<TRef, T>(
-    ({ isDisabled, elementid, ...props }, ref) => {
-      const [inTutorialState, whitelistedElementIds] = LevelsProgressionContext().useSelector(
-        state => [state.context.in_tutorial_state, state.context.whitelisted_element_ids],
+  const TutorialGuardedComponent = forwardRef<TRef, T>(({ elementid, ...props }, ref) => {
+    const [inTutorialState, whitelistedElementIds, blackListedElementIds] =
+      LevelsProgressionContext().useSelector(
+        state => [
+          state.context.in_tutorial_state,
+          state.context.whitelisted_element_ids,
+          state.context.restricted_element_ids,
+        ],
         _.isEqual
       );
 
-      const forceDisable = inTutorialState && !whitelistedElementIds?.includes(elementid);
+    const isWhitelisted = whitelistedElementIds?.includes(elementid) ?? false;
+    const isRestricted = blackListedElementIds?.includes(elementid) ?? false;
 
-      if (forceDisable) {
-        return null;
-      }
+    const shouldHide = isRestricted || (inTutorialState && !isWhitelisted);
 
-      return (
-        <>
-          <Tooltip
-            label={forceDisable ? 'This utility is blocked during the tutorial.' : undefined}
-            isDisabled={!forceDisable}
-          >
-            <WrappedComponent
-              {...(props as T)}
-              id={elementid}
-              isDisabled={isDisabled || forceDisable}
-              ref={ref}
-            />
-          </Tooltip>
-        </>
-      );
+    if (shouldHide) {
+      return null;
     }
-  );
+
+    return <WrappedComponent {...(props as T)} id={elementid} ref={ref} />;
+  });
 
   TutorialGuardedComponent.displayName = `TutorialGuardedComponent(${
     WrappedComponent.displayName || WrappedComponent.name
