@@ -56,6 +56,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     role_creation_objectives: [],
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
+    restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -118,6 +119,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         'next_edge_connection_objectives',
         'enable_tutorial_state',
         'show_side_panel',
+        'disable_edges_management_ability',
       ],
       states: {
         tutorial_popup1: {
@@ -161,7 +163,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         fixed_popover2: {
-          entry: 'next_fixed_popover',
+          entry: ['next_fixed_popover', 'enable_edges_management_ability'],
           on: {
             [EdgeConnectionFinishEvent.TUTORIAL_ROLE1_ATTACHED_TO_USER]: {
               target: 'user_attached_to_tutorial_role_popover',

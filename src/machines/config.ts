@@ -36,19 +36,32 @@ export const MANAGED_POLICIES = {
 };
 
 export const TUTORIAL_FINISHED_POPUP_MESSAGE = `
-  Congratulations! You have successfully completed the IAM tutorial Demo.
-  You have learned about IAM policies, roles, and groups,
-  and how to manage access to AWS resources effectively.
+🎉 **Well done!** You’ve completed the **IAM Tutorial Demo**.
 
-  There's more stuff coming up soon, we'll tackle more advanced topics like:
-  - Permission Boundaries
-  - Service Control Policies
-  - Federated Access
-  and much more!
+You’ve learned the basics of IAM — how **users**, **groups**, **roles**, and **policies**
+work together to manage access to AWS resources securely and effectively.
 
-  In the meantime, you can check out the following resources to deepen your understanding of IAM:
-  - [AWS IAM Best Practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
-  - [AWS IAM Policy Generator](https://awspolicygen.s3.amazonaws.com/policygen.html)
+&nbsp;
 
-  Click on the button below to start from the beginning and explore the IAM tutorial again.
+🚀 **Coming soon:** We’ll dive deeper into advanced IAM concepts like:|weight(700)
+
+* 🔒 *Permission Boundaries*
+
+* 🏢 *Service Control Policies (SCPs)*
+
+* 🌐 *Federated Access*
+...and more!
+
+&nbsp;
+
+📚 In the meantime, check out these resources to keep leveling up:|weight(700)
+
+* IAM Best Practices – AWS Docs
+
+* IAM Policy Generator
+
+&nbsp;
+
+🔁 Want to start over? Click the button below to replay the
+tutorial from the beginning and sharpen your skills again.|weight(700)
 `;

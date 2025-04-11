@@ -16,7 +16,7 @@ const HINT_MSG1 = `
 
 const HINT_MSG2 = `
   Grant the **Lambda Function** full read access
-  from the **S3 Bucket** \`users-certificates\`
+  from the **S3 Bucket** \`chat-images\`
 `;
 
 const CALLOUT_MSG1 = `
