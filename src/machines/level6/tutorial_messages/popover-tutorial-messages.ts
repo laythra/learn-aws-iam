@@ -2,7 +2,7 @@ import { UserNodeID } from '../types/node-id-enums';
 import type { PopoverTutorialMessage } from '@/machines/types';
 
 const POPOVER_MSG1 = `
-  The IAM User "richard" now has read access to the DynamoDB table "FinanceReports".
+  The IAM User "omar" now has *read access* to the DynamoDB table \`finance-reports\`.
   We didn't need to create a new IAM user in our account for this to happen 🚀
 `;
 

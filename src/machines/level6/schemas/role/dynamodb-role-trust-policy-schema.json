@@ -40,9 +40,25 @@
             "additionalProperties": false,
             "properties": {
               "AWS": {
-                "type": "string",
-                "enum": [
-                  "arn:aws:iam::987654321098:user/omar"
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "arn:aws:iam::987654321098:user/omar"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "arn:aws:iam::987654321098:user/omar"
+                    ]
+                  }
                 ]
               }
             }

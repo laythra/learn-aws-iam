@@ -11,7 +11,7 @@ const OBJECTIVE_MSG2 = `
 `;
 
 const OBJECTIVE_MSG3 = `
-  **Frontend Team**: Allow Read access to CloudFront Distribution \`E1234567890ABC\`
+  **Frontend Team**: Allow Read access to CloudFront Distribution \`E1A2B3C4D5E6F7\`
 `;
 
 const OBJECTIVE_MSG4 = `

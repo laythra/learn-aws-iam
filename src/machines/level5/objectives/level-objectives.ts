@@ -17,12 +17,12 @@ const TutorialObjective3Description = `
 `;
 
 const InLevelObjective1Description = `
-  Grant the **EC2 Instance** write access into the **S3 Bucket** \`users-certificates\`
+  Grant the **EC2 Instance** write access into the **S3 Bucket** \`chat-images\`
 `;
 
 const InLevelObjective2Description = `
   Grant the **Lambda Function** full read access
-  from the **S3 Bucket** \`users-certificates\`
+  from the **S3 Bucket** \`chat-images\`
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [
