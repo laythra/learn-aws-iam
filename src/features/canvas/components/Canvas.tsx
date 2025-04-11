@@ -2,10 +2,12 @@ import React from 'react';
 
 import { ReactFlow, Background, BackgroundVariant, ConnectionMode } from '@xyflow/react';
 
+import { AccountCanvasNode } from './AccountCanvasNode';
 import IAMCanvasEdge from './IAMCanvasEdge';
 import IAMCanvasNode from './IAMCanvasNode';
 import { useCanvas } from '../hooks/useCanvas';
 import { CanvasStore } from '../stores/canvas-store';
+
 import '@xyflow/react/dist/style.css';
 
 const nodeTypes = {
@@ -14,6 +16,8 @@ const nodeTypes = {
   iam_group: IAMCanvasNode,
   role: IAMCanvasNode,
   resource: IAMCanvasNode,
+  account: AccountCanvasNode,
+  ou: IAMCanvasNode,
 };
 
 const edgeTypes = {

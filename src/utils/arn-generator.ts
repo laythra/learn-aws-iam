@@ -11,7 +11,6 @@ const arnStrategies: Record<string, ArnGenerator> = {
     `arn:aws:iam::${accountId}:policy/${resourceName}`,
   [IAMNodeEntity.Group]: (resourceName, accountId) =>
     `arn:aws:iam::${accountId}:group/${resourceName}`,
-
   [IAMNodeResourceEntity.S3Bucket]: resourceName => `arn:aws:s3:::${resourceName}`,
   [IAMNodeResourceEntity.Lambda]: (resourceName, accountId, region = 'us-east-1') =>
     `arn:aws:lambda:${region}:${accountId}:function:${resourceName}`,
@@ -25,6 +24,7 @@ const arnStrategies: Record<string, ArnGenerator> = {
     `arn:aws:budgets::${accountId}:budget/${resourceName}`,
 };
 
+export const SupportedArnNodeTypes = Object.keys(arnStrategies);
 export function generateArn(
   serviceType: IAMNodeEntity | IAMNodeResourceEntity,
   resourceName: string,

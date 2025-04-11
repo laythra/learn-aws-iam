@@ -10,6 +10,7 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
  * a "tutorial guard" is merely a wrapper that blocks the user from interacting with the element
  * @param {React.FC<T>} WrappedComponent The component to wrap with the guard.
  * @returns The wrapped component with a guard.
+ * TODO: Convert this into a hook
  */
 export const withTutorialGuard = <
   T extends { isDisabled?: boolean; elementid: string },

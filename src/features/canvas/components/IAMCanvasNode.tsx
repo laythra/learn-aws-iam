@@ -15,7 +15,7 @@ import { WithPopoverBox } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { type CustomTheme, IAMAnyNode, IAMNodeEntity } from '@/types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
-import { generateArn } from '@/utils/arn-generator';
+import { generateArn, SupportedArnNodeTypes } from '@/utils/arn-generator';
 import { loadLocalImage } from '@/utils/image-loader';
 
 export interface IAMCanvasNodeProps {
@@ -56,6 +56,9 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
   };
 
   const isSelected = selectedNodeId === id;
+  const arn = SupportedArnNodeTypes.includes(resourceType || entity)
+    ? generateArn(resourceType || entity, label, data.account_id)
+    : undefined;
 
   useEffect(() => {
     // TODO: Figure out a better way to handle animations
@@ -155,12 +158,14 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
         </Flex>
       </Flex>
       <HStack position='absolute' top={1} right={2}>
-        <ARNIconButton
-          arn={generateArn(resourceType || entity, label, data.account_id)}
-          onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
-          onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
-          placement='top-end'
-        />
+        {arn && (
+          <ARNIconButton
+            arn={arn}
+            onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
+            onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+            placement='top-end'
+          />
+        )}
         {content && (
           <IAMNodeInfoButton
             nodeId={id}
