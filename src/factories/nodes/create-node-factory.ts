@@ -47,7 +47,7 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
     height,
     data: {
       id: entity.toLowerCase(),
-      label: entity.replace('IAM', 'IAM '),
+      label: entity,
       handles: defaultHandles,
       entity,
       image,
