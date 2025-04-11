@@ -169,16 +169,11 @@ export type IAMNodeAnimationConfig = {
   options: DynamicAnimationOptions;
 }[];
 
-export interface IAMEdgeData extends Record<string, unknown> {
-  source_node_data?: IAMAnyNode;
-  target_node_data?: IAMAnyNode;
+interface IAMEdgeData extends Record<string, unknown> {
+  source_node?: IAMAnyNode;
+  target_node?: IAMAnyNode;
   hovering_label?: AccessLevel | string;
   type: 'default';
-  /**
-   * The ID of the edge that was resposible for the creation of this edge
-   * mainly used for deleting edges, such that deleting an edge will also delete its children
-   */
-  parent_edge_id?: string;
   achieved_objective_id?: number;
   color: string;
   hovering_color: string;

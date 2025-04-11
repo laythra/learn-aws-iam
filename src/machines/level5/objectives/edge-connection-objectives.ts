@@ -9,8 +9,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: UserNodeID.FinanceUser,
-          target: RoleNodeID.FinanceAuditorRole,
+          rootOverrides: { source: UserNodeID.FinanceUser, target: RoleNodeID.FinanceAuditorRole },
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.TUTORIAL_ROLE1_ATTACHED_TO_USER,
@@ -22,8 +21,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: UserNodeID.FinanceUser,
-          target: RoleNodeID.S3ReadAccessRole,
+          rootOverrides: { source: UserNodeID.FinanceUser, target: RoleNodeID.S3ReadAccessRole },
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.TUTORIAL_ROLE2_ATTACHED_TO_USER,
@@ -35,8 +33,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: PolicyNodeID.S3ReadPolicy,
-          target: RoleNodeID.S3ReadAccessRole,
+          rootOverrides: { source: PolicyNodeID.S3ReadPolicy, target: RoleNodeID.S3ReadAccessRole },
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.TUTORIAL_POLICY_ATTACHED_TO_ROLE2,
@@ -50,8 +47,10 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: PolicyNodeID.ChatImagesS3ReadPolicy,
-          target: RoleNodeID.LambdaRole,
+          rootOverrides: {
+            source: PolicyNodeID.ChatImagesS3ReadPolicy,
+            target: RoleNodeID.LambdaRole,
+          },
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.S3_READ_POLICY_ATTACHED_TO_LAMBDA_ROLE,
@@ -63,8 +62,10 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: PolicyNodeID.ChatImagesS3WritePolicy,
-          target: RoleNodeID.EC2Role,
+          rootOverrides: {
+            source: PolicyNodeID.ChatImagesS3WritePolicy,
+            target: RoleNodeID.EC2Role,
+          },
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.S3_WRITE_POLICY_ATTACHED_TO_EC2_ROLE,
@@ -76,8 +77,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: ResourceNodeID.LambdaFunction,
-          target: RoleNodeID.LambdaRole,
+          rootOverrides: { source: ResourceNodeID.LambdaFunction, target: RoleNodeID.LambdaRole },
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.LAMBDA_ROLE_ATTACHED_TO_LAMBDA_FUNCTION,
@@ -89,8 +89,10 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
         createEdge({
-          source: ResourceNodeID.TimeshiftLabsEC2Instance,
-          target: RoleNodeID.EC2Role,
+          rootOverrides: {
+            source: ResourceNodeID.TimeshiftLabsEC2Instance,
+            target: RoleNodeID.EC2Role,
+          },
         }),
       ],
       on_finish_event: EdgeConnectionFinishEvent.EC2_ROLE_ATTACHED_TO_EC2_INSTANCE,
