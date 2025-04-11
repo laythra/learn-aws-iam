@@ -9,7 +9,9 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
-        createEdge({ source: UserNodeID.FirstUser, target: GroupNodeID.FirstGroup }),
+        createEdge({
+          rootOverrides: { source: UserNodeID.FirstUser, target: GroupNodeID.FirstGroup },
+        }),
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.User1AttachedToGroup,
@@ -20,7 +22,9 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
-        createEdge({ source: PolicyNodeID.PolicyNode1, target: GroupNodeID.FirstGroup }),
+        createEdge({
+          rootOverrides: { source: PolicyNodeID.PolicyNode1, target: GroupNodeID.FirstGroup },
+        }),
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.Policy1AttachedToGroup,
@@ -31,7 +35,9 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
-        createEdge({ source: PolicyNodeID.PolicyNode2, target: GroupNodeID.FirstGroup }),
+        createEdge({
+          rootOverrides: { source: PolicyNodeID.PolicyNode2, target: GroupNodeID.FirstGroup },
+        }),
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.Policy2AttachedToGroup,
@@ -42,7 +48,9 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
-        createEdge({ source: PolicyNodeID.PolicyNode3, target: GroupNodeID.FirstGroup }),
+        createEdge({
+          rootOverrides: { source: PolicyNodeID.PolicyNode3, target: GroupNodeID.FirstGroup },
+        }),
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.Policy3AttachedToGroup,
@@ -53,7 +61,9 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
-        createEdge({ source: UserNodeID.SecondUser, target: GroupNodeID.FirstGroup }),
+        createEdge({
+          rootOverrides: { source: UserNodeID.SecondUser, target: GroupNodeID.FirstGroup },
+        }),
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.User2AttachedToGroup,

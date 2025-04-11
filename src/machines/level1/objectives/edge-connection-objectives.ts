@@ -9,7 +9,9 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
-        createEdge({ source: PolicyNodeID.S3ReadPolicy, target: UserNodeID.TutorialUser }),
+        createEdge({
+          rootOverrides: { source: PolicyNodeID.S3ReadPolicy, target: UserNodeID.TutorialUser },
+        }),
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.PolicyAttachedToTutorialUser,
@@ -22,7 +24,9 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
       required_edges: [
-        createEdge({ source: PolicyNodeID.S3ReadPolicy, target: UserNodeID.FirstUser }),
+        createEdge({
+          rootOverrides: { source: PolicyNodeID.S3ReadPolicy, target: UserNodeID.FirstUser },
+        }),
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.PolicyAttachedToCreatedUser,

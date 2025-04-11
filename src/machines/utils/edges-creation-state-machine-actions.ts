@@ -9,7 +9,7 @@ import {
   NodeConnection,
   ObjectiveType,
 } from '../types';
-import { createEdge, CreateEdgeProps } from '@/factories/edge-factory';
+import { createEdge } from '@/factories/edge-factory';
 import { theme } from '@/theme';
 import { IAMNodeEntity, PartialEdge, PolicyGrantedAccess } from '@/types';
 import {
@@ -49,24 +49,24 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
   const edgeLabel = getEdgeLabel(sourceNode.data.entity, targetNode.data.entity);
   let validEdge: IAMEdge | undefined = undefined;
 
-  const invalidEdge = createEdge(
-    _.merge(
-      {
-        source: sourceNode.id,
-        target: targetNode.id,
-        animated: true,
-        deletable: true,
-        data: {
-          hovering_label: 'Invalid Connection',
-          hovering_color: theme.colors.red[500],
-          color: theme.colors.yellow[500],
-          unnecessary_edge: true,
-          label_always_visible: true,
-        },
-      },
-      options
-    )
-  );
+  const invalidEdge = createEdge({
+    rootOverrides: {
+      source: sourceNode.id,
+      target: targetNode.id,
+      animated: true,
+      deletable: true,
+      ...options,
+    },
+    dataOverrides: {
+      hovering_label: edgeLabel,
+      hovering_color: theme.colors.red[500],
+      color: theme.colors.yellow[500],
+      unnecessary_edge: true,
+      label_always_visible: true,
+      source_node: sourceNode,
+      target_node: targetNode,
+    },
+  });
 
   context.edges_connection_objectives
     .filter(objective => !objective.is_finished)
@@ -75,18 +75,21 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
         return;
       }
 
-      const newEdgeData: CreateEdgeProps = {
-        source: sourceNode.id,
-        target: targetNode.id,
-        targetHandle: objective.established_edge_target_handle,
-        sourceHandle: objective.established_edge_source_handle,
-        deletable: false,
-        data: {
-          hovering_label: edgeLabel,
+      validEdge = createEdge({
+        rootOverrides: {
+          source: sourceNode.id,
+          target: targetNode.id,
+          targetHandle: objective.established_edge_target_handle,
+          sourceHandle: objective.established_edge_source_handle,
+          deletable: false,
         },
-      };
+        dataOverrides: {
+          hovering_label: edgeLabel,
+          source_node: sourceNode,
+          target_node: targetNode,
+        },
+      });
 
-      validEdge = createEdge(newEdgeData);
       if (isEdgeConnectionObjectiveFinished(objective, [...context.edges, validEdge])) {
         sideEffectsEvents.push(objective.on_finish_event);
       }
@@ -108,16 +111,25 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
 function createEdgesFromGrantedAccesses(
   sourceId: string,
   grantedAccesses: PolicyGrantedAccess[],
-  parentEdgeId: string
+  parentEdgeId: string,
+  sourceNode: IAMAnyNode,
+  targetNode: IAMAnyNode
 ): IAMEdge[] {
   return grantedAccesses.map(access =>
     createEdge({
-      source: sourceId,
-      target: access.target_node,
-      targetHandle: access.target_handle,
-      sourceHandle: access.source_handle,
-      data: { hovering_label: access.access_level, parent_edge_id: parentEdgeId },
-      deletable: false,
+      rootOverrides: {
+        source: sourceId,
+        target: access.target_node,
+        targetHandle: access.target_handle,
+        sourceHandle: access.source_handle,
+        deletable: false,
+      },
+      dataOverrides: {
+        hovering_label: access.access_level,
+        parent_edge_id: parentEdgeId,
+        source_node: sourceNode,
+        target_node: targetNode,
+      },
     })
   );
 }
@@ -159,17 +171,21 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
 
   if (isInitialEdge) {
     baseEdge = createEdge({
-      source: source.id,
-      target: target.id,
-      animated: true,
-      deletable: false,
-      data: {
+      rootOverrides: {
+        source: source.id,
+        target: target.id,
+        animated: true,
+        deletable: false,
+        ...options,
+      },
+      dataOverrides: {
         hovering_label: getEdgeLabel(source.data.entity, target.data.entity),
         hovering_color: theme.colors.blue[500],
         color: theme.colors.black,
         label_always_visible: false,
+        source_node: source,
+        target_node: target,
       },
-      ...options,
     });
 
     events = [];
@@ -211,7 +227,13 @@ const connectionStrategies = {
     options: PartialEdge
   ) =>
     applyStrategy(context, policyNode, userNode, isInitialEdge, options, baseEdgeId =>
-      createEdgesFromGrantedAccesses(userNode.id, policyNode.data.granted_accesses, baseEdgeId)
+      createEdgesFromGrantedAccesses(
+        userNode.id,
+        policyNode.data.granted_accesses,
+        baseEdgeId,
+        policyNode,
+        userNode
+      )
     ),
 
   policyToGroup: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
@@ -231,7 +253,9 @@ const connectionStrategies = {
         createEdgesFromGrantedAccesses(
           connection.from.id,
           policyNode.data.granted_accesses,
-          baseEdgeId
+          baseEdgeId,
+          policyNode,
+          groupNode
         )
       )
     );
@@ -259,14 +283,18 @@ const connectionStrategies = {
         createEdgesFromGrantedAccesses(
           connection.from.id,
           policyNode.data.granted_accesses,
-          baseEdgeId
+          baseEdgeId,
+          policyNode,
+          roleNode
         )
       );
       const resourceEdges = resourceConnections.flatMap(connection =>
         createEdgesFromGrantedAccesses(
           connection.from.id,
           policyNode.data.granted_accesses,
-          baseEdgeId
+          baseEdgeId,
+          policyNode,
+          roleNode
         )
       );
       return [...userEdges, ...resourceEdges];
@@ -290,7 +318,9 @@ const connectionStrategies = {
         createEdgesFromGrantedAccesses(
           userNode.id,
           connection.from.data.granted_accesses,
-          baseEdgeId
+          baseEdgeId,
+          userNode,
+          groupNode
         )
       )
     );
@@ -313,7 +343,9 @@ const connectionStrategies = {
         createEdgesFromGrantedAccesses(
           userNode.id,
           connection.from.data.granted_accesses,
-          baseEdgeId
+          baseEdgeId,
+          userNode,
+          roleNode
         )
       )
     );
@@ -336,7 +368,9 @@ const connectionStrategies = {
         createEdgesFromGrantedAccesses(
           resourceNode.id,
           connection.from.data.granted_accesses,
-          baseEdgeId
+          baseEdgeId,
+          roleNode,
+          resourceNode
         )
       )
     );
@@ -348,14 +382,7 @@ const connectionStrategies = {
     isInitialEdge: boolean,
     options: PartialEdge = {}
   ) => {
-    return applyStrategy(
-      context,
-      policyNode,
-      resourceNode,
-      isInitialEdge,
-      options,
-      _baseEdge => []
-    );
+    return applyStrategy(context, policyNode, resourceNode, isInitialEdge, options, () => []);
   },
 } as const;
 

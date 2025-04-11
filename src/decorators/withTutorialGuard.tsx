@@ -1,6 +1,5 @@
 import React, { forwardRef, ForwardRefExoticComponent, PropsWithoutRef } from 'react';
 
-import { Tooltip } from '@chakra-ui/react';
 import _ from 'lodash';
 
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';

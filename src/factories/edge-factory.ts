@@ -1,18 +1,9 @@
-import type { Edge } from '@xyflow/react';
-import _ from 'lodash';
-
 import { theme } from '@/theme';
-import { IAMEdge, IAMEdgeData } from '@/types';
+import { IAMEdge } from '@/types';
+import { PartialWithRequired } from '@/types/common';
 import { getEdgeName } from '@/utils/names';
 
-type EdgeBaseProps = Omit<Edge<IAMEdgeData>, 'data'>;
-type RequiredEdgeProps = Pick<EdgeBaseProps, 'source' | 'target'>;
-type OptionalEdgeProps = Partial<Omit<EdgeBaseProps, 'source' | 'target'>>;
-
-export type CreateEdgeProps = RequiredEdgeProps &
-  OptionalEdgeProps & {
-    data?: Partial<IAMEdgeData>;
-  };
+type RootOverrides = PartialWithRequired<Omit<IAMEdge, 'data'>, 'source' | 'target'>;
 
 const EDGE_TEMPLATE: IAMEdge = {
   id: 'template_edge',
@@ -35,6 +26,21 @@ const EDGE_TEMPLATE: IAMEdge = {
   },
 };
 
-export const createEdge = (props: CreateEdgeProps): IAMEdge => {
-  return _.merge({}, EDGE_TEMPLATE, props, { id: getEdgeName(props.source, props.target) });
+export const createEdge = ({
+  rootOverrides,
+  dataOverrides,
+}: {
+  rootOverrides: RootOverrides;
+  dataOverrides?: Partial<IAMEdge['data']>;
+}): IAMEdge => {
+  return {
+    ...EDGE_TEMPLATE,
+    ...rootOverrides,
+    id: getEdgeName(rootOverrides.source, rootOverrides.target),
+    zIndex: dataOverrides?.source_node?.parentId ? 10 : 0,
+    data: {
+      ...EDGE_TEMPLATE.data,
+      ...dataOverrides,
+    },
+  } as IAMEdge;
 };

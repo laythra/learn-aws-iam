@@ -55,15 +55,15 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
       <EdgeLabelRenderer>
         {(highlightEdge || data?.label_always_visible) && (
           <Box
-            style={{
-              position: 'absolute',
-              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-              background: 'white',
-              padding: '1px',
-              pointerEvents: 'all',
-              fontSize: '11px',
-              fontWeight: 'bold',
-            }}
+            position='absolute'
+            transform={`translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}
+            background='white'
+            borderRadius='4px'
+            padding='1px'
+            pointerEvents='all'
+            fontSize='11px'
+            fontWeight='bold'
+            zIndex={10}
           >
             {data?.hovering_label || 'Placeholder Tooltip'}
           </Box>
