@@ -107,7 +107,8 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
           reactFlowViewport,
           nodesGroup.length,
           nodeIndex,
-          sidePanelWidth
+          sidePanelWidth,
+          node.parentId ? nodeById[node.parentId] : undefined
         );
 
         return { ...node, position: initialPosition };

@@ -6,7 +6,10 @@ import IAMCanvasEdge from './IAMCanvasEdge';
 import IAMCanvasNode from './IAMCanvasNode';
 import { useCanvas } from '../hooks/useCanvas';
 import { CanvasStore } from '../stores/canvas-store';
+
 import '@xyflow/react/dist/style.css';
+
+import { AccountCanvasNode } from './AccountCanvasNode';
 
 const nodeTypes = {
   policy: IAMCanvasNode,
@@ -14,6 +17,8 @@ const nodeTypes = {
   iam_group: IAMCanvasNode,
   role: IAMCanvasNode,
   resource: IAMCanvasNode,
+  account: AccountCanvasNode,
+  ou: IAMCanvasNode,
 };
 
 const edgeTypes = {
