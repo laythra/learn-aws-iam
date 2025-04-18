@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ]
+    },
+    "Statement": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "Effect",
+          "Action",
+          "Resource"
+        ],
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "const": "Allow"
+          },
+          "Action": {
+            "type": "array",
+            "uniqueItems": true,
+            "contains": {
+              "enum": [
+                "s3:GetObject",
+                "s3:PutObject"
+              ]
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "Resource": {
+            "type": "string",
+            "const": "arn:aws:s3:::public-images/*"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
