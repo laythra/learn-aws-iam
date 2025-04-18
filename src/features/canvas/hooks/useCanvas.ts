@@ -86,7 +86,11 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     if (!rfInstance) return;
 
     const reactFlowViewport = rfInstance.getViewport();
-    const nodeGroups = _.groupBy(nodes, 'data.initial_position');
+    const nodeGroups = _.groupBy(
+      nodes,
+      item => `${item.parentId}-${item.data.initial_position}-${item.data.layout_direction}`
+    );
+    const nodeById = _.keyBy(nodes, 'id');
 
     const newNodes = Object.values(nodeGroups).flatMap(nodesGroup => {
       return nodesGroup.map((node, nodeIndex) => {
@@ -108,7 +112,8 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
           nodesGroup.length,
           nodeIndex,
           sidePanelWidth,
-          node.parentId ? nodeById[node.parentId] : undefined
+          node.parentId ? nodeById[node.parentId] : undefined,
+          node.data.layout_direction || 'horizontal'
         );
 
         return { ...node, position: initialPosition };

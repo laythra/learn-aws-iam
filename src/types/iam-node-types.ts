@@ -63,6 +63,21 @@ export interface PolicyGrantedAccess {
 }
 
 /**
+ * Defines the logical placemenet of the node in the layout
+ * Nodes belonging to the same layout group will be positioned relative to each other
+ * and stacked according to the layout direction
+ * Currently unused, but placing it here so that I don't forget about it in the future
+ */
+export interface NodeLayoutGroup {
+  id: string;
+  parent_id?: string; // optional, if it's nested
+  initial_position: string;
+  layout_direction: 'horizontal' | 'vertical';
+  vertical_spacing?: number;
+  horizontal_spacing?: number;
+}
+
+/**
  * Serves as a base interface for all node data types.
  *
  * Should not be used directly
@@ -99,6 +114,26 @@ interface IAMNodeData extends Record<string, unknown> {
    * Defines whether the node is required for the user to complete the level
    */
   unnecessary_node?: boolean;
+
+  /**
+   * Defines the amount of space between its adjacent vertical nodes
+   */
+  vertical_spacing: number;
+
+  // /**
+  //  * Defines the amount of space between its adjacent horizontal nodes
+  //  */
+  horizontal_spacing: number;
+  // /**
+  //  * Defines the amount of space between its adjacent nodes
+  //  */
+  layout_direction: 'horizontal' | 'vertical';
+
+  /**
+   * Defines the layout group to which the node belongs,
+   * TODO: Use this to define which layout group the node belongs to
+   */
+  layout_group_id?: string;
 }
 
 interface IAMUserNodeData extends IAMNodeData {

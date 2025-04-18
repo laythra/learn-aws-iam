@@ -7,21 +7,25 @@ const USER_NODES: Partial<IAMUserNode['data']>[] = [
     id: UserNodeID.Laith,
     label: 'Laith',
     initial_position: 'left-center',
+    layout_direction: 'vertical',
   },
   {
     id: UserNodeID.Ali,
     label: 'Ali',
     initial_position: 'left-center',
+    layout_direction: 'vertical',
   },
   {
     id: UserNodeID.Mohammad,
     label: 'Mohammad',
     initial_position: 'right-center',
+    layout_direction: 'vertical',
   },
   {
     id: UserNodeID.Khalid,
     label: 'Khalid',
     initial_position: 'right-center',
+    layout_direction: 'vertical',
   },
 ];
 

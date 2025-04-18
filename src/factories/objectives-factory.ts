@@ -58,7 +58,7 @@ const IAM_USER_GROUP_CREATION_OBJECTIVE_TEMPLATE: Omit<
 > = {
   entity_id: '-',
   entity_to_create: IAMNodeEntity.User,
-  initial_position: 'left',
+  initial_position: 'left-center',
   on_finish_event: '',
 };
 

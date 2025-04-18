@@ -28,6 +28,9 @@ describe('createNodeFactory', () => {
     entity: IAMNodeEntity.User,
     image: 'custom-image.png',
     initial_position: 'top-left',
+    layout_direction: 'horizontal',
+    horizontal_spacing: baseConfig.width + 20,
+    vertical_spacing: baseConfig.height + 20,
   };
 
   const factory = createNodeFactory(baseConfig);
