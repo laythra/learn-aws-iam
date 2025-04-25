@@ -15,7 +15,7 @@ const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
 
 const RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
-    id: ResourceNodeID.PublicImagesS3Bucket,
+    id: ResourceNodeID.PublicAssetsS3Bucket,
     label: 'public-assets',
     initial_position: 'top-center',
     image: IAMNodeImage.S3Bucket,

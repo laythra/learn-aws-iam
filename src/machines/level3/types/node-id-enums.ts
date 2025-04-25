@@ -21,6 +21,7 @@ export const UserNodeID = {
 
 export const ResourceNodeID = {
   PublicImagesS3Bucket: uniqueId('resource-s3bucket-'),
+  PublicAssetsS3Bucket: uniqueId('resource-s3bucket-'),
   CloudFront: uniqueId('resource-cloudfront-'),
   DynamoDBTable: uniqueId('resource-dynamodbtable-'),
 } as const;

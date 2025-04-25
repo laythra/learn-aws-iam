@@ -7,11 +7,13 @@ const GROUP_NODES: Partial<IAMGroupNode['data']>[] = [
     id: GroupNodeID.FrontendGroup,
     label: 'frontend-team',
     initial_position: 'center',
+    layout_direction: 'vertical',
   },
   {
     id: GroupNodeID.BackendGroup,
     label: 'backend-team',
     initial_position: 'center',
+    layout_direction: 'vertical',
   },
 ];
 

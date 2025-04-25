@@ -53,6 +53,9 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
       image,
       initial_position,
       animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
+      layout_direction: 'horizontal',
+      vertical_spacing: height + 20,
+      horizontal_spacing: width + 20,
       ...additionalData,
     } as T,
   };

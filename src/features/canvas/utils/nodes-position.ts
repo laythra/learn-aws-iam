@@ -1,9 +1,94 @@
 import { XYPosition, Viewport } from '@xyflow/react';
 
 import { theme } from '@/theme';
-import { IAMAnyNode, IAMNodeEntity } from '@/types/iam-node-types';
+import { IAMAnyNode } from '@/types/iam-node-types';
 
 const BETWEEN_NODES_SPACING = 20;
+
+export type ValidInitialPosition =
+  | 'center'
+  | 'top-center'
+  | 'bottom-center'
+  | 'left-center'
+  | 'right-center'
+  | 'top-left'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-right';
+
+const NODES_POSITIONS = (
+  originX: number,
+  originY: number,
+  verticalSpacing: number,
+  horizontalSpacing: number,
+  nodeWidth: number,
+  nodeHeight: number,
+  parentHeight: number,
+  parentWidth: number,
+  nodeIndex: number,
+  numNodes: number,
+  layoutDirection: 'horizontal' | 'vertical' = 'vertical'
+): Record<ValidInitialPosition, { x: number; y: number }> => {
+  const isHorizontal = layoutDirection === 'horizontal';
+  const isVertical = !isHorizontal;
+
+  const totalHorizontalSpace = nodeWidth + (numNodes - 1) * horizontalSpacing;
+  const totalVerticalSpace = nodeHeight + (numNodes - 1) * verticalSpacing;
+
+  const xOffset = isHorizontal ? nodeIndex * horizontalSpacing : 0;
+  const yOffset = isVertical ? nodeIndex * verticalSpacing : 0;
+
+  const centerStartX = isVertical ? originX - nodeWidth / 2 : originX - totalHorizontalSpace / 2;
+  const centerStartY = isHorizontal ? originY - nodeHeight / 2 : originY - totalVerticalSpace / 2;
+
+  // Subtracting 10 so that the node isn't touching the bottom-right corner of the parent
+  const rightEdge = parentWidth - nodeWidth - 10;
+  const bottomEdge = parentHeight - nodeHeight - 10;
+
+  // Initializing with 10 so that the node isn't touching the top-left corner of the parent
+  const leftEdge = 10;
+  const topEdge = 10;
+
+  return {
+    center: {
+      x: centerStartX + xOffset,
+      y: centerStartY + yOffset,
+    },
+    'top-left': {
+      x: leftEdge + xOffset,
+      y: topEdge + yOffset,
+    },
+    'top-right': {
+      x: rightEdge - xOffset,
+      y: topEdge + yOffset,
+    },
+    'top-center': {
+      x: centerStartX + xOffset,
+      y: topEdge + yOffset,
+    },
+    'bottom-center': {
+      x: centerStartX + xOffset,
+      y: bottomEdge - yOffset,
+    },
+    'left-center': {
+      x: leftEdge + xOffset,
+      y: centerStartY + yOffset,
+    },
+    'right-center': {
+      x: rightEdge - xOffset,
+      y: centerStartY + yOffset,
+    },
+    'bottom-right': {
+      x: rightEdge - xOffset,
+      y: bottomEdge - yOffset,
+    },
+    'bottom-left': {
+      x: leftEdge + xOffset,
+      y: bottomEdge - yOffset,
+    },
+  };
+};
+
 const VALID_INITIAL_POSITIONS = [
   'center',
   'top-center',
@@ -17,32 +102,14 @@ const VALID_INITIAL_POSITIONS = [
 ];
 
 /**
- * Returns the size for the given node.
- * For instance, Account nodes have a larger size.
- */
-function getNodeSize(node: IAMAnyNode): { width: number; height: number } {
-  const { entity } = node.data;
-  if (entity === IAMNodeEntity.Account) {
-    return {
-      width: 800,
-      height: 300,
-    };
-  }
-  return {
-    width: theme.sizes.iamNodeWidthInPixels,
-    height: theme.sizes.iamNodeHeightInPixels,
-  };
-}
-
-/**
  * When a node has no parent, we calculate its center relative to the canvas.
  */
 function getCanvasCenter(viewport: Viewport, sidePanelWidth: number): XYPosition {
   const { x, y, zoom } = viewport;
   const navbarHeight = theme.sizes.navbarHeightInPixels;
-  const centerX = (window.innerWidth - sidePanelWidth) / 2 / zoom - x;
-  const centerY = (window.innerHeight - navbarHeight) / 2 / zoom - y;
-  return { x: centerX, y: centerY };
+  const originX = (window.innerWidth - sidePanelWidth) / 2 / zoom - x;
+  const originY = (window.innerHeight - navbarHeight) / 2 / zoom - y;
+  return { x: originX, y: originY };
 }
 
 /**
@@ -50,10 +117,9 @@ function getCanvasCenter(viewport: Viewport, sidePanelWidth: number): XYPosition
  * In the parent's coordinate system, (0,0) is the top-left.
  */
 function getParentCenterPosition(parentNode: IAMAnyNode): XYPosition {
-  const parentSize = getNodeSize(parentNode);
   return {
-    x: parentSize.width / 2,
-    y: parentSize.height / 2,
+    x: parentNode.width! / 2,
+    y: parentNode.height! / 2,
   };
 }
 
@@ -69,15 +135,15 @@ export function getNodeInitialPosition(
   numNodes: number,
   nodeIndex: number,
   sidePanelWidth: number,
-  parentNode?: IAMAnyNode // Pass the parent node if it exists
+  parentNode?: IAMAnyNode, // Pass the parent node if it exists
+  layoutDirection: 'horizontal' | 'vertical' = 'horizontal'
 ): XYPosition {
   const { initial_position } = node.data;
   if (!initial_position || !VALID_INITIAL_POSITIONS.includes(initial_position)) {
     return { x: 0, y: 0 };
   }
 
-  const { width: nodeWidth, height: nodeHeight } = getNodeSize(node);
-  const navbarHeight = theme.sizes.navbarHeightInPixels;
+  const { width: nodeWidth, height: nodeHeight } = node;
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
@@ -86,55 +152,22 @@ export function getNodeInitialPosition(
     ? getParentCenterPosition(parentNode)
     : getCanvasCenter(viewport, sidePanelWidth);
 
-  // Start with the center coordinates
-  let x = center.x;
-  let y = center.y - nodeHeight / 2;
+  const parentWidth = parentNode ? parentNode.width! : windowWidth - sidePanelWidth;
+  const parentHeight = parentNode
+    ? parentNode.height!
+    : windowHeight - theme.sizes.navbarHeightInPixels;
 
-  // If we are stacking nodes horizontally (for positions like center, top-center, bottom-center)
-  // we spread them out along the horizontal axis.
-  if (['center', 'top-center', 'bottom-center'].includes(initial_position)) {
-    const totalWidth = numNodes * nodeWidth + (numNodes - 1) * BETWEEN_NODES_SPACING;
-    x = center.x - totalWidth / 2 + nodeIndex * (nodeWidth + BETWEEN_NODES_SPACING);
-  } else {
-    // Otherwise, we stack vertically.
-    const totalHeight = numNodes * nodeHeight + (numNodes - 1) * BETWEEN_NODES_SPACING;
-    y = center.y - totalHeight / 2 + nodeIndex * (nodeHeight + BETWEEN_NODES_SPACING);
-  }
-
-  // Override x or y based on the specific initial_position setting.
-  if (initial_position === 'top-center') {
-    y = BETWEEN_NODES_SPACING;
-  } else if (initial_position === 'bottom-center') {
-    y = parentNode
-      ? getNodeSize(parentNode).height - nodeHeight - BETWEEN_NODES_SPACING
-      : windowHeight - nodeHeight - BETWEEN_NODES_SPACING - navbarHeight;
-  } else if (initial_position === 'left-center') {
-    x = BETWEEN_NODES_SPACING;
-  } else if (initial_position === 'right-center') {
-    x = parentNode
-      ? getNodeSize(parentNode).width - nodeWidth - BETWEEN_NODES_SPACING
-      : windowWidth - sidePanelWidth - nodeWidth - BETWEEN_NODES_SPACING;
-  } else if (initial_position === 'top-left') {
-    x = BETWEEN_NODES_SPACING;
-    y = BETWEEN_NODES_SPACING;
-  } else if (initial_position === 'top-right') {
-    x = parentNode
-      ? getNodeSize(parentNode).width - nodeWidth - BETWEEN_NODES_SPACING
-      : windowWidth - sidePanelWidth - nodeWidth - BETWEEN_NODES_SPACING;
-    y = BETWEEN_NODES_SPACING;
-  } else if (initial_position === 'bottom-left') {
-    x = BETWEEN_NODES_SPACING;
-    y = parentNode
-      ? getNodeSize(parentNode).height - nodeHeight - BETWEEN_NODES_SPACING
-      : windowHeight - nodeHeight - BETWEEN_NODES_SPACING - navbarHeight;
-  } else if (initial_position === 'bottom-right') {
-    x = parentNode
-      ? getNodeSize(parentNode).width - nodeWidth - BETWEEN_NODES_SPACING
-      : windowWidth - sidePanelWidth - nodeWidth - BETWEEN_NODES_SPACING;
-    y = parentNode
-      ? getNodeSize(parentNode).height - nodeHeight - BETWEEN_NODES_SPACING
-      : windowHeight - nodeHeight - BETWEEN_NODES_SPACING - navbarHeight;
-  }
-
-  return { x, y };
+  return NODES_POSITIONS(
+    center.x,
+    center.y,
+    node.data.vertical_spacing ?? theme.sizes.iamNodeHeightInPixels + BETWEEN_NODES_SPACING,
+    node.data.horizontal_spacing ?? theme.sizes.iamNodeWidthInPixels + BETWEEN_NODES_SPACING,
+    nodeWidth!,
+    nodeHeight!,
+    parentHeight,
+    parentWidth,
+    nodeIndex,
+    numNodes,
+    layoutDirection // Default layout direction
+  )[initial_position as ValidInitialPosition];
 }
