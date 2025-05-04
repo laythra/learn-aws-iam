@@ -36,10 +36,17 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
     codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: entity });
   };
 
-  const [isPolicyTabRestricted, isRoleTabRestricted] = useIsElementRestricted([
-    ElementID.CodeEditorPolicyTab,
-    ElementID.CodeEditorRoleTab,
-  ]);
+  const tabs = [
+    { element_id: ElementID.CodeEditorPolicyTab, node_entity: IAMNodeEntity.Policy },
+    { element_id: ElementID.CodeEditorRoleTab, node_entity: IAMNodeEntity.Role },
+    { element_id: ElementID.CodeEditorSCPTab, node_entity: IAMNodeEntity.SCP },
+  ];
+
+  const restrictedTabs = useIsElementRestricted(tabs.map(tab => tab.element_id));
+
+  const tabsToRender = tabs.filter((_tab, index) => {
+    return !restrictedTabs[index];
+  });
 
   return (
     <Flex justifyContent='space-between'>
@@ -48,16 +55,17 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
       <HStack>
         <CodeEditorHelpButton selectedEntity={selectedIAMEntity} />
         <Tabs
-          index={selectedIAMEntity === IAMNodeEntity.Policy ? 0 : 1}
+          index={tabsToRender.findIndex(tab => tab.node_entity === selectedIAMEntity)}
           onChange={index =>
-            setSelectedIAMEntity(index === 0 ? IAMNodeEntity.Policy : IAMNodeEntity.Role)
+            setSelectedIAMEntity(tabsToRender[index].node_entity as IAMScriptableEntity)
           }
           variant='soft-rounded'
           size='sm'
         >
           <TabList>
-            <Tab isDisabled={isPolicyTabRestricted}>{IAMNodeEntity.Policy}</Tab>
-            <Tab isDisabled={isRoleTabRestricted}>{IAMNodeEntity.Role}</Tab>
+            {tabsToRender.map(({ element_id, node_entity }) => (
+              <Tab key={element_id}>{node_entity}</Tab>
+            ))}
           </TabList>
         </Tabs>
       </HStack>

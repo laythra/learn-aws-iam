@@ -5,6 +5,7 @@ import {
   BaseFinishEventMap,
   IAMPolicyCreationObjective,
   IAMRoleCreationObjective,
+  IAMSCPCreationObjective,
   IAMUserGroupCreationObjective,
   ObjectiveType,
 } from '@/machines/types';
@@ -17,6 +18,10 @@ export type RoleCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMa
 
 export type PolicyCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> = Partial<
   Omit<IAMPolicyCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'>
+>;
+
+export type SCPCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> = Partial<
+  Omit<IAMSCPCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'>
 >;
 
 export type UserGroupCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> = Partial<
@@ -83,6 +88,20 @@ export function createPolicyCreationObjective<TFinishEventMap extends BaseFinish
     id: _.uniqueId(`policy-creation-objective-`),
     type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
     entity: IAMNodeEntity.Policy,
+    ...getTemplatePolicyCreationObjectiveAttributes(),
+    ...props,
+  };
+}
+
+export function createSCPCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
+  props: SCPCreationObjectiveInput<TFinishEventMap>
+): IAMSCPCreationObjective<TFinishEventMap> {
+  return {
+    finished: false,
+    id: _.uniqueId(`scp-creation-objective-`),
+    type: ObjectiveType.SCP_CREATION_OBJECTIVE,
+    entity: IAMNodeEntity.SCP,
+    blocked_accesses: [],
     ...getTemplatePolicyCreationObjectiveAttributes(),
     ...props,
   };

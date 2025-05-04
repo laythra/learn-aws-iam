@@ -18,6 +18,7 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { FIXED_POPOVER_MESSAGES } from '../level2/tutorial_messages/fixed-popover-messages';
 import { ElementID } from '@/config/element-ids';
+import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -56,6 +57,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
+    scp_creation_objectives: [],
+    all_policy_creation_objectives: [],
+    objectives_map: {
+      [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
+    },
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {

@@ -16,6 +16,10 @@ import {
 } from './utils/nodes-creation-state-machine-actions';
 import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
 import { editPermissionPolicy } from './utils/nodes-editing-state-machine-actions';
+// prettier-ignore
+import {
+  updatePolicyRoleCreationObjectivesList
+} from './utils/objectives-navigation-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
 import type {
   AccountID,
@@ -31,7 +35,7 @@ import type {
   LevelObjective,
   IAMPolicyCreationObjective,
 } from '@/machines/types';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 
 /**
@@ -292,6 +296,16 @@ export const createStateMachineSetup = <
         next_edges_connection_objectives_index: ({ context }) =>
           (context.next_edges_connection_objectives_index ?? 0) + 1,
       }),
+      next_policy_role_creation_objectives: enqueueActions(
+        ({ context, enqueue }, { entity }: { entity: IAMScriptableEntity }) => {
+          const { updatedContext } = updatePolicyRoleCreationObjectivesList(context, entity);
+
+          enqueue.assign({
+            all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
+            policy_creation_objectives: updatedContext.policy_creation_objectives,
+          });
+        }
+      ),
       enable_edges_management_ability: assign({ edges_management_disabled: false }),
       disable_edges_management_ability: assign({ edges_management_disabled: true }),
       enable_tutorial_state: assign({ in_tutorial_state: true }),
@@ -332,6 +346,12 @@ export const createStateMachineSetup = <
       }),
       set_mutli_account_canvas: assign({
         use_multi_account_canvas: true,
+      }),
+      update_restricted_element_ids: assign({
+        restricted_element_ids: (
+          {},
+          { restricted_element_ids }: { restricted_element_ids: string[] }
+        ) => restricted_element_ids,
       }),
     },
   });

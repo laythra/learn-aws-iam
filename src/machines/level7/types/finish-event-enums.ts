@@ -18,4 +18,5 @@ export interface FinishEventMap {
   [ObjectiveType.LEVEL_OBJECTIVE]: never;
   [ObjectiveType.ROLE_CREATION_OBJECTIVE]: never;
   [ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE]: never;
+  [ObjectiveType.SCP_CREATION_OBJECTIVE]: never;
 }

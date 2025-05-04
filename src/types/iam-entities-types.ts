@@ -7,5 +7,5 @@ export interface IAMEntitiesContextState {
   maxNodesToCreated?: number;
 }
 
-export type IAMScriptableEntity = IAMNodeEntity.Policy | IAMNodeEntity.Role;
+export type IAMScriptableEntity = IAMNodeEntity.Policy | IAMNodeEntity.Role | IAMNodeEntity.SCP;
 export type IAMIdentityEntity = IAMNodeEntity.User | IAMNodeEntity.Group;

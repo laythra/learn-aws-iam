@@ -23,6 +23,7 @@ export enum IAMNodeEntity {
   Resource = 'AWS Resource',
   Account = 'Account',
   OU = 'Organizational Unit',
+  SCP = 'Service Control Policy',
 }
 
 export enum IAMNodeResourceEntity {
@@ -60,6 +61,13 @@ export interface PolicyGrantedAccess {
   readonly access_level: AccessLevel;
   readonly target_handle: string;
   readonly source_handle?: string;
+}
+
+export interface PolicyBlockedAccess {
+  readonly target_handle: string;
+  readonly source_handle?: string;
+  readonly access_level: AccessLevel;
+  readonly target_node: string;
 }
 
 /**
@@ -152,6 +160,14 @@ interface IAMPolicyNodeData extends IAMNodeData {
   content: string;
 }
 
+interface IAMSCPNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.SCP;
+  editable: boolean;
+  blocked_accesses: PolicyBlockedAccess[];
+  initial_edges?: Edge<IAMEdgeData>[];
+  content: string;
+}
+
 interface IAMRoleNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Role;
   editable: boolean;
@@ -179,6 +195,7 @@ export type IAMResourceNode = Node<IAMResourceNodeData, 'resource'>;
 export type IAMRoleNode = Node<IAMRoleNodeData, 'role'>;
 export type IAMAccountNode = Node<IAMAccountNodeData, 'account'>;
 export type IAMOUNode = Node<IAMOUNodeData, 'ou'>;
+export type IAMSCPNode = Node<IAMSCPNodeData, 'scp'>;
 
 export type IAMNodeMap = {
   [IAMNodeEntity.Policy]: IAMPolicyNode;
@@ -188,6 +205,7 @@ export type IAMNodeMap = {
   [IAMNodeEntity.Resource]: IAMResourceNode;
   [IAMNodeEntity.Account]: IAMAccountNode;
   [IAMNodeEntity.OU]: IAMOUNode;
+  [IAMNodeEntity.SCP]: IAMSCPNode;
 };
 
 export type IAMAnyNode = IAMNodeMap[keyof IAMNodeMap];
