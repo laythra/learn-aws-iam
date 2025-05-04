@@ -5,14 +5,16 @@ import _ from 'lodash';
 
 import {
   AccountID,
+  BaseCreationObjective,
   BaseFinishEventMap,
   IAMPolicyCreationObjective,
   IAMRoleCreationObjective,
+  IAMSCPCreationObjective,
 } from '@/machines/types';
 import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
 import iamRoleTurstPolicySchema from '@/schemas/aws-iam-role-trust-policy-schema.json';
 import sharedConditionSchema from '@/schemas/shared-condition-schema.json';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
 interface LintConfig {
@@ -27,18 +29,17 @@ export const AJV_COMPILER = new Ajv({
 export const GENERIC_VALIDATION_FNS = {
   [IAMNodeEntity.Policy]: AJV_COMPILER.compile(iamPolicySchema),
   [IAMNodeEntity.Role]: AJV_COMPILER.compile(iamRoleTurstPolicySchema),
+  [IAMNodeEntity.SCP]: AJV_COMPILER.compile(iamPolicySchema),
 };
 
-export const getObjectiveValidationFunction = (
-  objective:
-    | IAMPolicyCreationObjective<BaseFinishEventMap>
-    | IAMRoleCreationObjective<BaseFinishEventMap>,
+export const getObjectiveValidationFunction = <TFinishEventMap extends BaseFinishEventMap>(
+  objective: BaseCreationObjective<TFinishEventMap>,
   nodes: IAMAnyNode[]
 ): ValidateFunction => {
   return (
     objective.get_validate_function?.(nodes) ??
     objective.validate_function ??
-    GENERIC_VALIDATION_FNS[objective.entity]
+    GENERIC_VALIDATION_FNS[objective.entity as IAMScriptableEntity]
   );
 };
 
@@ -89,42 +90,36 @@ export const isJSONValid = (docString: string, validateFunction: ValidateFunctio
   }
 };
 
-// TODO: This helper script surely shouldn't understand the context of policy/role objectives
-// Move this elsewhere
-export const findAnyValidPolicy = <TFinishEventMap extends BaseFinishEventMap>(
-  policyObjectives: IAMPolicyCreationObjective<TFinishEventMap>[],
-  docString: string,
-  nodes: IAMAnyNode[],
-  accountId?: AccountID
-): IAMPolicyCreationObjective<TFinishEventMap> | undefined => {
-  policyObjectives = _.orderBy(policyObjectives, 'validate_inside_code_editor', 'desc');
-
-  return policyObjectives.find(policyObjective => {
-    if (policyObjective.finished) return false;
-
-    const validAccountId = policyObjective.account_id === accountId || !policyObjective.account_id;
-    const validateFn = getObjectiveValidationFunction(policyObjective, nodes);
-
-    return isJSONValid(docString, validateFn) && validAccountId;
-  });
+type ObjectiveEntityMap = {
+  [IAMNodeEntity.Policy]: IAMPolicyCreationObjective<BaseFinishEventMap>;
+  [IAMNodeEntity.SCP]: IAMSCPCreationObjective<BaseFinishEventMap>;
+  [IAMNodeEntity.Role]: IAMRoleCreationObjective<BaseFinishEventMap>;
 };
 
-// TODO: The feels like it doesn't belong here. Move it
-export const findAnyValidRole = <TFinishEventMap extends BaseFinishEventMap>(
-  roleObjectives: IAMRoleCreationObjective<TFinishEventMap>[],
-  docString: string,
-  nodes: IAMAnyNode[],
-  accountId?: AccountID
-): IAMRoleCreationObjective<TFinishEventMap> | undefined => {
-  roleObjectives = _.orderBy(roleObjectives, 'validate_inside_code_editor', 'desc');
-  return roleObjectives.find(roleObjective => {
-    if (roleObjective.finished) return false;
+type ObjectiveByEntity<E extends IAMNodeEntity> = E extends keyof ObjectiveEntityMap
+  ? ObjectiveEntityMap[E]
+  : BaseCreationObjective<BaseFinishEventMap>;
 
-    const validAccountId = roleObjective.account_id === accountId || !roleObjective.account_id;
-    const validateFn = getObjectiveValidationFunction(roleObjective, nodes);
-    return isJSONValid(docString, validateFn) && validAccountId;
+export function findAnyValidObjective<E extends IAMNodeEntity>(
+  objectives: ObjectiveByEntity<E>[],
+  nodes: IAMAnyNode[],
+  docString: string,
+  accountId?: AccountID,
+  targetObjectiveEntity?: IAMNodeEntity
+): ObjectiveByEntity<E> | undefined {
+  const sorted = _.orderBy(objectives, 'validate_inside_code_editor', 'desc');
+
+  return sorted.find(objective => {
+    if (objective.finished) return false;
+    if (targetObjectiveEntity && objective.entity !== targetObjectiveEntity) return false;
+
+    const validAccount = !objective.account_id || objective.account_id === accountId;
+    const validateFn = getObjectiveValidationFunction(objective, nodes);
+    const isValidJSON = isJSONValid(docString, validateFn);
+
+    return isValidJSON && validAccount;
   });
-};
+}
 
 export const getLintingErrors = (
   view: EditorView,

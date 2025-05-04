@@ -8,7 +8,7 @@ import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { IAMGroupNode, IAMNodeEntity, IAMPolicyNode, IAMRoleNode, IAMUserNode } from '@/types';
-import { findAnyValidPolicy, findAnyValidRole } from '@/utils/iam-code-linter';
+import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
 export function createTrustPolicy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
@@ -19,11 +19,12 @@ export function createTrustPolicy<TLevelObjectiveID, TFinishEventMap extends Bas
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][];
 } {
-  const targetValidObjective = findAnyValidRole(
+  const targetValidObjective = findAnyValidObjective<IAMNodeEntity.Role>(
     context.role_creation_objectives,
-    docString,
     context.nodes,
-    accountId
+    docString,
+    accountId,
+    IAMNodeEntity.Role
   );
 
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];
@@ -67,11 +68,12 @@ export function createPermissionPolicy<
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][];
 } {
-  const targetValidObjective = findAnyValidPolicy(
+  const targetValidObjective = findAnyValidObjective<IAMNodeEntity.Policy>(
     context.policy_creation_objectives,
-    docString,
     context.nodes,
-    accountId
+    docString,
+    accountId,
+    IAMNodeEntity.Policy
   );
 
   const sideEffectsEvents: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][] = [];

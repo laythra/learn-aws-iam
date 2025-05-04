@@ -13,13 +13,9 @@ import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { AccountID, BaseFinishEventMap } from '@/machines/types';
-import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
-import {
-  findAnyValidPolicy,
-  findAnyValidRole,
-  GENERIC_VALIDATION_FNS,
-} from '@/utils/iam-code-linter';
+import { AccountID } from '@/machines/types';
+import { IAMScriptableEntity } from '@/types';
+import { findAnyValidObjective, GENERIC_VALIDATION_FNS } from '@/utils/iam-code-linter';
 
 interface CodeEditorCreateProps {
   nodeId: string;
@@ -29,7 +25,6 @@ interface CodeEditorCreateProps {
 }
 
 const NO_MATCHING_POLICY_WARNING = 'This policy does not achieve any of the objectives.';
-const NO_MATCHING_ROLE_WARNING = 'This role does not achieve any of the objectives.';
 
 export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   nodeId,
@@ -37,16 +32,14 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   errors,
   warnings,
 }) => {
-  const [policyCreationObjectives, roleCreationObjectives, multiAccount, nodes] =
-    LevelsProgressionContext().useSelector(
-      state => [
-        state.context.policy_creation_objectives,
-        state.context.role_creation_objectives,
-        state.context.use_multi_account_canvas,
-        state.context.nodes,
-      ],
-      _.isEqual
-    );
+  const [multiAccount, allCreationObjectives, nodes] = LevelsProgressionContext().useSelector(
+    state => [
+      state.context.use_multi_account_canvas,
+      state.context.all_policy_creation_objectives,
+      state.context.nodes,
+    ],
+    _.isEqual
+  );
 
   const [selectedAccountId, labelError] = useSelector(
     codeEditorStateStore,
@@ -55,49 +48,29 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   );
 
   const editorView = useRef<EditorView | null>(null);
-  const unfinishedPolicyCreationObjectives = policyCreationObjectives.filter(
-    objective => objective.validate_inside_code_editor && !objective.finished
-  );
-  const unfinishedRoleCreationObjectives = roleCreationObjectives.filter(
+  const unfinishedCreationObjectives = allCreationObjectives.filter(
     objective => objective.validate_inside_code_editor && !objective.finished
   );
 
-  const objectiveToTargetInEditor =
-    selectedIAMEntity === IAMNodeEntity.Policy
-      ? unfinishedPolicyCreationObjectives[0]
-      : unfinishedRoleCreationObjectives[0];
+  const objectiveToTargetInEditor = unfinishedCreationObjectives.find(
+    objective => objective.entity === selectedIAMEntity
+  );
 
   const initialContent = objectiveToTargetInEditor?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
   const getWarnings = (): string[] => {
     if (!editorView.current) return [];
 
-    if (selectedIAMEntity === IAMNodeEntity.Policy) {
-      const anyValidPolicy = findAnyValidPolicy<BaseFinishEventMap>(
-        unfinishedPolicyCreationObjectives,
-        editorView.current.state.doc.toString(),
-        nodes,
-        selectedAccountId
-      );
+    const anyValidPolicy = findAnyValidObjective(
+      unfinishedCreationObjectives,
+      nodes,
+      editorView.current.state.doc.toString(),
+      selectedAccountId
+    );
 
-      return anyValidPolicy ? [] : [NO_MATCHING_POLICY_WARNING];
-    } else {
-      const anyValidRole = findAnyValidRole<BaseFinishEventMap>(
-        unfinishedRoleCreationObjectives,
-        editorView.current.state.doc.toString(),
-        nodes,
-        selectedAccountId
-      );
-
-      return anyValidRole ? [] : [NO_MATCHING_ROLE_WARNING];
-    }
+    return anyValidPolicy ? [] : [NO_MATCHING_POLICY_WARNING];
   };
 
-  const targetUnfinishedObjectives =
-    selectedIAMEntity === IAMNodeEntity.Policy
-      ? unfinishedPolicyCreationObjectives
-      : unfinishedRoleCreationObjectives;
-
-  const validateFns = targetUnfinishedObjectives.filterMap(
+  const validateFns = unfinishedCreationObjectives.filterMap(
     obj => obj.get_validate_function?.(nodes) ?? obj.validate_function
   );
 
