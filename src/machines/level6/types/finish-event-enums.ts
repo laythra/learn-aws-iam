@@ -27,4 +27,5 @@ export interface FinishEventMap extends BaseFinishEventMap {
   [ObjectiveType.LEVEL_OBJECTIVE]: never;
   [ObjectiveType.ROLE_CREATION_OBJECTIVE]: RoleCreationFinishEvent;
   [ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE]: TrustPolicyEditFinishEvent;
+  [ObjectiveType.SCP_CREATION_OBJECTIVE]: never;
 }

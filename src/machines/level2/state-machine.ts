@@ -59,6 +59,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     nodes_connnections: [],
     initial_node_connections: INITIAL_CONNECTIONS,
     restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
+    scp_creation_objectives: [],
+    all_policy_creation_objectives: [],
+    objectives_map: {
+      [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
+    },
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {

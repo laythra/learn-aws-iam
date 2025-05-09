@@ -29,7 +29,6 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
     state => [state.context.show_popovers, state.context.popover_content],
     _.isEqual
   );
-
   // To keep the user focused on a shown tutorial popover,
   // we disable the button if a popover with a next button is shown.
   const disableEntityButton = showPopovers && popoverContent?.show_next_button;

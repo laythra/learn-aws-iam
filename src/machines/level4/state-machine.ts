@@ -11,6 +11,7 @@ import { FinishEventMap, NodeEditFinishEvent } from './types/finish-event-enums'
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { ElementID } from '@/config/element-ids';
+import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -53,6 +54,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     whitelisted_element_ids: [],
     nodes_connnections: [],
     restricted_element_ids: [ElementID.NewEntityBtn],
+    scp_creation_objectives: [],
+    all_policy_creation_objectives: [],
+    objectives_map: {
+      [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
+    },
   },
   on: {
     [StatefulStateMachineEvent.EditIAMPolicyNode]: {

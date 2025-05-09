@@ -1,6 +1,6 @@
 import { GenericContext } from '@/machines/types';
 import { BaseFinishEventMap } from '@/machines/types';
-import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
+import { IAMAnyNode, IAMEdge, IAMNodeEntity } from '@/types/iam-node-types';
 
 export function createMockContext<
   TLevelObjectiveID = string,
@@ -40,6 +40,12 @@ export function createMockContext<
     in_tutorial_state: false,
     side_panel_open: false,
     edges_management_disabled: false,
+    all_policy_creation_objectives: [],
+    objectives_map: {
+      [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
+    },
     ...props,
   };
 }

@@ -30,9 +30,10 @@ interface CodeEditorProps {}
 
 export const CodeEditor: React.FC<CodeEditorProps> = () => {
   const theme = useTheme<CustomTheme>();
-  const [isPolicyTabRestricted, isRoleTabRestricted] = useIsElementRestricted([
+  const [isPolicyTabRestricted, isRoleTabRestricted, isSCPTabRestricted] = useIsElementRestricted([
     ElementID.CodeEditorPolicyTab,
     ElementID.CodeEditorRoleTab,
+    ElementID.CodeEditorSCPTab,
   ]);
 
   const [isCodeEditorOpen, codeEditorMode, selectedNodeId] = useSelector(
@@ -61,6 +62,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
       codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: IAMNodeEntity.Policy });
     } else if (!isRoleTabRestricted) {
       codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: IAMNodeEntity.Role });
+    } else if (!isSCPTabRestricted) {
+      codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: IAMNodeEntity.SCP });
     }
   }, [isPolicyTabRestricted, isRoleTabRestricted]);
 

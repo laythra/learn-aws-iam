@@ -10,10 +10,10 @@ import {
   createUserGroupCreationObjective,
 } from '@/factories/objectives-factory';
 import { CreatableIAMNodeEntity, IAMNodeEntity } from '@/types';
-import { findAnyValidPolicy } from '@/utils/iam-code-linter';
+import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
 vi.mock('@/utils/iam-code-linter', () => ({
-  findAnyValidPolicy: vi.fn(),
+  findAnyValidObjective: vi.fn(),
 }));
 
 vi.mock('@/machines/common-state-machine-setup', () => ({
@@ -33,7 +33,7 @@ describe('createPermissionPolicy', () => {
   });
 
   it('creates a new policy node without a matching objective and adds it as unnecessary', () => {
-    vi.mocked(findAnyValidPolicy).mockReturnValue(undefined);
+    vi.mocked(findAnyValidObjective).mockReturnValue(undefined);
 
     const result = createPermissionPolicy(mockContext, mockDocString, mockLabel);
 
@@ -55,7 +55,7 @@ describe('createPermissionPolicy', () => {
   it('creates a new policy node with a matching objective and marks it as necessary', () => {
     mockContext = createMockContext({});
 
-    vi.mocked(findAnyValidPolicy).mockReturnValue(
+    vi.mocked(findAnyValidObjective).mockReturnValue(
       createPolicyCreationObjective({
         on_finish_event: 'MOCK_EVENT',
         initial_edges: [],

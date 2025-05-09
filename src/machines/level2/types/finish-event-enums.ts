@@ -21,4 +21,5 @@ export interface FinishEventMap extends BaseFinishEventMap {
   [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: UserGroupCreationFinishEvent;
   [ObjectiveType.ROLE_CREATION_OBJECTIVE]: never;
   [ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE]: never;
+  [ObjectiveType.SCP_CREATION_OBJECTIVE]: never;
 }

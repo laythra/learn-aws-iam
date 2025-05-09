@@ -12,6 +12,7 @@ export enum ElementID {
   IAMNodeContentCloseButton = 'iam-node-content-close-button',
   CodeEditorPolicyTab = 'code-editor-policy-tab',
   CodeEditorRoleTab = 'code-editor-role-tab',
+  CodeEditorSCPTab = 'code-editor-scp-tab',
   CodeEditorHelpButton = 'code-editor-help-button',
   IdentityCreationPopupGroupTab = 'identity-creation-popup-group-tab',
   IdentityCreationPopupUserTab = 'identity-creation-popup-user-tab',

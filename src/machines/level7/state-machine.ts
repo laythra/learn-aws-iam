@@ -16,6 +16,7 @@ import {
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { ElementID } from '@/config/element-ids';
+import { IAMNodeEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
@@ -34,7 +35,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     next_popover_index: 0,
     next_popup_index: 0,
     next_fixed_popover_index: 0,
-    state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -50,6 +50,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     side_panel_open: false,
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
+    scp_creation_objectives: [],
+    all_policy_creation_objectives: [],
+    objectives_map: {
+      [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
+    },
   },
   on: {
     ADD_IAM_POLICY_NODE: {

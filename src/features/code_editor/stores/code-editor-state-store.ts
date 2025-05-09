@@ -45,9 +45,9 @@ export type CodeEditorState = {
 
 export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produce, {
   context: {
-    errors: { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} },
-    warnings: { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} },
-    content: { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} },
+    errors: { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {}, [IAMNodeEntity.SCP]: {} },
+    warnings: { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {}, [IAMNodeEntity.SCP]: {} },
+    content: { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {}, [IAMNodeEntity.SCP]: {} },
     selectedIAMEntity: IAMNodeEntity.Policy,
     isCodeEditorInitialized: false,
     selectedPolicies: [],
@@ -95,9 +95,21 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
       context.isCodeEditorInitialized = false;
       context.isValidating = false;
       context.selectedIAMEntity = IAMNodeEntity.Policy;
-      context.errors = { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} };
-      context.warnings = { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} };
-      context.content = { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {} };
+      context.errors = {
+        [IAMNodeEntity.Policy]: {},
+        [IAMNodeEntity.Role]: {},
+        [IAMNodeEntity.SCP]: {},
+      };
+      context.warnings = {
+        [IAMNodeEntity.Policy]: {},
+        [IAMNodeEntity.Role]: {},
+        [IAMNodeEntity.SCP]: {},
+      };
+      context.content = {
+        [IAMNodeEntity.Policy]: {},
+        [IAMNodeEntity.Role]: {},
+        [IAMNodeEntity.SCP]: {},
+      };
       context.labelError = undefined;
     },
     selectPolicy: (context: CodeEditorState, event: { policyId: string }) => {
