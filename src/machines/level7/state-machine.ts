@@ -22,8 +22,6 @@ import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
-  POLICY_CREATION_OBJECTIVES,
-  ROLE_CREATION_OBJECTIVES,
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level7_state_machine',
@@ -50,11 +48,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     side_panel_open: false,
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
-    scp_creation_objectives: [],
     all_policy_creation_objectives: [],
     objectives_map: {
-      [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
-      [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.Role]: { objectives: ROLE_CREATION_OBJECTIVES, current_index: 0 },
+      [IAMNodeEntity.Policy]: { objectives: POLICY_CREATION_OBJECTIVES, current_index: 0 },
       [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
     },
   },
@@ -160,7 +157,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
-        'next_policy_creation_objectives',
+        { type: 'next_policy_role_creation_objectives', params: { entity: IAMNodeEntity.Role } },
       ],
       onDone: 'inside_level',
       initial: 'welcoming_message',
@@ -265,7 +262,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           entry: [
             'hide_popovers',
             'next_edge_connection_objectives',
-            'next_policy_creation_objectives',
+            {
+              type: 'next_policy_role_creation_objectives',
+              params: { entity: IAMNodeEntity.Role },
+            },
             'show_side_panel',
           ],
           states: {

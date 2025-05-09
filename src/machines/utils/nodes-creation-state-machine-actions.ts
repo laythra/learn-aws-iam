@@ -20,7 +20,7 @@ export function createTrustPolicy<TLevelObjectiveID, TFinishEventMap extends Bas
   events: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][];
 } {
   const targetValidObjective = findAnyValidObjective<IAMNodeEntity.Role>(
-    context.role_creation_objectives,
+    context.all_policy_creation_objectives,
     context.nodes,
     docString,
     accountId,
@@ -69,7 +69,7 @@ export function createPermissionPolicy<
   events: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][];
 } {
   const targetValidObjective = findAnyValidObjective<IAMNodeEntity.Policy>(
-    context.policy_creation_objectives,
+    context.all_policy_creation_objectives,
     context.nodes,
     docString,
     accountId,

@@ -10,8 +10,8 @@ import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-mess
 import { FinishEventMap, NodeEditFinishEvent } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../config';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -20,8 +20,6 @@ import {
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
-  [],
-  [],
   []
 ).createMachine({
   id: 'level4_state_machine',
@@ -56,11 +54,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     restricted_element_ids: [ElementID.NewEntityBtn],
     scp_creation_objectives: [],
     all_policy_creation_objectives: [],
-    objectives_map: {
-      [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
-      [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
-      [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
-    },
+    objectives_map: DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
   },
   on: {
     [StatefulStateMachineEvent.EditIAMPolicyNode]: {

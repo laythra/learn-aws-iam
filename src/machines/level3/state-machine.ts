@@ -27,8 +27,6 @@ import {
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
-  POLICY_CREATION_OBJECTIVES,
-  [],
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level3_state_machine',
@@ -56,11 +54,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     restricted_element_ids: [ElementID.CodeEditorRoleTab],
-    scp_creation_objectives: [],
     all_policy_creation_objectives: [],
     objectives_map: {
       [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
-      [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.Policy]: { objectives: POLICY_CREATION_OBJECTIVES, current_index: 0 },
       [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
     },
   },
@@ -209,7 +206,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             'hide_fixed_popovers',
             'next_popover',
             'show_side_panel',
-            'next_policy_creation_objectives',
+            {
+              type: 'next_policy_role_creation_objectives',
+              params: { entity: IAMNodeEntity.Policy },
+            },
             {
               type: 'update_whitelisted_element_ids',
               params: {
@@ -282,7 +282,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           entry: [
             'hide_popups',
             'next_popover',
-            'next_policy_creation_objectives',
+            {
+              type: 'next_policy_role_creation_objectives',
+              params: { entity: IAMNodeEntity.Policy },
+            },
             'next_edge_connection_objectives',
           ],
           type: 'parallel',
