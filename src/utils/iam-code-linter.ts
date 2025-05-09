@@ -101,7 +101,7 @@ type ObjectiveByEntity<E extends IAMNodeEntity> = E extends keyof ObjectiveEntit
   : BaseCreationObjective<BaseFinishEventMap>;
 
 export function findAnyValidObjective<E extends IAMNodeEntity>(
-  objectives: ObjectiveByEntity<E>[],
+  objectives: BaseCreationObjective<BaseFinishEventMap>[],
   nodes: IAMAnyNode[],
   docString: string,
   accountId?: AccountID,
@@ -118,7 +118,7 @@ export function findAnyValidObjective<E extends IAMNodeEntity>(
     const isValidJSON = isJSONValid(docString, validateFn);
 
     return isValidJSON && validAccount;
-  });
+  }) as ObjectiveByEntity<E>;
 }
 
 export const getLintingErrors = (

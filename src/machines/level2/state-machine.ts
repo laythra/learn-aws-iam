@@ -25,8 +25,6 @@ import {
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
-  [],
-  [],
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level2_state_machine',

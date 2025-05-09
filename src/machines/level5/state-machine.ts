@@ -25,8 +25,6 @@ import {
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
-  [],
-  ROLE_CREATION_OBJECTIVES,
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level5_state_machine',
@@ -43,7 +41,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     next_fixed_popover_index: 0,
     next_role_creation_objectives_index: 0,
     next_edges_connection_objectives_index: 0,
-    state_name: 'inside_tutorial',
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -58,10 +55,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
-    scp_creation_objectives: [],
     all_policy_creation_objectives: [],
     objectives_map: {
-      [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.Role]: { objectives: ROLE_CREATION_OBJECTIVES, current_index: 0 },
       [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
       [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
     },
@@ -193,7 +189,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         create_your_first_role_popover: {
           entry: [
             'next_popover',
-            'next_role_creation_objectives',
+            {
+              type: 'next_policy_role_creation_objectives',
+              params: { entity: IAMNodeEntity.Role },
+            },
             {
               type: 'update_whitelisted_element_ids',
               params: {
@@ -320,7 +319,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         'next_edge_connection_objectives',
-        'next_role_creation_objectives',
+        { type: 'next_policy_role_creation_objectives', params: { entity: IAMNodeEntity.Role } },
+
         'hide_unncessary_edges_or_nodes_warning',
       ],
       initial: 'inside_level_popup1',

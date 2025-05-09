@@ -16,9 +16,9 @@ import {
 import { UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../config';
 import { FIXED_POPOVER_MESSAGES } from '../level2/tutorial_messages/fixed-popover-messages';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -27,8 +27,6 @@ import {
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
-  [],
-  [],
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level1_state_machine',
@@ -59,11 +57,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
     scp_creation_objectives: [],
     all_policy_creation_objectives: [],
-    objectives_map: {
-      [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
-      [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
-      [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
-    },
+    objectives_map: DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {

@@ -25,16 +25,10 @@ import type {
   AccountID,
   BaseFinishEventMap,
   EdgeConnectionObjective,
-  IAMRoleCreationObjective,
   PopoverTutorialMessage,
   PopupTutorialMessage,
 } from '@/machines/types';
-import type {
-  GenericContext,
-  GenericEventData,
-  LevelObjective,
-  IAMPolicyCreationObjective,
-} from '@/machines/types';
+import type { GenericContext, GenericEventData, LevelObjective } from '@/machines/types';
 import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 
@@ -62,8 +56,6 @@ export const createStateMachineSetup = <
 >(
   popoverTutorialMessages: PopoverTutorialMessage[],
   popupTutorialMessages: PopupTutorialMessage[],
-  policyCreationObjectives: IAMPolicyCreationObjective<TFinishEventMap>[][],
-  roleCreationObjectives: IAMRoleCreationObjective<TFinishEventMap>[][],
   edgeConnectionObjectives: EdgeConnectionObjective<TFinishEventMap>[][]
 ) => {
   return setup({
@@ -243,18 +235,6 @@ export const createStateMachineSetup = <
         next_fixed_popover_index: ({ context }) => context.next_fixed_popover_index + 1,
         show_fixed_popovers: ({ context }) =>
           context.next_fixed_popover_index < context.fixed_popover_messages.length,
-      }),
-      next_policy_creation_objectives: assign({
-        policy_creation_objectives: ({ context }) =>
-          policyCreationObjectives[context.next_policy_creation_objectives_index ?? 0],
-        next_policy_creation_objectives_index: ({ context }) =>
-          (context.next_policy_creation_objectives_index ?? 0) + 1,
-      }),
-      next_role_creation_objectives: assign({
-        role_creation_objectives: ({ context }) =>
-          roleCreationObjectives[context.next_role_creation_objectives_index ?? 0],
-        next_role_creation_objectives_index: ({ context }) =>
-          (context.next_role_creation_objectives_index ?? 0) + 1,
       }),
       hide_popups: assign({ show_popups: false }),
       hide_popovers: assign({ show_popovers: false }),
