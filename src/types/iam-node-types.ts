@@ -166,7 +166,7 @@ interface IAMPolicyNodeData extends IAMNodeData {
 interface IAMSCPNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
   editable: boolean;
-  blocked_accesses: PolicyBlockedAccess[];
+  blocked_edges: string[];
   initial_edges?: Edge<IAMEdgeData>[];
   content: string;
 }
@@ -236,6 +236,7 @@ interface IAMEdgeData extends Record<string, unknown> {
   stroke_width: number;
   label_always_visible: boolean;
   unnecessary_edge?: boolean;
+  is_blocked?: boolean;
 }
 
 export type PartialEdge = Omit<Partial<IAMEdge>, 'data'> & {

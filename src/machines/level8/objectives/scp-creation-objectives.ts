@@ -1,12 +1,13 @@
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import tutorialSCPSchema from '../schemas/policy/scp-tutorial-policy-schema.json';
 import { FinishEventMap, SCPCreationFInishEvent } from '../types/finish-event-enums';
-import { SCPNodeID } from '../types/node-id-enums';
+import { ResourceNodeID, SCPNodeID, UserNodeID } from '../types/node-id-enums';
 import { createSCPCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMSCPCreationObjective, ObjectiveType } from '@/machines/types';
 import { IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
+import { getEdgeName } from '@/utils/names';
 
 const OBJECTIVE1_HINT_MSG1 = `
   Remember, the Effect can be either Allow or Deny.
@@ -30,6 +31,7 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
       initial_code: INITIAL_POLICIES.TUTORIAL_SCP,
       limit_new_lines: false,
       created_node_initial_position: 'left-center',
+      blocked_accesses: [getEdgeName(UserNodeID.TutorialFirstUser, ResourceNodeID.TutorialSecret1)],
       initial_edges: [],
       help_badges: [
         {

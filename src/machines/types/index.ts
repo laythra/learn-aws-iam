@@ -13,7 +13,6 @@ import type {
   IAMGroupNode,
   IAMScriptableEntity,
   IAMUserNode,
-  PolicyBlockedAccess,
   PolicyGrantedAccess,
 } from '@/types';
 import { IAMNodeEntity } from '@/types';
@@ -256,7 +255,7 @@ export interface IAMSCPCreationObjective<TFinishEventMap extends BaseFinishEvent
   extends BaseCreationObjective<TFinishEventMap> {
   readonly type: ObjectiveType.SCP_CREATION_OBJECTIVE;
   readonly initial_position?: string;
-  readonly blocked_accesses: PolicyBlockedAccess[];
+  readonly blocked_accesses: string[];
   readonly on_finish_event: TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE];
   readonly entity: IAMNodeEntity.SCP;
 }
