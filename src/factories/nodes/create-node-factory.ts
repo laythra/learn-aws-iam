@@ -43,6 +43,7 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
     type: type as IAMNodeMap[E]['type'],
     draggable,
     deletable,
+    extent: 'parent',
     width,
     height,
     data: {
