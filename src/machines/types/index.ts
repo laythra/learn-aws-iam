@@ -151,6 +151,11 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       account_id?: AccountID;
     }
   | {
+      type: StatefulStateMachineEvent.AddIAMSCPNode;
+      doc_string: string;
+      label: string;
+    }
+  | {
       type: StatefulStateMachineEvent.ConnectNodes;
       sourceNode: IAMAnyNode;
       targetNode: IAMAnyNode;
@@ -233,6 +238,7 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
   readonly callout_message?: string;
   readonly hint_messages?: { title: string; content: string }[];
   readonly initial_edges: IAMEdge[];
+  readonly created_node_parent_id?: string;
   finished: boolean;
 }
 
@@ -322,6 +328,7 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
   readonly on_finish_event: TFinishEventMap[ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE];
   readonly entity_to_create: CreatableIAMNodeEntity;
   readonly initial_position?: string;
+  readonly created_node_parent_id?: string;
   finished: boolean;
 };
 

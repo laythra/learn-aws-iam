@@ -161,7 +161,7 @@ interface IAMPolicyNodeData extends IAMNodeData {
 }
 
 interface IAMSCPNodeData extends IAMNodeData {
-  entity: IAMNodeEntity.SCP;
+  entity: IAMNodeEntity.Policy;
   editable: boolean;
   blocked_accesses: PolicyBlockedAccess[];
   initial_edges?: Edge<IAMEdgeData>[];

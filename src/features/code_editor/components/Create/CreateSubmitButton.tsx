@@ -41,11 +41,17 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
         account_id: accountId,
         label,
       });
-    } else {
+    } else if (selectedIAMEntity == IAMNodeEntity.Role) {
       levelActor.send({
         type: StatefulStateMachineEvent.ADDIAMRoleNode,
         doc_string: content,
         account_id: accountId,
+        label,
+      });
+    } else if (selectedIAMEntity == IAMNodeEntity.SCP) {
+      levelActor.send({
+        type: StatefulStateMachineEvent.AddIAMSCPNode,
+        doc_string: content,
         label,
       });
     }

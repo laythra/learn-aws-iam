@@ -11,6 +11,7 @@ import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-acti
 import { resolveInitialEdges } from './utils/initial-edges-resolver';
 import {
   createPermissionPolicy,
+  createSCP,
   createTrustPolicy,
   createUserGroupNode,
 } from './utils/nodes-creation-state-machine-actions';
@@ -202,6 +203,24 @@ export const createStateMachineSetup = <
             docString,
             label,
             accountId
+          );
+
+          enqueue.assign({
+            nodes: updatedContext.nodes,
+            role_creation_objectives: updatedContext.role_creation_objectives,
+          });
+
+          events.forEach(event => {
+            enqueue.raise({ type: event });
+          });
+        }
+      ),
+      add_scp_node: enqueueActions(
+        ({ context, enqueue }, { docString, label }: { docString: string; label: string }) => {
+          const { updatedContext, events } = createSCP<TLevelObjectiveID, TFinishEventMap>(
+            context,
+            docString,
+            label
           );
 
           enqueue.assign({

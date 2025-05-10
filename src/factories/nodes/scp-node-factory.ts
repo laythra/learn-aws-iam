@@ -6,7 +6,7 @@ import { HandleID, IAMNodeEntity, IAMNodeImage, IAMSCPNode } from '@/types';
 export const createSCPNode = createNodeFactory<IAMSCPNode['data'], IAMNodeEntity.SCP>({
   type: 'scp',
   entity: IAMNodeEntity.SCP,
-  image: IAMNodeImage.Policy,
+  image: IAMNodeImage.SCP,
   defaultHandles: [
     { id: HandleID.Top, type: 'source', position: Position.Top },
     { id: HandleID.Right, type: 'source', position: Position.Right },

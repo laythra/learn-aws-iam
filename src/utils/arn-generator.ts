@@ -11,6 +11,8 @@ const arnStrategies: Record<string, ArnGenerator> = {
     `arn:aws:iam::${accountId}:policy/${resourceName}`,
   [IAMNodeEntity.Group]: (resourceName, accountId) =>
     `arn:aws:iam::${accountId}:group/${resourceName}`,
+  [IAMNodeEntity.SCP]: (resourceName, accountId) =>
+    `arn:aws:iam::${accountId}:policy/${resourceName}`,
   [IAMNodeResourceEntity.S3Bucket]: resourceName => `arn:aws:s3:::${resourceName}`,
   [IAMNodeResourceEntity.Lambda]: (resourceName, accountId, region = 'us-east-1') =>
     `arn:aws:lambda:${region}:${accountId}:function:${resourceName}`,
