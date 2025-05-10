@@ -34,6 +34,7 @@ export enum IAMNodeResourceEntity {
   CloudFront = 'CloudFront CDN',
   Billing = 'Billing and Cost Management',
   Lambda = 'Lambda Function',
+  Secret = 'Secret',
 }
 
 export enum IAMNodeImage {
@@ -48,6 +49,8 @@ export enum IAMNodeImage {
   Billing = 'billing',
   Lambda = 'lambda',
   OU = 'ou',
+  Secret = 'secret',
+  SCP = 'scp',
 }
 
 export type CreatableIAMNodeEntity =

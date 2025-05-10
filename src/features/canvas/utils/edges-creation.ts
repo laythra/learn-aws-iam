@@ -11,6 +11,8 @@ const VALID_CONNECTIONS = new Set<string>(
     [IAMNodeEntity.Policy, IAMNodeEntity.Role],
     [IAMNodeEntity.Resource, IAMNodeEntity.Role],
     [IAMNodeEntity.OU, IAMNodeEntity.Account],
+    [IAMNodeEntity.SCP, IAMNodeEntity.OU],
+    [IAMNodeEntity.SCP, IAMNodeEntity.Account],
   ].map(([source, target]) => `${source}-${target}`)
 );
 
