@@ -24,6 +24,8 @@ const arnStrategies: Record<string, ArnGenerator> = {
     `arn:aws:cloudfront::${accountId}:distribution/${resourceName}`,
   [IAMNodeResourceEntity.Billing]: (resourceName, accountId) =>
     `arn:aws:budgets::${accountId}:budget/${resourceName}`,
+  [IAMNodeResourceEntity.Secret]: (resourceName, accountId) =>
+    `arn:aws:secretsmanager:${accountId}:secret:${resourceName}`,
 };
 
 export const SupportedArnNodeTypes = Object.keys(arnStrategies);
