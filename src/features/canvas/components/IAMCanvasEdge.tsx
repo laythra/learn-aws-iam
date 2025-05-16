@@ -34,13 +34,18 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
     _.isEqual
   );
 
-  const isEdgeBlocked = data?.is_blocked;
-  const edgeColor = data?.color || theme.colors.black;
-  const edgeHoverColor = data?.hovering_color || theme.colors.blue[500];
-  const strokeWidth = data?.stroke_width || 1;
-  const highlightEdge = clickedEdgeId === id || hoveredOverEdgeId === id;
-  const edgeStrokeColor = highlightEdge ? edgeHoverColor : edgeColor; // Blue when hovered, black otherwise
-  const edgeStrokeWidth = highlightEdge ? strokeWidth + 2 : strokeWidth; // Thicker when hovered
+  const {
+    is_blocked: isEdgeBlocked,
+    color: edgeColor = theme.colors.black,
+    hovering_color: edgeHoverColor = theme.colors.blue[500],
+    stroke_width: strokeWidth = 1,
+    persistent_label: persistentLabel,
+  } = data || {};
+
+  const isEdgeHighlighted = clickedEdgeId === id || hoveredOverEdgeId === id;
+  const edgeStrokeColor = isEdgeHighlighted ? edgeHoverColor : edgeColor;
+  const edgeStrokeWidth = isEdgeHighlighted ? strokeWidth + 2 : strokeWidth;
+  const shouldShowLabel = persistentLabel || isEdgeHighlighted;
 
   return (
     <>
@@ -57,7 +62,7 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
       </g>
       {data?.hovering_label && (
         <EdgeLabelRenderer>
-          {(highlightEdge || data?.label_always_visible) && (
+          {shouldShowLabel && (
             <Box
               position='absolute'
               transform={`translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}
@@ -69,7 +74,7 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
               fontWeight='bold'
               zIndex={10}
             >
-              {data?.hovering_label}
+              {isEdgeHighlighted ? data?.hovering_label : data?.persistent_label}
             </Box>
           )}
         </EdgeLabelRenderer>

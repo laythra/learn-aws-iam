@@ -61,11 +61,10 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
     },
     dataOverrides: {
       hovering_label: edgeLabel,
+      persistent_label: edgeLabel,
       hovering_color: theme.colors.red[500],
       color: theme.colors.yellow[500],
       unnecessary_edge: true,
-      label_always_visible: true,
-      source_node: sourceNode,
       target_node: targetNode,
     },
   });
@@ -183,8 +182,8 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
       dataOverrides: {
         hovering_label: getEdgeLabel(source.data.entity, target.data.entity),
         hovering_color: theme.colors.blue[500],
+        persistent_label: undefined,
         color: theme.colors.black,
-        label_always_visible: false,
         source_node: source,
         target_node: target,
       },
@@ -402,6 +401,7 @@ const connectionStrategies = {
         if (blockedEdgeIds.has(edge.id)) {
           edge.data!.is_blocked = true;
           edge.data!.hovering_label = 'Edge is blocked by SCP 🔒';
+          edge.data!.persistent_label = '🔒';
           edge.data!.color = theme.colors.red[500];
           edge.data!.hovering_color = theme.colors.red[500];
         }

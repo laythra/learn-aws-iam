@@ -31,12 +31,21 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
       initial_code: INITIAL_POLICIES.TUTORIAL_SCP,
       limit_new_lines: false,
       created_node_initial_position: 'left-center',
-      blocked_accesses: [getEdgeName(UserNodeID.TutorialFirstUser, ResourceNodeID.TutorialSecret1)],
+      blocked_accesses: [
+        ResourceNodeID.TutorialSecret1,
+        ResourceNodeID.TutorialSecret2,
+        ResourceNodeID.TutorialSecret3,
+      ].map(secretId => getEdgeName(UserNodeID.TutorialFirstUser, secretId)),
       initial_edges: [],
       help_badges: [
         {
           path: 'Statement[0].Effect',
           content: 'We want to limit access here, is Allow the right choice?',
+          color: 'yellow',
+        },
+        {
+          path: 'Statement[0].Action',
+          content: 'We want to block read access for all secrets',
           color: 'yellow',
         },
       ],

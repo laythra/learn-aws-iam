@@ -229,12 +229,12 @@ interface IAMEdgeData extends Record<string, unknown> {
   source_node?: IAMAnyNode;
   target_node?: IAMAnyNode;
   hovering_label?: AccessLevel | string;
+  persistent_label?: string;
   type: 'default';
   achieved_objective_id?: number;
   color: string;
   hovering_color: string;
   stroke_width: number;
-  label_always_visible: boolean;
   unnecessary_edge?: boolean;
   is_blocked?: boolean;
 }
