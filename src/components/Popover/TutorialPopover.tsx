@@ -12,6 +12,7 @@ import {
 import Markdown from 'react-markdown';
 
 import { PopoverNextButton } from './PopoverNextButton';
+import { HelpImage } from '../HelpComponents/HelpImage';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
 
@@ -23,6 +24,7 @@ interface TutorialPopoverProps {
   showNextButton?: boolean;
   showCloseButton?: boolean;
   placement?: PlacementWithLogical;
+  imagePath?: string;
   onNextClick: () => void;
   onCloseClick: () => void;
   containerRef?: React.RefObject<HTMLElement>;
@@ -36,6 +38,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
   showNextButton = false,
   showCloseButton = false,
   placement = 'auto',
+  imagePath,
   onNextClick,
   onCloseClick,
 }) => {
@@ -67,6 +70,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
             <Markdown components={markdownComponents} rehypePlugins={[remarkChakra]}>
               {description}
             </Markdown>
+            {imagePath && <HelpImage imagePath={imagePath} />}
           </PopoverBody>
         )}
         {showNextButton && <PopoverNextButton onNextClick={onNextClick} />}

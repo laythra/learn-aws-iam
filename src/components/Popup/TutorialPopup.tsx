@@ -6,7 +6,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Image,
   Box,
 } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
@@ -15,6 +14,7 @@ import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import { GoToNextLevelButton } from './GoToNextLevelButton';
+import { HelpImage } from '../HelpComponents/HelpImage';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { CustomTheme } from '@/types';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
@@ -47,11 +47,7 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
           <Markdown components={components} rehypePlugins={[remarkChakra]}>
             {popupContent.content}
           </Markdown>
-          {popupContent.image && (
-            <Box borderRadius={16} borderWidth='2px' borderColor='gray.200'>
-              <Image src={popupContent.image} borderRadius={16} />
-            </Box>
-          )}
+          {popupContent.image && <HelpImage imagePath={popupContent.image} />}
           {popupContent.lottie_animation && (
             <Box height='250px' width='250px' position='absolute' right='0' bottom='0'>
               <DotLottieReact
