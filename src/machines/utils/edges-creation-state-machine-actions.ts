@@ -17,9 +17,11 @@ import {
   IAMEdge,
   IAMGroupNode,
   IAMNodeMap,
+  IAMOUNode,
   IAMPolicyNode,
   IAMResourceNode,
   IAMRoleNode,
+  IAMSCPNode,
   IAMUserNode,
 } from '@/types/iam-node-types';
 import { getEdgeName, getEdgeLabel } from '@/utils/names';
@@ -59,11 +61,10 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
     },
     dataOverrides: {
       hovering_label: edgeLabel,
+      persistent_label: edgeLabel,
       hovering_color: theme.colors.red[500],
       color: theme.colors.yellow[500],
       unnecessary_edge: true,
-      label_always_visible: true,
-      source_node: sourceNode,
       target_node: targetNode,
     },
   });
@@ -181,8 +182,8 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
       dataOverrides: {
         hovering_label: getEdgeLabel(source.data.entity, target.data.entity),
         hovering_color: theme.colors.blue[500],
+        persistent_label: undefined,
         color: theme.colors.black,
-        label_always_visible: false,
         source_node: source,
         target_node: target,
       },
@@ -207,6 +208,17 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
   return { updatedContext, events };
 }
 
+/**
+ * Filters a list of node connections to include only those where the target node's ID matches
+ * the specified `targetId` and the source node (`from`) matches the given entity type.
+ *
+ * @template T - The type of the IAM node entity.
+ * @param nodeConnections - The array of node connections to filter.
+ * @param targetId - The ID of the target node to match against each connection's `to` node.
+ * @param entity - The entity type to match against the `from` node of each connection.
+ * @returns An array of node connections where the `to` node's ID matches `targetId` and the `from` node
+ *          is of the specified entity type, with the `from` property typed as `IAMNodeMap[T]`.
+ */
 function filterConnections<T extends IAMNodeEntity>(
   nodeConnections: NodeConnection[],
   targetId: string,
@@ -214,7 +226,7 @@ function filterConnections<T extends IAMNodeEntity>(
 ): Array<NodeConnection & { from: IAMNodeMap[T] }> {
   return nodeConnections.filter(
     (connection): connection is NodeConnection & { from: IAMNodeMap[T] } =>
-      connection.to.id === targetId && isNodeOfAnyEntity(connection.from, [entity])
+      isNodeOfAnyEntity(connection.from, [entity]) && connection.to.id === targetId
   );
 }
 
@@ -375,6 +387,31 @@ const connectionStrategies = {
       )
     );
   },
+  SCPToOU: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+    context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+    SCPNode: IAMSCPNode,
+    OUNode: IAMOUNode,
+    isInitialEdge: boolean,
+    options: PartialEdge = {}
+  ) => {
+    const blockedEdgeIds = new Set(SCPNode.data.blocked_edges);
+
+    const updatedContext = produce(context, draft => {
+      draft.edges.forEach(edge => {
+        if (blockedEdgeIds.has(edge.id)) {
+          edge.data!.is_blocked = true;
+          edge.data!.hovering_label = 'Access blocked by SCP 🔒';
+          edge.data!.persistent_label = '🔒';
+          edge.data!.color = theme.colors.red[500];
+          edge.data!.hovering_color = theme.colors.red[500];
+        }
+      });
+    });
+
+    debugger;
+
+    return applyStrategy(updatedContext, SCPNode, OUNode, isInitialEdge, options, () => []);
+  },
   anyToAny: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
     policyNode: IAMAnyNode,
@@ -461,6 +498,11 @@ export function updateConnectionEdges<
       isInitialEdge,
       options
     );
+  } else if (
+    isNodeOfEntity(sourceNode, IAMNodeEntity.SCP) &&
+    isNodeOfEntity(targetNode, IAMNodeEntity.OU)
+  ) {
+    return connectionStrategies.SCPToOU(context, sourceNode, targetNode, isInitialEdge, options);
   }
 
   return connectionStrategies.anyToAny(context, sourceNode, targetNode, isInitialEdge, options);

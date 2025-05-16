@@ -1,12 +1,13 @@
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import tutorialSCPSchema from '../schemas/policy/scp-tutorial-policy-schema.json';
 import { FinishEventMap, SCPCreationFInishEvent } from '../types/finish-event-enums';
-import { SCPNodeID } from '../types/node-id-enums';
+import { ResourceNodeID, SCPNodeID, UserNodeID } from '../types/node-id-enums';
 import { createSCPCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMSCPCreationObjective, ObjectiveType } from '@/machines/types';
 import { IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
+import { getEdgeName } from '@/utils/names';
 
 const OBJECTIVE1_HINT_MSG1 = `
   Remember, the Effect can be either Allow or Deny.
@@ -30,11 +31,21 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
       initial_code: INITIAL_POLICIES.TUTORIAL_SCP,
       limit_new_lines: false,
       created_node_initial_position: 'left-center',
+      blocked_accesses: [
+        ResourceNodeID.TutorialSecret1,
+        ResourceNodeID.TutorialSecret2,
+        ResourceNodeID.TutorialSecret3,
+      ].map(secretId => getEdgeName(UserNodeID.TutorialFirstUser, secretId)),
       initial_edges: [],
       help_badges: [
         {
           path: 'Statement[0].Effect',
           content: 'We want to limit access here, is Allow the right choice?',
+          color: 'yellow',
+        },
+        {
+          path: 'Statement[0].Action',
+          content: 'We want to block read access for all secrets',
           color: 'yellow',
         },
       ],

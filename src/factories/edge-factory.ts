@@ -22,7 +22,6 @@ const EDGE_TEMPLATE: IAMEdge = {
     stroke_width: 1,
     hovering_color: theme.colors.blue[500],
     hovering_label: 'Attached to',
-    label_always_visible: false,
   },
 };
 

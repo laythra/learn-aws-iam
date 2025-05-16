@@ -52,7 +52,7 @@ function createIAMNode<
       editable: false,
       parent_id: targetValidObjective?.created_node_parent_id,
       ...additionalDataOverrides,
-    },
+    } as Partial<TNode['data']>,
     rootOverrides: {
       parentId: targetValidObjective?.created_node_parent_id,
     },
@@ -161,7 +161,7 @@ export function createSCP<TLevelObjectiveID, TFinishEventMap extends BaseFinishE
     IAMNodeEntity.SCP,
     createSCPNode,
     targetValidObjective,
-    { blocked_accesses: targetValidObjective?.blocked_accesses }
+    { blocked_edges: targetValidObjective?.blocked_accesses }
   );
 }
 

@@ -1,4 +1,10 @@
-import { AccountNodeID, OUNodeID, SCPNodeID, UserNodeID } from '../types/node-id-enums';
+import {
+  AccountNodeID,
+  OUNodeID,
+  ResourceNodeID,
+  SCPNodeID,
+  UserNodeID,
+} from '../types/node-id-enums';
 import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/machines/types';
 
@@ -29,6 +35,12 @@ const POPOVER_MSG5 = `
 
 const POPOVER_MSG6 = `
   Attach the SCP to the **Organization Unit**.
+ `;
+
+const POPOVER_MSG7 = `
+  Edges marked in red with a 🔒 icon indicate blocked access,
+  even if an IAM policy explicitly allows it.
+  Try hovering over the red edges.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
@@ -79,5 +91,13 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_next_button: false,
     show_close_button: true,
     popover_placement: 'right-end',
+  },
+  {
+    element_id: ResourceNodeID.TutorialSecret1,
+    popover_title: 'Access has been blocked',
+    popover_content: POPOVER_MSG7,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'right',
   },
 ];

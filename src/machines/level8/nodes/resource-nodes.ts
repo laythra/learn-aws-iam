@@ -14,7 +14,7 @@ const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = _.zip(
   image: IAMNodeImage.Secret,
   resource_type: IAMNodeResourceEntity.Secret,
   layout_direction: 'horizontal',
-  horizontal_spacing: 10,
+  horizontal_spacing: 80,
   parent_id: AccountNodeID.Dev,
 }));
 

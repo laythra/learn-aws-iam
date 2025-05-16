@@ -34,12 +34,17 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
     _.isEqual
   );
 
-  const edgeColor = data?.color || theme.colors.black;
-  const edgeHoverColor = data?.hovering_color || theme.colors.blue[500];
-  const strokeWidth = data?.stroke_width || 1;
-  const highlightEdge = clickedEdgeId === id || hoveredOverEdgeId === id;
-  const edgeStrokeColor = highlightEdge ? edgeHoverColor : edgeColor; // Blue when hovered, black otherwise
-  const edgeStrokeWidth = highlightEdge ? strokeWidth + 2 : strokeWidth; // Thicker when hovered
+  const {
+    color: edgeColor = theme.colors.black,
+    hovering_color: edgeHoverColor = theme.colors.blue[500],
+    stroke_width: strokeWidth = 1,
+    persistent_label: persistentLabel,
+  } = data || {};
+
+  const isEdgeHighlighted = clickedEdgeId === id || hoveredOverEdgeId === id;
+  const edgeStrokeColor = isEdgeHighlighted ? edgeHoverColor : edgeColor;
+  const edgeStrokeWidth = isEdgeHighlighted ? strokeWidth + 2 : strokeWidth;
+  const shouldShowLabel = persistentLabel || isEdgeHighlighted;
 
   return (
     <>
@@ -52,23 +57,25 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
           }}
         />
       </g>
-      <EdgeLabelRenderer>
-        {(highlightEdge || data?.label_always_visible) && (
-          <Box
-            position='absolute'
-            transform={`translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}
-            background='white'
-            borderRadius='4px'
-            padding='1px'
-            pointerEvents='all'
-            fontSize='11px'
-            fontWeight='bold'
-            zIndex={10}
-          >
-            {data?.hovering_label || 'Placeholder Tooltip'}
-          </Box>
-        )}
-      </EdgeLabelRenderer>
+      {data?.hovering_label && (
+        <EdgeLabelRenderer>
+          {shouldShowLabel && (
+            <Box
+              position='absolute'
+              transform={`translate(-50%, -50%) translate(${labelX}px,${labelY}px)`}
+              background='white'
+              borderRadius='4px'
+              padding='1px'
+              pointerEvents='all'
+              fontSize='11px'
+              fontWeight='bold'
+              zIndex={10}
+            >
+              {isEdgeHighlighted ? data?.hovering_label : data?.persistent_label}
+            </Box>
+          )}
+        </EdgeLabelRenderer>
+      )}
     </>
   );
 };
