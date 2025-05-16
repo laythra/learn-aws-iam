@@ -40,6 +40,7 @@ export const withPopover = <T extends { elementid: string }, R = HTMLElement>(
         showNextButton={popoverContent?.show_next_button as boolean}
         placement={popoverContent?.popover_placement}
         showCloseButton={popoverContent?.show_close_button}
+        imagePath={popoverContent?.image_path}
         onNextClick={goToNextPopOver}
         onCloseClick={closePopover}
       >
