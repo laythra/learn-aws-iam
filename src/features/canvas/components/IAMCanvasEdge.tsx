@@ -55,8 +55,6 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
           style={{
             stroke: edgeStrokeColor,
             strokeWidth: edgeStrokeWidth,
-            opacity: isEdgeBlocked ? 0.5 : 1,
-            strokeOpacity: isEdgeBlocked ? 0.5 : 1,
           }}
         />
       </g>
