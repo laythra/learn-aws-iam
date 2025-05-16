@@ -35,7 +35,6 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
   );
 
   const {
-    is_blocked: isEdgeBlocked,
     color: edgeColor = theme.colors.black,
     hovering_color: edgeHoverColor = theme.colors.blue[500],
     stroke_width: strokeWidth = 1,

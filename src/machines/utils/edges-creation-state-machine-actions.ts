@@ -400,7 +400,7 @@ const connectionStrategies = {
       draft.edges.forEach(edge => {
         if (blockedEdgeIds.has(edge.id)) {
           edge.data!.is_blocked = true;
-          edge.data!.hovering_label = 'Edge is blocked by SCP 🔒';
+          edge.data!.hovering_label = 'Access blocked by SCP 🔒';
           edge.data!.persistent_label = '🔒';
           edge.data!.color = theme.colors.red[500];
           edge.data!.hovering_color = theme.colors.red[500];
