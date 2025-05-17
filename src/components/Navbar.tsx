@@ -87,8 +87,8 @@ export const Navbar: React.FC<NavbarProps> = () => {
               icon={<Bars3Icon />}
               aria-label='side-panel-button'
               color='gray.600'
-              _hover={{ color: 'blue.500' }}
-              _active={{ color: 'blue.600' }}
+              _hover={{ color: 'black' }}
+              _active={{ color: 'black' }}
               bg='transparent'
               size='xs'
             />

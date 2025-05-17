@@ -12,7 +12,6 @@ export const PopoverNextButton: React.FC<PopoverNextButtonProps> = ({ onNextClic
         rightIcon={<Icon as={ArrowRightIcon} verticalAlign='middle' />}
         variant='solid'
         onClick={onNextClick}
-        colorScheme='blue'
       >
         Next
       </Button>

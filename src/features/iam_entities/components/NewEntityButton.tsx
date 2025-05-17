@@ -55,9 +55,9 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
             aria-label='New'
             icon={<PlusCircleIcon />}
             onClick={hidePopovers}
-            color={'blue.500'}
-            _hover={{ color: 'blue.500' }}
-            _active={{ color: 'blue.600' }}
+            color={'gray.600'}
+            _hover={{ color: 'black' }}
+            _active={{ color: 'black' }}
             bg='transparent'
           />
 
