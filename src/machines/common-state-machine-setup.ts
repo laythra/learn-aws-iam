@@ -352,6 +352,12 @@ export const createStateMachineSetup = <
           { restricted_element_ids }: { restricted_element_ids: string[] }
         ) => restricted_element_ids,
       }),
+      hide_help_popover: assign({
+        show_help_popover: false,
+      }),
+      show_help_popover: assign({
+        show_help_popover: true,
+      }),
     },
   });
 };

@@ -57,6 +57,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
       [IAMNodeEntity.SCP]: { objectives: SCP_CREATION_OBJECTIVES, current_index: 0 },
     },
+    help_tips: ['ConnectNodes', 'CreatePolicies'],
   },
   on: {
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
@@ -116,6 +117,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       ],
     },
     [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
+    [StatelessStateMachineEvent.HideHelpPopover]: { actions: 'hide_help_popover' },
+    [StatelessStateMachineEvent.ShowHelpPopover]: { actions: 'show_help_popover' },
   },
   states: {
     inside_tutorial: {
