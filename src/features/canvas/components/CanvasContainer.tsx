@@ -5,6 +5,8 @@ import { Flex, Box, useTheme } from '@chakra-ui/react';
 import Canvas from './Canvas';
 import MultiAccountCanvas from './MultiAccountCanvas';
 import { GithubCorner } from '@/components/GithubCorner';
+import { HelpButton } from '@/components/HelpComponents/HelpButton';
+import { HelpPopover } from '@/components/HelpComponents/HelpPopover';
 import { Navbar } from '@/components/Navbar';
 import { FixedPopover } from '@/components/Popover/FixedPopover';
 import { MobileWarningPopup } from '@/components/Popup/MobileWarningPopup';
@@ -27,6 +29,8 @@ const CanvasContainer: React.FC<CanvasContainerProps> = () => {
       <TutorialPopup />
       <MobileWarningPopup />
       <Navbar />
+      <HelpButton />
+      <HelpPopover />
       <Box h='100vh' w='100%' pt={theme.sizes.navbarHeightInPixels}>
         {useMultiAccountCanvas ? <MultiAccountCanvas /> : <Canvas />}
       </Box>

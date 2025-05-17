@@ -80,7 +80,9 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   use_multi_account_canvas?: boolean;
   highlighted_element_id?: string;
   in_tutorial_state?: boolean;
+  show_help_popover?: boolean;
   whitelisted_element_ids?: string[];
+  help_tips?: HelpTip[];
   /*
     Defines the list of elements that are always hidden or disabled, regardless of the current state.
   */
@@ -184,6 +186,7 @@ export type PopoverTutorialMessage = {
   show_next_button: boolean;
   show_close_button: boolean;
   popover_placement?: PlacementWithLogical;
+  image_path?: string;
 };
 
 export type PopupTutorialMessage = {
@@ -335,3 +338,5 @@ export enum AccountID {
   Trusting = '123456789012',
   Trusted = '987654321098',
 }
+
+export type HelpTip = 'ConnectNodes' | 'CreatePolicies';

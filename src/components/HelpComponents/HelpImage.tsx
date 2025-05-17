@@ -16,7 +16,12 @@ export const HelpImage: React.FC<HelpImageProps> = ({ imagePath }) => {
         display='inline-block'
         mx='auto'
       >
-        <Image src={loadLocalImage(imagePath, 'gif')} borderRadius={8} height='auto' maxW='100%' />
+        <Image
+          src={loadLocalImage(`help-tips-gifs/${imagePath}`, 'gif')}
+          borderRadius={8}
+          height='auto'
+          maxW='100%'
+        />
       </Box>
     </Flex>
   );
