@@ -19,6 +19,7 @@ const nodeTypes = {
   account: AccountCanvasNode,
   ou: IAMCanvasNode,
   scp: IAMCanvasNode,
+  resource_policy: IAMCanvasNode,
 };
 
 const edgeTypes = {

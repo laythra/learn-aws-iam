@@ -1,5 +1,5 @@
 import { LevelObjectiveID } from './objective-enums';
-import { BaseFinishEventMap, ObjectiveType } from '@/machines/types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
 
 export enum RoleCreationFinishEvent {
   TUTORIAL_ROLE_CREATED = 'TUTORIAL_ROLE_CREATED',
@@ -22,13 +22,9 @@ export enum EdgeConnectionFinishEvent {
   EC2_ROLE_ATTACHED_TO_EC2_INSTANCE = 'EC2_ROLE_ATTACHED_TO_EC2_INSTANCE',
 }
 
-export interface FinishEventMap extends BaseFinishEventMap {
-  [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: never;
-  [ObjectiveType.POLICY_CREATION_OBJECTIVE]: never;
+export type FinishEventMap = FinishEventMapWithDefaults<{
   [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: EdgeConnectionFinishEvent;
-  [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
-  [ObjectiveType.LEVEL_OBJECTIVE]: LevelObjectiveID;
   [ObjectiveType.ROLE_CREATION_OBJECTIVE]: RoleCreationFinishEvent;
   [ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE]: TrustPolicyEditFinishEvent;
-  [ObjectiveType.SCP_CREATION_OBJECTIVE]: never;
-}
+  [ObjectiveType.LEVEL_OBJECTIVE]: LevelObjectiveID;
+}>;

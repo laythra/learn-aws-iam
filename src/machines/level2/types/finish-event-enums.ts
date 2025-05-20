@@ -1,4 +1,4 @@
-import { BaseFinishEventMap, ObjectiveType } from '@/machines/types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
 
 export enum EdgeConnectionFinishEvent {
   User1AttachedToGroup = 'User1AttachedToGroup',
@@ -13,13 +13,7 @@ export enum UserGroupCreationFinishEvent {
   GroupCreated = 'GroupCreated',
 }
 
-export interface FinishEventMap extends BaseFinishEventMap {
+export type FinishEventMap = FinishEventMapWithDefaults<{
   [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: EdgeConnectionFinishEvent;
-  [ObjectiveType.POLICY_CREATION_OBJECTIVE]: never;
-  [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
-  [ObjectiveType.LEVEL_OBJECTIVE]: never;
   [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: UserGroupCreationFinishEvent;
-  [ObjectiveType.ROLE_CREATION_OBJECTIVE]: never;
-  [ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE]: never;
-  [ObjectiveType.SCP_CREATION_OBJECTIVE]: never;
-}
+}>;

@@ -1,4 +1,4 @@
-import { BaseFinishEventMap, ObjectiveType } from '@/machines/types';
+import { ObjectiveType, FinishEventMapWithDefaults } from '@/machines/types';
 
 export enum RoleCreationFinishEvent {
   DYNAMODB_READ_ROLE_CREATED = 'DYNAMODB_READ_ROLE_CREATED',
@@ -19,13 +19,9 @@ export enum PolicyCreationFinishEvent {
   ASSUME_ROLE_POLICY_CREATED = 'ASSUME_ROLE_POLICY_CREATED',
 }
 
-export interface FinishEventMap extends BaseFinishEventMap {
-  [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: never;
+export type FinishEventMap = FinishEventMapWithDefaults<{
   [ObjectiveType.POLICY_CREATION_OBJECTIVE]: PolicyCreationFinishEvent;
   [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: EdgeConnectionFinishEvent;
-  [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
-  [ObjectiveType.LEVEL_OBJECTIVE]: never;
   [ObjectiveType.ROLE_CREATION_OBJECTIVE]: RoleCreationFinishEvent;
   [ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE]: TrustPolicyEditFinishEvent;
-  [ObjectiveType.SCP_CREATION_OBJECTIVE]: never;
-}
+}>;

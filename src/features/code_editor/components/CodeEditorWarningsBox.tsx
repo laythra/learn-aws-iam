@@ -3,11 +3,11 @@ import { ExclamationCircleIcon } from '@heroicons/react/16/solid';
 import { useSelector } from '@xstate/store/react';
 
 import codeEditorStateStore from '../stores/code-editor-state-store';
-import { IAMScriptableEntity } from '@/types';
+import { IAMCodeDefinedEntity } from '@/types';
 
 interface CodeEditorWarningsBoxProps {
   nodeId: string;
-  selectedIAMEntity: IAMScriptableEntity;
+  selectedIAMEntity: IAMCodeDefinedEntity;
 }
 
 export const CodeEditorWarningsBox: React.FC<CodeEditorWarningsBoxProps> = ({

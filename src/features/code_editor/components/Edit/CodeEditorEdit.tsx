@@ -16,12 +16,12 @@ import {
   IAMPolicyEditObjective,
   IAMTrustPolicyEditObject,
 } from '@/machines/types';
-import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
+import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
 import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/utils/iam-code-linter';
 
 interface CodeEditorEditProps {
   nodeId: string;
-  selectedIAMEntity: IAMScriptableEntity;
+  selectedIAMEntity: IAMCodeDefinedEntity;
   errors: Diagnostic[];
   warnings: string[];
 }

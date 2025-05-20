@@ -8,13 +8,14 @@ import {
   BaseCreationObjective,
   BaseFinishEventMap,
   IAMPolicyCreationObjective,
+  IAMResourcePolicyCreationObjective,
   IAMRoleCreationObjective,
   IAMSCPCreationObjective,
 } from '@/machines/types';
 import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
 import iamRoleTurstPolicySchema from '@/schemas/aws-iam-role-trust-policy-schema.json';
 import sharedConditionSchema from '@/schemas/shared-condition-schema.json';
-import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
+import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
 interface LintConfig {
@@ -30,6 +31,7 @@ export const GENERIC_VALIDATION_FNS = {
   [IAMNodeEntity.Policy]: AJV_COMPILER.compile(iamPolicySchema),
   [IAMNodeEntity.Role]: AJV_COMPILER.compile(iamRoleTurstPolicySchema),
   [IAMNodeEntity.SCP]: AJV_COMPILER.compile(iamPolicySchema),
+  [IAMNodeEntity.ResourcePolicy]: AJV_COMPILER.compile(iamPolicySchema),
 };
 
 export const getObjectiveValidationFunction = <TFinishEventMap extends BaseFinishEventMap>(
@@ -39,7 +41,7 @@ export const getObjectiveValidationFunction = <TFinishEventMap extends BaseFinis
   return (
     objective.get_validate_function?.(nodes) ??
     objective.validate_function ??
-    GENERIC_VALIDATION_FNS[objective.entity as IAMScriptableEntity]
+    GENERIC_VALIDATION_FNS[objective.entity as IAMCodeDefinedEntity]
   );
 };
 
@@ -94,6 +96,7 @@ type ObjectiveEntityMap = {
   [IAMNodeEntity.Policy]: IAMPolicyCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.SCP]: IAMSCPCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.Role]: IAMRoleCreationObjective<BaseFinishEventMap>;
+  [IAMNodeEntity.ResourcePolicy]: IAMResourcePolicyCreationObjective<BaseFinishEventMap>;
 };
 
 type ObjectiveByEntity<E extends IAMNodeEntity> = E extends keyof ObjectiveEntityMap
