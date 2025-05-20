@@ -30,7 +30,7 @@ import type {
   PopupTutorialMessage,
 } from '@/machines/types';
 import type { GenericContext, GenericEventData, LevelObjective } from '@/machines/types';
-import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
+import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 
 /**
@@ -296,7 +296,7 @@ export const createStateMachineSetup = <
           (context.next_edges_connection_objectives_index ?? 0) + 1,
       }),
       next_policy_role_creation_objectives: enqueueActions(
-        ({ context, enqueue }, { entity }: { entity: IAMScriptableEntity }) => {
+        ({ context, enqueue }, { entity }: { entity: IAMCodeDefinedEntity }) => {
           const { updatedContext } = updatePolicyRoleCreationObjectivesList(context, entity);
 
           enqueue.assign({

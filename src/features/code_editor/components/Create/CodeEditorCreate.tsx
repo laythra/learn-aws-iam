@@ -14,12 +14,12 @@ import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID } from '@/machines/types';
-import { IAMScriptableEntity } from '@/types';
+import { IAMCodeDefinedEntity } from '@/types';
 import { findAnyValidObjective, GENERIC_VALIDATION_FNS } from '@/utils/iam-code-linter';
 
 interface CodeEditorCreateProps {
   nodeId: string;
-  selectedIAMEntity: IAMScriptableEntity;
+  selectedIAMEntity: IAMCodeDefinedEntity;
   errors: Diagnostic[];
   warnings: string[];
 }
@@ -142,7 +142,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
               type: 'setContent',
               content: newContent,
               nodeId,
-              entity: selectedIAMEntity as IAMScriptableEntity,
+              entity: selectedIAMEntity as IAMCodeDefinedEntity,
             });
 
             validateChange();

@@ -1,3 +1,4 @@
+import { IAMCodeDefinedEntities } from '@/config/consts';
 import { IAMNodeEntity } from '@/types';
 
 export const MANAGED_POLICIES = {
@@ -68,8 +69,16 @@ work together to manage access to AWS resources securely and effectively.
 tutorial from the beginning and sharpen your skills again.|weight(700)
 `;
 
-export const DEFAULT_ROLE_POLICY_OBJECTIVES_MAP = {
-  [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
-  [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
-  [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
-};
+// export const DEFAULT_ROLE_POLICY_OBJECTIVES_MAP = {
+//   [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
+//   [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
+//   [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
+// };
+
+export const DEFAULT_ROLE_POLICY_OBJECTIVES_MAP = IAMCodeDefinedEntities.reduce(
+  (acc, entity) => {
+    acc[entity] = { objectives: [], current_index: 0 };
+    return acc;
+  },
+  {} as Record<IAMNodeEntity, { objectives: []; current_index: number }>
+);

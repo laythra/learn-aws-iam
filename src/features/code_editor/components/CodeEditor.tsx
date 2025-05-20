@@ -59,11 +59,20 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
 
   useEffect(() => {
     if (!isPolicyTabRestricted) {
-      codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: IAMNodeEntity.Policy });
+      codeEditorStateStore.send({
+        type: 'setSelectedIAMEntity',
+        payload: IAMNodeEntity.Policy,
+      });
     } else if (!isRoleTabRestricted) {
-      codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: IAMNodeEntity.Role });
+      codeEditorStateStore.send({
+        type: 'setSelectedIAMEntity',
+        payload: IAMNodeEntity.Role,
+      });
     } else if (!isSCPTabRestricted) {
-      codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: IAMNodeEntity.SCP });
+      codeEditorStateStore.send({
+        type: 'setSelectedIAMEntity',
+        payload: IAMNodeEntity.SCP,
+      });
     }
   }, [isPolicyTabRestricted, isRoleTabRestricted]);
 

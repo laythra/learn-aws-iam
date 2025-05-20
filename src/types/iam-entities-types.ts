@@ -1,11 +1,5 @@
-import { IAMAnyNode, IAMNodeEntity } from '@/types';
+// TODO: Get rid of this file
 
-export interface IAMEntitiesContextState {
-  createdNodes: IAMAnyNode[];
-  createNode: (nodeProps: IAMAnyNode) => void;
-  removeNode: (nodeId: string) => void;
-  maxNodesToCreated?: number;
-}
+import { IAMNodeEntity } from '@/types';
 
-export type IAMScriptableEntity = IAMNodeEntity.Policy | IAMNodeEntity.Role | IAMNodeEntity.SCP;
 export type IAMIdentityEntity = IAMNodeEntity.User | IAMNodeEntity.Group;

@@ -1,4 +1,4 @@
-import { BaseFinishEventMap, ObjectiveType } from '@/machines/types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
 
 // TODO: Rename to PolicyEditFinishEvent instead
 export enum NodeEditFinishEvent {
@@ -7,13 +7,6 @@ export enum NodeEditFinishEvent {
   INTERN_POLICY_EDITED = 'INTERN_POLICY_EDITED',
 }
 
-export interface FinishEventMap extends BaseFinishEventMap {
-  [ObjectiveType.LEVEL_OBJECTIVE]: never;
-  [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: never;
-  [ObjectiveType.POLICY_CREATION_OBJECTIVE]: never;
+export type FinishEventMap = FinishEventMapWithDefaults<{
   [ObjectiveType.POLICY_EDIT_OBJECTIVE]: NodeEditFinishEvent;
-  [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: never;
-  [ObjectiveType.ROLE_CREATION_OBJECTIVE]: never;
-  [ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE]: never;
-  [ObjectiveType.SCP_CREATION_OBJECTIVE]: never;
-}
+}>;

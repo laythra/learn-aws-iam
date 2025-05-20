@@ -1,14 +1,14 @@
 import { produce } from 'immer';
 
 import { BaseFinishEventMap, GenericContext } from '../types';
-import { IAMScriptableEntity } from '@/types';
+import { IAMCodeDefinedEntity } from '@/types';
 
 export function updatePolicyRoleCreationObjectivesList<
   TLevelObjectiveID,
   TFinishEventMap extends BaseFinishEventMap,
 >(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  objective_entity: IAMScriptableEntity
+  objective_entity: IAMCodeDefinedEntity
 ): { updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap> } {
   const updatedContext = produce(context, draftContext => {
     const entityObjectives = draftContext.objectives_map[objective_entity];

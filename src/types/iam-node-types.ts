@@ -24,7 +24,14 @@ export enum IAMNodeEntity {
   Account = 'Account',
   OU = 'Organizational Unit',
   SCP = 'Service Control Policy',
+  ResourcePolicy = 'Resource Policy',
 }
+
+export type IAMCodeDefinedEntity =
+  | IAMNodeEntity.Policy
+  | IAMNodeEntity.Role
+  | IAMNodeEntity.SCP
+  | IAMNodeEntity.ResourcePolicy;
 
 export enum IAMNodeResourceEntity {
   Resource = 'AWS Resource',
@@ -161,6 +168,20 @@ interface IAMPolicyNodeData extends IAMNodeData {
   granted_accesses: PolicyGrantedAccess[];
   initial_edges?: Edge<IAMEdgeData>[];
   content: string;
+
+  /**
+   * Used for resource-based policies, such that the policy is attached to the resource
+   */
+  resource_node_id?: string;
+}
+
+interface IAMResourcePolicyNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.Policy;
+  editable: boolean;
+  granted_accesses: PolicyGrantedAccess[];
+  initial_edges?: Edge<IAMEdgeData>[];
+  content: string;
+  resource_node_id: string;
 }
 
 interface IAMSCPNodeData extends IAMNodeData {
@@ -186,12 +207,13 @@ interface IAMResourceNodeData extends IAMNodeData {
 interface IAMAccountNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Account;
 }
+
 interface IAMOUNodeData extends IAMNodeData {
   entity: IAMNodeEntity.OU;
 }
 
 export type IAMUserNode = Node<IAMUserNodeData, 'user'>;
-// Using 'group' as the type causes react-flow to render the node improperly for some reason
+// 'group' is reserved in @xyflow/react, we're using 'iam_group' instead
 export type IAMGroupNode = Node<IAMGroupNodeData, 'iam_group'>;
 export type IAMPolicyNode = Node<IAMPolicyNodeData, 'policy'>;
 export type IAMResourceNode = Node<IAMResourceNodeData, 'resource'>;
@@ -199,6 +221,7 @@ export type IAMRoleNode = Node<IAMRoleNodeData, 'role'>;
 export type IAMAccountNode = Node<IAMAccountNodeData, 'account'>;
 export type IAMOUNode = Node<IAMOUNodeData, 'ou'>;
 export type IAMSCPNode = Node<IAMSCPNodeData, 'scp'>;
+export type IAMResourcePolicyNode = Node<IAMResourcePolicyNodeData, 'resource_policy'>;
 
 export type IAMNodeMap = {
   [IAMNodeEntity.Policy]: IAMPolicyNode;
@@ -209,6 +232,7 @@ export type IAMNodeMap = {
   [IAMNodeEntity.Account]: IAMAccountNode;
   [IAMNodeEntity.OU]: IAMOUNode;
   [IAMNodeEntity.SCP]: IAMSCPNode;
+  [IAMNodeEntity.ResourcePolicy]: IAMResourcePolicyNode;
 };
 
 export type IAMAnyNode = IAMNodeMap[keyof IAMNodeMap];

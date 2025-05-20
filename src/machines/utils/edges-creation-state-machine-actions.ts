@@ -408,10 +408,24 @@ const connectionStrategies = {
       });
     });
 
-    debugger;
-
     return applyStrategy(updatedContext, SCPNode, OUNode, isInitialEdge, options, () => []);
   },
+  PolicyToResource: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+    context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+    policyNode: IAMPolicyNode,
+    resourceNode: IAMResourceNode,
+    isInitialEdge: boolean,
+    options: PartialEdge = {}
+  ) =>
+    applyStrategy(context, policyNode, resourceNode, isInitialEdge, options, baseEdgeId =>
+      createEdgesFromGrantedAccesses(
+        policyNode.id,
+        policyNode.data.granted_accesses,
+        baseEdgeId,
+        policyNode,
+        resourceNode
+      )
+    ),
   anyToAny: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
     policyNode: IAMAnyNode,
@@ -503,6 +517,17 @@ export function updateConnectionEdges<
     isNodeOfEntity(targetNode, IAMNodeEntity.OU)
   ) {
     return connectionStrategies.SCPToOU(context, sourceNode, targetNode, isInitialEdge, options);
+  } else if (
+    isNodeOfEntity(sourceNode, IAMNodeEntity.Policy) &&
+    isNodeOfEntity(targetNode, IAMNodeEntity.Resource)
+  ) {
+    return connectionStrategies.PolicyToResource(
+      context,
+      sourceNode,
+      targetNode,
+      isInitialEdge,
+      options
+    );
   }
 
   return connectionStrategies.anyToAny(context, sourceNode, targetNode, isInitialEdge, options);

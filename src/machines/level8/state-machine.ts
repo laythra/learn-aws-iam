@@ -15,6 +15,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../config';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -53,8 +54,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     nodes_connnections: [],
     all_policy_creation_objectives: [],
     objectives_map: {
-      [IAMNodeEntity.Role]: { objectives: [], current_index: 0 },
-      [IAMNodeEntity.Policy]: { objectives: [], current_index: 0 },
+      ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
       [IAMNodeEntity.SCP]: { objectives: SCP_CREATION_OBJECTIVES, current_index: 0 },
     },
     help_tips: ['ConnectNodes', 'CreatePolicies'],
@@ -249,6 +249,17 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       },
     },
-    inside_level: {},
+    inside_level: {
+      entry: [
+        // {
+        //   type: 'assign_nodes',
+        //   params: { nodes: INITIAL_IN_LEVEL_NODES },
+        // },
+        // assign({
+        //   initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
+        // }),
+        // 'resolve_initial_edges',
+      ],
+    },
   },
 });

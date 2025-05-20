@@ -1,4 +1,4 @@
-import { BaseFinishEventMap, ObjectiveType } from '@/machines/types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
 
 export enum LevelObjectiveFinishEvent {
   LEVEL_OBJECTIVE_FINISHED = 'LEVEL_OBJECTIVE_FINISHED',
@@ -18,13 +18,8 @@ export enum NodeCreationFinishEvent {
   CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED = 'CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED',
 }
 
-export interface FinishEventMap extends BaseFinishEventMap {
-  [ObjectiveType.LEVEL_OBJECTIVE]: LevelObjectiveFinishEvent;
+export type FinishEventMap = FinishEventMapWithDefaults<{
   [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: EdgeConnectionFinishEvent;
   [ObjectiveType.POLICY_CREATION_OBJECTIVE]: NodeCreationFinishEvent;
-  [ObjectiveType.POLICY_EDIT_OBJECTIVE]: never;
-  [ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE]: never;
-  [ObjectiveType.ROLE_CREATION_OBJECTIVE]: never;
-  [ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE]: never;
-  [ObjectiveType.SCP_CREATION_OBJECTIVE]: never;
-}
+  [ObjectiveType.LEVEL_OBJECTIVE]: LevelObjectiveFinishEvent;
+}>;

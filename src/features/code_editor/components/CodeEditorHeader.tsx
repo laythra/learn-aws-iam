@@ -7,9 +7,9 @@ import { ElementID } from '@/config/element-ids';
 import { CanvasStore } from '@/features/canvas/stores/canvas-store';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
 import { CodeEditorMode } from '@/stores/code-editor-popup-store';
-import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
+import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
 interface CodeEditorHeaderProps {
-  selectedIAMEntity: IAMScriptableEntity;
+  selectedIAMEntity: IAMCodeDefinedEntity;
   codeEditorMode: CodeEditorMode;
   nodeId: string;
 }
@@ -27,12 +27,12 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
         <Text>
           Edit {_.upperFirst(selectedIAMEntity)}: {selectedNode.data.label}
         </Text>
-        <CodeEditorHelpButton selectedEntity={selectedNode.data.entity as IAMScriptableEntity} />
+        <CodeEditorHelpButton selectedEntity={selectedNode.data.entity as IAMCodeDefinedEntity} />
       </HStack>
     );
   }
 
-  const setSelectedIAMEntity = (entity: IAMScriptableEntity): void => {
+  const setSelectedIAMEntity = (entity: IAMCodeDefinedEntity): void => {
     codeEditorStateStore.send({ type: 'setSelectedIAMEntity', payload: entity });
   };
 
@@ -57,7 +57,7 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
         <Tabs
           index={tabsToRender.findIndex(tab => tab.node_entity === selectedIAMEntity)}
           onChange={index =>
-            setSelectedIAMEntity(tabsToRender[index].node_entity as IAMScriptableEntity)
+            setSelectedIAMEntity(tabsToRender[index].node_entity as IAMCodeDefinedEntity)
           }
           variant='soft-rounded'
           size='sm'

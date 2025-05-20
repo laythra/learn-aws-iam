@@ -1,43 +1,45 @@
 import { Diagnostic } from '@codemirror/lint';
 import { createStoreWithProducer } from '@xstate/store';
 import { produce } from 'immer';
+import { reduce } from 'lodash';
 
+import { IAMCodeDefinedEntities } from '@/config/consts';
 import { AccountID } from '@/machines/types';
-import { IAMNodeEntity, IAMScriptableEntity } from '@/types';
+import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
 
 type CodeEditorEvents = {
   setCodeErrorsAndWarnings: {
     errors: Diagnostic[];
     warnings: string[];
     nodeId: string;
-    entity: IAMScriptableEntity;
+    entity: IAMCodeDefinedEntity;
   };
-  setContent: { nodeId: string; content: string; entity: IAMScriptableEntity };
-  setSelectedIAMEntity: { payload: IAMScriptableEntity };
+  setContent: { nodeId: string; content: string; entity: IAMCodeDefinedEntity };
+  setSelectedIAMEntity: { payload: IAMCodeDefinedEntity };
   setIsValidating: { payload: boolean };
-  initializeCodeEditor: { content: string; nodeId: string; entity: IAMScriptableEntity };
+  initializeCodeEditor: { content: string; nodeId: string; entity: IAMCodeDefinedEntity };
   deinitializeCodeEditor: { nodeId: string };
   selectPolicy: { policyId: string };
   deselectPolicy: { policyId: string };
   setSelectedAccount: { selectedAccountId: AccountID };
-  showHelpPopup: { type: string; entity: IAMScriptableEntity };
+  showHelpPopup: { type: string; entity: IAMCodeDefinedEntity };
   hideHelpPopup: { type: string };
   setNodeLabel: { label: string };
   setNodeLabelError: { error: string | undefined; isValidating: boolean };
 };
 
 export type CodeEditorState = {
-  errors: Record<IAMScriptableEntity, Record<string, Diagnostic[]>>;
-  warnings: Record<IAMScriptableEntity, Record<string, string[]>>;
-  content: Record<IAMScriptableEntity, Record<string, string>>;
-  selectedIAMEntity: IAMScriptableEntity;
+  errors: Record<IAMCodeDefinedEntity, Record<string, Diagnostic[]>>;
+  warnings: Record<IAMCodeDefinedEntity, Record<string, string[]>>;
+  content: Record<IAMCodeDefinedEntity, Record<string, string>>;
+  selectedIAMEntity: IAMCodeDefinedEntity;
   isValidating?: boolean;
   isCodeEditorInitialized: boolean;
   selectedPolicies: string[];
   selectedAccountId?: AccountID;
   helpPopupInfo: {
     isOpen: boolean;
-    entity: IAMScriptableEntity;
+    entity: IAMCodeDefinedEntity;
   };
   label?: string;
   labelError: string | undefined;
@@ -45,9 +47,30 @@ export type CodeEditorState = {
 
 export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produce, {
   context: {
-    errors: { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {}, [IAMNodeEntity.SCP]: {} },
-    warnings: { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {}, [IAMNodeEntity.SCP]: {} },
-    content: { [IAMNodeEntity.Policy]: {}, [IAMNodeEntity.Role]: {}, [IAMNodeEntity.SCP]: {} },
+    errors: reduce(
+      IAMCodeDefinedEntities,
+      (acc, entity) => {
+        acc[entity] = {};
+        return acc;
+      },
+      {} as Record<IAMCodeDefinedEntity, Record<string, Diagnostic[]>>
+    ),
+    warnings: reduce(
+      IAMCodeDefinedEntities,
+      (acc, entity) => {
+        acc[entity] = {};
+        return acc;
+      },
+      {} as Record<IAMCodeDefinedEntity, Record<string, string[]>>
+    ),
+    content: reduce(
+      IAMCodeDefinedEntities,
+      (acc, entity) => {
+        acc[entity] = {};
+        return acc;
+      },
+      {} as Record<IAMCodeDefinedEntity, Record<string, string>>
+    ),
     selectedIAMEntity: IAMNodeEntity.Policy,
     isCodeEditorInitialized: false,
     selectedPolicies: [],
@@ -62,7 +85,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
         errors: Diagnostic[];
         warnings: string[];
         nodeId: string;
-        entity: IAMScriptableEntity;
+        entity: IAMCodeDefinedEntity;
       }
     ) => {
       context.errors[event.entity] = { [event.nodeId]: event.errors };
@@ -70,12 +93,12 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     },
     setContent: (
       context: CodeEditorState,
-      event: { content: string; nodeId: string; entity: IAMScriptableEntity }
+      event: { content: string; nodeId: string; entity: IAMCodeDefinedEntity }
     ) => {
       context.isValidating = true;
       context.content[event.entity] = { [event.nodeId]: event.content };
     },
-    setSelectedIAMEntity: (context: CodeEditorState, event: { payload: IAMScriptableEntity }) => {
+    setSelectedIAMEntity: (context: CodeEditorState, event: { payload: IAMCodeDefinedEntity }) => {
       context.selectedIAMEntity = event.payload;
     },
     setIsValidating: (context: CodeEditorState, event: { payload: boolean }) => {
@@ -83,7 +106,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     },
     initializeCodeEditor: (
       context: CodeEditorState,
-      event: { content: string; nodeId: string; entity: IAMScriptableEntity }
+      event: { content: string; nodeId: string; entity: IAMCodeDefinedEntity }
     ) => {
       context.isCodeEditorInitialized = true;
 
@@ -95,21 +118,27 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
       context.isCodeEditorInitialized = false;
       context.isValidating = false;
       context.selectedIAMEntity = IAMNodeEntity.Policy;
-      context.errors = {
-        [IAMNodeEntity.Policy]: {},
-        [IAMNodeEntity.Role]: {},
-        [IAMNodeEntity.SCP]: {},
-      };
-      context.warnings = {
-        [IAMNodeEntity.Policy]: {},
-        [IAMNodeEntity.Role]: {},
-        [IAMNodeEntity.SCP]: {},
-      };
-      context.content = {
-        [IAMNodeEntity.Policy]: {},
-        [IAMNodeEntity.Role]: {},
-        [IAMNodeEntity.SCP]: {},
-      };
+      context.errors = IAMCodeDefinedEntities.reduce(
+        (acc, entity) => {
+          acc[entity] = {};
+          return acc;
+        },
+        {} as Record<IAMCodeDefinedEntity, Record<string, Diagnostic[]>>
+      );
+      context.warnings = IAMCodeDefinedEntities.reduce(
+        (acc, entity) => {
+          acc[entity] = {};
+          return acc;
+        },
+        {} as Record<IAMCodeDefinedEntity, Record<string, string[]>>
+      );
+      context.content = IAMCodeDefinedEntities.reduce(
+        (acc, entity) => {
+          acc[entity] = {};
+          return acc;
+        },
+        {} as Record<IAMCodeDefinedEntity, Record<string, string>>
+      );
       context.labelError = undefined;
     },
     selectPolicy: (context: CodeEditorState, event: { policyId: string }) => {
@@ -124,7 +153,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
       context.isValidating = true;
       context.selectedAccountId = event.selectedAccountId;
     },
-    showHelpPopup: (context: CodeEditorState, event: { entity: IAMScriptableEntity }) => {
+    showHelpPopup: (context: CodeEditorState, event: { entity: IAMCodeDefinedEntity }) => {
       context.helpPopupInfo = {
         isOpen: true,
         entity: event.entity,

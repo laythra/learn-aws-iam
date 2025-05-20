@@ -7,10 +7,10 @@ import codeEditorStateStore from '../stores/code-editor-state-store';
 import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
-import { IAMScriptableEntity } from '@/types';
+import { IAMCodeDefinedEntity } from '@/types';
 
 interface CodeEditorHelpButtonProps {
-  selectedEntity: IAMScriptableEntity;
+  selectedEntity: IAMCodeDefinedEntity;
 }
 const CodeEditorHelpButton: React.FC<CodeEditorHelpButtonProps> = ({ selectedEntity }) => {
   const showPolicyHelpPopup = (): void => {

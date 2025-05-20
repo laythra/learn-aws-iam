@@ -14,14 +14,20 @@ import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createSCPNode } from '@/factories/nodes/scp-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
-import { IAMAnyNode, IAMGroupNode, IAMNodeEntity, IAMScriptableEntity, IAMUserNode } from '@/types';
+import {
+  IAMAnyNode,
+  IAMGroupNode,
+  IAMNodeEntity,
+  IAMCodeDefinedEntity,
+  IAMUserNode,
+} from '@/types';
 import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
 function createIAMNode<
   TLevelObjectiveID,
   TFinishEventMap extends BaseFinishEventMap,
   TNode extends IAMAnyNode,
-  TEntity extends IAMScriptableEntity,
+  TEntity extends IAMCodeDefinedEntity,
   TObjectiveType extends ObjectiveType,
 >(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
@@ -37,6 +43,7 @@ function createIAMNode<
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[TObjectiveType][];
+  createdNode: TNode;
 } {
   const sideEffectsEvents: TFinishEventMap[TObjectiveType][] = [];
 
@@ -78,7 +85,7 @@ function createIAMNode<
     sideEffectsEvents.push(targetValidObjective.on_finish_event);
   }
 
-  return { updatedContext, events: sideEffectsEvents };
+  return { updatedContext, events: sideEffectsEvents, createdNode: newNode };
 }
 
 export function createTrustPolicy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
@@ -136,6 +143,55 @@ export function createPermissionPolicy<
     createPolicyNode,
     targetValidObjective
   );
+}
+
+export function createResourcePolicy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  docString: string,
+  label: string,
+  accountId?: AccountID
+): {
+  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
+  events: TFinishEventMap[ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE][];
+} {
+  const targetValidObjective = findAnyValidObjective<IAMNodeEntity.ResourcePolicy>(
+    context.all_policy_creation_objectives,
+    context.nodes,
+    docString,
+    accountId,
+    IAMNodeEntity.ResourcePolicy
+  );
+
+  const createNodeRes = createIAMNode(
+    context,
+    docString,
+    label,
+    IAMNodeEntity.ResourcePolicy,
+    createPolicyNode,
+    targetValidObjective
+  );
+
+  if (!targetValidObjective) return createNodeRes;
+
+  const { updatedContext } = updateConnectionEdges(
+    createNodeRes.updatedContext,
+    createNodeRes.createdNode,
+    createNodeRes.updatedContext.nodes.find(
+      node => node.id === targetValidObjective.resource_node_id
+    )!,
+    true,
+    {
+      data: {
+        source: createNodeRes.createdNode.id,
+        target: targetValidObjective?.created_node_parent_id,
+      },
+    }
+  );
+
+  return {
+    updatedContext,
+    events: createNodeRes.events,
+  };
 }
 
 export function createSCP<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(

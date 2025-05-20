@@ -16,6 +16,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../config';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -58,9 +59,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
     all_policy_creation_objectives: [],
     objectives_map: {
-      [IAMNodeEntity.Role]: { objectives: ROLE_CREATION_OBJECTIVES, current_index: 0 },
+      ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
       [IAMNodeEntity.Policy]: { objectives: POLICY_CREATION_OBJECTIVES, current_index: 0 },
-      [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.Role]: { objectives: ROLE_CREATION_OBJECTIVES, current_index: 0 },
     },
   },
   on: {

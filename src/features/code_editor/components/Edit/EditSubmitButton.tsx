@@ -5,12 +5,12 @@ import _ from 'lodash';
 import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import codeEditorPopupStore from '@/stores/code-editor-popup-store';
-import { IAMScriptableEntity } from '@/types';
+import { IAMCodeDefinedEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface EditSubmitButtonProps {
   nodeId: string;
-  selectedIAMEntity: IAMScriptableEntity;
+  selectedIAMEntity: IAMCodeDefinedEntity;
 }
 
 export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({

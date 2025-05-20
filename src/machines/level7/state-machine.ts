@@ -15,6 +15,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../config';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -50,9 +51,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     nodes_connnections: [],
     all_policy_creation_objectives: [],
     objectives_map: {
-      [IAMNodeEntity.Role]: { objectives: ROLE_CREATION_OBJECTIVES, current_index: 0 },
+      ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
       [IAMNodeEntity.Policy]: { objectives: POLICY_CREATION_OBJECTIVES, current_index: 0 },
-      [IAMNodeEntity.SCP]: { objectives: [], current_index: 0 },
+      [IAMNodeEntity.Role]: { objectives: ROLE_CREATION_OBJECTIVES, current_index: 0 },
     },
   },
   on: {
@@ -157,7 +158,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
-        { type: 'next_policy_role_creation_objectives', params: { entity: IAMNodeEntity.Role } },
+        { type: 'next_policy_role_creation_objectives', params: { entity: IAMNodeEntity.Policy } },
       ],
       onDone: 'inside_level',
       initial: 'welcoming_message',

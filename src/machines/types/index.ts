@@ -11,7 +11,7 @@ import type {
   IAMAnyNode,
   IAMEdge,
   IAMGroupNode,
-  IAMScriptableEntity,
+  IAMCodeDefinedEntity,
   IAMUserNode,
   PolicyGrantedAccess,
 } from '@/types';
@@ -29,6 +29,7 @@ export type HelpBadge = {
 
 export enum ObjectiveType {
   POLICY_CREATION_OBJECTIVE = 'POLICY_CREATION_OBJECTIVE',
+  RESOURCE_POLICY_CREATION_OBJECTIVE = 'RESOURCE_POLICY_CREATION_OBJECTIVE',
   SCP_CREATION_OBJECTIVE = 'SCP_CREATION_OBJECTIVE',
   POLICY_EDIT_OBJECTIVE = 'POLICY_EDIT_OBJECTIVE',
   TRUST_POLICY_EDIT_OBJECTIVE = 'TRUST_POLICY_EDIT_OBJECTIVE',
@@ -39,6 +40,10 @@ export enum ObjectiveType {
 }
 
 export type BaseFinishEventMap = Record<ObjectiveType, string>;
+export type FinishEventMapWithDefaults<T extends Partial<Record<ObjectiveType, string>>> = {
+  [K in ObjectiveType]: K extends keyof T ? T[K] : never;
+};
+
 export type NodeConnection = {
   from: IAMAnyNode;
   to: IAMAnyNode;
@@ -106,6 +111,10 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
     };
     [IAMNodeEntity.Role]: {
       objectives: IAMRoleCreationObjective<TBaseFinishEventMap>[][];
+      current_index: number;
+    };
+    [IAMNodeEntity.ResourcePolicy]: {
+      objectives: IAMResourcePolicyCreationObjective<TBaseFinishEventMap>[][];
       current_index: number;
     };
   };
@@ -246,12 +255,18 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
 
 export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>
   extends BaseCreationObjective<TFinishEventMap> {
+  readonly entity: IAMNodeEntity.Policy;
+
   readonly type: ObjectiveType.POLICY_CREATION_OBJECTIVE;
   readonly initial_position?: string;
   readonly granted_accesses: PolicyGrantedAccess[];
   readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE];
-  // Override the `entity` type here
-  readonly entity: IAMNodeEntity.Policy;
+}
+
+export interface IAMResourcePolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>
+  extends Omit<IAMPolicyCreationObjective<TFinishEventMap>, 'type'> {
+  readonly type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE;
+  readonly resource_node_id: string;
 }
 
 export interface IAMSCPCreationObjective<TFinishEventMap extends BaseFinishEventMap>
@@ -281,7 +296,7 @@ export type AllPolicyCreationObjectives<TFinishEventMap extends BaseFinishEventM
 export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {
   readonly type: ObjectiveType.POLICY_EDIT_OBJECTIVE;
   readonly entity_id: string;
-  readonly entity: IAMScriptableEntity;
+  readonly entity: IAMCodeDefinedEntity;
   readonly json_schema: Schema;
   readonly allow_new_lines?: boolean;
 
