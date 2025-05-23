@@ -4,6 +4,7 @@ import { MANAGED_POLICIES } from '@/machines/config';
 import {
   BaseFinishEventMap,
   IAMPolicyCreationObjective,
+  IAMResourcePolicyCreationObjective,
   IAMRoleCreationObjective,
   IAMSCPCreationObjective,
   IAMUserGroupCreationObjective,
@@ -11,6 +12,7 @@ import {
 } from '@/machines/types';
 import trustPolicySchema from '@/schemas/aws-iam-role-trust-policy-schema.json';
 import { IAMNodeEntity } from '@/types';
+import { PartialWithRequired } from '@/types/common';
 
 export type RoleCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> = Partial<
   Omit<IAMRoleCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'>
@@ -27,6 +29,15 @@ export type SCPCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap
 export type UserGroupCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> = Partial<
   Omit<IAMUserGroupCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'>
 >;
+
+export type ResourcePolicyCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> =
+  PartialWithRequired<
+    Omit<
+      IAMResourcePolicyCreationObjective<TFinishEventMap>,
+      'id' | 'finished' | 'type' | 'entity'
+    >,
+    'resource_node_id'
+  >;
 
 function getTemplateRoleCreationObjectiveAttributes<
   TFinishEventMap extends BaseFinishEventMap,
@@ -114,6 +125,19 @@ export function createUserGroupCreationObjective<TFinishEventMap extends BaseFin
     finished: false,
     type: ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE,
     ...IAM_USER_GROUP_CREATION_OBJECTIVE_TEMPLATE,
+    ...props,
+  };
+}
+
+export function createResourcePolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
+  props: ResourcePolicyCreationObjectiveInput<TFinishEventMap>
+): IAMResourcePolicyCreationObjective<TFinishEventMap> {
+  return {
+    finished: false,
+    id: _.uniqueId(`resource-policy-creation-objective-`),
+    type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
+    entity: IAMNodeEntity.ResourcePolicy,
+    ...getTemplatePolicyCreationObjectiveAttributes(),
     ...props,
   };
 }

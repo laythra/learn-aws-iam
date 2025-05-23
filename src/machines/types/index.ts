@@ -161,6 +161,12 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       account_id?: AccountID;
     }
   | {
+      type: StatefulStateMachineEvent.AddIAMResourcePolicyNode;
+      doc_string: string;
+      label: string;
+      account_id?: AccountID;
+    }
+  | {
       type: StatefulStateMachineEvent.AddIAMSCPNode;
       doc_string: string;
       label: string;
@@ -253,10 +259,11 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
   finished: boolean;
 }
 
+// TODO: Create a common interface for IAMPolicyCreationObjective and IAMResourcePolicyCreationObjective
+// to avoid code duplication
 export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>
   extends BaseCreationObjective<TFinishEventMap> {
   readonly entity: IAMNodeEntity.Policy;
-
   readonly type: ObjectiveType.POLICY_CREATION_OBJECTIVE;
   readonly initial_position?: string;
   readonly granted_accesses: PolicyGrantedAccess[];
@@ -264,9 +271,12 @@ export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEv
 }
 
 export interface IAMResourcePolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>
-  extends Omit<IAMPolicyCreationObjective<TFinishEventMap>, 'type'> {
+  extends BaseCreationObjective<TFinishEventMap> {
+  readonly entity: IAMNodeEntity.ResourcePolicy;
   readonly type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE;
+  readonly initial_position?: string;
   readonly resource_node_id: string;
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE];
 }
 
 export interface IAMSCPCreationObjective<TFinishEventMap extends BaseFinishEventMap>

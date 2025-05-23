@@ -11,6 +11,7 @@ import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-acti
 import { resolveInitialEdges } from './utils/initial-edges-resolver';
 import {
   createPermissionPolicy,
+  createResourcePolicy,
   createSCP,
   createTrustPolicy,
   createUserGroupNode,
@@ -146,14 +147,17 @@ export const createStateMachineSetup = <
             docString,
             label,
             accountId,
-          }: { docString: string; accountId?: AccountID; label: string }
+            policyNodeType,
+          }: {
+            docString: string;
+            accountId?: AccountID;
+            label: string;
+            policyNodeType: IAMNodeEntity.Policy | IAMNodeEntity.ResourcePolicy;
+          }
         ) => {
-          const createPermissionPolicyResult = createPermissionPolicy(
-            context,
-            docString,
-            label,
-            accountId
-          );
+          const createFn =
+            policyNodeType === IAMNodeEntity.Policy ? createPermissionPolicy : createResourcePolicy;
+          const createPermissionPolicyResult = createFn(context, docString, label, accountId);
 
           const { updatedContext } = createPermissionPolicyResult;
 
