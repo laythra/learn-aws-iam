@@ -54,6 +54,12 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
         doc_string: content,
         label,
       });
+    } else if (selectedIAMEntity == IAMNodeEntity.ResourcePolicy) {
+      levelActor.send({
+        type: StatefulStateMachineEvent.AddIAMResourcePolicyNode,
+        doc_string: content,
+        label,
+      });
     }
 
     codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });

@@ -24,16 +24,22 @@ import codeEditorStateStore from '../stores/code-editor-state-store';
 import { ElementID } from '@/config/element-ids';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
 import CodeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
-import { CustomTheme, IAMNodeEntity } from '@/types';
+import { CustomTheme, IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
 
 interface CodeEditorProps {}
 
 export const CodeEditor: React.FC<CodeEditorProps> = () => {
   const theme = useTheme<CustomTheme>();
-  const [isPolicyTabRestricted, isRoleTabRestricted, isSCPTabRestricted] = useIsElementRestricted([
+  const [
+    isPolicyTabRestricted,
+    isRoleTabRestricted,
+    isSCPTabRestricted,
+    isResourcePolicyTabRestricted,
+  ] = useIsElementRestricted([
     ElementID.CodeEditorPolicyTab,
     ElementID.CodeEditorRoleTab,
     ElementID.CodeEditorSCPTab,
+    ElementID.CodeEditorResourcePolicyTab,
   ]);
 
   const [isCodeEditorOpen, codeEditorMode, selectedNodeId] = useSelector(
@@ -58,23 +64,27 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
   };
 
   useEffect(() => {
-    if (!isPolicyTabRestricted) {
+    const entityOrder = [
+      { restricted: isPolicyTabRestricted, entity: IAMNodeEntity.Policy },
+      { restricted: isRoleTabRestricted, entity: IAMNodeEntity.Role },
+      { restricted: isSCPTabRestricted, entity: IAMNodeEntity.SCP },
+      { restricted: isResourcePolicyTabRestricted, entity: IAMNodeEntity.ResourcePolicy },
+    ];
+
+    const availableEntity = entityOrder.find(item => !item.restricted);
+    if (availableEntity) {
       codeEditorStateStore.send({
         type: 'setSelectedIAMEntity',
-        payload: IAMNodeEntity.Policy,
-      });
-    } else if (!isRoleTabRestricted) {
-      codeEditorStateStore.send({
-        type: 'setSelectedIAMEntity',
-        payload: IAMNodeEntity.Role,
-      });
-    } else if (!isSCPTabRestricted) {
-      codeEditorStateStore.send({
-        type: 'setSelectedIAMEntity',
-        payload: IAMNodeEntity.SCP,
+        payload: availableEntity.entity as IAMCodeDefinedEntity,
+        // payload: availableEntity.entity,
       });
     }
-  }, [isPolicyTabRestricted, isRoleTabRestricted]);
+  }, [
+    isPolicyTabRestricted,
+    isRoleTabRestricted,
+    isSCPTabRestricted,
+    isResourcePolicyTabRestricted,
+  ]);
 
   return (
     <>
