@@ -49,12 +49,13 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
 
   const editorView = useRef<EditorView | null>(null);
   const unfinishedCreationObjectives = allCreationObjectives.filter(
-    objective => objective.validate_inside_code_editor && !objective.finished
+    objective =>
+      objective.validate_inside_code_editor &&
+      !objective.finished &&
+      objective.entity === selectedIAMEntity
   );
 
-  const objectiveToTargetInEditor = unfinishedCreationObjectives.find(
-    objective => objective.entity === selectedIAMEntity
-  );
+  const objectiveToTargetInEditor = unfinishedCreationObjectives[0];
 
   const initialContent = objectiveToTargetInEditor?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
   const getWarnings = (): string[] => {

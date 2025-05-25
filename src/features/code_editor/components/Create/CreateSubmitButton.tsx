@@ -59,9 +59,11 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
         type: StatefulStateMachineEvent.AddIAMResourcePolicyNode,
         doc_string: content,
         label,
+        account_id: accountId,
       });
     }
 
+    // TODO: Two actions can be merged into one
     codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });
     codeEditorPopupStore.send({ type: 'close' });
   };
