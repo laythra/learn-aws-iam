@@ -12,6 +12,7 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../config';
 import { ElementID } from '@/config/element-ids';
+import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -68,7 +69,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     [StatefulStateMachineEvent.AddIAMPolicyNode]: {
       actions: {
         type: 'add_policy_node',
-        params: ({ event }) => ({ docString: event.doc_string, label: event.label }),
+        params: ({ event }) => ({
+          docString: event.doc_string,
+          label: event.label,
+          policyNodeType: IAMNodeEntity.Policy,
+        }),
       },
     },
     [StatefulStateMachineEvent.ConnectNodes]: {

@@ -1,7 +1,5 @@
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import s3ReadPolicySchema from '../schemas/policy/s3-read-policy-schema.json';
-import s3ReadWriteIdentityPolicySchema from '../schemas/policy/\
-s3-read-write-identity-policy-schema.json';
 import s3ReadWriteResourcePolicySchema from '../schemas/policy/\
 s3-read-write-resource-policy-schema.json';
 import { FinishEventMap, ResourcePolicyCreationFinishEvent } from '../types/finish-event-enums';
@@ -94,20 +92,6 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
         limit_new_lines: false,
         created_node_initial_position: 'bottom-left',
         account_id: AccountID.Trusting,
-        resource_node_id: ResourceNodeID.InsideLevelS3Bucket,
-      } satisfies Partial<IAMResourcePolicyCreationObjective<FinishEventMap>>,
-      {
-        type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
-        entity_id: ResourcePolicyNodeID.InsideLevelIdentityBasedPolicy,
-        entity: IAMNodeEntity.ResourcePolicy,
-        json_schema: s3ReadWriteIdentityPolicySchema,
-        on_finish_event: ResourcePolicyCreationFinishEvent.IN_LEVEL_IDENTITY_POLICY_CREATED,
-        validate_inside_code_editor: true,
-        validate_function: AJV_COMPILER.compile(s3ReadWriteIdentityPolicySchema),
-        initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
-        account_id: AccountID.Trusted,
-        limit_new_lines: false,
-        created_node_initial_position: 'bottom-right',
         resource_node_id: ResourceNodeID.InsideLevelS3Bucket,
       } satisfies Partial<IAMResourcePolicyCreationObjective<FinishEventMap>>,
     ].map(objective => createResourcePolicyCreationObjective(objective)),

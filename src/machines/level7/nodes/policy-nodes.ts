@@ -1,10 +1,10 @@
-import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { ResourceNodeID, ResourcePolicyNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { AccessLevel, type IAMPolicyNode } from '@/types';
 
 const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
-    id: PolicyNodeID.TutorialResourceBasedPolicy,
+    id: ResourcePolicyNodeID.TutorialResourceBasedPolicy,
     label: 's3-read-access',
     granted_accesses: [
       {
