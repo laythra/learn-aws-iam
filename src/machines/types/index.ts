@@ -236,7 +236,7 @@ export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> 
 };
 
 export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
-  id: string;
+  readonly id: string;
   readonly entity_id: string;
   readonly entity: unknown;
   readonly json_schema: Schema;
@@ -261,6 +261,7 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
 
 // TODO: Create a common interface for IAMPolicyCreationObjective and IAMResourcePolicyCreationObjective
 // to avoid code duplication
+// TODO: Rename IAMPolicyCreationObjective to IAMPermissionPolicyCreationObjective
 export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>
   extends BaseCreationObjective<TFinishEventMap> {
   readonly entity: IAMNodeEntity.Policy;

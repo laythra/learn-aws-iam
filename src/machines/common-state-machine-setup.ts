@@ -165,6 +165,7 @@ export const createStateMachineSetup = <
             nodes: updatedContext.nodes,
             edges: updatedContext.edges,
             nodes_connnections: updatedContext.nodes_connnections,
+            all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
           });
 
           createPermissionPolicyResult.events.forEach(event => {
@@ -186,6 +187,7 @@ export const createStateMachineSetup = <
             nodes: updatedContext.nodes,
             edges: updatedContext.edges,
             nodes_connnections: updatedContext.nodes_connnections,
+            policy_edit_objectives: updatedContext.policy_edit_objectives,
           });
 
           editPolicyResult.events.forEach(event => {
@@ -212,6 +214,7 @@ export const createStateMachineSetup = <
           enqueue.assign({
             nodes: updatedContext.nodes,
             role_creation_objectives: updatedContext.role_creation_objectives,
+            all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
           });
 
           events.forEach(event => {
@@ -230,6 +233,7 @@ export const createStateMachineSetup = <
           enqueue.assign({
             nodes: updatedContext.nodes,
             role_creation_objectives: updatedContext.role_creation_objectives,
+            all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
           });
 
           events.forEach(event => {

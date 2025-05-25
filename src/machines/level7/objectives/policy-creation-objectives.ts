@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-len
 import s3ReadWriteIdentityPolicySchema from '../schemas/policy/s3-read-write-identity-policy-schema.json';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';

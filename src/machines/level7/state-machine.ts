@@ -4,7 +4,10 @@ import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
-import { RESOURCE_POLICY_CREATION_OBJECTIVES } from './objectives/resource-policy-creation-objectives';
+// prettier-ignore
+import {
+  RESOURCE_POLICY_CREATION_OBJECTIVES
+} from './objectives/resource-policy-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
