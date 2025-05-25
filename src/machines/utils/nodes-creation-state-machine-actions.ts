@@ -59,7 +59,7 @@ function createIAMNode<
       editable: false,
       parent_id: targetValidObjective?.created_node_parent_id,
       ...additionalDataOverrides,
-    } as Partial<TNode['data']>,
+    } satisfies Partial<TNode['data']>,
     rootOverrides: {
       parentId: targetValidObjective?.created_node_parent_id,
     },
@@ -67,23 +67,27 @@ function createIAMNode<
 
   let updatedContext = produce(context, draftContext => {
     draftContext.nodes.push(newNode as WritableDraft<IAMAnyNode>);
+
+    if (targetValidObjective) {
+      draftContext.all_policy_creation_objectives.find(
+        objective => objective.id === targetValidObjective.id
+      )!.finished = true;
+
+      sideEffectsEvents.push(targetValidObjective.on_finish_event);
+    }
   });
 
   const nodeById = _.keyBy(updatedContext.nodes, 'id');
 
-  if (targetValidObjective) {
-    targetValidObjective.initial_edges?.forEach(edge => {
-      ({ updatedContext } = updateConnectionEdges(
-        updatedContext,
-        nodeById[edge.source],
-        nodeById[edge.target],
-        true,
-        { data: edge.data }
-      ));
-    });
-
-    sideEffectsEvents.push(targetValidObjective.on_finish_event);
-  }
+  targetValidObjective?.initial_edges?.forEach(edge => {
+    ({ updatedContext } = updateConnectionEdges(
+      updatedContext,
+      nodeById[edge.source],
+      nodeById[edge.target],
+      true,
+      { data: edge.data }
+    ));
+  });
 
   return { updatedContext, events: sideEffectsEvents, createdNode: newNode };
 }
@@ -141,7 +145,8 @@ export function createPermissionPolicy<
     label,
     IAMNodeEntity.Policy,
     createPolicyNode,
-    targetValidObjective
+    targetValidObjective,
+    { granted_accesses: targetValidObjective?.granted_accesses ?? [] }
   );
 }
 
