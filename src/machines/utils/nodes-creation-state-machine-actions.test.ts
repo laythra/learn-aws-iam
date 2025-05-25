@@ -53,14 +53,15 @@ describe('createPermissionPolicy', () => {
   });
 
   it('creates a new policy node with a matching objective and marks it as necessary', () => {
-    mockContext = createMockContext({});
+    const mockObjective = createPolicyCreationObjective({
+      on_finish_event: 'MOCK_EVENT',
+      initial_edges: [],
+    });
+    mockContext = createMockContext({
+      all_policy_creation_objectives: [mockObjective],
+    });
 
-    vi.mocked(findAnyValidObjective).mockReturnValue(
-      createPolicyCreationObjective({
-        on_finish_event: 'MOCK_EVENT',
-        initial_edges: [],
-      })
-    );
+    vi.mocked(findAnyValidObjective).mockReturnValue(mockObjective);
 
     const result = createPermissionPolicy(mockContext, mockDocString, mockLabel);
     const createdNode = result.updatedContext.nodes.find(

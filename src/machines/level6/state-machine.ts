@@ -104,6 +104,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             docString: event.doc_string,
             accountId: event.account_id,
             label: event.label,
+            policyNodeType: IAMNodeEntity.Policy,
           }),
         },
       ],

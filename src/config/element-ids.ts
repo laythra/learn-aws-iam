@@ -13,6 +13,7 @@ export enum ElementID {
   CodeEditorPolicyTab = 'code-editor-policy-tab',
   CodeEditorRoleTab = 'code-editor-role-tab',
   CodeEditorSCPTab = 'code-editor-scp-tab',
+  CodeEditorResourcePolicyTab = 'code-editor-resource-policy-tab',
   CodeEditorHelpButton = 'code-editor-help-button',
   IdentityCreationPopupGroupTab = 'identity-creation-popup-group-tab',
   IdentityCreationPopupUserTab = 'identity-creation-popup-user-tab',

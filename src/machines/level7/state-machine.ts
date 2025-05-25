@@ -4,14 +4,17 @@ import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
-import { ROLE_CREATION_OBJECTIVES } from './objectives/role-creation-objectives';
+// prettier-ignore
+import {
+  RESOURCE_POLICY_CREATION_OBJECTIVES
+} from './objectives/resource-policy-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import {
   EdgeConnectionFinishEvent,
   FinishEventMap,
-  PolicyCreationFinishEvent,
+  ResourcePolicyCreationFinishEvent,
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
@@ -26,7 +29,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level7_state_machine',
-  initial: 'inside_tutorial',
+  // initial: 'inside_tutorial',
+  initial: 'inside_level',
   context: {
     level_title: 'Resource Based Policies',
     level_description: 'Resource Based Policies',
@@ -50,10 +54,17 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     all_policy_creation_objectives: [],
+    restricted_element_ids: [ElementID.CodeEditorSCPTab, ElementID.CodeEditorRoleTab],
     objectives_map: {
       ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
-      [IAMNodeEntity.Policy]: { objectives: POLICY_CREATION_OBJECTIVES, current_index: 0 },
-      [IAMNodeEntity.Role]: { objectives: ROLE_CREATION_OBJECTIVES, current_index: 0 },
+      [IAMNodeEntity.Policy]: {
+        objectives: POLICY_CREATION_OBJECTIVES,
+        current_index: 0,
+      },
+      [IAMNodeEntity.ResourcePolicy]: {
+        objectives: RESOURCE_POLICY_CREATION_OBJECTIVES,
+        current_index: 1,
+      },
     },
   },
   on: {
@@ -65,6 +76,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             docString: event.doc_string,
             accountId: event.account_id,
             label: event.label,
+            policyNodeType: IAMNodeEntity.Policy,
           }),
         },
       ],
@@ -98,6 +110,19 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       }),
     },
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
+    [StatefulStateMachineEvent.AddIAMResourcePolicyNode]: {
+      actions: [
+        {
+          type: 'add_policy_node',
+          params: ({ event }) => ({
+            docString: event.doc_string,
+            label: event.label,
+            policyNodeType: IAMNodeEntity.ResourcePolicy,
+            accountId: event.account_id,
+          }),
+        },
+      ],
+    },
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [
         {
@@ -152,13 +177,16 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           params: {
             whitelisted_element_ids: [
               ElementID.NewEntityBtn,
-              ElementID.CodeEditorPolicyTab,
+              ElementID.CodeEditorResourcePolicyTab,
               ElementID.CreateRolesAndPoliciesMenuItem,
             ],
           },
         },
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
-        { type: 'next_policy_role_creation_objectives', params: { entity: IAMNodeEntity.Policy } },
+        {
+          type: 'next_policy_role_creation_objectives',
+          params: { entity: IAMNodeEntity.ResourcePolicy },
+        },
       ],
       onDone: 'inside_level',
       initial: 'welcoming_message',
@@ -194,7 +222,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             },
           ],
           on: {
-            [PolicyCreationFinishEvent.TUTORIAL_RESOURCE_BASED_POLICY_CREATED]: {
+            [ResourcePolicyCreationFinishEvent.TUTORIAL_RESOURCE_BASED_POLICY_CREATED]: {
               target: 'access_granted_popover',
               actions: [
                 {
@@ -265,7 +293,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             'next_edge_connection_objectives',
             {
               type: 'next_policy_role_creation_objectives',
-              params: { entity: IAMNodeEntity.Role },
+              params: { entity: IAMNodeEntity.ResourcePolicy },
+            },
+            {
+              type: 'next_policy_role_creation_objectives',
+              params: { entity: IAMNodeEntity.Policy },
             },
             'show_side_panel',
           ],
@@ -275,7 +307,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
               states: {
                 in_progress: {
                   on: {
-                    [PolicyCreationFinishEvent.IN_LEVEL_IDENTITY_POLICY_CREATED]: {
+                    [ResourcePolicyCreationFinishEvent.IN_LEVEL_IDENTITY_POLICY_CREATED]: {
                       target: 'finished',
                       actions: [
                         {
@@ -296,7 +328,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
               states: {
                 in_progress: {
                   on: {
-                    [PolicyCreationFinishEvent.IN_LEVEL_RESOURCE_BASED_POLICY_CREATED]: {
+                    [ResourcePolicyCreationFinishEvent.IN_LEVEL_RESOURCE_BASED_POLICY_CREATED]: {
                       target: 'finished',
                       actions: [
                         {

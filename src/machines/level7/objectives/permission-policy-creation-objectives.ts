@@ -1,14 +1,14 @@
-// eslint-disable-next-line max-len
-import s3ReadWriteIdentityPolicySchema from '../schemas/policy/s3-read-write-identity-policy-schema.json';
+import s3ReadWriteIdentityPolicySchema from '../schemas/policy/\
+s3-read-write-identity-policy-schema.json';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
-import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { PolicyNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { AccessLevel, IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
-export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
+export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
   [
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
@@ -22,14 +22,6 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       account_id: AccountID.Trusted,
       limit_new_lines: false,
       created_node_initial_position: 'bottom-right',
-      granted_accesses: [
-        {
-          target_node: ResourceNodeID.InsideLevelS3Bucket,
-          access_level: AccessLevel.ReadWrite,
-          target_handle: 'right',
-          source_handle: 'left',
-        },
-      ],
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];
