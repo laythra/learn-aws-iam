@@ -27,24 +27,51 @@ const POPUP_MSG2 = `
 `;
 
 const POPUP_MSG3 = `
-  As you have noticed, a **Resource Based Policy** is merely a normal permission policy
-  with the addition of the **Principal** field.
+  Service Control Policies (SCPs) are quite identical to
+  IAM policies in terms of syntax and structure.
+  The main difference is that SCPs act as guardrails for
+  your AWS accounts and organizational units (OUs),
 
-  The **Principal** field defines the entity that is allowed access to the resource,
-  and has the same format as the **Principal** field in a **Trust Policy**.
+  The next part of the level will be quite similar to the previous one,
+  with the addition of the \`condition\`
+  element, which allows you to add conditions to your policies.
 `;
 
 const POPUP_MSG4 = `
-  This level covered the basics of **Resource Based Policies** and how they can be used
-  to grant access to resources across different AWS accounts.
+  Policies whether **AWS Managed** or **Customer Managed** have the same structure:
 
-  Here are the list of policy types we've covered so far:
-  - **Identity Based Permission Policies**: attached to IAM entities (users, roles)
-  - **Resource Based Trust Policies**: attached to AWS resources (S3 buckets, SNS topics)
-  - **Trust Policies**: attached to IAM roles, specifying which entities can assume the role
+  * **Effect**: Whether the policy allows or denies the access
+  * **Action**: The specific actions that the policy allows or denies
+  * **Resource**: The resources to which the policy applies
 
-  The next level will introduce you to a new, powerful
-  type of policies called *Permission Boundaries* 🔥.
+  ~~~js
+  {
+    Version: "2012-10-17",
+    Statement: [
+      {
+        "Effect": "Allow", ::badge[ALLOWS SPECIFIED ACTIONS]::
+        "Action": ["s3:Get*", "s3:List*"], ::badge[LISTING ALL OBJECTS AND BUCKETS]::
+        "Resource": "*" ::badge[ALL S3 BUCKETS]::
+      }
+    ]
+  }|fullwidth
+  ~~~
+`;
+
+const POPUP_MSG5 = `
+  SCPs come in quite handy when you want to enforce
+  certain restrictions across multiple accounts or OUs.
+  They allow you to set policies that apply at the account or OU level.
+
+  This level covered a handful of essential concepts:
+  - **AWS Accounts**: Containers for your resources and IAM entities.
+  - **Organizational Units (OUs)**: Grouping multiple AWS accounts for better management.
+  - **Service Control Policies (SCPs)**: Guardrails that apply to accounts and OUs
+
+  The upcoming level will continue upon these concepts, where we will apply our SCPs
+  knownledge with something called **Tag Based Access Control**.
+
+  See you there! 👋
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
@@ -57,12 +84,17 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG2,
   },
   {
-    title: 'Resource Based Policies',
+    title: 'Adding guard rails on the account level',
     content: POPUP_MSG3,
   },
   {
-    title: 'Level Recap',
+    title: 'Conditional Policies',
     content: POPUP_MSG4,
+    go_to_next_level_button: true,
+  },
+  {
+    title: 'Level Recap',
+    content: POPUP_MSG5,
     go_to_next_level_button: true,
   },
 ];

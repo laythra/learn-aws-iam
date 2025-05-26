@@ -340,6 +340,8 @@ export const createStateMachineSetup = <
       }),
       clear_edges: assign({ edges: [] }),
       clear_nodes: assign({ nodes: [] }),
+      // TODO: Create an initial nodes resolver just like we have for edges
+      // Benificial for performing side effects when nodes are added, such as creating their associated edges and whatnot
       resolve_initial_edges: enqueueActions(({ context, enqueue }) => {
         const initialEdgesConfig = resolveInitialEdges(context);
 

@@ -43,6 +43,24 @@ const POPOVER_MSG7 = `
   Try hovering over the red edges.
 `;
 
+const POPOVER_MSG8 = `
+  The user \`Clark\` has access to a secret in another account. we want to block this access without
+  removing the IAM policy that allows it.
+`;
+
+const POPOVER_MSG9 = `
+  The OU has an SCP attached to it that allows full access to every aws service
+`;
+
+// const POPOVER_MSG89 = `
+//   User \`Clark\` can no longer access the secret despite having an IAM policy that allows it. 🔒
+// `;
+
+// const POPOVER_MSG90 = `
+//   Even with an SCP that allows full access, the new SCP blocked access to
+//   the secret because SCPs are intersected — the most restrictive applies.
+// `;
+
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: OUNodeID.Dev,
@@ -96,6 +114,22 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     element_id: ResourceNodeID.TutorialSecret1,
     popover_title: 'Access has been blocked',
     popover_content: POPOVER_MSG7,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'right',
+  },
+  {
+    element_id: UserNodeID.InsideLevelUser3,
+    popover_title: 'Access has been blocked',
+    popover_content: POPOVER_MSG8,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'right',
+  },
+  {
+    element_id: SCPNodeID.InLevelOUSCP,
+    popover_title: 'SCPs are intersected',
+    popover_content: POPOVER_MSG9,
     show_next_button: true,
     show_close_button: false,
     popover_placement: 'right',

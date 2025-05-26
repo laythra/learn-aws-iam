@@ -9,12 +9,22 @@ export const INITIAL_POLICIES = {
       },
     ],
   },
-  TUTORIA_SECRETS_READ_PERMISSION_POLICY: {
+  TUTORIAL_SECRETS_READ_PERMISSION_POLICY: {
     Version: '2012-10-17',
     Statement: [
       {
         Effect: 'Allow',
         Action: ['secretsmanager:GetSecretValue'],
+        Resource: '*',
+      },
+    ],
+  },
+  IN_LEVEL_INITIAL_SCP: {
+    Version: '2012-10-17',
+    Statement: [
+      {
+        Effect: 'Allow',
+        Action: '*',
         Resource: '*',
       },
     ],

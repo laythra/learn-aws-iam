@@ -2,6 +2,7 @@ import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
 
 export enum EdgeConnectionFinishEvent {
   TUTORIAL_SCP_ATTACHED_TO_OU = 'TUTORIAL_SCP_ATTACHED_TO_OU',
+  IN_LEVEL_SCP_ATTACHED_TO_OU = 'IN_LEVEL_SCP_ATTACHED_TO_OU',
 }
 
 export enum PolicyCreationFinishEvent {
@@ -12,6 +13,7 @@ export enum PolicyCreationFinishEvent {
 
 export enum SCPCreationFInishEvent {
   TUTORIAL_SCP_CREATED = 'TUTORIAL_SCP_CREATED',
+  IN_LEVEL_SCP_CREATED = 'IN_LEVEL_SCP_CREATED',
 }
 
 export type FinishEventMap = FinishEventMapWithDefaults<{

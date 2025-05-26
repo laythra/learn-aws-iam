@@ -5,15 +5,23 @@ export const UserNodeID = {
   InsideLevelUser1: uniqueId('user-'),
   InsideLevelUser2: uniqueId('user-'),
   InsideLevelUser3: uniqueId('user-'),
+  InsideLevelUser4: uniqueId('user-'),
 } as const;
 
 export const PolicyNodeID = {
   TutorialS3ReadPolicy: uniqueId('policy-'),
   InLevelResourceBasedPolicy: uniqueId('policy-'),
+  InLevelPermissionPolicy: uniqueId('policy-'),
+} as const;
+
+export const ResourcePolicyNodeID = {
+  InLevelResourceBasedPolicy: uniqueId('policy-'),
 } as const;
 
 export const SCPNodeID = {
   TutorialSCP: uniqueId('scp-'),
+  InLevelOUSCP: uniqueId('scp-'),
+  InLevelAccountSCP: uniqueId('scp-'),
 } as const;
 
 export const ResourceNodeID = {
