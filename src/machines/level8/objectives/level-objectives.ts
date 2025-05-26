@@ -8,8 +8,8 @@ const Objective1Description = `
 `;
 
 const Objective2Description = `
-  Attach the **Service Control Policy (SCP)**
-  you created in the previous step to the **OU**.
+  Create an **Service Control Policy (SCP)** to prevent the user \`Clark\`
+  from reading any secret from the **Secrets Manager**
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [
@@ -25,7 +25,7 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.ATTACH_TUTORIAL_SCP_TO_OU,
+      id: LevelObjectiveID.CREATE_IN_LEVEL_SCP,
       label: Objective2Description,
     },
   ],

@@ -61,4 +61,20 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
       ],
     } as Partial<IAMSCPCreationObjective<FinishEventMap>>,
   ].map(objective => createSCPCreationObjective(objective)),
+  [
+    {
+      type: ObjectiveType.SCP_CREATION_OBJECTIVE,
+      entity_id: SCPNodeID.InLevelAccountSCP,
+      entity: IAMNodeEntity.SCP,
+      json_schema: MANAGED_POLICIES.EmptyPolicy,
+      on_finish_event: SCPCreationFInishEvent.IN_LEVEL_SCP_CREATED,
+      validate_inside_code_editor: true,
+      validate_function: AJV_COMPILER.compile(tutorialSCPSchema),
+      initial_code: INITIAL_POLICIES.TUTORIAL_SCP,
+      limit_new_lines: false,
+      created_node_initial_position: 'left-center',
+      blocked_accesses: [getEdgeName(UserNodeID.TutorialFirstUser, ResourceNodeID.InLevelSecret1)],
+      initial_edges: [],
+    } satisfies Partial<IAMSCPCreationObjective<FinishEventMap>>,
+  ].map(objective => createSCPCreationObjective(objective)),
 ];

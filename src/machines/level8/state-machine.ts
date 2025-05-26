@@ -1,7 +1,7 @@
 import { assign } from 'xstate';
 
-import { INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
-import { INITIAL_TUTORIAL_NODES } from './nodes';
+import { INITIAL_IN_LEVEL_CONNECTIONS, INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
+import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { SCP_CREATION_OBJECTIVES } from './objectives/scp-creation-objectives';
@@ -29,14 +29,17 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level8_state_machine',
-  initial: 'inside_tutorial',
+  initial: 'inside_level',
   context: {
     level_title: 'Service Control Policies',
     level_description: 'Service Control Policies',
     level_number: 8,
-    next_popover_index: 0,
-    next_popup_index: 0,
-    next_fixed_popover_index: 0,
+    next_popover_index: 6,
+    next_popup_index: 2,
+    next_fixed_popover_index: 1,
+    // next_popover_index: 0,
+    // next_popup_index: 0,
+    // next_fixed_popover_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -57,7 +60,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
       [IAMNodeEntity.SCP]: { objectives: SCP_CREATION_OBJECTIVES, current_index: 0 },
     },
-    help_tips: ['ConnectNodes', 'CreatePolicies'],
+    // help_tips: ['ConnectNodes', 'CreatePolicies'],
   },
   on: {
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
@@ -250,16 +253,76 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       },
     },
     inside_level: {
+      initial: 'in_level_popup1',
       entry: [
-        // {
-        //   type: 'assign_nodes',
-        //   params: { nodes: INITIAL_IN_LEVEL_NODES },
-        // },
-        // assign({
-        //   initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
-        // }),
-        // 'resolve_initial_edges',
+        {
+          type: 'assign_nodes',
+          params: { nodes: INITIAL_IN_LEVEL_NODES },
+        },
+        assign({
+          initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
+        }),
+        'resolve_initial_edges',
+        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
+        'next_edge_connection_objectives',
       ],
+      states: {
+        in_level_popup1: {
+          entry: 'next_popup',
+          on: {
+            NEXT_POPUP: 'in_level_fixed_popover1',
+          },
+        },
+        in_level_fixed_popover1: {
+          entry: ['hide_popovers', 'hide_popups', 'show_fixed_popover'],
+          on: {
+            NEXT_FIXED_POPOVER: 'create_in_level_scp',
+          },
+        },
+        create_in_level_scp: {
+          entry: 'hide_fixed_popovers',
+          on: {
+            [SCPCreationFInishEvent.IN_LEVEL_SCP_CREATED]: 'scp_in_level_created',
+          },
+        },
+        scp_in_level_created: {
+          entry: ['next_edge_connection_objectives', 'enable_edges_management_ability'],
+          on: {
+            [EdgeConnectionFinishEvent.IN_LEVEL_SCP_ATTACHED_TO_OU]: {
+              target: 'scp_in_level_attached_to_ou_popover1',
+              actions: [
+                {
+                  type: 'change_objective_progress',
+                  params: {
+                    id: LevelObjectiveID.CREATE_IN_LEVEL_SCP,
+                    finished: true,
+                  },
+                },
+              ],
+            },
+          },
+        },
+        scp_in_level_attached_to_ou_popover1: {
+          entry: ['next_popover'],
+          on: {
+            NEXT_POPOVER: {
+              target: 'scp_in_level_attached_to_ou_popover2',
+            },
+          },
+        },
+        scp_in_level_attached_to_ou_popover2: {
+          entry: ['next_popover'],
+          on: {
+            NEXT_POPOVER: {
+              target: 'in_level_finished',
+            },
+          },
+        },
+        in_level_finished: {
+          type: 'final',
+          entry: 'next_popup',
+        },
+      },
     },
   },
 });

@@ -18,6 +18,29 @@ const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = _.zip(
   parent_id: AccountNodeID.Dev,
 }));
 
+const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
+  {
+    id: ResourceNodeID.InLevelSecret1,
+    label: 'slack-alert-token',
+    initial_position: 'left-center',
+    image: IAMNodeImage.Secret,
+    resource_type: IAMNodeResourceEntity.Secret,
+    layout_direction: 'horizontal',
+    horizontal_spacing: 10,
+    parent_id: AccountNodeID.Prod,
+  },
+  {
+    id: ResourceNodeID.InLevelSecret1,
+    label: 'slack-alert-token',
+    initial_position: 'left-center',
+    image: IAMNodeImage.Secret,
+    resource_type: IAMNodeResourceEntity.Secret,
+    layout_direction: 'horizontal',
+    horizontal_spacing: 10,
+    parent_id: AccountNodeID.Prod,
+  },
+];
+
 export const INITIAL_TUTORIAL_RESOURCE_NODES: IAMResourceNode[] = TUTORIAL_RESOURCE_NODES.map(
   nodeData =>
     createResourceNode({
@@ -26,4 +49,10 @@ export const INITIAL_TUTORIAL_RESOURCE_NODES: IAMResourceNode[] = TUTORIAL_RESOU
     })
 );
 
-export const INITIAL_IN_LEVEL_RESOURCE_NODES: IAMResourceNode[] = [];
+export const INITIAL_IN_LEVEL_RESOURCE_NODES: IAMResourceNode[] = IN_LEVEL_RESOURCE_NODES.map(
+  nodeData =>
+    createResourceNode({
+      dataOverrides: nodeData,
+      rootOverrides: { parentId: AccountNodeID.Prod, draggable: true },
+    })
+);
