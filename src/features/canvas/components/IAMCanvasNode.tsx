@@ -10,6 +10,7 @@ import _ from 'lodash';
 import ARNIconButton from './ARNIconButton';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
 import { ShimmerBackground } from './ShimmerBackground';
+import TagsIconButton from './TagsIconButton';
 import { CanvasStore } from '../stores/canvas-store';
 import { WithPopoverBox } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
@@ -38,7 +39,7 @@ enum AnimationState {
  * @param `data` The node data passed from React Flow.
  */
 export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
-  const { entity, label, handles, image, content, animations } = data;
+  const { entity, label, handles, image, content, animations, tags } = data;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
   const [selectedNodeId, openedNodeId] = useSelector(
     CanvasStore,
@@ -158,12 +159,11 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
         </Flex>
       </Flex>
       <HStack position='absolute' top={1} right={2}>
-        {arn && (
-          <ARNIconButton
-            arn={arn}
-            onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
-            onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+        {tags && (
+          <TagsIconButton
             placement='top-end'
+            tags={tags}
+            onOpenEvent={StatelessStateMachineEvent.IAMNodeTagsOpened}
           />
         )}
         {content && (
@@ -174,6 +174,15 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
             codeDescription={content}
             placement='top-end'
             editable={data.entity === IAMNodeEntity.Policy && data.editable}
+          />
+        )}
+
+        {arn && (
+          <ARNIconButton
+            arn={arn}
+            onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
+            onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+            placement='top-end'
           />
         )}
       </HStack>
