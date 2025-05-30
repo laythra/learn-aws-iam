@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 import {
   Modal,
@@ -76,15 +76,9 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
       codeEditorStateStore.send({
         type: 'setSelectedIAMEntity',
         payload: availableEntity.entity as IAMCodeDefinedEntity,
-        // payload: availableEntity.entity,
       });
     }
-  }, [
-    isPolicyTabRestricted,
-    isRoleTabRestricted,
-    isSCPTabRestricted,
-    isResourcePolicyTabRestricted,
-  ]);
+  }, [isCodeEditorOpen]);
 
   return (
     <>
