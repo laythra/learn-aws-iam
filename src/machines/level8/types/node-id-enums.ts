@@ -2,10 +2,11 @@ import { uniqueId } from 'lodash';
 
 export const UserNodeID = {
   TutorialFirstUser: uniqueId('user-'),
-  InsideLevelUser1: uniqueId('user-'),
-  InsideLevelUser2: uniqueId('user-'),
-  InsideLevelUser3: uniqueId('user-'),
-  InsideLevelUser4: uniqueId('user-'),
+  JuniorBruce: uniqueId('user-'),
+  SeniorWayne: uniqueId('user-'),
+  JuniorClark: uniqueId('user-'),
+  SeniorKent: uniqueId('user-'),
+  JuniorDiana: uniqueId('user-'),
 } as const;
 
 export const PolicyNodeID = {

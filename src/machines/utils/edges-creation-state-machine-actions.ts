@@ -13,6 +13,7 @@ import { createEdge } from '@/factories/edge-factory';
 import { theme } from '@/theme';
 import { IAMNodeEntity, PartialEdge, PolicyGrantedAccess } from '@/types';
 import {
+  IAMAccountNode,
   IAMAnyNode,
   IAMEdge,
   IAMGroupNode,
@@ -51,6 +52,8 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
   const edgeLabel = getEdgeLabel(sourceNode.data.entity, targetNode.data.entity);
   let validEdge: IAMEdge | undefined = undefined;
 
+  // Create an invalid edge that will be used if no valid edge is found
+  // This edge will be deletable
   const invalidEdge = createEdge({
     rootOverrides: {
       source: sourceNode.id,
@@ -410,6 +413,29 @@ const connectionStrategies = {
 
     return applyStrategy(updatedContext, SCPNode, OUNode, isInitialEdge, options, () => []);
   },
+  SCPToAccount: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+    context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+    SCPNode: IAMSCPNode,
+    AccountNode: IAMAccountNode,
+    isInitialEdge: boolean,
+    options: PartialEdge = {}
+  ) => {
+    const blockedEdgeIds = new Set(SCPNode.data.blocked_edges);
+
+    const updatedContext = produce(context, draft => {
+      draft.edges.forEach(edge => {
+        if (blockedEdgeIds.has(edge.id)) {
+          edge.data!.is_blocked = true;
+          edge.data!.hovering_label = 'Access blocked by SCP 🔒';
+          edge.data!.persistent_label = '🔒';
+          edge.data!.color = theme.colors.red[500];
+          edge.data!.hovering_color = theme.colors.red[500];
+        }
+      });
+    });
+
+    return applyStrategy(updatedContext, SCPNode, AccountNode, isInitialEdge, options, () => []);
+  },
   PolicyToResource: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
     policyNode: IAMPolicyNode,
@@ -517,6 +543,17 @@ export function updateConnectionEdges<
     isNodeOfEntity(targetNode, IAMNodeEntity.OU)
   ) {
     return connectionStrategies.SCPToOU(context, sourceNode, targetNode, isInitialEdge, options);
+  } else if (
+    isNodeOfEntity(sourceNode, IAMNodeEntity.SCP) &&
+    isNodeOfEntity(targetNode, IAMNodeEntity.Account)
+  ) {
+    return connectionStrategies.SCPToAccount(
+      context,
+      sourceNode,
+      targetNode,
+      isInitialEdge,
+      options
+    );
   } else if (
     isNodeOfEntity(sourceNode, IAMNodeEntity.Policy) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.Resource)

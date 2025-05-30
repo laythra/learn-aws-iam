@@ -310,6 +310,7 @@ export const createStateMachineSetup = <
           enqueue.assign({
             all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
             policy_creation_objectives: updatedContext.policy_creation_objectives,
+            objectives_map: updatedContext.objectives_map,
           });
         }
       ),

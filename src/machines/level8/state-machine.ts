@@ -29,17 +29,14 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level8_state_machine',
-  initial: 'inside_level',
+  initial: 'inside_tutorial',
   context: {
     level_title: 'Service Control Policies',
     level_description: 'Service Control Policies',
     level_number: 8,
-    next_popover_index: 6,
-    next_popup_index: 2,
-    next_fixed_popover_index: 1,
-    // next_popover_index: 0,
-    // next_popup_index: 0,
-    // next_fixed_popover_index: 0,
+    next_popover_index: 0,
+    next_popup_index: 0,
+    next_fixed_popover_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -56,11 +53,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     all_policy_creation_objectives: [],
+    restricted_element_ids: [ElementID.CodeEditorPolicyTab, ElementID.CodeEditorRoleTab],
     objectives_map: {
       ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
       [IAMNodeEntity.SCP]: { objectives: SCP_CREATION_OBJECTIVES, current_index: 0 },
     },
-    // help_tips: ['ConnectNodes', 'CreatePolicies'],
   },
   on: {
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
@@ -189,15 +186,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
               params: { entity: IAMNodeEntity.SCP },
             },
             {
-              type: 'update_restricted_element_ids',
-              params: {
-                restricted_element_ids: [
-                  ElementID.CodeEditorPolicyTab,
-                  ElementID.CodeEditorRoleTab,
-                ],
-              },
-            },
-            {
               type: 'update_red_dot_visibility',
               params: {
                 elementIds: [ElementID.NewEntityBtn, ElementID.CreateRolesAndPoliciesMenuItem],
@@ -264,23 +252,38 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         }),
         'resolve_initial_edges',
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
-        'next_edge_connection_objectives',
       ],
       states: {
         in_level_popup1: {
+          entry: 'next_popup',
+          on: {
+            NEXT_POPUP: 'in_level_popup2',
+          },
+        },
+        in_level_popup2: {
           entry: 'next_popup',
           on: {
             NEXT_POPUP: 'in_level_fixed_popover1',
           },
         },
         in_level_fixed_popover1: {
-          entry: ['hide_popovers', 'hide_popups', 'show_fixed_popover'],
+          entry: ['hide_popups', 'next_fixed_popover'],
+          on: {
+            NEXT_FIXED_POPOVER: 'in_level_fixed_popover2',
+          },
+        },
+        in_level_fixed_popover2: {
+          entry: ['next_fixed_popover'],
           on: {
             NEXT_FIXED_POPOVER: 'create_in_level_scp',
           },
         },
         create_in_level_scp: {
-          entry: 'hide_fixed_popovers',
+          entry: [
+            'hide_fixed_popovers',
+            'next_popover',
+            { type: 'next_policy_role_creation_objectives', params: { entity: IAMNodeEntity.SCP } },
+          ],
           on: {
             [SCPCreationFInishEvent.IN_LEVEL_SCP_CREATED]: 'scp_in_level_created',
           },
