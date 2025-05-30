@@ -14,6 +14,7 @@ import { TutorialPopup } from '@/components/Popup/TutorialPopup';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import RightSidePanel from '@/components/SidePanels/RightSidePanel';
 import { UnnecessaryEdgesNodesWarning } from '@/components/UnnecessaryEdgesNodesWarning';
+import { CodeEditor } from '@/features/code_editor';
 import { CustomTheme } from '@/types';
 
 interface CanvasContainerProps {}
@@ -25,6 +26,7 @@ const CanvasContainer: React.FC<CanvasContainerProps> = () => {
   );
   return (
     <Flex direction='row' h='100vh' w='100vw'>
+      <CodeEditor />
       <GithubCorner />
       <TutorialPopup />
       <MobileWarningPopup />

@@ -12,7 +12,6 @@ import {
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { ElementID } from '@/config/element-ids';
 import { withPopover } from '@/decorators/withPopover';
-import { CodeEditor } from '@/features/code_editor';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -43,7 +42,6 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
 
   return (
     <>
-      <CodeEditor />
       <IdentityCreationPopup />
       <Menu>
         <Box position='relative'>
