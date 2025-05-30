@@ -33,29 +33,45 @@ const POPUP_MSG3 = `
   your AWS accounts and organizational units (OUs),
 
   The next part of the level will be quite similar to the previous one,
-  with the addition of the \`condition\`
+  with the addition of the \`Condition\`
   element, which allows you to add conditions to your policies.
 `;
 
 const POPUP_MSG4 = `
-  Policies whether **AWS Managed** or **Customer Managed** have the same structure:
+  Here's a quick dive into the \`Condition\` element in IAM Policies,
+  it consists of three main parts:
 
-  * **Effect**: Whether the policy allows or denies the access
-  * **Action**: The specific actions that the policy allows or denies
-  * **Resource**: The resources to which the policy applies
+  * **Condition Operator**: The operator used to evaluate
+  the condition (e.g., \`Bool\`, \`StringEquals\`, etc.)
+  * **Condition Key**: The key that the condition evaluates (e.g., \`aws:MultiFactorAuthPresent\`)
+  * **Condition Value**: The value that the condition key must match for the policy to apply
+
+  &nbsp;
 
   ~~~js
   {
     Version: "2012-10-17",
     Statement: [
       {
-        "Effect": "Allow", ::badge[ALLOWS SPECIFIED ACTIONS]::
-        "Action": ["s3:Get*", "s3:List*"], ::badge[LISTING ALL OBJECTS AND BUCKETS]::
-        "Resource": "*" ::badge[ALL S3 BUCKETS]::
+        "Effect": "Deny", ::badge[DENIES SPECIFIED ACTIONS]::
+        "Action": ["*"], ::badge[ALL ACTIONS]::
+        "Resource": "*" ::badge[ALL AWS RESOURCES]::
+        "Condition": {
+          "Bool": { ::badge[CONDITION OPERATOR]::
+            "aws:MultiFactorAuthPresent": "false" ::badge[CONDITION KEY AND VALUE]::
+          }
+        }
       }
     ]
   }|fullwidth
   ~~~
+
+  &nbsp;
+
+  Notice the \`Condition\` element at the end of the policy.
+  The operator \`Bool\` checks whether a condition is either true or false.
+  In this case, the policy denies access to all actions and resources
+  if **Multi-Factor Authentication (MFA)** is not enabled for the principal.
 `;
 
 const POPUP_MSG5 = `
@@ -67,9 +83,11 @@ const POPUP_MSG5 = `
   - **AWS Accounts**: Containers for your resources and IAM entities.
   - **Organizational Units (OUs)**: Grouping multiple AWS accounts for better management.
   - **Service Control Policies (SCPs)**: Guardrails that apply to accounts and OUs
+  - **Condition Element**: Adds conditions to your policies for more granular control.
 
-  The upcoming level will continue upon these concepts, where we will apply our SCPs
-  knownledge with something called **Tag Based Access Control**.
+  The upcoming level will continue upon these concepts,
+  but we will start applying condititions more effectively
+  using something called **Tag Based Access Control (TBAC)**.
 
   See you there! 👋
 `;
@@ -90,10 +108,9 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: 'Conditional Policies',
     content: POPUP_MSG4,
-    go_to_next_level_button: true,
   },
   {
-    title: 'Level Recap',
+    title: 'Level 8 completed! 🔥',
     content: POPUP_MSG5,
     go_to_next_level_button: true,
   },

@@ -13,29 +13,36 @@ const TUTORIAL_USER_NODES: Partial<IAMUserNode['data']>[] = [
 
 const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
-    id: UserNodeID.InsideLevelUser1,
+    id: UserNodeID.SeniorWayne,
     label: 'senior-wayne',
     initial_position: 'bottom-right',
     horizontal_spacing: 80,
     parent_id: AccountNodeID.Prod,
   },
   {
-    id: UserNodeID.InsideLevelUser2,
+    id: UserNodeID.JuniorBruce,
     label: 'junior-bruce',
     initial_position: 'bottom-right',
     horizontal_spacing: 80,
     parent_id: AccountNodeID.Prod,
   },
   {
-    id: UserNodeID.InsideLevelUser3,
+    id: UserNodeID.JuniorClark,
     label: 'junior-clark',
     initial_position: 'top-right',
     layout_direction: 'vertical',
     parent_id: AccountNodeID.Staging,
   },
   {
-    id: UserNodeID.InsideLevelUser4,
+    id: UserNodeID.SeniorKent,
     label: 'senior-kent',
+    initial_position: 'top-right',
+    parent_id: AccountNodeID.Staging,
+    layout_direction: 'vertical',
+  },
+  {
+    id: UserNodeID.JuniorDiana,
+    label: 'junior-diana',
     initial_position: 'top-right',
     parent_id: AccountNodeID.Staging,
     layout_direction: 'vertical',

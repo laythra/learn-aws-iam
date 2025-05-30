@@ -20,7 +20,8 @@
         "required": [
           "Effect",
           "Action",
-          "Resource"
+          "Resource",
+          "Condition"
         ],
         "properties": {
           "Effect": {
@@ -50,6 +51,28 @@
           "Resource": {
             "type": "string",
             "const": "*"
+          },
+          "Condition": {
+            "type": "object",
+            "required": [
+              "StringLike"
+            ],
+            "properties": {
+              "StringLike": {
+                "type": "object",
+                "required": [
+                  "aws:username"
+                ],
+                "properties": {
+                  "aws:username": {
+                    "type": "string",
+                    "const": "junior-*"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
           }
         },
         "additionalProperties": false

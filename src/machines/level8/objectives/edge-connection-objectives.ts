@@ -34,8 +34,12 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       ],
       on_finish_event: EdgeConnectionFinishEvent.IN_LEVEL_SCP_ATTACHED_TO_OU,
       is_finished: false,
+
+      // TODO: Do we need established_edge_hovering_label and established_edge_target_handle
+      // if we can define this at the required_edges key level?
       established_edge_hovering_label: 'Attached To',
-      established_edge_target_handle: 'left',
+      established_edge_target_handle: 'top',
+      established_edge_source_handle: 'bottom',
     },
   ],
 ];
