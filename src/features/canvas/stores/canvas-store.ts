@@ -15,7 +15,9 @@ type CanvasStoreState = {
   selectedEdgeId?: string;
   selectedNodeId?: string;
   hoveredOverEdgeId?: string;
-  openedNodeId?: string;
+  nodeIdWithOpenedContent?: string;
+  nodeIdWithOpenedTags?: string;
+  nodeIdWithOpenedARN?: string;
 };
 
 type CanvasStoreEvents = {
@@ -27,7 +29,8 @@ type CanvasStoreEvents = {
   setEdges: { edges: IAMEdge[] };
   updateNodePosition: { nodeId: string; position: { x: number; y: number } };
   updateSelectedNodeId: { nodeId: string };
-  updateOpenedNodeId: { nodeId: string };
+  openNodePanel: { nodeId: string; panel: 'content' | 'tags' | 'arn' | undefined };
+  closeAllNodePanels: unknown; // No payload needed for this event
 };
 
 export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStoreEvents>(produce, {
@@ -62,8 +65,18 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
       context.nodes.forEach(node => (node.zIndex = 0));
       context.nodes.find(node => node.id == event.nodeId)!.zIndex = 10000;
     },
-    updateOpenedNodeId(context: CanvasStoreState, event: { nodeId: string }) {
-      context.openedNodeId = event.nodeId;
+    openNodePanel(
+      context: CanvasStoreState,
+      event: { nodeId: string; panel: 'content' | 'tags' | 'arn' | undefined }
+    ) {
+      context.nodeIdWithOpenedContent = event.panel === 'content' ? event.nodeId : undefined;
+      context.nodeIdWithOpenedTags = event.panel === 'tags' ? event.nodeId : undefined;
+      context.nodeIdWithOpenedARN = event.panel === 'arn' ? event.nodeId : undefined;
+    },
+    closeAllNodePanels(context: CanvasStoreState) {
+      context.nodeIdWithOpenedContent = undefined;
+      context.nodeIdWithOpenedTags = undefined;
+      context.nodeIdWithOpenedARN = undefined;
     },
   },
 });

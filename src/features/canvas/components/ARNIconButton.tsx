@@ -11,13 +11,14 @@ import {
   ChakraProps,
 } from '@chakra-ui/react';
 import { IdentificationIcon, ClipboardDocumentIcon } from '@heroicons/react/20/solid';
+import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { WithStateMachineEventIconButton } from '@/components/Decorated';
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface ARNIconButtonProps extends ChakraProps {
+  nodeId: string;
   arn: string;
   onOpenEvent: StatelessStateMachineEvent;
   onCopyEvent: StatelessStateMachineEvent;
@@ -25,6 +26,7 @@ interface ARNIconButtonProps extends ChakraProps {
 }
 
 const ARNIconButton: React.FC<ARNIconButtonProps> = ({
+  nodeId,
   arn,
   onOpenEvent,
   onCopyEvent,
@@ -32,10 +34,8 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
   ...styleProps
 }) => {
   const toast = useToast();
-  const levelActor = LevelsProgressionContext().useActorRef();
 
   const copyToClipboard = (): void => {
-    console.log(levelActor.getSnapshot().value);
     navigator.clipboard.writeText(arn);
     toast({
       title: 'ARN copied to clipboard',
@@ -45,8 +45,15 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
     });
   };
 
-  const closeOpenedNode = (): void => {
-    CanvasStore.send({ type: 'updateOpenedNodeId', nodeId: '-' });
+  const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedARN);
+  const isARNOpen = openedNodeId === nodeId;
+
+  const toggleNodeARNPopover = (): void => {
+    CanvasStore.send({
+      type: 'openNodePanel',
+      nodeId,
+      panel: isARNOpen ? undefined : 'arn',
+    });
   };
 
   return (
@@ -55,7 +62,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
       closeOnBlur={true}
       isLazy={true}
       closeDelay={0}
-      onOpen={closeOpenedNode}
+      isOpen={isARNOpen}
     >
       <PopoverTrigger>
         <WithStateMachineEventIconButton
@@ -67,6 +74,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
           height='16px'
           width='16px'
           minWidth='auto'
+          onClick={toggleNodeARNPopover}
           _hover={{ bg: 'gray.200', opacity: 1 }}
           {...styleProps}
         />

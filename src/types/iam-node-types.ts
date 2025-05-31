@@ -152,6 +152,11 @@ interface IAMNodeData extends Record<string, unknown> {
    * TODO: Use this to define which layout group the node belongs to
    */
   layout_group_id?: string;
+  /**
+   * Tags associated with the node.
+   * The first element of each pair (the key) must be unique across all tags.
+   */
+  tags: Array<[string, string]>;
 }
 
 interface IAMUserNodeData extends IAMNodeData {
