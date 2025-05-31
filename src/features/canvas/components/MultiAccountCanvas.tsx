@@ -138,6 +138,7 @@ const MultiAccountCanvas: React.FC = () => {
       >
         Trusting Account
         <ARNIconButton
+          nodeId={AccountID.Trusting}
           arn={AccountID.Trusting}
           onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
@@ -159,6 +160,7 @@ const MultiAccountCanvas: React.FC = () => {
       >
         Trusted Account
         <ARNIconButton
+          nodeId={AccountID.Trusted}
           arn={AccountID.Trusted}
           onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
           onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}

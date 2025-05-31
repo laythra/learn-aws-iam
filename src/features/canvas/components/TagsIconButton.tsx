@@ -12,25 +12,35 @@ import {
   PopoverHeader,
 } from '@chakra-ui/react';
 import { TagIcon } from '@heroicons/react/16/solid';
+import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { WithStateMachineEventIconButton } from '@/components/Decorated';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface TagsIconButtonProps extends ChakraProps {
+  nodeId: string;
   onOpenEvent: StatelessStateMachineEvent;
   tags: Array<[string, string]>;
   placement?: PlacementWithLogical;
 }
 
 const TagsIconButton: React.FC<TagsIconButtonProps> = ({
+  nodeId,
   onOpenEvent,
   tags,
   placement = 'end-end',
   ...styleProps
 }) => {
-  const closeOpenedNode = (): void => {
-    CanvasStore.send({ type: 'updateOpenedNodeId', nodeId: '-' });
+  const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedTags);
+  const areTagsOpen = openedNodeId === nodeId;
+
+  const toggleNodeTagsPopover = (): void => {
+    CanvasStore.send({
+      type: 'openNodePanel',
+      nodeId,
+      panel: areTagsOpen ? undefined : 'tags',
+    });
   };
 
   return (
@@ -38,8 +48,8 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
       placement={placement}
       closeOnBlur={true}
       isLazy={true}
+      isOpen={areTagsOpen}
       closeDelay={0}
-      onOpen={closeOpenedNode}
     >
       <PopoverTrigger>
         <WithStateMachineEventIconButton
@@ -51,6 +61,7 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
           height='16px'
           width='16px'
           minWidth='auto'
+          onClick={toggleNodeTagsPopover}
           _hover={{ bg: 'gray.200', opacity: 1 }}
           {...styleProps}
         />

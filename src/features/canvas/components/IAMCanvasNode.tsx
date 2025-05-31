@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, memo } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
@@ -41,11 +41,7 @@ enum AnimationState {
 export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const { entity, label, handles, image, content, animations, tags } = data;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
-  const [selectedNodeId, openedNodeId] = useSelector(
-    CanvasStore,
-    state => [state.context.selectedNodeId, state.context.openedNodeId],
-    _.isEqual
-  );
+  const selectedNodeId = useSelector(CanvasStore, state => state.context.selectedNodeId);
 
   const [animationsState, setAnimationsState] = useState<Record<string, AnimationState>>({});
   const [scope, animate] = useAnimate();
@@ -163,13 +159,13 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
           <TagsIconButton
             placement='top-end'
             tags={tags}
+            nodeId={id}
             onOpenEvent={StatelessStateMachineEvent.IAMNodeTagsOpened}
           />
         )}
         {content && (
           <IAMNodeInfoButton
             nodeId={id}
-            opened={openedNodeId === id}
             label={label}
             codeDescription={content}
             placement='top-end'
@@ -179,6 +175,7 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
 
         {arn && (
           <ARNIconButton
+            nodeId={id}
             arn={arn}
             onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
             onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
@@ -209,4 +206,4 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   );
 };
 
-export default IAMCanvasNode;
+export default memo(IAMCanvasNode);

@@ -16,6 +16,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
+import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
@@ -31,7 +32,6 @@ import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 interface IAMNodeInfoButtonProps {
   nodeId: string;
   label: string;
-  opened: boolean;
   editable?: boolean;
   verboseDescription?: string;
   codeDescription?: string;
@@ -41,21 +41,21 @@ interface IAMNodeInfoButtonProps {
 const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
   nodeId,
   label,
-  opened,
   verboseDescription,
   codeDescription,
   editable = false,
   placement = 'end-end',
 }) => {
   const popoverContentRef = useRef<HTMLDivElement>(null);
-  const toggleNodeContentPopover = (): void => {
-    const isContentOpened = CanvasStore.getSnapshot().context.openedNodeId === nodeId;
+  const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedContent);
+  const isContentOpen = openedNodeId === nodeId;
 
-    if (isContentOpened) {
-      CanvasStore.send({ type: 'updateOpenedNodeId', nodeId: '-' });
-    } else {
-      CanvasStore.send({ type: 'updateOpenedNodeId', nodeId });
-    }
+  const toggleNodeContentPopover = (): void => {
+    CanvasStore.send({
+      type: 'openNodePanel',
+      nodeId,
+      panel: isContentOpen ? undefined : 'content',
+    });
   };
 
   const { isRedDotEnabledForElement } = useAnimatedRedDot({
@@ -81,7 +81,13 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
   }, []);
 
   return (
-    <Popover placement={placement} closeOnBlur={true} isLazy={true} closeDelay={0} isOpen={opened}>
+    <Popover
+      placement={placement}
+      closeOnBlur={true}
+      isLazy={true}
+      closeDelay={0}
+      isOpen={isContentOpen}
+    >
       <PopoverTrigger>
         <GuardedIconButtonWithStateMachineEvent
           elementid={ElementID.IAMNodeContentButton}
@@ -105,7 +111,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
           </Text>
         </PopoverHeader>
         <WithStateMachineEventPopoverCloseButton
-          onClick={() => CanvasStore.send({ type: 'updateOpenedNodeId', nodeId: '-' })}
+          onClick={() => CanvasStore.send({ type: 'closeAllNodePanels' })}
           event={StatelessStateMachineEvent.IAMNodeContentClosed}
         />
         <PopoverBody textAlign='left'>
