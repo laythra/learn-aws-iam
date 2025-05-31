@@ -1,5 +1,4 @@
 export enum LevelObjectiveID {
-  CREATE_TUTORIAL_SCP = 'CREATE_TUTORIAL_SCP',
-  ATTACH_TUTORIAL_SCP_TO_OU = 'ATTACH_TUTORIAL_SCP_TO_OU',
-  CREATE_IN_LEVEL_SCP = 'CREATE_IN_LEVEL_SCP',
+  GRANT_TUTORIAL_USER_EC2_TERMINATE_ACCESS = 'grant_tutorial_user_ec2_terminate_access',
+  CREATE_IN_LEVEL_SCP = 'create_in_level_scp',
 }

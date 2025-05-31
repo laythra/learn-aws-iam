@@ -1,6 +1,6 @@
 import {
   AccountNodeID,
-  OUNodeID,
+  PolicyNodeID,
   ResourceNodeID,
   SCPNodeID,
   UserNodeID,
@@ -9,19 +9,16 @@ import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/machines/types';
 
 const POPOVER_MSG1 = `
-  This is a regular **IAM User** which has some tags attached to it.
-  Click on the tags icon to left of the ARN icon to see the tags.
+  This is a regular EC2 instance, but it has some tags attached to it.
+  Click on the tags 🏷️ icon to view them
 `;
 
 const POPOVER_MSG2 = `
-  an OU could contain multiple **AWS Accounts**.
-  Think of it as a logical grouping of accounts. Right now, it contains only one Account.
+  Let's create a **Permission Policy** that allows the creator of this EC2 instance to terminate it.
 `;
 
 const POPOVER_MSG3 = `
-  This represents an **AWS Account**.
-  An AWS account serves as a secure and isolated container for your cloud resources,
-  enabling you to manage permissions, billing, and resource organization effectively.
+  Attach the policy to both users
 `;
 
 const POPOVER_MSG4 = `
@@ -60,7 +57,7 @@ const POPOVER_MSG10 = `
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
-    element_id: UserNodeID.Satoru,
+    element_id: ResourceNodeID.TutorialEC2Instance2,
     popover_title: 'Tags',
     popover_content: POPOVER_MSG1,
     show_next_button: false,
@@ -68,23 +65,23 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'top',
   },
   {
-    element_id: OUNodeID.Dev,
-    popover_title: 'Organization Unit',
+    element_id: ElementID.NewEntityBtn,
+    popover_title: 'Create a Permission Policy',
     popover_content: POPOVER_MSG2,
-    show_next_button: true,
+    show_next_button: false,
     show_close_button: false,
-    popover_placement: 'left',
+    popover_placement: 'bottom',
   },
   {
-    element_id: AccountNodeID.Dev,
-    popover_title: 'AWS Account',
+    element_id: PolicyNodeID.TutorialEC2TerminatePolicy,
+    popover_title: 'Apply the Policy',
     popover_content: POPOVER_MSG3,
-    show_next_button: true,
+    show_next_button: false,
     show_close_button: false,
-    popover_placement: 'right-end',
+    popover_placement: 'top',
   },
   {
-    element_id: UserNodeID.Satoru,
+    element_id: UserNodeID.James,
     popover_title: 'IAM User',
     popover_content: POPOVER_MSG4,
     show_next_button: true,
@@ -108,7 +105,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'right-end',
   },
   {
-    element_id: ResourceNodeID.TutorialSecret1,
+    element_id: ResourceNodeID.InLevelSecret1,
     popover_title: 'Access has been blocked',
     popover_content: POPOVER_MSG7,
     show_next_button: true,

@@ -1,7 +1,8 @@
 import { uniqueId } from 'lodash';
 
 export const UserNodeID = {
-  Satoru: uniqueId('user-'),
+  James: uniqueId('user-'),
+  Bond: uniqueId('user-'),
   JuniorBruce: uniqueId('user-'),
   SeniorWayne: uniqueId('user-'),
   JuniorClark: uniqueId('user-'),
@@ -10,7 +11,7 @@ export const UserNodeID = {
 } as const;
 
 export const PolicyNodeID = {
-  TutorialS3ReadPolicy: uniqueId('policy-'),
+  TutorialEC2TerminatePolicy: uniqueId('policy-'),
   InLevelResourceBasedPolicy: uniqueId('policy-'),
   InLevelPermissionPolicy: uniqueId('policy-'),
 } as const;
@@ -26,10 +27,13 @@ export const SCPNodeID = {
 } as const;
 
 export const ResourceNodeID = {
-  TutorialSecret1: uniqueId('secret-'),
-  TutorialSecret2: uniqueId('secret-'),
-  TutorialSecret3: uniqueId('secret-'),
+  TutorialEC2Instance1: uniqueId('resource-'),
+  TutorialEC2Instance2: uniqueId('resource-'),
+  TutorialEC2Instance3: uniqueId('resource-'),
+  TutorialEC2Instance4: uniqueId('resource-'),
   InLevelSecret1: uniqueId('secret-'),
+  InLevelSecret2: uniqueId('secret-'),
+  InLevelSecret3: uniqueId('secret-'),
 } as const;
 
 export const AccountNodeID = {

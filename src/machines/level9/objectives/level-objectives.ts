@@ -3,8 +3,8 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/machines/types';
 
 const Objective1Description = `
-  Create your first **Service Control Policy (SCP)**
-  which should prevent reading any secret from the **Secrets Manager**
+  Grant the user \`satoru\` terminate access
+  to the **EC2** instances which were created by him
 `;
 
 const Objective2Description = `
@@ -17,7 +17,7 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.CREATE_TUTORIAL_SCP,
+      id: LevelObjectiveID.GRANT_TUTORIAL_USER_EC2_TERMINATE_ACCESS,
       label: Objective1Description,
     },
   ],

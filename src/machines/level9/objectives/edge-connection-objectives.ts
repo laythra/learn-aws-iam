@@ -1,5 +1,5 @@
 import { EdgeConnectionFinishEvent, FinishEventMap } from '../types/finish-event-enums';
-import { AccountNodeID, OUNodeID, SCPNodeID } from '../types/node-id-enums';
+import { AccountNodeID, PolicyNodeID, SCPNodeID, UserNodeID } from '../types/node-id-enums';
 import { createEdge } from '@/factories/edge-factory';
 import { EdgeConnectionObjective, ObjectiveType } from '@/machines/types';
 
@@ -10,12 +10,27 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       required_edges: [
         createEdge({
           rootOverrides: {
-            source: SCPNodeID.TutorialSCP,
-            target: OUNodeID.Dev,
+            source: PolicyNodeID.TutorialEC2TerminatePolicy,
+            target: UserNodeID.James,
           },
         }),
       ],
-      on_finish_event: EdgeConnectionFinishEvent.TUTORIAL_SCP_ATTACHED_TO_OU,
+      on_finish_event: EdgeConnectionFinishEvent.TUTORIAL_POLICY_CONNECTED_TO_USER1,
+      is_finished: false,
+      established_edge_hovering_label: 'Attached To',
+      established_edge_target_handle: 'left',
+    },
+    {
+      type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
+      required_edges: [
+        createEdge({
+          rootOverrides: {
+            source: PolicyNodeID.TutorialEC2TerminatePolicy,
+            target: UserNodeID.Bond,
+          },
+        }),
+      ],
+      on_finish_event: EdgeConnectionFinishEvent.TUTORIAL_POLICY_CONNECTED_TO_USER2,
       is_finished: false,
       established_edge_hovering_label: 'Attached To',
       established_edge_target_handle: 'left',
