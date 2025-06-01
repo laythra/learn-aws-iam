@@ -12,6 +12,7 @@ export enum AccessLevel {
   Read = 'Read',
   Write = 'Write',
   ReadWrite = 'Read/Write',
+  Delete = 'Delete',
   Full = 'Full',
 }
 
@@ -71,6 +72,14 @@ export interface PolicyGrantedAccess {
   readonly access_level: AccessLevel;
   readonly target_handle: string;
   readonly source_handle?: string;
+
+  /**
+   * The source node from which the access is granted
+   * This key is used for conditional access policies
+   * where the access is granted based on the source node
+   * e.g. a policy that grants access to a resource only if the request comes from a specific user or group
+   */
+  readonly source_node?: string;
 }
 
 export interface PolicyBlockedAccess {

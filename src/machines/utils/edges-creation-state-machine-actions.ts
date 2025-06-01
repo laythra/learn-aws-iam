@@ -119,23 +119,28 @@ function createEdgesFromGrantedAccesses(
   sourceNode: IAMAnyNode,
   targetNode: IAMAnyNode
 ): IAMEdge[] {
-  return grantedAccesses.map(access =>
-    createEdge({
-      rootOverrides: {
-        source: sourceId,
-        target: access.target_node,
-        targetHandle: access.target_handle,
-        sourceHandle: access.source_handle,
-        deletable: false,
-      },
-      dataOverrides: {
-        hovering_label: access.access_level,
-        parent_edge_id: parentEdgeId,
-        source_node: sourceNode,
-        target_node: targetNode,
-      },
+  return grantedAccesses
+    .filter(grantedAccess => {
+      // Filter out accesses that are not applicable for the target node to which the edge is being created
+      return !grantedAccess.source_node || grantedAccess.source_node === targetNode.id;
     })
-  );
+    .map(access =>
+      createEdge({
+        rootOverrides: {
+          source: sourceId,
+          target: access.target_node,
+          targetHandle: access.target_handle,
+          sourceHandle: access.source_handle,
+          deletable: false,
+        },
+        dataOverrides: {
+          hovering_label: access.access_level,
+          parent_edge_id: parentEdgeId,
+          source_node: sourceNode,
+          target_node: targetNode,
+        },
+      })
+    );
 }
 
 function updateNodeConnectionsMap<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(

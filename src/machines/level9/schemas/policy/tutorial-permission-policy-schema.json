@@ -20,12 +20,13 @@
         "required": [
           "Effect",
           "Action",
-          "Resource"
+          "Resource",
+          "Condition"
         ],
         "properties": {
           "Effect": {
             "type": "string",
-            "const": "Deny"
+            "const": "Allow"
           },
           "Action": {
             "oneOf": [
@@ -34,7 +35,7 @@
                 "uniqueItems": true,
                 "contains": {
                   "enum": [
-                    "secretsmanager:GetSecretValue"
+                    "ec2:TerminateInstances"
                   ]
                 },
                 "minItems": 1
@@ -42,7 +43,7 @@
               {
                 "type": "string",
                 "enum": [
-                  "secretsmanager:GetSecretValue"
+                  "ec2:TerminateInstances"
                 ]
               }
             ]
@@ -50,6 +51,28 @@
           "Resource": {
             "type": "string",
             "const": "*"
+          },
+          "Condition": {
+            "type": "object",
+            "required": [
+              "StringEquals"
+            ],
+            "properties": {
+              "StringEquals": {
+                "type": "object",
+                "required": [
+                  "ec2:ResourceTag/CreatedBy"
+                ],
+                "properties": {
+                  "ec2:ResourceTag/CreatedBy": {
+                    "type": "string",
+                    "const": "${aws:username}"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
           }
         },
         "additionalProperties": false

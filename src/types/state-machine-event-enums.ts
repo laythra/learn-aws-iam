@@ -16,6 +16,7 @@ export enum StatelessStateMachineEvent {
   IAMNodeARNCopied = 'IAM_NODE_ARN_COPIED',
   IAMNodeTagsOpened = 'IAM_NODE_TAGS_OPENED',
   IAMNodeTutorialPopoverClosed = 'IAM_NODE_TUTORIAL_POPOVER_CLOSED',
+  IAMNodeTagsPopoverClosed = 'IAM_NODE_TAGS_POPOVER_CLOSED',
   HidePopovers = 'HIDE_POPOVERS',
   HideHelpPopover = 'HIDE_HELP_POPOVER',
   ShowHelpPopover = 'SHOW_HELP_POPOVER',

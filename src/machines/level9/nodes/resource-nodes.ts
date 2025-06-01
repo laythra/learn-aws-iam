@@ -5,17 +5,22 @@ import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { IAMNodeImage, IAMNodeResourceEntity, type IAMResourceNode } from '@/types';
 
 const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = _.zip(
-  [ResourceNodeID.TutorialSecret1, ResourceNodeID.TutorialSecret2, ResourceNodeID.TutorialSecret3],
-  ['github-webhook-token', 'salesforce-integration-token', 'slack-notification-token']
-).map(([id, label]) => ({
+  [
+    ResourceNodeID.TutorialEC2Instance1,
+    ResourceNodeID.TutorialEC2Instance2,
+    ResourceNodeID.TutorialEC2Instance3,
+    ResourceNodeID.TutorialEC2Instance4,
+  ],
+  ['ec2-instance-1', 'ec2-instance-2', 'ec2-instance-3', 'ec2-instance-4'],
+  ['james', 'bond', 'james', 'bond']
+).map(([id, label, creator]) => ({
   id,
   label,
-  initial_position: 'bottom-right',
-  image: IAMNodeImage.Secret,
-  resource_type: IAMNodeResourceEntity.Secret,
+  initial_position: 'center',
+  image: IAMNodeImage.Server,
+  resource_type: IAMNodeResourceEntity.EC2Instance,
   layout_direction: 'horizontal',
-  horizontal_spacing: 80,
-  parent_id: AccountNodeID.Dev,
+  tags: [['CreatedBy', creator!]],
 }));
 
 const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
@@ -45,7 +50,7 @@ export const INITIAL_TUTORIAL_RESOURCE_NODES: IAMResourceNode[] = TUTORIAL_RESOU
   nodeData =>
     createResourceNode({
       dataOverrides: nodeData,
-      rootOverrides: { parentId: AccountNodeID.Dev, draggable: true },
+      rootOverrides: { draggable: true },
     })
 );
 

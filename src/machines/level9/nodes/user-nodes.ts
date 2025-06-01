@@ -4,13 +4,14 @@ import { type IAMUserNode } from '@/types';
 
 const TUTORIAL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
-    id: UserNodeID.Satoru,
-    label: 'satoru',
-    initial_position: 'center',
-    tags: [
-      ['grade', 'Special'],
-      ['ability', 'Limitless'],
-    ],
+    id: UserNodeID.James,
+    label: 'james',
+    initial_position: 'bottom-center',
+  },
+  {
+    id: UserNodeID.Bond,
+    label: 'bond',
+    initial_position: 'bottom-center',
   },
 ];
 
