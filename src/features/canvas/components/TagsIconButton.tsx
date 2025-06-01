@@ -6,16 +6,22 @@ import {
   PopoverContent,
   type PlacementWithLogical,
   ChakraProps,
-  UnorderedList,
-  ListItem,
   PopoverBody,
   PopoverHeader,
+  HStack,
+  TagLabel,
+  VStack,
+  Tag,
+  Text,
 } from '@chakra-ui/react';
 import { TagIcon } from '@heroicons/react/16/solid';
 import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { WithStateMachineEventIconButton } from '@/components/Decorated';
+import {
+  WithStateMachineEventIconButton,
+  WithStateMachineEventPopoverCloseButton,
+} from '@/components/Decorated';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface TagsIconButtonProps extends ChakraProps {
@@ -68,17 +74,26 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
       </PopoverTrigger>
       <PopoverContent width='auto'>
         <PopoverHeader fontWeight='bold' fontSize='md'>
+          <WithStateMachineEventPopoverCloseButton
+            onClick={() => CanvasStore.send({ type: 'closeAllNodePanels' })}
+            event={StatelessStateMachineEvent.IAMNodeTagsPopoverClosed}
+          />
           Tags
         </PopoverHeader>
         <PopoverBody py={2}>
-          <UnorderedList spacing={1}>
+          <VStack spacing={2}>
             {tags.map(([key, val]) => (
-              <ListItem key={key}>
-                <span style={{ fontWeight: 'bold' }}>{key}:</span>
-                <span style={{ marginLeft: '4px' }}>{val}</span>
-              </ListItem>
+              <HStack key={key} spacing={1} alignItems='center'>
+                <Tag>
+                  <TagLabel fontWeight='700'>{key}</TagLabel>
+                </Tag>
+                <Text> : </Text>
+                <Tag>
+                  <TagLabel>{val}</TagLabel>
+                </Tag>
+              </HStack>
             ))}
-          </UnorderedList>
+          </VStack>
         </PopoverBody>
       </PopoverContent>
     </Popover>

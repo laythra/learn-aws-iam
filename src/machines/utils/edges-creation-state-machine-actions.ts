@@ -122,7 +122,7 @@ function createEdgesFromGrantedAccesses(
   return grantedAccesses
     .filter(grantedAccess => {
       // Filter out accesses that are not applicable for the target node to which the edge is being created
-      return !grantedAccess.target_node || grantedAccess.source_node === targetNode.id;
+      return !grantedAccess.source_node || grantedAccess.source_node === targetNode.id;
     })
     .map(access =>
       createEdge({

@@ -196,11 +196,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
             }),
           ],
           on: {
-            IAM_NODE_ARN_OPENED: 'copy_arn',
+            [StatelessStateMachineEvent.IAMNodeARNOpened]: 'copy_arn',
           },
         },
         copy_arn: {
-          entry: 'hide_popovers',
+          entry: ['hide_popovers'],
           on: {
             [StatelessStateMachineEvent.IAMNodeARNCopied]: 'create_your_custom_policy_popover',
           },
