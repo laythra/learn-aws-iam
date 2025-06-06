@@ -11,7 +11,7 @@ export interface IAMCanvasNodeProps {
 
 export const AccountCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   return (
-    <WithPopoverBox elementid={id} zIndex={20}>
+    <WithPopoverBox data-element-id={id} zIndex={20}>
       <Box
         position='absolute'
         top={0}

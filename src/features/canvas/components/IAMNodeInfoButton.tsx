@@ -90,7 +90,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
     >
       <PopoverTrigger>
         <GuardedIconButtonWithStateMachineEvent
-          elementid={ElementID.IAMNodeContentButton}
+          data-element-id={ElementID.IAMNodeContentButton}
           event={StatelessStateMachineEvent.IAMNodeContentOpened}
           aria-label='info'
           icon={<CodeBracketIcon />}

@@ -46,7 +46,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
       <Menu>
         <Box position='relative'>
           <TutorialGuardedMenuButton
-            elementid={ElementID.NewEntityBtn}
+            data-element-id={ElementID.NewEntityBtn}
             isDisabled={disableEntityButton}
             as={IconButton}
             size='sm'
@@ -63,7 +63,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
         </Box>
         <MenuList>
           <GuardedMenuItemWithEventAndPopover
-            elementid={ElementID.CreateEntitiesMenuItem}
+            data-element-id={ElementID.CreateEntitiesMenuItem}
             event={StatelessStateMachineEvent.CreateIAMIdentityPopupOpened}
             onClick={openIdentityCreator}
           >
@@ -72,7 +72,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
 
           <GuardedMenuItemWithEventAndPopover
             onClick={openCodeEditor}
-            elementid={ElementID.CreateRolesAndPoliciesMenuItem}
+            data-element-id={ElementID.CreateRolesAndPoliciesMenuItem}
             event={StatelessStateMachineEvent.CreateIAMPolicyRoleWindowOpened}
           >
             Roles & Policies

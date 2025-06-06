@@ -62,7 +62,7 @@ const RightSidePanel: React.FC = () => {
             </Popover>
           </HStack>
           <Divider my={2} />
-          <WithPopoverBox mt={2} overflowY='auto' elementid={ElementID.ObjectivesSidePanel}>
+          <WithPopoverBox mt={2} overflowY='auto' data-element-id={ElementID.ObjectivesSidePanel}>
             <List spacing={3}>
               {Object.values(levelObjectives).map((objective, index) => {
                 return (

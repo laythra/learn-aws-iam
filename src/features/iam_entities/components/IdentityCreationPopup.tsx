@@ -127,7 +127,10 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
         <ModalHeader>
           <Flex justifyContent='space-between'>
             <Text>New {_.upperFirst(iamIdentityEntity)}</Text>
-            <WithPopoverBox elementid={ElementID.IAMIdentitySelectorTypeForCreation} fontSize='8px'>
+            <WithPopoverBox
+              data-element-id={ElementID.IAMIdentitySelectorTypeForCreation}
+              fontSize='8px'
+            >
               <Tabs
                 onChange={handleTabChange}
                 variant='soft-rounded'
@@ -148,7 +151,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
               {iamIdentityEntity === IAMNodeEntity.User ? 'User Name' : 'Group Name'}
             </FormLabel>
             <WithPopoverInput
-              elementid={ElementID.IAMIdentityNameInput}
+              data-element-id={ElementID.IAMIdentityNameInput}
               value={getNameFieldVal()}
               onChange={handleNameChange}
             />

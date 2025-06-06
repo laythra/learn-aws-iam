@@ -200,7 +200,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   }, [withPopoverElementId]);
 
   return (
-    <WithPopoverBox elementid={id} ref={ref}>
+    <WithPopoverBox data-element-id={id} ref={ref}>
       <WithElementidIAMCanvasNode data={data} id={id} />
     </WithPopoverBox>
   );

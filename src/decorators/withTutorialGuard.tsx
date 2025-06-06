@@ -12,12 +12,12 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
  * TODO: Convert this into a hook
  */
 export const withTutorialGuard = <
-  T extends { isDisabled?: boolean; elementid: string },
+  T extends { isDisabled?: boolean; 'data-element-id': string },
   TRef = HTMLElement,
 >(
   WrappedComponent: React.FC<T>
 ): ForwardRefExoticComponent<PropsWithoutRef<T> & React.RefAttributes<TRef>> => {
-  const TutorialGuardedComponent = forwardRef<TRef, T>(({ elementid, ...props }, ref) => {
+  const TutorialGuardedComponent = forwardRef<TRef, T>(({ ...props }, ref) => {
     const [inTutorialState, whitelistedElementIds, blackListedElementIds] =
       LevelsProgressionContext().useSelector(
         state => [
@@ -28,8 +28,8 @@ export const withTutorialGuard = <
         _.isEqual
       );
 
-    const isWhitelisted = whitelistedElementIds?.includes(elementid) ?? false;
-    const isRestricted = blackListedElementIds?.includes(elementid) ?? false;
+    const isWhitelisted = whitelistedElementIds?.includes(props['data-element-id']) ?? false;
+    const isRestricted = blackListedElementIds?.includes(props['data-element-id']) ?? false;
 
     const shouldHide = isRestricted || (inTutorialState && !isWhitelisted);
 
@@ -37,7 +37,7 @@ export const withTutorialGuard = <
       return null;
     }
 
-    return <WrappedComponent {...(props as T)} id={elementid} ref={ref} />;
+    return <WrappedComponent {...(props as T)} id={props['data-element-id']} ref={ref} />;
   });
 
   TutorialGuardedComponent.displayName = `TutorialGuardedComponent(${
