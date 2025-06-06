@@ -1,5 +1,6 @@
 export enum ElementID {
   NewEntityBtn = 'new-entity-btn',
+  IAMIdentityCreatorPopup = 'iam-identity-creator-popup',
   IAMIdentityNameInput = 'iam-identity-name',
   IAMIdentitySelectorTypeForCreation = 'iam-identity-selector-type-for-creation',
   IAMPolicyRoleSelectorTypeForCreation = 'iam-policy-role-selector-type-for-creation',
@@ -10,6 +11,7 @@ export enum ElementID {
   IAMNodeContentEditButton = 'iam-node-content-edit-button',
   RightSidePanelToggleButton = 'right-side-panel-toggle-button',
   IAMNodeContentCloseButton = 'iam-node-content-close-button',
+  TutorialPopoverCloseButton = 'tutorial-popover-close-button',
   CodeEditorPolicyTab = 'code-editor-policy-tab',
   CodeEditorRoleTab = 'code-editor-role-tab',
   CodeEditorSCPTab = 'code-editor-scp-tab',

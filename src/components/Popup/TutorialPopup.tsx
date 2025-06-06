@@ -37,15 +37,12 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
   if (!popupContent) return null;
 
   return (
-    <Modal
-      isOpen={showPopups}
-      onClose={() => {}}
-      isCentered
-      motionPreset='slideInBottom'
-      data-element-id={`popup-${popupContent.title}`}
-    >
+    <Modal isOpen={showPopups} onClose={() => {}} isCentered motionPreset='slideInBottom'>
       <ModalOverlay />
-      <ModalContent maxW={theme.sizes.modalsMaxWidthInPixels}>
+      <ModalContent
+        maxW={theme.sizes.modalsMaxWidthInPixels}
+        data-element-id={popupContent.id || 'default-popup-id'} // TODO: Remove fallback ID when all popups have IDs
+      >
         <ModalHeader fontWeight='700' fontSize={24} pt={6}>
           {popupContent.title}
         </ModalHeader>

@@ -205,6 +205,11 @@ export type PopoverTutorialMessage = {
 };
 
 export type PopupTutorialMessage = {
+  /**
+   * The ID of the popup, used for testing purposes.
+   * TODO: Make it required when the popup is used in the tutorial.
+   */
+  id?: string;
   title: string;
   content: string;
   image?: string;

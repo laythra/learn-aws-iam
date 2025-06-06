@@ -103,7 +103,7 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG_5,
   },
   {
-    title: 'Phenomenal work! 🎉️',
+    title: 'Level 3 completed! 🔥',
     content: POPUP_MSG_6,
     go_to_next_level_button: true,
   },
