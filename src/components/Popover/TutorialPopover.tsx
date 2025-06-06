@@ -13,6 +13,7 @@ import Markdown from 'react-markdown';
 
 import { PopoverNextButton } from './PopoverNextButton';
 import { HelpImage } from '../HelpComponents/HelpImage';
+import { ElementID } from '@/config/element-ids';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
 
@@ -64,7 +65,12 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
         >
           {label}
         </PopoverHeader>
-        {showCloseButton && <PopoverCloseButton onClick={onCloseClick} />}
+        {showCloseButton && (
+          <PopoverCloseButton
+            onClick={onCloseClick}
+            data-element-id={ElementID.TutorialPopoverCloseButton}
+          />
+        )}
         {description && (
           <PopoverBody>
             <Markdown components={markdownComponents} rehypePlugins={[remarkChakra]}>

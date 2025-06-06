@@ -123,7 +123,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
   return (
     <Modal isOpen={isIdentityCreatorOpen} onClose={closeIdentityCreator}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent data-element-id={ElementID.IAMIdentityCreatorPopup}>
         <ModalHeader>
           <Flex justifyContent='space-between'>
             <Text>New {_.upperFirst(iamIdentityEntity)}</Text>

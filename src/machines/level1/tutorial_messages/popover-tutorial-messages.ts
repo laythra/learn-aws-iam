@@ -44,15 +44,18 @@ const POPOVER_MSG8 = `
   How about we create your own **IAM User** and grant it the same access to the **S3 bucket**?
 `;
 
-const POPOVER_MSG9 = `
+// This step intentionally has no message.
+const POPOVER_MSG9 = ``;
+
+const POPOVER_MSG10 = `
   You should know the drill by now - attach the **IAM Policy** to the **IAM User**
 `;
 
-const POPOVER_MSG10 = `
+const POPOVER_MSG11 = `
   There you have it! Both **IAM Users** have been granted read access to the **S3 bucket**.
 `;
 
-const POPOVER_MSG11 = `
+const POPOVER_MSG12 = `
   By the way, you can always check your objectives on the right side of the screen.
 `;
 
@@ -124,7 +127,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: ElementID.IAMIdentityNameInput,
     popover_title: "Enter your IAM User's name",
-    popover_content: ``,
+    popover_content: POPOVER_MSG9,
     show_next_button: false,
     show_close_button: false,
     popover_placement: 'start',
@@ -132,7 +135,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: UserNodeID.FirstUser,
     popover_title: 'Final Step',
-    popover_content: POPOVER_MSG9,
+    popover_content: POPOVER_MSG10,
     show_next_button: false,
     show_close_button: true,
     popover_placement: 'start',
@@ -140,7 +143,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: UserNodeID.FirstUser,
     popover_title: 'Level 1 Completed! 🎉',
-    popover_content: POPOVER_MSG10,
+    popover_content: POPOVER_MSG11,
     show_next_button: true,
     show_close_button: false,
     popover_placement: 'start',
@@ -148,7 +151,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: ElementID.ObjectivesSidePanel,
     popover_title: 'Your level objectives',
-    popover_content: POPOVER_MSG11,
+    popover_content: POPOVER_MSG12,
     show_next_button: true,
     show_close_button: false,
     popover_placement: 'start',
