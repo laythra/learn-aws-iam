@@ -8,11 +8,11 @@ import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 /**
  * `withPopover` is a decorator that wraps a component with a popover.
- * * Each passed component must have a unique string `elementid` prop.
+ * * Each passed component must have a unique string `'data-element-id'` prop.
  * @param {React.FC<T>} WrappedComponent The component to wrap with a popover.
  * @returns The wrapped component with a popover.
  */
-export const withPopover = <T extends { elementid: string }, R = HTMLElement>(
+export const withPopover = <T extends { 'data-element-id': string }, R = HTMLElement>(
   WrappedComponent: React.FC<T>
 ): ForwardRefExoticComponent<PropsWithoutRef<T> & React.RefAttributes<R>> => {
   const WithPopover = forwardRef<R, T>((props, ref) => {
@@ -22,7 +22,7 @@ export const withPopover = <T extends { elementid: string }, R = HTMLElement>(
       _.isEqual
     );
 
-    const popoverOpen = showPopovers && popoverContent?.element_id === props.elementid;
+    const popoverOpen = showPopovers && popoverContent?.element_id === props['data-element-id'];
 
     const goToNextPopOver = (): void => {
       machineActor.send({ type: 'NEXT_POPOVER' });
@@ -43,6 +43,7 @@ export const withPopover = <T extends { elementid: string }, R = HTMLElement>(
         imagePath={popoverContent?.image_path}
         onNextClick={goToNextPopOver}
         onCloseClick={closePopover}
+        elementId={props['data-element-id']}
       >
         <WrappedComponent {...props} ref={ref} />
       </TutorialPopover>

@@ -18,7 +18,7 @@ export const IAMUserCreationPopupSection: React.FC<IAMUserCreationPopupSectionPr
       <FormControl>
         <FormLabel>User Name</FormLabel>
         <WithPopoverInput
-          elementid='username'
+          data-element-id='username'
           value={userName}
           onChange={e => setUserName(e.target.value)}
         />
