@@ -27,6 +27,7 @@ interface TutorialPopoverProps {
   imagePath?: string;
   onNextClick: () => void;
   onCloseClick: () => void;
+  elementId: string;
   containerRef?: React.RefObject<HTMLElement>;
 }
 
@@ -41,21 +42,20 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
   imagePath,
   onNextClick,
   onCloseClick,
+  elementId,
 }) => {
   return (
     <Popover
       isOpen={isOpen}
       placement={placement}
-      isLazy={true}
       closeOnEsc={showCloseButton}
-      closeDelay={100}
       closeOnBlur={showCloseButton}
     >
       <PopoverTrigger>
         <Box>{children}</Box>
       </PopoverTrigger>
 
-      <PopoverContent>
+      <PopoverContent data-element-id={`popover-${elementId}`} variants={{ exit: {}, enter: {} }}>
         <PopoverArrow />
         <PopoverHeader
           fontWeight='semibold'

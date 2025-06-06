@@ -37,7 +37,13 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
   if (!popupContent) return null;
 
   return (
-    <Modal isOpen={showPopups} onClose={() => {}} isCentered motionPreset='slideInBottom'>
+    <Modal
+      isOpen={showPopups}
+      onClose={() => {}}
+      isCentered
+      motionPreset='slideInBottom'
+      data-element-id={`popup-${popupContent.title}`}
+    >
       <ModalOverlay />
       <ModalContent maxW={theme.sizes.modalsMaxWidthInPixels}>
         <ModalHeader fontWeight='700' fontSize={24} pt={6}>

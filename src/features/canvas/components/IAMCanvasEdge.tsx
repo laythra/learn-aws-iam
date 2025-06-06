@@ -48,7 +48,7 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
 
   return (
     <>
-      <g onClick={() => CanvasStore.send({ type: 'selectEdge', edgeId: id })}>
+      <g onClick={() => CanvasStore.send({ type: 'selectEdge', edgeId: id })} data-element-id={id}>
         <BaseEdge
           path={edgePath}
           style={{

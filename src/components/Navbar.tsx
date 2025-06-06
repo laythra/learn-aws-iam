@@ -80,7 +80,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
             </Text>
           </HStack>
 
-          <NewEntityButtonWithPopover elementid={ElementID.NewEntityBtn} />
+          <NewEntityButtonWithPopover data-element-id={ElementID.NewEntityBtn} />
           <Box position='relative'>
             <IconButton
               onClick={toggleSidePanel}
