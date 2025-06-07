@@ -3,14 +3,7 @@ import { AccountNodeID, SCPNodeID } from '../types/node-id-enums';
 import { createSCPNode } from '@/factories/nodes/scp-node-factory';
 import { IAMSCPNode } from '@/types';
 
-const TUTORIAL_SCP_NODES: Partial<IAMSCPNode['data']>[] = [
-  {
-    id: SCPNodeID.TutorialSCP,
-    label: 'secrets-read-access',
-    initial_position: 'bottom-left',
-    parent_id: AccountNodeID.Dev,
-  },
-];
+const TUTORIAL_SCP_NODES: Partial<IAMSCPNode['data']>[] = [];
 
 const IN_LEVEL_SCP_NODES: Partial<IAMSCPNode['data']>[] = [
   {
