@@ -11,9 +11,8 @@ export const UserNodeID = {
 } as const;
 
 export const PolicyNodeID = {
-  TutorialEC2TerminatePolicy: uniqueId('policy-'),
-  InLevelResourceBasedPolicy: uniqueId('policy-'),
   InLevelPermissionPolicy: uniqueId('policy-'),
+  TutorialEC2TerminatePolicy: uniqueId('policy-'),
 } as const;
 
 export const ResourcePolicyNodeID = {
@@ -21,7 +20,6 @@ export const ResourcePolicyNodeID = {
 } as const;
 
 export const SCPNodeID = {
-  TutorialSCP: uniqueId('scp-'),
   InLevelOUSCP: uniqueId('scp-'),
   InLevelAccountSCP: uniqueId('scp-'),
 } as const;

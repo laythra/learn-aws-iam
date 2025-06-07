@@ -22,6 +22,7 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
     initial_position: 'bottom-right',
     horizontal_spacing: 80,
     parent_id: AccountNodeID.Prod,
+    tags: [['role', 'senior']],
   },
   {
     id: UserNodeID.JuniorBruce,
@@ -29,6 +30,7 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
     initial_position: 'bottom-right',
     horizontal_spacing: 80,
     parent_id: AccountNodeID.Prod,
+    tags: [['role', 'junior']],
   },
   {
     id: UserNodeID.JuniorClark,
@@ -36,6 +38,7 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
     initial_position: 'top-right',
     layout_direction: 'vertical',
     parent_id: AccountNodeID.Staging,
+    tags: [['role', 'junior']],
   },
   {
     id: UserNodeID.SeniorKent,
@@ -43,6 +46,7 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
     initial_position: 'top-right',
     parent_id: AccountNodeID.Staging,
     layout_direction: 'vertical',
+    tags: [['role', 'senior']],
   },
   {
     id: UserNodeID.JuniorDiana,
@@ -50,6 +54,7 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
     initial_position: 'top-right',
     parent_id: AccountNodeID.Staging,
     layout_direction: 'vertical',
+    tags: [['role', 'junior']],
   },
 ];
 

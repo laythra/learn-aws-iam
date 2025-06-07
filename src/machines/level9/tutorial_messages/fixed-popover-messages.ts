@@ -30,6 +30,11 @@ const FIXED_POPOVER_MSG3 = `
   Click next to head to the next section of this level.
 `;
 
+const FIXED_POPOVER_MSG4 = `
+  Similiar to the previous level, we will be revoking the \`slack-alert-token\` secret
+  from Junior users, this time using their corresponding tags. Click ***Next*** to continue.
+`;
+
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
   {
     popover_title: 'Introduction to EC2 Instance Tags',
@@ -48,6 +53,13 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
   {
     popover_title: 'You did it! 🔥',
     popover_content: FIXED_POPOVER_MSG3,
+    position: 'top-left',
+    show_close_button: false,
+    show_next_button: true,
+  },
+  {
+    popover_title: 'TBAC In Action',
+    popover_content: FIXED_POPOVER_MSG4,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
