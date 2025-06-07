@@ -55,18 +55,18 @@
           "Condition": {
             "type": "object",
             "required": [
-              "StringLike"
+              "StringEquals"
             ],
             "properties": {
-              "StringLike": {
+              "StringEquals": {
                 "type": "object",
                 "required": [
-                  "aws:username"
+                  "aws:PrincipalTag/role"
                 ],
                 "properties": {
-                  "aws:username": {
+                  "aws:PrincipalTag/role": {
                     "type": "string",
-                    "const": "junior-*"
+                    "const": "junior"
                   }
                 },
                 "additionalProperties": false

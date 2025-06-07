@@ -1,7 +1,11 @@
-import { INITIAL_TUTORIAL_NODES } from './nodes';
+import { assign } from 'xstate';
+
+import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
+import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
+import { SCP_CREATION_OBJECTIVES } from './objectives/scp-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
@@ -9,6 +13,7 @@ import {
   EdgeConnectionFinishEvent,
   FinishEventMap,
   PolicyCreationFinishEvent,
+  SCPCreationFInishEvent,
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
@@ -26,10 +31,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level9_state_machine',
-  initial: 'inside_tutorial',
+  initial: 'inside_level',
   context: {
     level_title: 'Tag Based Access Control (TBAC)',
-    level_description: 'This level introduces you to Tag Based Access Control (TBAC) in AWS IAM.',
+    level_description: 'TBAC FTW! Learn how to use tags to control access.',
     level_number: 9,
     next_popover_index: 0,
     next_popup_index: 0,
@@ -50,10 +55,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     all_policy_creation_objectives: [],
-    restricted_element_ids: [],
+    restricted_element_ids: [ElementID.CodeEditorPolicyTab, ElementID.CodeEditorRoleTab],
     objectives_map: {
       ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
       [IAMNodeEntity.Policy]: { objectives: POLICY_CREATION_OBJECTIVES, current_index: 0 },
+      [IAMNodeEntity.SCP]: { objectives: SCP_CREATION_OBJECTIVES, current_index: 0 },
     },
   },
   on: {
@@ -244,6 +250,76 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       },
     },
-    inside_level: {},
+    inside_level: {
+      initial: 'in_level_popup1',
+      entry: [
+        'clear_edges',
+        'disable_tutorial_state',
+        {
+          type: 'assign_nodes',
+          params: { nodes: INITIAL_IN_LEVEL_NODES },
+        },
+        assign({
+          initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
+        }),
+        'resolve_initial_edges',
+        {
+          type: 'add_new_level_objective',
+          params: {
+            objectives: LEVEL_OBJECTIVES[1],
+          },
+        },
+      ],
+      states: {
+        in_level_popup1: {
+          entry: 'next_popup',
+          on: {
+            NEXT_POPUP: 'fixed_popover4',
+          },
+        },
+        fixed_popover4: {
+          entry: ['hide_popups', 'next_fixed_popover'],
+          on: {
+            NEXT_FIXED_POPOVER: 'create_in_level_scp',
+          },
+        },
+        create_in_level_scp: {
+          entry: [
+            'hide_fixed_popovers',
+            { type: 'next_policy_role_creation_objectives', params: { entity: IAMNodeEntity.SCP } },
+          ],
+          on: {
+            [SCPCreationFInishEvent.IN_LEVEL_SCP_CREATED]: 'scp_in_level_created',
+          },
+        },
+        scp_in_level_created: {
+          entry: ['next_edge_connection_objectives', 'enable_edges_management_ability'],
+          on: {
+            [EdgeConnectionFinishEvent.IN_LEVEL_SCP_ATTACHED_TO_OU]: {
+              target: 'scp_in_level_attached_to_ou_popover1',
+              actions: [
+                {
+                  type: 'change_objective_progress',
+                  params: {
+                    id: LevelObjectiveID.CREATE_IN_LEVEL_SCP,
+                    finished: true,
+                  },
+                },
+              ],
+            },
+          },
+        },
+        scp_in_level_attached_to_ou_popover1: {
+          entry: ['next_popover'],
+          on: {
+            NEXT_POPOVER: 'in_level_finished',
+          },
+        },
+        in_level_finished: {
+          entry: ['next_popup'],
+          type: 'final',
+        },
+      },
+    },
   },
 });

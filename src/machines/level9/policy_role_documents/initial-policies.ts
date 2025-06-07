@@ -23,8 +23,8 @@ export const INITIAL_POLICIES = {
     Version: '2012-10-17',
     Statement: [
       {
-        Effect: 'INSERT_EFFECT_HERE',
-        Action: 'SecretsManager:GetSecretValue',
+        Effect: 'Deny',
+        Action: 'secretsmanager:GetSecretValue',
         Resource: '*',
         Condition: 'INSERT_CONDITION_HERE',
       },
