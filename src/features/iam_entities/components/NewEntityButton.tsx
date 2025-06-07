@@ -24,13 +24,18 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   const { isRedDotEnabledForElement: isRedDotEnabled } = useAnimatedRedDot({
     elementIds: [ElementID.NewEntityBtn],
   });
-  const [showPopovers, popoverContent] = LevelsProgressionContext().useSelector(
-    state => [state.context.show_popovers, state.context.popover_content],
+  const [showPopovers, showFixedPopovers, popoverContent] = LevelsProgressionContext().useSelector(
+    state => [
+      state.context.show_popovers,
+      state.context.show_fixed_popovers,
+      state.context.popover_content,
+    ],
     _.isEqual
   );
   // To keep the user focused on a shown tutorial popover,
   // we disable the button if a popover with a next button is shown.
-  const disableEntityButton = showPopovers && popoverContent?.show_next_button;
+  const disableEntityButton =
+    (showPopovers && popoverContent?.show_next_button) || showFixedPopovers;
 
   const hidePopovers = (): void => {
     levelActor.send({ type: StatelessStateMachineEvent.HidePopovers });
