@@ -202,6 +202,7 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
     ({ edge: baseEdge, events } = createEdgeWithEvents(context, source, target, options));
   }
 
+  // TODO: Should we compute extra edges only if the established edge wasn't an initial edge?
   const extraEdges = computeExtraEdges(baseEdge.id) as WritableDraft<IAMEdge>[];
 
   const updatedContext = produce(context, draft => {
