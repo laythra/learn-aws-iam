@@ -1,22 +1,20 @@
-import { uniqueId } from 'lodash';
-
 export const UserNodeID = {
-  FirstUser: uniqueId('user-'),
-  SecondUser: uniqueId('user-'),
+  FirstUser: 'user-1',
+  SecondUser: 'user-2',
 } as const;
 
 export const GroupNodeID = {
-  FirstGroup: uniqueId('group-'),
+  FirstGroup: 'group-1',
 } as const;
 
 export const ResourceNodeID = {
-  S3Bucket: uniqueId('resource-s3bucket-'),
-  DynamoDBTable: uniqueId('resource-dynamodbtable-'),
-  EC2Instance: uniqueId('resource-ec2instance-'),
+  S3Bucket: 'resource-s3bucket-1',
+  DynamoDBTable: 'resource-dynamodbtable-1',
+  EC2Instance: 'ec2-instance-1',
 } as const;
 
 export const PolicyNodeID = {
-  PolicyNode1: uniqueId('policy-'),
-  PolicyNode2: uniqueId('policy-'),
-  PolicyNode3: uniqueId('policy-'),
+  PolicyNode1: 'policy-1',
+  PolicyNode2: 'policy-2',
+  PolicyNode3: 'policy-3',
 } as const;

@@ -10,6 +10,8 @@ const POPOVER_MSG1 = `
   Click *NEXT* to begin anew.
 `;
 
+const POPOVER_MSG3 = ``;
+
 const POPOVER_MSG2 = `
   Let's create an **IAM Group**
 `;
@@ -52,7 +54,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: ElementID.IAMIdentityNameInput,
     popover_title: `It goes without saying, but each group must have a name`,
-    popover_content: ``,
+    popover_content: POPOVER_MSG3,
     show_next_button: false,
     show_close_button: false,
     popover_placement: 'start',
@@ -63,7 +65,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_content: POPOVER_MSG4,
     show_next_button: false,
     show_close_button: true,
-    popover_placement: 'start',
+    popover_placement: 'top',
   },
   {
     element_id: UserNodeID.FirstUser,
