@@ -2,15 +2,14 @@ import { Flex, HStack, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import _ from 'lodash';
 
 import CodeEditorHelpButton from './CodeEditorHelpButton';
-import codeEditorStateStore from '../stores/code-editor-state-store';
 import { ElementID } from '@/config/element-ids';
 import { CanvasStore } from '@/features/canvas/stores/canvas-store';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
-import { CodeEditorMode } from '@/stores/code-editor-popup-store';
+import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
 interface CodeEditorHeaderProps {
   selectedIAMEntity: IAMCodeDefinedEntity;
-  codeEditorMode: CodeEditorMode;
+  codeEditorMode: 'create' | 'edit';
   nodeId: string;
 }
 
@@ -19,7 +18,7 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
   codeEditorMode,
   nodeId,
 }) => {
-  if (codeEditorMode === CodeEditorMode.Edit) {
+  if (codeEditorMode === 'edit') {
     const selectedNode = CanvasStore.getSnapshot().context.nodes.find(node => node.id === nodeId)!;
 
     return (

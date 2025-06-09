@@ -14,7 +14,7 @@ import { useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import Markdown from 'react-markdown';
 
-import codeEditorStateStore from '../stores/code-editor-state-store';
+import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { CustomTheme, IAMNodeEntity } from '@/types';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';

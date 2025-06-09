@@ -17,7 +17,6 @@ type CodeEditorEvents = {
   setContent: { nodeId: string; content: string; entity: IAMCodeDefinedEntity };
   setSelectedIAMEntity: { payload: IAMCodeDefinedEntity };
   setIsValidating: { payload: boolean };
-  initializeCodeEditor: { content: string; nodeId: string; entity: IAMCodeDefinedEntity };
   deinitializeCodeEditor: { nodeId: string };
   selectPolicy: { policyId: string };
   deselectPolicy: { policyId: string };
@@ -26,6 +25,13 @@ type CodeEditorEvents = {
   hideHelpPopup: { type: string };
   setNodeLabel: { label: string };
   setNodeLabelError: { error: string | undefined; isValidating: boolean };
+  open: {
+    type: string;
+    mode: 'create' | 'edit';
+    selectedNodeId?: string;
+    selectedIAMEntity?: IAMCodeDefinedEntity;
+  };
+  close: { type: string };
 };
 
 export type CodeEditorState = {
@@ -43,6 +49,9 @@ export type CodeEditorState = {
   };
   label?: string;
   labelError: string | undefined;
+  isOpen: boolean;
+  mode: 'create' | 'edit';
+  selectedNodeId?: string;
 };
 
 export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produce, {
@@ -77,6 +86,8 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     selectedAccountId: AccountID.Trusted,
     helpPopupInfo: { isOpen: false, entity: IAMNodeEntity.Policy },
     labelError: undefined,
+    isOpen: false,
+    mode: 'create',
   },
   on: {
     setCodeErrorsAndWarnings: (
@@ -99,20 +110,11 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
       context.content[event.entity] = { [event.nodeId]: event.content };
     },
     setSelectedIAMEntity: (context: CodeEditorState, event: { payload: IAMCodeDefinedEntity }) => {
+      console.log('Setting selected IAM entity:', event.payload);
       context.selectedIAMEntity = event.payload;
     },
     setIsValidating: (context: CodeEditorState, event: { payload: boolean }) => {
       context.isValidating = event.payload;
-    },
-    initializeCodeEditor: (
-      context: CodeEditorState,
-      event: { content: string; nodeId: string; entity: IAMCodeDefinedEntity }
-    ) => {
-      context.isCodeEditorInitialized = true;
-
-      context.content[event.entity][event.nodeId] = event.content;
-      context.errors[event.entity][event.nodeId] = [];
-      context.warnings[event.entity][event.nodeId] = [];
     },
     deinitializeCodeEditor: (context: CodeEditorState) => {
       context.isCodeEditorInitialized = false;
@@ -140,6 +142,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
         {} as Record<IAMCodeDefinedEntity, Record<string, string>>
       );
       context.labelError = undefined;
+      context.isOpen = false;
     },
     selectPolicy: (context: CodeEditorState, event: { policyId: string }) => {
       context.selectedPolicies.push(event.policyId);
@@ -175,6 +178,23 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     ) => {
       context.labelError = event.error;
       context.isValidating = event.isValidating;
+    },
+    open: (
+      context: CodeEditorState,
+      event: {
+        mode: 'create' | 'edit';
+        selectedNodeId?: string;
+        selectedIAMEntity?: IAMCodeDefinedEntity;
+      }
+    ) => {
+      console.log('Setting selected IAM entity:', event.selectedIAMEntity);
+      context.isOpen = true;
+      context.mode = event.mode;
+      context.selectedNodeId = event.selectedNodeId;
+      context.selectedIAMEntity = event.selectedIAMEntity ?? IAMNodeEntity.Policy;
+    },
+    close: (context: CodeEditorState) => {
+      context.isOpen = false;
     },
   },
 });

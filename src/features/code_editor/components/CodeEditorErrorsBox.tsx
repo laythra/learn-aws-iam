@@ -2,7 +2,7 @@ import { HStack, Text } from '@chakra-ui/react';
 import { ExclamationCircleIcon } from '@heroicons/react/16/solid';
 import { useSelector } from '@xstate/store/react';
 
-import codeEditorStateStore from '../stores/code-editor-state-store';
+import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types';
 
 interface CodeEditorerrorsBoxProps {

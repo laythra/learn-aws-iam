@@ -20,10 +20,9 @@ import { CodeEditorCreate } from './Create/CodeEditorCreate';
 import { CreateSubmitButton } from './Create/CreateSubmitButton';
 import { CodeEditorEdit } from './Edit/CodeEditorEdit';
 import { EditSubmitButton } from './Edit/EditSubmitButton';
-import codeEditorStateStore from '../stores/code-editor-state-store';
 import { ElementID } from '@/config/element-ids';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
-import CodeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
+import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { CustomTheme, IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
 
 interface CodeEditorProps {}
@@ -42,15 +41,23 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     ElementID.CodeEditorResourcePolicyTab,
   ]);
 
-  const [isCodeEditorOpen, codeEditorMode, selectedNodeId] = useSelector(
-    CodeEditorPopupStore,
-    state => [state.context.isOpen, state.context.mode, state.context.selectedNodeId],
-    _.isEqual
-  );
-
-  const [selectedIAMEntity, errorsMap, warningsMap] = useSelector(
+  const [
+    selectedIAMEntity,
+    errorsMap,
+    warningsMap,
+    isCodeEditorOpen,
+    codeEditorMode,
+    selectedNodeId,
+  ] = useSelector(
     codeEditorStateStore,
-    state => [state.context.selectedIAMEntity, state.context.errors, state.context.warnings],
+    state => [
+      state.context.selectedIAMEntity,
+      state.context.errors,
+      state.context.warnings,
+      state.context.isOpen,
+      state.context.mode,
+      state.context.selectedNodeId,
+    ],
     _.isEqual
   );
 
@@ -60,7 +67,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
   const warnings = warningsMap[selectedIAMEntity][nodeId];
 
   const closeCodeEditor = (): void => {
-    CodeEditorPopupStore.send({ type: 'close' });
+    codeEditorStateStore.send({ type: 'close' });
   };
 
   useEffect(() => {
@@ -70,6 +77,14 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
       { restricted: isSCPTabRestricted, entity: IAMNodeEntity.SCP },
       { restricted: isResourcePolicyTabRestricted, entity: IAMNodeEntity.ResourcePolicy },
     ];
+
+    const isSelectedEntityRestricted = entityOrder.some(
+      item => item.entity === selectedIAMEntity && item.restricted
+    );
+
+    if (!isSelectedEntityRestricted) {
+      return;
+    }
 
     const availableEntity = entityOrder.find(item => !item.restricted);
     if (availableEntity) {
@@ -98,20 +113,17 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
           <ModalBody>
             <CodeEditorHelpPopup />
             <VStack align='stretch' spacing={4}>
-              {React.createElement(
-                codeEditorMode === CodeEditorMode.Create ? CodeEditorCreate : CodeEditorEdit,
-                {
-                  nodeId,
-                  selectedIAMEntity,
-                  errors,
-                  warnings,
-                }
-              )}
+              {React.createElement(codeEditorMode == 'create' ? CodeEditorCreate : CodeEditorEdit, {
+                nodeId,
+                selectedIAMEntity,
+                errors,
+                warnings,
+              })}
             </VStack>
           </ModalBody>
           <ModalFooter>
             {React.createElement(
-              codeEditorMode === CodeEditorMode.Create ? CreateSubmitButton : EditSubmitButton,
+              codeEditorMode === 'create' ? CreateSubmitButton : EditSubmitButton,
               {
                 nodeId,
                 selectedIAMEntity,

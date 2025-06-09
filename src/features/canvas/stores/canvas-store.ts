@@ -69,6 +69,7 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
       context: CanvasStoreState,
       event: { nodeId: string; panel: 'content' | 'tags' | 'arn' | undefined }
     ) {
+      context.selectedNodeId = event.nodeId;
       context.nodeIdWithOpenedContent = event.panel === 'content' ? event.nodeId : undefined;
       context.nodeIdWithOpenedTags = event.panel === 'tags' ? event.nodeId : undefined;
       context.nodeIdWithOpenedARN = event.panel === 'arn' ? event.nodeId : undefined;
