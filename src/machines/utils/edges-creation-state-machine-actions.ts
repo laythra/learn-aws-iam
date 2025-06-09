@@ -122,7 +122,7 @@ function createEdgesFromGrantedAccesses(
   return grantedAccesses
     .filter(grantedAccess => {
       // Filter out accesses that are not applicable for the target node to which the edge is being created
-      return !grantedAccess.source_node || grantedAccess.source_node === targetNode.id;
+      return !grantedAccess.source_node || grantedAccess.source_node === sourceId;
     })
     .map(access =>
       createEdge({
@@ -289,32 +289,33 @@ const connectionStrategies = {
     isInitialEdge: boolean,
     options: PartialEdge = {}
   ) => {
-    const userConnections = filterConnections(
+    const userToRoleConnections = filterConnections(
       context.nodes_connnections,
       roleNode.id,
       IAMNodeEntity.User
     );
-    const resourceConnections = filterConnections(
+    const resourceToRoleConnections = filterConnections(
       context.nodes_connnections,
       roleNode.id,
       IAMNodeEntity.Resource
     );
+
     return applyStrategy(context, policyNode, roleNode, isInitialEdge, options, baseEdgeId => {
-      const userEdges = userConnections.flatMap(connection =>
+      const userEdges = userToRoleConnections.flatMap(connection =>
         createEdgesFromGrantedAccesses(
           connection.from.id,
           policyNode.data.granted_accesses,
           baseEdgeId,
-          policyNode,
+          connection.from,
           roleNode
         )
       );
-      const resourceEdges = resourceConnections.flatMap(connection =>
+      const resourceEdges = resourceToRoleConnections.flatMap(connection =>
         createEdgesFromGrantedAccesses(
           connection.from.id,
           policyNode.data.granted_accesses,
           baseEdgeId,
-          policyNode,
+          connection.from,
           roleNode
         )
       );
