@@ -1,5 +1,5 @@
 import { TUTORIAL_STEPS } from './tutorial-steps';
-import { test, expect } from '../helpers/test-fixtures';
+import { test } from '../helpers/test-fixtures';
 import { ElementID } from '@/config/element-ids';
 // prettier-ignore
 import {
@@ -12,12 +12,12 @@ import {
 import { UserNodeID, ResourceNodeID, PolicyNodeID } from '@/machines/level1/types/node-id-enums';
 
 test.describe('Level 1 Tutorial Phase', () => {
-  test('Goes through the tutorial phase', async ({ page, tutorial, nodes }) => {
-    // Setup
+  test('Goes through the tutorial phase', async ({ page, tutorial, nodes, popups, goToLevel }) => {
+    await goToLevel(1);
     await page.goto('http://localhost:5173');
 
     // Initial popup
-    await tutorial.expectPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].id!);
+    await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);
 
     // Check initial node visibility
     await nodes.expectVisible(UserNodeID.TutorialUser);
@@ -47,12 +47,7 @@ test.describe('Level 1 Tutorial Phase', () => {
       POPOVER_TUTORIAL_MESSAGES[6].popover_title
     );
 
-    // Create new entity
-    const newEntityBtn = page.getByTestId(ElementID.NewEntityBtn);
-    await expect(newEntityBtn).toBeVisible();
-    await newEntityBtn.click();
-
-    await nodes.createUserEntity(
+    await popups.submitCreateEntityPopup(
       'TestUser',
       ElementID.CreateEntitiesMenuItem,
       ElementID.IAMIdentityCreatorPopup
@@ -73,6 +68,6 @@ test.describe('Level 1 Tutorial Phase', () => {
 
     await tutorial.goThroughConsecutivePopovers(TUTORIAL_STEPS.FINAL_POPOVERS);
 
-    await tutorial.expectPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].id!);
+    await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
   });
 });

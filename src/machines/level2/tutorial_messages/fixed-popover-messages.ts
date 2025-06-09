@@ -21,21 +21,21 @@ const POPUP_MSG_3 = `
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
   {
-    popover_title: 'Level 2: IAM Groups',
+    popover_title: 'IAM Groups',
     popover_content: POPUP_MSG_1,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
   },
   {
-    popover_title: 'Level 2: IAM Groups',
+    popover_title: 'IAM Groups',
     popover_content: POPUP_MSG_2,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
   },
   {
-    popover_title: 'Level 2: IAM Groups',
+    popover_title: 'IAM Groups',
     popover_content: POPUP_MSG_3,
     position: 'top-left',
     show_close_button: false,

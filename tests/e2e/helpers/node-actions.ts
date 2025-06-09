@@ -10,6 +10,12 @@ export class NodeActions {
     await expect(findNode(this.page, nodeId)).toBeVisible();
   }
 
+  async expectMultipleVisible(nodeIds: string[]): Promise<void> {
+    for (const nodeId of nodeIds) {
+      await expect(findNode(this.page, nodeId)).toBeVisible();
+    }
+  }
+
   async expectHidden(nodeId: string): Promise<void> {
     await expect(findNode(this.page, nodeId)).not.toBeVisible();
   }
@@ -20,13 +26,5 @@ export class NodeActions {
 
   async connectNodes(sourceId: string, targetId: string): Promise<void> {
     await connectNodes(this.page, sourceId, targetId);
-  }
-
-  async createUserEntity(name: string, menuItemId: string, popupId: string): Promise<void> {
-    await this.page.getByTestId(menuItemId).click();
-    const popup = this.page.getByTestId(popupId);
-    await popup.getByRole('textbox').fill(name);
-    await popup.getByRole('button', { name: 'submit' }).click();
-    await expect(popup).not.toBeVisible();
   }
 }

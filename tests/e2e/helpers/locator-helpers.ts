@@ -3,7 +3,7 @@ import { Locator, Page } from '@playwright/test';
 import { getEdgeName } from '../../../src/utils/names';
 
 export const findNode = (page: Page, nodeId: string): Locator => {
-  return page.getByTestId(`${nodeId}`);
+  return page.getByTestId(nodeId);
 };
 
 export const findPopover = (page: Page, popoverId: string, title: string): Locator => {
@@ -15,6 +15,30 @@ export const findEdge = (page: Page, sourceNode: string, targetNode: string): Lo
   return page.getByTestId(edgeName);
 };
 
-export const findPopup = (page: Page, popupId: string): Locator => {
+/**
+ * Finds a tutorial popup by its title.
+ * Tutorial popups are used to guide users through the application,
+ * and they usually have a hardcoded title, and a `Next` button.
+ * @param page
+ * @param popupTitle
+ * @returns
+ */
+export const findTutorialPopup = (page: Page, popupTitle: string): Locator => {
+  return page.getByRole('dialog').filter({ hasText: popupTitle });
+};
+
+/**
+ * Finds an operational popup by its test ID.
+ * Test IDs are used for better developer experience,
+ * since operational popups don't have hardcoded titles, unlike tutorial popups.
+ * @param page - The Playwright page object
+ * @param popupId - The test ID of the popup to find
+ * @returns Locator for the operational popup
+ */
+export const findOperationalPopup = (page: Page, popupId: string): Locator => {
   return page.getByTestId(popupId);
+};
+
+export const fixedFixedPopover = (page: Page, popoverTitle: string): Locator => {
+  return page.getByRole('dialog').filter({ hasText: popoverTitle });
 };

@@ -1,6 +1,6 @@
 import { Page, expect } from '@playwright/test';
 
-import { findPopover, findPopup } from './locator-helpers';
+import { findPopover, findTutorialPopup, fixedFixedPopover } from './locator-helpers';
 
 export class TutorialActions {
   constructor(private page: Page) {}
@@ -11,10 +11,17 @@ export class TutorialActions {
     await popover.getByRole('button', { name: /next/i }).click();
   }
 
-  async expectPopupAndClickNext(popupId: string): Promise<void> {
-    const popup = findPopup(this.page, popupId);
+  async expectTutorialPopupAndClickNext(title: string): Promise<void> {
+    const popup = findTutorialPopup(this.page, title);
     await expect(popup).toBeVisible();
     await popup.getByRole('button', { name: /next/i }).click();
+    await expect(popup).not.toBeVisible();
+  }
+
+  async expectFixedPopoverAndClickNext(title: string): Promise<void> {
+    const fixedPopover = fixedFixedPopover(this.page, title);
+    await expect(fixedPopover).toBeVisible();
+    await fixedPopover.getByRole('button', { name: /next/i }).click();
   }
 
   async expectPopoverWithoutNextButton(nodeId: string, title: string): Promise<void> {

@@ -31,7 +31,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level9_state_machine',
-  initial: 'inside_level',
+  initial: 'inside_tutorial',
   context: {
     level_title: 'Tag Based Access Control (TBAC)',
     level_description: 'TBAC FTW! Learn how to use tags to control access.',
