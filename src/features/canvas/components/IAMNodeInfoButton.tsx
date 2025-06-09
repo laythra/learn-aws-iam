@@ -124,7 +124,6 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
                 <Tooltip label='Edit' aria-label='Edit' placement='top'>
                   <IconButton
                     onClick={() => {
-                      debugger;
                       codeEditorStateStore.send({
                         type: 'open',
                         mode: 'edit',

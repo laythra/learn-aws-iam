@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ]
+    },
+    "Statement": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/secretsManagerStatement"
+          },
+          {
+            "$ref": "#/definitions/codeDeployStatement"
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "secretsManagerStatement": {
+      "type": "object",
+      "required": [
+        "Effect",
+        "Action",
+        "Resource",
+        "Condition"
+      ],
+      "properties": {
+        "Effect": {
+          "const": "Allow"
+        },
+        "Action": {
+          "oneOf": [
+            {
+              "const": "secretsmanager:GetSecretValue"
+            },
+            {
+              "type": "array",
+              "contains": {
+                "const": "secretsmanager:GetSecretValue"
+              }
+            }
+          ]
+        },
+        "Resource": {
+          "const": "arn:aws:secretsmanager:us-east-1:123456789012:secret:slack-integration-secret"
+        },
+        "Condition": {
+          "type": "object",
+          "required": [
+            "StringLike"
+          ],
+          "properties": {
+            "StringLike": {
+              "type": "object",
+              "required": [
+                "aws:username"
+              ],
+              "properties": {
+                "aws:username": {
+                  "const": "senior-*"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "codeDeployStatement": {
+      "type": "object",
+      "required": [
+        "Effect",
+        "Action",
+        "Resource"
+      ],
+      "properties": {
+        "Effect": {
+          "const": "Allow"
+        },
+        "Action": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "codedeploy:CreateDeployment",
+              "codedeploy:GetDeployment",
+              "codedeploy:ListDeployments",
+              "codedeploy:RegisterApplicationRevision"
+            ]
+          }
+        },
+        "Resource": {
+          "const": "arn:aws:codedeploy:us-east-1:123456789012:application:SlackCodeDeployApp"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

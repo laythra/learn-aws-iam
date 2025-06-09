@@ -2,7 +2,7 @@ import { produce, WritableDraft } from 'immer';
 
 import { refreshPolicyConnections } from './edges-creation-state-machine-actions';
 import { BaseFinishEventMap, GenericContext, ObjectiveType } from '../types';
-import { IAMNodeEntity, IAMPolicyNode } from '@/types';
+import { IAMAnyNode, IAMNodeEntity, IAMPolicyNode } from '@/types';
 import { isJSONValid } from '@/utils/iam-code-linter';
 import { isNodeOfEntity } from '@/utils/node-type-guards';
 
@@ -43,4 +43,20 @@ export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends 
     updatedContext,
     events: [targetEditObjective.on_finish_event],
   };
+}
+
+export function editNodeAttributes<
+  TLevelObjectiveID,
+  TFinishEventMap extends BaseFinishEventMap,
+  TNode extends IAMAnyNode,
+>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  nodeId: string,
+  attributes: Partial<TNode['data']>
+): GenericContext<TLevelObjectiveID, TFinishEventMap> {
+  return produce(context, draftContext => {
+    const currentNode = draftContext.nodes.find(node => node.id === nodeId) as TNode;
+
+    currentNode.data = { ...currentNode.data, ...attributes };
+  });
 }
