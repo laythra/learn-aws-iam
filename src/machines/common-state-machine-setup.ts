@@ -17,7 +17,10 @@ import {
   createUserGroupNode,
 } from './utils/nodes-creation-state-machine-actions';
 import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
-import { editPermissionPolicy } from './utils/nodes-editing-state-machine-actions';
+import {
+  editNodeAttributes,
+  editPermissionPolicy,
+} from './utils/nodes-editing-state-machine-actions';
 // prettier-ignore
 import {
   updatePolicyRoleCreationObjectivesList
@@ -32,7 +35,13 @@ import type {
 } from '@/machines/types';
 import type { GenericContext, GenericEventData, LevelObjective } from '@/machines/types';
 import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
-import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
+import {
+  IAMAnyNode,
+  IAMEdge,
+  IAMGroupNode,
+  IAMPolicyNode,
+  IAMUserNode,
+} from '@/types/iam-node-types';
 
 /**
  * Defines a common state machine setup for all levels
@@ -101,6 +110,28 @@ export const createStateMachineSetup = <
           });
 
           events.forEach(event => enqueue.raise({ type: event }));
+        }
+      ),
+      edit_policy_node_attributes: enqueueActions(
+        (
+          { context, enqueue },
+          {
+            nodeId,
+            attributes,
+          }: {
+            nodeId: string;
+            attributes: Partial<IAMPolicyNode['data']>;
+          }
+        ) => {
+          const updatedContext = editNodeAttributes<
+            TLevelObjectiveID,
+            TFinishEventMap,
+            IAMPolicyNode
+          >(context, nodeId, attributes);
+
+          enqueue.assign({
+            nodes: updatedContext.nodes,
+          });
         }
       ),
       delete_edge: enqueueActions(({ context, enqueue }, { edge }: { edge: IAMEdge }) => {
