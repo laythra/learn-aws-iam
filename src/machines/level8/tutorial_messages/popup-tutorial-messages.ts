@@ -1,43 +1,14 @@
 import { PopupTutorialMessage } from '@/machines/types';
 const POPUP_MSG1 = `
-  Everything we've been covering so far had to do with how to ***grant*** access to iam entities.|lg
+  The policies we create so far have been relatively straightforward,
+  but as we progress, we’ll need to create more complex policies which mainly involve conditions.|lg
 
-  Now, we'll be covering how to add some protective measures to your AWS resources
-  to prevent accidental access or simply guard against unwanted access more effectively.|lg
+
+  Conditions allow us to specify when a policy should apply,
+  and it supports a wide range of operators and ways to evaluate the conditions.
 `;
 
 const POPUP_MSG2 = `
-  This level might feel a little different from the ones before.
-
-  But before we dive in, we need to cover a couple of essential AWS concepts.
-  Don’t worry—they’re simple, and everything will make sense once you see the canvas.
-
-  In AWS, two key concepts form the foundation of access management:
-
-  - ***AWS Accounts***: Think of these as containers.
-  Each account has its own resources and IAM entities, isolated from others.
-
-  - ***Organizational Units (OUs)***: These let you group multiple AWS accounts
-  under a common structure. For example, you might create an OU
-  for each department in your company—like Engineering or
-  Marketing—and inside each OU, you could have separate
-  AWS accounts for staging and production environments.
-
-  Let’s go over them visually—it’ll click in no time.
-`;
-
-const POPUP_MSG3 = `
-  Service Control Policies (SCPs) are quite identical to
-  IAM policies in terms of syntax and structure.
-  The main difference is that SCPs act as guardrails for
-  your AWS accounts and organizational units (OUs),
-
-  The next part of the level will be quite similar to the previous one,
-  with the addition of the \`Condition\`
-  element, which allows you to add conditions to your policies.
-`;
-
-const POPUP_MSG4 = `
   Here's a quick dive into the \`Condition\` element in IAM Policies,
   it consists of three main parts:
 
@@ -75,39 +46,24 @@ const POPUP_MSG4 = `
 `;
 
 const POPUP_MSG5 = `
-  SCPs come in quite handy when you want to enforce
-  certain restrictions across multiple accounts or OUs.
-  They allow you to set policies that apply at the account or OU level.
+  Congratulations on completing Level 8! 🎉
 
-  This level covered a handful of essential concepts:
-  - **AWS Accounts**: Containers for your resources and IAM entities.
-  - **Organizational Units (OUs)**: Grouping multiple AWS accounts for better management.
-  - **Service Control Policies (SCPs)**: Guardrails that apply to accounts and OUs
-  - **Condition Element**: Adds conditions to your policies for more granular control.
+  You have successfully learned how to create more sohisticated IAM policies
+  using conditions to restrict access based on user roles and attributes,
+  we also got a glimpse of how **Tag Based Access Control (TBAC)** works. |lg
 
-  The upcoming level will continue upon these concepts,
-  but we will start applying condititions more effectively
-  using something called **Tag Based Access Control (TBAC)**.
-
-  See you there! 👋
+  We're still touching the surface when it comes to writing policies with Conditions and Tags,
+  but don't worry, we'll dive deeper into these concepts in the next levels.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
-    title: 'Time To Add Some Guard Rails 🛡️',
+    title: 'Time to get serious about creating complex policies',
     content: POPUP_MSG1,
   },
   {
-    title: 'AWS Accounts and OUs',
+    title: 'Conditions in IAM Policies',
     content: POPUP_MSG2,
-  },
-  {
-    title: 'Adding guard rails on the account level',
-    content: POPUP_MSG3,
-  },
-  {
-    title: 'Conditional Policies',
-    content: POPUP_MSG4,
   },
   {
     title: 'Level 8 completed! 🔥',

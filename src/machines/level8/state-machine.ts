@@ -1,23 +1,18 @@
 import { assign } from 'xstate';
 
-import { INITIAL_IN_LEVEL_CONNECTIONS, INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
-import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
-import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
+import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
+import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
-import { SCP_CREATION_OBJECTIVES } from './objectives/scp-creation-objectives';
+import { POLICY_EDIT_OBJECTIVES } from './objectives/policy-edit-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
-import {
-  EdgeConnectionFinishEvent,
-  FinishEventMap,
-  SCPCreationFInishEvent,
-} from './types/finish-event-enums';
+import { FinishEventMap, PolicyEditFinishEvent } from './types/finish-event-enums';
+import { PolicyNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../config';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -26,10 +21,10 @@ import {
 export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
   POPOVER_TUTORIAL_MESSAGES,
   POPUP_TUTORIAL_MESSAGES,
-  EDGE_CONNECTION_OBJECTIVES
+  []
 ).createMachine({
   id: 'level8_state_machine',
-  initial: 'inside_tutorial',
+  initial: 'inside_level',
   context: {
     level_title: 'Service Control Policies',
     level_description: 'Service Control Policies',
@@ -53,10 +48,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     all_policy_creation_objectives: [],
-    restricted_element_ids: [ElementID.CodeEditorPolicyTab, ElementID.CodeEditorRoleTab],
+    restricted_element_ids: [ElementID.NewEntityBtn],
     objectives_map: {
       ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
-      [IAMNodeEntity.SCP]: { objectives: SCP_CREATION_OBJECTIVES, current_index: 0 },
     },
   },
   on: {
@@ -116,214 +110,144 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
+    [StatefulStateMachineEvent.EditIAMPolicyNode]: {
+      actions: [
+        {
+          type: 'edit_policy_node',
+          params: ({ event }) => ({ nodeId: event.node_id, docString: event.doc_string }),
+        },
+      ],
+    },
     [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
     [StatelessStateMachineEvent.HideHelpPopover]: { actions: 'hide_help_popover' },
     [StatelessStateMachineEvent.ShowHelpPopover]: { actions: 'show_help_popover' },
   },
   states: {
-    inside_tutorial: {
-      entry: [
-        { type: 'assign_nodes', params: { nodes: INITIAL_TUTORIAL_NODES } },
-        'disable_edges_management_ability',
-        assign({
-          initial_node_connections: INITIAL_TUTORIAL_CONNECTIONS,
-        }),
-        'resolve_initial_edges',
-        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
-      ],
-      onDone: 'inside_level',
-      initial: 'welcoming_message',
-      states: {
-        welcoming_message: {
-          entry: 'next_popup',
-          on: {
-            NEXT_POPUP: 'tutorial_popup1',
-          },
-        },
-        tutorial_popup1: {
-          entry: ['next_popup'],
-          on: {
-            NEXT_POPUP: 'tutorial_popover1',
-          },
-        },
-        tutorial_popover1: {
-          entry: ['next_popover', 'hide_popups'],
-          on: {
-            NEXT_POPOVER: 'tutorial_popover2',
-          },
-        },
-        tutorial_popover2: {
-          entry: ['next_popover'],
-          on: {
-            NEXT_POPOVER: 'tutorial_popover3',
-          },
-        },
-        tutorial_popover3: {
-          entry: 'next_popover',
-          // type: 'final',
-          on: {
-            NEXT_POPOVER: 'tutorial_popover4',
-          },
-        },
-        tutorial_popover4: {
-          entry: 'next_popover',
-          on: {
-            NEXT_POPOVER: 'tutorial_fixed_popover1',
-          },
-        },
-        tutorial_fixed_popover1: {
-          entry: ['hide_popovers', 'show_fixed_popover'],
-          on: {
-            NEXT_FIXED_POPOVER: 'create_tutorial_scp',
-          },
-        },
-        create_tutorial_scp: {
-          entry: [
-            'hide_fixed_popovers',
-            'next_popover',
-            {
-              type: 'next_policy_role_creation_objectives',
-              params: { entity: IAMNodeEntity.SCP },
-            },
-            {
-              type: 'update_red_dot_visibility',
-              params: {
-                elementIds: [ElementID.NewEntityBtn, ElementID.CreateRolesAndPoliciesMenuItem],
-                isVisible: true,
-              },
-            },
-          ],
-          on: {
-            [SCPCreationFInishEvent.TUTORIAL_SCP_CREATED]: 'scp_policy_created',
-          },
-        },
-        scp_policy_created: {
-          entry: [
-            'next_popover',
-            'next_edge_connection_objectives',
-            'enable_edges_management_ability',
-          ],
-          on: {
-            [EdgeConnectionFinishEvent.TUTORIAL_SCP_ATTACHED_TO_OU]: {
-              target: 'scp_attached_to_ou',
-              actions: [
-                {
-                  type: 'change_objective_progress',
-                  params: {
-                    id: LevelObjectiveID.CREATE_TUTORIAL_SCP,
-                    finished: true,
-                  },
-                },
-              ],
-            },
-          },
-        },
-        scp_attached_to_ou: {
-          entry: ['next_popover'],
-          on: {
-            NEXT_POPOVER: {
-              target: 'tutorial_finished',
-              actions: [
-                {
-                  type: 'change_objective_progress',
-                  params: {
-                    id: LevelObjectiveID.ATTACH_TUTORIAL_SCP_TO_OU,
-                    finished: true,
-                  },
-                },
-              ],
-            },
-          },
-        },
-        tutorial_finished: {
-          type: 'final',
-        },
-      },
-    },
     inside_level: {
-      initial: 'in_level_popup1',
       entry: [
-        {
-          type: 'assign_nodes',
-          params: { nodes: INITIAL_IN_LEVEL_NODES },
-        },
+        { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         assign({
           initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
         }),
-        'resolve_initial_edges',
-        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
+        'resolve_initial_edges', // TODO: Can't we pass the connections directly?
+        'disable_edges_management_ability',
+        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
       ],
+      initial: 'popup1',
       states: {
-        in_level_popup1: {
+        popup1: {
           entry: 'next_popup',
           on: {
-            NEXT_POPUP: 'in_level_popup2',
+            NEXT_POPUP: 'popup2',
           },
         },
-        in_level_popup2: {
-          entry: 'next_popup',
+        popup2: {
+          entry: ['next_popup'],
           on: {
-            NEXT_POPUP: 'in_level_fixed_popover1',
+            NEXT_POPUP: 'popover1',
           },
         },
-        in_level_fixed_popover1: {
-          entry: ['hide_popups', 'next_fixed_popover'],
+        popover1: {
+          entry: ['next_popover', 'hide_popups'],
           on: {
-            NEXT_FIXED_POPOVER: 'in_level_fixed_popover2',
+            NEXT_POPOVER: 'fixed_popover1',
           },
         },
-        in_level_fixed_popover2: {
-          entry: ['next_fixed_popover'],
+        fixed_popover1: {
+          entry: ['hide_popovers', 'show_fixed_popover'],
           on: {
-            NEXT_FIXED_POPOVER: 'create_in_level_scp',
+            NEXT_FIXED_POPOVER: 'popover2',
           },
         },
-        create_in_level_scp: {
+        popover2: {
+          entry: ['hide_fixed_popovers', 'next_popover'],
+          on: {
+            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'edit_policy',
+          },
+        },
+        edit_policy: {
           entry: [
-            'hide_fixed_popovers',
-            'next_popover',
-            { type: 'next_policy_role_creation_objectives', params: { entity: IAMNodeEntity.SCP } },
+            'hide_popovers',
+            assign({
+              policy_edit_objectives: POLICY_EDIT_OBJECTIVES[0], // TODO: Move into `objectives_map`
+            }),
           ],
           on: {
-            [SCPCreationFInishEvent.IN_LEVEL_SCP_CREATED]: 'scp_in_level_created',
-          },
-        },
-        scp_in_level_created: {
-          entry: ['next_edge_connection_objectives', 'enable_edges_management_ability'],
-          on: {
-            [EdgeConnectionFinishEvent.IN_LEVEL_SCP_ATTACHED_TO_OU]: {
-              target: 'scp_in_level_attached_to_ou_popover1',
+            [PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_FIRST_TIME]: {
+              target: 'fixed_popover2',
               actions: [
                 {
-                  type: 'change_objective_progress',
+                  type: 'finish_level_objective',
                   params: {
-                    id: LevelObjectiveID.CREATE_IN_LEVEL_SCP,
-                    finished: true,
+                    id: LevelObjectiveID.EDIT_POLICY_FIRST_TIME,
                   },
                 },
               ],
             },
           },
         },
-        scp_in_level_attached_to_ou_popover1: {
-          entry: ['next_popover'],
+        fixed_popover2: {
+          entry: ['hide_popovers', 'next_fixed_popover'],
           on: {
-            NEXT_POPOVER: {
-              target: 'scp_in_level_attached_to_ou_popover2',
+            NEXT_FIXED_POPOVER: 'popover3',
+          },
+        },
+        popover3: {
+          entry: ['hide_fixed_popovers', 'next_popover'],
+          on: {
+            [StatelessStateMachineEvent.IAMNodeTagsOpened]: 'fixed_popover3',
+          },
+        },
+        fixed_popover3: {
+          entry: ['hide_popovers', 'next_fixed_popover'],
+          on: {
+            [StatelessStateMachineEvent.IAMNodeTagsPopoverClosed]: 'popover4',
+          },
+        },
+        popover4: {
+          entry: ['hide_fixed_popovers', 'next_popover'],
+          on: {
+            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'edit_policy_again',
+          },
+        },
+        edit_policy_again: {
+          entry: [
+            'hide_popovers',
+            {
+              type: 'edit_policy_node_attributes',
+              params: {
+                nodeId: PolicyNodeID.SlackServiceManagePolicy,
+                attributes: { editable: true },
+              },
+            },
+            { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
+            assign({
+              policy_edit_objectives: POLICY_EDIT_OBJECTIVES[1], // TODO: Move into `objectives_map`
+            }),
+          ],
+          on: {
+            [PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_SECOND_TIME]: {
+              target: 'popover5',
+              actions: [
+                {
+                  type: 'finish_level_objective',
+                  params: {
+                    id: LevelObjectiveID.EDIT_POLICY_SECOND_TIME,
+                  },
+                },
+              ],
             },
           },
         },
-        scp_in_level_attached_to_ou_popover2: {
-          entry: ['next_popover'],
+        popover5: {
+          entry: ['hide_fixed_popovers', 'next_popover'],
           on: {
-            NEXT_POPOVER: {
-              target: 'in_level_finished',
-            },
+            NEXT_POPOVER: 'popup3',
           },
         },
-        in_level_finished: {
+        popup3: {
+          entry: ['hide_popovers', 'next_popup'],
           type: 'final',
-          entry: 'next_popup',
         },
       },
     },

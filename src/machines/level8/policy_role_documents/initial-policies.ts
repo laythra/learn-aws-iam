@@ -1,32 +1,22 @@
 export const INITIAL_POLICIES = {
-  TUTORIAL_SCP: {
+  INITIAL_ROLE: {
     Version: '2012-10-17',
     Statement: [
       {
         Effect: 'Allow',
-        Action: [],
-        Resource: '*',
+        Action: [
+          'codedeploy:RegisterApplicationRevision',
+          'codedeploy:CreateDeployment',
+          'codedeploy:GetDeployment',
+          'codedeploy:ListDeployments',
+        ],
+        Resource: 'arn:aws:codedeploy:us-east-1:123456789012:application:SlackCodeDeployApp',
       },
-    ],
-  },
-  TUTORIAL_SECRETS_READ_PERMISSION_POLICY: {
-    Version: '2012-10-17',
-    Statement: [
       {
         Effect: 'Allow',
         Action: ['secretsmanager:GetSecretValue'],
-        Resource: '*',
-      },
-    ],
-  },
-  IN_LEVEL_INITIAL_SCP: {
-    Version: '2012-10-17',
-    Statement: [
-      {
-        Effect: 'INSERT_EFFECT_HERE',
-        Action: 'SecretsManager:GetSecretValue',
-        Resource: '*',
-        Condition: 'INSERT_CONDITION_HERE',
+        Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:slack-integration-secret',
+        Condition: {},
       },
     ],
   },

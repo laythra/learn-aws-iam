@@ -1,51 +1,42 @@
-import { AccountNodeID, UserNodeID } from '../types/node-id-enums';
+import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
+import { theme } from '@/theme';
 import { type IAMUserNode } from '@/types';
 
-const TUTORIAL_USER_NODES: Partial<IAMUserNode['data']>[] = [
-  {
-    id: UserNodeID.TutorialFirstUser,
-    label: 'laith',
-    initial_position: 'top-center',
-    parent_id: AccountNodeID.Dev,
-  },
-];
+const TUTORIAL_USER_NODES: Partial<IAMUserNode['data']>[] = [];
 
 const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
-    id: UserNodeID.SeniorWayne,
-    label: 'senior-wayne',
-    initial_position: 'bottom-right',
-    horizontal_spacing: 80,
-    parent_id: AccountNodeID.Prod,
-  },
-  {
     id: UserNodeID.JuniorBruce,
     label: 'junior-bruce',
-    initial_position: 'bottom-right',
-    horizontal_spacing: 80,
-    parent_id: AccountNodeID.Prod,
+    initial_position: 'center',
+    layout_direction: 'vertical',
+    vertical_spacing: theme.sizes.iamNodeHeightInPixels + 20,
+    tags: [['role', 'junior']],
+  },
+  {
+    id: UserNodeID.SeniorWayne,
+    label: 'senior-wayne',
+    initial_position: 'center',
+    layout_direction: 'vertical',
+    horizontal_spacing: theme.sizes.iamNodeHeightInPixels + 20,
+    tags: [['role', 'senior']],
   },
   {
     id: UserNodeID.JuniorClark,
     label: 'junior-clark',
-    initial_position: 'top-right',
+    initial_position: 'center',
     layout_direction: 'vertical',
-    parent_id: AccountNodeID.Staging,
+    vertical_spacing: theme.sizes.iamNodeHeightInPixels + 20,
+    tags: [['role', 'junior']],
   },
   {
     id: UserNodeID.SeniorKent,
     label: 'senior-kent',
-    initial_position: 'top-right',
-    parent_id: AccountNodeID.Staging,
+    initial_position: 'center',
     layout_direction: 'vertical',
-  },
-  {
-    id: UserNodeID.JuniorDiana,
-    label: 'junior-diana',
-    initial_position: 'top-right',
-    parent_id: AccountNodeID.Staging,
-    layout_direction: 'vertical',
+    vertical_spacing: theme.sizes.iamNodeHeightInPixels + 20,
+    tags: [['role', 'senior']],
   },
 ];
 

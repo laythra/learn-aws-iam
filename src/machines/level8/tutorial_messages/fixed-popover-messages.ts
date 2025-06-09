@@ -1,47 +1,54 @@
 import { FixedPopoverMessage } from '@/machines/types';
 
 const FIXED_POPOVER_MSG1 = `
-  Laith is a user in the Development Account who was mistakenly
-  given access to sensitive integration secrets via the secrets-read-access policy.
-  However, organizational governance has decided that no user should access
-  secrets directly without security team oversight.
-  So, an SCP should be created to restrict secrets access
-  for the entire Organizational Unit that contains this account
+  Currently, the same role is allowing users to deploy the Slack Crashlytics Notifier Service,
+  as well as read the Slack Integration Secret. This is not ideal,
+  as we'd like to only allow ***Senior*** developers
+  to have visibility into the actual token for debugging purposes.”
+
+  How can we know if a user is a senior developer?
+  By checking if their username starts with \`senior-\`
 `;
 
 const FIXED_POPOVER_MSG2 = `
-  What we ultimately want to achieve is to block access to secrets
-  from any junior developer in the Staging Account,
+  Good job, now only senior developers can read the Slack Integration Secret.
 
+  However, using wildcards and matching usernames directly is not ideal.
+  Suppose we want to change a user's role from junior to senior,
+  this will be quite cumbersome to implement with the current setup. (IAM usernames are immutable)
+
+  For this reason, we will be moving forward with **Tag Based Access Control (TBAC)**.
 `;
 
 const FIXED_POPOVER_MSG3 = `
-  How do we know that a user is a junior developer?
-  By checking if their username starts with \`junior-\`
+  a tag in IAM is a key-value pair that can be associated with an IAM entity,
+  such as a user, role, or policy. Tags are used to organize and manage IAM entities,
 
-  Not ideal, but it works for now.
+  The tag you're currently viewing has a key of \`role\` and a value of \`senior\` or \`junior\`.
+
+  Close the popover to continue editing the policy.
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
   {
-    popover_title: "Let's place some guard rails",
+    popover_title: 'Applying Conditional Access',
     popover_content: FIXED_POPOVER_MSG1,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
   },
   {
-    popover_title: 'Removing sensitive access',
+    popover_title: 'Applying Conditional Access',
     popover_content: FIXED_POPOVER_MSG2,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
   },
   {
-    popover_title: 'Removing sensitive access',
+    popover_title: 'Tags in AWS 🏷️',
     popover_content: FIXED_POPOVER_MSG3,
     position: 'top-left',
     show_close_button: false,
-    show_next_button: true,
+    show_next_button: false,
   },
 ];
