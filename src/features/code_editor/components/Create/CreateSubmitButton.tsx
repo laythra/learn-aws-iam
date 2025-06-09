@@ -2,9 +2,8 @@ import { Button } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
-import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import codeEditorPopupStore from '@/stores/code-editor-popup-store';
+import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -63,9 +62,7 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
       });
     }
 
-    // TODO: Two actions can be merged into one
     codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });
-    codeEditorPopupStore.send({ type: 'close' });
   };
 
   return (

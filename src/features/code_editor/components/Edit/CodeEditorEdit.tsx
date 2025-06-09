@@ -6,7 +6,6 @@ import CodeMirror from '@uiw/react-codemirror';
 import _ from 'lodash';
 
 import { useCodeEditor } from '../../hooks/useCodeEditor';
-import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
@@ -16,6 +15,7 @@ import {
   IAMPolicyEditObjective,
   IAMTrustPolicyEditObject,
 } from '@/machines/types';
+import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
 import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/utils/iam-code-linter';
 

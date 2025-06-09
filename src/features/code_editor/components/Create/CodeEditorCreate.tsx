@@ -7,13 +7,13 @@ import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
 import { useCodeEditor } from '../../hooks/useCodeEditor';
-import codeEditorStateStore from '../../stores/code-editor-state-store';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID } from '@/machines/types';
+import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types';
 import { findAnyValidObjective, GENERIC_VALIDATION_FNS } from '@/utils/iam-code-linter';
 

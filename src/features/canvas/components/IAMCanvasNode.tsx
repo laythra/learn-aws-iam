@@ -14,7 +14,7 @@ import TagsIconButton from './TagsIconButton';
 import { CanvasStore } from '../stores/canvas-store';
 import { WithPopoverBox } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
-import { type CustomTheme, IAMAnyNode, IAMNodeEntity } from '@/types';
+import { type CustomTheme, IAMAnyNode, IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 import { generateArn, SupportedArnNodeTypes } from '@/utils/arn-generator';
 import { loadLocalImage } from '@/utils/image-loader';
@@ -170,6 +170,7 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
             codeDescription={content}
             placement='top-end'
             editable={data.entity === IAMNodeEntity.Policy && data.editable}
+            selectedIAMEntity={data.entity as IAMCodeDefinedEntity}
           />
         )}
 

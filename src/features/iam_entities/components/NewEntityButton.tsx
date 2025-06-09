@@ -13,7 +13,7 @@ import { LevelsProgressionContext } from '@/components/providers/LevelsProgressi
 import { ElementID } from '@/config/element-ids';
 import { withPopover } from '@/decorators/withPopover';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
-import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
+import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface NewEntityButtonProps {}
@@ -42,7 +42,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   };
 
   const openCodeEditor = (): void => {
-    codeEditorPopupStore.send({ type: 'open', mode: CodeEditorMode.Create });
+    codeEditorStateStore.send({ type: 'open', mode: 'create' });
   };
 
   return (

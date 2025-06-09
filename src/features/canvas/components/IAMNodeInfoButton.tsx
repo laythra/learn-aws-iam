@@ -26,7 +26,8 @@ import {
 } from '@/components/Decorated';
 import { ElementID } from '@/config/element-ids';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
-import codeEditorPopupStore, { CodeEditorMode } from '@/stores/code-editor-popup-store';
+import codeEditorStateStore from '@/stores/code-editor-state-store';
+import { IAMCodeDefinedEntity } from '@/types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface IAMNodeInfoButtonProps {
@@ -36,6 +37,7 @@ interface IAMNodeInfoButtonProps {
   verboseDescription?: string;
   codeDescription?: string;
   placement?: PlacementWithLogical;
+  selectedIAMEntity: IAMCodeDefinedEntity;
 }
 
 const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
@@ -43,6 +45,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
   label,
   verboseDescription,
   codeDescription,
+  selectedIAMEntity,
   editable = false,
   placement = 'end-end',
 }) => {
@@ -121,10 +124,12 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
                 <Tooltip label='Edit' aria-label='Edit' placement='top'>
                   <IconButton
                     onClick={() => {
-                      codeEditorPopupStore.send({
+                      debugger;
+                      codeEditorStateStore.send({
                         type: 'open',
-                        mode: CodeEditorMode.Edit,
+                        mode: 'edit',
                         selectedNodeId: nodeId,
+                        selectedIAMEntity,
                       });
 
                       toggleNodeContentPopover();

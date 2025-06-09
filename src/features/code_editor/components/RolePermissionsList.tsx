@@ -13,8 +13,8 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import codeEditorStateStore from '../stores/code-editor-state-store';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity } from '@/types';
 
 interface RolePermissionsListProps {}
