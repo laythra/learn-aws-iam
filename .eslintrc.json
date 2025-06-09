@@ -27,7 +27,15 @@
         "allowExpressions": true
       }
     ],
-    "max-len": ["warn", { "code": 100, "ignoreComments": true, "ignoreUrls": true }],
+    "max-len": [
+      "warn",
+      {
+        "code": 100,
+        "ignoreComments": true,
+        "ignoreUrls": true,
+        "ignorePattern": "^import\\s.+\\sfrom\\s.+$"
+      }
+    ],
     "import/prefer-default-export": "off",
     "react/prop-types": "off",
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
