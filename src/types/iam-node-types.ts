@@ -70,8 +70,8 @@ export type CreatableIAMNodeEntity =
 export interface PolicyGrantedAccess {
   readonly target_node: string;
   readonly access_level: AccessLevel;
-  readonly target_handle: string;
   readonly source_handle?: string;
+  readonly target_handle: string;
 
   /**
    * The source node from which the access is granted

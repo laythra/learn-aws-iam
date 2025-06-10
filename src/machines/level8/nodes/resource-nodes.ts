@@ -14,10 +14,10 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   },
   {
     id: ResourceNodeID.SlackCrashlyticsNotifierService,
-    label: 'slack-alert-token',
+    label: 'slack-alerting-service',
     initial_position: 'right-center',
     image: IAMNodeImage.Server,
-    resource_type: IAMNodeResourceEntity.Resource,
+    resource_type: IAMNodeResourceEntity.EC2Instance,
     layout_direction: 'vertical',
   },
 ];
