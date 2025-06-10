@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 
 import { getEdgeName } from '../../../src/utils/names';
+import { ElementID } from '@/config/element-ids';
 
 export const findNode = (page: Page, nodeId: string): Locator => {
   return page.getByTestId(nodeId);
@@ -39,6 +40,30 @@ export const findOperationalPopup = (page: Page, popupId: string): Locator => {
   return page.getByTestId(popupId);
 };
 
+export const findNodeButton = (page: Page, buttonTestId: string): Locator => {
+  return page.getByTestId(buttonTestId);
+};
+
 export const fixedFixedPopover = (page: Page, popoverTitle: string): Locator => {
   return page.getByRole('dialog').filter({ hasText: popoverTitle });
+};
+
+export const findNodeTagsButton = (page: Page, nodeId: string): Locator => {
+  return findNode(page, nodeId).getByTestId(ElementID.IAMNodeTagsButton);
+};
+
+export const findNodeArnButton = (page: Page, nodeId: string): Locator => {
+  return findNode(page, nodeId).getByTestId(ElementID.IAMNodeArnButton);
+};
+
+export const findNodeContentButton = (page: Page, nodeId: string): Locator => {
+  return findNode(page, nodeId).getByTestId(ElementID.IAMNodeContentButton);
+};
+
+export const findNodePopover = (
+  page: Page,
+  nodeId: string,
+  popoverType: 'content' | 'arn' | 'tags'
+): Locator => {
+  return page.getByTestId(`${nodeId}-${popoverType}`);
 };

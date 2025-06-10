@@ -1,7 +1,16 @@
 import { Page, expect } from '@playwright/test';
 
 import { connectNodes } from './connection-helpers';
-import { findNode, findEdge } from './locator-helpers';
+import {
+  findNode,
+  findEdge,
+  findOperationalPopup,
+  findNodeContentButton,
+  findNodeTagsButton,
+  findNodeArnButton,
+  findNodePopover,
+} from './locator-helpers';
+import { ElementID } from '@/config/element-ids';
 
 export class NodeActions {
   constructor(private page: Page) {}
@@ -26,5 +35,42 @@ export class NodeActions {
 
   async connectNodes(sourceId: string, targetId: string): Promise<void> {
     await connectNodes(this.page, sourceId, targetId);
+  }
+
+  async openNodePopover(nodeId: string, popoverType: 'content' | 'tags' | 'arn'): Promise<void> {
+    switch (popoverType) {
+      case 'content':
+        await findNodeContentButton(this.page, nodeId).click();
+        break;
+      case 'tags':
+        await findNodeTagsButton(this.page, nodeId).click();
+        break;
+      case 'arn':
+        await findNodeArnButton(this.page, nodeId).click();
+        break;
+      default:
+        throw new Error(`Unknown popover type: ${popoverType}`);
+    }
+  }
+
+  async closeNodePopover(nodeId: string, popoverType: 'content' | 'tags'): Promise<void> {
+    await findNodePopover(this.page, nodeId, popoverType)
+      .getByRole('button', { name: 'close' })
+      .click();
+  }
+
+  async editPolicyNodeContent(nodeId: string, newContent: string): Promise<void> {
+    await this.openNodePopover(nodeId, 'content');
+    const contentPopover = findNodePopover(this.page, nodeId, 'content');
+    expect(contentPopover).toBeVisible();
+    const editButton = contentPopover.getByTestId(ElementID.IAMNodeContentEditButton);
+    await expect(editButton).toBeVisible();
+    await editButton.click();
+
+    const codeEditorPopup = findOperationalPopup(this.page, ElementID.CodeEditorPopup);
+
+    await expect(codeEditorPopup).toBeVisible();
+    await codeEditorPopup.getByRole('textbox').fill(newContent);
+    await codeEditorPopup.getByRole('button', { name: 'Submit' }).click();
   }
 }

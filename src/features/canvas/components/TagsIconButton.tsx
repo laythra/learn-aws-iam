@@ -22,6 +22,7 @@ import {
   WithStateMachineEventIconButton,
   WithStateMachineEventPopoverCloseButton,
 } from '@/components/Decorated';
+import { ElementID } from '@/config/element-ids';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface TagsIconButtonProps extends ChakraProps {
@@ -60,6 +61,7 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
       <PopoverTrigger>
         <WithStateMachineEventIconButton
           event={onOpenEvent}
+          data-element-id={ElementID.IAMNodeTagsButton}
           aria-label='arn'
           icon={<TagIcon />}
           variant='ghost'
@@ -72,11 +74,12 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
           {...styleProps}
         />
       </PopoverTrigger>
-      <PopoverContent width='auto'>
+      <PopoverContent width='auto' data-element-id={`${nodeId}-tags`}>
         <PopoverHeader fontWeight='bold' fontSize='md'>
           <WithStateMachineEventPopoverCloseButton
             onClick={() => CanvasStore.send({ type: 'closeAllNodePanels' })}
             event={StatelessStateMachineEvent.IAMNodeTagsPopoverClosed}
+            aria-label='close'
           />
           Tags
         </PopoverHeader>
