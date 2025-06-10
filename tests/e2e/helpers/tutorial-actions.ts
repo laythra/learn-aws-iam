@@ -30,6 +30,12 @@ export class TutorialActions {
     await expect(popover.getByRole('button', { name: /next/i })).toHaveCount(0);
   }
 
+  async expectFixedPopoverWithoutNextButton(title: string): Promise<void> {
+    const fixedPopover = fixedFixedPopover(this.page, title);
+    await expect(fixedPopover).toBeVisible();
+    await expect(fixedPopover.getByRole('button', { name: /next/i })).toHaveCount(0);
+  }
+
   async goThroughConsecutivePopovers(
     steps: Array<{ nodeId: string; title: string }>
   ): Promise<void> {
