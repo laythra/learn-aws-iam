@@ -1,20 +1,12 @@
-import { uniqueId } from 'lodash';
-
 export const UserNodeID = {
-  TutorialFirstUser: uniqueId('user-'),
-  JuniorBruce: uniqueId('user-'),
-  SeniorWayne: uniqueId('user-'),
-  JuniorClark: uniqueId('user-'),
-  SeniorKent: uniqueId('user-'),
-  JuniorDiana: uniqueId('user-'),
+  JuniorBruce: 'user-1',
+  SeniorWayne: 'user-2',
+  JuniorClark: 'user-3',
+  SeniorKent: 'user-4',
 } as const;
 
 export const PolicyNodeID = {
   SlackServiceManagePolicy: 'policy-1',
-} as const;
-
-export const ResourcePolicyNodeID = {
-  InLevelResourceBasedPolicy: uniqueId('policy-'),
 } as const;
 
 export const ResourceNodeID = {
@@ -24,4 +16,4 @@ export const ResourceNodeID = {
 
 export const RoleNodeID = {
   SlackCodeDeployRole: 'role-1',
-};
+} as const;

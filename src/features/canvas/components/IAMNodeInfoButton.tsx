@@ -116,13 +116,20 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
         <WithStateMachineEventPopoverCloseButton
           onClick={() => CanvasStore.send({ type: 'closeAllNodePanels' })}
           event={StatelessStateMachineEvent.IAMNodeContentClosed}
+          aria-label='close'
         />
         <PopoverBody textAlign='left'>
-          <Code width='100%' whiteSpace='pre-wrap' position='relative'>
+          <Code
+            width='100%'
+            whiteSpace='pre-wrap'
+            position='relative'
+            data-element-id={`${nodeId}-content`}
+          >
             {editable && (
               <Box position='absolute' top={2} right={2}>
                 <Tooltip label='Edit' aria-label='Edit' placement='top'>
                   <IconButton
+                    data-element-id={ElementID.IAMNodeContentEditButton}
                     onClick={() => {
                       codeEditorStateStore.send({
                         type: 'open',

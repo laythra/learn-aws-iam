@@ -102,6 +102,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
         <ModalContent
           maxW={theme.sizes.modalsMaxWidthInPixels}
           maxH={theme.sizes.codeEditorMaxHeightInPixels}
+          data-element-id={ElementID.CodeEditorPopup}
         >
           <ModalHeader>
             <CodeEditorHeader

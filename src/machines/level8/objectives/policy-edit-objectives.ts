@@ -3,7 +3,7 @@ import slackServicePolicyWithTags from '../schemas/policy/slack-manage-service-p
 import { FinishEventMap, PolicyEditFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID, UserNodeID } from '../types/node-id-enums';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/machines/types';
-import { AccessLevel, IAMNodeEntity } from '@/types';
+import { AccessLevel, HandleID, IAMNodeEntity, PolicyGrantedAccess } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const OBJECTIVE1_CALLOUT_MSG = `
@@ -70,22 +70,30 @@ const OBJECTIVE2_HINT_MSG2 = `
 
   Which one do you think is best suited for this case?
 `;
-
-const GRANTED_RESOURCES = [
-  {
+const GRANTED_RESOURCES: PolicyGrantedAccess[] = [
+  ...[UserNodeID.SeniorKent, UserNodeID.SeniorWayne].flatMap(id => [
+    {
+      source_node: id,
+      access_level: AccessLevel.Read,
+      target_node: ResourceNodeID.SlackIntegrationSecret,
+      source_handle: HandleID.Right,
+      target_handle: HandleID.Left,
+    },
+    {
+      source_node: id,
+      access_level: AccessLevel.Read,
+      target_node: ResourceNodeID.SlackCrashlyticsNotifierService,
+      source_handle: HandleID.Right,
+      target_handle: HandleID.Left,
+    },
+  ]),
+  ...[UserNodeID.JuniorBruce, UserNodeID.JuniorClark].map(id => ({
+    source_node: id,
     access_level: AccessLevel.Read,
-    source_node: UserNodeID.SeniorKent,
-    target_node: ResourceNodeID.SlackIntegrationSecret,
-    target_handle: 'bottom',
-    source_handle: 'top',
-  },
-  {
-    access_level: AccessLevel.Read,
-    source_node: UserNodeID.SeniorWayne,
     target_node: ResourceNodeID.SlackCrashlyticsNotifierService,
-    target_handle: 'bottom',
-    source_handle: 'top',
-  },
+    source_handle: HandleID.Right,
+    target_handle: HandleID.Left,
+  })),
 ];
 
 export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] = [
