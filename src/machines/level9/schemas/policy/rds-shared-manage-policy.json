@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ]
+    },
+    "Statement": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/describeDbInstancesStatement"
+          },
+          {
+            "$ref": "#/definitions/allowDBConnectionsStatement"
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "describeDbInstancesStatement": {
+      "type": "object",
+      "required": [
+        "Effect",
+        "Action",
+        "Resource",
+        "Condition"
+      ],
+      "properties": {
+        "Effect": {
+          "const": "Allow"
+        },
+        "Action": {
+          "oneOf": [
+            {
+              "const": "rds:DescribeDBInstances"
+            },
+            {
+              "type": "array",
+              "contains": {
+                "const": "rds:DescribeDBInstances"
+              }
+            }
+          ]
+        },
+        "Resource": {
+          "const": "*"
+        },
+        "Condition": {
+          "type": "object",
+          "required": [
+            "StringEquals"
+          ],
+          "properties": {
+            "StringEquals": {
+              "type": "object",
+              "required": [
+                "aws:ResourceTag/application"
+              ],
+              "properties": {
+                "aws:ResourceTag/application": {
+                  "const": "${aws:PrincipalTag/application}"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "allowDBConnectionsStatement": {
+      "type": "object",
+      "required": [
+        "Effect",
+        "Action",
+        "Resource",
+        "Condition"
+      ],
+      "properties": {
+        "Effect": {
+          "const": "Allow"
+        },
+        "Action": {
+          "oneOf": [
+            {
+              "const": "rds-db:connect"
+            },
+            {
+              "type": "array",
+              "contains": {
+                "const": "rds-db:connect"
+              }
+            }
+          ]
+        },
+        "Resource": {
+          "oneOf": [
+            {
+              "const": "arn:aws:rds-db:*:*:dbuser:*/*"
+            },
+            {
+              "type": "array",
+              "contains": {
+                "const": "arn:aws:rds-db:*:*:dbuser:*/*"
+              }
+            }
+          ]
+        },
+        "Condition": {
+          "type": "object",
+          "required": [
+            "StringEquals"
+          ],
+          "properties": {
+            "StringEquals": {
+              "type": "object",
+              "required": [
+                "aws:ResourceTag/application"
+              ],
+              "properties": {
+                "aws:ResourceTag/application": {
+                  "const": "${aws:PrincipalTag/application}"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

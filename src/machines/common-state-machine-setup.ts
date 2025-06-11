@@ -151,6 +151,23 @@ export const createStateMachineSetup = <
           nodes_connnections: updatedContext.nodes_connnections,
         });
       }),
+      delete_nodes: enqueueActions(({ context, enqueue }, { nodeIds }: { nodeIds: string[] }) => {
+        const nodes = context.nodes.filter(node => nodeIds.includes(node.id));
+        let updatedContext = context;
+
+        nodes.forEach(node => {
+          ({ updatedContext } = deleteNode<TLevelObjectiveID, TFinishEventMap>(
+            updatedContext,
+            node
+          ));
+        });
+
+        enqueue.assign({
+          nodes: updatedContext.nodes,
+          edges: updatedContext.edges,
+          nodes_connnections: updatedContext.nodes_connnections,
+        });
+      }),
       add_iam_user_group_node: enqueueActions(
         (
           { context, enqueue },

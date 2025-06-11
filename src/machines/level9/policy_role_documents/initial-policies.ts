@@ -1,32 +1,43 @@
 export const INITIAL_POLICIES = {
-  TUTORIAL_SCP: {
+  SEPARATE_RDS_POLICY: {
     Version: '2012-10-17',
     Statement: [
       {
         Effect: 'Allow',
-        Action: [],
+        Action: ['INSERT_ACTION_HERE'],
         Resource: '*',
+        Condition: {},
+      },
+      {
+        Effect: 'Allow',
+        Action: ['rds-db:connect'],
+        Resource: ['arn:aws:rds-db:*:*:dbuser:*/*'],
+        Condition: {},
       },
     ],
   },
-  TUTORIAL_SECRETS_READ_PERMISSION_POLICY: {
+  SHARED_RDS_POLICY: {
     Version: '2012-10-17',
     Statement: [
       {
         Effect: 'Allow',
-        Action: ['secretsmanager:GetSecretValue'],
+        Action: ['rds:DescribeDBInstances'],
         Resource: '*',
+        Condition: {
+          StringEquals: {
+            'aws:ResourceTag/application': '',
+          },
+        },
       },
-    ],
-  },
-  IN_LEVEL_INITIAL_SCP: {
-    Version: '2012-10-17',
-    Statement: [
       {
-        Effect: 'Deny',
-        Action: 'secretsmanager:GetSecretValue',
-        Resource: '*',
-        Condition: 'INSERT_CONDITION_HERE',
+        Effect: 'Allow',
+        Action: ['rds-db:connect'],
+        Resource: ['arn:aws:rds-db:*:*:dbuser:*/*'],
+        Condition: {
+          StringEquals: {
+            'aws:ResourceTag/application': '',
+          },
+        },
       },
     ],
   },

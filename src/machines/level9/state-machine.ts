@@ -1,11 +1,10 @@
 import { assign } from 'xstate';
 
 import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
-import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
+import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
-import { SCP_CREATION_OBJECTIVES } from './objectives/scp-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
@@ -13,8 +12,8 @@ import {
   EdgeConnectionFinishEvent,
   FinishEventMap,
   PolicyCreationFinishEvent,
-  SCPCreationFInishEvent,
 } from './types/finish-event-enums';
+import { PolicyNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../config';
@@ -31,10 +30,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
   EDGE_CONNECTION_OBJECTIVES
 ).createMachine({
   id: 'level9_state_machine',
-  initial: 'inside_tutorial',
+  initial: 'inside_level',
   context: {
-    level_title: 'Tag Based Access Control (TBAC)',
-    level_description: 'TBAC FTW! Learn how to use tags to control access.',
+    level_title: 'Service Control Policies',
+    level_description: 'Service Control Policies',
     level_number: 9,
     next_popover_index: 0,
     next_popup_index: 0,
@@ -55,27 +54,18 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     all_policy_creation_objectives: [],
-    restricted_element_ids: [ElementID.CodeEditorPolicyTab, ElementID.CodeEditorRoleTab],
+    restricted_element_ids: [
+      ElementID.CodeEditorRoleTab,
+      ElementID.CodeEditorSCPTab,
+      ElementID.CodeEditorResourcePolicyTab,
+    ],
     objectives_map: {
       ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
       [IAMNodeEntity.Policy]: { objectives: POLICY_CREATION_OBJECTIVES, current_index: 0 },
-      [IAMNodeEntity.SCP]: { objectives: SCP_CREATION_OBJECTIVES, current_index: 0 },
     },
   },
   on: {
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
-    [StatefulStateMachineEvent.AddIAMPolicyNode]: {
-      actions: [
-        {
-          type: 'add_policy_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            label: event.label,
-            policyNodeType: IAMNodeEntity.Policy,
-          }),
-        },
-      ],
-    },
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [
         {
@@ -107,6 +97,16 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
+    [StatefulStateMachineEvent.AddIAMPolicyNode]: {
+      actions: {
+        type: 'add_policy_node',
+        params: ({ event }) => ({
+          docString: event.doc_string,
+          label: event.label,
+          policyNodeType: IAMNodeEntity.Policy,
+        }),
+      },
+    },
     [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {
@@ -131,107 +131,111 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
       ],
     },
+    [StatefulStateMachineEvent.EditIAMPolicyNode]: {
+      actions: [
+        {
+          type: 'edit_policy_node',
+          params: ({ event }) => ({ nodeId: event.node_id, docString: event.doc_string }),
+        },
+      ],
+    },
     [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
     [StatelessStateMachineEvent.HideHelpPopover]: { actions: 'hide_help_popover' },
     [StatelessStateMachineEvent.ShowHelpPopover]: { actions: 'show_help_popover' },
   },
   states: {
-    inside_tutorial: {
-      onDone: 'inside_level',
-      initial: 'tutorial_popup1',
+    inside_level: {
       entry: [
-        {
-          type: 'assign_nodes',
-          params: { nodes: INITIAL_TUTORIAL_NODES },
-        },
-        {
-          type: 'add_new_level_objective',
-          params: {
-            objectives: LEVEL_OBJECTIVES[0],
-          },
-        },
-        'enable_tutorial_state',
+        { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
+        assign({
+          initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
+        }),
+        'resolve_initial_edges', // TODO: Can't we pass the connections directly?
+        'disable_edges_management_ability',
+        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
       ],
+      initial: 'popup1',
       states: {
-        tutorial_popup1: {
+        popup1: {
           entry: 'next_popup',
           on: {
-            NEXT_POPUP: 'tutorial_popover1',
-          },
-        },
-        tutorial_popover1: {
-          entry: ['hide_popups', 'next_popover'],
-          on: {
-            [StatelessStateMachineEvent.IAMNodeTagsOpened]: 'fixed_popover1',
+            NEXT_POPUP: 'fixed_popover1',
           },
         },
         fixed_popover1: {
-          entry: ['hide_popovers', 'show_fixed_popover'],
+          entry: ['hide_popups', 'show_fixed_popover'],
           on: {
-            [StatelessStateMachineEvent.IAMNodeTagsPopoverClosed]: 'fixed_popover2',
+            NEXT_FIXED_POPOVER: 'fixed_popover2',
           },
         },
         fixed_popover2: {
           entry: ['next_fixed_popover'],
           on: {
-            NEXT_FIXED_POPOVER: 'create_tutorial_permission_policy',
+            NEXT_FIXED_POPOVER: 'create_policy',
           },
         },
-        create_tutorial_permission_policy: {
+        create_policy: {
+          type: 'parallel',
+          onDone: 'fixed_popover3',
           entry: [
             'hide_fixed_popovers',
             'next_popover',
+            'next_edge_connection_objectives',
+            'enable_edges_management_ability',
             {
               type: 'next_policy_role_creation_objectives',
-              params: {
-                entity: IAMNodeEntity.Policy,
-              },
-            },
-            {
-              type: 'update_whitelisted_element_ids',
-              params: {
-                whitelisted_element_ids: [
-                  ElementID.NewEntityBtn,
-                  ElementID.CodeEditorPolicyTab,
-                  ElementID.CreateRolesAndPoliciesMenuItem,
-                ],
-              },
+              params: { entity: IAMNodeEntity.Policy },
             },
           ],
-          on: {
-            [PolicyCreationFinishEvent.TUTORIAL_PERMISSION_POLICY_CREATED]:
-              'attach_permission_policy_to_users',
-          },
-        },
-        attach_permission_policy_to_users: {
-          type: 'parallel',
-          entry: ['next_edge_connection_objectives', 'enable_edges_management_ability'],
-          onDone: 'fixed_popover3',
           states: {
-            attach_policy_to_user1: {
+            create_policy1: {
               initial: 'in_progress',
               states: {
                 in_progress: {
-                  onDone: 'finished',
                   on: {
-                    [EdgeConnectionFinishEvent.TUTORIAL_POLICY_CONNECTED_TO_USER1]: 'finished',
+                    [PolicyCreationFinishEvent.RDS1_MANAGE_POLICY_CREATED]: 'completed',
                   },
                 },
-                finished: {
+                completed: {
                   type: 'final',
                 },
               },
             },
-            attach_policy_to_user2: {
+            create_policy2: {
               initial: 'in_progress',
               states: {
                 in_progress: {
-                  onDone: 'finished',
                   on: {
-                    [EdgeConnectionFinishEvent.TUTORIAL_POLICY_CONNECTED_TO_USER2]: 'finished',
+                    [PolicyCreationFinishEvent.RDS2_MANAGE_POLICY_CREATED]: 'completed',
                   },
                 },
-                finished: {
+                completed: {
+                  type: 'final',
+                },
+              },
+            },
+            attach_policy1_to_group1: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [EdgeConnectionFinishEvent.RDS1_MANAGE_POLICY_ATTACHED_GROUP1]: 'completed',
+                  },
+                },
+                completed: {
+                  type: 'final',
+                },
+              },
+            },
+            attach_policy2_to_group2: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [EdgeConnectionFinishEvent.RDS2_MANAGE_POLICY_ATTACHED_GROUP2]: 'completed',
+                  },
+                },
+                completed: {
                   type: 'final',
                 },
               },
@@ -239,84 +243,77 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         fixed_popover3: {
-          entry: ['next_fixed_popover'],
+          entry: ['hide_popovers', 'next_fixed_popover'],
           on: {
-            NEXT_FIXED_POPOVER: 'tutorial_finished',
-          },
-        },
-        tutorial_finished: {
-          entry: ['hide_fixed_popovers', 'hide_popovers'],
-          type: 'final',
-        },
-      },
-    },
-    inside_level: {
-      initial: 'in_level_popup1',
-      entry: [
-        'clear_edges',
-        'disable_tutorial_state',
-        {
-          type: 'assign_nodes',
-          params: { nodes: INITIAL_IN_LEVEL_NODES },
-        },
-        assign({
-          initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
-        }),
-        'resolve_initial_edges',
-        {
-          type: 'add_new_level_objective',
-          params: {
-            objectives: LEVEL_OBJECTIVES[1],
-          },
-        },
-      ],
-      states: {
-        in_level_popup1: {
-          entry: 'next_popup',
-          on: {
-            NEXT_POPUP: 'fixed_popover4',
+            NEXT_FIXED_POPOVER: 'fixed_popover4',
           },
         },
         fixed_popover4: {
-          entry: ['hide_popups', 'next_fixed_popover'],
+          entry: ['hide_popovers', 'next_fixed_popover'],
           on: {
-            NEXT_FIXED_POPOVER: 'create_in_level_scp',
+            NEXT_FIXED_POPOVER: 'create_new_policy',
           },
         },
-        create_in_level_scp: {
+        create_new_policy: {
           entry: [
             'hide_fixed_popovers',
-            { type: 'next_policy_role_creation_objectives', params: { entity: IAMNodeEntity.SCP } },
+            'next_popover',
+            {
+              type: 'delete_nodes',
+              params: { nodeIds: [PolicyNodeID.RDSManagePolicy1, PolicyNodeID.RDSManagePolicy2] },
+            },
+            {
+              type: 'next_policy_role_creation_objectives',
+              params: { entity: IAMNodeEntity.Policy },
+            },
           ],
           on: {
-            [SCPCreationFInishEvent.IN_LEVEL_SCP_CREATED]: 'scp_in_level_created',
+            [PolicyCreationFinishEvent.RDS_SHARED_POLICY_CREATED]: 'attach_policy1_to_groups',
           },
         },
-        scp_in_level_created: {
-          entry: ['next_edge_connection_objectives', 'enable_edges_management_ability'],
-          on: {
-            [EdgeConnectionFinishEvent.IN_LEVEL_SCP_ATTACHED_TO_OU]: {
-              target: 'scp_in_level_attached_to_ou_popover1',
-              actions: [
-                {
-                  type: 'change_objective_progress',
-                  params: {
-                    id: LevelObjectiveID.CREATE_IN_LEVEL_SCP,
-                    finished: true,
+        attach_policy1_to_groups: {
+          type: 'parallel',
+          onDone: 'policy_creation_completed',
+          entry: 'next_edge_connection_objectives',
+          states: {
+            attach_policy_to_group1: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [EdgeConnectionFinishEvent.RDS_SHARED_MANAGE_POLICY_ATTACHED_GROUP1]:
+                      'completed',
                   },
                 },
-              ],
+                completed: {
+                  type: 'final',
+                },
+              },
+            },
+            attach_policy_to_group2: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [EdgeConnectionFinishEvent.RDS_SHARED_MANAGE_POLICY_ATTACHED_GROUP2]:
+                      'completed',
+                  },
+                },
+                completed: {
+                  type: 'final',
+                },
+              },
             },
           },
         },
-        scp_in_level_attached_to_ou_popover1: {
+        policy_creation_completed: {
           entry: ['next_popover'],
           on: {
-            NEXT_POPOVER: 'in_level_finished',
+            NEXT_POPOVER: 'level_finished_popup',
           },
         },
-        in_level_finished: {
-          entry: ['next_popup'],
+        level_finished_popup: {
+          entry: ['hide_popovers', 'next_popup'],
           type: 'final',
         },
       },

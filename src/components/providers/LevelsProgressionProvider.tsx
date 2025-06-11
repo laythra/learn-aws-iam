@@ -10,6 +10,7 @@ import { stateMachine as level5StateMachine } from '@/machines/level5/state-mach
 import { stateMachine as leve6StateMachine } from '@/machines/level6/state-machine';
 import { stateMachine as level7StateMachine } from '@/machines/level7/state-machine';
 import { stateMachine as level8StateMachine } from '@/machines/level8/state-machine';
+import { stateMachine as level9StateMachine } from '@/machines/level9/state-machine';
 import CurrentLevelDetailsStore from '@/stores/current-level-details-store';
 
 const LEVELS_STATE_MACHINES = {
@@ -21,6 +22,7 @@ const LEVELS_STATE_MACHINES = {
   6: leve6StateMachine,
   7: level7StateMachine,
   8: level8StateMachine,
+  9: level9StateMachine,
 };
 
 type LevelNumber = keyof typeof LEVELS_STATE_MACHINES;
@@ -32,7 +34,8 @@ type ActorLogicType =
   | typeof level5StateMachine
   | typeof leve6StateMachine
   | typeof level7StateMachine
-  | typeof level8StateMachine;
+  | typeof level8StateMachine
+  | typeof level9StateMachine;
 
 export const levelActors: {
   [key: number]: ReturnType<typeof createActorContext<ActorLogicType>>;

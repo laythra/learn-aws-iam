@@ -1,45 +1,28 @@
-import { uniqueId } from 'lodash';
-
 export const UserNodeID = {
-  James: uniqueId('user-'),
-  Bond: uniqueId('user-'),
-  JuniorBruce: uniqueId('user-'),
-  SeniorWayne: uniqueId('user-'),
-  JuniorClark: uniqueId('user-'),
-  SeniorKent: uniqueId('user-'),
-  JuniorDiana: uniqueId('user-'),
+  Mario: 'mario',
+  Luigi: 'luigi',
+  Peach: 'peach',
+  Bowser: 'bowser',
+  Wario: 'wario',
+  Waluigi: 'waluigi',
 } as const;
+
+export const GroupNodeID = {
+  PeachTeam: 'peach-team',
+  BowserForce: 'bowser-force',
+};
 
 export const PolicyNodeID = {
-  InLevelPermissionPolicy: uniqueId('policy-'),
-  TutorialEC2TerminatePolicy: uniqueId('policy-'),
-} as const;
-
-export const ResourcePolicyNodeID = {
-  InLevelResourceBasedPolicy: uniqueId('policy-'),
-} as const;
-
-export const SCPNodeID = {
-  InLevelOUSCP: uniqueId('scp-'),
-  InLevelAccountSCP: uniqueId('scp-'),
+  RDSManagePolicy1: 'policy-1',
+  RDSManagePolicy2: 'policy-2',
+  RDSSharedPolicy: 'policy-3',
 } as const;
 
 export const ResourceNodeID = {
-  TutorialEC2Instance1: uniqueId('resource-'),
-  TutorialEC2Instance2: uniqueId('resource-'),
-  TutorialEC2Instance3: uniqueId('resource-'),
-  TutorialEC2Instance4: uniqueId('resource-'),
-  InLevelSecret1: uniqueId('secret-'),
-  InLevelSecret2: uniqueId('secret-'),
-  InLevelSecret3: uniqueId('secret-'),
+  RDS1: 'resource-1',
+  RDS2: 'resource-2',
 } as const;
 
-export const AccountNodeID = {
-  Dev: uniqueId('account-'),
-  Staging: uniqueId('account-'),
-  Prod: uniqueId('account-'),
-} as const;
-
-export const OUNodeID = {
-  Dev: uniqueId('ou-'),
-} as const;
+export const RoleNodeID = {
+  SlackCodeDeployRole: 'role-1',
+};
