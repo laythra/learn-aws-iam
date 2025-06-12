@@ -1,10 +1,10 @@
-import { produce, WritableDraft } from 'immer';
+import { produce } from 'immer';
 
 import { refreshPolicyConnections } from './edges-creation-state-machine-actions';
+import { IAMNodeFilter } from './iam-node-filter';
 import { BaseFinishEventMap, GenericContext, ObjectiveType } from '../types';
-import { IAMAnyNode, IAMNodeEntity, IAMPolicyNode } from '@/types';
+import { IAMAnyNode, IAMPolicyNode } from '@/types';
 import { isJSONValid } from '@/utils/iam-code-linter';
-import { isNodeOfEntity } from '@/utils/node-type-guards';
 
 export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
@@ -23,9 +23,10 @@ export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends 
   }
 
   let updatedContext = produce(context, draftContext => {
-    const targetNode = draftContext.nodes.find(
-      node => node.id === nodeId && isNodeOfEntity(node, IAMNodeEntity.Policy)
-    ) as WritableDraft<IAMPolicyNode>;
+    const targetNode = IAMNodeFilter.create()
+      .fromNodes(draftContext.nodes)
+      .whereIdIs(nodeId)
+      .build()[0];
 
     if (!targetNode) return;
 

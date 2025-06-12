@@ -73,14 +73,15 @@ export interface PolicyGrantedAccess {
   readonly access_level: AccessLevel;
   readonly source_handle?: string;
   readonly target_handle: string;
-
   /**
-   * The source node from which the access is granted
-   * This key is used for conditional access policies
-   * where the access is granted based on the source node
-   * e.g. a policy that grants access to a resource only if the request comes from a specific user or group
+   * A function which returns the list of nodes to which the access is granted.
+   *
+   * This is useful for policies with conditional access,
+   * where the access is granted to a subset of nodes based on some condition.
+   * @param nodes The list of candidate nodes to which the access might be granted.
+   * @returns An array of nodes to which the access is granted.
    */
-  readonly source_node?: string;
+  readonly applicable_nodes?: (node: IAMAnyNode[]) => IAMAnyNode[];
 }
 
 export interface PolicyBlockedAccess {

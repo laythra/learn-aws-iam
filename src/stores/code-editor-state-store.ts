@@ -110,7 +110,6 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
       context.content[event.entity] = { [event.nodeId]: event.content };
     },
     setSelectedIAMEntity: (context: CodeEditorState, event: { payload: IAMCodeDefinedEntity }) => {
-      console.log('Setting selected IAM entity:', event.payload);
       context.selectedIAMEntity = event.payload;
     },
     setIsValidating: (context: CodeEditorState, event: { payload: boolean }) => {
@@ -187,7 +186,6 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
         selectedIAMEntity?: IAMCodeDefinedEntity;
       }
     ) => {
-      console.log('Setting selected IAM entity:', event.selectedIAMEntity);
       context.isOpen = true;
       context.mode = event.mode;
       context.selectedNodeId = event.selectedNodeId;
