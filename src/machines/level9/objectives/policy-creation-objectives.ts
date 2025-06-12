@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import rdsSharedManagePolicySchema from '../schemas/policy/rds-shared-manage-policy.json';
 import rds1ManagePolicySchema from '../schemas/policy/rds1-manage-policy.json';
@@ -8,7 +6,8 @@ import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/objectives-factory';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { AccessLevel, IAMNodeEntity } from '@/types';
+import { IAMNodeFilter } from '@/machines/utils/iam-node-filter';
+import { AccessLevel, IAMAnyNode, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const OBJECTIVE_CALLOUT_MSG = `
@@ -49,62 +48,89 @@ const HINT_MSG3 = `
   You can use the \`rds:DescribeDBInstances\` action for this purpose.
 `;
 
+const SHARED_HINT_MESSAGES = [
+  {
+    title: 'Condition Operator',
+    content: HINT_MSG1,
+  },
+  {
+    title: 'Condition Key',
+    content: HINT_MSG2,
+  },
+  {
+    title: 'Action to List RDS Instances',
+    content: HINT_MSG3,
+  },
+];
+
+const SHAERD_HELP_BADGES = [
+  {
+    path: 'Statement[0].Action',
+    content: 'Place an action here that helps listing all RDS instances',
+    color: 'yellow',
+  },
+];
+
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
-  _.zip(
-    [PolicyNodeID.RDSManagePolicy1, PolicyNodeID.RDSManagePolicy2],
-    [rds1ManagePolicySchema, rds2managePolicySchema],
-    [ResourceNodeID.RDS1, ResourceNodeID.RDS2],
-    [
-      PolicyCreationFinishEvent.RDS1_MANAGE_POLICY_CREATED,
-      PolicyCreationFinishEvent.RDS2_MANAGE_POLICY_CREATED,
-    ]
-  )
-    .map(
-      ([policyNodeId, schema, resourceNodeId, finishEvent]) =>
-        ({
-          type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-          entity_id: policyNodeId,
-          entity: IAMNodeEntity.Policy,
-          json_schema: schema,
-          on_finish_event: finishEvent,
-          validate_inside_code_editor: true,
-          validate_function: AJV_COMPILER.compile(schema!),
-          initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
-          limit_new_lines: false,
-          created_node_initial_position: 'center',
-          granted_accesses: [
-            {
-              target_node: resourceNodeId!,
-              access_level: AccessLevel.Read,
-              target_handle: 'bottom',
-              source_handle: 'top',
-            },
-          ],
-          callout_message: OBJECTIVE_CALLOUT_MSG,
-          hint_messages: [
-            {
-              title: 'Condition Operator',
-              content: HINT_MSG1,
-            },
-            {
-              title: 'Condition Key',
-              content: HINT_MSG2,
-            },
-            {
-              title: 'Action to List RDS Instances',
-              content: HINT_MSG3,
-            },
-          ],
-          help_badges: [
-            {
-              path: 'Statement[0].Action',
-              content: 'Place an action here that helps listing all RDS instances',
-              color: 'yellow',
-            },
-          ],
-        }) satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>
-    )
-    .map(objective => createPolicyCreationObjective(objective)),
+  [
+    {
+      type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
+      entity_id: PolicyNodeID.RDSManagePolicy1,
+      entity: IAMNodeEntity.Policy,
+      json_schema: rds1ManagePolicySchema,
+      on_finish_event: PolicyCreationFinishEvent.RDS1_MANAGE_POLICY_CREATED,
+      validate_inside_code_editor: true,
+      validate_function: AJV_COMPILER.compile(rds1ManagePolicySchema),
+      initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
+      limit_new_lines: false,
+      created_node_initial_position: 'center',
+      granted_accesses: [
+        {
+          target_node: ResourceNodeID.RDS1,
+          access_level: AccessLevel.Read,
+          target_handle: 'bottom',
+          source_handle: 'top',
+          applicable_nodes: (nodes: IAMAnyNode[]) =>
+            IAMNodeFilter.create()
+              .fromNodes(nodes)
+              .whereEntityIs(IAMNodeEntity.User)
+              .whereHasTag('peach-team')
+              .build(),
+        },
+      ],
+      callout_message: OBJECTIVE_CALLOUT_MSG,
+      hint_messages: SHARED_HINT_MESSAGES,
+      help_badges: SHAERD_HELP_BADGES,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+    {
+      type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
+      entity_id: PolicyNodeID.RDSManagePolicy2,
+      entity: IAMNodeEntity.Policy,
+      json_schema: rds2managePolicySchema,
+      on_finish_event: PolicyCreationFinishEvent.RDS2_MANAGE_POLICY_CREATED,
+      validate_inside_code_editor: true,
+      validate_function: AJV_COMPILER.compile(rds2managePolicySchema),
+      initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
+      limit_new_lines: false,
+      created_node_initial_position: 'center',
+      granted_accesses: [
+        {
+          target_node: ResourceNodeID.RDS2,
+          access_level: AccessLevel.Read,
+          target_handle: 'bottom',
+          source_handle: 'top',
+          applicable_nodes: (nodes: IAMAnyNode[]) =>
+            IAMNodeFilter.create()
+              .fromNodes(nodes)
+              .whereEntityIs(IAMNodeEntity.User)
+              .whereHasTag('bowser-power')
+              .build(),
+        },
+      ],
+      hint_messages: SHARED_HINT_MESSAGES,
+      help_badges: SHAERD_HELP_BADGES,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+  ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
@@ -123,12 +149,24 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
           access_level: AccessLevel.Read,
           target_handle: 'right',
           source_handle: 'left',
+          applicable_nodes: (nodes: IAMAnyNode[]) =>
+            IAMNodeFilter.create()
+              .fromNodes(nodes)
+              .whereEntityIs(IAMNodeEntity.User)
+              .whereHasTag('application', 'peach-team')
+              .build(),
         },
         {
           target_node: ResourceNodeID.RDS2,
           access_level: AccessLevel.Read,
           target_handle: 'right',
           source_handle: 'left',
+          applicable_nodes: (nodes: IAMAnyNode[]) =>
+            IAMNodeFilter.create()
+              .fromNodes(nodes)
+              .whereEntityIs(IAMNodeEntity.User)
+              .whereHasTag('application', 'bowser-power')
+              .build(),
         },
       ],
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,

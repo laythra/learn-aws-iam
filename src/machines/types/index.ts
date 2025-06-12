@@ -49,6 +49,7 @@ export type NodeConnection = {
   to: IAMAnyNode;
   parent_edge_id?: string;
 };
+
 export type InitialNodeConnection = {
   from: string;
   to: string;

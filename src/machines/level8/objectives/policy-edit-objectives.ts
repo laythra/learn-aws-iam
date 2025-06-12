@@ -1,9 +1,10 @@
 import slackServicePolicyNoTags from '../schemas/policy/slack-manage-service-policy-no-tags.json';
 import slackServicePolicyWithTags from '../schemas/policy/slack-manage-service-policy-with-tags.json';
 import { FinishEventMap, PolicyEditFinishEvent } from '../types/finish-event-enums';
-import { PolicyNodeID, ResourceNodeID, UserNodeID } from '../types/node-id-enums';
+import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/machines/types';
-import { AccessLevel, HandleID, IAMNodeEntity, PolicyGrantedAccess } from '@/types';
+import { IAMNodeFilter } from '@/machines/utils/iam-node-filter';
+import { AccessLevel, HandleID, IAMAnyNode, IAMNodeEntity, PolicyGrantedAccess } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const OBJECTIVE1_CALLOUT_MSG = `
@@ -71,29 +72,20 @@ const OBJECTIVE2_HINT_MSG2 = `
   Which one do you think is best suited for this case?
 `;
 const GRANTED_RESOURCES: PolicyGrantedAccess[] = [
-  ...[UserNodeID.SeniorKent, UserNodeID.SeniorWayne].flatMap(id => [
-    {
-      source_node: id,
-      access_level: AccessLevel.Read,
-      target_node: ResourceNodeID.SlackIntegrationSecret,
-      source_handle: HandleID.Right,
-      target_handle: HandleID.Left,
-    },
-    {
-      source_node: id,
-      access_level: AccessLevel.Read,
-      target_node: ResourceNodeID.SlackCrashlyticsNotifierService,
-      source_handle: HandleID.Right,
-      target_handle: HandleID.Left,
-    },
-  ]),
-  ...[UserNodeID.JuniorBruce, UserNodeID.JuniorClark].map(id => ({
-    source_node: id,
+  {
+    access_level: AccessLevel.Read,
+    target_node: ResourceNodeID.SlackIntegrationSecret,
+    source_handle: HandleID.Right,
+    target_handle: HandleID.Left,
+    applicable_nodes: (nodes: IAMAnyNode[]) =>
+      IAMNodeFilter.create().fromNodes(nodes).whereHasTag('role', 'senior').build(),
+  } satisfies PolicyGrantedAccess,
+  {
     access_level: AccessLevel.Read,
     target_node: ResourceNodeID.SlackCrashlyticsNotifierService,
     source_handle: HandleID.Right,
     target_handle: HandleID.Left,
-  })),
+  },
 ];
 
 export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] = [
