@@ -43,6 +43,7 @@ export enum IAMNodeResourceEntity {
   Billing = 'Billing and Cost Management',
   Lambda = 'Lambda Function',
   Secret = 'Secret',
+  RDS = 'RDS',
 }
 
 export enum IAMNodeImage {

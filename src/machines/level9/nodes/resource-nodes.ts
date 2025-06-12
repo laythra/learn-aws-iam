@@ -1,48 +1,26 @@
-import _ from 'lodash';
-
-import { AccountNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { IAMNodeImage, IAMNodeResourceEntity, type IAMResourceNode } from '@/types';
 
-const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = _.zip(
-  [
-    ResourceNodeID.TutorialEC2Instance1,
-    ResourceNodeID.TutorialEC2Instance2,
-    ResourceNodeID.TutorialEC2Instance3,
-    ResourceNodeID.TutorialEC2Instance4,
-  ],
-  ['ec2-instance-1', 'ec2-instance-2', 'ec2-instance-3', 'ec2-instance-4'],
-  ['james', 'bond', 'james', 'bond']
-).map(([id, label, creator]) => ({
-  id,
-  label,
-  initial_position: 'center',
-  image: IAMNodeImage.Server,
-  resource_type: IAMNodeResourceEntity.EC2Instance,
-  layout_direction: 'horizontal',
-  tags: [['CreatedBy', creator!]],
-}));
-
+const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [];
 const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
-    id: ResourceNodeID.InLevelSecret1,
-    label: 'slack-alert-token',
-    initial_position: 'left-center',
-    image: IAMNodeImage.Secret,
-    resource_type: IAMNodeResourceEntity.Secret,
+    id: ResourceNodeID.RDS1,
+    label: 'peach-team-rds',
+    initial_position: 'top-center',
+    image: IAMNodeImage.Database,
+    resource_type: IAMNodeResourceEntity.RDS,
     layout_direction: 'horizontal',
-    horizontal_spacing: 10,
-    parent_id: AccountNodeID.Prod,
+    tags: [['application', 'peach-team']],
   },
   {
-    id: ResourceNodeID.InLevelSecret1,
-    label: 'slack-alert-token',
-    initial_position: 'left-center',
-    image: IAMNodeImage.Secret,
-    resource_type: IAMNodeResourceEntity.Secret,
+    id: ResourceNodeID.RDS2,
+    label: 'bowser-force-rds',
+    initial_position: 'top-center',
+    image: IAMNodeImage.Database,
+    resource_type: IAMNodeResourceEntity.RDS,
     layout_direction: 'horizontal',
-    horizontal_spacing: 10,
-    parent_id: AccountNodeID.Prod,
+    tags: [['application', 'bowser-force']],
   },
 ];
 
@@ -58,6 +36,6 @@ export const INITIAL_IN_LEVEL_RESOURCE_NODES: IAMResourceNode[] = IN_LEVEL_RESOU
   nodeData =>
     createResourceNode({
       dataOverrides: nodeData,
-      rootOverrides: { parentId: AccountNodeID.Prod, draggable: true },
+      rootOverrides: { draggable: true },
     })
 );

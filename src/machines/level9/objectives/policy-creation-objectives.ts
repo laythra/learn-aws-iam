@@ -1,18 +1,19 @@
+import _ from 'lodash';
+
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
-import tutorialPolicySchema from '../schemas/policy/tutorial-permission-policy-schema.json';
+import rdsSharedManagePolicySchema from '../schemas/policy/rds-shared-manage-policy.json';
+import rds1ManagePolicySchema from '../schemas/policy/rds1-manage-policy.json';
+import rds2managePolicySchema from '../schemas/policy/rds2-manage-policy.json';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
-import { PolicyNodeID, ResourceNodeID, UserNodeID } from '../types/node-id-enums';
+import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/objectives-factory';
-import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
-const OBJECTIVE1_CALLOUT_MSG = `
-  The goal of this objective is to create a permission policy which allows the creator
-  of each EC2 instance to terminate it.
-
-  Below is a brief overview of the \`Condition\` element in IAM policies:
+const OBJECTIVE_CALLOUT_MSG = `
+  We ultimately want to create two policies that allow connecting to the RDS instances
+  and managing them, but only if the user the same tag as the RDS instance.
 
   ~~~js
   "Condition": {
@@ -21,95 +22,113 @@ const OBJECTIVE1_CALLOUT_MSG = `
     }
   }|fullwidth
   ~~~
+
+  Consult the hints below if you need further help
 `;
 
-const OBJECTIVE1_HINT_MSG1 = `
-  For the condition operators, the most commonly used ones are:
-  - **\`StringEquals\`**: checks if a string matches a specific value.
-  - **\`StringLike\`**: checks if a string matches a pattern (supports wildcards).
-  - **\`Bool\`**: evaluates to true or false.
-  - **\`NumericEquals\`**: checks if a numeric value matches a specific number.
+const HINT_MSG1 = `
+  Remember the condition operators we discussed earlier?
 
-  In this case, we want to check if the creator of the EC2 instance
-  is the same as the principal making the request
+  For this objective, we want to perform a strict string match,
+  what do you think is the best suited operator?
 `;
 
-const OBJECTIVE1_HINT_MSG2 = `
-  As for the condition keys, there are thousands of them available,
-  but the most commonly used ones are:
-  - **\`<resource-name>:ResourceTag/<tag-key>\`**: checks the tags attached to the resource.
-  - **\`<resource-name>:RequestTag/<tag-key>\`**: checks the tags attached to the request.
+const HINT_MSG2 = `
+  The condition key we need to define should represent the
+  resource tag that is associated with the RDS instance, and the value should be
+  the tag value that matches the user tag.
 
-  In this case, the resource name is \`ec2\`,
-  which leaves us with the condition key you're gonna construct
+  The most commonly used condition keys for this purpose are:
+
+  - **\`aws:ResourceTag/<tag-key>\`**: checks if the resource has a specific tag key and value.
+  - **\`aws:RequestTag/<tag-key>\`**: checks if the request has a specific tag key and value.
 `;
 
-const OBJECTIVE1_HINT_MSG3 = `
-  Condition values can be a fixed value, like \`"true"\` or \`"false"\`,
-  or they can be a variable, like:
-  - \`\${aws:username}\`: the username of the principal making the request.
-  - \`\${aws:userid}\`: the unique identifier of the principal making the request.
-
-  In this case, the value should be the username of the principal who created the EC2 instance.
+const HINT_MSG3 = `
+  The missing action in the policy would allow listing all RDS instances.
+  You can use the \`rds:DescribeDBInstances\` action for this purpose.
 `;
 
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
+  _.zip(
+    [PolicyNodeID.RDSManagePolicy1, PolicyNodeID.RDSManagePolicy2],
+    [rds1ManagePolicySchema, rds2managePolicySchema],
+    [ResourceNodeID.RDS1, ResourceNodeID.RDS2],
+    [
+      PolicyCreationFinishEvent.RDS1_MANAGE_POLICY_CREATED,
+      PolicyCreationFinishEvent.RDS2_MANAGE_POLICY_CREATED,
+    ]
+  )
+    .map(
+      ([policyNodeId, schema, resourceNodeId, finishEvent]) =>
+        ({
+          type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
+          entity_id: policyNodeId,
+          entity: IAMNodeEntity.Policy,
+          json_schema: schema,
+          on_finish_event: finishEvent,
+          validate_inside_code_editor: true,
+          validate_function: AJV_COMPILER.compile(schema!),
+          initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
+          limit_new_lines: false,
+          created_node_initial_position: 'center',
+          granted_accesses: [
+            {
+              target_node: resourceNodeId!,
+              access_level: AccessLevel.Read,
+              target_handle: 'bottom',
+              source_handle: 'top',
+            },
+          ],
+          callout_message: OBJECTIVE_CALLOUT_MSG,
+          hint_messages: [
+            {
+              title: 'Condition Operator',
+              content: HINT_MSG1,
+            },
+            {
+              title: 'Condition Key',
+              content: HINT_MSG2,
+            },
+            {
+              title: 'Action to List RDS Instances',
+              content: HINT_MSG3,
+            },
+          ],
+          help_badges: [
+            {
+              path: 'Statement[0].Action',
+              content: 'Place an action here that helps listing all RDS instances',
+              color: 'yellow',
+            },
+          ],
+        }) satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>
+    )
+    .map(objective => createPolicyCreationObjective(objective)),
   [
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.TutorialEC2TerminatePolicy,
+      entity_id: PolicyNodeID.RDSSharedPolicy,
       entity: IAMNodeEntity.Policy,
-      json_schema: MANAGED_POLICIES.EmptyPolicy, // What is this for?
-      on_finish_event: PolicyCreationFinishEvent.TUTORIAL_PERMISSION_POLICY_CREATED,
+      json_schema: rdsSharedManagePolicySchema,
+      on_finish_event: PolicyCreationFinishEvent.RDS_SHARED_POLICY_CREATED,
       validate_inside_code_editor: true,
-      validate_function: AJV_COMPILER.compile(tutorialPolicySchema),
-      initial_code: INITIAL_POLICIES.IN_LEVEL_INITIAL_SCP,
+      validate_function: AJV_COMPILER.compile(rdsSharedManagePolicySchema),
+      initial_code: INITIAL_POLICIES.SHARED_RDS_POLICY,
       limit_new_lines: false,
-      created_node_initial_position: 'bottom-left',
-      initial_edges: [],
+      created_node_initial_position: 'center',
       granted_accesses: [
         {
-          target_node: ResourceNodeID.TutorialEC2Instance1,
-          access_level: AccessLevel.Delete,
-          target_handle: 'bottom',
-          source_handle: 'top',
-          source_node: UserNodeID.James,
+          target_node: ResourceNodeID.RDS1,
+          access_level: AccessLevel.Read,
+          target_handle: 'right',
+          source_handle: 'left',
         },
         {
-          target_node: ResourceNodeID.TutorialEC2Instance2,
-          access_level: AccessLevel.Delete,
-          target_handle: 'bottom',
-          source_handle: 'top',
-          source_node: UserNodeID.Bond,
-        },
-        {
-          target_node: ResourceNodeID.TutorialEC2Instance3,
-          access_level: AccessLevel.Delete,
-          target_handle: 'bottom',
-          source_handle: 'top',
-          source_node: UserNodeID.James,
-        },
-        {
-          target_node: ResourceNodeID.TutorialEC2Instance4,
-          access_level: AccessLevel.Delete,
-          target_handle: 'bottom',
-          source_handle: 'top',
-          source_node: UserNodeID.Bond,
-        },
-      ],
-      callout_message: OBJECTIVE1_CALLOUT_MSG,
-      hint_messages: [
-        {
-          title: 'Condition Operators',
-          content: OBJECTIVE1_HINT_MSG1,
-        },
-        {
-          title: 'Condition Keys',
-          content: OBJECTIVE1_HINT_MSG2,
-        },
-        {
-          title: 'Condition Values',
-          content: OBJECTIVE1_HINT_MSG3,
+          target_node: ResourceNodeID.RDS2,
+          access_level: AccessLevel.Read,
+          target_handle: 'right',
+          source_handle: 'left',
         },
       ],
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,

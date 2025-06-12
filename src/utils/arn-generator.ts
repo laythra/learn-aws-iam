@@ -26,6 +26,8 @@ const arnStrategies: Record<string, ArnGenerator> = {
     `arn:aws:budgets::${accountId}:budget/${resourceName}`,
   [IAMNodeResourceEntity.Secret]: (resourceName, accountId) =>
     `arn:aws:secretsmanager:${accountId}:secret:${resourceName}`,
+  [IAMNodeResourceEntity.RDS]: (resourceName, accountId, region = 'us-east-1') =>
+    `arn:aws:rds:${region}:${accountId}:db:${resourceName}`,
 };
 
 export const SupportedArnNodeTypes = Object.keys(arnStrategies);
