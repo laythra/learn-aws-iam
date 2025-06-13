@@ -43,6 +43,7 @@ export function createMockContext<
     edges_management_disabled: false,
     all_policy_creation_objectives: [],
     objectives_map: DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
+    layout_groups: [],
     ...props,
   };
 }

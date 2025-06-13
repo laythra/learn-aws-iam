@@ -35,17 +35,19 @@ interface UseCanvasReturn {
 export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const theme = useTheme<CustomTheme>();
   const toast = useToast();
-  const [nodes, edges, sidePanelOpened, edgesManagementDisabled] =
+  const [nodes, edges, sidePanelOpened, edgesManagementDisabled, layoutGroups] =
     LevelsProgressionContext().useSelector(
       state => [
         state.context.nodes,
         state.context.edges,
         state.context.side_panel_open,
         state.context.edges_management_disabled,
+        state.context.layout_groups,
       ],
       _.isEqual
     );
 
+  const layoutGroupsSupported = layoutGroups && layoutGroups.length > 0;
   const [nodesState, edgesState] = useSelector(
     CanvasStore,
     state => [state.context.nodes, state.context.edges],
@@ -86,15 +88,25 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     if (!rfInstance) return;
 
     const reactFlowViewport = rfInstance.getViewport();
-    const nodeGroups = _.groupBy(
-      nodes,
-      item => `${item.parentId}-${item.data.initial_position}-${item.data.layout_direction}`
-    );
+    const nodeGroups = layoutGroupsSupported
+      ? _.groupBy(nodes, 'data.layout_group_id')
+      : _.groupBy(
+          nodes,
+          item => `${item.parentId}-${item.data.initial_position}-${item.data.layout_direction}`
+        );
+
     const nodeById = _.keyBy(nodes, 'id');
+    const layoutGroupsById = _.keyBy(layoutGroups, 'id');
 
     const newNodes = Object.values(nodeGroups).flatMap(nodesGroup => {
       return nodesGroup.map((node, nodeIndex) => {
+        // Very dirty I know. Will be cleaned up later once we migrate everything to layout groups
         const existingNode = _.find(nodesState, { id: node.id });
+        const layoutGroup = node.data.layout_group_id
+          ? layoutGroupsById[node.data.layout_group_id]
+          : undefined;
+
+        const parentNode = node.parentId ? nodeById[node.parentId] : undefined;
 
         // Ensures existing nodes' position remains unchanged
         // since the user might have moved them and we don't want to override that
@@ -112,8 +124,9 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
           nodesGroup.length,
           nodeIndex,
           sidePanelWidth,
-          node.parentId ? nodeById[node.parentId] : undefined,
-          node.data.layout_direction || 'horizontal'
+          parentNode,
+          node.data.layout_direction || 'horizontal',
+          layoutGroup
         );
 
         return { ...node, position: initialPosition };

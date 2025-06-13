@@ -1,6 +1,8 @@
 import { Edge, HandleProps, Node } from '@xyflow/react';
 import { DOMKeyframesDefinition, DynamicAnimationOptions } from 'framer-motion';
 
+import { ValidInitialPosition } from '@/features/canvas/utils/nodes-position';
+
 export enum HandleID {
   Top = 'top',
   Right = 'right',
@@ -92,17 +94,31 @@ export interface PolicyBlockedAccess {
 }
 
 /**
- * Defines the logical placemenet of the node in the layout
- * Nodes belonging to the same layout group will be positioned relative to each other
- * and stacked according to the layout direction
- * Currently unused, but placing it here so that I don't forget about it in the future
+ * Defines logical placement of nodes in layout groups inside the canvas.
+ * Nodes in the same group are positioned relative to each other and stacked by direction.
  */
 export interface NodeLayoutGroup {
   id: string;
-  parent_id?: string; // optional, if it's nested
-  initial_position: string;
+  /**
+   * Defines the initial position of the group relative to the canvas viewport.
+   * This is used to position the group when it is first rendered.
+   */
+  position: ValidInitialPosition;
+  /**
+   * Defines the direction in which nodes are laid out within this group.
+   * 'horizontal' means nodes are laid out side by side,
+   * 'vertical' means nodes are stacked on top of each other.
+   */
   layout_direction: 'horizontal' | 'vertical';
+  /**
+   * Defines the amount of space between its adjacent vertical nodes
+   * and horizontal nodes, depending on the layout direction.
+   */
   vertical_spacing?: number;
+  /**
+   * Defines the amount of space between its adjacent horizontal nodes
+   * and vertical nodes, depending on the layout direction.
+   */
   horizontal_spacing?: number;
 }
 
@@ -159,8 +175,7 @@ interface IAMNodeData extends Record<string, unknown> {
   layout_direction: 'horizontal' | 'vertical';
 
   /**
-   * Defines the layout group to which the node belongs,
-   * TODO: Use this to define which layout group the node belongs to
+   * Defines the layout group to which the node belongs
    */
   layout_group_id?: string;
   /**

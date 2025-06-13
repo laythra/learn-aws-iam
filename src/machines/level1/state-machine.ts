@@ -16,7 +16,7 @@ import {
 import { UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../config';
+import { COMMON_LAYOUT_GROUPS, DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
 import { FIXED_POPOVER_MESSAGES } from '../level2/tutorial_messages/fixed-popover-messages';
 import { ElementID } from '@/config/element-ids';
 import {
@@ -58,6 +58,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     scp_creation_objectives: [],
     all_policy_creation_objectives: [],
     objectives_map: DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
+    layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {

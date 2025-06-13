@@ -246,6 +246,7 @@ export function createUserGroupNode<TLevelObjectiveID, TFinishEventMap extends B
       dataOverrides: {
         id: targetObjective?.entity_id ?? _.uniqueId('node_'),
         initial_position: targetObjective?.initial_position ?? 'center',
+        layout_group_id: targetObjective?.layout_group_id,
         unnecessary_node: targetObjective === undefined,
         ...props,
       },
