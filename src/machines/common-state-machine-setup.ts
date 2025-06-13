@@ -30,6 +30,11 @@ import type {
   AccountID,
   BaseFinishEventMap,
   EdgeConnectionObjective,
+  FixedPopoverMessage,
+  IAMPolicyCreationObjective,
+  IAMPolicyEditObjective,
+  IAMResourcePolicyCreationObjective,
+  IAMRoleCreationObjective,
   PopoverTutorialMessage,
   PopupTutorialMessage,
 } from '@/machines/types';
@@ -213,7 +218,8 @@ export const createStateMachineSetup = <
             nodes: updatedContext.nodes,
             edges: updatedContext.edges,
             nodes_connnections: updatedContext.nodes_connnections,
-            all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
+            policy_creation_objectives: updatedContext.policy_creation_objectives,
+            resource_policy_creation_objectives: updatedContext.resource_policy_creation_objectives,
           });
 
           createPermissionPolicyResult.events.forEach(event => {
@@ -289,6 +295,30 @@ export const createStateMachineSetup = <
           });
         }
       ),
+      show_popup_message: enqueueActions(
+        ({ enqueue }, { message }: { message: PopupTutorialMessage }) => {
+          enqueue.assign({
+            popup_content: message,
+            show_popups: true,
+          });
+        }
+      ),
+      show_popover_message: enqueueActions(
+        ({ enqueue }, { message }: { message: PopoverTutorialMessage }) => {
+          enqueue.assign({
+            popover_content: message,
+            show_popovers: true,
+          });
+        }
+      ),
+      show_fixed_popover_message: enqueueActions(
+        ({ enqueue }, { message }: { message: FixedPopoverMessage }) => {
+          enqueue.assign({
+            fixed_popover_content: message,
+            show_fixed_popovers: true,
+          });
+        }
+      ),
       next_popover: assign({
         popover_content: ({ context }) => popoverTutorialMessages[context.next_popover_index ?? 0],
         show_popovers: ({ context }) => context.next_popover_index < popoverTutorialMessages.length,
@@ -345,6 +375,57 @@ export const createStateMachineSetup = <
           ),
       }),
       show_side_panel: assign({ side_panel_open: true }),
+      set_edge_connection_objectives: enqueueActions(
+        (
+          { enqueue },
+          { objectives }: { objectives: EdgeConnectionObjective<TFinishEventMap>[] }
+        ) => {
+          enqueue.assign({
+            edges_connection_objectives: objectives,
+          });
+        }
+      ),
+      set_permission_policy_creation_objectives: enqueueActions(
+        (
+          { enqueue },
+          { objectives }: { objectives: IAMPolicyCreationObjective<TFinishEventMap>[] }
+        ) => {
+          enqueue.assign({
+            policy_creation_objectives: objectives,
+          });
+        }
+      ),
+      set_resource_policy_creation_objectives: enqueueActions(
+        (
+          { enqueue },
+          { objectives }: { objectives: IAMResourcePolicyCreationObjective<TFinishEventMap>[] }
+        ) => {
+          enqueue.assign({
+            resource_policy_creation_objectives: objectives,
+          });
+        }
+      ),
+      set_role_creation_objectives: enqueueActions(
+        (
+          { enqueue },
+          { objectives }: { objectives: IAMRoleCreationObjective<TFinishEventMap>[] }
+        ) => {
+          enqueue.assign({
+            role_creation_objectives: objectives,
+          });
+        }
+      ),
+      set_permission_policy_edit_objectives: enqueueActions(
+        (
+          { enqueue },
+          { objectives }: { objectives: IAMPolicyEditObjective<TFinishEventMap>[] }
+        ) => {
+          enqueue.assign({
+            policy_edit_objectives: objectives,
+          });
+        }
+      ),
+
       next_edge_connection_objectives: assign({
         edges_connection_objectives: ({ context }) =>
           edgeConnectionObjectives[context.next_edges_connection_objectives_index ?? 0],

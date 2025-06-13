@@ -75,6 +75,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   next_fixed_popover_index: number;
   nodes: IAMAnyNode[];
   policy_creation_objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[];
+  resource_policy_creation_objectives?: IAMResourcePolicyCreationObjective<TBaseFinishEventMap>[];
   policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
@@ -82,6 +83,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   show_popovers: boolean;
   show_popups: boolean;
   show_fixed_popovers: boolean;
+  fixed_popover_content?: FixedPopoverMessage;
   side_panel_open?: boolean;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
   use_multi_account_canvas?: boolean;
