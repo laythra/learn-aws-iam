@@ -15,7 +15,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../config';
+import { COMMON_LAYOUT_GROUPS, DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -58,9 +58,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     nodes_connnections: [],
     initial_node_connections: INITIAL_CONNECTIONS,
     restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
-    scp_creation_objectives: [],
     all_policy_creation_objectives: [],
     objectives_map: DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
+    layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {

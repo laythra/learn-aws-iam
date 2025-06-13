@@ -11,7 +11,7 @@ import { FinishEventMap, PolicyEditFinishEvent } from './types/finish-event-enum
 import { PolicyNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../config';
+import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
@@ -49,6 +49,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     nodes_connnections: [],
     all_policy_creation_objectives: [],
     restricted_element_ids: [ElementID.NewEntityBtn],
+    layout_groups: [],
     objectives_map: {
       ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
     },

@@ -1,13 +1,13 @@
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import type { IAMPolicyNode } from '@/types';
-import { AccessLevel, IAMNodeImage } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeImage } from '@/types';
 
 const POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.PolicyNode1,
     label: 'S3ReadPolicy',
-    initial_position: 'bottom-center',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.Policy,
     granted_accesses: [
       {
@@ -20,7 +20,7 @@ const POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.PolicyNode2,
     label: 'DynamoDBReadPolicy',
-    initial_position: 'bottom-center',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.Policy,
     granted_accesses: [
       {
@@ -33,8 +33,8 @@ const POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.PolicyNode3,
     label: 'EC2ReadPolicy',
-    initial_position: 'bottom-center',
     image: IAMNodeImage.Policy,
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     granted_accesses: [
       {
         access_level: AccessLevel.Read,

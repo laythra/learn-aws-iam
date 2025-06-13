@@ -14,6 +14,7 @@ import type {
   IAMCodeDefinedEntity,
   IAMUserNode,
   PolicyGrantedAccess,
+  NodeLayoutGroup,
 } from '@/types';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -120,6 +121,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
     };
   };
   all_policy_creation_objectives: BaseCreationObjective<TBaseFinishEventMap>[];
+  layout_groups: NodeLayoutGroup[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -363,6 +365,7 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
   readonly entity_to_create: CreatableIAMNodeEntity;
   readonly initial_position?: string;
   readonly created_node_parent_id?: string;
+  readonly layout_group_id?: string;
   finished: boolean;
 };
 

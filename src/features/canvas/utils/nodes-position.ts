@@ -1,20 +1,25 @@
 import { XYPosition, Viewport } from '@xyflow/react';
 
 import { theme } from '@/theme';
-import { IAMAnyNode } from '@/types/iam-node-types';
+import { IAMAnyNode, NodeLayoutGroup } from '@/types/iam-node-types';
 
-const BETWEEN_NODES_SPACING = 20;
+export const BETWEEN_NODES_SPACING = 20;
+export const VALID_INITIAL_POSITIONS = [
+  'center',
+  'top-center',
+  'bottom-center',
+  'left-center',
+  'right-center',
+  'top-left',
+  'top-right',
+  'bottom-left',
+  'bottom-right',
+];
 
-export type ValidInitialPosition =
-  | 'center'
-  | 'top-center'
-  | 'bottom-center'
-  | 'left-center'
-  | 'right-center'
-  | 'top-left'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-right';
+export const LAYOUT_DIRECTIONS = ['horizontal', 'vertical'];
+
+export type ValidInitialPosition = (typeof VALID_INITIAL_POSITIONS)[number];
+export type LayoutDirection = (typeof LAYOUT_DIRECTIONS)[number];
 
 const NODES_POSITIONS = (
   originX: number,
@@ -27,7 +32,7 @@ const NODES_POSITIONS = (
   parentWidth: number,
   nodeIndex: number,
   numNodes: number,
-  layoutDirection: 'horizontal' | 'vertical' = 'vertical'
+  layoutDirection: LayoutDirection = 'vertical'
 ): Record<ValidInitialPosition, { x: number; y: number }> => {
   const isHorizontal = layoutDirection === 'horizontal';
   const isVertical = !isHorizontal;
@@ -89,18 +94,6 @@ const NODES_POSITIONS = (
   };
 };
 
-const VALID_INITIAL_POSITIONS = [
-  'center',
-  'top-center',
-  'bottom-center',
-  'left-center',
-  'right-center',
-  'top-left',
-  'top-right',
-  'bottom-left',
-  'bottom-right',
-];
-
 /**
  * When a node has no parent, we calculate its center relative to the canvas.
  */
@@ -136,9 +129,20 @@ export function getNodeInitialPosition(
   nodeIndex: number,
   sidePanelWidth: number,
   parentNode?: IAMAnyNode, // Pass the parent node if it exists
-  layoutDirection: 'horizontal' | 'vertical' = 'horizontal'
+  layoutDirection: LayoutDirection = 'horizontal',
+  layoutGroup?: NodeLayoutGroup
 ): XYPosition {
-  const { initial_position } = node.data;
+  // const { initial_position } = node.data;
+  const initial_position = layoutGroup?.position || node.data.initial_position;
+  const verticalSpacing =
+    layoutGroup?.vertical_spacing ??
+    node.data.vertical_spacing ??
+    theme.sizes.iamNodeHeightInPixels + BETWEEN_NODES_SPACING;
+  const horizontalSpacing =
+    layoutGroup?.horizontal_spacing ??
+    node.data.horizontal_spacing ??
+    theme.sizes.iamNodeWidthInPixels + BETWEEN_NODES_SPACING;
+
   if (!initial_position || !VALID_INITIAL_POSITIONS.includes(initial_position)) {
     return { x: 0, y: 0 };
   }
@@ -160,14 +164,14 @@ export function getNodeInitialPosition(
   return NODES_POSITIONS(
     center.x,
     center.y,
-    node.data.vertical_spacing ?? theme.sizes.iamNodeHeightInPixels + BETWEEN_NODES_SPACING,
-    node.data.horizontal_spacing ?? theme.sizes.iamNodeWidthInPixels + BETWEEN_NODES_SPACING,
+    verticalSpacing,
+    horizontalSpacing,
     nodeWidth!,
     nodeHeight!,
     parentHeight,
     parentWidth,
     nodeIndex,
     numNodes,
-    layoutDirection // Default layout direction
+    layoutGroup?.layout_direction ?? layoutDirection // Default layout direction
   )[initial_position as ValidInitialPosition];
 }
