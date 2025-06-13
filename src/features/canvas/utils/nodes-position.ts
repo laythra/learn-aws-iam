@@ -3,20 +3,23 @@ import { XYPosition, Viewport } from '@xyflow/react';
 import { theme } from '@/theme';
 import { IAMAnyNode, NodeLayoutGroup } from '@/types/iam-node-types';
 
-const BETWEEN_NODES_SPACING = 20;
+export const BETWEEN_NODES_SPACING = 20;
+export const VALID_INITIAL_POSITIONS = [
+  'center',
+  'top-center',
+  'bottom-center',
+  'left-center',
+  'right-center',
+  'top-left',
+  'top-right',
+  'bottom-left',
+  'bottom-right',
+];
 
-export type ValidInitialPosition =
-  | 'center'
-  | 'top-center'
-  | 'bottom-center'
-  | 'left-center'
-  | 'right-center'
-  | 'top-left'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-right';
+export const LAYOUT_DIRECTIONS = ['horizontal', 'vertical'];
 
-export type LayoutDirection = 'horizontal' | 'vertical';
+export type ValidInitialPosition = (typeof VALID_INITIAL_POSITIONS)[number];
+export type LayoutDirection = (typeof LAYOUT_DIRECTIONS)[number];
 
 const NODES_POSITIONS = (
   originX: number,
@@ -90,18 +93,6 @@ const NODES_POSITIONS = (
     },
   };
 };
-
-const VALID_INITIAL_POSITIONS = [
-  'center',
-  'top-center',
-  'bottom-center',
-  'left-center',
-  'right-center',
-  'top-left',
-  'top-right',
-  'bottom-left',
-  'bottom-right',
-];
 
 /**
  * When a node has no parent, we calculate its center relative to the canvas.

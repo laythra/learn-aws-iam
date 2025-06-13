@@ -2,6 +2,7 @@ import _ from 'lodash';
 
 export const UserNodeID = {
   TutorialUser: _.uniqueId('user-'),
+  TutorialUser2: _.uniqueId('user-'),
   FirstUser: _.uniqueId('user-'),
 };
 

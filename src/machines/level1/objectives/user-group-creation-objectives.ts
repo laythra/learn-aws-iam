@@ -1,8 +1,7 @@
 import { FinishEventMap, NodeCreationFinishEvent } from '../types/finish-event-enums';
 import { UserNodeID } from '../types/node-id-enums';
-import { CommonLayoutGroupID } from '@/machines/consts';
 import { IAMUserGroupCreationObjective, ObjectiveType } from '@/machines/types';
-import { IAMNodeEntity } from '@/types';
+import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 export const USER_GROUP_CREATION_OBJECTIVES: IAMUserGroupCreationObjective<FinishEventMap>[] = [
   {
@@ -11,6 +10,6 @@ export const USER_GROUP_CREATION_OBJECTIVES: IAMUserGroupCreationObjective<Finis
     finished: false,
     entity_to_create: IAMNodeEntity.User,
     on_finish_event: NodeCreationFinishEvent.USER_NODE_CREATED,
-    layout_group_id: CommonLayoutGroupID.TopCenter,
+    layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
   },
 ];

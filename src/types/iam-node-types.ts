@@ -302,3 +302,24 @@ export type IAMNodeDataMapping = {
   iam_user: IAMUserNodeData;
   iam_group: IAMGroupNodeData;
 };
+
+export enum CommonLayoutGroupID {
+  CenterHorizontal = 'center-horizontal',
+  CenterVertical = 'center-vertical',
+  TopCenterHorizontal = 'top-center-horizontal',
+  TopCenterVertical = 'top-center-vertical',
+  TopLeftHorizontal = 'top-left-horizontal',
+  TopLeftVertical = 'top-left-vertical',
+  TopRightHorizontal = 'top-right-horizontal',
+  TopRightVertical = 'top-right-vertical',
+  BottomCenterHorizontal = 'bottom-center-horizontal',
+  BottomCenterVertical = 'bottom-center-vertical',
+  BottomLeftHorizontal = 'bottom-left-horizontal',
+  BottomLeftVertical = 'bottom-left-vertical',
+  BottomRightHorizontal = 'bottom-right-horizontal',
+  BottomRightVertical = 'bottom-right-vertical',
+  LeftCenterHorizontal = 'left-center-horizontal',
+  LeftCenterVertical = 'left-center-vertical',
+  RightCenterHorizontal = 'right-center-horizontal',
+  RightCenterVertical = 'right-center-vertical',
+}

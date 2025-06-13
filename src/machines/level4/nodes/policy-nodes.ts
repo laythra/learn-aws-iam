@@ -3,7 +3,7 @@ import { DEVELOPERS_POLICY_DOCUMENT } from '../policy_role_documents/developers-
 import { INTERNS_POLICY_DOCUMENT } from '../policy_role_documents/interns-policy';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
-import { AccessLevel, IAMPolicyNode } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, IAMPolicyNode } from '@/types';
 
 const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
@@ -17,7 +17,7 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
         access_level: AccessLevel.Full,
       },
     ],
-    initial_position: 'bottom-center',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     editable: true,
   },
   {
@@ -36,7 +36,7 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
         access_level: AccessLevel.ReadWrite,
       },
     ],
-    initial_position: 'bottom-center',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     editable: true,
   },
   {
@@ -44,7 +44,7 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
     label: 'interns-access',
     content: INTERNS_POLICY_DOCUMENT,
     granted_accesses: [],
-    initial_position: 'bottom-center',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     editable: true,
   },
 ];

@@ -1,7 +1,7 @@
 import { FinishEventMap, UserGroupCreationFinishEvent } from '../types/finish-event-enums';
 import { GroupNodeID, UserNodeID } from '../types/node-id-enums';
 import { IAMUserGroupCreationObjective, ObjectiveType } from '@/machines/types';
-import { IAMNodeEntity } from '@/types';
+import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 export const USER_GROUP_CREATION_OBJECTIVES: IAMUserGroupCreationObjective<FinishEventMap>[] = [
   {
@@ -10,7 +10,7 @@ export const USER_GROUP_CREATION_OBJECTIVES: IAMUserGroupCreationObjective<Finis
     finished: false,
     entity_to_create: IAMNodeEntity.Group,
     on_finish_event: UserGroupCreationFinishEvent.GroupCreated,
-    initial_position: 'right-center',
+    layout_group_id: CommonLayoutGroupID.RightCenterHorizontal,
   },
   {
     entity_id: UserNodeID.SecondUser,
@@ -18,6 +18,6 @@ export const USER_GROUP_CREATION_OBJECTIVES: IAMUserGroupCreationObjective<Finis
     finished: false,
     entity_to_create: IAMNodeEntity.User,
     on_finish_event: UserGroupCreationFinishEvent.UserCreated,
-    initial_position: 'left-center',
+    layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
   },
 ];

@@ -10,7 +10,7 @@ import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-mess
 import { FinishEventMap, NodeEditFinishEvent } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
+import { COMMON_LAYOUT_GROUPS, DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -55,7 +55,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     restricted_element_ids: [ElementID.NewEntityBtn],
     all_policy_creation_objectives: [],
     objectives_map: DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
-    layout_groups: [],
+    layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
     [StatefulStateMachineEvent.EditIAMPolicyNode]: {

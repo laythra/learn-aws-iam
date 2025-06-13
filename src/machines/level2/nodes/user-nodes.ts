@@ -1,13 +1,13 @@
 import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import type { IAMUserNode } from '@/types';
-import { IAMNodeImage } from '@/types';
+import { CommonLayoutGroupID, IAMNodeImage } from '@/types';
 
 const USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.FirstUser,
     label: 'Kyouma',
-    initial_position: 'center',
+    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     image: IAMNodeImage.User,
   },
 ];
