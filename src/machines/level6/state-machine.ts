@@ -16,7 +16,6 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -24,11 +23,10 @@ import {
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
 
-export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  EDGE_CONNECTION_OBJECTIVES
-).createMachine({
+export const stateMachine = createStateMachineSetup<
+  LevelObjectiveID,
+  FinishEventMap
+>().createMachine({
   id: 'level6_state_machine',
   initial: 'inside_tutorial',
   context: {
@@ -38,9 +36,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       creating trust relationships and assigning cross-account roles.
     `,
     level_number: 6,
-    next_popover_index: 0,
-    next_popup_index: 0,
-    next_fixed_popover_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -54,16 +49,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     role_creation_objectives: [],
     use_multi_account_canvas: true,
     side_panel_open: false,
-    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
-    all_policy_creation_objectives: [],
     layout_groups: [],
-    objectives_map: {
-      ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
-      [IAMNodeEntity.Policy]: { objectives: POLICY_CREATION_OBJECTIVES, current_index: 0 },
-      [IAMNodeEntity.Role]: { objectives: ROLE_CREATION_OBJECTIVES, current_index: 0 },
-    },
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -164,16 +152,24 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         entities_creation: {
           entry: [
             {
-              type: 'next_policy_role_creation_objectives',
-              params: { entity: IAMNodeEntity.Policy },
+              type: 'set_permission_policy_creation_objectives',
+              params: {
+                objectives: POLICY_CREATION_OBJECTIVES[0],
+              },
             },
             {
-              type: 'next_policy_role_creation_objectives',
-              params: { entity: IAMNodeEntity.Role },
+              type: 'set_role_creation_objectives',
+              params: {
+                objectives: ROLE_CREATION_OBJECTIVES[0],
+              },
             },
-
             'show_side_panel',
-            'next_edge_connection_objectives',
+            {
+              type: 'set_edge_connection_objectives',
+              params: {
+                objectives: EDGE_CONNECTION_OBJECTIVES[0],
+              },
+            },
           ],
           type: 'parallel',
           onDone: {

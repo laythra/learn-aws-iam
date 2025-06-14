@@ -15,19 +15,16 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
 
-export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  EDGE_CONNECTION_OBJECTIVES
-).createMachine({
+export const stateMachine = createStateMachineSetup<
+  LevelObjectiveID,
+  FinishEventMap
+>().createMachine({
   id: 'level5_state_machine',
   initial: 'inside_tutorial',
   context: {
@@ -37,11 +34,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       secure service-to-service communication within your AWS environment.
     `,
     level_number: 5,
-    next_popover_index: 0,
-    next_popup_index: 0,
-    next_fixed_popover_index: 0,
-    next_role_creation_objectives_index: 0,
-    next_edges_connection_objectives_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -56,12 +48,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
-    all_policy_creation_objectives: [],
     layout_groups: [],
-    objectives_map: {
-      ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
-      [IAMNodeEntity.Role]: { objectives: ROLE_CREATION_OBJECTIVES, current_index: 0 },
-    },
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {

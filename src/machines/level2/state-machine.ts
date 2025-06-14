@@ -15,7 +15,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { COMMON_LAYOUT_GROUPS, DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -23,11 +23,10 @@ import {
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
 
-export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  EDGE_CONNECTION_OBJECTIVES
-).createMachine({
+export const stateMachine = createStateMachineSetup<
+  LevelObjectiveID,
+  FinishEventMap
+>().createMachine({
   id: 'level2_state_machine',
   initial: 'tutorial_popup1',
   context: {
@@ -37,9 +36,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       by using IAM Groups to assign shared permissions.
     `,
     level_number: 2,
-    next_popover_index: 0,
-    next_popup_index: 0,
-    next_fixed_popover_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -54,12 +50,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     identity_creation_popup_default_value: IAMNodeEntity.Group,
     in_tutorial_state: true,
     edges_management_disabled: true,
-    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     initial_node_connections: INITIAL_CONNECTIONS,
     restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
-    all_policy_creation_objectives: [],
-    objectives_map: DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {

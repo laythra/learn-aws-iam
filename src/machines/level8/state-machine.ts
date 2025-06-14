@@ -11,27 +11,22 @@ import { FinishEventMap, PolicyEditFinishEvent } from './types/finish-event-enum
 import { PolicyNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
 
-export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  []
-).createMachine({
+export const stateMachine = createStateMachineSetup<
+  LevelObjectiveID,
+  FinishEventMap
+>().createMachine({
   id: 'level8_state_machine',
   initial: 'inside_level',
   context: {
     level_title: 'Service Control Policies',
     level_description: 'Service Control Policies',
     level_number: 8,
-    next_popover_index: 0,
-    next_popup_index: 0,
-    next_fixed_popover_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -47,12 +42,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     side_panel_open: false,
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
-    all_policy_creation_objectives: [],
     restricted_element_ids: [ElementID.NewEntityBtn],
     layout_groups: [],
-    objectives_map: {
-      ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
-    },
   },
   on: {
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },

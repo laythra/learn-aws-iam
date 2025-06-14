@@ -21,10 +21,6 @@ import {
   editNodeAttributes,
   editPermissionPolicy,
 } from './utils/nodes-editing-state-machine-actions';
-// prettier-ignore
-import {
-  updatePolicyRoleCreationObjectivesList
-} from './utils/objectives-navigation-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
 import type {
   AccountID,
@@ -39,7 +35,7 @@ import type {
   PopupTutorialMessage,
 } from '@/machines/types';
 import type { GenericContext, GenericEventData, LevelObjective } from '@/machines/types';
-import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
+import { IAMNodeEntity } from '@/types';
 import {
   IAMAnyNode,
   IAMEdge,
@@ -69,11 +65,7 @@ import {
 export const createStateMachineSetup = <
   TLevelObjectiveID,
   TFinishEventMap extends BaseFinishEventMap,
->(
-  popoverTutorialMessages: PopoverTutorialMessage[],
-  popupTutorialMessages: PopupTutorialMessage[],
-  edgeConnectionObjectives: EdgeConnectionObjective<TFinishEventMap>[][]
-) => {
+>() => {
   return setup({
     types: {} as {
       context: GenericContext<TLevelObjectiveID, TFinishEventMap>;
@@ -268,7 +260,7 @@ export const createStateMachineSetup = <
           enqueue.assign({
             nodes: updatedContext.nodes,
             role_creation_objectives: updatedContext.role_creation_objectives,
-            all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
+            // all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
           });
 
           events.forEach(event => {
@@ -287,7 +279,7 @@ export const createStateMachineSetup = <
           enqueue.assign({
             nodes: updatedContext.nodes,
             role_creation_objectives: updatedContext.role_creation_objectives,
-            all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
+            // all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
           });
 
           events.forEach(event => {
@@ -319,28 +311,7 @@ export const createStateMachineSetup = <
           });
         }
       ),
-      next_popover: assign({
-        popover_content: ({ context }) => popoverTutorialMessages[context.next_popover_index ?? 0],
-        show_popovers: ({ context }) => context.next_popover_index < popoverTutorialMessages.length,
-        next_popover_index: ({ context }) => context.next_popover_index + 1,
-        show_popups: false,
-      }),
-      next_popup: assign({
-        popup_content: ({ context }) => popupTutorialMessages[context.next_popup_index],
-        show_popups: ({ context }) => context.next_popup_index < popupTutorialMessages.length,
-        next_popup_index: ({ context }) => context.next_popup_index + 1,
-        show_popovers: false,
-      }),
-      show_fixed_popover: assign({
-        show_fixed_popovers: ({ context }) =>
-          context.next_fixed_popover_index < context.fixed_popover_messages.length,
-      }),
       hide_fixed_popovers: assign({ show_fixed_popovers: false }),
-      next_fixed_popover: assign({
-        next_fixed_popover_index: ({ context }) => context.next_fixed_popover_index + 1,
-        show_fixed_popovers: ({ context }) =>
-          context.next_fixed_popover_index < context.fixed_popover_messages.length,
-      }),
       hide_popups: assign({ show_popups: false }),
       hide_popovers: assign({ show_popovers: false }),
       change_objective_progress: assign({
@@ -422,24 +393,6 @@ export const createStateMachineSetup = <
         ) => {
           enqueue.assign({
             policy_edit_objectives: objectives,
-          });
-        }
-      ),
-
-      next_edge_connection_objectives: assign({
-        edges_connection_objectives: ({ context }) =>
-          edgeConnectionObjectives[context.next_edges_connection_objectives_index ?? 0],
-        next_edges_connection_objectives_index: ({ context }) =>
-          (context.next_edges_connection_objectives_index ?? 0) + 1,
-      }),
-      next_policy_role_creation_objectives: enqueueActions(
-        ({ context, enqueue }, { entity }: { entity: IAMCodeDefinedEntity }) => {
-          const { updatedContext } = updatePolicyRoleCreationObjectivesList(context, entity);
-
-          enqueue.assign({
-            all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
-            policy_creation_objectives: updatedContext.policy_creation_objectives,
-            objectives_map: updatedContext.objectives_map,
           });
         }
       ),

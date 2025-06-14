@@ -8,7 +8,6 @@ import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objecti
 import {
   RESOURCE_POLICY_CREATION_OBJECTIVES
 } from './objectives/resource-policy-creation-objectives';
-import { ROLE_CREATION_OBJECTIVES } from './objectives/role-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
@@ -19,16 +18,14 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
-export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  EDGE_CONNECTION_OBJECTIVES
-).createMachine({
+export const stateMachine = createStateMachineSetup<
+  LevelObjectiveID,
+  FinishEventMap
+>().createMachine({
   id: 'level7_state_machine',
   // initial: 'inside_tutorial',
   initial: 'inside_level',
@@ -36,9 +33,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     level_title: 'Resource Based Policies',
     level_description: 'Resource Based Policies',
     level_number: 7,
-    next_popover_index: 0,
-    next_popup_index: 0,
-    next_fixed_popover_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -52,23 +46,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     role_creation_objectives: [],
     use_multi_account_canvas: false,
     side_panel_open: false,
-    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     all_policy_creation_objectives: [],
     restricted_element_ids: [ElementID.CodeEditorSCPTab, ElementID.CodeEditorRoleTab],
     resource_policy_creation_objectives: [],
     layout_groups: [],
-    objectives_map: {
-      ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
-      [IAMNodeEntity.Policy]: {
-        objectives: POLICY_CREATION_OBJECTIVES,
-        current_index: 0,
-      },
-      [IAMNodeEntity.ResourcePolicy]: {
-        objectives: RESOURCE_POLICY_CREATION_OBJECTIVES,
-        current_index: 1,
-      },
-    },
   },
   on: {
     ADD_IAM_POLICY_NODE: {
@@ -320,9 +302,9 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
               },
             },
             {
-              type: 'set_role_creation_objectives',
+              type: 'set_resource_policy_creation_objectives',
               params: {
-                objectives: ROLE_CREATION_OBJECTIVES[0],
+                objectives: RESOURCE_POLICY_CREATION_OBJECTIVES[1],
               },
             },
             'show_side_panel',

@@ -160,7 +160,7 @@ export function createResourcePolicy<TLevelObjectiveID, TFinishEventMap extends 
   events: TFinishEventMap[ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE][];
 } {
   const targetValidObjective = findAnyValidObjective<IAMNodeEntity.ResourcePolicy>(
-    context.resource_policy_creation_objectives!,
+    context.resource_policy_creation_objectives ?? [],
     context.nodes,
     docString,
     accountId,

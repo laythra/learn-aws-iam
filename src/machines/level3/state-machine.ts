@@ -17,7 +17,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { COMMON_LAYOUT_GROUPS, DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -25,11 +25,10 @@ import {
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
 
-export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  EDGE_CONNECTION_OBJECTIVES
-).createMachine({
+export const stateMachine = createStateMachineSetup<
+  LevelObjectiveID,
+  FinishEventMap
+>().createMachine({
   id: 'level3_state_machine',
   initial: 'inside_tutorial',
   context: {
@@ -38,9 +37,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       Write custom IAM policies and attach them directly to users, groups, or resources.
     `,
     level_number: 3,
-    next_popover_index: 0,
-    next_popup_index: 0,
-    next_fixed_popover_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -52,14 +48,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
-    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     restricted_element_ids: [ElementID.CodeEditorRoleTab],
-    all_policy_creation_objectives: [],
-    objectives_map: {
-      ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
-      [IAMNodeEntity.Policy]: { objectives: POLICY_CREATION_OBJECTIVES, current_index: 0 },
-    },
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {

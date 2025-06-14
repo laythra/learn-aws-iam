@@ -15,7 +15,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { COMMON_LAYOUT_GROUPS, DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { FIXED_POPOVER_MESSAGES } from '../level2/tutorial_messages/fixed-popover-messages';
 import { ElementID } from '@/config/element-ids';
 import {
@@ -23,11 +23,10 @@ import {
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
 
-export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  EDGE_CONNECTION_OBJECTIVES
-).createMachine({
+export const stateMachine = createStateMachineSetup<
+  LevelObjectiveID,
+  FinishEventMap
+>().createMachine({
   id: 'level1_state_machine',
   initial: 'inside_tutorial',
   context: {
@@ -37,9 +36,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       attaching managed policies, and granting them access to specific AWS resources.
     `,
     level_number: 1,
-    next_popover_index: 0,
-    next_popup_index: 0,
-    next_fixed_popover_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -54,8 +50,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
-    all_policy_creation_objectives: [],
-    objectives_map: DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
@@ -112,7 +106,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           nodes: INITIAL_TUTORIAL_USER_NODES,
           user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
         }),
-        'next_edge_connection_objectives',
+        {
+          type: 'set_edge_connection_objectives',
+          params: { objectives: EDGE_CONNECTION_OBJECTIVES[0] },
+        },
         'disable_edges_management_ability',
         {
           type: 'update_whitelisted_element_ids',
