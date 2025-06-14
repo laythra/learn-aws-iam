@@ -125,13 +125,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       ],
       states: {
         tutorial_popup1: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
             NEXT_POPUP: 'tutorial_popup2',
           },
         },
         tutorial_popup2: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           on: {
             NEXT_POPUP: {
               target: 'fixed_popover1',
@@ -141,7 +141,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         fixed_popover1: {
           entry: [
             'hide_popups',
-            'show_fixed_popover',
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
             'show_side_panel',
             assign({
               level_objectives: LEVEL_OBJECTIVES[0],
@@ -287,7 +287,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         level_finished_popover: {
-          entry: 'next_popover',
+          entry: {
+            type: 'show_popover_message',
+            params: { message: POPOVER_TUTORIAL_MESSAGES[0] },
+          },
           on: {
             NEXT_POPOVER: [
               {
@@ -309,13 +312,16 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         level_finished_popup: {
-          entry: ['hide_popovers', 'next_popup'],
+          entry: [
+            'hide_popovers',
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },
+          ],
           on: {
             NEXT_POPUP: 'tutorial_finished_popup',
           },
         },
         tutorial_finished_popup: {
-          entry: ['next_popup'],
+          entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[3] } }],
         },
       },
     },

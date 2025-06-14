@@ -158,19 +158,24 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       initial: 'popup1',
       states: {
         popup1: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
             NEXT_POPUP: 'fixed_popover1',
           },
         },
         fixed_popover1: {
-          entry: ['hide_popups', 'show_fixed_popover'],
+          entry: [
+            'hide_popups',
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
+          ],
           on: {
             NEXT_FIXED_POPOVER: 'fixed_popover2',
           },
         },
         fixed_popover2: {
-          entry: ['next_fixed_popover'],
+          entry: [
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
+          ],
           on: {
             NEXT_FIXED_POPOVER: 'create_policy',
           },
@@ -180,12 +185,17 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           onDone: 'fixed_popover3',
           entry: [
             'hide_fixed_popovers',
-            'next_popover',
-            'next_edge_connection_objectives',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
+            {
+              type: 'set_edge_connection_objectives',
+              params: { objectives: EDGE_CONNECTION_OBJECTIVES[0] },
+            },
             'enable_edges_management_ability',
             {
-              type: 'next_policy_role_creation_objectives',
-              params: { entity: IAMNodeEntity.Policy },
+              type: 'set_permission_policy_creation_objectives',
+              params: {
+                objectives: POLICY_CREATION_OBJECTIVES[0],
+              },
             },
           ],
           states: {
@@ -244,13 +254,19 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         fixed_popover3: {
-          entry: ['hide_popovers', 'next_fixed_popover'],
+          entry: [
+            'hide_popovers',
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
+          ],
           on: {
             NEXT_FIXED_POPOVER: 'fixed_popover4',
           },
         },
         fixed_popover4: {
-          entry: ['hide_popovers', 'next_fixed_popover'],
+          entry: [
+            'hide_popovers',
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[3] } },
+          ],
           on: {
             NEXT_FIXED_POPOVER: 'create_new_policy',
           },
@@ -258,14 +274,16 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         create_new_policy: {
           entry: [
             'hide_fixed_popovers',
-            'next_popover',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
             {
               type: 'delete_nodes',
               params: { nodeIds: [PolicyNodeID.RDSManagePolicy1, PolicyNodeID.RDSManagePolicy2] },
             },
             {
-              type: 'next_policy_role_creation_objectives',
-              params: { entity: IAMNodeEntity.Policy },
+              type: 'set_permission_policy_creation_objectives',
+              params: {
+                objectives: POLICY_CREATION_OBJECTIVES[1],
+              },
             },
           ],
           on: {
@@ -275,7 +293,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         attach_policy1_to_groups: {
           type: 'parallel',
           onDone: 'policy_creation_completed',
-          entry: 'next_edge_connection_objectives',
+          entry: {
+            type: 'set_edge_connection_objectives',
+            params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
+          },
           states: {
             attach_policy_to_group1: {
               initial: 'in_progress',
@@ -308,13 +329,18 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         policy_creation_completed: {
-          entry: ['next_popover'],
+          entry: [
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
+          ],
           on: {
             NEXT_POPOVER: 'level_finished_popup',
           },
         },
         level_finished_popup: {
-          entry: ['hide_popovers', 'next_popup'],
+          entry: [
+            'hide_popovers',
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
+          ],
           type: 'final',
         },
       },
