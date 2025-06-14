@@ -54,7 +54,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
-    scp_creation_objectives: [],
     all_policy_creation_objectives: [],
     objectives_map: DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
     layout_groups: COMMON_LAYOUT_GROUPS,
@@ -133,28 +132,36 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       onDone: 'finished_level',
       states: {
         welcoming_message: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
             NEXT_POPUP: {
-              actions: 'hide_popups',
               target: 'tutorial_popover1',
             },
           },
         },
         tutorial_popover1: {
-          entry: ['next_popover'],
+          entry: [
+            'hide_popups',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
+          ],
           on: {
             NEXT_POPOVER: 'tutorial_popover2',
           },
         },
         tutorial_popover2: {
-          entry: 'next_popover',
+          entry: {
+            type: 'show_popover_message',
+            params: { message: POPOVER_TUTORIAL_MESSAGES[1] },
+          },
           on: {
             NEXT_POPOVER: 'tutorial_popover3',
           },
         },
         tutorial_popover3: {
-          entry: 'next_popover',
+          entry: {
+            type: 'show_popover_message',
+            params: { message: POPOVER_TUTORIAL_MESSAGES[2] },
+          },
           on: {
             NEXT_POPOVER: 'tutorial_popover4',
           },
@@ -163,20 +170,29 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           }),
         },
         tutorial_popover4: {
-          entry: 'next_popover',
+          entry: {
+            type: 'show_popover_message',
+            params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
+          },
           on: {
             NEXT_POPOVER: 'tutorial_popover5',
           },
           exit: assign({ nodes: INITIAL_TUTORIAL_NODES }),
         },
         tutorial_popover5: {
-          entry: 'next_popover',
+          entry: {
+            type: 'show_popover_message',
+            params: { message: POPOVER_TUTORIAL_MESSAGES[4] },
+          },
           on: {
             NEXT_POPOVER: 'attach_policy_to_tutorial_user',
           },
         },
         attach_policy_to_tutorial_user: {
-          entry: ['next_popover', 'enable_edges_management_ability'],
+          entry: [
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[5] } },
+            'enable_edges_management_ability',
+          ],
           on: {
             [EdgeConnectionFinishEvent.PolicyAttachedToTutorialUser]: {
               target: 'policy_attached_to_tutorial_user_popover',
@@ -193,14 +209,17 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         policy_attached_to_tutorial_user_popover: {
-          entry: 'next_popover',
+          entry: {
+            type: 'show_popover_message',
+            params: { message: POPOVER_TUTORIAL_MESSAGES[6] },
+          },
           on: {
             NEXT_POPOVER: 'create_user_popover',
           },
         },
         create_user_popover: {
           entry: [
-            'next_popover',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[7] } },
             {
               type: 'update_whitelisted_element_ids',
               params: {
@@ -226,7 +245,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         add_your_name_popover: {
-          entry: 'next_popover',
+          entry: {
+            type: 'show_popover_message',
+            params: { message: POPOVER_TUTORIAL_MESSAGES[8] },
+          },
           on: {
             [NodeCreationFinishEvent.USER_NODE_CREATED]: {
               actions: [
@@ -240,7 +262,13 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         connect_iam_policy_to_user: {
-          entry: ['next_popover', 'next_edge_connection_objectives'],
+          entry: [
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[9] } },
+            {
+              type: 'set_edge_connection_objectives',
+              params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
+            },
+          ],
           on: {
             [EdgeConnectionFinishEvent.PolicyAttachedToCreatedUser]: {
               actions: [
@@ -261,13 +289,19 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         policy_attached: {
-          entry: 'next_popover',
+          entry: {
+            type: 'show_popover_message',
+            params: { message: POPOVER_TUTORIAL_MESSAGES[10] },
+          },
           on: {
             NEXT_POPOVER: 'level_objectives_popover',
           },
         },
         level_objectives_popover: {
-          entry: ['show_side_panel', 'next_popover'],
+          entry: [
+            'show_side_panel',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[11] } },
+          ],
           on: {
             NEXT_POPOVER: 'completed',
           },
@@ -287,7 +321,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       ],
       states: {
         finished_level_popup: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           on: {
             NEXT_POPUP: 'finished_level',
           },

@@ -124,25 +124,37 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       ],
       states: {
         popup1: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
             NEXT_POPUP: 'fixed_popover1',
           },
         },
         fixed_popover1: {
-          entry: ['hide_popups', 'show_fixed_popover'],
+          entry: [
+            'hide_popups',
+            {
+              type: 'show_fixed_popover_message',
+              params: { message: FIXED_POPOVER_MESSAGES[0] },
+            },
+          ],
           on: {
             NEXT_FIXED_POPOVER: 'fixed_popover2',
           },
         },
         fixed_popover2: {
-          entry: 'next_fixed_popover',
+          entry: {
+            type: 'show_fixed_popover_message',
+            params: { message: FIXED_POPOVER_MESSAGES[1] },
+          },
           on: {
             NEXT_FIXED_POPOVER: 'fixed_popover3',
           },
         },
         fixed_popover3: {
-          entry: 'next_fixed_popover',
+          entry: {
+            type: 'show_fixed_popover_message',
+            params: { message: FIXED_POPOVER_MESSAGES[2] },
+          },
           on: {
             NEXT_FIXED_POPOVER: 'popover1',
           },
@@ -150,7 +162,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         popover1: {
           entry: [
             'hide_fixed_popovers',
-            'next_popover',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
             {
               type: 'update_whitelisted_element_ids',
               params: {
@@ -167,7 +179,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
         tutorial_finished: {
           entry: [
-            'next_popover',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
             {
               type: 'update_red_dot_visibility',
               params: {
@@ -262,7 +274,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         editing_finished_fixed_popover: {
-          entry: 'next_fixed_popover',
+          entry: {
+            type: 'show_fixed_popover_message',
+            params: { message: FIXED_POPOVER_MESSAGES[3] },
+          },
           on: {
             NEXT_FIXED_POPOVER: [
               {
@@ -284,7 +299,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         level_finished: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           type: 'final',
         },
       },
