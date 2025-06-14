@@ -69,7 +69,7 @@ function createIAMNode<
     draftContext.nodes.push(newNode as WritableDraft<IAMAnyNode>);
 
     if (targetValidObjective) {
-      draftContext.all_policy_creation_objectives.find(
+      draftContext.policy_creation_objectives.find(
         objective => objective.id === targetValidObjective.id
       )!.finished = true;
 
@@ -102,7 +102,7 @@ export function createTrustPolicy<TLevelObjectiveID, TFinishEventMap extends Bas
   events: TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE][];
 } {
   const targetValidObjective = findAnyValidObjective<IAMNodeEntity.Role>(
-    context.all_policy_creation_objectives,
+    context.policy_creation_objectives,
     context.nodes,
     docString,
     accountId,
@@ -132,7 +132,7 @@ export function createPermissionPolicy<
   events: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][];
 } {
   const targetValidObjective = findAnyValidObjective<IAMNodeEntity.Policy>(
-    context.all_policy_creation_objectives,
+    context.policy_creation_objectives,
     context.nodes,
     docString,
     accountId,
@@ -160,7 +160,7 @@ export function createResourcePolicy<TLevelObjectiveID, TFinishEventMap extends 
   events: TFinishEventMap[ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE][];
 } {
   const targetValidObjective = findAnyValidObjective<IAMNodeEntity.ResourcePolicy>(
-    context.all_policy_creation_objectives,
+    context.resource_policy_creation_objectives ?? [],
     context.nodes,
     docString,
     accountId,
@@ -208,7 +208,7 @@ export function createSCP<TLevelObjectiveID, TFinishEventMap extends BaseFinishE
   events: TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE][];
 } {
   const targetValidObjective = findAnyValidObjective<IAMNodeEntity.SCP>(
-    context.all_policy_creation_objectives,
+    context.policy_creation_objectives,
     context.nodes,
     docString,
     undefined,

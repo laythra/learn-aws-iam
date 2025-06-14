@@ -10,7 +10,7 @@ import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-mess
 import { FinishEventMap, NodeEditFinishEvent } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { COMMON_LAYOUT_GROUPS, DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -18,11 +18,10 @@ import {
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
 
-export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  []
-).createMachine({
+export const stateMachine = createStateMachineSetup<
+  LevelObjectiveID,
+  FinishEventMap
+>().createMachine({
   id: 'level4_state_machine',
   initial: 'inside_tutorial',
   context: {
@@ -33,9 +32,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       real-world access requirements in this final challenge.
     `,
     level_number: 4,
-    next_popover_index: 0,
-    next_popup_index: 0,
-    next_fixed_popover_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -48,13 +44,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
-    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     in_tutorial_state: true,
     whitelisted_element_ids: [],
     nodes_connnections: [],
     restricted_element_ids: [ElementID.NewEntityBtn],
-    all_policy_creation_objectives: [],
-    objectives_map: DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
@@ -124,25 +117,37 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       ],
       states: {
         popup1: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
             NEXT_POPUP: 'fixed_popover1',
           },
         },
         fixed_popover1: {
-          entry: ['hide_popups', 'show_fixed_popover'],
+          entry: [
+            'hide_popups',
+            {
+              type: 'show_fixed_popover_message',
+              params: { message: FIXED_POPOVER_MESSAGES[0] },
+            },
+          ],
           on: {
             NEXT_FIXED_POPOVER: 'fixed_popover2',
           },
         },
         fixed_popover2: {
-          entry: 'next_fixed_popover',
+          entry: {
+            type: 'show_fixed_popover_message',
+            params: { message: FIXED_POPOVER_MESSAGES[1] },
+          },
           on: {
             NEXT_FIXED_POPOVER: 'fixed_popover3',
           },
         },
         fixed_popover3: {
-          entry: 'next_fixed_popover',
+          entry: {
+            type: 'show_fixed_popover_message',
+            params: { message: FIXED_POPOVER_MESSAGES[2] },
+          },
           on: {
             NEXT_FIXED_POPOVER: 'popover1',
           },
@@ -150,7 +155,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         popover1: {
           entry: [
             'hide_fixed_popovers',
-            'next_popover',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
             {
               type: 'update_whitelisted_element_ids',
               params: {
@@ -167,7 +172,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
         tutorial_finished: {
           entry: [
-            'next_popover',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
             {
               type: 'update_red_dot_visibility',
               params: {
@@ -262,7 +267,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         editing_finished_fixed_popover: {
-          entry: 'next_fixed_popover',
+          entry: {
+            type: 'show_fixed_popover_message',
+            params: { message: FIXED_POPOVER_MESSAGES[3] },
+          },
           on: {
             NEXT_FIXED_POPOVER: [
               {
@@ -284,7 +292,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         level_finished: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           type: 'final',
         },
       },

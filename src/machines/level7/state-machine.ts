@@ -18,16 +18,14 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
-export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  EDGE_CONNECTION_OBJECTIVES
-).createMachine({
+export const stateMachine = createStateMachineSetup<
+  LevelObjectiveID,
+  FinishEventMap
+>().createMachine({
   id: 'level7_state_machine',
   // initial: 'inside_tutorial',
   initial: 'inside_level',
@@ -35,9 +33,6 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     level_title: 'Resource Based Policies',
     level_description: 'Resource Based Policies',
     level_number: 7,
-    next_popover_index: 0,
-    next_popup_index: 0,
-    next_fixed_popover_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -51,22 +46,11 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     role_creation_objectives: [],
     use_multi_account_canvas: false,
     side_panel_open: false,
-    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     all_policy_creation_objectives: [],
     restricted_element_ids: [ElementID.CodeEditorSCPTab, ElementID.CodeEditorRoleTab],
+    resource_policy_creation_objectives: [],
     layout_groups: [],
-    objectives_map: {
-      ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
-      [IAMNodeEntity.Policy]: {
-        objectives: POLICY_CREATION_OBJECTIVES,
-        current_index: 0,
-      },
-      [IAMNodeEntity.ResourcePolicy]: {
-        objectives: RESOURCE_POLICY_CREATION_OBJECTIVES,
-        current_index: 1,
-      },
-    },
   },
   on: {
     ADD_IAM_POLICY_NODE: {
@@ -185,27 +169,30 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         },
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
         {
-          type: 'next_policy_role_creation_objectives',
-          params: { entity: IAMNodeEntity.ResourcePolicy },
+          type: 'set_resource_policy_creation_objectives',
+          params: { objectives: RESOURCE_POLICY_CREATION_OBJECTIVES[0] },
         },
       ],
       onDone: 'inside_level',
       initial: 'welcoming_message',
       states: {
         welcoming_message: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
             NEXT_POPUP: 'tutorial_popup1',
           },
         },
         tutorial_popup1: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           on: {
             NEXT_POPUP: ['fixed_popover1'],
           },
         },
         fixed_popover1: {
-          entry: ['show_fixed_popover', 'hide_popups'],
+          entry: [
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
+            'hide_popups',
+          ],
           on: {
             NEXT_FIXED_POPOVER: 'create_resource_based_policy',
           },
@@ -213,7 +200,7 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
         create_resource_based_policy: {
           entry: [
             'hide_fixed_popovers',
-            'next_popover',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
             {
               type: 'update_red_dot_visibility',
               params: {
@@ -235,7 +222,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         access_granted_popover: {
-          entry: 'next_popover',
+          entry: {
+            type: 'show_popover_message',
+            params: { message: POPOVER_TUTORIAL_MESSAGES[1] },
+          },
           on: {
             NEXT_POPOVER: 'tutorial_finished',
           },
@@ -263,25 +253,33 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       ],
       states: {
         tutorial_popup3: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },
           on: {
             NEXT_POPUP: 'fixed_popover2',
           },
         },
         fixed_popover2: {
-          entry: ['next_fixed_popover', 'hide_popups'],
+          entry: [
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
+            'hide_popups',
+          ],
           on: {
             NEXT_FIXED_POPOVER: 'resource_node_popover',
           },
         },
         resource_node_popover: {
-          entry: ['next_popover', 'hide_fixed_popovers'],
+          entry: [
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
+            'hide_fixed_popovers',
+          ],
           on: {
             NEXT_POPOVER: 'user_node_popover',
           },
         },
         user_node_popover: {
-          entry: ['next_popover'],
+          entry: [
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
+          ],
           on: {
             NEXT_POPOVER: 'create_nodes_and_edges',
           },
@@ -291,14 +289,23 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           onDone: 'create_and_attach_policies_completed',
           entry: [
             'hide_popovers',
-            'next_edge_connection_objectives',
             {
-              type: 'next_policy_role_creation_objectives',
-              params: { entity: IAMNodeEntity.ResourcePolicy },
+              type: 'set_edge_connection_objectives',
+              params: {
+                objectives: EDGE_CONNECTION_OBJECTIVES[0],
+              },
             },
             {
-              type: 'next_policy_role_creation_objectives',
-              params: { entity: IAMNodeEntity.Policy },
+              type: 'set_permission_policy_creation_objectives',
+              params: {
+                objectives: POLICY_CREATION_OBJECTIVES[0],
+              },
+            },
+            {
+              type: 'set_resource_policy_creation_objectives',
+              params: {
+                objectives: RESOURCE_POLICY_CREATION_OBJECTIVES[1],
+              },
             },
             'show_side_panel',
           ],
@@ -369,19 +376,27 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         create_and_attach_policies_completed: {
-          entry: ['hide_unncessary_edges_or_nodes_warning', 'next_popover'],
+          entry: [
+            'hide_unncessary_edges_or_nodes_warning',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[4] } },
+          ],
           on: {
             NEXT_POPOVER: 'fixed_popover3',
           },
         },
         fixed_popover3: {
-          entry: ['next_fixed_popover', 'hide_popovers'],
+          entry: [
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
+            'hide_popovers',
+          ],
           on: {
             NEXT_FIXED_POPOVER: 'fixed_popover4',
           },
         },
         fixed_popover4: {
-          entry: ['next_fixed_popover'],
+          entry: [
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[3] } },
+          ],
           on: {
             NEXT_FIXED_POPOVER: [
               {
@@ -403,7 +418,10 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         level_completed: {
-          entry: ['hide_fixed_popovers', 'next_popup'],
+          entry: [
+            'hide_fixed_popovers',
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[3] } },
+          ],
           type: 'final',
         },
       },

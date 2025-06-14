@@ -18,19 +18,18 @@ interface FixedPopover {}
 
 export const FixedPopover: React.FC<FixedPopover> = () => {
   const machineActor = LevelsProgressionContext().useActorRef();
-  const [fixedPopoverIndex, showFixedPopovers] = LevelsProgressionContext().useSelector(
-    state => [state.context.next_fixed_popover_index, state.context.show_fixed_popovers],
+  const [showFixedPopovers, fixedPopoverContent] = LevelsProgressionContext().useSelector(
+    state => [state.context.show_fixed_popovers, state.context.fixed_popover_content],
     _.isEqual
   );
 
-  const fixedPopoverMessages = machineActor.getSnapshot().context.fixed_popover_messages;
-  const showPopover = fixedPopoverIndex < fixedPopoverMessages.length && showFixedPopovers;
+  const showPopover = fixedPopoverContent && showFixedPopovers;
 
   if (!showPopover) {
     return null;
   }
 
-  const popoverMessage = fixedPopoverMessages[fixedPopoverIndex];
+  const popoverMessage = fixedPopoverContent!;
   const position = popoverMessage.position;
   const topPos = position.includes('top') ? '10px' : 'auto';
   const bottomPos = position.includes('bottom') ? '10px' : 'auto';

@@ -11,27 +11,22 @@ import { FinishEventMap, PolicyEditFinishEvent } from './types/finish-event-enum
 import { PolicyNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
-import { DEFAULT_ROLE_POLICY_OBJECTIVES_MAP } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
 
-export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEventMap>(
-  POPOVER_TUTORIAL_MESSAGES,
-  POPUP_TUTORIAL_MESSAGES,
-  []
-).createMachine({
+export const stateMachine = createStateMachineSetup<
+  LevelObjectiveID,
+  FinishEventMap
+>().createMachine({
   id: 'level8_state_machine',
   initial: 'inside_level',
   context: {
     level_title: 'Service Control Policies',
     level_description: 'Service Control Policies',
     level_number: 8,
-    next_popover_index: 0,
-    next_popup_index: 0,
-    next_fixed_popover_index: 0,
     show_popovers: false,
     show_popups: false,
     show_fixed_popovers: false,
@@ -47,12 +42,8 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
     side_panel_open: false,
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
-    all_policy_creation_objectives: [],
     restricted_element_ids: [ElementID.NewEntityBtn],
     layout_groups: [],
-    objectives_map: {
-      ...DEFAULT_ROLE_POLICY_OBJECTIVES_MAP,
-    },
   },
   on: {
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
@@ -137,31 +128,40 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
       initial: 'popup1',
       states: {
         popup1: {
-          entry: 'next_popup',
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
             NEXT_POPUP: 'popup2',
           },
         },
         popup2: {
-          entry: ['next_popup'],
+          entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } }],
           on: {
             NEXT_POPUP: 'popover1',
           },
         },
         popover1: {
-          entry: ['next_popover', 'hide_popups'],
+          entry: [
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
+            'hide_popups',
+          ],
           on: {
             NEXT_POPOVER: 'fixed_popover1',
           },
         },
         fixed_popover1: {
-          entry: ['hide_popovers', 'show_fixed_popover'],
+          entry: [
+            'hide_popovers',
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
+          ],
           on: {
             NEXT_FIXED_POPOVER: 'popover2',
           },
         },
         popover2: {
-          entry: ['hide_fixed_popovers', 'next_popover'],
+          entry: [
+            'hide_fixed_popovers',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
+          ],
           on: {
             [StatelessStateMachineEvent.IAMNodeContentOpened]: 'edit_policy',
           },
@@ -188,25 +188,37 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         fixed_popover2: {
-          entry: ['hide_popovers', 'next_fixed_popover'],
+          entry: [
+            'hide_popovers',
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
+          ],
           on: {
             NEXT_FIXED_POPOVER: 'popover3',
           },
         },
         popover3: {
-          entry: ['hide_fixed_popovers', 'next_popover'],
+          entry: [
+            'hide_fixed_popovers',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
+          ],
           on: {
             [StatelessStateMachineEvent.IAMNodeTagsOpened]: 'fixed_popover3',
           },
         },
         fixed_popover3: {
-          entry: ['hide_popovers', 'next_fixed_popover'],
+          entry: [
+            'hide_popovers',
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
+          ],
           on: {
             [StatelessStateMachineEvent.IAMNodeTagsPopoverClosed]: 'popover4',
           },
         },
         popover4: {
-          entry: ['hide_fixed_popovers', 'next_popover'],
+          entry: [
+            'hide_fixed_popovers',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
+          ],
           on: {
             [StatelessStateMachineEvent.IAMNodeContentOpened]: 'edit_policy_again',
           },
@@ -241,13 +253,19 @@ export const stateMachine = createStateMachineSetup<LevelObjectiveID, FinishEven
           },
         },
         popover5: {
-          entry: ['hide_fixed_popovers', 'next_popover'],
+          entry: [
+            'hide_fixed_popovers',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[4] } },
+          ],
           on: {
             NEXT_POPOVER: 'popup3',
           },
         },
         popup3: {
-          entry: ['hide_popovers', 'next_popup'],
+          entry: [
+            'hide_popovers',
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },
+          ],
           type: 'final',
         },
       },

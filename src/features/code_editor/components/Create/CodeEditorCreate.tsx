@@ -35,7 +35,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   const [multiAccount, allCreationObjectives, nodes] = LevelsProgressionContext().useSelector(
     state => [
       state.context.use_multi_account_canvas,
-      state.context.all_policy_creation_objectives,
+      state.context.policy_creation_objectives,
       state.context.nodes,
     ],
     _.isEqual

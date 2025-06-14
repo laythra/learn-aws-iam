@@ -66,15 +66,9 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   level_number: number;
   level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
   level_title: string;
-  next_edges_connection_objectives_index?: number;
-  next_level_objectives_list_index?: number;
-  next_policy_creation_objectives_index?: number;
-  next_role_creation_objectives_index?: number;
-  next_popover_index: number;
-  next_popup_index: number;
-  next_fixed_popover_index: number;
   nodes: IAMAnyNode[];
   policy_creation_objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[];
+  resource_policy_creation_objectives?: IAMResourcePolicyCreationObjective<TBaseFinishEventMap>[];
   policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
@@ -82,6 +76,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   show_popovers: boolean;
   show_popups: boolean;
   show_fixed_popovers: boolean;
+  fixed_popover_content?: FixedPopoverMessage;
   side_panel_open?: boolean;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
   use_multi_account_canvas?: boolean;
@@ -97,30 +92,10 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   edges_management_disabled?: boolean;
   animations?: Record<string, DynamicAnimationOptions>;
   identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
-  fixed_popover_messages: FixedPopoverMessage[];
   elements_with_animated_red_dot?: ElementID[];
   show_unncessary_edges_or_nodes_warning?: boolean;
   nodes_connnections: NodeConnection[];
   initial_node_connections?: InitialNodeConnection[];
-  objectives_map: {
-    [IAMNodeEntity.Policy]: {
-      objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[][];
-      current_index: number;
-    };
-    [IAMNodeEntity.SCP]: {
-      objectives: IAMSCPCreationObjective<TBaseFinishEventMap>[][];
-      current_index: number;
-    };
-    [IAMNodeEntity.Role]: {
-      objectives: IAMRoleCreationObjective<TBaseFinishEventMap>[][];
-      current_index: number;
-    };
-    [IAMNodeEntity.ResourcePolicy]: {
-      objectives: IAMResourcePolicyCreationObjective<TBaseFinishEventMap>[][];
-      current_index: number;
-    };
-  };
-  all_policy_creation_objectives: BaseCreationObjective<TBaseFinishEventMap>[];
   layout_groups: NodeLayoutGroup[];
 }
 

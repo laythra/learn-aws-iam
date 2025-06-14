@@ -58,7 +58,7 @@ describe('createPermissionPolicy', () => {
       initial_edges: [],
     });
     mockContext = createMockContext({
-      all_policy_creation_objectives: [mockObjective],
+      policy_creation_objectives: [mockObjective],
     });
 
     vi.mocked(findAnyValidObjective).mockReturnValue(mockObjective);
