@@ -16,6 +16,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -51,7 +52,7 @@ export const stateMachine = createStateMachineSetup<
     side_panel_open: false,
     nodes_connnections: [],
     restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
-    layout_groups: [],
+    layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {

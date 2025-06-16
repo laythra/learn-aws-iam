@@ -7,7 +7,7 @@ import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/objectives-factory';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { IAMNodeFilter } from '@/machines/utils/iam-node-filter';
-import { AccessLevel, IAMAnyNode, IAMNodeEntity } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, IAMAnyNode, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const OBJECTIVE_CALLOUT_MSG = `
@@ -83,7 +83,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       validate_function: AJV_COMPILER.compile(rds1ManagePolicySchema),
       initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
       limit_new_lines: false,
-      created_node_initial_position: 'center',
+      layout_group_id: CommonLayoutGroupID.CenterHorizontal,
       granted_accesses: [
         {
           target_node: ResourceNodeID.RDS1,
@@ -112,7 +112,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       validate_function: AJV_COMPILER.compile(rds2managePolicySchema),
       initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
       limit_new_lines: false,
-      created_node_initial_position: 'center',
+      layout_group_id: CommonLayoutGroupID.CenterHorizontal,
       granted_accesses: [
         {
           target_node: ResourceNodeID.RDS2,
@@ -142,7 +142,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       validate_function: AJV_COMPILER.compile(rdsSharedManagePolicySchema),
       initial_code: INITIAL_POLICIES.SHARED_RDS_POLICY,
       limit_new_lines: false,
-      created_node_initial_position: 'center',
+      layout_group_id: CommonLayoutGroupID.CenterHorizontal,
       granted_accesses: [
         {
           target_node: ResourceNodeID.RDS1,

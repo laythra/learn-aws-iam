@@ -2,13 +2,13 @@ import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { AccountID } from '@/machines/types';
 import type { IAMUserNode } from '@/types';
-import { IAMNodeImage } from '@/types';
+import { CommonLayoutGroupID, IAMNodeImage } from '@/types';
 
 const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.TrustedAccountIAMUser,
     label: 'omar',
-    initial_position: 'right-center',
+    layout_group_id: CommonLayoutGroupID.RightCenterVertical,
     image: IAMNodeImage.User,
     account_id: AccountID.Trusted,
   },

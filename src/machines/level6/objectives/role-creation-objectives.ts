@@ -6,6 +6,7 @@ import {
   RoleCreationObjectiveInput,
 } from '@/factories/objectives-factory';
 import { AccountID, IAMRoleCreationObjective } from '@/machines/types';
+import { CommonLayoutGroupID } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 export const CALLOUT_MESSAGE1 = `
@@ -23,7 +24,7 @@ export const ROLE_CREATION_OBJECTIVES_RAW_DATA: RoleCreationObjectiveInput<Finis
       on_finish_event: RoleCreationFinishEvent.DYNAMODB_READ_ROLE_CREATED,
       validate_inside_code_editor: true,
       validate_function: AJV_COMPILER.compile(dynamodbRoleTrustPolicy),
-      created_node_initial_position: 'left-center',
+      layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
       account_id: AccountID.Trusting,
       callout_message: CALLOUT_MESSAGE1,
     },

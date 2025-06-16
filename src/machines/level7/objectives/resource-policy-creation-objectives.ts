@@ -8,7 +8,7 @@ import { createEdge } from '@/factories/edge-factory';
 import { createResourcePolicyCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, IAMResourcePolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { IAMNodeEntity } from '@/types';
+import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const OBJECTIVE1_CALLOUT_MSG = `
@@ -42,7 +42,7 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
         validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
         initial_code: INITIAL_POLICIES.S3_READ_RESOURCE_BASED_POLICY,
         limit_new_lines: false,
-        created_node_initial_position: 'bottom-center',
+        layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
         resource_node_id: ResourceNodeID.TutorialS3Bucket,
         callout_message: OBJECTIVE1_CALLOUT_MSG,
         initial_edges: [
@@ -91,7 +91,7 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
         validate_function: AJV_COMPILER.compile(s3ReadWriteResourcePolicySchema),
         initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
         limit_new_lines: false,
-        created_node_initial_position: 'bottom-left',
+        layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
         account_id: AccountID.Trusting,
         resource_node_id: ResourceNodeID.InsideLevelS3Bucket,
       } satisfies Partial<IAMResourcePolicyCreationObjective<FinishEventMap>>,

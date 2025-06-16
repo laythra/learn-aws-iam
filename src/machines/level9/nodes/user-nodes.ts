@@ -1,47 +1,47 @@
 import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
-import { type IAMUserNode } from '@/types';
+import { CommonLayoutGroupID, type IAMUserNode } from '@/types';
 
 const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.Mario,
     label: 'mario',
-    initial_position: 'left-center',
+    layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
     layout_direction: 'vertical',
     tags: [['application', 'peach-team']],
   },
   {
     id: UserNodeID.Luigi,
     label: 'luigi',
-    initial_position: 'left-center',
+    layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
     layout_direction: 'vertical',
     tags: [['application', 'peach-team']],
   },
   {
     id: UserNodeID.Peach,
     label: 'peach',
-    initial_position: 'left-center',
+    layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
     layout_direction: 'vertical',
     tags: [['application', 'mashroom-team']],
   },
   {
     id: UserNodeID.Bowser,
     label: 'bowser',
-    initial_position: 'right-center',
+    layout_group_id: CommonLayoutGroupID.RightCenterVertical,
     layout_direction: 'vertical',
     tags: [['application', 'bowser-force']],
   },
   {
     id: UserNodeID.Wario,
     label: 'wario',
-    initial_position: 'right-center',
+    layout_group_id: CommonLayoutGroupID.RightCenterVertical,
     layout_direction: 'vertical',
     tags: [['application', 'bowser-force']],
   },
   {
     id: UserNodeID.Waluigi,
     label: 'waluigi',
-    initial_position: 'right-center',
+    layout_group_id: CommonLayoutGroupID.RightCenterVertical,
     layout_direction: 'vertical',
     tags: [['application', 'bowser-force']],
   },

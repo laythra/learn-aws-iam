@@ -4,7 +4,7 @@ import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event
 import { PolicyNodeID, ResourceNodeID, RoleNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/objectives-factory';
 import { AccountID, IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { AccessLevel, IAMNodeEntity } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 import { generateArn } from '@/utils/arn-generator';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
@@ -27,8 +27,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       validate_function: AJV_COMPILER.compile(dynamodbReadPolicySchema),
       limit_new_lines: false,
       account_id: AccountID.Trusting,
-      created_node_initial_position: 'left-center',
-    },
+      layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.TrustedAccountAssumeRolePolicy,
@@ -48,7 +48,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       granted_accesses: [],
       limit_new_lines: false,
       account_id: AccountID.Trusted,
-      created_node_initial_position: 'right-center',
-    } as Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+      layout_group_id: CommonLayoutGroupID.RightCenterHorizontal,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

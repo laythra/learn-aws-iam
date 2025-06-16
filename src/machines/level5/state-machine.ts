@@ -15,6 +15,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
@@ -45,10 +46,9 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
-    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
-    layout_groups: [],
+    layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
@@ -157,7 +157,7 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
           ],
           on: {
-            NEXT_FIXED_POPOVER: 'fixed_popover2',
+            [StatelessStateMachineEvent.IAMNodeContentClosed]: 'fixed_popover2',
           },
         },
         fixed_popover2: {

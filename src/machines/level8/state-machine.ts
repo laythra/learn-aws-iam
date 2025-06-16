@@ -11,6 +11,7 @@ import { FinishEventMap, PolicyEditFinishEvent } from './types/finish-event-enum
 import { PolicyNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
@@ -43,7 +44,7 @@ export const stateMachine = createStateMachineSetup<
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     nodes_connnections: [],
     restricted_element_ids: [ElementID.NewEntityBtn],
-    layout_groups: [],
+    layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },

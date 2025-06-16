@@ -1,6 +1,6 @@
 import { ResourceNodeID, ResourcePolicyNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
-import { AccessLevel, type IAMPolicyNode } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, type IAMPolicyNode } from '@/types';
 
 const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
@@ -13,7 +13,7 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
         access_level: AccessLevel.Read,
       },
     ],
-    initial_position: 'bottom-center',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     editable: true,
   },
 ];

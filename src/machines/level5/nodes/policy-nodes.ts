@@ -2,13 +2,13 @@ import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import type { IAMPolicyNode } from '@/types';
-import { AccessLevel, IAMNodeImage } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeImage } from '@/types';
 
 const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.BillingPolicy,
     label: 'BillingReadPolicy',
-    initial_position: 'bottom-center',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.Policy,
     granted_accesses: [
       {
@@ -22,7 +22,7 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.S3ReadPolicy,
     label: 'S3ReadPolicy',
-    initial_position: 'bottom-center',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.Policy,
     granted_accesses: [
       {
@@ -38,7 +38,7 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.ChatImagesS3ReadPolicy,
     label: 'ChatImagesS3Read',
-    initial_position: 'bottom-center',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.Policy,
     content: JSON.stringify(INITIAL_POLICIES.S3_READ_POLICY, null, 2),
     granted_accesses: [
@@ -53,7 +53,7 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.ChatImagesS3WritePolicy,
     label: 'ChatImagesS3Write',
-    initial_position: 'bottom-center',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.Policy,
     content: JSON.stringify(INITIAL_POLICIES.S3_WRITE_POLICY, null, 2),
     granted_accesses: [

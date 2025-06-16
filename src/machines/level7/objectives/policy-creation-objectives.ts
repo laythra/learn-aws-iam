@@ -5,7 +5,7 @@ import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { AccessLevel, IAMNodeEntity } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
@@ -21,7 +21,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       account_id: AccountID.Trusted,
       limit_new_lines: false,
-      created_node_initial_position: 'bottom-right',
+      layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
       granted_accesses: [
         {
           target_node: ResourceNodeID.InsideLevelS3Bucket,

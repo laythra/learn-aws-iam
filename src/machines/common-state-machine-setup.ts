@@ -260,7 +260,6 @@ export const createStateMachineSetup = <
           enqueue.assign({
             nodes: updatedContext.nodes,
             role_creation_objectives: updatedContext.role_creation_objectives,
-            // all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
           });
 
           events.forEach(event => {

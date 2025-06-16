@@ -8,7 +8,7 @@ import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { AccessLevel, IAMNodeEntity } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const CALLOUT_MESSAGE1 = `
@@ -23,7 +23,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       entity_id: PolicyNodeID.S3ReadWritePolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadPolicySchema,
-      created_node_initial_position: 'top-left',
+      layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
       initial_code: INITIAL_POLICIES.S3ReadAccess,
       callout_message: CALLOUT_MESSAGE1,
       on_finish_event: NodeCreationFinishEvent.S3_READ_POLICY_CREATED,
@@ -48,7 +48,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         },
       ],
       limit_new_lines: true,
-    },
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
@@ -68,8 +68,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         },
       ],
       validate_function: AJV_COMPILER.compile(s3ReadWritePolicySchema),
-      created_node_initial_position: 'bottom-left',
-    },
+      layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.CloudFrontReadPolicy,
@@ -87,8 +87,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         },
       ],
       validate_function: AJV_COMPILER.compile(cloudfrontReadPolicySchema),
-      created_node_initial_position: 'bottom-right',
-    },
+      layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.DynamoDBReadWritePolicy,
@@ -106,7 +106,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         },
       ],
       validate_function: AJV_COMPILER.compile(dynamoReadWritePolicySchema),
-      created_node_initial_position: 'bottom-right',
-    },
+      layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];
