@@ -1,12 +1,12 @@
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { RoleNodeID } from '@/machines/level8/types/node-id-enums';
-import { IAMRoleNode } from '@/types';
+import { CommonLayoutGroupID, IAMRoleNode } from '@/types';
 
 const IN_LEVEL_ROLE_NODES: Partial<IAMRoleNode['data']>[] = [
   {
     id: RoleNodeID.SlackCodeDeployRole,
     label: 'SlackCodeDeployRole',
-    initial_position: 'left-center',
+    layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
   },
 ];
 

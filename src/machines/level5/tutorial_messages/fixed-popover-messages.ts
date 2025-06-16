@@ -48,7 +48,7 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
     popover_content: FIXED_POPOVER_MSG1,
     position: 'top-left',
     show_close_button: false,
-    show_next_button: true,
+    show_next_button: false,
   },
   {
     popover_title: 'Make the user assume the role',

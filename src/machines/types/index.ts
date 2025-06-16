@@ -239,6 +239,7 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
   readonly hint_messages?: { title: string; content: string }[];
   readonly initial_edges: IAMEdge[];
   readonly created_node_parent_id?: string;
+  readonly layout_group_id?: string;
   finished: boolean;
 }
 

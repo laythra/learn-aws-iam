@@ -207,7 +207,7 @@ interface IAMPolicyNodeData extends IAMNodeData {
 }
 
 interface IAMResourcePolicyNodeData extends IAMNodeData {
-  entity: IAMNodeEntity.Policy;
+  entity: IAMNodeEntity.ResourcePolicy;
   editable: boolean;
   granted_accesses: PolicyGrantedAccess[];
   initial_edges?: Edge<IAMEdgeData>[];
@@ -267,6 +267,7 @@ export type IAMNodeMap = {
 };
 
 export type IAMAnyNode = IAMNodeMap[keyof IAMNodeMap];
+export type IAMCodeDefinedNode = IAMNodeMap[IAMCodeDefinedEntity];
 
 export type IAMEdge = Edge<IAMEdgeData, 'default'>;
 

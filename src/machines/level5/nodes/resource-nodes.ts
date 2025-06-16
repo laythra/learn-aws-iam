@@ -1,22 +1,22 @@
 import { ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import type { IAMResourceNode } from '@/types';
-import { IAMNodeImage, IAMNodeResourceEntity } from '@/types';
+import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 
 const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
-    id: ResourceNodeID.BillingAndCostManagement,
-    label: 'monthly-spend-budget',
-    initial_position: 'right-center',
-    image: IAMNodeImage.Billing,
-    resource_type: IAMNodeResourceEntity.Billing,
-  },
-  {
     id: ResourceNodeID.FinanceS3Bucket,
     label: 'financial-reports-bucket',
-    initial_position: 'left-center',
+    layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,
+  },
+  {
+    id: ResourceNodeID.BillingAndCostManagement,
+    label: 'monthly-spend-budget',
+    layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
+    image: IAMNodeImage.Billing,
+    resource_type: IAMNodeResourceEntity.Billing,
   },
 ];
 
@@ -24,21 +24,21 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.LambdaFunction,
     label: 'Lambda Function',
-    initial_position: 'center',
+    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     image: IAMNodeImage.Lambda,
     resource_type: IAMNodeResourceEntity.Lambda,
   },
   {
     id: ResourceNodeID.ChatImagesS3Bucket,
     label: 'chat-images',
-    initial_position: 'center',
+    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,
   },
   {
     id: ResourceNodeID.TimeshiftLabsEC2Instance,
     label: 'web-server',
-    initial_position: 'center',
+    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     image: IAMNodeImage.Server,
     resource_type: IAMNodeResourceEntity.EC2Instance,
   },

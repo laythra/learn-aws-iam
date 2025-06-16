@@ -1,7 +1,7 @@
 import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { theme } from '@/theme';
-import { type IAMUserNode } from '@/types';
+import { CommonLayoutGroupID, type IAMUserNode } from '@/types';
 
 const TUTORIAL_USER_NODES: Partial<IAMUserNode['data']>[] = [];
 
@@ -9,7 +9,7 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.JuniorBruce,
     label: 'junior-bruce',
-    initial_position: 'center',
+    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     layout_direction: 'vertical',
     vertical_spacing: theme.sizes.iamNodeHeightInPixels + 20,
     tags: [['role', 'junior']],
@@ -17,7 +17,7 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.SeniorWayne,
     label: 'senior-wayne',
-    initial_position: 'center',
+    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     layout_direction: 'vertical',
     horizontal_spacing: theme.sizes.iamNodeHeightInPixels + 20,
     tags: [['role', 'senior']],
@@ -25,7 +25,7 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.JuniorClark,
     label: 'junior-clark',
-    initial_position: 'center',
+    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     layout_direction: 'vertical',
     vertical_spacing: theme.sizes.iamNodeHeightInPixels + 20,
     tags: [['role', 'junior']],
@@ -33,7 +33,7 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.SeniorKent,
     label: 'senior-kent',
-    initial_position: 'center',
+    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     layout_direction: 'vertical',
     vertical_spacing: theme.sizes.iamNodeHeightInPixels + 20,
     tags: [['role', 'senior']],

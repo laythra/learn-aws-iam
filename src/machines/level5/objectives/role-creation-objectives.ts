@@ -7,7 +7,7 @@ import { RoleNodeID } from '../types/node-id-enums';
 import { createRoleCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types';
-import { IAMNodeEntity } from '@/types';
+import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const HINT_MSG1 = `
@@ -64,6 +64,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       json_schema: financeAuditorPolicySchema,
       initial_code: INITIAL_TRUST_POLICIES.TUTORIAL_ROLE_TRUST_POLICY2,
       on_finish_event: RoleCreationFinishEvent.TUTORIAL_ROLE_CREATED,
+      layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
       validate_inside_code_editor: true,
       callout_message: CALLOUT_MSG1,
       help_badges: [
@@ -86,7 +87,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       validate_function: AJV_COMPILER.compile(financeAuditorPolicySchema),
       required_policies: [],
       required_principles: [],
-    },
+    } satisfies Partial<IAMRoleCreationObjective<FinishEventMap>>,
   ].map(objective => createRoleCreationObjective(objective)),
   [
     {

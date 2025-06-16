@@ -32,10 +32,18 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   errors,
   warnings,
 }) => {
-  const [multiAccount, allCreationObjectives, nodes] = LevelsProgressionContext().useSelector(
+  const [
+    multiAccount,
+    policyCreationObjectives,
+    roleCreationObjectives,
+    resourcePolicyCreationObjectives,
+    nodes,
+  ] = LevelsProgressionContext().useSelector(
     state => [
       state.context.use_multi_account_canvas,
       state.context.policy_creation_objectives,
+      state.context.role_creation_objectives,
+      state.context.resource_policy_creation_objectives ?? [],
       state.context.nodes,
     ],
     _.isEqual
@@ -46,6 +54,11 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     state => [state.context.selectedAccountId, state.context.labelError],
     _.isEqual
   );
+  const allCreationObjectives = [
+    ...policyCreationObjectives,
+    ...roleCreationObjectives,
+    ...resourcePolicyCreationObjectives,
+  ];
 
   const editorView = useRef<EditorView | null>(null);
   const unfinishedCreationObjectives = allCreationObjectives.filter(

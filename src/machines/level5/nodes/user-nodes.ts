@@ -1,13 +1,13 @@
 import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import type { IAMUserNode } from '@/types';
-import { IAMNodeImage } from '@/types';
+import { CommonLayoutGroupID, IAMNodeImage } from '@/types';
 
 const TUTORIAL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.FinanceUser,
     label: 'finance-user',
-    initial_position: 'bottom-center',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.User,
   },
 ];

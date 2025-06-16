@@ -2,13 +2,13 @@ import { INITIAL_TRUST_POLICIES } from '../policy_role_documents/initial-roles';
 import { RoleNodeID } from '../types/node-id-enums';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import type { IAMRoleNode } from '@/types';
-import { IAMNodeImage } from '@/types';
+import { CommonLayoutGroupID, IAMNodeImage } from '@/types';
 
 const TUTORIAL_ROLE_NODES: Partial<IAMRoleNode['data']>[] = [
   {
     id: RoleNodeID.FinanceAuditorRole,
     label: 'finance-auditor-role',
-    initial_position: 'center',
+    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     image: IAMNodeImage.Role,
     editable: true,
     content: JSON.stringify(INITIAL_TRUST_POLICIES.TUTORIAL_ROLE_TRUST_POLICY1, null, 2),

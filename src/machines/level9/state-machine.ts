@@ -16,6 +16,7 @@ import {
 import { PolicyNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -47,7 +48,7 @@ export const stateMachine = createStateMachineSetup<
     use_multi_account_canvas: false,
     side_panel_open: false,
     nodes_connnections: [],
-    layout_groups: [],
+    layout_groups: COMMON_LAYOUT_GROUPS,
     restricted_element_ids: [
       ElementID.CodeEditorRoleTab,
       ElementID.CodeEditorSCPTab,
