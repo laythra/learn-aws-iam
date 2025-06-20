@@ -106,7 +106,13 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
           _hover={{ bg: 'gray.200', opacity: 1 }}
         />
       </PopoverTrigger>
-      <PopoverContent w='500px' overflow='auto' maxH='400px' ref={popoverContentRef}>
+      <PopoverContent
+        w='500px'
+        overflow='auto'
+        maxH='400px'
+        ref={popoverContentRef}
+        data-element-id={`${nodeId}-content`}
+      >
         <PopoverArrow />
         <PopoverHeader textAlign='left' display='flex' alignItems='center'>
           <Text fontSize='16px' fontWeight='700'>

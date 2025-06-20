@@ -177,7 +177,7 @@ interface IAMNodeData extends Record<string, unknown> {
   /**
    * Defines the layout group to which the node belongs
    */
-  layout_group_id?: string;
+  layout_group_id: string;
   /**
    * Tags associated with the node.
    * The first element of each pair (the key) must be unique across all tags.
