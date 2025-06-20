@@ -59,7 +59,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: ElementID.ObjectivesSidePanel,
-    popover_title: 'Your on your own now',
+    popover_title: "You're on your own now",
     popover_content: POPOVER_MSG5,
     show_next_button: false,
     show_close_button: true,
