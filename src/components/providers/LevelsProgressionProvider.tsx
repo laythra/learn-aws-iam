@@ -1,6 +1,7 @@
+import { createContext, useContext } from 'react';
+
 import { createActorContext } from '@xstate/react';
 import { useSelector } from '@xstate/store/react';
-import _ from 'lodash';
 
 import { stateMachine as level1StateMachine } from '@/machines/level1/state-machine';
 import { stateMachine as level2StateMachine } from '@/machines/level2/state-machine';
@@ -12,6 +13,11 @@ import { stateMachine as level7StateMachine } from '@/machines/level7/state-mach
 import { stateMachine as level8StateMachine } from '@/machines/level8/state-machine';
 import { stateMachine as level9StateMachine } from '@/machines/level9/state-machine';
 import CurrentLevelDetailsStore from '@/stores/current-level-details-store';
+import storage from '@/utils/storage';
+
+const CurrentActorContext = createContext<ReturnType<
+  typeof createActorContext<ActorLogicType>
+> | null>(null);
 
 const LEVELS_STATE_MACHINES = {
   1: level1StateMachine,
@@ -25,7 +31,6 @@ const LEVELS_STATE_MACHINES = {
   9: level9StateMachine,
 };
 
-type LevelNumber = keyof typeof LEVELS_STATE_MACHINES;
 type ActorLogicType =
   | typeof level1StateMachine
   | typeof level2StateMachine
@@ -37,16 +42,16 @@ type ActorLogicType =
   | typeof level8StateMachine
   | typeof level9StateMachine;
 
-export const levelActors: {
-  [key: number]: ReturnType<typeof createActorContext<ActorLogicType>>;
-} = _.reduce(
-  LEVELS_STATE_MACHINES,
-  (acc, stateMachine, levelNumber) => ({
-    ...acc,
-    [levelNumber]: createActorContext(stateMachine),
-  }),
-  {}
-);
+const GetActorLogicFromLevelNumber = (
+  levelNumber: keyof typeof LEVELS_STATE_MACHINES
+): ReturnType<typeof createActorContext<ActorLogicType>> => {
+  const stateMachine = LEVELS_STATE_MACHINES[levelNumber];
+  const checkpointData = storage.getKey(`level${levelNumber}StateCheckpoint`);
+
+  return createActorContext(stateMachine, {
+    snapshot: checkpointData ? JSON.parse(checkpointData) : undefined,
+  });
+};
 
 interface LevelsProgressionProviderProps {
   children: React.ReactNode;
@@ -56,24 +61,31 @@ const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ c
   const currentLevelNumber = useSelector(
     CurrentLevelDetailsStore,
     state => state.context.levelNumber
+  ) as keyof typeof LEVELS_STATE_MACHINES;
+
+  const ActorLogic = GetActorLogicFromLevelNumber(currentLevelNumber);
+
+  return (
+    <CurrentActorContext.Provider value={ActorLogic}>
+      <ActorLogic.Provider>{children}</ActorLogic.Provider>
+    </CurrentActorContext.Provider>
   );
-
-  const TargetActor = levelActors[currentLevelNumber];
-
-  return <TargetActor.Provider>{children}</TargetActor.Provider>;
 };
 
+/**
+ * Retrieves the context for the current level's actor logic.
+ * @returns The context for the current level's actor logic.
+ */
 export const LevelsProgressionContext = (): ReturnType<
   typeof createActorContext<ActorLogicType>
 > => {
-  const levelNumber = CurrentLevelDetailsStore.getSnapshot().context.levelNumber;
-  return levelActors[levelNumber];
-};
-type LevelStateMachineType = (typeof LEVELS_STATE_MACHINES)[keyof typeof LEVELS_STATE_MACHINES];
+  const actorContext = useContext(CurrentActorContext);
 
-export const getCurrentLevelStateMachine = (): LevelStateMachineType => {
-  const levelNumber = CurrentLevelDetailsStore.getSnapshot().context.levelNumber as LevelNumber;
-  return LEVELS_STATE_MACHINES[levelNumber];
+  if (!actorContext) {
+    throw new Error('LevelsProgressionContext must be used within a LevelsProgressionProvider');
+  }
+
+  return actorContext;
 };
 
 export default LevelsProgressionProvider;
