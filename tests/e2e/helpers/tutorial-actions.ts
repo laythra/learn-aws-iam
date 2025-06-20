@@ -3,7 +3,7 @@ import { Page, expect } from '@playwright/test';
 import { findPopover, findTutorialPopup, fixedFixedPopover } from './locator-helpers';
 
 export class TutorialActions {
-  constructor(private page: Page) {}
+  constructor(private readonly page: Page) {}
 
   async expectPopoverAndClickNext(nodeId: string, title: string): Promise<void> {
     const popover = findPopover(this.page, nodeId, title);

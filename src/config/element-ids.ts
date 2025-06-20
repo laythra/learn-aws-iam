@@ -23,3 +23,9 @@ export enum ElementID {
   RightSidePanelToggleButton = 'right-side-panel-toggle-button',
   TutorialPopoverCloseButton = 'tutorial-popover-close-button',
 }
+
+export type CodeEditorTabsElementID =
+  | ElementID.CodeEditorPolicyTab
+  | ElementID.CodeEditorRoleTab
+  | ElementID.CodeEditorSCPTab
+  | ElementID.CodeEditorResourcePolicyTab;
