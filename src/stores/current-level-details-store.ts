@@ -1,4 +1,5 @@
 import { createStore } from '@xstate/store';
+import { Actor, AnyActorLogic } from 'xstate';
 
 import storage from '@/utils/storage';
 
@@ -9,6 +10,7 @@ type CurrentLevelDetailsState = {
 type CurrentLevelDetailsEvents = {
   setLevelNumber: { levelNumber: number };
   incrementLevelNumber: unknown;
+  storeLevelProgress: { actor: Actor<AnyActorLogic> };
 };
 
 /*
@@ -30,6 +32,14 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
       const nextLevel = context.levelNumber + 1;
       storage.setKey('currentLevel', nextLevel.toString());
       return { levelNumber: nextLevel };
+    },
+    storeLevelProgress: (context: CurrentLevelDetailsState, event) => {
+      storage.setKey(
+        `level${context.levelNumber}StateCheckpoint`,
+        JSON.stringify(event.actor.getPersistedSnapshot())
+      );
+
+      return context;
     },
   }
 );
