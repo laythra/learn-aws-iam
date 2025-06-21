@@ -13,7 +13,7 @@ import {
 } from '@/machines/level8/types/node-id-enums';
 
 test.describe('Level 8', () => {
-  test('Goes through the entirety of level 2', async ({
+  test('Goes through the entirety of level 8', async ({
     page,
     tutorial,
     nodes,
@@ -72,7 +72,7 @@ test.describe('Level 8', () => {
     });
 
     await test.step('Edit Policy', async () => {
-      nodes.editPolicyNodeContent(
+      await nodes.editPolicyNodeContent(
         PolicyNodeID.SlackServiceManagePolicy,
         getTestSolution(ENCODED_TEST_SOLUTIONS, '1')
       );
