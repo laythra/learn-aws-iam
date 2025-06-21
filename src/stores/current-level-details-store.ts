@@ -11,6 +11,7 @@ type CurrentLevelDetailsEvents = {
   setLevelNumber: { levelNumber: number };
   incrementLevelNumber: unknown;
   storeLevelProgress: { actor: Actor<AnyActorLogic> };
+  storeSnapshotAtDisk: { actor: Actor<AnyActorLogic>; filename: string };
 };
 
 /*
@@ -38,6 +39,26 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
         `level${context.levelNumber}StateCheckpoint`,
         JSON.stringify(event.actor.getPersistedSnapshot())
       );
+
+      return context;
+    },
+    // TODO: Remove this! Only used for testing and debugging purposes.
+    storeSnapshotAtDisk: (context: CurrentLevelDetailsState, event) => {
+      const snapshot = event.actor.getPersistedSnapshot();
+      const snapshotString = JSON.stringify(snapshot);
+
+      storage.setKey(`level${context.levelNumber}StateCheckpoint`, snapshotString);
+
+      fetch('http://localhost:3001/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: snapshotString,
+          filename: event.filename,
+        }),
+      });
 
       return context;
     },
