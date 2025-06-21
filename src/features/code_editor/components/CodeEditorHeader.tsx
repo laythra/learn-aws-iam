@@ -67,7 +67,9 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
         >
           <TabList>
             {tabsToRender.map(({ element_id, node_entity }) => (
-              <Tab key={element_id}>{node_entity}</Tab>
+              <Tab key={element_id} data-element-id={element_id}>
+                {node_entity}
+              </Tab>
             ))}
           </TabList>
         </Tabs>
