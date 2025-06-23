@@ -20,7 +20,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
   [
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.S3ReadWritePolicy,
+      entity_id: PolicyNodeID.S3ReadPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadPolicySchema,
       layout_group_id: CommonLayoutGroupID.BottomLeftVertical,

@@ -50,7 +50,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'top',
   },
   {
-    element_id: PolicyNodeID.S3ReadWritePolicy,
+    element_id: PolicyNodeID.S3ReadPolicy,
     popover_title: 'Your first Customer Managed Policy 🔥',
     popover_content: POPOVER_MSG4,
     show_next_button: true,

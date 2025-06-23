@@ -17,8 +17,8 @@ import {
   UserNodeID,
 } from '@/machines/level3/types/node-id-enums';
 
-test.describe('Level 3', () => {
-  test('Stage 1 - Initial Tutorial Flow', async ({ tutorial, page, nodes, goToLevelAtStage }) => {
+test.describe('Stage 1 - Initial Tutorial Flow', () => {
+  test('Initial Tutorial Flow', async ({ tutorial, page, nodes, goToLevelAtStage }) => {
     await goToLevelAtStage(3, ENCODED_LEVEL_STAGES, 'stage1');
 
     await test.step('Go through initial popups', async () => {
