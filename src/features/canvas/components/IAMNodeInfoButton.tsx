@@ -106,7 +106,13 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
           _hover={{ bg: 'gray.200', opacity: 1 }}
         />
       </PopoverTrigger>
-      <PopoverContent w='500px' overflow='auto' maxH='400px' ref={popoverContentRef}>
+      <PopoverContent
+        w='500px'
+        overflow='auto'
+        maxH='400px'
+        ref={popoverContentRef}
+        data-element-id={`${nodeId}-content`}
+      >
         <PopoverArrow />
         <PopoverHeader textAlign='left' display='flex' alignItems='center'>
           <Text fontSize='16px' fontWeight='700'>
@@ -119,12 +125,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
           aria-label='close'
         />
         <PopoverBody textAlign='left'>
-          <Code
-            width='100%'
-            whiteSpace='pre-wrap'
-            position='relative'
-            data-element-id={`${nodeId}-content`}
-          >
+          <Code width='100%' whiteSpace='pre-wrap' position='relative'>
             {editable && (
               <Box position='absolute' top={2} right={2}>
                 <Tooltip label='Edit' aria-label='Edit' placement='top'>

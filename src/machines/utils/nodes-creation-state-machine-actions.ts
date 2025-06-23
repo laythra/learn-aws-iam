@@ -126,7 +126,7 @@ export function createPermissionPolicy<
     docString,
     label,
     IAMNodeEntity.Policy,
-    {},
+    { granted_accesses: targetValidObjective?.granted_accesses ?? [] },
     createPolicyNode,
     targetValidObjective
   );

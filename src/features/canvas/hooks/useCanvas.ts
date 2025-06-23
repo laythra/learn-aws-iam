@@ -47,7 +47,6 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
       _.isEqual
     );
 
-  const layoutGroupsSupported = layoutGroups && layoutGroups.length > 0;
   const [nodesState, edgesState] = useSelector(
     CanvasStore,
     state => [state.context.nodes, state.context.edges],
@@ -88,24 +87,14 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     if (!rfInstance) return;
 
     const reactFlowViewport = rfInstance.getViewport();
-    const nodeGroups = layoutGroupsSupported
-      ? _.groupBy(nodes, 'data.layout_group_id')
-      : _.groupBy(
-          nodes,
-          item => `${item.parentId}-${item.data.initial_position}-${item.data.layout_direction}`
-        );
-
+    const nodeGroups = _.groupBy(nodes, 'data.layout_group_id');
     const nodeById = _.keyBy(nodes, 'id');
     const layoutGroupsById = _.keyBy(layoutGroups, 'id');
 
     const newNodes = Object.values(nodeGroups).flatMap(nodesGroup => {
       return nodesGroup.map((node, nodeIndex) => {
-        // Very dirty I know. Will be cleaned up later once we migrate everything to layout groups
         const existingNode = _.find(nodesState, { id: node.id });
-        const layoutGroup = node.data.layout_group_id
-          ? layoutGroupsById[node.data.layout_group_id]
-          : undefined;
-
+        const layoutGroup = layoutGroupsById[node.data.layout_group_id];
         const parentNode = node.parentId ? nodeById[node.parentId] : undefined;
 
         // Ensures existing nodes' position remains unchanged
@@ -180,14 +169,6 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const onNodeDelete = useCallback((targetNodes: IAMAnyNode[]) => {
     levelActor.send({ type: StatefulStateMachineEvent.DeleteNode, node: targetNodes[0] });
   }, []);
-
-  // TODO: Save flow state to local storage?
-  // useEffect(() => {
-  //   if (rfInstance && levelFinished) {
-  //     const flowState = rfInstance.toObject();
-  //     storage.setKey('flow_state', JSON.stringify(flowState));
-  //   }
-  // }, [levelFinished]);
 
   return {
     rfInstance,

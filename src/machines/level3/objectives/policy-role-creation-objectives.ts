@@ -20,7 +20,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
   [
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.S3ReadWritePolicy,
+      entity_id: PolicyNodeID.S3ReadPolicy,
       entity: IAMNodeEntity.Policy,
       json_schema: s3ReadPolicySchema,
       layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
@@ -61,7 +61,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       validate_inside_code_editor: true,
       granted_accesses: [
         {
-          target_node: ResourceNodeID.PublicImagesS3Bucket,
+          target_node: ResourceNodeID.PublicAssetsS3Bucket,
           access_level: AccessLevel.ReadWrite,
           target_handle: 'top',
           source_handle: 'bottom',

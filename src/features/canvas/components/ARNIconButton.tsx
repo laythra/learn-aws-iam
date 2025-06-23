@@ -15,6 +15,7 @@ import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { WithStateMachineEventIconButton } from '@/components/Decorated';
+import { ElementID } from '@/config/element-ids';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface ARNIconButtonProps extends ChakraProps {
@@ -67,6 +68,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
       <PopoverTrigger>
         <WithStateMachineEventIconButton
           event={onOpenEvent}
+          data-element-id={ElementID.IAMNodeArnButton}
           aria-label='arn'
           icon={<IdentificationIcon />}
           variant='ghost'
@@ -79,7 +81,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
           {...styleProps}
         />
       </PopoverTrigger>
-      <PopoverContent width='auto'>
+      <PopoverContent width='auto' data-element-id={`${nodeId}-arn`}>
         <PopoverHeader
           textAlign='left'
           display='flex'
@@ -95,7 +97,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
               event={onCopyEvent}
               h='16px'
               w='16px'
-              aria-label='copy arn'
+              aria-label='copy'
               icon={<ClipboardDocumentIcon />}
               variant='ghost'
               opacity={0.5}

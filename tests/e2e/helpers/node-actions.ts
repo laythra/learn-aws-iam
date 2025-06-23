@@ -13,7 +13,7 @@ import {
 import { ElementID } from '@/config/element-ids';
 
 export class NodeActions {
-  constructor(private page: Page) {}
+  constructor(private readonly page: Page) {}
 
   async expectVisible(nodeId: string): Promise<void> {
     await expect(findNode(this.page, nodeId)).toBeVisible();
@@ -62,7 +62,7 @@ export class NodeActions {
   async editPolicyNodeContent(nodeId: string, newContent: string): Promise<void> {
     await this.openNodePopover(nodeId, 'content');
     const contentPopover = findNodePopover(this.page, nodeId, 'content');
-    expect(contentPopover).toBeVisible();
+    await expect(contentPopover).toBeVisible();
     const editButton = contentPopover.getByTestId(ElementID.IAMNodeContentEditButton);
     await expect(editButton).toBeVisible();
     await editButton.click();
