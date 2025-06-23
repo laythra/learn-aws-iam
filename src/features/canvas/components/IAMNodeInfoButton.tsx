@@ -125,12 +125,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
           aria-label='close'
         />
         <PopoverBody textAlign='left'>
-          <Code
-            width='100%'
-            whiteSpace='pre-wrap'
-            position='relative'
-            data-element-id={`${nodeId}-content`}
-          >
+          <Code width='100%' whiteSpace='pre-wrap' position='relative'>
             {editable && (
               <Box position='absolute' top={2} right={2}>
                 <Tooltip label='Edit' aria-label='Edit' placement='top'>
