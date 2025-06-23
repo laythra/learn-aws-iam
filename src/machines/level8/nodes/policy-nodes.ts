@@ -16,14 +16,14 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
       {
         target_node: ResourceNodeID.SlackCrashlyticsNotifierService,
         access_level: AccessLevel.Read,
-        source_handle: HandleID.Right,
-        target_handle: HandleID.Left,
+        source_handle: HandleID.Top,
+        target_handle: HandleID.Bottom,
       },
       {
         target_node: ResourceNodeID.SlackIntegrationSecret,
         access_level: AccessLevel.Read,
-        source_handle: HandleID.Right,
-        target_handle: HandleID.Left,
+        source_handle: HandleID.Top,
+        target_handle: HandleID.Bottom,
       },
     ],
   },

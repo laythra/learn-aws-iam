@@ -12,18 +12,16 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.SlackIntegrationSecret,
     label: 'slack-alert-token',
-    layout_group_id: CommonLayoutGroupID.RightCenterVertical,
+    layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,
-    layout_direction: 'vertical',
   },
   {
     id: ResourceNodeID.SlackCrashlyticsNotifierService,
     label: 'slack-alerting-service',
-    layout_group_id: CommonLayoutGroupID.RightCenterVertical,
+    layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Server,
     resource_type: IAMNodeResourceEntity.EC2Instance,
-    layout_direction: 'vertical',
   },
 ];
 

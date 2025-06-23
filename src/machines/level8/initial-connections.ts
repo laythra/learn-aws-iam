@@ -8,25 +8,25 @@ export const INITIAL_IN_LEVEL_CONNECTIONS: InitialNodeConnection[] = [
   {
     from: UserNodeID.JuniorBruce,
     to: RoleNodeID.SlackCodeDeployRole,
-    source_handle: HandleID.Left,
+    source_handle: HandleID.Top,
     target_handle: HandleID.Right,
   },
   {
     from: UserNodeID.JuniorClark,
     to: RoleNodeID.SlackCodeDeployRole,
-    source_handle: HandleID.Left,
+    source_handle: HandleID.Top,
     target_handle: HandleID.Right,
   },
   {
     from: UserNodeID.SeniorWayne,
     to: RoleNodeID.SlackCodeDeployRole,
-    source_handle: HandleID.Left,
+    source_handle: HandleID.Top,
     target_handle: HandleID.Right,
   },
   {
     from: UserNodeID.SeniorKent,
     to: RoleNodeID.SlackCodeDeployRole,
-    source_handle: HandleID.Left,
+    source_handle: HandleID.Top,
     target_handle: HandleID.Right,
   },
   {

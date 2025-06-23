@@ -13,6 +13,5 @@ const IN_LEVEL_ROLE_NODES: Partial<IAMRoleNode['data']>[] = [
 export const INITIAL_IN_LEVEL_ROLE_NODES: IAMRoleNode[] = IN_LEVEL_ROLE_NODES.map(nodeData =>
   createRoleNode({
     dataOverrides: nodeData,
-    rootOverrides: { draggable: false },
   })
 );

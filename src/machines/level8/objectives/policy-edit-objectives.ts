@@ -75,16 +75,16 @@ const GRANTED_RESOURCES: PolicyGrantedAccess[] = [
   {
     access_level: AccessLevel.Read,
     target_node: ResourceNodeID.SlackIntegrationSecret,
-    source_handle: HandleID.Right,
-    target_handle: HandleID.Left,
+    source_handle: HandleID.Top,
+    target_handle: HandleID.Bottom,
     applicable_nodes: (nodes: IAMAnyNode[]) =>
       IAMNodeFilter.create().fromNodes(nodes).whereHasTag('role', 'senior').build(),
   } satisfies PolicyGrantedAccess,
   {
     access_level: AccessLevel.Read,
     target_node: ResourceNodeID.SlackCrashlyticsNotifierService,
-    source_handle: HandleID.Right,
-    target_handle: HandleID.Left,
+    source_handle: HandleID.Top,
+    target_handle: HandleID.Bottom,
   },
 ];
 
