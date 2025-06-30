@@ -32,6 +32,8 @@ export default defineConfig({
     /* We already use this attribute for targeting elements with popovers or hiding them, so why not also use it for testing? */
     testIdAttribute: 'data-element-id',
     baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5173',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
 
   /* Configure projects for major browsers */

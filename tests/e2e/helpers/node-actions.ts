@@ -70,7 +70,17 @@ export class NodeActions {
     const codeEditorPopup = findOperationalPopup(this.page, ElementID.CodeEditorPopup);
 
     await expect(codeEditorPopup).toBeVisible();
-    await codeEditorPopup.getByRole('textbox').fill(newContent);
-    await codeEditorPopup.getByRole('button', { name: 'Submit' }).click();
+
+    const codeEditorTextarea = codeEditorPopup.getByRole('textbox').first();
+
+    codeEditorTextarea.clear();
+    codeEditorTextarea.fill(newContent);
+
+    const submitButton = codeEditorPopup.getByRole('button', { name: 'Submit' });
+
+    // wait for debounced button (500ms delay) to become clickable
+    await expect(submitButton).toBeEnabled({ timeout: 5000 });
+
+    await submitButton.click();
   }
 }
