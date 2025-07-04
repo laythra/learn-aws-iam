@@ -245,6 +245,7 @@ export const stateMachine = createStateMachineSetup<
         },
         fixed_popover3: {
           entry: [
+            'store_checkpoint',
             'hide_popovers',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
           ],
