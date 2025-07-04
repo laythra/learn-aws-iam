@@ -25,14 +25,14 @@ const OBJECTIVE_CALLOUT_MSG = `
   Consult the hints below if you need further help
 `;
 
-const HINT_MSG1 = `
+const SHARED_HINT_MSG1 = `
   Remember the condition operators we discussed earlier?
 
   For this objective, we want to perform a strict string match,
   what do you think is the best suited operator?
 `;
 
-const HINT_MSG2 = `
+const SHARED_HINT_MSG2 = `
   The condition key we need to define should represent the
   resource tag that is associated with the RDS instance, and the value should be
   the tag value that matches the user tag.
@@ -43,31 +43,47 @@ const HINT_MSG2 = `
   - **\`aws:RequestTag/<tag-key>\`**: checks if the request has a specific tag key and value.
 `;
 
-const HINT_MSG3 = `
+const SHARED_HINT_MSG3 = `
   The missing action in the policy would allow listing all RDS instances.
   You can use the \`rds:DescribeDBInstances\` action for this purpose.
+`;
+
+const SECOND_OBJECTIVE_HINT_MSG1 = `
+  We need to inject ***Policy Variables*** into the policy to make it work for both groups.
+  what policy variable do you think we should use to represent the tag value?
+
+  -  \`"\${aws:PrincipalTag/application}"\`: Represents the tag value of the user making the request.
+  - \`"\${aws:ResourceTag/application}"\`: Represents the tag value of the resource being accessed.
+  - \`"\${aws:RequestTag/application}"\`: Represents the tag value of the request being made.
 `;
 
 const SHARED_HINT_MESSAGES = [
   {
     title: 'Condition Operator',
-    content: HINT_MSG1,
+    content: SHARED_HINT_MSG1,
   },
   {
     title: 'Condition Key',
-    content: HINT_MSG2,
+    content: SHARED_HINT_MSG2,
   },
   {
     title: 'Action to List RDS Instances',
-    content: HINT_MSG3,
+    content: SHARED_HINT_MSG3,
   },
 ];
 
-const SHAERD_HELP_BADGES = [
+const SHARED_HELP_BADGES = [
   {
     path: 'Statement[0].Action',
     content: 'Place an action here that helps listing all RDS instances',
     color: 'yellow',
+  },
+];
+
+const SECOND_OBJECTIVE_HINT_MESSAGES = [
+  {
+    title: 'Policy Variable for Tag Value',
+    content: SECOND_OBJECTIVE_HINT_MSG1,
   },
 ];
 
@@ -88,19 +104,19 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         {
           target_node: ResourceNodeID.RDS1,
           access_level: AccessLevel.Read,
+          source_handle: 'right',
           target_handle: 'bottom',
-          source_handle: 'top',
           applicable_nodes: (nodes: IAMAnyNode[]) =>
             IAMNodeFilter.create()
               .fromNodes(nodes)
               .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('peach-team')
+              .whereHasTag('application', 'peach-team')
               .build(),
         },
       ],
       callout_message: OBJECTIVE_CALLOUT_MSG,
       hint_messages: SHARED_HINT_MESSAGES,
-      help_badges: SHAERD_HELP_BADGES,
+      help_badges: SHARED_HELP_BADGES,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
     {
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
@@ -117,18 +133,18 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         {
           target_node: ResourceNodeID.RDS2,
           access_level: AccessLevel.Read,
+          source_handle: 'left',
           target_handle: 'bottom',
-          source_handle: 'top',
           applicable_nodes: (nodes: IAMAnyNode[]) =>
             IAMNodeFilter.create()
               .fromNodes(nodes)
               .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('bowser-power')
+              .whereHasTag('application', 'bowser-force')
               .build(),
         },
       ],
       hint_messages: SHARED_HINT_MESSAGES,
-      help_badges: SHAERD_HELP_BADGES,
+      help_badges: SHARED_HELP_BADGES,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
   [
@@ -147,8 +163,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         {
           target_node: ResourceNodeID.RDS1,
           access_level: AccessLevel.Read,
-          target_handle: 'right',
-          source_handle: 'left',
+          source_handle: 'right',
+          target_handle: 'bottom',
           applicable_nodes: (nodes: IAMAnyNode[]) =>
             IAMNodeFilter.create()
               .fromNodes(nodes)
@@ -159,16 +175,17 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         {
           target_node: ResourceNodeID.RDS2,
           access_level: AccessLevel.Read,
-          target_handle: 'right',
           source_handle: 'left',
+          target_handle: 'bottom',
           applicable_nodes: (nodes: IAMAnyNode[]) =>
             IAMNodeFilter.create()
               .fromNodes(nodes)
               .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('application', 'bowser-power')
+              .whereHasTag('application', 'bowser-force')
               .build(),
         },
       ],
+      hint_messages: SECOND_OBJECTIVE_HINT_MESSAGES,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

@@ -16,16 +16,14 @@
       "type": "array",
       "minItems": 2,
       "maxItems": 2,
-      "items": {
-        "oneOf": [
-          {
-            "$ref": "#/definitions/describeDbInstancesStatement"
-          },
-          {
-            "$ref": "#/definitions/allowDBConnectionsStatement"
-          }
-        ]
-      }
+      "items": [
+        {
+          "$ref": "#/definitions/describeDbInstancesStatement"
+        },
+        {
+          "$ref": "#/definitions/allowDBConnectionsStatement"
+        }
+      ]
     }
   },
   "definitions": {
