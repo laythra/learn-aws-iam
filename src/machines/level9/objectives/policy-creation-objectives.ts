@@ -52,7 +52,7 @@ const SECOND_OBJECTIVE_HINT_MSG1 = `
   We need to inject ***Policy Variables*** into the policy to make it work for both groups.
   what policy variable do you think we should use to represent the tag value?
 
-  -  \`"\${aws:PrincipalTag/application}"\`: Represents the tag value of the user making the request.
+  - \`"\${aws:PrincipalTag/application}"\`: Represents the tag value of the user making the request.
   - \`"\${aws:ResourceTag/application}"\`: Represents the tag value of the resource being accessed.
   - \`"\${aws:RequestTag/application}"\`: Represents the tag value of the request being made.
 `;

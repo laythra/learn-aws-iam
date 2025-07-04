@@ -1,6 +1,6 @@
+import { PolicyNodeID } from '../types/node-id-enums';
 import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/machines/types';
-import { PolicyNodeID } from '../types/node-id-enums';
 
 const POPOVER_MSG1 = `
   Let's create a new policy
