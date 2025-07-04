@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { setup, enqueueActions, assign } from 'xstate';
+import { setup, enqueueActions, assign, AnyActorLogic, Actor } from 'xstate';
 
 import {
   editObjectiveState,
@@ -35,6 +35,7 @@ import type {
   PopupTutorialMessage,
 } from '@/machines/types';
 import type { GenericContext, GenericEventData, LevelObjective } from '@/machines/types';
+import currentLevelDetailsStore from '@/stores/current-level-details-store';
 import { IAMNodeEntity } from '@/types';
 import {
   IAMAnyNode,
@@ -313,6 +314,7 @@ export const createStateMachineSetup = <
       hide_fixed_popovers: assign({ show_fixed_popovers: false }),
       hide_popups: assign({ show_popups: false }),
       hide_popovers: assign({ show_popovers: false }),
+
       change_objective_progress: assign({
         level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) =>
           changeLevelObjectiveProgress(context, id, finished),
@@ -449,6 +451,15 @@ export const createStateMachineSetup = <
       }),
       show_help_popover: assign({
         show_help_popover: true,
+      }),
+      store_checkpoint: enqueueActions(({ self }, { filename }: { filename: string }) => {
+        queueMicrotask(() => {
+          currentLevelDetailsStore.send({
+            type: 'storeSnapshotAtDisk',
+            actor: self as Actor<AnyActorLogic>,
+            filename,
+          });
+        });
       }),
     },
   });
