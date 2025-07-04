@@ -6,6 +6,7 @@ import { Bars3Icon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
 import AnimatedRedDot from './Animated/AnimatedRedDot';
+import { GoToCheckpointButton } from './GoToCheckpointButton';
 import { LevelsProgressionContext } from './providers/LevelsProgressionProvider';
 import { ElementID } from '@/config/element-ids';
 import { NewEntityButtonWithPopover } from '@/features/iam_entities';
@@ -79,7 +80,9 @@ export const Navbar: React.FC<NavbarProps> = () => {
               | {levelTitle}
             </Text>
           </HStack>
-
+          <Box position='relative'>
+            <GoToCheckpointButton />
+          </Box>
           <NewEntityButtonWithPopover data-element-id={ElementID.NewEntityBtn} />
           <Box position='relative'>
             <IconButton

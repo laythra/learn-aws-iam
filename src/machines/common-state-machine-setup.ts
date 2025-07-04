@@ -451,7 +451,16 @@ export const createStateMachineSetup = <
       show_help_popover: assign({
         show_help_popover: true,
       }),
-      store_checkpoint: enqueueActions(({ self }, { filename }: { filename: string }) => {
+      store_checkpoint: enqueueActions(({ self }) => {
+        queueMicrotask(() => {
+          currentLevelDetailsStore.send({
+            type: 'storeLevelProgress',
+            actor: self as Actor<AnyActorLogic>,
+          });
+        });
+      }),
+      // TODO: Remove this! Only used for testing and debugging purposes.
+      store_snapshot_to_disk: enqueueActions(({ self }, { filename }: { filename: string }) => {
         queueMicrotask(() => {
           currentLevelDetailsStore.send({
             type: 'storeSnapshotAtDisk',

@@ -2,6 +2,7 @@ import { createContext, useContext } from 'react';
 
 import { createActorContext } from '@xstate/react';
 import { useSelector } from '@xstate/store/react';
+import _ from 'lodash';
 
 import { stateMachine as level1StateMachine } from '@/machines/level1/state-machine';
 import { stateMachine as level2StateMachine } from '@/machines/level2/state-machine';
@@ -58,12 +59,15 @@ interface LevelsProgressionProviderProps {
 }
 
 const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ children }) => {
-  const currentLevelNumber = useSelector(
+  const [currentLevelNumber] = useSelector(
     CurrentLevelDetailsStore,
-    state => state.context.levelNumber
-  ) as keyof typeof LEVELS_STATE_MACHINES;
+    state => [state.context.levelNumber, state.context.reloadCount],
+    _.isEqual
+  );
 
-  const ActorLogic = GetActorLogicFromLevelNumber(currentLevelNumber);
+  const ActorLogic = GetActorLogicFromLevelNumber(
+    currentLevelNumber as keyof typeof LEVELS_STATE_MACHINES
+  );
 
   return (
     <CurrentActorContext.Provider value={ActorLogic}>

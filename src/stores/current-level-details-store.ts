@@ -5,6 +5,7 @@ import storage from '@/utils/storage';
 
 type CurrentLevelDetailsState = {
   levelNumber: number;
+  reloadCount: number;
 };
 
 type CurrentLevelDetailsEvents = {
@@ -12,6 +13,7 @@ type CurrentLevelDetailsEvents = {
   incrementLevelNumber: unknown;
   storeLevelProgress: { actor: Actor<AnyActorLogic> };
   storeSnapshotAtDisk: { actor: Actor<AnyActorLogic>; filename: string };
+  returnToLastCheckpoint: unknown;
 };
 
 /*
@@ -23,11 +25,12 @@ type CurrentLevelDetailsEvents = {
 export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
   {
     levelNumber: storage.getKey('currentLevel') ? parseInt(storage.getKey('currentLevel')!) : 1,
+    reloadCount: 0,
   },
   {
-    setLevelNumber: (_context: CurrentLevelDetailsState, event: { levelNumber: number }) => {
+    setLevelNumber: (context: CurrentLevelDetailsState, event: { levelNumber: number }) => {
       storage.setKey('currentLevel', event.levelNumber.toString());
-      return { levelNumber: event.levelNumber };
+      return { ...context, levelNumber: event.levelNumber };
     },
     incrementLevelNumber: (context: CurrentLevelDetailsState) => {
       const nextLevel = context.levelNumber + 1;
@@ -41,6 +44,9 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
       );
 
       return context;
+    },
+    returnToLastCheckpoint: (context: CurrentLevelDetailsState) => {
+      return { ...context, reloadCount: context.reloadCount + 1 };
     },
     // TODO: Remove this! Only used for testing and debugging purposes.
     storeSnapshotAtDisk: (context: CurrentLevelDetailsState, event) => {

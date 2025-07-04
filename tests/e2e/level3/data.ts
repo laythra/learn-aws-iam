@@ -31,7 +31,6 @@ export const ENCODED_TEST_SOLUTIONS = {
     'H4sIAAAAAAAAE2XMOwuDMBSG4f9y5oSa9GKbzaGUbr3QLuIQ9QhCTCQ5QUT876UObaHrw/t9EzzRh9ZZUCATIblIuEiBwZ00YYeWQOUTHJsGKwIFmTFuAAZZRcsoh3q0unN1qU5IZ8IO2JeuEf34C5f41zz6WhMuWjC4YXDRV/h+1t4qPQT1SWPgqANxoYRcb7a7dH9IhFSkS4OrGNDz3rumNRigmIv5BWqbYS3cAAAA',
 };
 
-// Should have a string key and a func value which reads from a file
 export const ENCODED_LEVEL_STAGES = {
   stage1: () => Promise.resolve(undefined),
   stage2: () => readFile(join(__dirname, 'snapshots', 'stage2.txt'), { encoding: 'utf-8' }),
