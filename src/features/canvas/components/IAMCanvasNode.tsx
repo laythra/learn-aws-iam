@@ -42,7 +42,6 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
   const { entity, label, handles, image, content, animations, tags } = data;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
   const selectedNodeId = useSelector(CanvasStore, state => state.context.selectedNodeId);
-
   const [animationsState, setAnimationsState] = useState<Record<string, AnimationState>>({});
   const [scope, animate] = useAnimate();
 
@@ -137,7 +136,10 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
               </Tooltip>
               {data.unnecessary_node && (
                 <Tooltip
-                  label={`This ${entity} does not serve any purpose, click to remove it.`}
+                  label={`
+                    This ${entity} does not serve any purpose.
+                    Highlight it and press the delete key to remove it.
+                  `}
                   aria-label='A tooltip'
                   cursor='help'
                   placement='top'

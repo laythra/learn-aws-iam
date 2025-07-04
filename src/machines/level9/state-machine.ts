@@ -1,4 +1,4 @@
-import { assign } from 'xstate';
+import { and, assign, not } from 'xstate';
 
 import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
@@ -323,10 +323,26 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
           ],
           on: {
-            NEXT_POPOVER: 'level_finished_popup',
+            NEXT_POPOVER: [
+              {
+                guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+                target: 'level_completed',
+              },
+              {
+                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
+                target: 'remove_unnecessary_edges_and_nodes',
+              },
+            ],
           },
         },
-        level_finished_popup: {
+        remove_unnecessary_edges_and_nodes: {
+          entry: ['show_unncessary_edges_or_nodes_warning', 'hide_popovers'],
+          always: {
+            guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+            target: 'level_completed',
+          },
+        },
+        level_completed: {
           entry: [
             'hide_popovers',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },

@@ -53,7 +53,7 @@ import {
  * We still need to define the various top-level events for each state machine,
  * ie: `ADD_IAM_USER_NODE`, `ADD_IAM_POLICY_NODE`, etc.
  * Unfortunately, we can't share those definitions across state machines without losing typescript's type safety.
- * It all boils down to losing the contextual typing magic, which xstate heavily relies on.
+ * It all boils down to losing typescript's contextual typing, which xstate heavily relies on.
  * check the github issue: https://github.com/statelyai/xstate/issues/4846
  * @template TLevelObjectiveID - Type of level objective ID, will be passed to the generic context
  * @template TFinishEventMap - Defines the event finish type for each objective type, will be passed to the generic context
@@ -314,7 +314,6 @@ export const createStateMachineSetup = <
       hide_fixed_popovers: assign({ show_fixed_popovers: false }),
       hide_popups: assign({ show_popups: false }),
       hide_popovers: assign({ show_popovers: false }),
-
       change_objective_progress: assign({
         level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) =>
           changeLevelObjectiveProgress(context, id, finished),

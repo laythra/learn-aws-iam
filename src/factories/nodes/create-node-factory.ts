@@ -19,7 +19,40 @@ interface BaseFactoryConfig<T, E extends IAMNodeEntity> {
 type RootOverrides = Partial<Omit<IAMAnyNode, 'data'>>;
 
 /**
- * Generic node factory that supports overriding both root and data fields.
+ * Creates a factory function for generating IAM nodes with customizable properties.
+ *
+ * @template T - The data type for the node, constrained to IAMNodeMap[E]['data']
+ * @template E - The IAM node entity type, constrained to IAMNodeEntity
+ *
+ * @param config - Configuration object for the node factory
+ * @param config.type - The type of the node
+ * @param config.entity - The entity type of the node
+ * @param config.image - Image associated with the node
+ * @param config.defaultHandles - Default handles for the node
+ * @param config.width - Width of the node (default: 225)
+ * @param config.height - Height of the node (default: 82)
+ * @param config.deletable - Whether the node can be deleted (default: false)
+ * @param config.draggable - Whether the node can be dragged (default: true)
+ * @param config.initial_position - Initial position of the node (default: 'center')
+ * @param config.additionalData - Additional data to merge with the node's data (default: {})
+ *
+ * @returns A factory function that creates IAM nodes with optional overrides
+ * @returns factory.rootOverrides - Optional overrides for root-level node properties
+ * @returns factory.dataOverrides - Optional overrides for node data properties
+ *
+ * @example
+ * ```typescript
+ * const userNodeFactory = createNodeFactory({
+ *   type: 'user',
+ *   entity: 'User',
+ *   image: 'user-icon.png',
+ *   defaultHandles: ['source', 'target']
+ * });
+ *
+ * const userNode = userNodeFactory({
+ *   dataOverrides: { id: 'user-123', label: 'John Doe' }
+ * });
+ * ```
  */
 export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAMNodeEntity>(
   config: BaseFactoryConfig<T, E>
@@ -55,8 +88,8 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
       initial_position,
       animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
       layout_direction: 'horizontal',
-      vertical_spacing: height + 20,
-      horizontal_spacing: width + 20,
+      vertical_spacing: height + 20, // 20 so node don't completely overlap on each other
+      horizontal_spacing: width + 20, // 20 so node don't completely overlap on each other
       ...additionalData,
     } as T,
   };
@@ -72,6 +105,7 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
       ...TEMPLATE_NODE,
       ...rootOverrides,
       id: dataOverrides?.id ?? TEMPLATE_NODE.id,
+      deletable: dataOverrides?.unnecessary_node,
       data: {
         ...TEMPLATE_NODE.data,
         ...dataOverrides,

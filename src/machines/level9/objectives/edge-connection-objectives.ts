@@ -19,6 +19,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       is_finished: false,
       established_edge_hovering_label: 'Belongs To',
       established_edge_target_handle: 'top',
+      established_edge_source_handle: 'bottom',
     },
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
@@ -34,6 +35,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       is_finished: false,
       established_edge_hovering_label: 'Attahced To',
       established_edge_target_handle: 'top',
+      established_edge_source_handle: 'bottom',
     },
   ],
   [
@@ -51,6 +53,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       is_finished: false,
       established_edge_hovering_label: 'Attached To',
       established_edge_target_handle: 'top',
+      established_edge_source_handle: 'bottom',
     },
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
@@ -66,6 +69,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       is_finished: false,
       established_edge_hovering_label: 'Attached To',
       established_edge_target_handle: 'top',
+      established_edge_source_handle: 'bottom',
     },
   ],
 ];
