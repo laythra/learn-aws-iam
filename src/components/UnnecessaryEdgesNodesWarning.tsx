@@ -16,7 +16,13 @@ export const UnnecessaryEdgesNodesWarning: React.FC = () => {
   return (
     <Portal>
       <Popover isOpen={anyInvalidEdgesOrNodes}>
-        <PopoverContent position='fixed' top={`${topPos}px`} right={`${rightPos}px`} w='auto'>
+        <PopoverContent
+          position='fixed'
+          top={`${topPos}px`}
+          right={`${rightPos}px`}
+          w='auto'
+          data-element-id='unnecessary-edges-nodes-warning'
+        >
           <PopoverHeader fontWeight='semibold' fontSize='16px' color={theme.colors.red[700]}>
             You Have Unnecessary Edges or Nodes In The Canvas
             <br />

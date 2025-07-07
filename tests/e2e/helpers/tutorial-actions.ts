@@ -36,6 +36,11 @@ export class TutorialActions {
     await expect(fixedPopover.getByRole('button', { name: /next/i })).toHaveCount(0);
   }
 
+  async expectUnnecessaryEdgesNodesWarning(isVisible: boolean): Promise<void> {
+    const warning = this.page.getByTestId('unnecessary-edges-nodes-warning');
+    isVisible ? await expect(warning).toBeVisible() : await expect(warning).not.toBeVisible();
+  }
+
   async goThroughConsecutivePopovers(
     steps: Array<{ nodeId: string; title: string }>
   ): Promise<void> {

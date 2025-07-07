@@ -36,6 +36,12 @@ const FIXED_POPOVER_MSG4 = `
   with the **application** tag of the user.
 `;
 
+const FIXED_POPOVER_MSG5 = `
+  Notice how the same policy granted the appropriate permissions to both groups?
+  This is possible because we can inject condition values as variables into the policy,
+  enabling us to create a single policy that works across multiple groups.
+`;
+
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
   {
     popover_title: 'Understanding the Environment',
@@ -61,6 +67,13 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
   {
     popover_title: 'Creating a Single Policy with Variables',
     popover_content: FIXED_POPOVER_MSG4,
+    position: 'top-left',
+    show_close_button: false,
+    show_next_button: true,
+  },
+  {
+    popover_title: 'One policy for both groups! 💪🏻',
+    popover_content: FIXED_POPOVER_MSG5,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,

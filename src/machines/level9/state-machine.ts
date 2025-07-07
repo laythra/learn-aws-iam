@@ -321,10 +321,10 @@ export const stateMachine = createStateMachineSetup<
         },
         policy_creation_completed: {
           entry: [
-            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[4] } },
           ],
           on: {
-            NEXT_POPOVER: [
+            NEXT_FIXED_POPOVER: [
               {
                 guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
                 target: 'level_completed',
@@ -337,7 +337,8 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         remove_unnecessary_edges_and_nodes: {
-          entry: ['show_unncessary_edges_or_nodes_warning', 'hide_popovers'],
+          entry: ['show_unncessary_edges_or_nodes_warning', 'hide_fixed_popovers'],
+          exit: 'hide_unncessary_edges_or_nodes_warning',
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
             target: 'level_completed',
@@ -345,7 +346,7 @@ export const stateMachine = createStateMachineSetup<
         },
         level_completed: {
           entry: [
-            'hide_popovers',
+            'hide_fixed_popovers',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           ],
           type: 'final',

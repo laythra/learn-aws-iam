@@ -140,7 +140,7 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
                     This ${entity} does not serve any purpose.
                     Highlight it and press the delete key to remove it.
                   `}
-                  aria-label='A tooltip'
+                  aria-label='Unnecessary node warning'
                   cursor='help'
                   placement='top'
                 >

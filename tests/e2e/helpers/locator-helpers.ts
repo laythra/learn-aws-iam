@@ -7,6 +7,16 @@ export const findNode = (page: Page, nodeId: string): Locator => {
   return page.getByTestId(nodeId);
 };
 
+export const findUnnecessaryNodes = (page: Page): Locator => {
+  return page.locator('[data-element-id]').filter({
+    has: page.locator('span.chakra-badge').filter({ hasText: '!' }),
+  });
+};
+
+export const findUnnecessaryNode = (page: Page): Locator => {
+  return findUnnecessaryNodes(page).first();
+};
+
 export const findPopover = (page: Page, popoverId: string, title: string): Locator => {
   return page.getByTestId(`popover-${popoverId}`).filter({ hasText: title });
 };
