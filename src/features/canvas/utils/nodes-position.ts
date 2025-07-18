@@ -14,9 +14,9 @@ export const VALID_INITIAL_POSITIONS = [
   'top-right',
   'bottom-left',
   'bottom-right',
-];
+] as const;
 
-export const LAYOUT_DIRECTIONS = ['horizontal', 'vertical'];
+export const LAYOUT_DIRECTIONS = ['horizontal', 'vertical'] as const;
 
 export type ValidInitialPosition = (typeof VALID_INITIAL_POSITIONS)[number];
 export type LayoutDirection = (typeof LAYOUT_DIRECTIONS)[number];

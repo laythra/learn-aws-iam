@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { Box, Button, Flex, HStack, IconButton, Input, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Input, Text } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
 import { Bars3Icon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
 import AnimatedRedDot from './Animated/AnimatedRedDot';
+import { IconButtonWithEventAndPopover } from './Decorated';
 import { GoToCheckpointButton } from './GoToCheckpointButton';
 import { LevelsProgressionContext } from './providers/LevelsProgressionProvider';
 import { ElementID } from '@/config/element-ids';
@@ -13,6 +14,7 @@ import { NewEntityButtonWithPopover } from '@/features/iam_entities';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import currentLevelDetailsStore from '@/stores/current-level-details-store';
 import { CustomTheme } from '@/types';
+import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface NavbarProps {}
 
@@ -85,7 +87,9 @@ export const Navbar: React.FC<NavbarProps> = () => {
           </Box>
           <NewEntityButtonWithPopover data-element-id={ElementID.NewEntityBtn} />
           <Box position='relative'>
-            <IconButton
+            <IconButtonWithEventAndPopover
+              data-element-id={ElementID.RightSidePanelToggleButton}
+              event={StatelessStateMachineEvent.SidePanelOpened}
               onClick={toggleSidePanel}
               icon={<Bars3Icon />}
               aria-label='side-panel-button'

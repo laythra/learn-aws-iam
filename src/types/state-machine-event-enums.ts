@@ -20,6 +20,7 @@ export enum StatelessStateMachineEvent {
   HidePopovers = 'HIDE_POPOVERS',
   HideHelpPopover = 'HIDE_HELP_POPOVER',
   ShowHelpPopover = 'SHOW_HELP_POPOVER',
+  SidePanelOpened = 'SIDE_PANEL_OPENED',
 }
 
 // /**
