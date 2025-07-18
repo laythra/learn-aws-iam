@@ -58,12 +58,12 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
         ],
         help_badges: [
           {
-            path: 'Statement[0].Resource',
+            path: '/Statement/0/Resource',
             content: 'The resource the policy is applied to',
             color: 'yellow',
           },
           {
-            path: 'Statement[0].Principal',
+            path: '/Statement/0/Principal',
             content: 'The Principal which is allowed/denied access to the resource',
             color: 'yellow',
           },

@@ -69,17 +69,17 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       callout_message: CALLOUT_MSG1,
       help_badges: [
         {
-          path: 'Statement[0].Effect',
+          path: '/Statement/0/Effect',
           content: 'Allows the specified actions on the target resources',
           color: 'green',
         },
         {
-          path: 'Statement[0].Action',
+          path: '/Statement/0/Action',
           content: 'Allow the Principle to assume the role',
           color: 'green',
         },
         {
-          path: 'Statement[0].Principal.AWS',
+          path: '/Statement/0/Principal/AWS',
           content: 'The IAM user ARN that can assume the role',
           color: 'green',
         },

@@ -115,7 +115,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
       ],
       help_badges: [
         {
-          path: 'Statement[1].Condition',
+          path: '/Statement/1/Condition',
           content: 'Condition element to restrict access to seniors',
           color: 'yellow',
         },
