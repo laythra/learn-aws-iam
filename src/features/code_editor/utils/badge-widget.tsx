@@ -1,6 +1,7 @@
 import { Badge, ChakraProvider } from '@chakra-ui/react';
 import { StateEffect, StateField } from '@codemirror/state';
 import { EditorView, Decoration, DecorationSet, WidgetType } from '@codemirror/view';
+import { parse } from 'json-source-map';
 import _ from 'lodash';
 import { createRoot } from 'react-dom/client';
 
@@ -64,58 +65,17 @@ export const badgeExtension = StateField.define<DecorationSet>({
   provide: f => EditorView.decorations.from(f),
 });
 
-type Json = { [key: string]: Json } | Json[] | string | number | boolean | object | null;
-
 /**
  * gets the line number for a given path in a JSON object
  * @param json gets the line number for a given path in a JSON object
- * @param path the path to the value in the JSON object, ie. `Statement[0].Action[0]`
+ * @param path the path to the value in the JSON object, ie. `/Statement/0/Action/0`
  * @returns the line number for the path in the JSON object
  */
-function getLineNumberForPath(json: Json, path: string): number | null {
-  const resolvedValue = _.get(json, path);
-  if (!resolvedValue) {
-    throw new Error('Path does not exist');
-  }
+function getLineNumberForPath(json: object, path: string): number {
+  const pointers = parse(JSON.stringify(json, null, 2), path).pointers;
 
-  const jsonString = JSON.stringify(json, null, 2);
-  const lines = jsonString.split('\n');
-
-  // Split the path into parts, e.g., 'Statement[0].Action[0]' -> ['Statement', '0', 'Action', '0']
-  const parts = path.split(/\.|\[|\]/).filter(Boolean);
-  let nestedJson: Json = json;
-  let lineStartIndex = 0;
-
-  for (const part of parts) {
-    if (Array.isArray(nestedJson)) {
-      const index = parseInt(part, 10);
-
-      for (let start = 0, i = lineStartIndex; i < lines.length; i++, start++) {
-        if (index == start) {
-          lineStartIndex = i + 1;
-          break;
-        }
-      }
-
-      nestedJson = nestedJson[index];
-    } else if (typeof nestedJson === 'object' && nestedJson !== null) {
-      // Handle object keys
-      const key = `"${part}"`;
-      const regex = new RegExp(`^\\s*${key}\\s*:`);
-      for (let i = lineStartIndex; i < lines.length; i++) {
-        if (regex.test(lines[i])) {
-          lineStartIndex = i + 1;
-          break;
-        }
-      }
-
-      nestedJson = (nestedJson as { [key: string]: Json })[part];
-    } else {
-      return null; // Invalid path
-    }
-  }
-
-  return lineStartIndex || null;
+  // +1 because CodeMirror uses 1-based indexing for lines
+  return pointers[path].valueEnd.line + 1;
 }
 
 export const InitializeBadgeWidgets = (

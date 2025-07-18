@@ -74,7 +74,7 @@ const SHARED_HINT_MESSAGES = [
 
 const SHARED_HELP_BADGES = [
   {
-    path: 'Statement[0].Action',
+    path: '/Statement/0/Action',
     content: 'Place an action here that helps listing all RDS instances',
     color: 'yellow',
   },

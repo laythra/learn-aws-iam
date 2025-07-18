@@ -32,17 +32,17 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
       help_badges: [
         {
-          path: 'Statement[0].Effect',
+          path: '/Statement/0/Effect',
           content: 'Allows the specified actions on the target resources',
           color: 'green',
         },
         {
-          path: 'Statement[0].Action[0]',
+          path: '/Statement/0/Action/0',
           content: 'Allows reading objects from s3 buckets',
           color: 'green',
         },
         {
-          path: 'Statement[0].Resource',
+          path: '/Statement/0/Resource',
           content: 'Target resources to apply the policy',
           color: 'yellow',
         },
