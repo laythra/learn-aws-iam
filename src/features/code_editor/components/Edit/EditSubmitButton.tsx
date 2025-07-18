@@ -28,7 +28,12 @@ export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({
     !_.isEmpty(warnings[selectedIAMEntity][nodeId]);
 
   const submit = (): void => {
-    const content = codeEditorStateStore.getSnapshot().context.content[selectedIAMEntity][nodeId];
+    // Stringify and parse to ensure we get a clean, indented JSON object
+    const content = JSON.stringify(
+      JSON.parse(codeEditorStateStore.getSnapshot().context.content[selectedIAMEntity][nodeId]),
+      null,
+      2
+    );
 
     levelActor.send({
       type: StatefulStateMachineEvent.EditIAMPolicyNode,

@@ -28,7 +28,14 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
 
   const submit = (): void => {
     const codeEditorStateContext = codeEditorStateStore.getSnapshot().context;
-    const content = codeEditorStateContext.content[selectedIAMEntity][nodeId];
+
+    // Stringify and parse to ensure we get a clean, indented JSON object
+    const content = JSON.stringify(
+      JSON.parse(codeEditorStateContext.content[selectedIAMEntity][nodeId]),
+      null,
+      2
+    );
+
     const accountId = codeEditorStateContext.selectedAccountId;
     const label = codeEditorStateContext.label!;
 
