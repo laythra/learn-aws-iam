@@ -1,0 +1,16 @@
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
+
+export enum EdgeConnectionFinishEvent {
+  TBAC_POLICY_ATTACHED_GROUP1 = 'TBAC_POLICY_ATTACHED_GROUP1',
+  TBAC_POLICY_ATTACHED_GROUP2 = 'TBAC_POLICY_ATTACHED_GROUP2',
+  TBAC_POLICY_ATTACHED_GROUP3 = 'TBAC_POLICY_ATTACHED_GROUP3',
+}
+
+export enum PolicyCreationFinishEvent {
+  ALLOW_CREATE_RDS_WITH_TAGS_POLICY_CREATED = 'ALLOW_CREATE_RDS_WITH_TAGS_POLICY_CREATED',
+}
+
+export type FinishEventMap = FinishEventMapWithDefaults<{
+  [ObjectiveType.POLICY_CREATION_OBJECTIVE]: PolicyCreationFinishEvent;
+  [ObjectiveType.EDGE_CONNECTION_OBJECTIVE]: EdgeConnectionFinishEvent;
+}>;

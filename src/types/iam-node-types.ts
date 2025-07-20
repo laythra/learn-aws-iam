@@ -142,7 +142,7 @@ interface IAMNodeData extends Record<string, unknown> {
   /**
    * Defines the initial position of the node relative to the canvas viewport
    */
-  initial_position?: string;
+  initial_position?: ValidInitialPosition;
   /**
    * Defines the account for which the node belongs to
    * mainly used for multi-account scenarios

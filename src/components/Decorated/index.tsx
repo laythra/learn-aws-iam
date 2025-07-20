@@ -71,3 +71,7 @@ export const GuardedMenuItemWithEventAndPopover = withTutorialGuard<
 export const GuardedIconButtonWithStateMachineEvent = withTutorialGuard<
   IconButtonProps & { event: StatelessStateMachineEvent; 'data-element-id': string }
 >(WithStateMachineEventIconButton);
+
+export const IconButtonWithEventAndPopover = withPopover<
+  IconButtonProps & { event: StatelessStateMachineEvent; 'data-element-id': string }
+>(WithStateMachineEventIconButton);
