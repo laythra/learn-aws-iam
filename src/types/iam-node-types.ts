@@ -16,6 +16,7 @@ export enum AccessLevel {
   ReadWrite = 'Read/Write',
   Delete = 'Delete',
   Full = 'Full',
+  StartStopControl = 'Control (Start/Stop)',
 }
 
 export enum IAMNodeEntity {

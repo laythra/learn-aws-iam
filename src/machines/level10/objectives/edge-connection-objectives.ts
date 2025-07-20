@@ -20,14 +20,40 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         required_edges: [
           createEdge({
             rootOverrides: {
-              source: PolicyNodeID.TBACPolicy!,
+              source: PolicyNodeID.TBACPolicy,
               target: groupId!,
             },
           }),
         ],
         on_finish_event: finishEvent,
         is_finished: false,
-        established_edge_hovering_label: 'Belongs To',
+        established_edge_hovering_label: 'Attached To',
+        established_edge_target_handle: 'top',
+        established_edge_source_handle: 'bottom',
+      }) as EdgeConnectionObjective<FinishEventMap>
+  ),
+  _.zip(
+    [GroupNodeID.PaymentsTeam, GroupNodeID.AnalyticsTeam, GroupNodeID.ComplianceTeam],
+    [
+      EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP1,
+      EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP2,
+      EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP3,
+    ]
+  ).map(
+    ([groupId, finishEvent]) =>
+      ({
+        type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
+        required_edges: [
+          createEdge({
+            rootOverrides: {
+              source: PolicyNodeID.RDSManagePolicy,
+              target: groupId!,
+            },
+          }),
+        ],
+        on_finish_event: finishEvent,
+        is_finished: false,
+        established_edge_hovering_label: 'Attached To',
         established_edge_target_handle: 'top',
         established_edge_source_handle: 'bottom',
       }) as EdgeConnectionObjective<FinishEventMap>
