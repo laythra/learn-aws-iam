@@ -21,7 +21,8 @@ export const LAYOUT_DIRECTIONS = ['horizontal', 'vertical'] as const;
 export type ValidInitialPosition = (typeof VALID_INITIAL_POSITIONS)[number];
 export type LayoutDirection = (typeof LAYOUT_DIRECTIONS)[number];
 
-const NODES_POSITIONS = (
+// Should we cache this?
+const calculateNodePositions = (
   originX: number,
   originY: number,
   verticalSpacing: number,
@@ -117,6 +118,24 @@ function getParentCenterPosition(parentNode: IAMAnyNode): XYPosition {
 }
 
 /**
+ * Adjusts the position of a node based on the layout group margin.
+ * This is used to ensure that nodes are positioned correctly within their layout group.
+ * Currently, only supports top and left margins.
+ */
+function adjustPositionForMargin(position: XYPosition, layoutGroup: NodeLayoutGroup): XYPosition {
+  if (!layoutGroup.margin) return position;
+
+  if (layoutGroup.margin.top < 0) {
+    debugger;
+  }
+
+  return {
+    x: position.x + (layoutGroup.margin.left || 0),
+    y: position.y + (layoutGroup.margin.top || 0),
+  };
+}
+
+/**
  * Calculates the initial position for a node.
  *
  * If a parent node is provided, the position is computed relative to the parent.
@@ -128,20 +147,14 @@ export function getNodeInitialPosition(
   numNodes: number,
   nodeIndex: number,
   sidePanelWidth: number,
-  parentNode?: IAMAnyNode, // Pass the parent node if it exists
-  layoutDirection: LayoutDirection = 'horizontal',
-  layoutGroup?: NodeLayoutGroup
+  layoutGroup: NodeLayoutGroup,
+  parentNode?: IAMAnyNode // Pass the parent node if it exists
 ): XYPosition {
-  // const { initial_position } = node.data;
   const initial_position = layoutGroup?.position || node.data.initial_position;
   const verticalSpacing =
-    layoutGroup?.vertical_spacing ??
-    node.data.vertical_spacing ??
-    theme.sizes.iamNodeHeightInPixels + BETWEEN_NODES_SPACING;
+    layoutGroup?.vertical_spacing ?? theme.sizes.iamNodeHeightInPixels + BETWEEN_NODES_SPACING;
   const horizontalSpacing =
-    layoutGroup?.horizontal_spacing ??
-    node.data.horizontal_spacing ??
-    theme.sizes.iamNodeWidthInPixels + BETWEEN_NODES_SPACING;
+    layoutGroup?.horizontal_spacing ?? theme.sizes.iamNodeWidthInPixels + BETWEEN_NODES_SPACING;
 
   if (!initial_position || !VALID_INITIAL_POSITIONS.includes(initial_position)) {
     return { x: 0, y: 0 };
@@ -161,7 +174,7 @@ export function getNodeInitialPosition(
     ? parentNode.height!
     : windowHeight - theme.sizes.navbarHeightInPixels;
 
-  return NODES_POSITIONS(
+  const nodePosition = calculateNodePositions(
     center.x,
     center.y,
     verticalSpacing,
@@ -172,6 +185,8 @@ export function getNodeInitialPosition(
     parentWidth,
     nodeIndex,
     numNodes,
-    layoutGroup?.layout_direction ?? layoutDirection // Default layout direction
-  )[initial_position as ValidInitialPosition];
+    layoutGroup.layout_direction
+  )[initial_position];
+
+  return adjustPositionForMargin(nodePosition, layoutGroup);
 }

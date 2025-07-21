@@ -121,6 +121,14 @@ export interface NodeLayoutGroup {
    * and vertical nodes, depending on the layout direction.
    */
   horizontal_spacing?: number;
+  /**
+   * Defines the margin around the group.
+   * Supports top and left margins.
+   */
+  margin?: {
+    top: number;
+    left: number;
+  };
 }
 
 /**
