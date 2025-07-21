@@ -28,8 +28,8 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         on_finish_event: finishEvent,
         is_finished: false,
         established_edge_hovering_label: 'Attached To',
-        established_edge_target_handle: 'top',
-        established_edge_source_handle: 'bottom',
+        established_edge_target_handle: 'left',
+        established_edge_source_handle: 'top',
       }) as EdgeConnectionObjective<FinishEventMap>
   ),
   _.zip(
@@ -54,8 +54,8 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         on_finish_event: finishEvent,
         is_finished: false,
         established_edge_hovering_label: 'Attached To',
-        established_edge_target_handle: 'top',
-        established_edge_source_handle: 'bottom',
+        established_edge_target_handle: 'left',
+        established_edge_source_handle: 'top',
       }) as EdgeConnectionObjective<FinishEventMap>
   ),
 ];

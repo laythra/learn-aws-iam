@@ -1,13 +1,8 @@
 import { and, assign, not } from 'xstate';
 
 import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
-import {
-  ANALYTICS_TEAM_LAYOUT_GROUP,
-  COMPLIANCE_TEAM_LAYOUT_GROUP,
-  PAYMENTS_TEAM_LAYOUT_GROUP,
-  RDS_INSTANCES_LAYOUT_GROUP,
-} from './layout-groups';
-import { INITIAL_IN_LEVEL_GROUP_NODES } from './nodes/group-node';
+import { LAYOUT_GROUPS } from './layout-groups';
+import { INITIAL_IN_LEVEL_GROUP_NODES } from './nodes/group-nodes';
 import { INITIAL_IN_LEVEL_RESOURCE_NODES } from './nodes/resource-nodes';
 import { INITIAL_IN_LEVEL_USER_NODES } from './nodes/user-nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
@@ -55,13 +50,7 @@ export const stateMachine = createStateMachineSetup<
     use_multi_account_canvas: false,
     side_panel_open: false,
     nodes_connnections: [],
-    layout_groups: [
-      ...COMMON_LAYOUT_GROUPS,
-      PAYMENTS_TEAM_LAYOUT_GROUP,
-      ANALYTICS_TEAM_LAYOUT_GROUP,
-      COMPLIANCE_TEAM_LAYOUT_GROUP,
-      RDS_INSTANCES_LAYOUT_GROUP,
-    ],
+    layout_groups: [...COMMON_LAYOUT_GROUPS, ...LAYOUT_GROUPS],
     restricted_element_ids: [
       ElementID.CodeEditorRoleTab,
       ElementID.CodeEditorSCPTab,

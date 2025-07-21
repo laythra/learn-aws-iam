@@ -121,7 +121,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       validate_function: AJV_COMPILER.compile(createRDSWithTagsPolicy),
       initial_code: INITIAL_POLICIES.POLICY_WITH_CONDITION,
       limit_new_lines: false,
-      layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
+      layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
       granted_accesses: [],
       callout_message: OBJECTIVE1_CALLOUT_MSG,
       hint_messages: [
@@ -152,12 +152,12 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       validate_function: AJV_COMPILER.compile(manageTaggedRdsPolicy),
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       limit_new_lines: false,
-      layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
+      layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
       granted_accesses: [
         {
           access_level: AccessLevel.StartStopControl,
-          target_handle: 'bottom',
-          source_handle: 'top',
+          target_handle: 'left',
+          source_handle: 'right',
           target_node: ResourceNodeID.RDS1,
           applicable_nodes: (nodes: IAMAnyNode[]) =>
             IAMNodeFilter.create()
@@ -168,8 +168,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         },
         {
           access_level: AccessLevel.StartStopControl,
-          target_handle: 'bottom',
-          source_handle: 'top',
+          target_handle: 'left',
+          source_handle: 'right',
           target_node: ResourceNodeID.RDS2,
           applicable_nodes: (nodes: IAMAnyNode[]) =>
             IAMNodeFilter.create()
@@ -180,8 +180,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         },
         {
           access_level: AccessLevel.StartStopControl,
-          target_handle: 'bottom',
-          source_handle: 'top',
+          target_handle: 'left',
+          source_handle: 'right',
           target_node: ResourceNodeID.RDS3,
           applicable_nodes: (nodes: IAMAnyNode[]) =>
             IAMNodeFilter.create()

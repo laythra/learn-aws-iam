@@ -1,32 +1,21 @@
-import { createHorizontalGroup } from '@/factories/layout-group-factory';
+import { createHorizontalGroup, createVerticalGroup } from '@/factories/layout-group-factory';
+import { theme } from '@/theme';
 
 export enum LayoutGroupID {
-  PaymentsTeamLayoutGroup = 'payments-team-layout-group',
-  AnalyticsTeamLayoutGroup = 'analytics-team-layout-group',
-  ComplianceTeamLayoutGroup = 'compliance-team-layout-group',
+  GroupNodesLayoutGroup = 'group-nodes-layout-group',
   RDSInstancesLayoutGroup = 'rds-instances-layout-group',
 }
 
-export const PAYMENTS_TEAM_LAYOUT_GROUP = createHorizontalGroup(
-  LayoutGroupID.PaymentsTeamLayoutGroup,
-  'bottom-right',
-  200
-);
-
-export const ANALYTICS_TEAM_LAYOUT_GROUP = createHorizontalGroup(
-  LayoutGroupID.AnalyticsTeamLayoutGroup,
-  'bottom-center',
-  200
-);
-
-export const COMPLIANCE_TEAM_LAYOUT_GROUP = createHorizontalGroup(
-  LayoutGroupID.ComplianceTeamLayoutGroup,
-  'bottom-left',
-  200
-);
-
-export const RDS_INSTANCES_LAYOUT_GROUP = createHorizontalGroup(
-  LayoutGroupID.RDSInstancesLayoutGroup,
+const GROUP_NODES_LAYOUT_GROUP = createVerticalGroup(
+  LayoutGroupID.GroupNodesLayoutGroup,
   'top-center',
-  200
+  theme.sizes.iamNodeHeightInPixels + 40,
+  { left: -theme.sizes.iamNodeWidthInPixels - 100, top: 0 }
 );
+
+const RDS_INSTANCES_LAYOUT_GROUP = createHorizontalGroup(
+  LayoutGroupID.RDSInstancesLayoutGroup,
+  'right-center'
+);
+
+export const LAYOUT_GROUPS = [GROUP_NODES_LAYOUT_GROUP, RDS_INSTANCES_LAYOUT_GROUP];

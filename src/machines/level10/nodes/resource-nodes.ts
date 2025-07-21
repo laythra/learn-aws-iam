@@ -20,7 +20,7 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = _.zip(
 ).map(([id, tags]) => ({
   id,
   label: `${id}-rds`,
-  layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
+  layout_group_id: CommonLayoutGroupID.RightCenterVertical,
   image: IAMNodeImage.Database,
   resource_type: IAMNodeResourceEntity.RDS,
   tags: [tags as [string, string]],
@@ -38,6 +38,6 @@ export const INITIAL_IN_LEVEL_RESOURCE_NODES: IAMResourceNode[] = IN_LEVEL_RESOU
   nodeData =>
     createResourceNode({
       dataOverrides: nodeData,
-      rootOverrides: { draggable: true },
+      rootOverrides: { draggable: false },
     })
 );

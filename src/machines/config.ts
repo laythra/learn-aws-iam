@@ -1,3 +1,5 @@
+// TODO: Remove this file and rely on consts.ts instead
+
 import { IAMCodeDefinedEntities } from '@/config/consts';
 import { IAMNodeEntity } from '@/types';
 
@@ -13,6 +15,10 @@ export const MANAGED_POLICIES = {
     ],
   },
   EmptyPolicy: {
+    Version: '2012-10-17',
+    Statement: [],
+  },
+  EmptyPolicyWithCondition: {
     Version: '2012-10-17',
     Statement: [],
   },
