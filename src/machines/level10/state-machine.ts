@@ -1,14 +1,14 @@
-import { assign } from 'xstate';
+import { and, assign, not } from 'xstate';
 
 import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
-import {
-  ANALYTICS_TEAM_LAYOUT_GROUP,
-  COMPLIANCE_TEAM_LAYOUT_GROUP,
-  PAYMENTS_TEAM_LAYOUT_GROUP,
-} from './layout-groups';
-import { INITIAL_IN_LEVEL_NODES } from './nodes';
+import { LAYOUT_GROUPS } from './layout-groups';
+import { INITIAL_IN_LEVEL_GROUP_NODES } from './nodes/group-nodes';
+import { INITIAL_IN_LEVEL_RESOURCE_NODES } from './nodes/resource-nodes';
+import { INITIAL_IN_LEVEL_USER_NODES } from './nodes/user-nodes';
+import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
+import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import {
@@ -50,12 +50,7 @@ export const stateMachine = createStateMachineSetup<
     use_multi_account_canvas: false,
     side_panel_open: false,
     nodes_connnections: [],
-    layout_groups: [
-      ...COMMON_LAYOUT_GROUPS,
-      PAYMENTS_TEAM_LAYOUT_GROUP,
-      ANALYTICS_TEAM_LAYOUT_GROUP,
-      COMPLIANCE_TEAM_LAYOUT_GROUP,
-    ],
+    layout_groups: [...COMMON_LAYOUT_GROUPS, ...LAYOUT_GROUPS],
     restricted_element_ids: [
       ElementID.CodeEditorRoleTab,
       ElementID.CodeEditorSCPTab,
@@ -144,7 +139,10 @@ export const stateMachine = createStateMachineSetup<
   states: {
     inside_level: {
       entry: [
-        { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
+        {
+          type: 'assign_nodes',
+          params: { nodes: [...INITIAL_IN_LEVEL_USER_NODES, ...INITIAL_IN_LEVEL_GROUP_NODES] },
+        },
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
         assign({
           initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
@@ -174,7 +172,6 @@ export const stateMachine = createStateMachineSetup<
         },
         popover1: {
           entry: [
-            // 'store_checkpoint',
             'hide_popups',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
           ],
@@ -193,18 +190,46 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [PolicyCreationFinishEvent.ALLOW_CREATE_RDS_WITH_TAGS_POLICY_CREATED]:
-              'attach_policy1_to_groups',
+            [PolicyCreationFinishEvent.ALLOW_CREATE_RDS_WITH_TAGS_POLICY_CREATED]: {
+              target: 'attach_policy1_to_groups',
+              actions: [
+                'close_side_panel',
+                {
+                  type: 'finish_level_objective',
+                  params: {
+                    id: LevelObjectiveID.ALLOW_CREATE_RDS_WITH_TAGS_POLICY,
+                  },
+                },
+              ],
+            },
           },
         },
         attach_policy1_to_groups: {
           type: 'parallel',
-          onDone: 'finished',
+          onDone: {
+            target: 'level_objective1_finished',
+            actions: [
+              {
+                type: 'finish_level_objective',
+                params: {
+                  id: LevelObjectiveID.ATTACH_POLICY1_TO_GROUPS,
+                },
+              },
+            ],
+          },
           entry: [
+            'close_side_panel',
             {
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[1] },
             },
+            {
+              type: 'set_edge_connection_objectives',
+              params: {
+                objectives: EDGE_CONNECTION_OBJECTIVES[0],
+              },
+            },
+            'enable_edges_management_ability',
           ],
           states: {
             attach_policy1_to_group1: {
@@ -248,7 +273,158 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        finished: {},
+        level_objective1_finished: {
+          entry: [
+            {
+              type: 'show_fixed_popover_message',
+              params: { message: FIXED_POPOVER_MESSAGES[0] },
+            },
+            {
+              type: 'append_nodes',
+              params: { nodes: INITIAL_IN_LEVEL_RESOURCE_NODES },
+            },
+          ],
+          on: {
+            NEXT_FIXED_POPOVER: 'create_policy2',
+          },
+        },
+        create_policy2: {
+          entry: [
+            'hide_fixed_popovers',
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[2] },
+            },
+            {
+              type: 'add_new_level_objective',
+              params: { objectives: LEVEL_OBJECTIVES[1] },
+            },
+            {
+              type: 'set_permission_policy_creation_objectives',
+              params: {
+                objectives: POLICY_CREATION_OBJECTIVES[1],
+              },
+            },
+          ],
+          on: {
+            [PolicyCreationFinishEvent.MANAGE_RDS_POLICY_CREATED]: {
+              target: 'attach_policy2_to_groups',
+              actions: [
+                {
+                  type: 'finish_level_objective',
+                  params: {
+                    id: LevelObjectiveID.CREATE_MANAGE_RDS_POLICY,
+                  },
+                },
+              ],
+            },
+          },
+        },
+        attach_policy2_to_groups: {
+          type: 'parallel',
+          onDone: [
+            {
+              target: 'level_objectives_completed',
+              actions: [
+                {
+                  type: 'finish_level_objective',
+                  params: {
+                    id: LevelObjectiveID.ATTACH_POLICY2_TO_GROUPS,
+                  },
+                },
+              ],
+            },
+          ],
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
+            },
+            {
+              type: 'set_edge_connection_objectives',
+              params: {
+                objectives: EDGE_CONNECTION_OBJECTIVES[1],
+              },
+            },
+          ],
+          states: {
+            attach_policy2_to_group1: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP1]: 'completed',
+                  },
+                },
+                completed: {
+                  type: 'final',
+                },
+              },
+            },
+            attach_policy2_to_group2: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP2]: 'completed',
+                  },
+                },
+                completed: {
+                  type: 'final',
+                },
+              },
+            },
+            attach_policy2_to_group3: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP3]: 'completed',
+                  },
+                },
+                completed: {
+                  type: 'final',
+                },
+              },
+            },
+          },
+        },
+        level_objectives_completed: {
+          entry: [
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
+          ],
+          on: {
+            NEXT_FIXED_POPOVER: [
+              {
+                guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+                target: 'level_completed',
+              },
+              {
+                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
+                target: 'remove_unnecessary_edges_and_nodes',
+              },
+            ],
+          },
+        },
+        remove_unnecessary_edges_and_nodes: {
+          entry: ['show_unncessary_edges_or_nodes_warning', 'hide_popovers'],
+          always: {
+            guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+            target: 'level_completed',
+          },
+        },
+        level_completed: {
+          type: 'final',
+          entry: [
+            'hide_help_popover',
+            {
+              type: 'show_popup_message',
+              params: {
+                message: POPUP_TUTORIAL_MESSAGES[3],
+              },
+            },
+          ],
+        },
       },
     },
   },

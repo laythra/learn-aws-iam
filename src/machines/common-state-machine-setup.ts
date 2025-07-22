@@ -346,6 +346,7 @@ export const createStateMachineSetup = <
           ),
       }),
       show_side_panel: assign({ side_panel_open: true }),
+      close_side_panel: assign({ side_panel_open: false }),
       set_edge_connection_objectives: enqueueActions(
         (
           { enqueue },
@@ -435,6 +436,9 @@ export const createStateMachineSetup = <
       }),
       assign_nodes: assign({
         nodes: (__, { nodes }: { nodes: IAMAnyNode[] }) => nodes,
+      }),
+      append_nodes: assign({
+        nodes: ({ context }, { nodes }: { nodes: IAMAnyNode[] }) => [...context.nodes, ...nodes],
       }),
       set_mutli_account_canvas: assign({
         use_multi_account_canvas: true,

@@ -18,6 +18,11 @@ export const MANAGED_POLICIES = {
     Version: '2012-10-17',
     Statement: [],
   },
+  EmptyPolicyWithCondition: {
+    Version: '2012-10-17',
+    Statement: [],
+    Condition: {},
+  },
   EmptyTrustPolicy: {
     Version: '2012-10-17',
     Statement: [

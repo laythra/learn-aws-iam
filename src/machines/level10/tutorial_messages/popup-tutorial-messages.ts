@@ -42,6 +42,22 @@ To achieve this level of control, we need to define a single policy with two dis
   * \`name\` - Can be any descriptive name for the RDS instance
 `;
 
+const POPUP_MSG4 = `
+  That was a tough level, give yourself a well-earned pat on the back! 🎉|lg
+
+  You’ve now mastered ***Tag-Based Access Control (TBAC)***,
+  and not only that, you’ve shown real skill in crafting complex IAM policies.|lg
+
+  In this level, we explored *Request Tags* and how they can
+  be used to manage access based on the tags attached to the request itself.|lg
+
+  We're nearing the end of our journey.
+  Next up, we’ll dive into a powerful concept called **Permission Boundaries**,
+  which help define the maximum permissions an IAM entity can receive.|lg
+
+  You're doing great. Let’s finish strong! 💪|lg
+`;
+
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: 'Level 10: Request Tags',
@@ -54,5 +70,10 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: 'Level 10 Objectives',
     content: POPUP_MSG3,
+  },
+  {
+    title: 'Level 10 Completed! ✅',
+    content: POPUP_MSG4,
+    go_to_next_level_button: true,
   },
 ];

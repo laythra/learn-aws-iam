@@ -7,6 +7,19 @@ const Objective1Description = `
   and another for allowing tag creation when creating RDS instances.
 `;
 
+const Objective2Description = `
+  Attach the RDS creation policy to the appropriate team groups.
+`;
+
+const Objective3Description = `
+  Create a policy that allows stopping/starting RDS instances,
+  but only by the team to whom the instance belongs.
+`;
+
+const Objective4Description = `
+  Attach the RDS management policy to the respective team groups.
+`;
+
 const Objective1Hint = `
   The policy should include two statements:
 
@@ -23,6 +36,11 @@ const Objective1Hint = `
   * \`name\` - Can be any descriptive name for the RDS instance
 `;
 
+const Objective3Hint = `
+  How can you know the team to which the RDS instance belongs?
+  We can utilize **Resource Tags** to achieve this!
+`;
+
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [
   [
     {
@@ -31,6 +49,27 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
       id: LevelObjectiveID.ALLOW_CREATE_RDS_WITH_TAGS_POLICY,
       label: Objective1Description,
       hint_text: Objective1Hint,
+    },
+    {
+      type: ObjectiveType.LEVEL_OBJECTIVE,
+      finished: false,
+      id: LevelObjectiveID.ATTACH_POLICY1_TO_GROUPS,
+      label: Objective2Description,
+    },
+  ],
+  [
+    {
+      type: ObjectiveType.LEVEL_OBJECTIVE,
+      finished: false,
+      id: LevelObjectiveID.CREATE_MANAGE_RDS_POLICY,
+      label: Objective3Description,
+      hint_text: Objective3Hint,
+    },
+    {
+      type: ObjectiveType.LEVEL_OBJECTIVE,
+      finished: false,
+      id: LevelObjectiveID.ATTACH_POLICY2_TO_GROUPS,
+      label: Objective4Description,
     },
   ],
 ];

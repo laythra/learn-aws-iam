@@ -113,9 +113,8 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
           nodesGroup.length,
           nodeIndex,
           sidePanelWidth,
-          parentNode,
-          node.data.layout_direction || 'horizontal',
-          layoutGroup
+          layoutGroup,
+          parentNode
         );
 
         return { ...node, position: initialPosition };

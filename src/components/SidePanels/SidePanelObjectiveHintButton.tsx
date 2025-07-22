@@ -24,7 +24,7 @@ const SidePanelObjectiveHintButton: React.FC<SidePanelObjectiveHintButtonProps> 
   return (
     <Popover>
       <PopoverTrigger>
-        <Button fontSize='xs' alignSelf='flex-end' size='sm'>
+        <Button fontSize='xs' size='sm'>
           Hint
         </Button>
       </PopoverTrigger>

@@ -31,8 +31,8 @@ export const stateMachine = createStateMachineSetup<
   id: 'level9_state_machine',
   initial: 'inside_level',
   context: {
-    level_title: 'Service Control Policies',
-    level_description: 'Service Control Policies',
+    level_title: 'TBAC: Resource Tags',
+    level_description: 'TBAC: Resource Tags',
     level_number: 9,
     show_popovers: false,
     show_popups: false,
