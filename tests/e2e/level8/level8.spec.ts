@@ -74,7 +74,7 @@ test.describe('Level 8', () => {
     await test.step('Edit Policy', async () => {
       await nodes.editPolicyNodeContent(
         PolicyNodeID.SlackServiceManagePolicy,
-        getTestSolution(ENCODED_TEST_SOLUTIONS, '1')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy1')
       );
     });
 
@@ -118,7 +118,7 @@ test.describe('Level 8', () => {
     await test.step('Edit Policy', async () => {
       await nodes.editPolicyNodeContent(
         PolicyNodeID.SlackServiceManagePolicy,
-        getTestSolution(ENCODED_TEST_SOLUTIONS, '2')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
     });
 

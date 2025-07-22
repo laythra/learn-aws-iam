@@ -80,7 +80,7 @@ test.describe('Stage 2 - ARNs and Policy Creation Workflow', () => {
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 's3_read_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy1')
       );
 
       await nodes.expectVisible(PolicyNodeID.S3ReadPolicy);
@@ -151,16 +151,12 @@ test.describe('Stage 3 - Creating new nodes and edges', () => {
 
     await test.step('Create all policies first, then connect them', async () => {
       // Create all policies first
-      for (const policyKey of [
-        's3_read_write_policy',
-        'dynamo_db_read_write_policy',
-        'cloudfront_read_policy',
-      ]) {
+      for (const policyKey of ['policy2', 'policy3', 'policy4']) {
         await popups.submitCreatePolicyPopup(
           [ElementID.CodeEditorPolicyTab],
           ElementID.CodeEditorPolicyTab,
           `TestPolicy${policyKey}`,
-          getTestSolution(ENCODED_TEST_SOLUTIONS, policyKey)
+          await getTestSolution(ENCODED_TEST_SOLUTIONS, policyKey)
         );
       }
 
@@ -173,7 +169,6 @@ test.describe('Stage 3 - Creating new nodes and edges', () => {
     });
   });
 
-  // Test case 2: Create and connect each policy immediately (interleaved approach)
   test('Policy creation workflow: create and connect each policy immediately', async ({
     goToLevelAtStage,
     nodes,
@@ -194,7 +189,7 @@ test.describe('Stage 3 - Creating new nodes and edges', () => {
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy2',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 's3_read_write_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
       await nodes.connectNodes(PolicyNodeID.S3ReadWritePolicy, GroupNodeID.FrontendGroup);
 
@@ -203,7 +198,7 @@ test.describe('Stage 3 - Creating new nodes and edges', () => {
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy3',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 'cloudfront_read_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy3')
       );
       await nodes.connectNodes(PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup);
 
@@ -212,7 +207,7 @@ test.describe('Stage 3 - Creating new nodes and edges', () => {
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy4',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 'dynamo_db_read_write_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy4')
       );
       await nodes.connectNodes(PolicyNodeID.DynamoDBReadWritePolicy, GroupNodeID.BackendGroup);
 
@@ -241,19 +236,19 @@ test.describe('Stage 3 - Creating new nodes and edges', () => {
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy4',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 'dynamo_db_read_write_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy4')
       );
       await popups.submitCreatePolicyPopup(
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy3',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 'cloudfront_read_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy3')
       );
       await popups.submitCreatePolicyPopup(
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy2',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 's3_read_write_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
 
       await nodes.connectNodes(PolicyNodeID.S3ReadWritePolicy, GroupNodeID.FrontendGroup);
@@ -284,19 +279,19 @@ test.describe('Stage 3 - Creating new nodes and edges', () => {
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy3',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 'cloudfront_read_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy3')
       );
       await popups.submitCreatePolicyPopup(
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy2',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 's3_read_write_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
       await popups.submitCreatePolicyPopup(
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy4',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 'dynamo_db_read_write_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy4')
       );
 
       await nodes.connectNodes(PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup);
@@ -327,7 +322,7 @@ test.describe('Stage 3 - Creating new nodes and edges', () => {
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy4',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 'dynamo_db_read_write_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy4')
       );
       await nodes.connectNodes(PolicyNodeID.DynamoDBReadWritePolicy, GroupNodeID.BackendGroup);
 
@@ -335,13 +330,13 @@ test.describe('Stage 3 - Creating new nodes and edges', () => {
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy2',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 's3_read_write_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
       await popups.submitCreatePolicyPopup(
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         'TestPolicy3',
-        getTestSolution(ENCODED_TEST_SOLUTIONS, 'cloudfront_read_policy')
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy3')
       );
 
       await nodes.connectNodes(PolicyNodeID.S3ReadWritePolicy, GroupNodeID.FrontendGroup);

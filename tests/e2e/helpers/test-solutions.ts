@@ -1,11 +1,11 @@
 import { gunzipSync } from 'zlib';
 
-export const getTestSolution = <K extends string>(
-  testSolutions: Record<K, string>,
+export const getTestSolution = async <K extends string>(
+  testSolutions: Record<K, () => Promise<string>>,
   objectiveNumber: K
-): string => {
+): Promise<string> => {
   try {
-    const compressed = Buffer.from(testSolutions[objectiveNumber], 'base64');
+    const compressed = Buffer.from(await testSolutions[objectiveNumber](), 'base64');
     return gunzipSync(new Uint8Array(compressed)).toString('utf-8');
   } catch (error) {
     throw new Error(`Failed to decode test solution for step: ${objectiveNumber}`);

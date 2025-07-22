@@ -15,8 +15,10 @@ import { ElementID } from '@/config/element-ids';
 export class NodeActions {
   constructor(private readonly page: Page) {}
 
-  async expectVisible(nodeId: string): Promise<void> {
-    await expect(findNode(this.page, nodeId)).toBeVisible();
+  async expectVisible(...nodeId: string[]): Promise<void> {
+    for (const id of nodeId) {
+      await expect(findNode(this.page, id)).toBeVisible();
+    }
   }
 
   async expectMultipleVisible(nodeIds: string[]): Promise<void> {
@@ -82,5 +84,13 @@ export class NodeActions {
     await expect(submitButton).toBeEnabled({ timeout: 5000 });
 
     await submitButton.click();
+  }
+
+  async deleteNode(nodeId: string): Promise<void> {
+    const node = findNode(this.page, nodeId);
+    await expect(node).toBeVisible();
+
+    await node.click();
+    await this.page.keyboard.press('Backspace');
   }
 }

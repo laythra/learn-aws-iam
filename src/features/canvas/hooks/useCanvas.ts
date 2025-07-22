@@ -9,6 +9,7 @@ import { CanvasStore } from '../stores/canvas-store';
 import { isValidConnection } from '../utils/edges-creation';
 import { getNodeInitialPosition } from '../utils/nodes-position';
 import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { createHorizontalGroup } from '@/factories/layout-group-factory';
 import { CustomTheme } from '@/types';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -26,6 +27,11 @@ interface UseCanvasReturn {
   sidePanelWidth: number;
   disabledEdgesCreation: boolean;
 }
+
+const DEFAULT_LAYOUT_GROUP = createHorizontalGroup('default-layout-group', 'center', 10, {
+  top: 100,
+  left: 100,
+});
 
 /**
  * A hook that's responsible for managing the canvas state, which includes nodes, edges, and the ReactFlow instance.
@@ -113,7 +119,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
           nodesGroup.length,
           nodeIndex,
           sidePanelWidth,
-          layoutGroup,
+          layoutGroup ?? DEFAULT_LAYOUT_GROUP,
           parentNode
         );
 
