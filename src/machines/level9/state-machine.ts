@@ -220,7 +220,15 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 in_progress: {
                   on: {
-                    [EdgeConnectionFinishEvent.RDS1_MANAGE_POLICY_ATTACHED_GROUP1]: 'completed',
+                    [EdgeConnectionFinishEvent.RDS1_MANAGE_POLICY_ATTACHED_GROUP1]: {
+                      target: 'completed',
+                      actions: [
+                        {
+                          type: 'finish_level_objective',
+                          params: { id: LevelObjectiveID.GRANT_ACCESS_FOR_TEAM_PEACH },
+                        },
+                      ],
+                    },
                   },
                 },
                 completed: {
@@ -233,7 +241,15 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 in_progress: {
                   on: {
-                    [EdgeConnectionFinishEvent.RDS2_MANAGE_POLICY_ATTACHED_GROUP2]: 'completed',
+                    [EdgeConnectionFinishEvent.RDS2_MANAGE_POLICY_ATTACHED_GROUP2]: {
+                      target: 'completed',
+                      actions: [
+                        {
+                          type: 'finish_level_objective',
+                          params: { id: LevelObjectiveID.GRANT_ACCESS_FOR_BOWSER_FORCE },
+                        },
+                      ],
+                    },
                   },
                 },
                 completed: {
@@ -265,6 +281,7 @@ export const stateMachine = createStateMachineSetup<
         create_new_policy: {
           entry: [
             'hide_fixed_popovers',
+            { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
             {
               type: 'delete_nodes',
@@ -283,7 +300,13 @@ export const stateMachine = createStateMachineSetup<
         },
         attach_policy1_to_groups: {
           type: 'parallel',
-          onDone: 'policy_creation_completed',
+          onDone: {
+            target: 'policy_creation_completed',
+            actions: {
+              type: 'finish_level_objective',
+              params: { id: LevelObjectiveID.GRANT_ACCESS_WITH_SHARED_POLICY },
+            },
+          },
           entry: {
             type: 'set_edge_connection_objectives',
             params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
