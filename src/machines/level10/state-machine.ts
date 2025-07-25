@@ -167,21 +167,14 @@ export const stateMachine = createStateMachineSetup<
         popup3: {
           entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } }],
           on: {
-            NEXT_POPUP: 'popover1',
-          },
-        },
-        popover1: {
-          entry: [
-            'hide_popups',
-            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
-          ],
-          on: {
-            [StatelessStateMachineEvent.SidePanelOpened]: 'create_policy1',
+            NEXT_POPUP: 'create_policy1',
           },
         },
         create_policy1: {
           entry: [
-            'hide_popovers',
+            'hide_popups',
+            'show_side_panel',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
             {
               type: 'set_permission_policy_creation_objectives',
               params: {
@@ -408,6 +401,7 @@ export const stateMachine = createStateMachineSetup<
         },
         remove_unnecessary_edges_and_nodes: {
           entry: ['show_unncessary_edges_or_nodes_warning', 'hide_popovers'],
+          exit: 'hide_unncessary_edges_or_nodes_warning',
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
             target: 'level_completed',

@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
           Learn AWS IAM
         </Text>
         <HStack spacing={4}>
-          {(import.meta.env.VITE_APP_ENV || 'development') === 'development' && ( // TODO: REMOVE THIS! Something hacky for dev purposes only.
+          {(import.meta.env.VITE_APP_ENV || 'development') === 'development' && (
             <HStack>
               <Text>{JSON.stringify(value)}</Text>
               <Input
