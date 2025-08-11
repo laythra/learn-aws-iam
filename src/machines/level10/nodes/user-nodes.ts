@@ -5,13 +5,13 @@ import { CommonLayoutGroupID, IAMUserNode } from '@/types';
 const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.Davis,
-    label: 'david',
+    label: 'davis',
     layout_group_id: CommonLayoutGroupID.TopCenterVertical,
     tags: [['team', 'payments-team']],
   },
   {
     id: UserNodeID.John,
-    label: 'luigi',
+    label: 'john',
     layout_group_id: CommonLayoutGroupID.TopCenterVertical,
     tags: [['team', 'payments-team']],
   },

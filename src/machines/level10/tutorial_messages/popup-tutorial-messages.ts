@@ -64,7 +64,7 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG1,
   },
   {
-    title: 'Level 10 Objectives',
+    title: 'Your role as a DevOps Engineer',
     content: POPUP_MSG2,
   },
   {
