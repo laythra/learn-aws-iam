@@ -46,7 +46,6 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
-    nodes_connnections: [],
     restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },

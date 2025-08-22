@@ -42,7 +42,6 @@ export const stateMachine = createStateMachineSetup<
     use_multi_account_canvas: false,
     side_panel_open: false,
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
-    nodes_connnections: [],
     restricted_element_ids: [ElementID.NewEntityBtn],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },

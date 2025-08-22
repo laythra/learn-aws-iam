@@ -134,30 +134,10 @@ function createEdgesFromGrantedAccesses(
           hovering_label: access.access_level,
           parent_edge_id: parentEdgeId,
           source_node: node,
+          target_node: node,
         },
       })
     );
-  });
-}
-
-function updateNodeConnectionsMap<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  newEdge: IAMEdge,
-  newEdges: IAMEdge[]
-): NodeConnection[] {
-  return produce(context.nodes_connnections, draftConnections => {
-    const nodesById = _.keyBy(context.nodes, 'id');
-    const sourceNode = nodesById[newEdge.source] as WritableDraft<IAMAnyNode>;
-    const targetNode = nodesById[newEdge.target] as WritableDraft<IAMAnyNode>;
-
-    draftConnections.push({ from: sourceNode, to: targetNode });
-    newEdges.forEach(edge => {
-      draftConnections.push({
-        from: nodesById[edge.source] as WritableDraft<IAMAnyNode>,
-        to: nodesById[edge.target] as WritableDraft<IAMAnyNode>,
-        parent_edge_id: newEdge.id,
-      });
-    });
   });
 }
 
@@ -204,11 +184,6 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
 
   const updatedContext = produce(context, draft => {
     draft.edges.push(baseEdge as WritableDraft<IAMEdge>, ...extraEdges);
-    draft.nodes_connnections = updateNodeConnectionsMap(
-      context,
-      baseEdge,
-      extraEdges
-    ) as WritableDraft<NodeConnection[]>;
   });
 
   return { updatedContext, events };
@@ -233,12 +208,13 @@ const connectionStrategies = {
     isInitialEdge: boolean,
     options: PartialEdge
   ) => {
+    debugger;
     const usersConnectedToGroup = ConnectionFilter.create()
-      .fromConnections(context.nodes_connnections)
+      .fromEdges(context.edges)
       .whereTargetIs(groupNode.id)
       .whereSourceEntityIs(IAMNodeEntity.User)
       .build()
-      .map(connection => connection.from);
+      .map(edge => edge.data!.source_node as IAMUserNode);
 
     return applyStrategy(context, policyNode, groupNode, isInitialEdge, options, baseEdgeId =>
       createEdgesFromGrantedAccesses(
@@ -257,18 +233,18 @@ const connectionStrategies = {
     options: PartialEdge = {}
   ) => {
     const usersConnectedToRole = ConnectionFilter.create()
-      .fromConnections(context.nodes_connnections)
+      .fromEdges(context.edges)
       .whereSourceEntityIs(IAMNodeEntity.User)
       .whereTargetIs(roleNode.id)
       .build()
-      .map(connection => connection.from);
+      .map(edge => edge.data!.source_node);
 
     const resourcesConnectedToRole = ConnectionFilter.create()
-      .fromConnections(context.nodes_connnections)
+      .fromEdges(context.edges)
       .whereSourceEntityIs(IAMNodeEntity.Resource)
       .whereTargetIs(roleNode.id)
       .build()
-      .map(connection => connection.from);
+      .map(edge => edge.data!.source_node);
 
     return applyStrategy(context, policyNode, roleNode, isInitialEdge, options, baseEdgeId => {
       return createEdgesFromGrantedAccesses(
@@ -287,11 +263,11 @@ const connectionStrategies = {
     options: PartialEdge = {}
   ) => {
     const policiesConnectedToGroup = ConnectionFilter.create()
-      .fromConnections(context.nodes_connnections)
+      .fromEdges(context.edges)
       .whereTargetIs(groupNode.id)
       .whereSourceEntityIs(IAMNodeEntity.Policy)
       .build()
-      .flatMap(connection => connection.from as IAMPolicyNode);
+      .flatMap(edge => edge.data!.source_node as IAMPolicyNode);
 
     return applyStrategy(context, userNode, groupNode, isInitialEdge, options, baseEdgeId =>
       createEdgesFromGrantedAccesses(
@@ -310,11 +286,11 @@ const connectionStrategies = {
     options: PartialEdge = {}
   ) => {
     const policiesConnectedToRole = ConnectionFilter.create()
-      .fromConnections(context.nodes_connnections)
+      .fromEdges(context.edges)
       .whereSourceEntityIs(IAMNodeEntity.Policy)
       .whereTargetIs(roleNode.id)
       .build()
-      .map(connection => connection.from as IAMPolicyNode);
+      .map(edge => edge.data!.source_node as IAMPolicyNode);
 
     return applyStrategy(context, userNode, roleNode, isInitialEdge, options, baseEdgeId =>
       createEdgesFromGrantedAccesses(
@@ -333,11 +309,11 @@ const connectionStrategies = {
     options: PartialEdge = {}
   ) => {
     const policiesConnectedToRole = ConnectionFilter.create()
-      .fromConnections(context.nodes_connnections)
+      .fromEdges(context.edges)
       .whereTargetIs(roleNode.id)
       .whereSourceEntityIs(IAMNodeEntity.Policy)
       .build()
-      .map(connection => connection.from as IAMPolicyNode);
+      .map(edge => edge.data!.source_node as IAMPolicyNode);
 
     return applyStrategy(context, roleNode, resourceNode, isInitialEdge, options, baseEdgeId =>
       createEdgesFromGrantedAccesses(
@@ -534,7 +510,7 @@ export function refreshPolicyConnections<
   const edgeById = _.keyBy(context.edges, 'id');
 
   const edgesToDelete = ConnectionFilter.create()
-    .fromConnections(context.nodes_connnections)
+    .fromEdges(context.edges)
     .whereSourceIs(policyNode.id)
     .mapToEdgeIds();
 

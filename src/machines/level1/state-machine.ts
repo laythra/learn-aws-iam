@@ -48,7 +48,6 @@ export const stateMachine = createStateMachineSetup<
     user_group_creation_objectives: [],
     role_creation_objectives: [],
     fixed_popover_messages: FIXED_POPOVER_MESSAGES,
-    nodes_connnections: [],
     restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },

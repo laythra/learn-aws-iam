@@ -103,7 +103,6 @@ export const createStateMachineSetup = <
             .value();
 
           enqueue.assign({
-            nodes_connnections: updatedContext.nodes_connnections,
             edges: updatedEdges,
           });
 
@@ -146,7 +145,6 @@ export const createStateMachineSetup = <
         enqueue.assign({
           nodes: updatedContext.nodes,
           edges: updatedContext.edges,
-          nodes_connnections: updatedContext.nodes_connnections,
         });
       }),
       delete_nodes: enqueueActions(({ context, enqueue }, { nodeIds }: { nodeIds: string[] }) => {
@@ -163,7 +161,6 @@ export const createStateMachineSetup = <
         enqueue.assign({
           nodes: updatedContext.nodes,
           edges: updatedContext.edges,
-          nodes_connnections: updatedContext.nodes_connnections,
         });
       }),
       add_iam_user_group_node: enqueueActions(
@@ -210,7 +207,6 @@ export const createStateMachineSetup = <
           enqueue.assign({
             nodes: updatedContext.nodes,
             edges: updatedContext.edges,
-            nodes_connnections: updatedContext.nodes_connnections,
             policy_creation_objectives: updatedContext.policy_creation_objectives,
             resource_policy_creation_objectives: updatedContext.resource_policy_creation_objectives,
           });
@@ -233,7 +229,6 @@ export const createStateMachineSetup = <
           enqueue.assign({
             nodes: updatedContext.nodes,
             edges: updatedContext.edges,
-            nodes_connnections: updatedContext.nodes_connnections,
             policy_edit_objectives: updatedContext.policy_edit_objectives,
           });
 
@@ -431,7 +426,6 @@ export const createStateMachineSetup = <
 
         enqueue.assign({
           edges: initialEdgesConfig.edges,
-          nodes_connnections: initialEdgesConfig.nodes_connections,
         });
       }),
       assign_nodes: assign({
