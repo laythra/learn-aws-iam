@@ -48,7 +48,6 @@ export const stateMachine = createStateMachineSetup<
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
-    nodes_connnections: [],
     restricted_element_ids: [ElementID.CodeEditorRoleTab],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },

@@ -1,9 +1,7 @@
-import { NodeConnection } from '../types';
-import { IAMNodeEntity } from '@/types';
-import { getEdgeName } from '@/utils/names';
+import { IAMEdge, IAMNodeEntity } from '@/types';
 
 interface FilterGroup {
-  filters: Array<(connection: NodeConnection) => boolean>;
+  filters: Array<(edge: IAMEdge) => boolean>;
   operator: 'AND' | 'OR';
 }
 
@@ -22,7 +20,7 @@ interface FilterGroup {
 //   .build();
 // */
 export class ConnectionFilter {
-  private connections: NodeConnection[] = [];
+  private edges: IAMEdge[] = [];
   private filterGroups: FilterGroup[] = [];
   private currentGroup: FilterGroup;
 
@@ -36,8 +34,8 @@ export class ConnectionFilter {
     this.filterGroups.push(this.currentGroup);
   }
 
-  fromConnections(connections: NodeConnection[]): ConnectionFilter {
-    this.connections = connections;
+  fromEdges(edges: IAMEdge[]): ConnectionFilter {
+    this.edges = edges;
     return this;
   }
 
@@ -54,76 +52,109 @@ export class ConnectionFilter {
   }
 
   whereTargetIs(targetId: string): ConnectionFilter {
-    this.currentGroup.filters.push(connection => connection.to.id === targetId);
+    this.currentGroup.filters.push(edge => {
+      return edge.data!.target_node.id === targetId;
+    });
+    return this;
+  }
+
+  whereTargetIn(targetIds: string[]): ConnectionFilter {
+    this.currentGroup.filters.push(edge => {
+      return targetIds.includes(edge.data!.target_node.id);
+    });
+    return this;
+  }
+
+  whereTargetNotIn(targetIds: string[]): ConnectionFilter {
+    this.currentGroup.filters.push(edge => {
+      return !targetIds.includes(edge.data!.target_node.id);
+    });
     return this;
   }
 
   whereSourceIs(sourceId: string): ConnectionFilter {
-    this.currentGroup.filters.push(connection => connection.from.id === sourceId);
+    this.currentGroup.filters.push(edge => {
+      return edge.data!.source_node.id === sourceId;
+    });
     return this;
   }
 
   whereSourceEntityIs(entity: IAMNodeEntity): ConnectionFilter {
-    this.currentGroup.filters.push(connection => connection.from.data.entity === entity);
+    this.currentGroup.filters.push(edge => {
+      return edge.data!.source_node.data.entity === entity;
+    });
     return this;
   }
 
   whereTargetEntityIs(entity: IAMNodeEntity): ConnectionFilter {
-    this.currentGroup.filters.push(connection => connection.to.data.entity === entity);
+    this.currentGroup.filters.push(edge => {
+      return edge.data!.target_node.data.entity === entity;
+    });
+    return this;
+  }
+
+  whereTargetEntityIn(entities: IAMNodeEntity[]): ConnectionFilter {
+    this.currentGroup.filters.push(edge => {
+      const entity = edge.data!.target_node.data.entity;
+      return entity !== undefined && entities.includes(entity);
+    });
+    return this;
+  }
+
+  whereTargetEntityNotIn(entities: IAMNodeEntity[]): ConnectionFilter {
+    this.currentGroup.filters.push(edge => {
+      const entity = edge.data!.target_node.data.entity;
+      return entity === undefined || !entities.includes(entity);
+    });
     return this;
   }
 
   whereSourceHasTag(tagKey: string, tagValue?: string): ConnectionFilter {
-    this.currentGroup.filters.push(connection => {
-      const tags = connection.from.data.tags || {};
+    this.currentGroup.filters.push(edge => {
+      const tags = edge.data!.source_node.data.tags;
       return this.#tagExists(tags, tagKey, tagValue);
     });
     return this;
   }
 
   whereTargetHasTag(tagKey: string, tagValue?: string): ConnectionFilter {
-    this.currentGroup.filters.push(connection => {
-      const tags = connection.to.data.tags || {};
+    this.currentGroup.filters.push(edge => {
+      const tags = edge.data!.target_node.data.tags;
       return this.#tagExists(tags, tagKey, tagValue);
     });
     return this;
   }
 
-  // Convenience method for your specific use case
   whereEntityIs(entity: IAMNodeEntity, side: 'source' | 'target' | 'either'): ConnectionFilter {
-    if (side === 'either') {
-      this.currentGroup.filters.push(
-        connection => connection.from.data.entity === entity || connection.to.data.entity === entity
-      );
-    } else if (side === 'source') {
-      this.whereSourceEntityIs(entity);
-    } else {
-      this.whereTargetEntityIs(entity);
-    }
+    this.currentGroup.filters.push(edge => {
+      const sourceEntity = edge.data!.source_node.data.entity;
+      const targetEntity = edge.data!.target_node.data.entity;
+      if (side === 'either') {
+        return sourceEntity === entity || targetEntity === entity;
+      } else if (side === 'source') {
+        return sourceEntity === entity;
+      } else {
+        return targetEntity === entity;
+      }
+    });
     return this;
   }
 
   mapToEdgeIds(): string[] {
-    return this.mapTo(connection => getEdgeName(connection.from.id, connection.to.id));
+    return this.mapTo(edge => edge.id);
   }
 
-  mapTo<T>(mapper: (connection: NodeConnection) => T): T[] {
+  mapTo<T>(mapper: (edge: IAMEdge) => T): T[] {
     return this.build().map(mapper);
   }
 
-  // TODO: Fix and / or operators. This implementation assumes all filters are AND
-  // which is not always the case. Need to handle nested groups properly.
-  build(): NodeConnection[] {
-    return this.connections.filter(connection => {
-      // Each filter group must pass
-
+  build(): IAMEdge[] {
+    return this.edges.filter(edge => {
       return this.filterGroups.every(group => {
         if (group.operator === 'AND') {
-          // All filters in AND group must pass
-          return group.filters.every(filter => filter(connection));
+          return group.filters.every(filter => filter(edge));
         } else {
-          // At least one filter in OR group must pass
-          return group.filters.some(filter => filter(connection));
+          return group.filters.some(filter => filter(edge));
         }
       });
     });

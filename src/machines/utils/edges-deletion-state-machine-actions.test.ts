@@ -14,21 +14,18 @@ describe('deleteConnectionEdges', () => {
     const resourceNode = createResourceNode({});
 
     const edge1 = createEdge({ rootOverrides: { source: policyNode.id, target: userNode.id } });
-
-    const edge2 = createEdge({ rootOverrides: { source: userNode.id, target: resourceNode.id } });
+    const edge2 = createEdge({
+      rootOverrides: { source: userNode.id, target: resourceNode.id },
+      dataOverrides: { parent_edge_id: edge1.id },
+    });
 
     const context = createMockContext({
       nodes: [policyNode, userNode, resourceNode],
       edges: [edge1, edge2],
-      nodes_connnections: [
-        { from: policyNode, to: userNode },
-        { from: userNode, to: resourceNode, parent_edge_id: edge1.id },
-      ],
     });
 
     const { updatedContext } = deleteConnectionEdges(context, [edge1.id]);
 
-    expect(updatedContext.nodes_connnections).toEqual([]);
     expect(updatedContext.edges).toEqual([]);
   });
 });

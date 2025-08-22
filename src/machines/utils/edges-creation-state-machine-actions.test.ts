@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
 import { resolveInitialEdges } from './initial-edges-resolver';
-import { NodeConnection } from '../types';
 import { createMockContext } from '@/__test-helpers__/context';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
@@ -10,7 +9,6 @@ import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { AccessLevel, IAMAnyNode, IAMEdge } from '@/types';
-import { getEdgeName } from '@/utils/names';
 
 describe('updateConnectionEdges', () => {
   /**
@@ -24,20 +22,13 @@ describe('updateConnectionEdges', () => {
     nodes: IAMAnyNode[]
   ): ReturnType<typeof createMockContext> => {
     const ctx = createMockContext({ nodes, initial_node_connections: connections });
-    const { edges, nodes_connections } = resolveInitialEdges(ctx);
-    return { ...ctx, edges, nodes_connnections: nodes_connections };
+    const { edges } = resolveInitialEdges(ctx);
+    return { ...ctx, edges };
   };
 
   const expectEdges = (edges: IAMEdge[], expected: { source: string; target: string }[]): void => {
     expect(edges).toHaveLength(expected.length);
     expect(edges).toEqual(
-      expect.arrayContaining(expected.map(obj => expect.objectContaining(obj)))
-    );
-  };
-
-  const expectConnections = (connections: NodeConnection[], expected: NodeConnection[]): void => {
-    expect(connections).toHaveLength(expected.length);
-    expect(connections).toEqual(
       expect.arrayContaining(expected.map(obj => expect.objectContaining(obj)))
     );
   };
@@ -53,9 +44,6 @@ describe('updateConnectionEdges', () => {
       expect(updatedContext.edges).toHaveLength(1);
       expect(updatedContext.edges).toEqual(
         expect.arrayContaining([expect.objectContaining({ source: policy.id, target: user.id })])
-      );
-      expect(updatedContext.nodes_connnections).toEqual(
-        expect.arrayContaining([{ from: policy, to: user }])
       );
     });
 
@@ -81,15 +69,6 @@ describe('updateConnectionEdges', () => {
       expectEdges(updatedContext.edges, [
         { source: policy.id, target: user.id },
         { source: user.id, target: resource.id },
-      ]);
-
-      expectConnections(updatedContext.nodes_connnections, [
-        { from: policy, to: user },
-        {
-          from: user,
-          to: resource,
-          parent_edge_id: getEdgeName(policy.id, user.id),
-        },
       ]);
     });
 
@@ -126,7 +105,6 @@ describe('updateConnectionEdges', () => {
       const { updatedContext } = updateConnectionEdges(ctx, policy, group);
 
       expectEdges(updatedContext.edges, [{ source: policy.id, target: group.id }]);
-      expectConnections(updatedContext.nodes_connnections, [{ from: policy, to: group }]);
     });
 
     it('creates only a direct edge if users exist in group but policy grants no access', () => {
@@ -140,10 +118,6 @@ describe('updateConnectionEdges', () => {
       expectEdges(updatedContext.edges, [
         { source: policy.id, target: group.id },
         { source: user.id, target: group.id },
-      ]);
-      expectConnections(updatedContext.nodes_connnections, [
-        { from: user, to: group },
-        { from: policy, to: group },
       ]);
     });
 
@@ -175,15 +149,6 @@ describe('updateConnectionEdges', () => {
         { source: user.id, target: group.id },
         { source: user.id, target: resource.id },
       ]);
-      expectConnections(updatedContext.nodes_connnections, [
-        { from: policy, to: group },
-        { from: user, to: group },
-        {
-          from: user,
-          to: resource,
-          parent_edge_id: getEdgeName(policy.id, group.id),
-        },
-      ]);
     });
   });
 
@@ -196,7 +161,6 @@ describe('updateConnectionEdges', () => {
       const { updatedContext } = updateConnectionEdges(ctx, policy, role);
 
       expectEdges(updatedContext.edges, [{ source: policy.id, target: role.id }]);
-      expectConnections(updatedContext.nodes_connnections, [{ from: policy, to: role }]);
     });
 
     it('skips extra edges (user → resource) when policies don’t grant access', () => {
@@ -210,10 +174,6 @@ describe('updateConnectionEdges', () => {
       expectEdges(updatedContext.edges, [
         { source: policy.id, target: role.id },
         { source: user.id, target: role.id },
-      ]);
-      expectConnections(updatedContext.nodes_connnections, [
-        { from: user, to: role },
-        { from: policy, to: role },
       ]);
     });
 
@@ -244,15 +204,6 @@ describe('updateConnectionEdges', () => {
         { source: user.id, target: role.id },
         { source: user.id, target: resource.id },
       ]);
-      expectConnections(updatedContext.nodes_connnections, [
-        { from: policy, to: role },
-        { from: user, to: role },
-        {
-          from: user,
-          to: resource,
-          parent_edge_id: getEdgeName(policy.id, role.id),
-        },
-      ]);
     });
   });
 
@@ -265,7 +216,6 @@ describe('updateConnectionEdges', () => {
       const { updatedContext } = updateConnectionEdges(ctx, user, group);
 
       expectEdges(updatedContext.edges, [{ source: user.id, target: group.id }]);
-      expectConnections(updatedContext.nodes_connnections, [{ from: user, to: group }]);
     });
 
     it('skips extra edges (user → resource) when attached policies don’t grant access', () => {
@@ -280,10 +230,6 @@ describe('updateConnectionEdges', () => {
       expectEdges(updatedContext.edges, [
         { source: policy.id, target: group.id },
         { source: user.id, target: group.id },
-      ]);
-      expectConnections(updatedContext.nodes_connnections, [
-        { from: policy, to: group },
-        { from: user, to: group },
       ]);
     });
 
@@ -313,16 +259,6 @@ describe('updateConnectionEdges', () => {
         { source: user.id, target: group.id },
         { source: user.id, target: resource.id },
       ]);
-
-      expectConnections(updatedContext.nodes_connnections, [
-        { from: policy, to: group },
-        { from: user, to: group },
-        {
-          from: user,
-          to: resource,
-          parent_edge_id: getEdgeName(user.id, group.id),
-        },
-      ]);
     });
   });
 
@@ -335,7 +271,6 @@ describe('updateConnectionEdges', () => {
       const { updatedContext } = updateConnectionEdges(ctx, user, role);
 
       expectEdges(updatedContext.edges, [{ source: user.id, target: role.id }]);
-      expectConnections(updatedContext.nodes_connnections, [{ from: user, to: role }]);
     });
 
     it('skips extra edges (user → resource) when role’s policies grant no access', () => {
@@ -350,10 +285,6 @@ describe('updateConnectionEdges', () => {
         { source: policy.id, target: role.id },
         { source: user.id, target: role.id },
       ]);
-      expectConnections(updatedContext.nodes_connnections, [
-        { from: user, to: role },
-        { from: policy, to: role },
-      ]);
     });
   });
 
@@ -365,7 +296,6 @@ describe('updateConnectionEdges', () => {
 
       const { updatedContext } = updateConnectionEdges(ctx, role, resource);
       expectEdges(updatedContext.edges, [{ source: role.id, target: resource.id }]);
-      expectConnections(updatedContext.nodes_connnections, [{ from: role, to: resource }]);
     });
 
     it(`creates extra (resource → resource) edge
@@ -396,16 +326,6 @@ describe('updateConnectionEdges', () => {
         { source: policy.id, target: role.id },
         { source: role.id, target: resource1.id },
         { source: resource1.id, target: resource2.id },
-      ]);
-
-      expectConnections(updatedContext.nodes_connnections, [
-        { from: policy, to: role },
-        { from: role, to: resource1 },
-        {
-          from: resource1,
-          to: resource2,
-          parent_edge_id: getEdgeName(role.id, resource1.id),
-        },
       ]);
     });
   });

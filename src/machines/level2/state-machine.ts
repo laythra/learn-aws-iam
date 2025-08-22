@@ -50,7 +50,6 @@ export const stateMachine = createStateMachineSetup<
     identity_creation_popup_default_value: IAMNodeEntity.Group,
     in_tutorial_state: true,
     edges_management_disabled: true,
-    nodes_connnections: [],
     initial_node_connections: INITIAL_CONNECTIONS,
     restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
     layout_groups: COMMON_LAYOUT_GROUPS,

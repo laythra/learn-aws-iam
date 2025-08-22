@@ -21,6 +21,7 @@ interface CanvasContainerProps {}
 
 const CanvasContainer: React.FC<CanvasContainerProps> = () => {
   const theme = useTheme<CustomTheme>();
+
   const useMultiAccountCanvas = LevelsProgressionContext().useSelector(
     state => state.context.use_multi_account_canvas
   );

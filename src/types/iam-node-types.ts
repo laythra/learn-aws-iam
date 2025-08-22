@@ -291,8 +291,8 @@ export type IAMNodeAnimationConfig = {
 }[];
 
 interface IAMEdgeData extends Record<string, unknown> {
-  source_node?: IAMAnyNode;
-  target_node?: IAMAnyNode;
+  source_node: IAMAnyNode;
+  target_node: IAMAnyNode;
   hovering_label?: AccessLevel | string;
   persistent_label?: string;
   type: 'default';
@@ -302,6 +302,7 @@ interface IAMEdgeData extends Record<string, unknown> {
   stroke_width: number;
   unnecessary_edge?: boolean;
   is_blocked?: boolean;
+  parent_edge_id?: string;
 }
 
 export type PartialEdge = Omit<Partial<IAMEdge>, 'data'> & {

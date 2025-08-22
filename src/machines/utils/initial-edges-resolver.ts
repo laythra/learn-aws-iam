@@ -1,14 +1,14 @@
 import _ from 'lodash';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
-import { BaseFinishEventMap, GenericContext, NodeConnection } from '../types';
+import { BaseFinishEventMap, GenericContext } from '../types';
 import { HandleID, IAMEdge } from '@/types';
 
 export function resolveInitialEdges<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>
-): { edges: IAMEdge[]; nodes_connections: NodeConnection[] } {
+): { edges: IAMEdge[] } {
   if (!context.initial_node_connections) {
-    return { edges: [], nodes_connections: [] };
+    return { edges: [] };
   }
 
   const nodeById = _.keyBy(context.nodes, 'id');
@@ -27,5 +27,5 @@ export function resolveInitialEdges<TLevelObjectiveID, TFinishEventMap extends B
     ));
   });
 
-  return { edges: updatedContext.edges, nodes_connections: updatedContext.nodes_connnections };
+  return { edges: updatedContext.edges };
 }

@@ -46,7 +46,6 @@ export const stateMachine = createStateMachineSetup<
     role_creation_objectives: [],
     in_tutorial_state: true,
     whitelisted_element_ids: [],
-    nodes_connnections: [],
     restricted_element_ids: [ElementID.NewEntityBtn],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },

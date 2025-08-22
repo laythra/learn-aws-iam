@@ -15,7 +15,6 @@ export function createMockContext<
     policy_edit_objectives: [],
     nodes: [] as IAMAnyNode[],
     edges: [] as IAMEdge[],
-    nodes_connnections: [],
     policy_creation_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
