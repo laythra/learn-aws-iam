@@ -74,7 +74,7 @@ export class ConnectionFilter {
 
   whereSourceIs(sourceId: string): ConnectionFilter {
     this.currentGroup.filters.push(edge => {
-      return edge.data!.source_node.id === sourceId;
+      return edge.source === sourceId;
     });
     return this;
   }
@@ -82,6 +82,14 @@ export class ConnectionFilter {
   whereSourceEntityIs(entity: IAMNodeEntity): ConnectionFilter {
     this.currentGroup.filters.push(edge => {
       return edge.data!.source_node.data.entity === entity;
+    });
+    return this;
+  }
+
+  whereSourceEntityIn(entities: IAMNodeEntity[]): ConnectionFilter {
+    this.currentGroup.filters.push(edge => {
+      const entity = edge.data!.source_node.data.entity;
+      return entity !== undefined && entities.includes(entity);
     });
     return this;
   }

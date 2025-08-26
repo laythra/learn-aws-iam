@@ -7,7 +7,6 @@ import {
   BaseFinishEventMap,
   EdgeConnectionObjective,
   GenericContext,
-  NodeConnection,
   ObjectiveType,
 } from '../types';
 import { createEdge } from '@/factories/edge-factory';
@@ -19,6 +18,7 @@ import {
   IAMEdge,
   IAMGroupNode,
   IAMOUNode,
+  IAMPermissionBoundaryNode,
   IAMPolicyNode,
   IAMResourceNode,
   IAMRoleNode,
@@ -40,6 +40,36 @@ function isEdgeConnectionValid<TFinishEventMap extends BaseFinishEventMap>(
   newEdgeId: string
 ): boolean {
   return objective.required_edges.some(edge => edge.id === newEdgeId);
+}
+
+function markBlockedEdges(edges: IAMEdge[], node: IAMAnyNode): IAMEdge[] {
+  const permissionBoundaries = ConnectionFilter.create()
+    .fromEdges(edges)
+    .whereSourceEntityIs(IAMNodeEntity.PermissionBoundary)
+    .whereTargetIs(node.id)
+    .build()
+    .map(edge => edge.data!.source_node) as IAMPermissionBoundaryNode[];
+
+  return produce(edges, draftEdges => {
+    draftEdges.forEach(edge => {
+      if (!edge.data) return;
+      if (edge.source !== node.id) return;
+
+      const isBlocked = permissionBoundaries.some(
+        pb => !pb.data.is_access_to_node_allowed?.(edge.data!.target_node)
+      );
+
+      if (!isBlocked) {
+        edge.data.is_blocked = false;
+      } else {
+        edge.data.is_blocked = true;
+        edge.data.hovering_label = 'Access blocked by Permission Boundary 🔒';
+        edge.data.persistent_label = '🔒';
+        edge.data.color = theme.colors.red[500];
+        edge.data.hovering_color = theme.colors.red[500];
+      }
+    });
+  });
 }
 
 function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
@@ -69,6 +99,7 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
       color: theme.colors.yellow[500],
       unnecessary_edge: true,
       target_node: targetNode,
+      source_node: sourceNode,
     },
   });
 
@@ -116,8 +147,6 @@ function createEdgesFromGrantedAccesses(
   candidateNodes: IAMAnyNode[],
   grantedAccesses: PolicyGrantedAccess[],
   parentEdgeId: string
-  // sourceNode: IAMAnyNode,
-  // targetNode: IAMAnyNode
 ): IAMEdge[] {
   return grantedAccesses.flatMap(access => {
     const applicableNodes = access.applicable_nodes?.(candidateNodes) ?? candidateNodes;
@@ -183,7 +212,10 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
   const extraEdges = computeExtraEdges(baseEdge.id) as WritableDraft<IAMEdge>[];
 
   const updatedContext = produce(context, draft => {
-    draft.edges.push(baseEdge as WritableDraft<IAMEdge>, ...extraEdges);
+    const allEdges = [...context.edges, baseEdge, ...extraEdges];
+    const updatedEdges = markBlockedEdges(allEdges, target) as WritableDraft<IAMEdge>[];
+
+    draft.edges = updatedEdges;
   });
 
   return { updatedContext, events };
@@ -196,11 +228,11 @@ const connectionStrategies = {
     userNode: IAMUserNode,
     isInitialEdge: boolean,
     options: PartialEdge
-  ) =>
-    applyStrategy(context, policyNode, userNode, isInitialEdge, options, baseEdgeId =>
+  ) => {
+    return applyStrategy(context, policyNode, userNode, isInitialEdge, options, baseEdgeId =>
       createEdgesFromGrantedAccesses([userNode], policyNode.data.granted_accesses, baseEdgeId)
-    ),
-
+    );
+  },
   policyToGroup: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
     policyNode: IAMPolicyNode,
@@ -208,7 +240,6 @@ const connectionStrategies = {
     isInitialEdge: boolean,
     options: PartialEdge
   ) => {
-    debugger;
     const usersConnectedToGroup = ConnectionFilter.create()
       .fromEdges(context.edges)
       .whereTargetIs(groupNode.id)

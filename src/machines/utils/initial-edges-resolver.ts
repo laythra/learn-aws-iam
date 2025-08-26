@@ -1,3 +1,5 @@
+// TODO: Git rid of this file or trim it. we don't need an extra `initial_connections` property on the context
+// it only adds complexity.
 import _ from 'lodash';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
