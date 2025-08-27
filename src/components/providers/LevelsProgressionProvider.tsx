@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import { stateMachine as level1StateMachine } from '@/machines/level1/state-machine';
 import { stateMachine as level10StateMachine } from '@/machines/level10/state-machine';
+import { stateMachine as level11StateMachine } from '@/machines/level11/state-machine';
 import { stateMachine as level2StateMachine } from '@/machines/level2/state-machine';
 import { stateMachine as level3StateMachine } from '@/machines/level3/state-machine';
 import { stateMachine as level4StateMachine } from '@/machines/level4/state-machine';
@@ -32,6 +33,7 @@ const LEVELS_STATE_MACHINES = {
   8: level8StateMachine,
   9: level9StateMachine,
   10: level10StateMachine,
+  11: level11StateMachine,
 };
 
 type ActorLogicType =
@@ -44,7 +46,8 @@ type ActorLogicType =
   | typeof level7StateMachine
   | typeof level8StateMachine
   | typeof level9StateMachine
-  | typeof level10StateMachine;
+  | typeof level10StateMachine
+  | typeof level11StateMachine;
 
 const GetActorLogicFromLevelNumber = (
   levelNumber: keyof typeof LEVELS_STATE_MACHINES
