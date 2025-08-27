@@ -32,6 +32,7 @@ export const GENERIC_VALIDATION_FNS = {
   [IAMNodeEntity.Role]: AJV_COMPILER.compile(iamRoleTurstPolicySchema),
   [IAMNodeEntity.SCP]: AJV_COMPILER.compile(iamPolicySchema),
   [IAMNodeEntity.ResourcePolicy]: AJV_COMPILER.compile(iamPolicySchema),
+  [IAMNodeEntity.PermissionBoundary]: AJV_COMPILER.compile(iamPolicySchema),
 };
 
 export const getObjectiveValidationFunction = <TFinishEventMap extends BaseFinishEventMap>(

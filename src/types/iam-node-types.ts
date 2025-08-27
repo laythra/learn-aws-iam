@@ -29,13 +29,15 @@ export enum IAMNodeEntity {
   OU = 'Organizational Unit',
   SCP = 'Service Control Policy',
   ResourcePolicy = 'Resource Policy',
+  PermissionBoundary = 'Permission Boundary',
 }
 
 export type IAMCodeDefinedEntity =
   | IAMNodeEntity.Policy
   | IAMNodeEntity.Role
   | IAMNodeEntity.SCP
-  | IAMNodeEntity.ResourcePolicy;
+  | IAMNodeEntity.ResourcePolicy
+  | IAMNodeEntity.PermissionBoundary;
 
 export enum IAMNodeResourceEntity {
   Resource = 'AWS Resource',
@@ -69,7 +71,8 @@ export type CreatableIAMNodeEntity =
   | IAMNodeEntity.User
   | IAMNodeEntity.Group
   | IAMNodeEntity.Policy
-  | IAMNodeEntity.Role;
+  | IAMNodeEntity.Role
+  | IAMNodeEntity.PermissionBoundary;
 
 export interface PolicyGrantedAccess {
   readonly target_node: string;
@@ -85,6 +88,15 @@ export interface PolicyGrantedAccess {
    * @returns An array of nodes to which the access is granted.
    */
   readonly applicable_nodes?: (node: IAMAnyNode[]) => IAMAnyNode[];
+}
+
+export interface GuardRailAllowedAccess {
+  /**
+   * Defines the only nodes (e.g., IAM entities or AWS resources) to which a guard rail
+   * (such as a permission boundary or SCP) can allow access.
+   */
+  readonly allowed_target_node: string;
+  readonly allowed_access_level?: AccessLevel;
 }
 
 export interface PolicyBlockedAccess {
@@ -252,6 +264,19 @@ interface IAMOUNodeData extends IAMNodeData {
   entity: IAMNodeEntity.OU;
 }
 
+interface IAMPermissionBoundaryNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.PermissionBoundary;
+  editable: boolean;
+
+  /**
+   * A function that defines the allowed accesses for this permission boundary.
+   * @param node The nodes to check against the allowed accesses.
+   * @returns The allowed nodes for this permission boundary.
+   */
+  is_access_to_node_allowed?: (node: IAMAnyNode) => boolean;
+  content: string;
+}
+
 export type IAMUserNode = Node<IAMUserNodeData, 'user'>;
 // 'group' is reserved in @xyflow/react, we're using 'iam_group' instead
 export type IAMGroupNode = Node<IAMGroupNodeData, 'iam_group'>;
@@ -262,6 +287,7 @@ export type IAMAccountNode = Node<IAMAccountNodeData, 'account'>;
 export type IAMOUNode = Node<IAMOUNodeData, 'ou'>;
 export type IAMSCPNode = Node<IAMSCPNodeData, 'scp'>;
 export type IAMResourcePolicyNode = Node<IAMResourcePolicyNodeData, 'resource_policy'>;
+export type IAMPermissionBoundaryNode = Node<IAMPermissionBoundaryNodeData, 'permission_boundary'>;
 
 export type IAMNodeMap = {
   [IAMNodeEntity.Policy]: IAMPolicyNode;
@@ -273,6 +299,7 @@ export type IAMNodeMap = {
   [IAMNodeEntity.OU]: IAMOUNode;
   [IAMNodeEntity.SCP]: IAMSCPNode;
   [IAMNodeEntity.ResourcePolicy]: IAMResourcePolicyNode;
+  [IAMNodeEntity.PermissionBoundary]: IAMPermissionBoundaryNode;
 };
 
 export type IAMAnyNode = IAMNodeMap[keyof IAMNodeMap];

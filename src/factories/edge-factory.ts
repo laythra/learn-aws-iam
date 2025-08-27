@@ -22,6 +22,7 @@ const EDGE_TEMPLATE: PartialEdge = {
     stroke_width: 1,
     hovering_color: theme.colors.blue[500],
     hovering_label: 'Attached to',
+    is_blocked: false,
   },
 };
 

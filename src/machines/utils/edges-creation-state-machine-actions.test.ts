@@ -4,11 +4,18 @@ import { updateConnectionEdges } from './edges-creation-state-machine-actions';
 import { resolveInitialEdges } from './initial-edges-resolver';
 import { createMockContext } from '@/__test-helpers__/context';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
+import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { AccessLevel, IAMAnyNode, IAMEdge } from '@/types';
+
+type ExpectedEdge = {
+  source: string;
+  target: string;
+  data?: Partial<IAMEdge['data']>;
+};
 
 describe('updateConnectionEdges', () => {
   /**
@@ -26,10 +33,18 @@ describe('updateConnectionEdges', () => {
     return { ...ctx, edges };
   };
 
-  const expectEdges = (edges: IAMEdge[], expected: { source: string; target: string }[]): void => {
+  const expectEdges = (edges: IAMEdge[], expected: ExpectedEdge[]): void => {
     expect(edges).toHaveLength(expected.length);
     expect(edges).toEqual(
-      expect.arrayContaining(expected.map(obj => expect.objectContaining(obj)))
+      expect.arrayContaining(
+        expected.map(obj =>
+          expect.objectContaining({
+            source: obj.source,
+            target: obj.target,
+            ...(obj.data ? { data: expect.objectContaining(obj.data) } : {}),
+          })
+        )
+      )
     );
   };
 
@@ -63,7 +78,6 @@ describe('updateConnectionEdges', () => {
       });
 
       const ctx = createEdgeTestContext([], [policy, user, resource]);
-
       const { updatedContext } = updateConnectionEdges(ctx, policy, user);
 
       expectEdges(updatedContext.edges, [
@@ -72,28 +86,65 @@ describe('updateConnectionEdges', () => {
       ]);
     });
 
-    // it('skips extra edges (user → resource) when granted_access specifies\
-    //    a source_node that does not match the user being connected', () => {
-    //   const user = createUserNode({});
-    //   const resource = createResourceNode({});
-    //   const policy = createPolicyNode({
-    //     dataOverrides: {
-    //       granted_accesses: [
-    //         {
-    //           access_level: AccessLevel.Read,
-    //           target_node: resource.id,
-    //           target_handle: 'mock-target-handle',
-    //         },
-    //       ],
-    //     },
-    //   });
+    it('skips extra edges (user → resource) when granted_access specifies\
+       a source_node that does not match the user being connected', () => {
+      const user = createUserNode({});
+      const resource = createResourceNode({});
+      const policy = createPolicyNode({
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+              applicable_nodes: () => {
+                return [];
+              },
+            },
+          ],
+        },
+      });
 
-    //   const ctx = createEdgeTestContext([], [policy, user, resource]);
-    //   const { updatedContext } = updateConnectionEdges(ctx, policy, user);
+      const ctx = createEdgeTestContext([], [policy, user, resource]);
+      const { updatedContext } = updateConnectionEdges(ctx, policy, user);
 
-    //   expectEdges(updatedContext.edges, [{ source: policy.id, target: user.id }]);
-    //   expectConnections(updatedContext.nodes_connnections, [{ from: policy, to: user }]);
-    // });
+      expectEdges(updatedContext.edges, [{ source: policy.id, target: user.id }]);
+    });
+
+    it('marks extra edges (user → resource) as blocked when access is granted\
+       but a permission boundary blocks it', () => {
+      const user = createUserNode({});
+      const resource = createResourceNode({});
+      const permissionBoundary = createPermissionBoundaryNode({
+        dataOverrides: {
+          is_access_to_node_allowed: () => false,
+        },
+      });
+
+      const policy = createPolicyNode({
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
+      });
+
+      const ctx = createEdgeTestContext(
+        [{ from: permissionBoundary.id, to: user.id }],
+        [policy, user, resource, permissionBoundary]
+      );
+      const { updatedContext } = updateConnectionEdges(ctx, policy, user);
+
+      expectEdges(updatedContext.edges, [
+        { source: permissionBoundary.id, target: user.id },
+        { source: policy.id, target: user.id },
+        { source: user.id, target: resource.id, data: { is_blocked: true } },
+      ]);
+    });
   });
 
   describe('policy → group', () => {
