@@ -6,13 +6,16 @@ const FIXED_POPOVER_MSG1 = `
 `;
 
 const FIXED_POPOVER_MSG2 = `
-  There you have it! 🎉
+  For this part of the level, you'll be an admin who wants to delegate permission management
+  to the senior developer on your team in order to scale and move faster.
 
-  Teams can now manage **ONLY** their own RDS instances by stopping and starting them,
-  while the RDS instances of other teams remain untouched.
+  This can happen by granting the senior developer *Cloud* permissions to:
 
-  All thanks to the power of *resource tags*, *request tags*, and *policy variables*,
-  your team can now effectively manage resources in a multi-team environment.
+  * Create a permission boundary which limits users
+  to reading secrets tagged with their team name, ie: \`team: \${aws:PrincipalTag/team}\`
+  * Allow users tagged with **"role:senior"** to create permission policies as they like
+  * Allow the same users to attach these permission policies to roles that **ONLY**
+    have the created permission boundary attached
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [

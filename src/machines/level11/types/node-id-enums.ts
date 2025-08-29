@@ -1,9 +1,13 @@
 export const UserNodeID = {
   Sephiroth: 'Sephiroth',
+  Cloud: 'Cloud',
+  Tifa: 'Tifa',
+  Barret: 'Barret',
 } as const;
 
 export const PermissionBoundaryID = {
   PermissionBoundary1: 'PB1',
+  SecretsReadingPermissionBoundary: 'PB2',
 } as const;
 
 export const ResourceNodeID = {
@@ -17,6 +21,7 @@ export const ResourceNodeID = {
 export const PolicyNodeID = {
   Policy1: 'policy-1',
   FullAccessPolicy: 'policy-2',
+  AccessDelegationPolicy: 'policy-3',
 } as const;
 
 export const RoleNodeID = {

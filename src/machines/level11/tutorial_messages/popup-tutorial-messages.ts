@@ -21,13 +21,10 @@ const POPUP_MSG2 = `
 `;
 
 const POPUP_MSG3 = `
-  So permission boundaries are nice, but why would we want to cap the maximum permissions
-  a user/role can have if we can simply just limit the permissions they have in the first place?|lg
+  Why use permission boundaries if we can just limit permissions directly?|lg
 
-  Well, permission boundaries are especially useful in scenarios where you want to delegate
-  permission management to other users or teams, but still want to maintain control over
-  the maximum permissions that can be granted.
-  We'll see more of this in the upcoming section of this level|lg
+  They're essential when delegating permission management—letting others assign permissions,
+  but always keeping a strict upper limit on what can be granted.|lg
 `;
 
 const POPUP_MSG4 = `
