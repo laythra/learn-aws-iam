@@ -11,6 +11,7 @@ import {
   ObjectiveType,
 } from '../types';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
+import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { createResourcePolicyNode } from '@/factories/nodes/resource-policy-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
@@ -25,6 +26,7 @@ import {
   IAMRoleNode,
   IAMPolicyNode,
   IAMResourcePolicyNode,
+  IAMPermissionBoundaryNode,
 } from '@/types';
 import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
@@ -221,6 +223,50 @@ export function createSCP<TLevelObjectiveID, TFinishEventMap extends BaseFinishE
   return {
     updatedContext: context,
     events: [],
+  };
+}
+
+export function createPermissionBoundary<
+  TLevelObjectiveID,
+  TFinishEventMap extends BaseFinishEventMap,
+>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  docString: string,
+  label: string,
+  accountId?: AccountID
+): {
+  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
+  events: TFinishEventMap[ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE][];
+} {
+  const targetValidObjective = findAnyValidObjective<IAMNodeEntity.PermissionBoundary>(
+    context.permission_boundary_creation_objectives ?? [],
+    context.nodes,
+    docString,
+    accountId,
+    IAMNodeEntity.PermissionBoundary
+  );
+
+  const newNode = createNodeFromObjective<TFinishEventMap, IAMPermissionBoundaryNode>(
+    docString,
+    label,
+    IAMNodeEntity.PermissionBoundary,
+    {},
+    createPermissionBoundaryNode,
+    targetValidObjective
+  );
+
+  const updatedContext = produce(context, draftContext => {
+    if (targetValidObjective) {
+      (draftContext.permission_boundary_creation_objectives ?? []).find(
+        objective => objective.id === targetValidObjective?.id
+      )!.finished = true;
+    }
+    draftContext.nodes.push(newNode as WritableDraft<IAMPermissionBoundaryNode>);
+  });
+
+  return {
+    updatedContext,
+    events: targetValidObjective ? [targetValidObjective.on_finish_event] : [],
   };
 }
 

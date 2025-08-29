@@ -34,11 +34,13 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     isRoleTabRestricted,
     isSCPTabRestricted,
     isResourcePolicyTabRestricted,
+    isPermissionBoundaryTabRestricted,
   ] = useIsElementRestricted([
     ElementID.CodeEditorPolicyTab,
     ElementID.CodeEditorRoleTab,
     ElementID.CodeEditorSCPTab,
     ElementID.CodeEditorResourcePolicyTab,
+    ElementID.CodeEditorPermissionBoundaryTab,
   ]);
 
   const [
@@ -76,6 +78,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
       { restricted: isRoleTabRestricted, entity: IAMNodeEntity.Role },
       { restricted: isSCPTabRestricted, entity: IAMNodeEntity.SCP },
       { restricted: isResourcePolicyTabRestricted, entity: IAMNodeEntity.ResourcePolicy },
+      { restricted: isPermissionBoundaryTabRestricted, entity: IAMNodeEntity.PermissionBoundary },
     ];
 
     const isSelectedEntityRestricted = entityOrder.some(

@@ -43,6 +43,10 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
       element_id: ElementID.CodeEditorResourcePolicyTab,
       node_entity: IAMNodeEntity.ResourcePolicy,
     },
+    {
+      element_id: ElementID.CodeEditorPermissionBoundaryTab,
+      node_entity: IAMNodeEntity.PermissionBoundary,
+    },
   ];
 
   const restrictedTabs = useIsElementRestricted(tabs.map(tab => tab.element_id));

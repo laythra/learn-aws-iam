@@ -98,6 +98,7 @@ type ObjectiveEntityMap = {
   [IAMNodeEntity.SCP]: IAMSCPCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.Role]: IAMRoleCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.ResourcePolicy]: IAMResourcePolicyCreationObjective<BaseFinishEventMap>;
+  [IAMNodeEntity.PermissionBoundary]: IAMResourcePolicyCreationObjective<BaseFinishEventMap>;
 };
 
 type ObjectiveByEntity<E extends IAMNodeEntity> = E extends keyof ObjectiveEntityMap

@@ -10,6 +10,7 @@ import { updateConnectionEdges } from './utils/edges-creation-state-machine-acti
 import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-actions';
 import { resolveInitialEdges } from './utils/initial-edges-resolver';
 import {
+  createPermissionBoundary,
   createPermissionPolicy,
   createResourcePolicy,
   createSCP,
@@ -27,6 +28,7 @@ import type {
   BaseFinishEventMap,
   EdgeConnectionObjective,
   FixedPopoverMessage,
+  IAMPermissionBoundaryCreationObjective,
   IAMPolicyCreationObjective,
   IAMPolicyEditObjective,
   IAMResourcePolicyCreationObjective,
@@ -195,11 +197,19 @@ export const createStateMachineSetup = <
             docString: string;
             accountId?: AccountID;
             label: string;
-            policyNodeType: IAMNodeEntity.Policy | IAMNodeEntity.ResourcePolicy;
+            policyNodeType:
+              | IAMNodeEntity.Policy
+              | IAMNodeEntity.ResourcePolicy
+              | IAMNodeEntity.PermissionBoundary;
           }
         ) => {
-          const createFn =
-            policyNodeType === IAMNodeEntity.Policy ? createPermissionPolicy : createResourcePolicy;
+          const createFnMap = {
+            [IAMNodeEntity.Policy]: createPermissionPolicy,
+            [IAMNodeEntity.ResourcePolicy]: createResourcePolicy,
+            [IAMNodeEntity.PermissionBoundary]: createPermissionBoundary,
+          };
+
+          const createFn = createFnMap[policyNodeType];
           const createPermissionPolicyResult = createFn(context, docString, label, accountId);
 
           const { updatedContext } = createPermissionPolicyResult;
@@ -209,6 +219,8 @@ export const createStateMachineSetup = <
             edges: updatedContext.edges,
             policy_creation_objectives: updatedContext.policy_creation_objectives,
             resource_policy_creation_objectives: updatedContext.resource_policy_creation_objectives,
+            permission_boundary_creation_objectives:
+              updatedContext.permission_boundary_creation_objectives,
           });
 
           createPermissionPolicyResult.events.forEach(event => {
@@ -359,6 +371,16 @@ export const createStateMachineSetup = <
         ) => {
           enqueue.assign({
             policy_creation_objectives: objectives,
+          });
+        }
+      ),
+      set_permission_boundary_creation_objectives: enqueueActions(
+        (
+          { enqueue },
+          { objectives }: { objectives: IAMPermissionBoundaryCreationObjective<TFinishEventMap>[] }
+        ) => {
+          enqueue.assign({
+            permission_boundary_creation_objectives: objectives,
           });
         }
       ),

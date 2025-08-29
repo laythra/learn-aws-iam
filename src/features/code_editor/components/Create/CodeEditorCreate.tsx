@@ -37,6 +37,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     policyCreationObjectives,
     roleCreationObjectives,
     resourcePolicyCreationObjectives,
+    permissionBoundaryCreationObjectives,
     nodes,
   ] = LevelsProgressionContext().useSelector(
     state => [
@@ -44,6 +45,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       state.context.policy_creation_objectives,
       state.context.role_creation_objectives,
       state.context.resource_policy_creation_objectives ?? [],
+      state.context.permission_boundary_creation_objectives ?? [],
       state.context.nodes,
     ],
     _.isEqual
@@ -58,6 +60,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     ...policyCreationObjectives,
     ...roleCreationObjectives,
     ...resourcePolicyCreationObjectives,
+    ...permissionBoundaryCreationObjectives,
   ];
 
   const editorView = useRef<EditorView | null>(null);

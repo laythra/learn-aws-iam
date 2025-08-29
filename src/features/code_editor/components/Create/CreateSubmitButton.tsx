@@ -67,6 +67,13 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
         label,
         account_id: accountId,
       });
+    } else if (selectedIAMEntity == IAMNodeEntity.PermissionBoundary) {
+      levelActor.send({
+        type: StatefulStateMachineEvent.AddIAMPermissionBoundaryNode,
+        doc_string: content,
+        label,
+        account_id: accountId,
+      });
     }
 
     codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });

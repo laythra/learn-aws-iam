@@ -5,4 +5,5 @@ export const IAMCodeDefinedEntities = [
   IAMNodeEntity.Role,
   IAMNodeEntity.SCP,
   IAMNodeEntity.ResourcePolicy,
+  IAMNodeEntity.PermissionBoundary,
 ] as const;
