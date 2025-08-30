@@ -38,6 +38,7 @@ export enum ObjectiveType {
   IAM_USER_GROUP_CREATION_OBJECTIVE = 'IAM_USER_GROUP_CREATION_OBJECTIVE',
   EDGE_CONNECTION_OBJECTIVE = 'EDGE_CONNECTION_OBJECTIVE',
   LEVEL_OBJECTIVE = 'LEVEL_OBJECTIVE',
+  PERMISSION_BOUNDARY_CREATION_OBJECTIVE = 'PERMISSION_BOUNDARY_CREATION_OBJECTIVE',
 }
 
 export type BaseFinishEventMap = Record<ObjectiveType, string>;
@@ -79,6 +80,8 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   fixed_popover_content?: FixedPopoverMessage;
   side_panel_open?: boolean;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
+  // eslint-disable-next-line
+  permission_boundary_creation_objectives?: IAMPermissionBoundaryCreationObjective<TBaseFinishEventMap>[];
   use_multi_account_canvas?: boolean;
   highlighted_element_id?: string;
   in_tutorial_state?: boolean;
@@ -147,6 +150,12 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: StatefulStateMachineEvent.AddIAMSCPNode;
       doc_string: string;
       label: string;
+    }
+  | {
+      type: StatefulStateMachineEvent.AddIAMPermissionBoundaryNode;
+      doc_string: string;
+      label: string;
+      account_id?: AccountID;
     }
   | {
       type: StatefulStateMachineEvent.ConnectNodes;
@@ -270,6 +279,14 @@ export interface IAMSCPCreationObjective<TFinishEventMap extends BaseFinishEvent
   readonly blocked_accesses: string[];
   readonly on_finish_event: TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE];
   readonly entity: IAMNodeEntity.SCP;
+}
+
+export interface IAMPermissionBoundaryCreationObjective<TFinishEventMap extends BaseFinishEventMap>
+  extends BaseCreationObjective<TFinishEventMap> {
+  readonly type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE;
+  readonly initial_position?: string;
+  readonly on_finish_event: TFinishEventMap[ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE];
+  readonly is_access_to_node_allowed: (node: IAMAnyNode) => boolean;
 }
 
 export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap>

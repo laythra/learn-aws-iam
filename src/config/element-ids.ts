@@ -5,6 +5,7 @@ export enum ElementID {
   CodeEditorResourcePolicyTab = 'code-editor-resource-policy-tab',
   CodeEditorRoleTab = 'code-editor-role-tab',
   CodeEditorSCPTab = 'code-editor-scp-tab',
+  CodeEditorPermissionBoundaryTab = 'code-editor-permission-boundary-tab',
   CreateEntitiesMenuItem = 'create-entities-menu-item',
   CreateRolesAndPoliciesMenuItem = 'create-roles-and-policies-menu-item',
   IAMIdentityCreatorPopup = 'iam-identity-creator-popup',

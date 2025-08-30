@@ -5,10 +5,17 @@ import { LAYOUT_GROUPS } from './layout-groups';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
+import { PERMISSION_BOUNDARY_CREATION_OBJECTIVES } from './objectives/permission-boundary-creation-objectives';
+import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
-import { EdgeConnectionFinishEvent, FinishEventMap } from './types/finish-event-enums';
+import {
+  EdgeConnectionFinishEvent,
+  FinishEventMap,
+  PermissionBoundaryCreationFinishEvent,
+  PolicyCreationFinishEvent,
+} from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
@@ -43,12 +50,12 @@ export const stateMachine = createStateMachineSetup<
     role_creation_objectives: [],
     use_multi_account_canvas: false,
     side_panel_open: false,
-    nodes_connnections: [],
     layout_groups: [...COMMON_LAYOUT_GROUPS, ...LAYOUT_GROUPS],
     restricted_element_ids: [
       ElementID.CodeEditorRoleTab,
       ElementID.CodeEditorSCPTab,
       ElementID.CodeEditorResourcePolicyTab,
+      ElementID.CreateEntitiesMenuItem,
     ],
   },
   on: {
@@ -91,6 +98,16 @@ export const stateMachine = createStateMachineSetup<
           docString: event.doc_string,
           label: event.label,
           policyNodeType: IAMNodeEntity.Policy,
+        }),
+      },
+    },
+    [StatefulStateMachineEvent.AddIAMPermissionBoundaryNode]: {
+      actions: {
+        type: 'add_policy_node',
+        params: ({ event }) => ({
+          docString: event.doc_string,
+          label: event.label,
+          policyNodeType: IAMNodeEntity.PermissionBoundary,
         }),
       },
     },
@@ -217,7 +234,12 @@ export const stateMachine = createStateMachineSetup<
       },
     },
     inside_level: {
-      entry: ['hide_popovers', { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } }],
+      entry: [
+        'store_checkpoint',
+        'hide_popovers',
+        { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
+        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
+      ],
       initial: 'popup3',
       states: {
         popup3: {
@@ -228,22 +250,110 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            NEXT_POPUP: 'popup4',
+            NEXT_POPUP: 'popover4',
           },
         },
-        popup4: {
+        popover4: {
           entry: [
+            'hide_popups',
             {
-              type: 'show_popup_message',
-              params: { message: POPUP_TUTORIAL_MESSAGES[3] },
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
             },
           ],
           on: {
-            NEXT_POPUP: 'start_level',
+            NEXT_POPOVER: 'popover5',
           },
         },
-
-        start_level: {},
+        popover5: {
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[4] },
+            },
+          ],
+          on: {
+            NEXT_POPOVER: 'popover6',
+          },
+        },
+        popover6: {
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[5] },
+            },
+          ],
+          on: {
+            NEXT_POPOVER: 'create_permission_boundary',
+          },
+        },
+        create_permission_boundary: {
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[6] },
+            },
+            {
+              type: 'update_restricted_element_ids',
+              params: ({ context }) => ({
+                restricted_element_ids: [
+                  ...(context.restricted_element_ids ?? []),
+                  ElementID.CodeEditorPolicyTab,
+                ],
+              }),
+            },
+            {
+              type: 'set_permission_boundary_creation_objectives',
+              params: { objectives: PERMISSION_BOUNDARY_CREATION_OBJECTIVES[0] },
+            },
+          ],
+          on: {
+            [PermissionBoundaryCreationFinishEvent.READ_SECRETS_PERMISSION_BOUNDARY_CREATED]:
+              'permission_boundary_created',
+          },
+        },
+        permission_boundary_created: {
+          entry: [
+            'store_checkpoint',
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[7] },
+            },
+          ],
+          on: {
+            NEXT_POPOVER: 'create_delegation_policy',
+          },
+        },
+        create_delegation_policy: {
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[8] },
+            },
+            {
+              type: 'finish_level_objective',
+              params: { id: LevelObjectiveID.CREATE_PERMISSIONS_DELEGATION_POLICY },
+            },
+            {
+              type: 'set_permission_policy_creation_objectives',
+              params: { objectives: POLICY_CREATION_OBJECTIVES[0] },
+            },
+            {
+              type: 'update_restricted_element_ids',
+              params: ({ context }) => ({
+                restricted_element_ids: (context.restricted_element_ids ?? [])
+                  .filter(id => id !== ElementID.CodeEditorPolicyTab)
+                  .concat([ElementID.CodeEditorPermissionBoundaryTab]),
+              }),
+            },
+          ],
+          on: {
+            [PolicyCreationFinishEvent.ACCESS_DELEGATION_POLICY_CREATED]: 'attach_policy',
+          },
+        },
+        attach_policy: {
+          entry: ['enable_edges_management_ability'],
+        },
       },
     },
   },

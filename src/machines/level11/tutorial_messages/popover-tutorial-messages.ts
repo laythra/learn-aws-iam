@@ -1,4 +1,5 @@
-import { PermissionBoundaryID, PolicyNodeID, UserNodeID } from '../types/node-id-enums';
+import { PermissionBoundaryID, PolicyNodeID, RoleNodeID, UserNodeID } from '../types/node-id-enums';
+import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/machines/types';
 
 const POPOVER_MSG1 = `
@@ -19,6 +20,29 @@ const POPOVER_MSG3 = `
   Because a permission boundary is attached to him,
   which caps the maximum permissions he can have to listing SNS topics only.
 `;
+
+const POPOVER_MSG4 = `
+  **Cloud** is the senior developer (see the \`level\` tag).
+  He'll delegate read secrets permissions to his team, enforced by a permission boundary.
+`;
+
+const POPOVER_MSG5 = `
+  We will need to create a permission boundary to limit cloud's delegation abilities
+  and also allow him to attach policies to roles
+  which have the created permission boundary attached.
+`;
+
+const POPOVER_MSG6 = `
+  This is the role which Cloud will use to delegate permissions to his team.
+  Feel free to inspect its trust policy.
+`;
+
+const POPOVER_MSG7 = ``;
+const POPOVER_MSG8 = `
+  Nailed it. Let's create a permission policy which will allow us to delegate permissions.
+`;
+
+const POPOVER_MSG9 = ``;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
@@ -44,5 +68,53 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_next_button: true,
     show_close_button: false,
     popover_placement: 'left',
+  },
+  {
+    element_id: UserNodeID.Cloud,
+    popover_title: 'Meet Cloud, the senior developer',
+    popover_content: POPOVER_MSG4,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'top',
+  },
+  {
+    element_id: UserNodeID.Cloud,
+    popover_title: 'Delegating permissions',
+    popover_content: POPOVER_MSG5,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'top',
+  },
+  {
+    element_id: RoleNodeID.Role1,
+    popover_title: 'Delegation Role',
+    popover_content: POPOVER_MSG6,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'top',
+  },
+  {
+    element_id: ElementID.NewEntityBtn,
+    popover_title: 'Create Your First Permission Boundary',
+    popover_content: POPOVER_MSG7,
+    show_next_button: false,
+    show_close_button: false,
+    popover_placement: 'bottom',
+  },
+  {
+    element_id: PermissionBoundaryID.SecretsReadingPermissionBoundary,
+    popover_title: 'Nailed it ',
+    popover_content: POPOVER_MSG8,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'bottom',
+  },
+  {
+    element_id: ElementID.NewEntityBtn,
+    popover_title: 'We need to create the permission for delegating access now',
+    popover_content: POPOVER_MSG9,
+    show_next_button: false,
+    show_close_button: false,
+    popover_placement: 'bottom',
   },
 ];

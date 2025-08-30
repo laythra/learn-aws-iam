@@ -9,24 +9,14 @@ const TUTORIAL_PERMISSION_BOUNDARY_NODES: Partial<IAMPermissionBoundaryNode['dat
     label: 'SNSReadOnlyBoundary',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     content: JSON.stringify(INITIAL_POLICIES.SNS_READ_ONLY_BOUNDARY, null, 2),
-    allowed_accesses: [],
+    is_access_to_node_allowed: () => false,
   },
 ];
-
-const IN_LEVEL_PERMISSION_BOUNDARY_NODES: Partial<IAMPermissionBoundaryNode['data']>[] = [];
 
 export const INITIAL_TUTORIAL_PERMISSION_BOUNDARY_NODES: IAMPermissionBoundaryNode[] =
   TUTORIAL_PERMISSION_BOUNDARY_NODES.map(nodeData =>
     createPermissionBoundaryNode({
       dataOverrides: nodeData,
-      rootOverrides: { extent: 'parent', parentId: nodeData.parent_id, draggable: false },
-    })
-  );
-
-export const INITIAL_IN_LEVEL_PERMISSION_BOUNDARY_NODES: IAMPermissionBoundaryNode[] =
-  IN_LEVEL_PERMISSION_BOUNDARY_NODES.map(nodeData =>
-    createPermissionBoundaryNode({
-      dataOverrides: nodeData,
-      rootOverrides: { extent: 'parent', parentId: nodeData.parent_id },
+      rootOverrides: { draggable: false },
     })
   );

@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { MANAGED_POLICIES } from '@/machines/config';
 import {
   BaseFinishEventMap,
+  IAMPermissionBoundaryCreationObjective,
   IAMPolicyCreationObjective,
   IAMResourcePolicyCreationObjective,
   IAMRoleCreationObjective,
@@ -25,6 +26,14 @@ export type PolicyCreationObjectiveInput<TFinishEventMap extends BaseFinishEvent
 export type SCPCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> = Partial<
   Omit<IAMSCPCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'>
 >;
+
+export type PermissionBoundaryCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> =
+  Partial<
+    Omit<
+      IAMPermissionBoundaryCreationObjective<TFinishEventMap>,
+      'id' | 'finished' | 'type' | 'entity'
+    >
+  >;
 
 export type UserGroupCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> = Partial<
   Omit<IAMUserGroupCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'>
@@ -65,6 +74,23 @@ function getTemplatePolicyCreationObjectiveAttributes<
     validate_inside_code_editor: true,
     granted_accesses: [],
     initial_edges: [],
+  };
+}
+
+function getTemplatePermissionBoundaryCreationObjectiveAttributes<
+  TFinishEventMap extends BaseFinishEventMap,
+>(): Omit<
+  IAMPermissionBoundaryCreationObjective<TFinishEventMap>,
+  'id' | 'finished' | 'type' | 'entity'
+> {
+  return {
+    entity_id: '-',
+    json_schema: trustPolicySchema,
+    initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
+    on_finish_event: '',
+    initial_edges: [],
+    is_access_to_node_allowed: () => false,
+    validate_inside_code_editor: true,
   };
 }
 
@@ -138,6 +164,21 @@ export function createResourcePolicyCreationObjective<TFinishEventMap extends Ba
     type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
     entity: IAMNodeEntity.ResourcePolicy,
     ...getTemplatePolicyCreationObjectiveAttributes(),
+    ...props,
+  };
+}
+
+export function createPermissionBoundaryCreationObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+>(
+  props: PermissionBoundaryCreationObjectiveInput<TFinishEventMap>
+): IAMPermissionBoundaryCreationObjective<TFinishEventMap> {
+  return {
+    finished: false,
+    id: _.uniqueId(`resource-policy-creation-objective-`),
+    type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE,
+    entity: IAMNodeEntity.PermissionBoundary,
+    ...getTemplatePermissionBoundaryCreationObjectiveAttributes(),
     ...props,
   };
 }
