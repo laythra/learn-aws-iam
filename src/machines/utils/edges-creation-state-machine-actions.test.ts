@@ -257,7 +257,7 @@ describe('updateConnectionEdges', () => {
       ]);
     });
 
-    it.only('marks extra edges (user → resource) as blocked when access is granted\
+    it('marks extra edges (user → resource) as blocked when access is granted\
        but a permission boundary blocks it', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});

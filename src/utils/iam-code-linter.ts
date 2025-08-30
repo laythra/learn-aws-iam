@@ -7,6 +7,7 @@ import {
   AccountID,
   BaseCreationObjective,
   BaseFinishEventMap,
+  IAMPermissionBoundaryCreationObjective,
   IAMPolicyCreationObjective,
   IAMResourcePolicyCreationObjective,
   IAMRoleCreationObjective,
@@ -98,7 +99,7 @@ type ObjectiveEntityMap = {
   [IAMNodeEntity.SCP]: IAMSCPCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.Role]: IAMRoleCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.ResourcePolicy]: IAMResourcePolicyCreationObjective<BaseFinishEventMap>;
-  [IAMNodeEntity.PermissionBoundary]: IAMResourcePolicyCreationObjective<BaseFinishEventMap>;
+  [IAMNodeEntity.PermissionBoundary]: IAMPermissionBoundaryCreationObjective<BaseFinishEventMap>;
 };
 
 type ObjectiveByEntity<E extends IAMNodeEntity> = E extends keyof ObjectiveEntityMap
