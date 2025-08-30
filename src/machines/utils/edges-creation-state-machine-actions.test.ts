@@ -256,6 +256,46 @@ describe('updateConnectionEdges', () => {
         { source: user.id, target: resource.id },
       ]);
     });
+
+    it('marks extra edges (user → resource) as blocked when access is granted\
+       but a permission boundary blocks it', () => {
+      const user = createUserNode({});
+      const resource = createResourceNode({});
+      const role = createRoleNode({});
+      const permissionBoundary = createPermissionBoundaryNode({
+        dataOverrides: {
+          is_access_to_node_allowed: () => false,
+        },
+      });
+
+      const policy = createPolicyNode({
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
+      });
+
+      const ctx = createEdgeTestContext(
+        [
+          { from: permissionBoundary.id, to: role.id },
+          { from: policy.id, to: role.id },
+        ],
+        [policy, user, resource, permissionBoundary, role]
+      );
+      const { updatedContext } = updateConnectionEdges(ctx, user, role);
+
+      expectEdges(updatedContext.edges, [
+        { source: user.id, target: role.id },
+        { source: permissionBoundary.id, target: role.id },
+        { source: policy.id, target: role.id },
+        { source: user.id, target: resource.id, data: { is_blocked: true } },
+      ]);
+    });
   });
 
   describe('user → group', () => {

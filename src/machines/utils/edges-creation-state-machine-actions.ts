@@ -42,18 +42,15 @@ function isEdgeConnectionValid<TFinishEventMap extends BaseFinishEventMap>(
   return objective.required_edges.some(edge => edge.id === newEdgeId);
 }
 
-function markBlockedEdges(edges: IAMEdge[], node: IAMAnyNode): IAMEdge[] {
-  const permissionBoundaries = ConnectionFilter.create()
-    .fromEdges(edges)
-    .whereSourceEntityIs(IAMNodeEntity.PermissionBoundary)
-    .whereTargetIs(node.id)
-    .build()
-    .map(edge => edge.data!.source_node) as IAMPermissionBoundaryNode[];
+function markBlockedEdges(
+  edges: IAMEdge[],
+  permissionBoundaries: IAMPermissionBoundaryNode[]
+): IAMEdge[] {
+  if (edges.length == 0) return edges;
 
   return produce(edges, draftEdges => {
     draftEdges.forEach(edge => {
       if (!edge.data) return;
-      if (edge.source !== node.id) return;
 
       const isBlocked = permissionBoundaries.some(
         pb => !pb.data.is_access_to_node_allowed?.(edge.data!.target_node)
@@ -214,10 +211,21 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
   const extraEdges = computeExtraEdges(baseEdge.id) as WritableDraft<IAMEdge>[];
 
   const updatedContext = produce(context, draft => {
-    const allEdges = [...context.edges, baseEdge, ...extraEdges];
-    const updatedEdges = markBlockedEdges(allEdges, target) as WritableDraft<IAMEdge>[];
+    // TODO: Make this an attribute on the target node, a function attribute
+    const permissionBoundaries = ConnectionFilter.create()
+      .fromEdges(context.edges)
+      .whereSourceEntityIs(IAMNodeEntity.PermissionBoundary)
+      .whereTargetIs(target.id)
+      .build()
+      .map(edge => edge.data!.source_node) as IAMPermissionBoundaryNode[];
 
-    draft.edges = updatedEdges;
+    const updatedEdges = markBlockedEdges(
+      extraEdges,
+      permissionBoundaries
+    ) as WritableDraft<IAMEdge>[];
+
+    draft.edges.push(...updatedEdges);
+    draft.edges.push(baseEdge as WritableDraft<IAMEdge>);
   });
 
   return { updatedContext, events };
