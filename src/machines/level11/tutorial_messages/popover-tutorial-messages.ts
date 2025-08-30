@@ -43,6 +43,29 @@ const POPOVER_MSG8 = `
 `;
 
 const POPOVER_MSG9 = ``;
+const POPOVER_MSG10 = `
+  Almost done! Now, let's see what happens when Cloud tries
+  to attach the admin policy to the role and a user assumes it.
+
+  Next, we'll what happens from Cloud's POV.
+
+`;
+
+const POPOVER_MSG11 = `
+  Cloud has attached the admin policy to the role.
+
+  Next, we'll see what happens from Tifa's POV.
+`;
+
+const POPOVER_MSG12 = `
+  Tifa is a junior developer (see the \`level\` tag), and she will now attempt to assume the role
+
+  ***The principal in the role allows anyone with a \`level: junior\` tag to assume it.*** 😉
+`;
+
+const POPOVER_MSG13 = `
+  Tifa is allowed to assume the role.
+`;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
@@ -116,5 +139,37 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_next_button: false,
     show_close_button: false,
     popover_placement: 'bottom',
+  },
+  {
+    element_id: UserNodeID.Cloud,
+    popover_title: 'Delegating access',
+    popover_content: POPOVER_MSG10,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'left',
+  },
+  {
+    element_id: PolicyNodeID.FullAccessPolicy,
+    popover_title: 'Attaching the admin policy',
+    popover_content: POPOVER_MSG11,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'left',
+  },
+  {
+    element_id: UserNodeID.Tifa,
+    popover_title: 'Assuming the role as Tifa',
+    popover_content: POPOVER_MSG12,
+    show_next_button: true,
+    show_close_button: false,
+    popover_placement: 'left',
+  },
+  {
+    element_id: UserNodeID.Tifa,
+    popover_title: 'Assume the role',
+    popover_content: POPOVER_MSG13,
+    show_next_button: false,
+    show_close_button: false,
+    popover_placement: 'left',
   },
 ];

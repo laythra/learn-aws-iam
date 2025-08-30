@@ -125,10 +125,6 @@ function getParentCenterPosition(parentNode: IAMAnyNode): XYPosition {
 function adjustPositionForMargin(position: XYPosition, layoutGroup: NodeLayoutGroup): XYPosition {
   if (!layoutGroup.margin) return position;
 
-  if (layoutGroup.margin.top < 0) {
-    debugger;
-  }
-
   return {
     x: position.x + (layoutGroup.margin.left || 0),
     y: position.y + (layoutGroup.margin.top || 0),

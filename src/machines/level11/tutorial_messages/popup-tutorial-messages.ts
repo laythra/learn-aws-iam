@@ -28,7 +28,7 @@ const POPUP_MSG3 = `
 `;
 
 const POPUP_MSG4 = `
-  For this part of the level, you'll be an admin who wants to delegate permission management
+For this part of the level, you'll be an admin who wants to delegate permission management
   to other developers on your team in order to scale and move faster. You objectives are:|lg
 
   * Create a permission boundary which limits users
@@ -36,6 +36,20 @@ const POPUP_MSG4 = `
   * Allow users tagged with **"role:senior"** to create permission policies as they like
   * Allow the same users to attach these permission policies to roles that **ONLY**
     have the created permission boundary attached
+`;
+
+const POPUP_MSG5 = `
+  Congratulations! Reaching this far is a significant achievement. 🎉|lg
+
+  Permission boundaries are a powerful tool in IAM that allow you to set the maximum permissions.
+  You can tell by now that everything we've learned so far can
+  be used to construct complex scenarios, just like the one you just went through.|lg
+
+  In the upcoming (and final) level, we will
+  introduce **Service Control Policies** (a very simple concept)
+  and do a quick recap of everything we learned so far.|lg
+
+  Give yourself a pat on the back for making it this far! Let's finish this|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
@@ -54,5 +68,10 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: 'Your Objectives',
     content: POPUP_MSG4,
+  },
+  {
+    title: 'Level Finished! 🔥',
+    content: POPUP_MSG5,
+    go_to_next_level_button: true,
   },
 ];

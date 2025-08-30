@@ -75,8 +75,8 @@ export class NodeActions {
 
     const codeEditorTextarea = codeEditorPopup.getByRole('textbox').first();
 
-    codeEditorTextarea.clear();
-    codeEditorTextarea.fill(newContent);
+    await codeEditorTextarea.clear();
+    await codeEditorTextarea.fill(newContent);
 
     const submitButton = codeEditorPopup.getByRole('button', { name: 'Submit' });
 

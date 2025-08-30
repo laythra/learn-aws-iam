@@ -1,3 +1,4 @@
+import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { generateAssumeRolePolicySchema } from '../schemas/policy/delegating-permissions-policy';
 import { FinishEventMap } from '../types/finish-event-enums';
 import { PolicyCreationFinishEvent } from '../types/finish-event-enums';
@@ -77,8 +78,9 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         return AJV_COMPILER.compile(generateAssumeRolePolicySchema(pbArn));
       },
       limit_new_lines: false,
-      layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
+      layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
       callout_message: CALLOUT_MSG,
+      initial_code: INITIAL_POLICIES.DELEGATE_ACCESS_MANAGEMENT_POLICY,
       hint_messages: [
         {
           title: 'Actions',

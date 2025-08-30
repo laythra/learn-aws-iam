@@ -39,7 +39,18 @@ export const INITIAL_POLICIES = {
     Statement: [
       {
         Effect: 'Allow',
-        Action: [],
+        Action: ['secretsmanager:GetSecretValue', '???'],
+        Resource: '*',
+        Condition: {},
+      },
+    ],
+  },
+  DELEGATE_ACCESS_MANAGEMENT_POLICY: {
+    Version: '2012-10-17',
+    Statement: [
+      {
+        Effect: 'Allow',
+        Action: ['iam:AttachRolePolicy', '???'],
         Resource: '*',
         Condition: {},
       },

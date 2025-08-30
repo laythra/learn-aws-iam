@@ -26,11 +26,12 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
     id: PolicyNodeID.FullAccessPolicy,
     label: 'AdministratorAccess',
     content: JSON.stringify(MANAGED_POLICIES.FullAccessPolicy, null, 2),
-    layout_group_id: CommonLayoutGroupID.RightCenterVertical,
+    layout_group_id: CommonLayoutGroupID.TopRightHorizontal,
     granted_accesses: Object.keys(ResourceNodeID).map(key => ({
       target_node: ResourceNodeID[key as keyof typeof ResourceNodeID],
       target_handle: 'right',
       access_level: AccessLevel.Full,
+      source_handle: 'left',
     })),
     editable: false,
   },

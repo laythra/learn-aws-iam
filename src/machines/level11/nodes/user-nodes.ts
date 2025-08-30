@@ -15,19 +15,28 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
     id: UserNodeID.Cloud,
     label: 'Cloud',
     layout_group_id: CommonLayoutGroupID.CenterVertical,
-    tags: [['Level', 'senior']],
+    tags: [
+      ['level', 'senior'],
+      ['team', 'avalanche'],
+    ],
   },
   {
     id: UserNodeID.Tifa,
     label: 'Tifa',
     layout_group_id: CommonLayoutGroupID.CenterVertical,
-    tags: [['Level', 'junior']],
+    tags: [
+      ['level', 'junior'],
+      ['team', 'avalanche'],
+    ],
   },
   {
-    id: UserNodeID.Barret,
-    label: 'Barret',
+    id: UserNodeID.Rufus,
+    label: 'Rufus',
     layout_group_id: CommonLayoutGroupID.CenterVertical,
-    tags: [['Level', 'junior']],
+    tags: [
+      ['level', 'junior'],
+      ['team', 'shinra'],
+    ],
   },
 ];
 
