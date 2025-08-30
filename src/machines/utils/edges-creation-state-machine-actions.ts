@@ -144,10 +144,12 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
  * @returns An array of edges
  */
 function createEdgesFromGrantedAccesses(
+  allNodes: IAMAnyNode[],
   candidateNodes: IAMAnyNode[],
   grantedAccesses: PolicyGrantedAccess[],
   parentEdgeId: string
 ): IAMEdge[] {
+  const nodesById = _.keyBy(allNodes, 'id');
   return grantedAccesses.flatMap(access => {
     const applicableNodes = access.applicable_nodes?.(candidateNodes) ?? candidateNodes;
     return applicableNodes.map(node =>
@@ -163,7 +165,7 @@ function createEdgesFromGrantedAccesses(
           hovering_label: access.access_level,
           parent_edge_id: parentEdgeId,
           source_node: node,
-          target_node: node,
+          target_node: nodesById[access.target_node],
         },
       })
     );
@@ -230,7 +232,12 @@ const connectionStrategies = {
     options: PartialEdge
   ) => {
     return applyStrategy(context, policyNode, userNode, isInitialEdge, options, baseEdgeId =>
-      createEdgesFromGrantedAccesses([userNode], policyNode.data.granted_accesses, baseEdgeId)
+      createEdgesFromGrantedAccesses(
+        context.nodes,
+        [userNode],
+        policyNode.data.granted_accesses,
+        baseEdgeId
+      )
     );
   },
   policyToGroup: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
@@ -249,6 +256,7 @@ const connectionStrategies = {
 
     return applyStrategy(context, policyNode, groupNode, isInitialEdge, options, baseEdgeId =>
       createEdgesFromGrantedAccesses(
+        context.nodes,
         usersConnectedToGroup,
         policyNode.data.granted_accesses,
         baseEdgeId
@@ -279,6 +287,7 @@ const connectionStrategies = {
 
     return applyStrategy(context, policyNode, roleNode, isInitialEdge, options, baseEdgeId => {
       return createEdgesFromGrantedAccesses(
+        context.nodes,
         usersConnectedToRole.concat(resourcesConnectedToRole),
         policyNode.data.granted_accesses,
         baseEdgeId
@@ -302,6 +311,7 @@ const connectionStrategies = {
 
     return applyStrategy(context, userNode, groupNode, isInitialEdge, options, baseEdgeId =>
       createEdgesFromGrantedAccesses(
+        context.nodes,
         [userNode],
         policiesConnectedToGroup.flatMap(policy => policy.data.granted_accesses),
         baseEdgeId
@@ -325,6 +335,7 @@ const connectionStrategies = {
 
     return applyStrategy(context, userNode, roleNode, isInitialEdge, options, baseEdgeId =>
       createEdgesFromGrantedAccesses(
+        context.nodes,
         [userNode],
         policiesConnectedToRole.flatMap(policy => policy.data.granted_accesses),
         baseEdgeId
@@ -348,6 +359,7 @@ const connectionStrategies = {
 
     return applyStrategy(context, roleNode, resourceNode, isInitialEdge, options, baseEdgeId =>
       createEdgesFromGrantedAccesses(
+        context.nodes,
         [resourceNode],
         policiesConnectedToRole.flatMap(policy => policy.data.granted_accesses),
         baseEdgeId
