@@ -56,7 +56,7 @@ const GetActorLogicFromLevelNumber = (
   const checkpointData = storage.getKey(`level${levelNumber}StateCheckpoint`);
 
   return createActorContext(stateMachine, {
-    snapshot: checkpointData ? JSON.parse(checkpointData) : undefined,
+    snapshot: checkpointData ? eval('(' + checkpointData + ')') : undefined,
   });
 };
 
