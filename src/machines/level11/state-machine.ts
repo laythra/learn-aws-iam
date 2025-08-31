@@ -16,6 +16,7 @@ import {
   PermissionBoundaryCreationFinishEvent,
   PolicyCreationFinishEvent,
 } from './types/finish-event-enums';
+import { PolicyNodeID, RoleNodeID, UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
@@ -219,6 +220,7 @@ export const stateMachine = createStateMachineSetup<
         },
         popover3: {
           entry: [
+            'disable_edges_management_ability',
             {
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[2] },
@@ -348,11 +350,144 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [PolicyCreationFinishEvent.ACCESS_DELEGATION_POLICY_CREATED]: 'attach_policy',
+            [PolicyCreationFinishEvent.ACCESS_DELEGATION_POLICY_CREATED]: 'attach_nodes',
           },
         },
-        attach_policy: {
-          entry: ['enable_edges_management_ability'],
+        attach_nodes: {
+          onDone: 'attach_nodes_finished',
+          entry: [
+            'store_checkpoint',
+            'enable_edges_management_ability',
+            {
+              type: 'show_fixed_popover_message',
+              params: { message: FIXED_POPOVER_MESSAGES[1] },
+            },
+            {
+              type: 'set_edge_connection_objectives',
+              params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
+            },
+          ],
+          type: 'parallel',
+          states: {
+            attach_permission_boundary: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [EdgeConnectionFinishEvent.PERMISSION_BOUNDARY_CONNECTED_TO_ROLE]: 'finished',
+                  },
+                },
+                finished: {
+                  type: 'final',
+                },
+              },
+            },
+            attach_permission_policy: {
+              initial: 'in_progress',
+              states: {
+                in_progress: {
+                  on: {
+                    [EdgeConnectionFinishEvent.ACCESS_DELEGATION_POLICY_CONNECTED_TO_CLOUD]:
+                      'finished',
+                  },
+                },
+                finished: {
+                  type: 'final',
+                },
+              },
+            },
+          },
+        },
+        attach_nodes_finished: {
+          entry: [
+            'store_checkpoint',
+            {
+              type: 'show_fixed_popover_message',
+              params: { message: FIXED_POPOVER_MESSAGES[2] },
+            },
+          ],
+          on: {
+            NEXT_FIXED_POPOVER: 'fixed_popover3',
+          },
+        },
+        fixed_popover3: {
+          entry: [
+            'hide_fixed_popovers',
+            'disable_edges_management_ability',
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[9] },
+            },
+            {
+              type: 'set_edge_connection_objectives',
+              params: { objectives: EDGE_CONNECTION_OBJECTIVES[2] },
+            },
+          ],
+          on: {
+            NEXT_POPOVER: 'admin_policy_attached_to_role',
+          },
+          exit: {
+            type: 'connect_nodes',
+            params: ({ context }) => ({
+              sourceNode: context.nodes.find(n => n.id === PolicyNodeID.FullAccessPolicy)!,
+              targetNode: context.nodes.find(n => n.id === RoleNodeID.Role1)!,
+            }),
+          },
+        },
+        admin_policy_attached_to_role: {
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[10] },
+            },
+          ],
+          on: {
+            NEXT_POPOVER: 'attach_tifa_user_to_role',
+          },
+        },
+        attach_tifa_user_to_role: {
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[11] },
+            },
+            {
+              type: 'set_edge_connection_objectives',
+              params: { objectives: EDGE_CONNECTION_OBJECTIVES[3] },
+            },
+          ],
+          on: {
+            NEXT_POPOVER: 'tifa_user_attached_to_role',
+          },
+          exit: {
+            type: 'connect_nodes',
+            params: ({ context }) => ({
+              sourceNode: context.nodes.find(n => n.id === UserNodeID.Tifa)!,
+              targetNode: context.nodes.find(n => n.id === RoleNodeID.Role1)!,
+            }),
+          },
+        },
+        tifa_user_attached_to_role: {
+          entry: [
+            'hide_popovers',
+            {
+              type: 'show_fixed_popover_message',
+              params: { message: FIXED_POPOVER_MESSAGES[3] },
+            },
+          ],
+          on: {
+            NEXT_FIXED_POPOVER: 'level_completed',
+          },
+        },
+        level_completed: {
+          type: 'final',
+          entry: [
+            'hide_fixed_popovers',
+            {
+              type: 'show_popup_message',
+              params: { message: POPUP_TUTORIAL_MESSAGES[4] },
+            },
+          ],
         },
       },
     },

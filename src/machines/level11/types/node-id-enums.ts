@@ -2,7 +2,7 @@ export const UserNodeID = {
   Sephiroth: 'Sephiroth',
   Cloud: 'Cloud',
   Tifa: 'Tifa',
-  Barret: 'Barret',
+  Rufus: 'Rufus',
 } as const;
 
 export const PermissionBoundaryID = {

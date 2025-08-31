@@ -4,7 +4,7 @@ import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/
 import { PermissionBoundaryID } from '../types/node-id-enums';
 import { createPermissionBoundaryCreationObjective } from '@/factories/objectives-factory';
 import { IAMPermissionBoundaryCreationObjective, ObjectiveType } from '@/machines/types';
-import { CommonLayoutGroupID, IAMNodeEntity, IAMNodeResourceEntity } from '@/types';
+import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const OBJECTIVE_CALLOUT_MSG = `
@@ -67,12 +67,10 @@ export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreat
         validate_function: AJV_COMPILER.compile(readSecretsPermissionBoundarySchema),
         initial_code: INITIAL_POLICIES.READ_SECRETS_PERMISSION_BOUNDARY,
         limit_new_lines: false,
-        layout_group_id: CommonLayoutGroupID.TopRightHorizontal,
+        layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
+        // Not using any external context because this function will get serialized
         is_access_to_node_allowed: node => {
-          return (
-            node.data.entity === IAMNodeEntity.Resource &&
-            node.data.resource_type === IAMNodeResourceEntity.Secret
-          );
+          return ['resource-secret-1', 'resource-secret-2'].includes(node.id);
         },
         callout_message: OBJECTIVE_CALLOUT_MSG,
         hint_messages: [

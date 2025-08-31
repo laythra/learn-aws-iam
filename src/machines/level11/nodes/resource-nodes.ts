@@ -38,6 +38,7 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
     layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,
+    tags: [['team', 'avalanche']],
   },
   {
     id: ResourceNodeID.SNSTopic,
@@ -52,6 +53,7 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
     layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,
+    tags: [['team', 'avalanche']],
   },
 ];
 
