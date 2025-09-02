@@ -32,7 +32,7 @@ export const stateMachine = createStateMachineSetup<
   FinishEventMap
 >().createMachine({
   id: 'level11_state_machine',
-  initial: 'inside_level',
+  initial: 'inside_tutorial',
   context: {
     level_title: 'Permission Boundaries',
     level_description:
@@ -358,6 +358,7 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'store_checkpoint',
             'enable_edges_management_ability',
+
             {
               type: 'show_fixed_popover_message',
               params: { message: FIXED_POPOVER_MESSAGES[1] },

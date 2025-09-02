@@ -29,4 +29,5 @@ export type CodeEditorTabsElementID =
   | ElementID.CodeEditorPolicyTab
   | ElementID.CodeEditorRoleTab
   | ElementID.CodeEditorSCPTab
-  | ElementID.CodeEditorResourcePolicyTab;
+  | ElementID.CodeEditorResourcePolicyTab
+  | ElementID.CodeEditorPermissionBoundaryTab;

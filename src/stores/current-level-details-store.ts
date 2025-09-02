@@ -41,7 +41,7 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
     storeLevelProgress: (context: CurrentLevelDetailsState, event) => {
       storage.setKey(
         `level${context.levelNumber}StateCheckpoint`,
-        serialize(event.actor.getPersistedSnapshot(), { unsafe: true })
+        serialize(event.actor.getPersistedSnapshot())
       );
 
       return context;
@@ -52,7 +52,7 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
     // TODO: Remove this! Only used for testing and debugging purposes.
     storeSnapshotAtDisk: (context: CurrentLevelDetailsState, event) => {
       const snapshot = event.actor.getPersistedSnapshot();
-      const snapshotString = JSON.stringify(snapshot);
+      const snapshotString = serialize(snapshot);
 
       storage.setKey(`level${context.levelNumber}StateCheckpoint`, snapshotString);
 
@@ -61,7 +61,7 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
         headers: {
           'Content-Type': 'application/json',
         },
-        body: serialize({
+        body: JSON.stringify({
           content: snapshotString,
           filename: event.filename,
         }),
