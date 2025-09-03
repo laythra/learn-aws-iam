@@ -1,10 +1,18 @@
 import React from 'react';
 
-import { ReactFlow, Background, BackgroundVariant, ConnectionMode } from '@xyflow/react';
+import {
+  ReactFlow,
+  Background,
+  BackgroundVariant,
+  ConnectionMode,
+  useReactFlow,
+  Controls,
+} from '@xyflow/react';
 
 import { AccountCanvasNode } from './AccountCanvasNode';
 import IAMCanvasEdge from './IAMCanvasEdge';
 import IAMCanvasNode from './IAMCanvasNode';
+import { ResetZoomButton } from './ResetZoomButton';
 import { useCanvas } from '../hooks/useCanvas';
 import { CanvasStore } from '../stores/canvas-store';
 
@@ -30,10 +38,18 @@ const Canvas: React.FC = () => {
   const { nodesState, edgesState, onConnect, onEdgeDelete, onNodeDelete, setRfInstance } =
     useCanvas({});
 
+  const { setViewport } = useReactFlow();
+
   return (
     <ReactFlow
-      onNodesChange={changes => CanvasStore.send({ type: 'changeNodesState', changes })}
-      onEdgesChange={changes => CanvasStore.send({ type: 'changeEdgesState', changes })}
+      onNodesChange={changes => {
+        CanvasStore.send({ type: 'changeNodesState', changes });
+        setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 300 });
+      }}
+      onEdgesChange={changes => {
+        CanvasStore.send({ type: 'changeEdgesState', changes });
+        setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 300 });
+      }}
       onInit={rfi => setRfInstance(rfi)}
       nodes={nodesState}
       edges={edgesState}
@@ -43,10 +59,14 @@ const Canvas: React.FC = () => {
       onNodesDelete={onNodeDelete}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
+      zoomOnDoubleClick={false}
       onEdgeMouseEnter={(_e, edge) => CanvasStore.send({ type: 'hoverOverEdge', edgeId: edge.id })}
       onEdgeMouseLeave={() => CanvasStore.send({ type: 'hoverOverEdge', edgeId: undefined })}
     >
       <Background color='#ccc' variant={BackgroundVariant.Dots} size={2} gap={14} />
+      <Controls position='bottom-right' showZoom={false} showInteractive={false}>
+        <ResetZoomButton />
+      </Controls>
     </ReactFlow>
   );
 };
