@@ -9,6 +9,7 @@ import AnimatedRedDot from './Animated/AnimatedRedDot';
 import { IconButtonWithEventAndPopover } from './Decorated';
 import { GoToCheckpointButton } from './GoToCheckpointButton';
 import { LevelsProgressionContext } from './providers/LevelsProgressionProvider';
+import { RestartLevelButton } from './RestartLevelButton';
 import { ElementID } from '@/config/element-ids';
 import { NewEntityButtonWithPopover } from '@/features/iam_entities';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
@@ -84,6 +85,9 @@ export const Navbar: React.FC<NavbarProps> = () => {
           </HStack>
           <Box position='relative'>
             <GoToCheckpointButton />
+          </Box>
+          <Box position='relative'>
+            <RestartLevelButton />
           </Box>
           <NewEntityButtonWithPopover data-element-id={ElementID.NewEntityBtn} />
           <Box position='relative'>
