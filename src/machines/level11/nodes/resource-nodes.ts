@@ -9,7 +9,7 @@ import {
 
 const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
-    id: ResourceNodeID.S3Bucket,
+    id: ResourceNodeID.S3BucketTutorial,
     label: 'planet-healing-archives',
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.S3Bucket,
@@ -26,7 +26,7 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
     resource_type: IAMNodeResourceEntity.Lambda,
   },
   {
-    id: ResourceNodeID.S3Bucket,
+    id: ResourceNodeID.S3BucketInLevel,
     label: 'db-backups',
     layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
     image: IAMNodeImage.S3Bucket,

@@ -9,10 +9,10 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
     id: PolicyNodeID.Policy1,
     label: 'S3ReadAccess',
     content: JSON.stringify(INITIAL_POLICIES.S3_READ_ONLY_POLICY, null, 2),
-    layout_group_id: CommonLayoutGroupID.BottomCenterVertical,
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     granted_accesses: [
       {
-        target_node: ResourceNodeID.S3Bucket,
+        target_node: ResourceNodeID.S3BucketTutorial,
         target_handle: 'bottom',
         access_level: AccessLevel.Read,
       },
@@ -27,8 +27,14 @@ const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
     label: 'AdministratorAccess',
     content: JSON.stringify(MANAGED_POLICIES.FullAccessPolicy, null, 2),
     layout_group_id: CommonLayoutGroupID.TopRightHorizontal,
-    granted_accesses: Object.keys(ResourceNodeID).map(key => ({
-      target_node: ResourceNodeID[key as keyof typeof ResourceNodeID],
+    granted_accesses: [
+      ResourceNodeID.LambdaFunction,
+      ResourceNodeID.S3BucketInLevel,
+      ResourceNodeID.Secret1,
+      ResourceNodeID.Secret2,
+      ResourceNodeID.SNSTopic,
+    ].map(resource => ({
+      target_node: resource,
       target_handle: 'right',
       access_level: AccessLevel.Full,
       source_handle: 'left',
