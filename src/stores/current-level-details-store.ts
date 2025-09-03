@@ -15,6 +15,7 @@ type CurrentLevelDetailsEvents = {
   storeLevelProgress: { actor: Actor<AnyActorLogic> };
   storeSnapshotAtDisk: { actor: Actor<AnyActorLogic>; filename: string };
   returnToLastCheckpoint: unknown;
+  restartLevel: unknown;
 };
 
 /*
@@ -47,6 +48,10 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
       return context;
     },
     returnToLastCheckpoint: (context: CurrentLevelDetailsState) => {
+      return { ...context, reloadCount: context.reloadCount + 1 };
+    },
+    restartLevel: (context: CurrentLevelDetailsState) => {
+      storage.removeKey(`level${context.levelNumber}StateCheckpoint`);
       return { ...context, reloadCount: context.reloadCount + 1 };
     },
     // TODO: Remove this! Only used for testing and debugging purposes.
