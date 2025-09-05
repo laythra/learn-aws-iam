@@ -70,8 +70,8 @@ export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreat
         limit_new_lines: false,
         layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
         // Not using any external context because this function will get serialized
-        is_access_to_node_allowed: node => {
-          return ['resource-secret-1', 'resource-secret-2'].includes(node.id);
+        is_edge_blocked: edge => {
+          return ['resource-secret-1', 'resource-secret-2'].includes(edge.target);
         },
         callout_message: OBJECTIVE_CALLOUT_MSG,
         hint_messages: [

@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import { ConnectionFilter } from './connection-filter';
 import { deleteConnectionEdges } from './edges-deletion-state-machine-actions';
+import { selectGuardRailsNodes } from './node-selectors';
 import {
   BaseFinishEventMap,
   EdgeConnectionObjective,
@@ -17,8 +18,8 @@ import {
   IAMAnyNode,
   IAMEdge,
   IAMGroupNode,
+  IAMGuardRailsNode,
   IAMOUNode,
-  IAMPermissionBoundaryNode,
   IAMPolicyNode,
   IAMResourceNode,
   IAMRoleNode,
@@ -42,18 +43,15 @@ function isEdgeConnectionValid<TFinishEventMap extends BaseFinishEventMap>(
   return objective.required_edges.some(edge => edge.id === newEdgeId);
 }
 
-function markBlockedEdges(
-  edges: IAMEdge[],
-  permissionBoundaries: IAMPermissionBoundaryNode[]
-): IAMEdge[] {
+function markBlockedEdges(edges: IAMEdge[], guardRailsNodes: IAMGuardRailsNode[]): IAMEdge[] {
   if (edges.length == 0) return edges;
 
   return produce(edges, draftEdges => {
     draftEdges.forEach(edge => {
       if (!edge.data) return;
 
-      const isBlocked = permissionBoundaries.some(
-        pb => !pb.data.is_access_to_node_allowed?.(edge.data!.target_node)
+      const isBlocked = guardRailsNodes.some(
+        guardRailsNode => guardRailsNode.data.is_edge_blocked?.(edge)
       );
 
       if (!isBlocked) {
@@ -211,21 +209,13 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
   const extraEdges = computeExtraEdges(baseEdge.id) as WritableDraft<IAMEdge>[];
 
   const updatedContext = produce(context, draft => {
-    // TODO: Make this an attribute on the target node, a function attribute
-    const permissionBoundaries = ConnectionFilter.create()
-      .fromEdges(context.edges)
-      .whereSourceEntityIs(IAMNodeEntity.PermissionBoundary)
-      .whereTargetIs(target.id)
-      .build()
-      .map(edge => edge.data!.source_node) as IAMPermissionBoundaryNode[];
-
+    const guardRailsNodes = selectGuardRailsNodes(draft.nodes);
     const updatedEdges = markBlockedEdges(
-      extraEdges,
-      permissionBoundaries
+      [...extraEdges, ...context.edges, baseEdge],
+      guardRailsNodes
     ) as WritableDraft<IAMEdge>[];
 
-    draft.edges.push(...updatedEdges);
-    draft.edges.push(baseEdge as WritableDraft<IAMEdge>);
+    draft.edges = updatedEdges;
   });
 
   return { updatedContext, events };
@@ -381,21 +371,7 @@ const connectionStrategies = {
     isInitialEdge: boolean,
     options: PartialEdge = {}
   ) => {
-    const blockedEdgeIds = new Set(SCPNode.data.blocked_edges);
-
-    const updatedContext = produce(context, draft => {
-      draft.edges.forEach(edge => {
-        if (blockedEdgeIds.has(edge.id)) {
-          edge.data!.is_blocked = true;
-          edge.data!.hovering_label = 'Access blocked by SCP 🔒';
-          edge.data!.persistent_label = '🔒';
-          edge.data!.color = theme.colors.red[500];
-          edge.data!.hovering_color = theme.colors.red[500];
-        }
-      });
-    });
-
-    return applyStrategy(updatedContext, SCPNode, OUNode, isInitialEdge, options, () => []);
+    return applyStrategy(context, SCPNode, OUNode, isInitialEdge, options, () => []);
   },
   SCPToAccount: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
@@ -404,21 +380,7 @@ const connectionStrategies = {
     isInitialEdge: boolean,
     options: PartialEdge = {}
   ) => {
-    const blockedEdgeIds = new Set(SCPNode.data.blocked_edges);
-
-    const updatedContext = produce(context, draft => {
-      draft.edges.forEach(edge => {
-        if (blockedEdgeIds.has(edge.id)) {
-          edge.data!.is_blocked = true;
-          edge.data!.hovering_label = 'Access blocked by SCP 🔒';
-          edge.data!.persistent_label = '🔒';
-          edge.data!.color = theme.colors.red[500];
-          edge.data!.hovering_color = theme.colors.red[500];
-        }
-      });
-    });
-
-    return applyStrategy(updatedContext, SCPNode, AccountNode, isInitialEdge, options, () => []);
+    return applyStrategy(context, SCPNode, AccountNode, isInitialEdge, options, () => []);
   },
   // PolicyToResource: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   //   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
@@ -520,7 +482,19 @@ export function updateConnectionEdges<
     isNodeOfEntity(sourceNode, IAMNodeEntity.SCP) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.OU)
   ) {
-    return connectionStrategies.SCPToOU(context, sourceNode, targetNode, isInitialEdge, options);
+    const updatedContext = produce(context, draftContext => {
+      draftContext.edges = markBlockedEdges(draftContext.edges, [
+        sourceNode,
+      ]) as WritableDraft<IAMEdge>[];
+    });
+
+    return connectionStrategies.SCPToOU(
+      updatedContext,
+      sourceNode,
+      targetNode,
+      isInitialEdge,
+      options
+    );
   } else if (
     isNodeOfEntity(sourceNode, IAMNodeEntity.SCP) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.Account)

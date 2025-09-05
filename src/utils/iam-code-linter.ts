@@ -1,7 +1,6 @@
 import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import Ajv, { ValidateFunction } from 'ajv';
-import _ from 'lodash';
 
 import {
   AccountID,
@@ -113,9 +112,7 @@ export function findAnyValidObjective<E extends IAMNodeEntity>(
   accountId?: AccountID,
   targetObjectiveEntity?: IAMNodeEntity
 ): ObjectiveByEntity<E> | undefined {
-  const sorted = _.orderBy(objectives, 'validate_inside_code_editor', 'desc');
-
-  return sorted.find(objective => {
+  return objectives.find(objective => {
     if (objective.finished) return false;
     if (targetObjectiveEntity && objective.entity !== targetObjectiveEntity) return false;
 

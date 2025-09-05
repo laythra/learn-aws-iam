@@ -9,7 +9,7 @@ const TUTORIAL_PERMISSION_BOUNDARY_NODES: Partial<IAMPermissionBoundaryNode['dat
     label: 'SNSReadOnlyBoundary',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     content: JSON.stringify(INITIAL_POLICIES.SNS_READ_ONLY_BOUNDARY, null, 2),
-    is_access_to_node_allowed: () => false,
+    is_edge_blocked: () => true,
   },
 ];
 

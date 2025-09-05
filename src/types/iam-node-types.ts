@@ -90,15 +90,6 @@ export interface PolicyGrantedAccess {
   readonly applicable_nodes?: (node: IAMAnyNode[]) => IAMAnyNode[];
 }
 
-export interface GuardRailAllowedAccess {
-  /**
-   * Defines the only nodes (e.g., IAM entities or AWS resources) to which a guard rail
-   * (such as a permission boundary or SCP) can allow access.
-   */
-  readonly allowed_target_node: string;
-  readonly allowed_access_level?: AccessLevel;
-}
-
 export interface PolicyBlockedAccess {
   readonly target_handle: string;
   readonly source_handle?: string;
@@ -206,6 +197,19 @@ interface IAMNodeData extends Record<string, unknown> {
   tags: Array<[string, string]>;
 }
 
+interface IAMGuardRailsNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.SCP | IAMNodeEntity.PermissionBoundary;
+  editable: boolean;
+
+  /**
+   * A function that defines the allowed accesses for this permission boundary.
+   * @param node The nodes to check against the allowed accesses.
+   * @returns The allowed nodes for this permission boundary.
+   */
+  is_edge_blocked?: (edge: IAMEdge) => boolean;
+  content: string;
+}
+
 interface IAMUserNodeData extends IAMNodeData {
   entity: IAMNodeEntity.User;
 }
@@ -236,14 +240,6 @@ interface IAMResourcePolicyNodeData extends IAMNodeData {
   resource_node_id: string;
 }
 
-interface IAMSCPNodeData extends IAMNodeData {
-  entity: IAMNodeEntity.Policy;
-  editable: boolean;
-  blocked_edges: string[];
-  initial_edges?: Edge<IAMEdgeData>[];
-  content: string;
-}
-
 interface IAMRoleNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Role;
   editable: boolean;
@@ -264,17 +260,12 @@ interface IAMOUNodeData extends IAMNodeData {
   entity: IAMNodeEntity.OU;
 }
 
-interface IAMPermissionBoundaryNodeData extends IAMNodeData {
+interface IAMPermissionBoundaryNodeData extends IAMGuardRailsNodeData {
   entity: IAMNodeEntity.PermissionBoundary;
-  editable: boolean;
+}
 
-  /**
-   * A function that defines the allowed accesses for this permission boundary.
-   * @param node The nodes to check against the allowed accesses.
-   * @returns The allowed nodes for this permission boundary.
-   */
-  is_access_to_node_allowed?: (node: IAMAnyNode) => boolean;
-  content: string;
+interface IAMSCPNodeData extends IAMGuardRailsNodeData {
+  entity: IAMNodeEntity.SCP;
 }
 
 export type IAMUserNode = Node<IAMUserNodeData, 'user'>;
@@ -286,6 +277,7 @@ export type IAMRoleNode = Node<IAMRoleNodeData, 'role'>;
 export type IAMAccountNode = Node<IAMAccountNodeData, 'account'>;
 export type IAMOUNode = Node<IAMOUNodeData, 'ou'>;
 export type IAMSCPNode = Node<IAMSCPNodeData, 'scp'>;
+
 export type IAMResourcePolicyNode = Node<IAMResourcePolicyNodeData, 'resource_policy'>;
 export type IAMPermissionBoundaryNode = Node<IAMPermissionBoundaryNodeData, 'permission_boundary'>;
 
@@ -304,6 +296,9 @@ export type IAMNodeMap = {
 
 export type IAMAnyNode = IAMNodeMap[keyof IAMNodeMap];
 export type IAMCodeDefinedNode = IAMNodeMap[IAMCodeDefinedEntity];
+export type IAMGuardRailsNode =
+  | IAMNodeMap[IAMNodeEntity.SCP]
+  | IAMNodeMap[IAMNodeEntity.PermissionBoundary];
 
 export type IAMEdge = Edge<IAMEdgeData, 'default'>;
 
