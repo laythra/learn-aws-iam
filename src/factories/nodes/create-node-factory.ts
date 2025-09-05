@@ -88,8 +88,8 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
       initial_position,
       animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
       layout_direction: 'horizontal',
-      vertical_spacing: height + 20, // 20 so node don't completely overlap on each other
-      horizontal_spacing: width + 20, // 20 so node don't completely overlap on each other
+      vertical_spacing: height + 20, // 20 so nodes don't completely overlap on each other
+      horizontal_spacing: width + 20, // 20 so nodes don't completely overlap on each other
       ...additionalData,
     } as T,
   };
