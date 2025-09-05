@@ -23,6 +23,7 @@ export enum ElementID {
   ObjectivesSidePanel = 'objectives-side-panel',
   RightSidePanelToggleButton = 'right-side-panel-toggle-button',
   TutorialPopoverCloseButton = 'tutorial-popover-close-button',
+  ResetZoomButton = 'reset-zoom-button',
 }
 
 export type CodeEditorTabsElementID =
