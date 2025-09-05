@@ -3,8 +3,8 @@ import { generateAssumeRolePolicySchema } from '../schemas/policy/delegating-per
 import { FinishEventMap } from '../types/finish-event-enums';
 import { PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PermissionBoundaryID, PolicyNodeID } from '../types/node-id-enums';
-import { createPolicyCreationObjective } from '@/factories/objectives-factory';
-import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
+import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
+import { IAMPolicyCreationObjective } from '@/machines/types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 import { generateArn } from '@/utils/arn-generator.js';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
@@ -49,8 +49,7 @@ const CONDITIONS2_HINT_MSG = `
 
   ~~~js
   "Condition": {
-    "StringEquals": {
-      "???": "arn:aws:iam::123456789012:role/secrets-reader-role"
+    "StringEquals": { "???": "arn:aws:iam::123456789012:role/secrets-reader-role"
     }
   }|fullwidth
   ~~~
@@ -61,11 +60,9 @@ const CONDITIONS2_HINT_MSG = `
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
   [
     {
-      type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
+      id: 'policy-1',
       entity_id: PolicyNodeID.AccessDelegationPolicy,
-      entity: IAMNodeEntity.Policy,
       on_finish_event: PolicyCreationFinishEvent.ACCESS_DELEGATION_POLICY_CREATED,
-      validate_inside_code_editor: true,
       granted_accesses: [],
       get_validate_function: nodes => {
         const pbNode = nodes.find(

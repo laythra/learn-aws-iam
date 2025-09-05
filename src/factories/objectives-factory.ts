@@ -77,23 +77,6 @@ function getTemplatePolicyCreationObjectiveAttributes<
   };
 }
 
-function getTemplatePermissionBoundaryCreationObjectiveAttributes<
-  TFinishEventMap extends BaseFinishEventMap,
->(): Omit<
-  IAMPermissionBoundaryCreationObjective<TFinishEventMap>,
-  'id' | 'finished' | 'type' | 'entity'
-> {
-  return {
-    entity_id: '-',
-    json_schema: trustPolicySchema,
-    initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
-    on_finish_event: '',
-    initial_edges: [],
-    is_access_to_node_allowed: () => false,
-    validate_inside_code_editor: true,
-  };
-}
-
 const IAM_USER_GROUP_CREATION_OBJECTIVE_TEMPLATE: Omit<
   IAMUserGroupCreationObjective<BaseFinishEventMap>,
   'id' | 'finished' | 'type'
@@ -164,21 +147,6 @@ export function createResourcePolicyCreationObjective<TFinishEventMap extends Ba
     type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
     entity: IAMNodeEntity.ResourcePolicy,
     ...getTemplatePolicyCreationObjectiveAttributes(),
-    ...props,
-  };
-}
-
-export function createPermissionBoundaryCreationObjective<
-  TFinishEventMap extends BaseFinishEventMap,
->(
-  props: PermissionBoundaryCreationObjectiveInput<TFinishEventMap>
-): IAMPermissionBoundaryCreationObjective<TFinishEventMap> {
-  return {
-    finished: false,
-    id: _.uniqueId(`resource-policy-creation-objective-`),
-    type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE,
-    entity: IAMNodeEntity.PermissionBoundary,
-    ...getTemplatePermissionBoundaryCreationObjectiveAttributes(),
     ...props,
   };
 }
