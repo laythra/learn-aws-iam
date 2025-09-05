@@ -230,9 +230,16 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
   readonly id: string;
   readonly entity_id: string;
   readonly entity: unknown;
-  readonly json_schema: Schema;
+  readonly type: ObjectiveType;
+  /**
+   * @deprecated We no longer use  `json_schema` in favor of `validate_function`
+   */
+  readonly json_schema?: Schema;
   readonly initial_code: object;
-  readonly validate_inside_code_editor: boolean;
+  /**
+   * @deprecated all objectives should be validated inside the code editor
+   */
+  readonly validate_inside_code_editor?: boolean;
   readonly validate_function?: ValidateFunction;
   readonly get_validate_function?: (nodes: IAMAnyNode[]) => ValidateFunction | undefined;
   readonly on_finish_event:
@@ -245,7 +252,10 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
   readonly created_node_initial_position?: string;
   readonly callout_message?: string;
   readonly hint_messages?: { title: string; content: string }[];
-  readonly initial_edges: IAMEdge[];
+  /**
+   * @deprecated I forgot what's this used for. TODO: Remove if not needed
+   */
+  readonly initial_edges?: IAMEdge[];
   readonly created_node_parent_id?: string;
   readonly layout_group_id?: string;
   finished: boolean;
