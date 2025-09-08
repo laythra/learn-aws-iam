@@ -2,7 +2,7 @@ import { Button } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';

@@ -2,7 +2,7 @@ import React, { forwardRef, ForwardRefExoticComponent, PropsWithoutRef } from 'r
 
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 
 /**
  * `withTutorialGuard` is a decorator for wrapping elements with a tutorial guard.

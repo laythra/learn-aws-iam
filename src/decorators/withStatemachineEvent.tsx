@@ -6,7 +6,7 @@ import React, {
   MouseEvent,
 } from 'react';
 
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 /**

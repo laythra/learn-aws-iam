@@ -8,7 +8,7 @@ import _ from 'lodash';
 import { CanvasStore } from '../stores/canvas-store';
 import { isValidConnection } from '../utils/edges-creation';
 import { getNodeInitialPosition } from '../utils/nodes-position';
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { createHorizontalGroup } from '@/factories/layout-group-factory';
 import { CustomTheme } from '@/types';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';

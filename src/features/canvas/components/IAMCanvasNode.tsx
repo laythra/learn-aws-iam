@@ -13,7 +13,7 @@ import { ShimmerBackground } from './ShimmerBackground';
 import TagsIconButton from './TagsIconButton';
 import { CanvasStore } from '../stores/canvas-store';
 import { WithPopoverBox } from '@/components/Decorated';
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { type CustomTheme, IAMAnyNode, IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 import { generateArn, SupportedArnNodeTypes } from '@/utils/arn-generator';

@@ -1,4 +1,4 @@
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import useModal from '@/hooks/useModal';
 import { IAMNodeEntity } from '@/types';
 

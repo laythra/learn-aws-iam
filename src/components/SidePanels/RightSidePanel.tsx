@@ -19,7 +19,7 @@ import Markdown from 'react-markdown';
 
 import SidePanelObjectiveHintButton from './SidePanelObjectiveHintButton';
 import { WithPopoverBox } from '../Decorated';
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import SidePanel from '@/components/SidePanels/SidePanel';
 import { ElementID } from '@/config/element-ids';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';

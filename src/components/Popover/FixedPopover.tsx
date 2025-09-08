@@ -10,7 +10,7 @@ import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import { PopoverNextButton } from './PopoverNextButton';
-import { LevelsProgressionContext } from '../providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '../providers/level-actor-contexts';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
 
