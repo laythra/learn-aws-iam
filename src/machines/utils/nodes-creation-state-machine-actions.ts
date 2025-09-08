@@ -250,7 +250,7 @@ export function createPermissionBoundary<
     docString,
     label,
     IAMNodeEntity.PermissionBoundary,
-    { is_access_to_node_allowed: targetValidObjective?.is_access_to_node_allowed },
+    { is_edge_blocked: targetValidObjective?.is_edge_blocked },
     createPermissionBoundaryNode,
     targetValidObjective
   );

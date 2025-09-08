@@ -296,7 +296,7 @@ export interface IAMPermissionBoundaryCreationObjective<TFinishEventMap extends 
   readonly type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE;
   readonly initial_position?: string;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE];
-  readonly is_access_to_node_allowed: (node: IAMAnyNode) => boolean;
+  readonly is_edge_blocked: (edge: IAMEdge) => boolean;
 }
 
 export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap>

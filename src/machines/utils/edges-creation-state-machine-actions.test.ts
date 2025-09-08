@@ -3,11 +3,14 @@ import { describe, it, expect } from 'vitest';
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
 import { resolveInitialEdges } from './initial-edges-resolver';
 import { createMockContext } from '@/__test-helpers__/context';
+import { createAccountNode } from '@/factories/nodes/account-node-factory';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
+import { createOUNode } from '@/factories/nodes/ou-node-factory';
 import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
+import { createSCPNode } from '@/factories/nodes/scp-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { AccessLevel, IAMAnyNode, IAMEdge } from '@/types';
 
@@ -117,7 +120,7 @@ describe('updateConnectionEdges', () => {
       const resource = createResourceNode({});
       const permissionBoundary = createPermissionBoundaryNode({
         dataOverrides: {
-          is_access_to_node_allowed: () => false,
+          is_edge_blocked: edge => edge.source === user.id && edge.target === resource.id,
         },
       });
 
@@ -264,7 +267,7 @@ describe('updateConnectionEdges', () => {
       const role = createRoleNode({});
       const permissionBoundary = createPermissionBoundaryNode({
         dataOverrides: {
-          is_access_to_node_allowed: () => false,
+          is_edge_blocked: edge => edge.source === user.id && edge.target === resource.id,
         },
       });
 
@@ -417,6 +420,105 @@ describe('updateConnectionEdges', () => {
         { source: policy.id, target: role.id },
         { source: role.id, target: resource1.id },
         { source: resource1.id, target: resource2.id },
+      ]);
+    });
+  });
+
+  describe('SCP -> OU', () => {
+    it('blocks access for nodes affected by the SCP in an account under the OU', () => {
+      const accountNode = createAccountNode({});
+      const ouNode = createOUNode({});
+      const userNode = createUserNode({});
+      const resourceNode = createResourceNode({});
+      const scpNode = createSCPNode({
+        dataOverrides: {
+          is_edge_blocked: edge => edge.source === userNode.id && edge.target === resourceNode.id,
+        },
+      });
+      const policyNode = createPolicyNode({
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resourceNode.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
+      });
+
+      const ctx = createEdgeTestContext(
+        [
+          {
+            from: policyNode.id,
+            to: userNode.id,
+          },
+          {
+            from: ouNode.id,
+            to: accountNode.id,
+          },
+        ],
+        [accountNode, ouNode, userNode, resourceNode, policyNode, scpNode]
+      );
+
+      expectEdges(ctx.edges, [
+        { source: policyNode.id, target: userNode.id },
+        { source: userNode.id, target: resourceNode.id },
+        { source: ouNode.id, target: accountNode.id },
+      ]);
+
+      const { updatedContext } = updateConnectionEdges(ctx, scpNode, ouNode);
+
+      expectEdges(updatedContext.edges, [
+        { source: policyNode.id, target: userNode.id, data: { is_blocked: false } },
+        { source: ouNode.id, target: accountNode.id, data: { is_blocked: false } },
+        { source: scpNode.id, target: ouNode.id, data: { is_blocked: false } },
+        { source: userNode.id, target: resourceNode.id, data: { is_blocked: true } },
+      ]);
+    });
+
+    it('blocks access for nodes affected by the SCP attached to the account', () => {
+      const accountNode = createAccountNode({});
+      const userNode = createUserNode({});
+      const resourceNode = createResourceNode({});
+      const scpNode = createSCPNode({
+        dataOverrides: {
+          is_edge_blocked: edge => edge.source === userNode.id && edge.target === resourceNode.id,
+        },
+      });
+      const policyNode = createPolicyNode({
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resourceNode.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
+      });
+
+      const ctx = createEdgeTestContext(
+        [
+          {
+            from: policyNode.id,
+            to: userNode.id,
+          },
+        ],
+        [accountNode, userNode, resourceNode, policyNode, scpNode]
+      );
+
+      expectEdges(ctx.edges, [
+        { source: policyNode.id, target: userNode.id },
+        { source: userNode.id, target: resourceNode.id },
+      ]);
+
+      const { updatedContext } = updateConnectionEdges(ctx, scpNode, accountNode);
+
+      expectEdges(updatedContext.edges, [
+        { source: policyNode.id, target: userNode.id, data: { is_blocked: false } },
+        { source: scpNode.id, target: accountNode.id, data: { is_blocked: false } },
+        { source: userNode.id, target: resourceNode.id, data: { is_blocked: true } },
       ]);
     });
   });
