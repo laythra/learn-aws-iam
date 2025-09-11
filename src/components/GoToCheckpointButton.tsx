@@ -15,7 +15,7 @@ import {
 import { ArrowUturnLeftIcon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from './providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from './providers/level-actor-contexts';
 import currentLevelDetailsStore from '@/stores/current-level-details-store';
 
 interface GoToCheckpointButtonProps {}

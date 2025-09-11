@@ -9,7 +9,7 @@ import {
   GuardedMenuItemWithEventAndPopover,
   TutorialGuardedMenuButton,
 } from '@/components/Decorated';
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { withPopover } from '@/decorators/withPopover';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';

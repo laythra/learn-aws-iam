@@ -8,7 +8,7 @@ import _ from 'lodash';
 import AnimatedRedDot from './Animated/AnimatedRedDot';
 import { IconButtonWithEventAndPopover } from './Decorated';
 import { GoToCheckpointButton } from './GoToCheckpointButton';
-import { LevelsProgressionContext } from './providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from './providers/level-actor-contexts';
 import { RestartLevelButton } from './RestartLevelButton';
 import { ElementID } from '@/config/element-ids';
 import { NewEntityButtonWithPopover } from '@/features/iam_entities';

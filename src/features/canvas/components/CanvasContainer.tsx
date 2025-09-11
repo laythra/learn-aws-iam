@@ -11,7 +11,7 @@ import { Navbar } from '@/components/Navbar';
 import { FixedPopover } from '@/components/Popover/FixedPopover';
 import { MobileWarningPopup } from '@/components/Popup/MobileWarningPopup';
 import { TutorialPopup } from '@/components/Popup/TutorialPopup';
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import RightSidePanel from '@/components/SidePanels/RightSidePanel';
 import { UnnecessaryEdgesNodesWarning } from '@/components/UnnecessaryEdgesNodesWarning';
 import { CodeEditor } from '@/features/code_editor';

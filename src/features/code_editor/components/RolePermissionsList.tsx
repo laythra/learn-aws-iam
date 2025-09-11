@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity } from '@/types';
 

@@ -15,7 +15,7 @@ import Markdown from 'react-markdown';
 
 import { GoToNextLevelButton } from './GoToNextLevelButton';
 import { HelpImage } from '../HelpComponents/HelpImage';
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { CustomTheme } from '@/types';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';

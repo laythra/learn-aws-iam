@@ -3,7 +3,7 @@ import React, { forwardRef, ForwardRefExoticComponent, PropsWithoutRef } from 'r
 import _ from 'lodash';
 
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 /**

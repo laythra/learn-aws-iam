@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, useTheme } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { CustomTheme } from '@/types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 

@@ -1,6 +1,6 @@
 import { Popover, PopoverContent, Portal, PopoverHeader, useTheme } from '@chakra-ui/react';
 
-import { LevelsProgressionContext } from './providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from './providers/level-actor-contexts';
 import { CustomTheme } from '@/types';
 
 export const UnnecessaryEdgesNodesWarning: React.FC = () => {

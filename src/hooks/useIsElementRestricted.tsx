@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from '@/components/providers/LevelsProgressionProvider';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 
 /*
  * Determines the restriction status of a list of element IDs based on the current tutorial state.
