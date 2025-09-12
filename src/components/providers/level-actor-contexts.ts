@@ -49,8 +49,6 @@ const cache: Partial<Record<number, ReturnType<typeof createActorContext<AnyLeve
 // The exact reason for this behavior is still unclear to me. See: https://github.com/vitejs/vite/issues/3301
 export const CurrentActorContext = createContext<ReturnType<typeof getActorContext> | null>(null);
 
-console.log('Recreated context');
-
 export function getActorContext(
   level: number,
   snapshot?: Snapshot<unknown>

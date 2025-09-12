@@ -38,6 +38,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     roleCreationObjectives,
     resourcePolicyCreationObjectives,
     permissionBoundaryCreationObjectives,
+    scpCreationObjectives,
     nodes,
   ] = LevelsProgressionContext().useSelector(
     state => [
@@ -46,6 +47,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       state.context.role_creation_objectives,
       state.context.resource_policy_creation_objectives ?? [],
       state.context.permission_boundary_creation_objectives ?? [],
+      state.context.scp_creation_objectives ?? [],
       state.context.nodes,
     ],
     _.isEqual
@@ -61,14 +63,12 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     ...roleCreationObjectives,
     ...resourcePolicyCreationObjectives,
     ...permissionBoundaryCreationObjectives,
+    ...scpCreationObjectives,
   ];
 
   const editorView = useRef<EditorView | null>(null);
   const unfinishedCreationObjectives = allCreationObjectives.filter(
-    objective =>
-      objective.validate_inside_code_editor &&
-      !objective.finished &&
-      objective.entity === selectedIAMEntity
+    objective => !objective.finished && objective.entity === selectedIAMEntity
   );
 
   const objectiveToTargetInEditor = unfinishedCreationObjectives[0];

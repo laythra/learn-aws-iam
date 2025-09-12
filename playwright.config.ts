@@ -30,7 +30,9 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+      },
     },
     // Disabling these browsers for now, as they increase CI time significantly.
     ...(!process.env.CI

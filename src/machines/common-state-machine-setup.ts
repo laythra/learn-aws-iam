@@ -33,6 +33,7 @@ import type {
   IAMPolicyEditObjective,
   IAMResourcePolicyCreationObjective,
   IAMRoleCreationObjective,
+  IAMSCPCreationObjective,
   PopoverTutorialMessage,
   PopupTutorialMessage,
 } from '@/machines/types';
@@ -200,13 +201,15 @@ export const createStateMachineSetup = <
             policyNodeType:
               | IAMNodeEntity.Policy
               | IAMNodeEntity.ResourcePolicy
-              | IAMNodeEntity.PermissionBoundary;
+              | IAMNodeEntity.PermissionBoundary
+              | IAMNodeEntity.SCP;
           }
         ) => {
           const createFnMap = {
             [IAMNodeEntity.Policy]: createPermissionPolicy,
             [IAMNodeEntity.ResourcePolicy]: createResourcePolicy,
             [IAMNodeEntity.PermissionBoundary]: createPermissionBoundary,
+            [IAMNodeEntity.SCP]: createSCP,
           };
 
           const createFn = createFnMap[policyNodeType];
@@ -221,6 +224,7 @@ export const createStateMachineSetup = <
             resource_policy_creation_objectives: updatedContext.resource_policy_creation_objectives,
             permission_boundary_creation_objectives:
               updatedContext.permission_boundary_creation_objectives,
+            scp_creation_objectives: updatedContext.scp_creation_objectives,
           });
 
           createPermissionPolicyResult.events.forEach(event => {
@@ -249,6 +253,7 @@ export const createStateMachineSetup = <
           });
         }
       ),
+      // TODO: Migrate this to `add_policy_node` action
       add_role_node: enqueueActions(
         (
           { context, enqueue },
@@ -268,25 +273,6 @@ export const createStateMachineSetup = <
           enqueue.assign({
             nodes: updatedContext.nodes,
             role_creation_objectives: updatedContext.role_creation_objectives,
-          });
-
-          events.forEach(event => {
-            enqueue.raise({ type: event });
-          });
-        }
-      ),
-      add_scp_node: enqueueActions(
-        ({ context, enqueue }, { docString, label }: { docString: string; label: string }) => {
-          const { updatedContext, events } = createSCP<TLevelObjectiveID, TFinishEventMap>(
-            context,
-            docString,
-            label
-          );
-
-          enqueue.assign({
-            nodes: updatedContext.nodes,
-            role_creation_objectives: updatedContext.role_creation_objectives,
-            // all_policy_creation_objectives: updatedContext.all_policy_creation_objectives,
           });
 
           events.forEach(event => {
@@ -371,6 +357,16 @@ export const createStateMachineSetup = <
         ) => {
           enqueue.assign({
             policy_creation_objectives: objectives,
+          });
+        }
+      ),
+      set_scp_creation_objectives: enqueueActions(
+        (
+          { enqueue },
+          { objectives }: { objectives: IAMSCPCreationObjective<TFinishEventMap>[] }
+        ) => {
+          enqueue.assign({
+            scp_creation_objectives: objectives,
           });
         }
       ),

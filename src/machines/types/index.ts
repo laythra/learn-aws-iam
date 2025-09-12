@@ -70,6 +70,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   nodes: IAMAnyNode[];
   policy_creation_objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[];
   resource_policy_creation_objectives?: IAMResourcePolicyCreationObjective<TBaseFinishEventMap>[];
+  scp_creation_objectives?: IAMSCPCreationObjective<TBaseFinishEventMap>[];
   policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
@@ -286,9 +287,9 @@ export interface IAMSCPCreationObjective<TFinishEventMap extends BaseFinishEvent
   extends BaseCreationObjective<TFinishEventMap> {
   readonly type: ObjectiveType.SCP_CREATION_OBJECTIVE;
   readonly initial_position?: string;
-  readonly blocked_accesses: string[];
   readonly on_finish_event: TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE];
   readonly entity: IAMNodeEntity.SCP;
+  readonly is_edge_blocked: (edge: IAMEdge) => boolean;
 }
 
 export interface IAMPermissionBoundaryCreationObjective<TFinishEventMap extends BaseFinishEventMap>
