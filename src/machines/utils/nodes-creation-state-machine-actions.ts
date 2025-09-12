@@ -205,7 +205,6 @@ export function createResourcePolicy<TLevelObjectiveID, TFinishEventMap extends 
   };
 }
 
-// TODO: Add support for SCP creation objectives
 export function createSCP<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   docString: string,
@@ -227,7 +226,11 @@ export function createSCP<TLevelObjectiveID, TFinishEventMap extends BaseFinishE
     docString,
     label,
     IAMNodeEntity.SCP,
-    { is_edge_blocked: targetValidObjective?.is_edge_blocked },
+    {
+      is_edge_blocked: targetValidObjective?.is_edge_blocked,
+      blocked_edge_content:
+        targetValidObjective?.blocked_edge_content ?? 'Access Blocked By SCP 🔒',
+    },
     createSCPNode,
     targetValidObjective
   );
@@ -272,7 +275,11 @@ export function createPermissionBoundary<
     docString,
     label,
     IAMNodeEntity.PermissionBoundary,
-    { is_edge_blocked: targetValidObjective?.is_edge_blocked },
+    {
+      is_edge_blocked: targetValidObjective?.is_edge_blocked,
+      blocked_edge_content:
+        targetValidObjective?.blocked_edge_content ?? 'Access Blocked By Permission Boundary 🔒',
+    },
     createPermissionBoundaryNode,
     targetValidObjective
   );
