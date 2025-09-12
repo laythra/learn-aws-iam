@@ -11,7 +11,7 @@ import { getNodeInitialPosition } from '../utils/nodes-position';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { createHorizontalGroup } from '@/factories/layout-group-factory';
 import { CustomTheme } from '@/types';
-import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
+import { IAMAnyNode, IAMEdge, IAMNodeEntity } from '@/types/iam-node-types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface UseCanvasOptions {}
@@ -92,10 +92,27 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   useEffect(() => {
     if (!rfInstance) return;
 
-    const reactFlowViewport = rfInstance.getViewport();
-    const nodeGroups = _.groupBy(nodes, 'data.layout_group_id');
-    const nodeById = _.keyBy(nodes, 'id');
     const layoutGroupsById = _.keyBy(layoutGroups, 'id');
+    const reactFlowViewport = rfInstance.getViewport();
+
+    // This section organizes nodes into groups based on their relationships.
+    // Nodes with a parent are grouped separately, as are account nodes.
+    const nodeGroups = _.groupBy(nodes, node => {
+      const isAccountNode = node.data.entity === IAMNodeEntity.Account;
+      const hasParent = !!node.parentId;
+
+      if (hasParent) {
+        return `child-${node.parentId}-${node.data.layout_group_id}`;
+      }
+
+      if (isAccountNode) {
+        return `account-${node.data.layout_group_id}`;
+      }
+
+      return node.data.layout_group_id;
+    });
+
+    const nodeById = _.keyBy(nodes, 'id');
 
     const newNodes = Object.values(nodeGroups).flatMap(nodesGroup => {
       return nodesGroup.map((node, nodeIndex) => {

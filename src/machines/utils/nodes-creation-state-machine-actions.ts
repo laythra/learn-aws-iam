@@ -15,6 +15,7 @@ import { createPermissionBoundaryNode } from '@/factories/nodes/permission-bound
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { createResourcePolicyNode } from '@/factories/nodes/resource-policy-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
+import { createSCPNode } from '@/factories/nodes/scp-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import {
   IAMAnyNode,
@@ -27,6 +28,7 @@ import {
   IAMPolicyNode,
   IAMResourcePolicyNode,
   IAMPermissionBoundaryNode,
+  IAMSCPNode,
 } from '@/types';
 import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
@@ -207,22 +209,42 @@ export function createResourcePolicy<TLevelObjectiveID, TFinishEventMap extends 
 export function createSCP<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   docString: string,
-  label: string
+  label: string,
+  accountId?: AccountID
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE][];
 } {
-  findAnyValidObjective<IAMNodeEntity.SCP>(
-    context.policy_creation_objectives,
+  const targetValidObjective = findAnyValidObjective<IAMNodeEntity.SCP>(
+    context.scp_creation_objectives ?? [],
     context.nodes,
-    docString + label,
-    undefined,
+    docString,
+    accountId,
     IAMNodeEntity.SCP
   );
 
+  const newNode = createNodeFromObjective<TFinishEventMap, IAMSCPNode>(
+    docString,
+    label,
+    IAMNodeEntity.SCP,
+    { is_edge_blocked: targetValidObjective?.is_edge_blocked },
+    createSCPNode,
+    targetValidObjective
+  );
+
+  const updatedContext = produce(context, draftContext => {
+    if (targetValidObjective) {
+      (draftContext.scp_creation_objectives ?? []).find(
+        objective => objective.id === targetValidObjective?.id
+      )!.finished = true;
+    }
+
+    draftContext.nodes.push(newNode as WritableDraft<IAMSCPNode>);
+  });
+
   return {
-    updatedContext: context,
-    events: [],
+    updatedContext,
+    events: targetValidObjective ? [targetValidObjective.on_finish_event] : [],
   };
 }
 

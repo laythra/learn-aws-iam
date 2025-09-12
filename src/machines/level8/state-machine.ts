@@ -67,17 +67,6 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
     },
-    [StatefulStateMachineEvent.AddIAMSCPNode]: {
-      actions: [
-        {
-          type: 'add_scp_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            label: event.label,
-          }),
-        },
-      ],
-    },
     [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
         {

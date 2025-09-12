@@ -113,20 +113,6 @@ export function createPolicyCreationObjective<TFinishEventMap extends BaseFinish
   };
 }
 
-export function createSCPCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
-  props: SCPCreationObjectiveInput<TFinishEventMap>
-): IAMSCPCreationObjective<TFinishEventMap> {
-  return {
-    finished: false,
-    id: _.uniqueId(`scp-creation-objective-`),
-    type: ObjectiveType.SCP_CREATION_OBJECTIVE,
-    entity: IAMNodeEntity.SCP,
-    blocked_accesses: [],
-    ...getTemplatePolicyCreationObjectiveAttributes(),
-    ...props,
-  };
-}
-
 export function createUserGroupCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
   props: UserGroupCreationObjectiveInput<TFinishEventMap>
 ): IAMUserGroupCreationObjective<TFinishEventMap> {
