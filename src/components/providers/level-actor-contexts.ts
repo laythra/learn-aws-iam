@@ -6,6 +6,7 @@ import { Snapshot } from 'xstate';
 import { stateMachine as level1StateMachine } from '@/machines/level1/state-machine';
 import { stateMachine as level10StateMachine } from '@/machines/level10/state-machine';
 import { stateMachine as level11StateMachine } from '@/machines/level11/state-machine';
+import { stateMachine as level12StateMachine } from '@/machines/level12/state-machine';
 import { stateMachine as level2StateMachine } from '@/machines/level2/state-machine';
 import { stateMachine as level3StateMachine } from '@/machines/level3/state-machine';
 import { stateMachine as level4StateMachine } from '@/machines/level4/state-machine';
@@ -26,7 +27,8 @@ export type AnyLevelMachine =
   | typeof level8StateMachine
   | typeof level9StateMachine
   | typeof level10StateMachine
-  | typeof level11StateMachine;
+  | typeof level11StateMachine
+  | typeof level12StateMachine;
 
 const MACHINES: Record<number, AnyLevelMachine> = {
   1: level1StateMachine,
@@ -40,6 +42,7 @@ const MACHINES: Record<number, AnyLevelMachine> = {
   9: level9StateMachine,
   10: level10StateMachine,
   11: level11StateMachine,
+  12: level12StateMachine,
 };
 
 const cache: Partial<Record<number, ReturnType<typeof createActorContext<AnyLevelMachine>>>> = {};

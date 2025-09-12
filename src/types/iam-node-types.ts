@@ -49,6 +49,8 @@ export enum IAMNodeResourceEntity {
   Lambda = 'Lambda Function',
   Secret = 'Secret',
   RDS = 'RDS',
+  CloudTrail = 'CloudTrail',
+  ElastiCache = 'ElastiCache',
 }
 
 export enum IAMNodeImage {
@@ -65,6 +67,8 @@ export enum IAMNodeImage {
   OU = 'ou',
   Secret = 'secret',
   SCP = 'scp',
+  CloudTrail = 'cloudtrail',
+  ElastiCache = 'elasticache',
 }
 
 export type CreatableIAMNodeEntity =
@@ -203,11 +207,12 @@ interface IAMGuardRailsNodeData extends IAMNodeData {
 
   /**
    * A function that defines the allowed accesses for this permission boundary.
-   * @param node The nodes to check against the allowed accesses.
+   * @param edge The edge to check against the allowed accesses.
    * @returns The allowed nodes for this permission boundary.
    */
   is_edge_blocked?: (edge: IAMEdge) => boolean;
   content: string;
+  blocked_edge_content: string;
 }
 
 interface IAMUserNodeData extends IAMNodeData {
