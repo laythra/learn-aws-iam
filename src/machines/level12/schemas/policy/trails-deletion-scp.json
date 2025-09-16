@@ -1,0 +1,79 @@
+{
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ]
+    },
+    "Statement": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "Effect",
+          "Action",
+          "Resource"
+        ],
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "enum": [
+              "Deny"
+            ]
+          },
+          "Action": {
+            "oneOf": [
+              {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "cloudtrail:DeleteTrail"
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "cloudtrail:DeleteTrail"
+                ]
+              }
+            ]
+          },
+          "Resource": {
+            "oneOf": [
+              {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "*"
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "*"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

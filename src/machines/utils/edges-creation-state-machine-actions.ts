@@ -50,15 +50,15 @@ function markBlockedEdges(edges: IAMEdge[], guardRailsNodes: IAMGuardRailsNode[]
     draftEdges.forEach(edge => {
       if (!edge.data) return;
 
-      const isBlocked = guardRailsNodes.some(
+      const blockingGuardRail = guardRailsNodes.find(
         guardRailsNode => guardRailsNode.data.is_edge_blocked?.(edge)
       );
 
-      if (!isBlocked) {
+      if (!blockingGuardRail) {
         edge.data.is_blocked = false;
       } else {
         edge.data.is_blocked = true;
-        edge.data.hovering_label = 'Access blocked by Permission Boundary 🔒';
+        edge.data.hovering_label = blockingGuardRail.data.blocked_edge_content;
         edge.data.persistent_label = '🔒';
         edge.data.color = theme.colors.red[500];
         edge.data.hovering_color = theme.colors.red[500];

@@ -290,6 +290,7 @@ export interface IAMSCPCreationObjective<TFinishEventMap extends BaseFinishEvent
   readonly on_finish_event: TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE];
   readonly entity: IAMNodeEntity.SCP;
   readonly is_edge_blocked: (edge: IAMEdge) => boolean;
+  readonly blocked_edge_content: string;
 }
 
 export interface IAMPermissionBoundaryCreationObjective<TFinishEventMap extends BaseFinishEventMap>
@@ -298,6 +299,7 @@ export interface IAMPermissionBoundaryCreationObjective<TFinishEventMap extends 
   readonly initial_position?: string;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE];
   readonly is_edge_blocked: (edge: IAMEdge) => boolean;
+  readonly blocked_edge_content: string;
 }
 
 export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap>
