@@ -44,10 +44,14 @@ const Canvas: React.FC = () => {
     <ReactFlow
       onNodesChange={changes => {
         CanvasStore.send({ type: 'changeNodesState', changes });
+        if (!changes.some(change => change.type === 'remove' || change.type === 'add')) return;
+
         setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 300 });
       }}
       onEdgesChange={changes => {
         CanvasStore.send({ type: 'changeEdgesState', changes });
+        if (!changes.some(change => change.type === 'remove' || change.type === 'add')) return;
+
         setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 300 });
       }}
       onInit={rfi => setRfInstance(rfi)}
@@ -60,6 +64,8 @@ const Canvas: React.FC = () => {
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       zoomOnDoubleClick={false}
+      snapToGrid={true}
+      snapGrid={[15, 15]}
       onEdgeMouseEnter={(_e, edge) => CanvasStore.send({ type: 'hoverOverEdge', edgeId: edge.id })}
       onEdgeMouseLeave={() => CanvasStore.send({ type: 'hoverOverEdge', edgeId: undefined })}
     >
