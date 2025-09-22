@@ -1,5 +1,3 @@
-import { useEffect, useMemo, useRef } from 'react';
-
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 import { Snapshot } from 'xstate';
@@ -19,26 +17,16 @@ const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ c
     _.isEqual
   );
 
-  const snapshotRef = useRef<Record<number, Snapshot<unknown> | undefined>>({});
+  const snapshotRaw = storage.getKey(`level${levelNumber}StateCheckpoint`);
+  let snapshot: Snapshot<unknown> | undefined = undefined;
 
-  if (!(levelNumber in snapshotRef.current)) {
-    const raw = storage.getKey(`level${levelNumber}StateCheckpoint`);
-    try {
-      // eslint-disable-next-line no-eval
-      snapshotRef.current[levelNumber] = raw ? eval('(' + raw + ')') : undefined;
-    } catch {
-      snapshotRef.current[levelNumber] = undefined;
-    }
+  try {
+    snapshot = snapshotRaw ? eval('(' + snapshotRaw + ')') : undefined;
+  } catch {
+    snapshot = undefined;
   }
 
-  const ActorCtx = useMemo(
-    () => getActorContext(levelNumber, snapshotRef.current[levelNumber]),
-    [levelNumber]
-  );
-
-  useEffect(() => {
-    delete snapshotRef.current[levelNumber];
-  }, [levelNumber]);
+  const ActorCtx = getActorContext(levelNumber, snapshot);
 
   return (
     <CurrentActorContext.Provider value={ActorCtx}>
@@ -46,8 +34,5 @@ const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ c
     </CurrentActorContext.Provider>
   );
 };
-
-// Temporary backwards compatibility (optional)
-// export const LevelsProgressionContext = useLevelsProgressionContext;
 
 export default LevelsProgressionProvider;
