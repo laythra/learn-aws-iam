@@ -26,6 +26,7 @@ interface UseCanvasReturn {
   onNodeDelete: (targetNodes: IAMAnyNode[]) => void;
   sidePanelWidth: number;
   disabledEdgesCreation: boolean;
+  initialZoom: number;
 }
 
 const DEFAULT_LAYOUT_GROUP = createHorizontalGroup('default-layout-group', 'center', 10, {
@@ -53,6 +54,12 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
       _.isEqual
     );
 
+  const hasAccountNodes = nodes.some(node => node.data.entity === IAMNodeEntity.Account);
+  const accountNodesWidth = _.sumBy(nodes, node =>
+    node.data.entity === IAMNodeEntity.Account ? node.width! + 20 : 0
+  );
+  // If there are account nodes, set initial zoom to fit them within the viewport width
+  const initialZoom = Math.min(hasAccountNodes ? window.innerWidth / accountNodesWidth : 1, 1);
   const [nodesState, edgesState] = useSelector(
     CanvasStore,
     state => [state.context.nodes, state.context.edges],
@@ -202,5 +209,6 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     onNodeDelete,
     sidePanelWidth,
     disabledEdgesCreation: edgesManagementDisabled ?? false,
+    initialZoom,
   };
 }

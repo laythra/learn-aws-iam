@@ -35,8 +35,15 @@ const edgeTypes = {
 };
 
 const Canvas: React.FC = () => {
-  const { nodesState, edgesState, onConnect, onEdgeDelete, onNodeDelete, setRfInstance } =
-    useCanvas({});
+  const {
+    nodesState,
+    edgesState,
+    onConnect,
+    onEdgeDelete,
+    onNodeDelete,
+    setRfInstance,
+    initialZoom,
+  } = useCanvas({});
 
   const { setViewport } = useReactFlow();
 
@@ -44,10 +51,14 @@ const Canvas: React.FC = () => {
     <ReactFlow
       onNodesChange={changes => {
         CanvasStore.send({ type: 'changeNodesState', changes });
+        if (!changes.some(change => change.type === 'remove' || change.type === 'add')) return;
+
         setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 300 });
       }}
       onEdgesChange={changes => {
         CanvasStore.send({ type: 'changeEdgesState', changes });
+        if (!changes.some(change => change.type === 'remove' || change.type === 'add')) return;
+
         setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 300 });
       }}
       onInit={rfi => setRfInstance(rfi)}
@@ -60,8 +71,10 @@ const Canvas: React.FC = () => {
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       zoomOnDoubleClick={false}
+      snapToGrid
       onEdgeMouseEnter={(_e, edge) => CanvasStore.send({ type: 'hoverOverEdge', edgeId: edge.id })}
       onEdgeMouseLeave={() => CanvasStore.send({ type: 'hoverOverEdge', edgeId: undefined })}
+      defaultViewport={{ x: 0, y: 0, zoom: initialZoom }}
     >
       <Background color='#ccc' variant={BackgroundVariant.Dots} size={2} gap={14} />
       <Controls position='bottom-right' showZoom={false} showInteractive={false}>
