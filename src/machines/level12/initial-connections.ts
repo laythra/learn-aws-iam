@@ -54,4 +54,29 @@ export const INITIAL_TUTORIAL_CONNECTIONS: InitialNodeConnection[] = [
   })),
 ];
 
-export const INITIAL_IN_LEVEL_CONNECTIONS: InitialNodeConnection[] = [];
+export const INITIAL_IN_LEVEL_CONNECTIONS: InitialNodeConnection[] = [
+  ...[AccountID.InLevelStagingAccount, AccountID.InLevelProdAccount].map(id => ({
+    from: OUNodeID.InLevelOU,
+    to: id,
+    source_handle: HandleID.Bottom,
+    target_handle: HandleID.Top,
+  })),
+  ...[UserNodeID.Salma, UserNodeID.Tareq].map(id => ({
+    from: id,
+    to: GroupNodeID.InLevelNotificationsTeamGroup,
+    source_handle: HandleID.Right,
+    target_handle: HandleID.Top,
+  })),
+  ...[UserNodeID.Karim, UserNodeID.Yasmin].map(id => ({
+    from: id,
+    to: GroupNodeID.InLevelSearchTeamGroup,
+    source_handle: HandleID.Right,
+    target_handle: HandleID.Top,
+  })),
+  ...[UserNodeID.Omar, UserNodeID.Rania].map(id => ({
+    from: id,
+    to: GroupNodeID.InLevelPaymentsTeamGroup,
+    source_handle: HandleID.Right,
+    target_handle: HandleID.Top,
+  })),
+];

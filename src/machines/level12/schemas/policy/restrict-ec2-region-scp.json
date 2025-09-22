@@ -1,0 +1,119 @@
+{
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ]
+    },
+    "Statement": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "Effect",
+          "Action",
+          "Resource",
+          "Condition"
+        ],
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "enum": [
+              "Deny"
+            ]
+          },
+          "Action": {
+            "oneOf": [
+              {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "ec2:RunInstances"
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "ec2:RunInstances"
+                ]
+              }
+            ]
+          },
+          "Resource": {
+            "oneOf": [
+              {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "*"
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "*"
+                ]
+              }
+            ]
+          },
+          "Condition": {
+            "type": "object",
+            "required": [
+              "StringNotEquals"
+            ],
+            "properties": {
+              "StringNotEquals": {
+                "type": "object",
+                "required": [
+                  "aws:RequestedRegion"
+                ],
+                "properties": {
+                  "aws:RequestedRegion": {
+                    "oneOf": [
+                      {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 1,
+                        "uniqueItems": true,
+                        "items": {
+                          "enum": [
+                            "us-east-1"
+                          ]
+                        }
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "us-east-1"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

@@ -1,9 +1,12 @@
 import { assign } from 'xstate';
 
-import { INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
+import { INITIAL_IN_LEVEL_CONNECTIONS, INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
 import { LAYOUT_GROUPS } from './layout-groups';
-import { INITIAL_TUTORIAL_NODES } from './nodes';
+import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
+import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
+import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
+import { ROLE_CREATION_OBJECTIVES } from './objectives/role-creation-objectives';
 import { SCP_CREATION_OBJECTIVES } from './objectives/scp-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
@@ -11,6 +14,8 @@ import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-mess
 import {
   EdgeConnectionFinishEvent,
   FinishEventMap,
+  PolicyCreationFinishEvent,
+  RoleCreationFinishEvent,
   SCPCreationFinishEvent,
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
@@ -28,7 +33,7 @@ export const stateMachine = createStateMachineSetup<
   FinishEventMap
 >().createMachine({
   id: 'level12_state_machine',
-  initial: 'inside_tutorial',
+  initial: 'inside_level',
   context: {
     level_title: 'Permission Boundaries',
     level_description:
@@ -159,6 +164,7 @@ export const stateMachine = createStateMachineSetup<
         'resolve_initial_edges', // TODO: Can't we pass the connections directly?
       ],
       initial: 'popup1',
+      onDone: 'inside_level',
       states: {
         popup1: {
           entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } }],
@@ -225,7 +231,7 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [SCPCreationFinishEvent.BLOCK_CLOUDTRAIL_DELE1TION_SCP_CREATED]: 'connect_scp_to_ou',
+            [SCPCreationFinishEvent.BLOCK_CLOUDTRAIL_DELETION_SCP_CREATED]: 'connect_scp_to_ou',
           },
         },
         connect_scp_to_ou: {
@@ -248,7 +254,210 @@ export const stateMachine = createStateMachineSetup<
             NEXT_FIXED_POPOVER: 'tutorial_complete',
           },
         },
-        tutorial_complete: {},
+        tutorial_complete: {
+          entry: 'hide_fixed_popovers',
+          type: 'final',
+        },
+      },
+    },
+    inside_level: {
+      entry: [
+        { type: 'set_restricted_element_ids', params: { element_ids: [] } },
+        { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
+        { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
+        {
+          type: 'set_scp_creation_objectives',
+          params: { objectives: SCP_CREATION_OBJECTIVES[1] },
+        },
+        {
+          type: 'set_edge_connection_objectives',
+          params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
+        },
+        {
+          type: 'set_permission_policy_creation_objectives',
+          params: { objectives: POLICY_CREATION_OBJECTIVES[0] },
+        },
+        {
+          type: 'set_role_creation_objectives',
+          params: { objectives: ROLE_CREATION_OBJECTIVES[0] },
+        },
+        assign({
+          initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
+        }),
+        'resolve_initial_edges', // TODO: Can't we pass the connections directly?
+      ],
+      initial: 'in_progress',
+      states: {
+        in_progress: {
+          onDone: 'completed',
+          type: 'parallel',
+          states: {
+            objective1: {
+              initial: 'create_scp',
+              onDone: {
+                actions: [
+                  {
+                    type: 'finish_level_objective',
+                    params: { id: LevelObjectiveID.RESTRICT_EC2_REGION },
+                  },
+                ],
+              },
+              states: {
+                create_scp: {
+                  on: {
+                    [SCPCreationFinishEvent.RESTRICT_EC2_REGION_SCP_CREATED]: 'attach_scp',
+                  },
+                },
+                attach_scp: {
+                  on: {
+                    [EdgeConnectionFinishEvent.EC2_REGION_SCP_CONNECTED]: 'finished',
+                  },
+                },
+                finished: {
+                  entry: {
+                    type: 'finish_level_objective',
+                    params: { id: LevelObjectiveID.RESTRICT_EC2_REGION },
+                  },
+                  type: 'final',
+                },
+              },
+            },
+            objective3: {
+              type: 'parallel',
+              onDone: {
+                actions: [
+                  {
+                    type: 'finish_level_objective',
+                    params: { id: LevelObjectiveID.ENABLE_EC2_TO_S3_COMMUNICATION },
+                  },
+                ],
+              },
+              states: {
+                establish_trust_policy: {
+                  initial: 'create_trust_policy',
+                  states: {
+                    create_trust_policy: {
+                      on: {
+                        [RoleCreationFinishEvent.EC2_ROLE_CREATED]: 'attach_trust_policy_to_ec2',
+                      },
+                    },
+                    attach_trust_policy_to_ec2: {
+                      on: {
+                        [EdgeConnectionFinishEvent.TRUST_POLICY_ATTACHED_TO_EC2_INSTANCE]:
+                          'finished',
+                      },
+                    },
+                    finished: {
+                      type: 'final',
+                    },
+                  },
+                },
+                estabish_permission_policy: {
+                  initial: 'create_permission_policy',
+                  states: {
+                    create_permission_policy: {
+                      on: {
+                        [PolicyCreationFinishEvent.S3_WRITE_POLICY_CREATED]:
+                          'attach_permission_policy',
+                      },
+                    },
+                    attach_permission_policy: {
+                      on: {
+                        [EdgeConnectionFinishEvent.PERMISSION_POLICY_ATTACHED_TO_ROLE]: 'finished',
+                      },
+                    },
+                    finished: {
+                      type: 'final',
+                    },
+                  },
+                },
+              },
+            },
+            objective4: {
+              initial: 'create_elasticache_manage_policy',
+              onDone: {
+                actions: [
+                  {
+                    type: 'finish_level_objective',
+                    params: { id: LevelObjectiveID.ELASTICACHE_ACCESS_MANAGEMENT },
+                  },
+                ],
+              },
+              states: {
+                create_elasticache_manage_policy: {
+                  on: {
+                    [PolicyCreationFinishEvent.ELASTICACHE_MANAGEMENT_POLICY_CREATED]:
+                      'attach_elasticache_manage_policy_to_group',
+                  },
+                },
+                attach_elasticache_manage_policy_to_group: {
+                  onDone: 'finished',
+                  type: 'parallel',
+                  states: {
+                    attach_to_group1: {
+                      initial: 'in_progress',
+                      states: {
+                        in_progress: {
+                          on: {
+                            [EdgeConnectionFinishEvent.EC_MANAGEMENT_POLICY_ATTACHED_TO_GROUP1]:
+                              'finished',
+                          },
+                        },
+                        finished: {
+                          type: 'final',
+                        },
+                      },
+                    },
+                    attach_to_group2: {
+                      initial: 'in_progress',
+                      states: {
+                        in_progress: {
+                          on: {
+                            [EdgeConnectionFinishEvent.EC_MANAGEMENT_POLICY_ATTACHED_TO_GROUP2]:
+                              'finished',
+                          },
+                        },
+                        finished: {
+                          type: 'final',
+                        },
+                      },
+                    },
+                    attach_to_group3: {
+                      initial: 'in_progress',
+                      states: {
+                        in_progress: {
+                          on: {
+                            [EdgeConnectionFinishEvent.EC_MANAGEMENT_POLICY_ATTACHED_TO_GROUP3]:
+                              'finished',
+                          },
+                        },
+                        finished: {
+                          type: 'final',
+                        },
+                      },
+                    },
+                  },
+                },
+                finished: {
+                  type: 'final',
+                },
+              },
+            },
+          },
+        },
+        completed: {
+          initial: 'popup3',
+          states: {
+            popup3: {
+              entry: [
+                {
+                  type: 'show_popup_message',
+                  params: { message: POPUP_TUTORIAL_MESSAGES[2] },
+                },
+              ],
+            },
+          },
+        },
       },
     },
   },

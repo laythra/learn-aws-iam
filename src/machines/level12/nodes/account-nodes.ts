@@ -15,7 +15,28 @@ const TUTORIAL_ACCOUNT_NODES: Partial<IAMAccountNode['data']>[] = [
   },
 ];
 
+const IN_LEVEL_ACCOUNT_NODES: Partial<IAMAccountNode['data']>[] = [
+  {
+    id: AccountID.InLevelStagingAccount,
+    label: 'Staging Account',
+    layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
+  },
+  {
+    id: AccountID.InLevelProdAccount,
+    label: 'Production Account',
+    layout_group_id: CommonLayoutGroupID.RightCenterHorizontal,
+  },
+];
+
 export const INITIAL_TUTORIAL_ACCOUNT_NODES: IAMAccountNode[] = TUTORIAL_ACCOUNT_NODES.map(
   nodeData =>
     createAccountNode({ dataOverrides: nodeData, rootOverrides: { draggable: false, height: 400 } })
+);
+
+export const INITIAL_IN_LEVEL_ACCOUNT_NODES: IAMAccountNode[] = IN_LEVEL_ACCOUNT_NODES.map(
+  nodeData =>
+    createAccountNode({
+      dataOverrides: nodeData,
+      rootOverrides: { draggable: false, height: 600, width: window.innerWidth * 0.5 },
+    })
 );

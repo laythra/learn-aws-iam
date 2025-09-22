@@ -27,7 +27,7 @@ const delegatePermissionsPolicySchema = {
             uniqueItems: true,
             items: {
               type: 'string',
-              enum: ['iam:AttachRolePolicy', 'iam:DetachRolePolicy'],
+              enum: ['iam:AttachRolePolicy', 'iam:DetachRolePolicy', 'iam:CreateRolePolicy'],
             },
           },
           Resource: {

@@ -1,0 +1,76 @@
+{
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ]
+    },
+    "Statement": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "Effect",
+          "Action",
+          "Resource",
+          "Condition"
+        ],
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "enum": [
+              "Allow"
+            ]
+          },
+          "Action": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "elasticache:ModifyCacheCluster",
+                "elasticache:DeleteCacheCluster",
+                "elasticache:DescribeCacheClusters"
+              ]
+            }
+          },
+          "Resource": {
+            "type": "string",
+            "enum": [
+              "*"
+            ]
+          },
+          "Condition": {
+            "type": "object",
+            "required": [
+              "StringEquals"
+            ],
+            "properties": {
+              "StringEquals": {
+                "type": "object",
+                "properties": {
+                  "elasticache:ResourceTag/team": {
+                    "const": "${aws:PrincipalTag/team}"
+                  }
+                },
+                "required": [
+                  "elasticache:ResourceTag/team"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
