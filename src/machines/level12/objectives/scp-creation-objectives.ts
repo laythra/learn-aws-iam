@@ -73,7 +73,7 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
       layout_group_id: CommonLayoutGroupID.TopRightVertical,
       blocked_edge_content: 'Access Blocked By SCP 🔒',
       // Not using any external context because this function will get serialized
-      is_edge_blocked: _ => {
+      is_edge_blocked: () => {
         return false;
       },
     } satisfies Partial<IAMSCPCreationObjective<FinishEventMap>>,
