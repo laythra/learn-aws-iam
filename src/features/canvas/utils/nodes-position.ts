@@ -165,10 +165,12 @@ export function getNodeInitialPosition(
     ? getParentCenterPosition(parentNode)
     : getCanvasCenter(viewport, sidePanelWidth);
 
-  const parentWidth = parentNode ? parentNode.width! : windowWidth - sidePanelWidth;
+  const parentWidth = parentNode
+    ? parentNode.width!
+    : (windowWidth - sidePanelWidth) / viewport.zoom; // Convert to flow space
   const parentHeight = parentNode
     ? parentNode.height!
-    : windowHeight - theme.sizes.navbarHeightInPixels;
+    : (windowHeight - theme.sizes.navbarHeightInPixels) / viewport.zoom; // Convert to flow space
 
   const nodePosition = calculateNodePositions(
     center.x,
