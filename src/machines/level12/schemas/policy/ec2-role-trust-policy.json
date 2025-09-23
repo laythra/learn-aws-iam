@@ -1,0 +1,72 @@
+{
+  "type": "object",
+  "required": [
+    "Version",
+    "Statement"
+  ],
+  "properties": {
+    "Version": {
+      "type": "string",
+      "enum": [
+        "2012-10-17"
+      ]
+    },
+    "Statement": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "Effect",
+          "Principal",
+          "Action"
+        ],
+        "properties": {
+          "Effect": {
+            "type": "string",
+            "enum": [
+              "Allow"
+            ]
+          },
+          "Action": {
+            "oneOf": [
+              {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "sts:AssumeRole"
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "sts:AssumeRole"
+                ]
+              }
+            ]
+          },
+          "Principal": {
+            "type": "object",
+            "required": [
+              "Service"
+            ],
+            "properties": {
+              "Service": {
+                "type": "string",
+                "enum": [
+                  "ec2.amazonaws.com"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

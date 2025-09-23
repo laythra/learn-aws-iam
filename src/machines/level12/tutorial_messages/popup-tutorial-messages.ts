@@ -25,6 +25,27 @@ const POPUP_MSG2 = `
   restrict what can be allowed by other policies.|lg
 `;
 
+const POPUP_MSG3 = `
+  Congratulations! You've now mastered AWS IAM, conquering users, groups, roles, policies,
+  permission boundaries, and many more!|lg
+
+  **You've successfully completed Level 12 and the full AWS IAM learning journey!** 🎉|lg
+
+  You now have a strong foundation in AWS IAM fundamentals and security best practices.
+  IAM is one of the most critical services for AWS security,
+  so continue building on this knowledge through hands-on practice and real-world application.|lg
+
+  Your learning doesn't have to stop here - there's a whole world of advanced IAM topics
+  waiting to be explored, including ***identity federation***, ***attribute-based access control***,
+  and ***sophisticated access management strategies***.|lg
+
+  You should feel proud of this accomplishment and confident in your ability to
+  design and implement secure AWS access controls. Keep experimenting,
+  building and sharing your knowledge with others.|lg
+
+  ***Ready to put your IAM expertise to work? The cloud awaits! 🚀***|lg
+`;
+
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: 'Welcome to Level 12',
@@ -33,5 +54,9 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: 'Understanding SCPs',
     content: POPUP_MSG2,
+  },
+  {
+    title: 'Officialy an IAM Master 🔥',
+    content: POPUP_MSG3,
   },
 ];

@@ -1,8 +1,10 @@
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
+import ec2RegionRestrictionScpSchema from '../schemas/policy/restrict-ec2-region-scp.json';
 import blockTrailDeletionScpSchema from '../schemas/policy/trails-deletion-scp.json';
 import { FinishEventMap, SCPCreationFinishEvent } from '../types/finish-event-enums';
 import { SCPNodeID } from '../types/node-id-enums';
 import { createSCPCreationObjective } from '@/factories/nodes_creation_objectives/scp-creation-objective-factory';
+import { MANAGED_POLICIES } from '@/machines/consts';
 import { IAMSCPCreationObjective, ObjectiveType } from '@/machines/types';
 import { CommonLayoutGroupID } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
@@ -26,12 +28,12 @@ const ACTIONS_HINT_MSG = `
 export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][] = [
   [
     {
-      id: 'permission-boundary-1',
+      id: 'scp-1',
       initial_edges: [],
       type: ObjectiveType.SCP_CREATION_OBJECTIVE,
       entity_id: SCPNodeID.BlockCloudTrailDeletionSCP,
       json_schema: blockTrailDeletionScpSchema,
-      on_finish_event: SCPCreationFinishEvent.BLOCK_CLOUDTRAIL_DELE1TION_SCP_CREATED,
+      on_finish_event: SCPCreationFinishEvent.BLOCK_CLOUDTRAIL_DELETION_SCP_CREATED,
       validate_function: AJV_COMPILER.compile(blockTrailDeletionScpSchema),
       initial_code: INITIAL_POLICIES.FIRST_SCP_OBJECTIVE_POLICY,
       limit_new_lines: false,
@@ -55,6 +57,25 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
           content: ACTIONS_HINT_MSG,
         },
       ],
+    } satisfies Partial<IAMSCPCreationObjective<FinishEventMap>>,
+  ].map(objective => createSCPCreationObjective(objective)),
+  [
+    {
+      id: 'scp-2',
+      initial_edges: [],
+      type: ObjectiveType.SCP_CREATION_OBJECTIVE,
+      entity_id: SCPNodeID.RestrictEC2RegionSCP,
+      json_schema: ec2RegionRestrictionScpSchema,
+      on_finish_event: SCPCreationFinishEvent.RESTRICT_EC2_REGION_SCP_CREATED,
+      validate_function: AJV_COMPILER.compile(ec2RegionRestrictionScpSchema),
+      initial_code: MANAGED_POLICIES.EmptyPolicy,
+      limit_new_lines: false,
+      layout_group_id: CommonLayoutGroupID.TopRightVertical,
+      blocked_edge_content: 'Access Blocked By SCP 🔒',
+      // Not using any external context because this function will get serialized
+      is_edge_blocked: () => {
+        return false;
+      },
     } satisfies Partial<IAMSCPCreationObjective<FinishEventMap>>,
   ].map(objective => createSCPCreationObjective(objective)),
 ];

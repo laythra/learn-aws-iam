@@ -317,6 +317,15 @@ export const createStateMachineSetup = <
           { objectives }: { objectives: LevelObjective<TLevelObjectiveID, TFinishEventMap>[] }
         ) => [...context.level_objectives, ...objectives],
       }),
+      set_level_objectives: assign({
+        level_objectives: (
+          __,
+          { objectives }: { objectives: LevelObjective<TLevelObjectiveID, TFinishEventMap>[] }
+        ) => objectives,
+      }),
+      set_restricted_element_ids: assign({
+        restricted_element_ids: (__, { element_ids }: { element_ids: ElementID[] }) => element_ids,
+      }),
       finish_level_objective: assign({
         level_objectives: ({ context }, { id }: { id: string }) =>
           editObjectiveState(context, id, true),
