@@ -5,7 +5,6 @@ import {
   BaseFinishEventMap,
   IAMPermissionBoundaryCreationObjective,
   IAMPolicyCreationObjective,
-  IAMResourcePolicyCreationObjective,
   IAMRoleCreationObjective,
   IAMSCPCreationObjective,
   IAMUserGroupCreationObjective,
@@ -13,7 +12,6 @@ import {
 } from '@/machines/types';
 import trustPolicySchema from '@/schemas/aws-iam-role-trust-policy-schema.json';
 import { IAMNodeEntity } from '@/types';
-import { PartialWithRequired } from '@/types/common';
 
 export type RoleCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> = Partial<
   Omit<IAMRoleCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'>
@@ -39,27 +37,28 @@ export type UserGroupCreationObjectiveInput<TFinishEventMap extends BaseFinishEv
   Omit<IAMUserGroupCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'>
 >;
 
-export type ResourcePolicyCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> =
-  PartialWithRequired<
-    Omit<
-      IAMResourcePolicyCreationObjective<TFinishEventMap>,
-      'id' | 'finished' | 'type' | 'entity'
-    >,
-    'resource_node_id'
-  >;
+// export type ResourcePolicyCreationObjectiveInput<TFinishEventMap extends BaseFinishEventMap> =
+//   PartialWithRequired<
+//     Omit<
+//       IAMResourcePolicyCreationObjective<TFinishEventMap>,
+//       'id' | 'finished' | 'type' | 'entity'
+//     >,
+//     'resource_node_id'
+//   >;
 
 function getTemplateRoleCreationObjectiveAttributes<
   TFinishEventMap extends BaseFinishEventMap,
 >(): Omit<IAMRoleCreationObjective<TFinishEventMap>, 'id' | 'finished' | 'type' | 'entity'> {
   return {
-    required_policies: [],
-    required_principles: [],
     entity_id: '-',
     json_schema: trustPolicySchema,
     initial_code: MANAGED_POLICIES.EmptyTrustPolicy,
     on_finish_event: '',
     validate_inside_code_editor: true,
-    initial_edges: [],
+    extra_data: {
+      required_policies: [],
+      required_principles: [],
+    },
   };
 }
 
@@ -72,8 +71,9 @@ function getTemplatePolicyCreationObjectiveAttributes<
     initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
     on_finish_event: '',
     validate_inside_code_editor: true,
-    granted_accesses: [],
-    initial_edges: [],
+    extra_data: {
+      granted_accesses: [],
+    },
   };
 }
 
@@ -124,15 +124,15 @@ export function createUserGroupCreationObjective<TFinishEventMap extends BaseFin
   };
 }
 
-export function createResourcePolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
-  props: ResourcePolicyCreationObjectiveInput<TFinishEventMap>
-): IAMResourcePolicyCreationObjective<TFinishEventMap> {
-  return {
-    finished: false,
-    id: _.uniqueId(`resource-policy-creation-objective-`),
-    type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
-    entity: IAMNodeEntity.ResourcePolicy,
-    ...getTemplatePolicyCreationObjectiveAttributes(),
-    ...props,
-  };
-}
+// export function createResourcePolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
+//   props: ResourcePolicyCreationObjectiveInput<TFinishEventMap>
+// ): IAMResourcePolicyCreationObjective<TFinishEventMap> {
+//   return {
+//     finished: false,
+//     id: _.uniqueId(`resource-policy-creation-objective-`),
+//     type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
+//     entity: IAMNodeEntity.ResourcePolicy,
+//     ...getTemplatePolicyCreationObjectiveAttributes(),
+//     ...props,
+//   };
+// }

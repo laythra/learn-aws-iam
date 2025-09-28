@@ -14,8 +14,12 @@ export function formatNodeName(name: string): string {
   return _.snakeCase(name);
 }
 
-export function getEdgeName(source: string, target: string): string {
-  return `e:${formatNodeName(source)}:${formatNodeName(target)}`;
+export function getEdgeName(source: string, target: string, attachedAs?: IAMNodeEntity): string {
+  if (attachedAs) {
+    return `e:${formatNodeName(source)}:${formatNodeName(target)}:${attachedAs}`;
+  } else {
+    return `e:${formatNodeName(source)}:${formatNodeName(target)}`;
+  }
 }
 
 export function getEdgeLabel(sourceEntity: IAMNodeEntity, targetEntity: IAMNodeEntity): string {

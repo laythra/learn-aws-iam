@@ -85,8 +85,10 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
         },
       ],
       validate_function: AJV_COMPILER.compile(financeAuditorPolicySchema),
-      required_policies: [],
-      required_principles: [],
+      extra_data: {
+        required_policies: [],
+        required_principles: [],
+      },
     } satisfies Partial<IAMRoleCreationObjective<FinishEventMap>>,
   ].map(objective => createRoleCreationObjective(objective)),
   [

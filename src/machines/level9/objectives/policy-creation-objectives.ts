@@ -100,20 +100,22 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
-      granted_accesses: [
-        {
-          target_node: ResourceNodeID.RDS1,
-          access_level: AccessLevel.Read,
-          source_handle: 'right',
-          target_handle: 'bottom',
-          applicable_nodes: (nodes: IAMAnyNode[]) =>
-            IAMNodeFilter.create()
-              .fromNodes(nodes)
-              .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('application', 'peach-team')
-              .build(),
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            target_node: ResourceNodeID.RDS1,
+            access_level: AccessLevel.Read,
+            source_handle: 'right',
+            target_handle: 'bottom',
+            applicable_nodes: (nodes: IAMAnyNode[]) =>
+              IAMNodeFilter.create()
+                .fromNodes(nodes)
+                .whereEntityIs(IAMNodeEntity.User)
+                .whereHasTag('application', 'peach-team')
+                .build(),
+          },
+        ],
+      },
       callout_message: OBJECTIVE_CALLOUT_MSG,
       hint_messages: SHARED_HINT_MESSAGES,
       help_badges: SHARED_HELP_BADGES,
@@ -129,20 +131,22 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
-      granted_accesses: [
-        {
-          target_node: ResourceNodeID.RDS2,
-          access_level: AccessLevel.Read,
-          source_handle: 'left',
-          target_handle: 'bottom',
-          applicable_nodes: (nodes: IAMAnyNode[]) =>
-            IAMNodeFilter.create()
-              .fromNodes(nodes)
-              .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('application', 'bowser-force')
-              .build(),
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            target_node: ResourceNodeID.RDS2,
+            access_level: AccessLevel.Read,
+            source_handle: 'left',
+            target_handle: 'bottom',
+            applicable_nodes: (nodes: IAMAnyNode[]) =>
+              IAMNodeFilter.create()
+                .fromNodes(nodes)
+                .whereEntityIs(IAMNodeEntity.User)
+                .whereHasTag('application', 'bowser-force')
+                .build(),
+          },
+        ],
+      },
       hint_messages: SHARED_HINT_MESSAGES,
       help_badges: SHARED_HELP_BADGES,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
@@ -159,32 +163,34 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       initial_code: INITIAL_POLICIES.SHARED_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
-      granted_accesses: [
-        {
-          target_node: ResourceNodeID.RDS1,
-          access_level: AccessLevel.Read,
-          source_handle: 'right',
-          target_handle: 'bottom',
-          applicable_nodes: (nodes: IAMAnyNode[]) =>
-            IAMNodeFilter.create()
-              .fromNodes(nodes)
-              .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('application', 'peach-team')
-              .build(),
-        },
-        {
-          target_node: ResourceNodeID.RDS2,
-          access_level: AccessLevel.Read,
-          source_handle: 'left',
-          target_handle: 'bottom',
-          applicable_nodes: (nodes: IAMAnyNode[]) =>
-            IAMNodeFilter.create()
-              .fromNodes(nodes)
-              .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('application', 'bowser-force')
-              .build(),
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            target_node: ResourceNodeID.RDS1,
+            access_level: AccessLevel.Read,
+            source_handle: 'right',
+            target_handle: 'bottom',
+            applicable_nodes: (nodes: IAMAnyNode[]) =>
+              IAMNodeFilter.create()
+                .fromNodes(nodes)
+                .whereEntityIs(IAMNodeEntity.User)
+                .whereHasTag('application', 'peach-team')
+                .build(),
+          },
+          {
+            target_node: ResourceNodeID.RDS2,
+            access_level: AccessLevel.Read,
+            source_handle: 'left',
+            target_handle: 'bottom',
+            applicable_nodes: (nodes: IAMAnyNode[]) =>
+              IAMNodeFilter.create()
+                .fromNodes(nodes)
+                .whereEntityIs(IAMNodeEntity.User)
+                .whereHasTag('application', 'bowser-force')
+                .build(),
+          },
+        ],
+      },
       hint_messages: SECOND_OBJECTIVE_HINT_MESSAGES,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),

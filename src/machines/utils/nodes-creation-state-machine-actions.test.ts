@@ -1,9 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 
-import {
-  createPermissionPolicy,
-  createUserGroupNode,
-} from './nodes-creation-state-machine-actions';
+import { createIAMNode, createUserGroupNode } from './nodes-creation-state-machine-actions';
 import { createMockContext } from '@/__test-helpers__/context';
 import {
   createPolicyCreationObjective,
@@ -35,7 +32,7 @@ describe('createPermissionPolicy', () => {
   it('creates a new policy node without a matching objective and adds it as unnecessary', () => {
     vi.mocked(findAnyValidObjective).mockReturnValue(undefined);
 
-    const result = createPermissionPolicy(mockContext, mockDocString, mockLabel);
+    const result = createIAMNode(mockContext, mockDocString, mockLabel, IAMNodeEntity.Policy);
 
     const createdNode = result.updatedContext.nodes.find(
       n => n.data.entity === IAMNodeEntity.Policy
@@ -55,7 +52,6 @@ describe('createPermissionPolicy', () => {
   it('creates a new policy node with a matching objective and marks it as necessary', () => {
     const mockObjective = createPolicyCreationObjective({
       on_finish_event: 'MOCK_EVENT',
-      initial_edges: [],
     });
     mockContext = createMockContext({
       policy_creation_objectives: [mockObjective],
@@ -63,7 +59,7 @@ describe('createPermissionPolicy', () => {
 
     vi.mocked(findAnyValidObjective).mockReturnValue(mockObjective);
 
-    const result = createPermissionPolicy(mockContext, mockDocString, mockLabel);
+    const result = createIAMNode(mockContext, mockDocString, mockLabel, IAMNodeEntity.Policy);
     const createdNode = result.updatedContext.nodes.find(
       n => n.data.entity === IAMNodeEntity.Policy
     );

@@ -20,8 +20,10 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       on_finish_event: RoleCreationFinishEvent.EC2_ROLE_CREATED,
       layout_group_id: CommonLayoutGroupID.BottomCenterVertical,
       validate_function: AJV_COMPILER.compile(ec2RoleTrustPolicySchema),
-      required_policies: [],
-      required_principles: [],
+      extra_data: {
+        required_policies: [],
+        required_principles: [],
+      },
       created_node_parent_id: AccountID.InLevelStagingAccount,
     } satisfies Partial<IAMRoleCreationObjective<FinishEventMap>>,
   ].map(objective => createRoleCreationObjective(objective)),

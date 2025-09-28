@@ -4,7 +4,6 @@ import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
-import { ROLE_CREATION_OBJECTIVES } from './objectives/role-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
@@ -18,7 +17,6 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -62,17 +60,15 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
     },
-    [StatefulStateMachineEvent.ADDIAMRoleNode]: {
-      actions: [
-        {
-          type: 'add_role_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            accountId: event.account_id,
-            label: event.label,
-          }),
-        },
-      ],
+    [StatefulStateMachineEvent.AddIAMNode]: {
+      actions: {
+        type: 'add_iam_node',
+        params: ({ event }) => ({
+          docString: event.doc_string,
+          label: event.label,
+          policyNodeType: event.node_entity,
+        }),
+      },
     },
     [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
@@ -81,19 +77,6 @@ export const stateMachine = createStateMachineSetup<
           params: ({ event }) => ({
             sourceNode: event.sourceNode,
             targetNode: event.targetNode,
-          }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.AddIAMPolicyNode]: {
-      actions: [
-        {
-          type: 'add_policy_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            accountId: event.account_id,
-            label: event.label,
-            policyNodeType: IAMNodeEntity.Policy,
           }),
         },
       ],
@@ -147,20 +130,14 @@ export const stateMachine = createStateMachineSetup<
     },
     inside_level: {
       initial: 'entities_creation',
-      entry: ['disable_tutorial_state'],
+      entry: ['disable_tutorial_state', 'clear_creation_objectives'],
       states: {
         entities_creation: {
           entry: [
             {
-              type: 'set_permission_policy_creation_objectives',
+              type: 'append_creation_objectives',
               params: {
                 objectives: POLICY_CREATION_OBJECTIVES[0],
-              },
-            },
-            {
-              type: 'set_role_creation_objectives',
-              params: {
-                objectives: ROLE_CREATION_OBJECTIVES[0],
               },
             },
             'show_side_panel',

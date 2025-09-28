@@ -22,14 +22,16 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       account_id: AccountID.Trusted,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
-      granted_accesses: [
-        {
-          target_node: ResourceNodeID.InsideLevelS3Bucket,
-          access_level: AccessLevel.ReadWrite,
-          target_handle: 'right',
-          source_handle: 'left',
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            target_node: ResourceNodeID.InsideLevelS3Bucket,
+            access_level: AccessLevel.ReadWrite,
+            target_handle: 'right',
+            source_handle: 'left',
+          },
+        ],
+      },
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

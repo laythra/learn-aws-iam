@@ -15,14 +15,16 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       id: 'policy-1',
       entity_id: PolicyNodeID.S3WriteAccessPolicy,
       on_finish_event: PolicyCreationFinishEvent.S3_WRITE_POLICY_CREATED,
-      granted_accesses: [
-        {
-          access_level: AccessLevel.Write,
-          source_handle: HandleID.Top,
-          target_handle: HandleID.Bottom,
-          target_node: ResourceNodeID.InLevelStagingS3Bucket,
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            access_level: AccessLevel.Write,
+            source_handle: HandleID.Top,
+            target_handle: HandleID.Bottom,
+            target_node: ResourceNodeID.InLevelStagingS3Bucket,
+          },
+        ],
+      },
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
@@ -33,14 +35,16 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       id: 'policy-2',
       entity_id: PolicyNodeID.S3WriteAccessPolicy,
       on_finish_event: PolicyCreationFinishEvent.S3_WRITE_POLICY_CREATED,
-      granted_accesses: [
-        {
-          access_level: AccessLevel.Write,
-          source_handle: HandleID.Top,
-          target_handle: HandleID.Bottom,
-          target_node: ResourceNodeID.InLevelStagingS3Bucket,
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            access_level: AccessLevel.Write,
+            source_handle: HandleID.Top,
+            target_handle: HandleID.Bottom,
+            target_node: ResourceNodeID.InLevelStagingS3Bucket,
+          },
+        ],
+      },
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
@@ -51,44 +55,47 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       id: 'policy-3',
       entity_id: PolicyNodeID.ElasticCacheManagementPolicy,
       on_finish_event: PolicyCreationFinishEvent.ELASTICACHE_MANAGEMENT_POLICY_CREATED,
-      granted_accesses: [
-        {
-          access_level: AccessLevel.Full,
-          source_handle: HandleID.Top,
-          target_handle: HandleID.Bottom,
-          target_node: ResourceNodeID.InLevelProductionElastiCacheCluster1,
-          applicable_nodes: nodes =>
-            IAMNodeFilter.create()
-              .fromNodes(nodes)
-              .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('squad', 'notifications')
-              .build(),
-        },
-        {
-          access_level: AccessLevel.Full,
-          source_handle: HandleID.Top,
-          target_handle: HandleID.Bottom,
-          target_node: ResourceNodeID.InLevelProductionElastiCacheCluster2,
-          applicable_nodes: nodes =>
-            IAMNodeFilter.create()
-              .fromNodes(nodes)
-              .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('squad', 'search')
-              .build(),
-        },
-        {
-          access_level: AccessLevel.Full,
-          source_handle: HandleID.Top,
-          target_handle: HandleID.Bottom,
-          target_node: ResourceNodeID.InLevelProductionElastiCacheCluster3,
-          applicable_nodes: nodes =>
-            IAMNodeFilter.create()
-              .fromNodes(nodes)
-              .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('squad', 'payments')
-              .build(),
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            access_level: AccessLevel.Full,
+            source_handle: HandleID.Top,
+            target_handle: HandleID.Bottom,
+            target_node: ResourceNodeID.InLevelProductionElastiCacheCluster1,
+            applicable_nodes: nodes =>
+              IAMNodeFilter.create()
+                .fromNodes(nodes)
+                .whereEntityIs(IAMNodeEntity.User)
+                .whereHasTag('squad', 'notifications')
+                .build(),
+          },
+          {
+            access_level: AccessLevel.Full,
+            source_handle: HandleID.Top,
+            target_handle: HandleID.Bottom,
+            target_node: ResourceNodeID.InLevelProductionElastiCacheCluster2,
+            applicable_nodes: nodes =>
+              IAMNodeFilter.create()
+                .fromNodes(nodes)
+                .whereEntityIs(IAMNodeEntity.User)
+                .whereHasTag('squad', 'search')
+                .build(),
+          },
+          {
+            access_level: AccessLevel.Full,
+            source_handle: HandleID.Top,
+            target_handle: HandleID.Bottom,
+            target_node: ResourceNodeID.InLevelProductionElastiCacheCluster3,
+            applicable_nodes: nodes =>
+              IAMNodeFilter.create()
+                .fromNodes(nodes)
+                .whereEntityIs(IAMNodeEntity.User)
+                .whereHasTag('squad', 'payments')
+                .build(),
+          },
+        ],
+      },
+
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
       initial_code: MANAGED_POLICIES.EmptyPolicy,

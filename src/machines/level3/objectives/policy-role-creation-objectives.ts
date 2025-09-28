@@ -28,7 +28,9 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       callout_message: CALLOUT_MESSAGE1,
       on_finish_event: NodeCreationFinishEvent.S3_READ_POLICY_CREATED,
       validate_inside_code_editor: true,
-      granted_accesses: [],
+      extra_data: {
+        granted_accesses: [],
+      },
       validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
       help_badges: [
         {
@@ -59,14 +61,17 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.S3_READ_WRITE_POLICY_CREATED,
       validate_inside_code_editor: true,
-      granted_accesses: [
-        {
-          target_node: ResourceNodeID.PublicAssetsS3Bucket,
-          access_level: AccessLevel.ReadWrite,
-          target_handle: 'top',
-          source_handle: 'bottom',
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            target_node: ResourceNodeID.PublicAssetsS3Bucket,
+            access_level: AccessLevel.ReadWrite,
+            target_handle: 'top',
+            source_handle: 'bottom',
+          },
+        ],
+      },
+
       validate_function: AJV_COMPILER.compile(s3ReadWritePolicySchema),
       layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
@@ -78,14 +83,16 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED,
       validate_inside_code_editor: true,
-      granted_accesses: [
-        {
-          target_node: ResourceNodeID.CloudFront,
-          access_level: AccessLevel.Read,
-          target_handle: 'bottom',
-          source_handle: 'top',
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            target_node: ResourceNodeID.CloudFront,
+            access_level: AccessLevel.Read,
+            target_handle: 'bottom',
+            source_handle: 'top',
+          },
+        ],
+      },
       validate_function: AJV_COMPILER.compile(cloudfrontReadPolicySchema),
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
@@ -97,14 +104,16 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CREATED,
       validate_inside_code_editor: true,
-      granted_accesses: [
-        {
-          target_node: ResourceNodeID.DynamoDBTable,
-          access_level: AccessLevel.Read,
-          target_handle: 'bottom',
-          source_handle: 'top',
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            target_node: ResourceNodeID.DynamoDBTable,
+            access_level: AccessLevel.Read,
+            target_handle: 'bottom',
+            source_handle: 'top',
+          },
+        ],
+      },
       validate_function: AJV_COMPILER.compile(dynamoReadWritePolicySchema),
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,

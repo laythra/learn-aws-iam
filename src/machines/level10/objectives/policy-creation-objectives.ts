@@ -122,7 +122,6 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       initial_code: INITIAL_POLICIES.POLICY_WITH_CONDITION,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
-      granted_accesses: [],
       callout_message: OBJECTIVE1_CALLOUT_MSG,
       hint_messages: [
         {
@@ -153,44 +152,46 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
-      granted_accesses: [
-        {
-          access_level: AccessLevel.StartStopControl,
-          target_handle: 'left',
-          source_handle: 'right',
-          target_node: ResourceNodeID.RDS1,
-          applicable_nodes: (nodes: IAMAnyNode[]) =>
-            IAMNodeFilter.create()
-              .fromNodes(nodes)
-              .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('team', 'payments-team')
-              .build(),
-        },
-        {
-          access_level: AccessLevel.StartStopControl,
-          target_handle: 'left',
-          source_handle: 'right',
-          target_node: ResourceNodeID.RDS2,
-          applicable_nodes: (nodes: IAMAnyNode[]) =>
-            IAMNodeFilter.create()
-              .fromNodes(nodes)
-              .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('team', 'compliance-team')
-              .build(),
-        },
-        {
-          access_level: AccessLevel.StartStopControl,
-          target_handle: 'left',
-          source_handle: 'right',
-          target_node: ResourceNodeID.RDS3,
-          applicable_nodes: (nodes: IAMAnyNode[]) =>
-            IAMNodeFilter.create()
-              .fromNodes(nodes)
-              .whereEntityIs(IAMNodeEntity.User)
-              .whereHasTag('team', 'analytics-team')
-              .build(),
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            access_level: AccessLevel.StartStopControl,
+            target_handle: 'left',
+            source_handle: 'right',
+            target_node: ResourceNodeID.RDS1,
+            applicable_nodes: (nodes: IAMAnyNode[]) =>
+              IAMNodeFilter.create()
+                .fromNodes(nodes)
+                .whereEntityIs(IAMNodeEntity.User)
+                .whereHasTag('team', 'payments-team')
+                .build(),
+          },
+          {
+            access_level: AccessLevel.StartStopControl,
+            target_handle: 'left',
+            source_handle: 'right',
+            target_node: ResourceNodeID.RDS2,
+            applicable_nodes: (nodes: IAMAnyNode[]) =>
+              IAMNodeFilter.create()
+                .fromNodes(nodes)
+                .whereEntityIs(IAMNodeEntity.User)
+                .whereHasTag('team', 'compliance-team')
+                .build(),
+          },
+          {
+            access_level: AccessLevel.StartStopControl,
+            target_handle: 'left',
+            source_handle: 'right',
+            target_node: ResourceNodeID.RDS3,
+            applicable_nodes: (nodes: IAMAnyNode[]) =>
+              IAMNodeFilter.create()
+                .fromNodes(nodes)
+                .whereEntityIs(IAMNodeEntity.User)
+                .whereHasTag('team', 'analytics-team')
+                .build(),
+          },
+        ],
+      },
       callout_message: OBJECTIVE2_CALLOUT_MSG,
       help_badges: OBJECTIVE2_HELP_BADGES,
       hint_messages: [

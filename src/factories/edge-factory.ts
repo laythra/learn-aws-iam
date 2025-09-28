@@ -4,7 +4,6 @@ import { PartialWithRequired } from '@/types/common';
 import { getEdgeName } from '@/utils/names';
 
 type RootOverrides = PartialWithRequired<Omit<IAMEdge, 'data'>, 'source' | 'target'>;
-
 const EDGE_TEMPLATE: PartialEdge = {
   id: 'template_edge',
   source: 'template_source',

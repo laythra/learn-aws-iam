@@ -17,13 +17,16 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       json_schema: dynamodbReadPolicySchema,
       on_finish_event: PolicyCreationFinishEvent.DYNAMODB_READ_POLICY_CREATED,
       validate_inside_code_editor: true,
-      granted_accesses: [
-        {
-          access_level: AccessLevel.Read,
-          target_node: ResourceNodeID.TrustingAccountDynamoDBTable,
-          target_handle: 'right',
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            access_level: AccessLevel.Read,
+            target_node: ResourceNodeID.TrustingAccountDynamoDBTable,
+            target_handle: 'right',
+          },
+        ],
+      },
+
       validate_function: AJV_COMPILER.compile(dynamodbReadPolicySchema),
       limit_new_lines: false,
       account_id: AccountID.Trusting,
@@ -45,7 +48,9 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         const roleArn = generateArn(IAMNodeEntity.Role, roleNode.data.label);
         return AJV_COMPILER.compile(generateAssumeRolePolicySchema(roleArn));
       },
-      granted_accesses: [],
+      extra_data: {
+        granted_accesses: [],
+      },
       limit_new_lines: false,
       account_id: AccountID.Trusted,
       layout_group_id: CommonLayoutGroupID.RightCenterHorizontal,

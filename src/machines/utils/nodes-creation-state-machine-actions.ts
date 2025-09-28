@@ -1,8 +1,6 @@
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
-import { updateConnectionEdges } from './edges-creation-state-machine-actions';
-import { IAMNodeFilter } from './iam-node-filter';
 import {
   AccountID,
   BaseCreationObjective,
@@ -29,23 +27,43 @@ import {
   IAMResourcePolicyNode,
   IAMPermissionBoundaryNode,
   IAMSCPNode,
+  IAMCodeDefinedEntity,
 } from '@/types';
 import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
-function createNodeFromObjective<
+type EntityToNode = {
+  [IAMNodeEntity.Policy]: IAMPolicyNode;
+  [IAMNodeEntity.ResourcePolicy]: IAMResourcePolicyNode;
+  [IAMNodeEntity.PermissionBoundary]: IAMPermissionBoundaryNode;
+  [IAMNodeEntity.SCP]: IAMSCPNode;
+  [IAMNodeEntity.Role]: IAMRoleNode;
+};
+
+type NodeFor<E extends IAMCodeDefinedEntity> = EntityToNode[E];
+type NodeDataFor<E extends IAMCodeDefinedEntity> = NodeFor<E>['data'];
+type CreateNodeFn<E extends IAMCodeDefinedEntity> = (args: {
+  dataOverrides?: Partial<NodeDataFor<E>>;
+  rootOverrides?: Partial<Omit<IAMAnyNode, 'data'>>;
+}) => NodeFor<E>;
+
+const nodesCreationMap: { [E in IAMCodeDefinedEntity]: CreateNodeFn<E> } = {
+  [IAMNodeEntity.Policy]: createPolicyNode,
+  [IAMNodeEntity.ResourcePolicy]: createResourcePolicyNode,
+  [IAMNodeEntity.PermissionBoundary]: createPermissionBoundaryNode,
+  [IAMNodeEntity.SCP]: createSCPNode,
+  [IAMNodeEntity.Role]: createRoleNode,
+};
+
+export function createNodeFromObjectiveNew<
   TFinishEventMap extends BaseFinishEventMap,
-  TNode extends IAMCodeDefinedNode,
+  E extends IAMCodeDefinedEntity,
 >(
   docString: string,
   label: string,
-  entityType: TNode['data']['entity'],
-  additionalDataOverrides: Partial<TNode['data']> = {},
-  createNodeFn: (overrides: {
-    rootOverrides?: Partial<Omit<IAMAnyNode, 'data'>>;
-    dataOverrides?: Partial<TNode['data']>;
-  }) => TNode,
+  entityType: E,
   targetValidObjective?: BaseCreationObjective<TFinishEventMap>
-): TNode {
+): NodeFor<E> {
+  const createNodeFn = nodesCreationMap[entityType];
   return createNodeFn({
     dataOverrides: {
       id: targetValidObjective?.entity_id ?? _.uniqueId(`${entityType.toLowerCase()}-`),
@@ -58,82 +76,37 @@ function createNodeFromObjective<
       entity: entityType,
       editable: false,
       parent_id: targetValidObjective?.created_node_parent_id,
-      ...additionalDataOverrides,
-    } satisfies Partial<TNode['data']>,
+      ...targetValidObjective?.extra_data,
+    } as NodeDataFor<E>,
     rootOverrides: {
       parentId: targetValidObjective?.created_node_parent_id,
     },
   });
 }
 
-export function createTrustPolicy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  docString: string,
-  label: string,
-  accountId?: AccountID
-): {
-  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
-  events: TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE][];
-} {
-  const targetValidObjective = findAnyValidObjective<IAMNodeEntity.Role>(
-    context.role_creation_objectives,
-    context.nodes,
-    docString,
-    accountId,
-    IAMNodeEntity.Role
-  );
-
-  const newNode = createNodeFromObjective<TFinishEventMap, IAMRoleNode>(
-    docString,
-    label,
-    IAMNodeEntity.Role,
-    {},
-    createRoleNode,
-    targetValidObjective
-  );
-
-  const updatedContext = produce(context, draftContext => {
-    draftContext.role_creation_objectives.find(
-      objective => objective.id === targetValidObjective?.id
-    )!.finished = true;
-
-    draftContext.nodes.push(newNode as WritableDraft<IAMRoleNode>);
-  });
-
-  return {
-    updatedContext,
-    events: targetValidObjective ? [targetValidObjective.on_finish_event] : [],
-  };
-}
-
-export function createPermissionPolicy<
+export function createIAMNode<
   TLevelObjectiveID,
   TFinishEventMap extends BaseFinishEventMap,
+  TNode extends IAMCodeDefinedNode,
 >(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   docString: string,
   label: string,
+  nodeEntity: TNode['data']['entity'],
   accountId?: AccountID
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
-  events: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][];
+  events: string[];
 } {
-  const targetValidObjective = findAnyValidObjective<IAMNodeEntity.Policy>(
+  const targetValidObjective = findAnyValidObjective(
     context.policy_creation_objectives,
     context.nodes,
     docString,
     accountId,
-    IAMNodeEntity.Policy
+    nodeEntity
   );
 
-  const newNode = createNodeFromObjective<TFinishEventMap, IAMPolicyNode>(
-    docString,
-    label,
-    IAMNodeEntity.Policy,
-    { granted_accesses: targetValidObjective?.granted_accesses ?? [] },
-    createPolicyNode,
-    targetValidObjective
-  );
+  const newNode = createNodeFromObjectiveNew(docString, label, nodeEntity, targetValidObjective);
 
   const updatedContext = produce(context, draftContext => {
     if (targetValidObjective) {
@@ -142,155 +115,7 @@ export function createPermissionPolicy<
       )!.finished = true;
     }
 
-    draftContext.nodes.push(newNode as WritableDraft<IAMPolicyNode>);
-  });
-
-  return {
-    updatedContext,
-    events: targetValidObjective ? [targetValidObjective.on_finish_event] : [],
-  };
-}
-
-export function createResourcePolicy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  docString: string,
-  label: string,
-  accountId?: AccountID
-): {
-  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
-  events: TFinishEventMap[ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE][];
-} {
-  const targetValidObjective = findAnyValidObjective<IAMNodeEntity.ResourcePolicy>(
-    context.resource_policy_creation_objectives ?? [],
-    context.nodes,
-    docString,
-    accountId,
-    IAMNodeEntity.ResourcePolicy
-  );
-
-  const newNode = createNodeFromObjective<TFinishEventMap, IAMResourcePolicyNode>(
-    docString,
-    label,
-    IAMNodeEntity.ResourcePolicy,
-    {},
-    createResourcePolicyNode,
-    targetValidObjective
-  );
-
-  let updatedContext = produce(context, draftContext => {
-    if (targetValidObjective) {
-      (draftContext.resource_policy_creation_objectives ?? []).find(
-        objective => objective.id === targetValidObjective?.id
-      )!.finished = true;
-    }
-    draftContext.nodes.push(newNode as WritableDraft<IAMResourcePolicyNode>);
-  });
-
-  const resourceNode = IAMNodeFilter.create()
-    .fromNodes(context.nodes)
-    .whereIdIs(newNode.data.resource_node_id)
-    .whereEntityIs(IAMNodeEntity.Resource)
-    .build()[0];
-
-  ({ updatedContext } = updateConnectionEdges(context, newNode, resourceNode, true, {
-    data: {
-      source: newNode.id,
-      target: targetValidObjective?.created_node_parent_id,
-    },
-  }));
-
-  return {
-    updatedContext,
-    events: targetValidObjective ? [targetValidObjective.on_finish_event] : [],
-  };
-}
-
-export function createSCP<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  docString: string,
-  label: string,
-  accountId?: AccountID
-): {
-  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
-  events: TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE][];
-} {
-  const targetValidObjective = findAnyValidObjective<IAMNodeEntity.SCP>(
-    context.scp_creation_objectives ?? [],
-    context.nodes,
-    docString,
-    accountId,
-    IAMNodeEntity.SCP
-  );
-
-  const newNode = createNodeFromObjective<TFinishEventMap, IAMSCPNode>(
-    docString,
-    label,
-    IAMNodeEntity.SCP,
-    {
-      is_edge_blocked: targetValidObjective?.is_edge_blocked,
-      blocked_edge_content:
-        targetValidObjective?.blocked_edge_content ?? 'Access Blocked By SCP 🔒',
-    },
-    createSCPNode,
-    targetValidObjective
-  );
-
-  const updatedContext = produce(context, draftContext => {
-    if (targetValidObjective) {
-      (draftContext.scp_creation_objectives ?? []).find(
-        objective => objective.id === targetValidObjective?.id
-      )!.finished = true;
-    }
-
-    draftContext.nodes.push(newNode as WritableDraft<IAMSCPNode>);
-  });
-
-  return {
-    updatedContext,
-    events: targetValidObjective ? [targetValidObjective.on_finish_event] : [],
-  };
-}
-
-export function createPermissionBoundary<
-  TLevelObjectiveID,
-  TFinishEventMap extends BaseFinishEventMap,
->(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  docString: string,
-  label: string,
-  accountId?: AccountID
-): {
-  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
-  events: TFinishEventMap[ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE][];
-} {
-  const targetValidObjective = findAnyValidObjective<IAMNodeEntity.PermissionBoundary>(
-    context.permission_boundary_creation_objectives ?? [],
-    context.nodes,
-    docString,
-    accountId,
-    IAMNodeEntity.PermissionBoundary
-  );
-
-  const newNode = createNodeFromObjective<TFinishEventMap, IAMPermissionBoundaryNode>(
-    docString,
-    label,
-    IAMNodeEntity.PermissionBoundary,
-    {
-      is_edge_blocked: targetValidObjective?.is_edge_blocked,
-      blocked_edge_content:
-        targetValidObjective?.blocked_edge_content ?? 'Access Blocked By Permission Boundary 🔒',
-    },
-    createPermissionBoundaryNode,
-    targetValidObjective
-  );
-
-  const updatedContext = produce(context, draftContext => {
-    if (targetValidObjective) {
-      (draftContext.permission_boundary_creation_objectives ?? []).find(
-        objective => objective.id === targetValidObjective?.id
-      )!.finished = true;
-    }
-    draftContext.nodes.push(newNode as WritableDraft<IAMPermissionBoundaryNode>);
+    draftContext.nodes.push(newNode as WritableDraft<IAMCodeDefinedNode>);
   });
 
   return {

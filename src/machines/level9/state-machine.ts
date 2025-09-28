@@ -18,7 +18,6 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -44,7 +43,6 @@ export const stateMachine = createStateMachineSetup<
     edges_connection_objectives: [],
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
-    role_creation_objectives: [],
     use_multi_account_canvas: false,
     side_panel_open: false,
     layout_groups: COMMON_LAYOUT_GROUPS,
@@ -64,25 +62,13 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
     },
-    [StatefulStateMachineEvent.ADDIAMRoleNode]: {
-      actions: [
-        {
-          type: 'add_role_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            accountId: event.account_id,
-            label: event.label,
-          }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.AddIAMPolicyNode]: {
+    [StatefulStateMachineEvent.AddIAMNode]: {
       actions: {
-        type: 'add_policy_node',
+        type: 'add_iam_node',
         params: ({ event }) => ({
           docString: event.doc_string,
           label: event.label,
-          policyNodeType: IAMNodeEntity.Policy,
+          policyNodeType: event.node_entity,
         }),
       },
     },
@@ -125,6 +111,7 @@ export const stateMachine = createStateMachineSetup<
   states: {
     inside_level: {
       entry: [
+        'clear_creation_objectives',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         assign({
           initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
@@ -170,7 +157,7 @@ export const stateMachine = createStateMachineSetup<
             },
             'enable_edges_management_ability',
             {
-              type: 'set_permission_policy_creation_objectives',
+              type: 'append_creation_objectives',
               params: {
                 objectives: POLICY_CREATION_OBJECTIVES[0],
               },
@@ -276,7 +263,7 @@ export const stateMachine = createStateMachineSetup<
               params: { nodeIds: [PolicyNodeID.RDSManagePolicy1, PolicyNodeID.RDSManagePolicy2] },
             },
             {
-              type: 'set_permission_policy_creation_objectives',
+              type: 'append_creation_objectives',
               params: {
                 objectives: POLICY_CREATION_OBJECTIVES[1],
               },

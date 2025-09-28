@@ -9,7 +9,7 @@ const VALID_CONNECTIONS = new Set<string>(
     [IAMNodeEntity.User, IAMNodeEntity.Group],
     [IAMNodeEntity.User, IAMNodeEntity.Role],
     [IAMNodeEntity.Policy, IAMNodeEntity.Role],
-    [IAMNodeEntity.Resource, IAMNodeEntity.Role],
+    [IAMNodeEntity.Role, IAMNodeEntity.Resource],
     [IAMNodeEntity.OU, IAMNodeEntity.Account],
     [IAMNodeEntity.SCP, IAMNodeEntity.OU],
     [IAMNodeEntity.SCP, IAMNodeEntity.Account],

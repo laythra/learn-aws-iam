@@ -38,10 +38,8 @@ export const stateMachine = createStateMachineSetup<
     edges_connection_objectives: [],
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
-    role_creation_objectives: [],
     use_multi_account_canvas: false,
     side_panel_open: false,
-    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     restricted_element_ids: [ElementID.NewEntityBtn],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
@@ -52,18 +50,6 @@ export const stateMachine = createStateMachineSetup<
         {
           type: 'add_iam_user_group_node',
           params: ({ event }) => ({ params: event.node_data, nodeType: event.node_entity }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.ADDIAMRoleNode]: {
-      actions: [
-        {
-          type: 'add_role_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            accountId: event.account_id,
-            label: event.label,
-          }),
         },
       ],
     },

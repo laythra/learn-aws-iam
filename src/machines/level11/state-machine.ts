@@ -21,7 +21,6 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -69,35 +68,13 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
     },
-    [StatefulStateMachineEvent.ADDIAMRoleNode]: {
-      actions: [
-        {
-          type: 'add_role_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            accountId: event.account_id,
-            label: event.label,
-          }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.AddIAMPolicyNode]: {
+    [StatefulStateMachineEvent.AddIAMNode]: {
       actions: {
-        type: 'add_policy_node',
+        type: 'add_iam_node',
         params: ({ event }) => ({
           docString: event.doc_string,
           label: event.label,
-          policyNodeType: IAMNodeEntity.Policy,
-        }),
-      },
-    },
-    [StatefulStateMachineEvent.AddIAMPermissionBoundaryNode]: {
-      actions: {
-        type: 'add_policy_node',
-        params: ({ event }) => ({
-          docString: event.doc_string,
-          label: event.label,
-          policyNodeType: IAMNodeEntity.PermissionBoundary,
+          policyNodeType: event.node_entity,
         }),
       },
     },
@@ -226,6 +203,7 @@ export const stateMachine = createStateMachineSetup<
     },
     inside_level: {
       entry: [
+        'clear_creation_objectives',
         'store_checkpoint',
         'hide_popovers',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
@@ -294,9 +272,13 @@ export const stateMachine = createStateMachineSetup<
               }),
             },
             {
-              type: 'set_permission_boundary_creation_objectives',
+              type: 'append_creation_objectives',
               params: { objectives: PERMISSION_BOUNDARY_CREATION_OBJECTIVES[0] },
             },
+            // {
+            //   type: 'set_permission_boundary_creation_objectives',
+            //   params: { objectives: PERMISSION_BOUNDARY_CREATION_OBJECTIVES[0] },
+            // },
           ],
           on: {
             [PermissionBoundaryCreationFinishEvent.READ_SECRETS_PERMISSION_BOUNDARY_CREATED]:
@@ -326,7 +308,7 @@ export const stateMachine = createStateMachineSetup<
               params: { id: LevelObjectiveID.CREATE_PERMISSIONS_DELEGATION_POLICY },
             },
             {
-              type: 'set_permission_policy_creation_objectives',
+              type: 'append_creation_objectives',
               params: { objectives: POLICY_CREATION_OBJECTIVES[0] },
             },
             {
