@@ -4,7 +4,7 @@ import rds1ManagePolicySchema from '../schemas/policy/rds1-manage-policy.json';
 import rds2managePolicySchema from '../schemas/policy/rds2-manage-policy.json';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyCreationObjective } from '@/factories/objectives-factory';
+import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { IAMNodeFilter } from '@/machines/utils/iam-node-filter';
 import { AccessLevel, CommonLayoutGroupID, IAMAnyNode, IAMNodeEntity } from '@/types';
@@ -90,6 +90,7 @@ const SECOND_OBJECTIVE_HINT_MESSAGES = [
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
   [
     {
+      id: PolicyNodeID.RDSManagePolicy1,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.RDSManagePolicy1,
       entity: IAMNodeEntity.Policy,
@@ -121,6 +122,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       help_badges: SHARED_HELP_BADGES,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
     {
+      id: PolicyNodeID.RDSManagePolicy2,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.RDSManagePolicy2,
       entity: IAMNodeEntity.Policy,
@@ -153,6 +155,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
   ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
+      id: PolicyNodeID.RDSSharedPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.RDSSharedPolicy,
       entity: IAMNodeEntity.Policy,

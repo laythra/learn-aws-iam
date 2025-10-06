@@ -150,6 +150,7 @@ export const stateMachine = createStateMachineSetup<
           onDone: 'fixed_popover3',
           entry: [
             'hide_fixed_popovers',
+            { type: 'store_snapshot_to_disk', params: { filename: 'stage2' } },
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
             {
               type: 'set_edge_connection_objectives',
@@ -236,6 +237,7 @@ export const stateMachine = createStateMachineSetup<
         },
         fixed_popover3: {
           entry: [
+            { type: 'store_snapshot_to_disk', params: { filename: 'stage3' } },
             'store_checkpoint',
             'hide_popovers',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },

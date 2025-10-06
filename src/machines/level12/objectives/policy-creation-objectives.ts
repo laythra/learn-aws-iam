@@ -2,7 +2,7 @@ import s3WriteAccessPolicySchema from '../schemas/policy/ec2-staging-s3-upload-p
 import elasticacheManagementPolicySchema from '../schemas/policy/elasticcache-prod-management-policy.json';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyCreationObjective } from '@/factories/objectives-factory';
+import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
 import { IAMPolicyCreationObjective } from '@/machines/types';
 import { IAMNodeFilter } from '@/machines/utils/iam-node-filter';
@@ -12,7 +12,7 @@ import { AJV_COMPILER } from '@/utils/iam-code-linter';
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
   [
     {
-      id: 'policy-1',
+      id: PolicyNodeID.S3WriteAccessPolicy,
       entity_id: PolicyNodeID.S3WriteAccessPolicy,
       on_finish_event: PolicyCreationFinishEvent.S3_WRITE_POLICY_CREATED,
       extra_data: {
@@ -32,7 +32,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       created_node_parent_id: AccountID.InLevelStagingAccount,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
     {
-      id: 'policy-2',
+      id: PolicyNodeID.S3WriteAccessPolicy,
       entity_id: PolicyNodeID.S3WriteAccessPolicy,
       on_finish_event: PolicyCreationFinishEvent.S3_WRITE_POLICY_CREATED,
       extra_data: {
@@ -52,7 +52,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       created_node_parent_id: AccountID.InLevelStagingAccount,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
     {
-      id: 'policy-3',
+      id: PolicyNodeID.ElasticCacheManagementPolicy,
       entity_id: PolicyNodeID.ElasticCacheManagementPolicy,
       on_finish_event: PolicyCreationFinishEvent.ELASTICACHE_MANAGEMENT_POLICY_CREATED,
       extra_data: {

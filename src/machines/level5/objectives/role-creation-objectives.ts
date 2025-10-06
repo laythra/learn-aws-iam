@@ -4,7 +4,7 @@ import financeAuditorPolicySchema from '../schemas/role/finance-auditor-role-sch
 import lambdaRoleSchema from '../schemas/role/lambda-role-schema.json';
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { RoleNodeID } from '../types/node-id-enums';
-import { createRoleCreationObjective } from '@/factories/objectives-factory';
+import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
@@ -58,6 +58,7 @@ const HINT_MESSAGES = [
 export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[][] = [
   [
     {
+      id: RoleNodeID.S3ReadAccessRole,
       type: ObjectiveType.ROLE_CREATION_OBJECTIVE,
       entity_id: RoleNodeID.S3ReadAccessRole,
       entity: IAMNodeEntity.Role,
@@ -93,6 +94,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
   ].map(objective => createRoleCreationObjective(objective)),
   [
     {
+      id: RoleNodeID.EC2Role,
       type: ObjectiveType.ROLE_CREATION_OBJECTIVE,
       entity_id: RoleNodeID.EC2Role,
       entity: IAMNodeEntity.Role,
@@ -102,12 +104,17 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       validate_inside_code_editor: true,
       help_badges: [],
       validate_function: AJV_COMPILER.compile(ec2RoleSchema),
-      required_policies: [],
-      required_principles: [],
+      // required_policies: [],
+      // required_principles: [],
       hint_messages: HINT_MESSAGES,
       callout_message: CALLOUT_MSG2,
-    },
+      extra_data: {
+        required_policies: [],
+        required_principles: [],
+      },
+    } satisfies Partial<IAMRoleCreationObjective<FinishEventMap>>,
     {
+      id: RoleNodeID.LambdaRole,
       type: ObjectiveType.ROLE_CREATION_OBJECTIVE,
       entity_id: RoleNodeID.LambdaRole,
       entity: IAMNodeEntity.Role,
@@ -117,10 +124,12 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       validate_inside_code_editor: true,
       help_badges: [],
       validate_function: AJV_COMPILER.compile(lambdaRoleSchema),
-      required_policies: [],
-      required_principles: [],
       hint_messages: HINT_MESSAGES,
       callout_message: CALLOUT_MSG2,
-    },
+      extra_data: {
+        required_policies: [],
+        required_principles: [],
+      },
+    } satisfies Partial<IAMRoleCreationObjective<FinishEventMap>>,
   ].map(objective => createRoleCreationObjective(objective)),
 ];

@@ -3,9 +3,9 @@ import { describe, it, expect, vi } from 'vitest';
 import { createIAMNode, createUserGroupNode } from './nodes-creation-state-machine-actions';
 import { createMockContext } from '@/__test-helpers__/context';
 import {
-  createPolicyCreationObjective,
-  createUserGroupCreationObjective,
-} from '@/factories/objectives-factory';
+  createMockPolicyCreationObjective,
+  createMockUserGroupCreationObjective,
+} from '@/__test-helpers__/objectives';
 import { CreatableIAMNodeEntity, IAMNodeEntity } from '@/types';
 import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
@@ -50,7 +50,7 @@ describe('createPermissionPolicy', () => {
   });
 
   it('creates a new policy node with a matching objective and marks it as necessary', () => {
-    const mockObjective = createPolicyCreationObjective({
+    const mockObjective = createMockPolicyCreationObjective({
       on_finish_event: 'MOCK_EVENT',
     });
     mockContext = createMockContext({
@@ -83,7 +83,7 @@ describe.each([
 ])('createUserGroupNode (%s)', (_, entityType) => {
   it('creates node and returns event if valid objective is found', () => {
     const mockLabel = `mock_${entityType.toLowerCase()}`;
-    const mockObjective = createUserGroupCreationObjective({
+    const mockObjective = createMockUserGroupCreationObjective({
       on_finish_event: `${entityType}_CREATED`,
       entity_to_create: entityType as CreatableIAMNodeEntity,
     });

@@ -5,7 +5,7 @@ import s3ReadPolicySchema from '../schemas/policy/s3-read-policy-schema.json';
 import s3ReadWritePolicySchema from '../schemas/policy/s3-read-write-policy-schema.json';
 import { FinishEventMap, NodeCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyCreationObjective } from '@/factories/objectives-factory';
+import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
@@ -19,6 +19,7 @@ const CALLOUT_MESSAGE1 = `
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
   [
     {
+      id: PolicyNodeID.S3ReadPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.S3ReadPolicy,
       entity: IAMNodeEntity.Policy,
@@ -54,6 +55,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
   ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
+      id: PolicyNodeID.S3ReadWritePolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.S3ReadWritePolicy,
       entity: IAMNodeEntity.Policy,
@@ -76,6 +78,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
     {
+      id: PolicyNodeID.CloudFrontReadPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.CloudFrontReadPolicy,
       entity: IAMNodeEntity.Policy,
@@ -97,6 +100,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
     {
+      id: PolicyNodeID.DynamoDBReadWritePolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.DynamoDBReadWritePolicy,
       entity: IAMNodeEntity.Policy,

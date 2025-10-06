@@ -234,11 +234,6 @@ interface IAMPolicyNodeData extends IAMNodeData {
   editable: boolean;
   granted_accesses: PolicyGrantedAccess[];
   content: string;
-
-  /**
-   * Used for resource-based policies, such that the policy is attached to the resource
-   */
-  resource_node_id?: string;
 }
 
 interface IAMResourcePolicyNodeData extends IAMNodeData {

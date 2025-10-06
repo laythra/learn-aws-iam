@@ -176,48 +176,6 @@ export const createStateMachineSetup = <
           events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
-      // add_policy_node: enqueueActions(
-      //   (
-      //     { context, enqueue },
-      //     {
-      //       docString,
-      //       label,
-      //       accountId,
-      //       policyNodeType,
-      //     }: {
-      //       docString: string;
-      //       accountId?: AccountID;
-      //       label: string;
-      //       policyNodeType:
-      //         | IAMNodeEntity.Policy
-      //         | IAMNodeEntity.ResourcePolicy
-      //         | IAMNodeEntity.PermissionBoundary
-      //         | IAMNodeEntity.SCP;
-      //     }
-      //   ) => {
-      //     const createFnMap = {
-      //       [IAMNodeEntity.Policy]: createPermissionPolicy,
-      //       [IAMNodeEntity.ResourcePolicy]: createResourcePolicy,
-      //       [IAMNodeEntity.PermissionBoundary]: createPermissionBoundary,
-      //       [IAMNodeEntity.SCP]: createSCP,
-      //     };
-
-      //     const createFn = createFnMap[policyNodeType];
-      //     const createPermissionPolicyResult = createFn(context, docString, label, accountId);
-
-      //     const { updatedContext } = createPermissionPolicyResult;
-
-      //     enqueue.assign({
-      //       nodes: updatedContext.nodes,
-      //       edges: updatedContext.edges,
-      //       policy_creation_objectives: updatedContext.policy_creation_objectives,
-      //     });
-
-      //     createPermissionPolicyResult.events.forEach(event => {
-      //       enqueue.raise({ type: event });
-      //     });
-      //   }
-      // ),
       edit_policy_node: enqueueActions(
         ({ context, enqueue }, { docString, nodeId }: { docString: string; nodeId: string }) => {
           const editPolicyResult = editPermissionPolicy<TLevelObjectiveID, TFinishEventMap>(
@@ -239,33 +197,6 @@ export const createStateMachineSetup = <
           });
         }
       ),
-      // // TODO: Migrate this to `add_policy_node` action
-      // add_role_node: enqueueActions(
-      //   (
-      //     { context, enqueue },
-      //     {
-      //       docString,
-      //       label,
-      //       accountId,
-      //     }: { docString: string; label: string; accountId?: AccountID }
-      //   ) => {
-      //     const { updatedContext, events } = createTrustPolicy<TLevelObjectiveID, TFinishEventMap>(
-      //       context,
-      //       docString,
-      //       label,
-      //       accountId
-      //     );
-
-      //     enqueue.assign({
-      //       nodes: updatedContext.nodes,
-      //       policy_creation_objectives: updatedContext.policy_creation_objectives,
-      //     });
-
-      //     events.forEach(event => {
-      //       enqueue.raise({ type: event });
-      //     });
-      //   }
-      // ),
       show_popup_message: enqueueActions(
         ({ enqueue }, { message }: { message: PopupTutorialMessage }) => {
           enqueue.assign({
