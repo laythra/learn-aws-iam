@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
-import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
+import { IAMCodeDefinedEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface CreateSubmitButtonProps {
@@ -38,43 +38,13 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
 
     const accountId = codeEditorStateContext.selectedAccountId;
     const label = codeEditorStateContext.label!;
-
-    // TODO: Create policies and roles through the same state machine event
-    if (selectedIAMEntity == IAMNodeEntity.Policy) {
-      levelActor.send({
-        type: StatefulStateMachineEvent.AddIAMPolicyNode,
-        doc_string: content,
-        account_id: accountId,
-        label,
-      });
-    } else if (selectedIAMEntity == IAMNodeEntity.Role) {
-      levelActor.send({
-        type: StatefulStateMachineEvent.ADDIAMRoleNode,
-        doc_string: content,
-        account_id: accountId,
-        label,
-      });
-    } else if (selectedIAMEntity == IAMNodeEntity.SCP) {
-      levelActor.send({
-        type: StatefulStateMachineEvent.AddIAMSCPNode,
-        doc_string: content,
-        label,
-      });
-    } else if (selectedIAMEntity == IAMNodeEntity.ResourcePolicy) {
-      levelActor.send({
-        type: StatefulStateMachineEvent.AddIAMResourcePolicyNode,
-        doc_string: content,
-        label,
-        account_id: accountId,
-      });
-    } else if (selectedIAMEntity == IAMNodeEntity.PermissionBoundary) {
-      levelActor.send({
-        type: StatefulStateMachineEvent.AddIAMPermissionBoundaryNode,
-        doc_string: content,
-        label,
-        account_id: accountId,
-      });
-    }
+    levelActor.send({
+      type: StatefulStateMachineEvent.AddIAMNode,
+      doc_string: content,
+      account_id: accountId,
+      label,
+      node_entity: selectedIAMEntity,
+    });
 
     codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });
   };

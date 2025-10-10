@@ -199,6 +199,11 @@ interface IAMNodeData extends Record<string, unknown> {
    * The first element of each pair (the key) must be unique across all tags.
    */
   tags: Array<[string, string]>;
+
+  /**
+   * Defines which node entities can connect to this node
+   */
+  allowed_sources?: IAMNodeEntity[];
 }
 
 interface IAMGuardRailsNodeData extends IAMNodeData {
@@ -217,6 +222,7 @@ interface IAMGuardRailsNodeData extends IAMNodeData {
 
 interface IAMUserNodeData extends IAMNodeData {
   entity: IAMNodeEntity.User;
+  allowed_sources: [IAMNodeEntity.Policy, IAMNodeEntity.PermissionBoundary];
 }
 
 interface IAMGroupNodeData extends IAMNodeData {
@@ -227,20 +233,13 @@ interface IAMPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Policy;
   editable: boolean;
   granted_accesses: PolicyGrantedAccess[];
-  initial_edges?: Edge<IAMEdgeData>[];
   content: string;
-
-  /**
-   * Used for resource-based policies, such that the policy is attached to the resource
-   */
-  resource_node_id?: string;
 }
 
 interface IAMResourcePolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.ResourcePolicy;
   editable: boolean;
   granted_accesses: PolicyGrantedAccess[];
-  initial_edges?: Edge<IAMEdgeData>[];
   content: string;
   resource_node_id: string;
 }
@@ -330,15 +329,11 @@ interface IAMEdgeData extends Record<string, unknown> {
   unnecessary_edge?: boolean;
   is_blocked?: boolean;
   parent_edge_id?: string;
+  attached_as: IAMNodeEntity;
 }
 
 export type PartialEdge = Omit<Partial<IAMEdge>, 'data'> & {
   data?: Partial<IAMEdge['data']>;
-};
-
-export type IAMNodeDataMapping = {
-  iam_user: IAMUserNodeData;
-  iam_group: IAMGroupNodeData;
 };
 
 export enum CommonLayoutGroupID {

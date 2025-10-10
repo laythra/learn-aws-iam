@@ -117,6 +117,7 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
           hovering_label: edgeLabel,
           source_node: sourceNode,
           target_node: targetNode,
+          attached_as: sourceNode.data.entity,
         },
       });
 
@@ -161,6 +162,7 @@ function createEdgesFromGrantedAccesses(
           parent_edge_id: parentEdgeId,
           source_node: node,
           target_node: nodesById[access.target_node],
+          attached_as: node.data.entity,
         },
       })
     );
@@ -197,6 +199,7 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
         color: theme.colors.black,
         source_node: source,
         target_node: target,
+        attached_as: source.data.entity,
       },
     });
 

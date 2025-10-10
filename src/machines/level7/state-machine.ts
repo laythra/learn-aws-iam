@@ -20,7 +20,6 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
@@ -53,19 +52,6 @@ export const stateMachine = createStateMachineSetup<
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
-    ADD_IAM_POLICY_NODE: {
-      actions: [
-        {
-          type: 'add_policy_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            accountId: event.account_id,
-            label: event.label,
-            policyNodeType: IAMNodeEntity.Policy,
-          }),
-        },
-      ],
-    },
     ADD_EDGE: {
       actions: assign({
         edges: ({ context, event }) => [...context.edges, event.edge],
@@ -95,36 +81,11 @@ export const stateMachine = createStateMachineSetup<
       }),
     },
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
-    [StatefulStateMachineEvent.AddIAMResourcePolicyNode]: {
-      actions: [
-        {
-          type: 'add_policy_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            label: event.label,
-            policyNodeType: IAMNodeEntity.ResourcePolicy,
-            accountId: event.account_id,
-          }),
-        },
-      ],
-    },
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [
         {
           type: 'add_iam_user_group_node',
           params: ({ event }) => ({ params: event.node_data, nodeType: event.node_entity }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.ADDIAMRoleNode]: {
-      actions: [
-        {
-          type: 'add_role_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            accountId: event.account_id,
-            label: event.label,
-          }),
         },
       ],
     },
@@ -152,6 +113,19 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
     },
+    [StatefulStateMachineEvent.AddIAMNode]: {
+      actions: [
+        {
+          type: 'add_iam_node',
+          params: ({ event }) => ({
+            docString: event.doc_string,
+            label: event.label,
+            accountId: event.account_id,
+            policyNodeType: event.node_entity,
+          }),
+        },
+      ],
+    },
   },
   states: {
     inside_tutorial: {
@@ -169,8 +143,10 @@ export const stateMachine = createStateMachineSetup<
         },
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
         {
-          type: 'set_resource_policy_creation_objectives',
-          params: { objectives: RESOURCE_POLICY_CREATION_OBJECTIVES[0] },
+          type: 'append_creation_objectives',
+          params: {
+            objectives: RESOURCE_POLICY_CREATION_OBJECTIVES[0],
+          },
         },
       ],
       onDone: 'inside_level',
@@ -296,15 +272,12 @@ export const stateMachine = createStateMachineSetup<
               },
             },
             {
-              type: 'set_permission_policy_creation_objectives',
+              type: 'append_creation_objectives',
               params: {
-                objectives: POLICY_CREATION_OBJECTIVES[0],
-              },
-            },
-            {
-              type: 'set_resource_policy_creation_objectives',
-              params: {
-                objectives: RESOURCE_POLICY_CREATION_OBJECTIVES[1],
+                objectives: [
+                  ...RESOURCE_POLICY_CREATION_OBJECTIVES[1],
+                  ...POLICY_CREATION_OBJECTIVES[0],
+                ],
               },
             },
             'show_side_panel',

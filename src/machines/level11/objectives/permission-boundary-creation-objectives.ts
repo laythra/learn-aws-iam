@@ -58,7 +58,6 @@ export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreat
     [
       {
         id: 'permission-boundary-1',
-        initial_edges: [],
         type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE,
         entity_id: PermissionBoundaryID.SecretsReadingPermissionBoundary,
         entity: IAMNodeEntity.PermissionBoundary,
@@ -69,11 +68,14 @@ export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreat
         initial_code: INITIAL_POLICIES.READ_SECRETS_PERMISSION_BOUNDARY,
         limit_new_lines: false,
         layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
-        blocked_edge_content: 'Access Blocked By Permission Boundary 🔒',
-        // Not using any external context because this function will get serialized
-        is_edge_blocked: edge => {
-          return ['resource-secret-1', 'resource-secret-2'].includes(edge.target);
+        extra_data: {
+          blocked_edge_content: 'Access Blocked By Permission Boundary 🔒',
+          // Not using any external context because this function will get serialized
+          is_edge_blocked: edge => {
+            return ['resource-secret-1', 'resource-secret-2'].includes(edge.target);
+          },
         },
+
         callout_message: OBJECTIVE_CALLOUT_MSG,
         hint_messages: [
           {

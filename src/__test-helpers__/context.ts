@@ -17,7 +17,6 @@ export function createMockContext<
     edges: [] as IAMEdge[],
     policy_creation_objectives: [],
     user_group_creation_objectives: [],
-    role_creation_objectives: [],
     edges_connection_objectives: [],
     level_objectives: [],
     whitelisted_element_ids: [],

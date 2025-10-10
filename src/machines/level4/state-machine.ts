@@ -12,7 +12,6 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -43,7 +42,6 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
-    role_creation_objectives: [],
     in_tutorial_state: true,
     whitelisted_element_ids: [],
     restricted_element_ids: [ElementID.NewEntityBtn],
@@ -58,13 +56,13 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
     },
-    [StatefulStateMachineEvent.AddIAMPolicyNode]: {
+    [StatefulStateMachineEvent.AddIAMNode]: {
       actions: {
-        type: 'add_policy_node',
+        type: 'add_iam_node',
         params: ({ event }) => ({
           docString: event.doc_string,
           label: event.label,
-          policyNodeType: IAMNodeEntity.Policy,
+          policyNodeType: event.node_entity,
         }),
       },
     },

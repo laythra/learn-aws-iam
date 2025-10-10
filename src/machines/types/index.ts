@@ -68,13 +68,13 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
   level_title: string;
   nodes: IAMAnyNode[];
-  policy_creation_objectives: IAMPolicyCreationObjective<TBaseFinishEventMap>[];
-  resource_policy_creation_objectives?: IAMResourcePolicyCreationObjective<TBaseFinishEventMap>[];
-  scp_creation_objectives?: IAMSCPCreationObjective<TBaseFinishEventMap>[];
+  policy_creation_objectives: BaseCreationObjective<TBaseFinishEventMap>[];
+  // resource_policy_creation_objectives?: IAMResourcePolicyCreationObjective<TBaseFinishEventMap>[];
+  // scp_creation_objectives?: IAMSCPCreationObjective<TBaseFinishEventMap>[];
   policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  role_creation_objectives: IAMRoleCreationObjective<TBaseFinishEventMap>[];
+  // role_creation_objectives: IAMRoleCreationObjective<TBaseFinishEventMap>[];
   show_popovers: boolean;
   show_popups: boolean;
   show_fixed_popovers: boolean;
@@ -82,7 +82,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   side_panel_open?: boolean;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
   // eslint-disable-next-line
-  permission_boundary_creation_objectives?: IAMPermissionBoundaryCreationObjective<TBaseFinishEventMap>[];
+  // permission_boundary_creation_objectives?: IAMPermissionBoundaryCreationObjective<TBaseFinishEventMap>[];
   use_multi_account_canvas?: boolean;
   highlighted_element_id?: string;
   in_tutorial_state?: boolean;
@@ -136,10 +136,11 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       doc_string: string;
     }
   | {
-      type: StatefulStateMachineEvent.AddIAMPolicyNode;
+      type: StatefulStateMachineEvent.AddIAMNode;
       doc_string: string;
       label: string;
       account_id?: AccountID;
+      node_entity: IAMCodeDefinedEntity;
     }
   | {
       type: StatefulStateMachineEvent.AddIAMResourcePolicyNode;
@@ -246,20 +247,23 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
   readonly on_finish_event:
     | TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE]
     | TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE]
-    | TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE];
+    | TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE]
+    | TFinishEventMap[ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE]
+    | TFinishEventMap[ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE];
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
+  readonly initial_position?: string;
   readonly account_id?: AccountID;
   readonly created_node_initial_position?: string;
   readonly callout_message?: string;
   readonly hint_messages?: { title: string; content: string }[];
-  /**
-   * @deprecated I forgot what's this used for. TODO: Remove if not needed
-   */
-  readonly initial_edges?: IAMEdge[];
   readonly created_node_parent_id?: string;
   readonly layout_group_id?: string;
   finished: boolean;
+  /**
+   * Extra data overridable by each objective type
+   */
+  extra_data: Record<string, unknown>;
 }
 
 // TODO: Create a common interface for IAMPolicyCreationObjective and IAMResourcePolicyCreationObjective
@@ -269,53 +273,55 @@ export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEv
   extends BaseCreationObjective<TFinishEventMap> {
   readonly entity: IAMNodeEntity.Policy;
   readonly type: ObjectiveType.POLICY_CREATION_OBJECTIVE;
-  readonly initial_position?: string;
-  readonly granted_accesses: PolicyGrantedAccess[];
   readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE];
+  readonly extra_data: {
+    granted_accesses: PolicyGrantedAccess[];
+  };
 }
 
 export interface IAMResourcePolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>
   extends BaseCreationObjective<TFinishEventMap> {
   readonly entity: IAMNodeEntity.ResourcePolicy;
   readonly type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE;
-  readonly initial_position?: string;
-  readonly resource_node_id: string;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE];
+  readonly extra_data: {
+    readonly initial_edges: IAMEdge[];
+    readonly resource_node_id: string;
+  };
 }
 
 export interface IAMSCPCreationObjective<TFinishEventMap extends BaseFinishEventMap>
   extends BaseCreationObjective<TFinishEventMap> {
   readonly type: ObjectiveType.SCP_CREATION_OBJECTIVE;
-  readonly initial_position?: string;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE];
   readonly entity: IAMNodeEntity.SCP;
-  readonly is_edge_blocked: (edge: IAMEdge) => boolean;
-  readonly blocked_edge_content: string;
+  readonly extra_data: {
+    readonly is_edge_blocked: (edge: IAMEdge) => boolean;
+    readonly blocked_edge_content: string;
+  };
 }
 
 export interface IAMPermissionBoundaryCreationObjective<TFinishEventMap extends BaseFinishEventMap>
   extends BaseCreationObjective<TFinishEventMap> {
   readonly type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE;
-  readonly initial_position?: string;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE];
-  readonly is_edge_blocked: (edge: IAMEdge) => boolean;
-  readonly blocked_edge_content: string;
+  readonly entity: IAMNodeEntity.PermissionBoundary;
+  readonly extra_data: {
+    readonly is_edge_blocked: (edge: IAMEdge) => boolean;
+    readonly blocked_edge_content: string;
+  };
 }
 
 export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap>
   extends BaseCreationObjective<TFinishEventMap> {
   readonly type: ObjectiveType.ROLE_CREATION_OBJECTIVE;
-  readonly required_policies: string[];
-  readonly required_principles: string[];
   readonly on_finish_event: TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE];
-  // Override the `entity` type here
   readonly entity: IAMNodeEntity.Role;
+  readonly extra_data: {
+    readonly required_policies: string[];
+    readonly required_principles: string[];
+  };
 }
-
-export type AllPolicyCreationObjectives<TFinishEventMap extends BaseFinishEventMap> =
-  | IAMPolicyCreationObjective<TFinishEventMap>[]
-  | IAMSCPCreationObjective<TFinishEventMap>[]
-  | IAMRoleCreationObjective<TFinishEventMap>[];
 
 export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {
   readonly type: ObjectiveType.POLICY_EDIT_OBJECTIVE;

@@ -16,7 +16,6 @@ import {
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
-import { FIXED_POPOVER_MESSAGES } from '../level2/tutorial_messages/fixed-popover-messages';
 import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
@@ -46,8 +45,6 @@ export const stateMachine = createStateMachineSetup<
     edges_connection_objectives: [],
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
-    role_creation_objectives: [],
-    fixed_popover_messages: FIXED_POPOVER_MESSAGES,
     restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
@@ -57,14 +54,6 @@ export const stateMachine = createStateMachineSetup<
         {
           type: 'add_iam_user_group_node',
           params: ({ event }) => ({ params: event.node_data, nodeType: event.node_entity }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.ADDIAMRoleNode]: {
-      actions: [
-        {
-          type: 'add_role_node',
-          params: ({ event }) => ({ docString: event.doc_string, label: event.label }),
         },
       ],
     },

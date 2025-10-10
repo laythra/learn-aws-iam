@@ -32,6 +32,17 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        launchOptions: {
+          // Chromium introduced a scheduling optimization (DeferRendererTaskAfterInput) that defers
+          // certain rendering tasks after user input to improve responsiveness. This changes execution
+          // order in subtle ways, which makes some of our Playwright tests flaky (e.g. text fields
+          // sometimes don’t clear before being refilled).
+          //
+          // We disable the feature only in the e2e test browser to restore deterministic behavior.
+          // This does not affect production users. Long term we should fix the tests to be resilient
+          // or fix the underlying issues that cause the flakiness, and then remove this flag.
+          args: ['--disable-features=DeferRendererTaskAfterInput'],
+        },
       },
     },
     // Disabling these browsers for now, as they increase CI time significantly.

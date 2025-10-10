@@ -9,14 +9,7 @@ import {
 import { updateConnectionEdges } from './utils/edges-creation-state-machine-actions';
 import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-actions';
 import { resolveInitialEdges } from './utils/initial-edges-resolver';
-import {
-  createPermissionBoundary,
-  createPermissionPolicy,
-  createResourcePolicy,
-  createSCP,
-  createTrustPolicy,
-  createUserGroupNode,
-} from './utils/nodes-creation-state-machine-actions';
+import { createIAMNode, createUserGroupNode } from './utils/nodes-creation-state-machine-actions';
 import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
 import {
   editNodeAttributes,
@@ -25,15 +18,11 @@ import {
 import { ElementID } from '@/config/element-ids';
 import type {
   AccountID,
+  BaseCreationObjective,
   BaseFinishEventMap,
   EdgeConnectionObjective,
   FixedPopoverMessage,
-  IAMPermissionBoundaryCreationObjective,
-  IAMPolicyCreationObjective,
   IAMPolicyEditObjective,
-  IAMResourcePolicyCreationObjective,
-  IAMRoleCreationObjective,
-  IAMSCPCreationObjective,
   PopoverTutorialMessage,
   PopupTutorialMessage,
 } from '@/machines/types';
@@ -42,6 +31,7 @@ import currentLevelDetailsStore from '@/stores/current-level-details-store';
 import { IAMNodeEntity } from '@/types';
 import {
   IAMAnyNode,
+  IAMCodeDefinedEntity,
   IAMEdge,
   IAMGroupNode,
   IAMPolicyNode,
@@ -186,52 +176,6 @@ export const createStateMachineSetup = <
           events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
-      add_policy_node: enqueueActions(
-        (
-          { context, enqueue },
-          {
-            docString,
-            label,
-            accountId,
-            policyNodeType,
-          }: {
-            docString: string;
-            accountId?: AccountID;
-            label: string;
-            policyNodeType:
-              | IAMNodeEntity.Policy
-              | IAMNodeEntity.ResourcePolicy
-              | IAMNodeEntity.PermissionBoundary
-              | IAMNodeEntity.SCP;
-          }
-        ) => {
-          const createFnMap = {
-            [IAMNodeEntity.Policy]: createPermissionPolicy,
-            [IAMNodeEntity.ResourcePolicy]: createResourcePolicy,
-            [IAMNodeEntity.PermissionBoundary]: createPermissionBoundary,
-            [IAMNodeEntity.SCP]: createSCP,
-          };
-
-          const createFn = createFnMap[policyNodeType];
-          const createPermissionPolicyResult = createFn(context, docString, label, accountId);
-
-          const { updatedContext } = createPermissionPolicyResult;
-
-          enqueue.assign({
-            nodes: updatedContext.nodes,
-            edges: updatedContext.edges,
-            policy_creation_objectives: updatedContext.policy_creation_objectives,
-            resource_policy_creation_objectives: updatedContext.resource_policy_creation_objectives,
-            permission_boundary_creation_objectives:
-              updatedContext.permission_boundary_creation_objectives,
-            scp_creation_objectives: updatedContext.scp_creation_objectives,
-          });
-
-          createPermissionPolicyResult.events.forEach(event => {
-            enqueue.raise({ type: event });
-          });
-        }
-      ),
       edit_policy_node: enqueueActions(
         ({ context, enqueue }, { docString, nodeId }: { docString: string; nodeId: string }) => {
           const editPolicyResult = editPermissionPolicy<TLevelObjectiveID, TFinishEventMap>(
@@ -249,33 +193,6 @@ export const createStateMachineSetup = <
           });
 
           editPolicyResult.events.forEach(event => {
-            enqueue.raise({ type: event });
-          });
-        }
-      ),
-      // TODO: Migrate this to `add_policy_node` action
-      add_role_node: enqueueActions(
-        (
-          { context, enqueue },
-          {
-            docString,
-            label,
-            accountId,
-          }: { docString: string; label: string; accountId?: AccountID }
-        ) => {
-          const { updatedContext, events } = createTrustPolicy<TLevelObjectiveID, TFinishEventMap>(
-            context,
-            docString,
-            label,
-            accountId
-          );
-
-          enqueue.assign({
-            nodes: updatedContext.nodes,
-            role_creation_objectives: updatedContext.role_creation_objectives,
-          });
-
-          events.forEach(event => {
             enqueue.raise({ type: event });
           });
         }
@@ -330,9 +247,43 @@ export const createStateMachineSetup = <
         level_objectives: ({ context }, { id }: { id: string }) =>
           editObjectiveState(context, id, true),
       }),
-      add_iam_node: assign({
-        nodes: ({ context }, { node }: { node: IAMAnyNode }) => [...context.nodes, node],
-      }),
+      add_iam_node: enqueueActions(
+        (
+          { context, enqueue },
+          {
+            docString,
+            label,
+            accountId,
+            policyNodeType,
+          }: {
+            docString: string;
+            accountId?: AccountID;
+            label: string;
+            policyNodeType: IAMCodeDefinedEntity;
+          }
+        ) => {
+          const createPolicyResult = createIAMNode(
+            context,
+            docString,
+            label,
+            policyNodeType,
+            accountId
+          );
+
+          const { updatedContext } = createPolicyResult;
+
+          enqueue.assign({
+            nodes: updatedContext.nodes,
+            edges: updatedContext.edges,
+            policy_creation_objectives: updatedContext.policy_creation_objectives,
+          });
+
+          createPolicyResult.events.forEach(event => {
+            // TODO:  Remove the `as` cast
+            enqueue.raise({ type: event as TFinishEventMap[keyof TFinishEventMap] & string });
+          });
+        }
+      ),
       show_popover: assign({
         popover_content: (
           _context_obj,
@@ -349,6 +300,12 @@ export const createStateMachineSetup = <
       }),
       show_side_panel: assign({ side_panel_open: true }),
       close_side_panel: assign({ side_panel_open: false }),
+      append_creation_objectives: assign({
+        policy_creation_objectives: (
+          { context },
+          { objectives }: { objectives: BaseCreationObjective<TFinishEventMap>[] }
+        ) => [...context.policy_creation_objectives, ...objectives],
+      }),
       set_edge_connection_objectives: enqueueActions(
         (
           { enqueue },
@@ -356,56 +313,6 @@ export const createStateMachineSetup = <
         ) => {
           enqueue.assign({
             edges_connection_objectives: objectives,
-          });
-        }
-      ),
-      set_permission_policy_creation_objectives: enqueueActions(
-        (
-          { enqueue },
-          { objectives }: { objectives: IAMPolicyCreationObjective<TFinishEventMap>[] }
-        ) => {
-          enqueue.assign({
-            policy_creation_objectives: objectives,
-          });
-        }
-      ),
-      set_scp_creation_objectives: enqueueActions(
-        (
-          { enqueue },
-          { objectives }: { objectives: IAMSCPCreationObjective<TFinishEventMap>[] }
-        ) => {
-          enqueue.assign({
-            scp_creation_objectives: objectives,
-          });
-        }
-      ),
-      set_permission_boundary_creation_objectives: enqueueActions(
-        (
-          { enqueue },
-          { objectives }: { objectives: IAMPermissionBoundaryCreationObjective<TFinishEventMap>[] }
-        ) => {
-          enqueue.assign({
-            permission_boundary_creation_objectives: objectives,
-          });
-        }
-      ),
-      set_resource_policy_creation_objectives: enqueueActions(
-        (
-          { enqueue },
-          { objectives }: { objectives: IAMResourcePolicyCreationObjective<TFinishEventMap>[] }
-        ) => {
-          enqueue.assign({
-            resource_policy_creation_objectives: objectives,
-          });
-        }
-      ),
-      set_role_creation_objectives: enqueueActions(
-        (
-          { enqueue },
-          { objectives }: { objectives: IAMRoleCreationObjective<TFinishEventMap>[] }
-        ) => {
-          enqueue.assign({
-            role_creation_objectives: objectives,
           });
         }
       ),
@@ -446,6 +353,9 @@ export const createStateMachineSetup = <
       }),
       clear_edges: assign({ edges: [] }),
       clear_nodes: assign({ nodes: [] }),
+      clear_creation_objectives: assign({
+        policy_creation_objectives: [],
+      }),
       // TODO: Create an initial nodes resolver just like we have for edges
       // Benificial for performing side effects when nodes are added, such as creating their associated edges and whatnot
       resolve_initial_edges: enqueueActions(({ context, enqueue }) => {

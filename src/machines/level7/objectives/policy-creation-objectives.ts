@@ -2,7 +2,7 @@
 import s3ReadWriteIdentityPolicySchema from '../schemas/policy/s3-read-write-identity-policy-schema.json';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyCreationObjective } from '@/factories/objectives-factory';
+import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
@@ -11,6 +11,7 @@ import { AJV_COMPILER } from '@/utils/iam-code-linter';
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
   [
     {
+      id: PolicyNodeID.InsideLevelIdentityBasedPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity_id: PolicyNodeID.InsideLevelIdentityBasedPolicy,
       entity: IAMNodeEntity.Policy,
@@ -22,14 +23,16 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       account_id: AccountID.Trusted,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
-      granted_accesses: [
-        {
-          target_node: ResourceNodeID.InsideLevelS3Bucket,
-          access_level: AccessLevel.ReadWrite,
-          target_handle: 'right',
-          source_handle: 'left',
-        },
-      ],
+      extra_data: {
+        granted_accesses: [
+          {
+            target_node: ResourceNodeID.InsideLevelS3Bucket,
+            access_level: AccessLevel.ReadWrite,
+            target_handle: 'right',
+            source_handle: 'left',
+          },
+        ],
+      },
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

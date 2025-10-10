@@ -5,8 +5,6 @@ import { LAYOUT_GROUPS } from './layout-groups';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
-import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
-import { ROLE_CREATION_OBJECTIVES } from './objectives/role-creation-objectives';
 import { SCP_CREATION_OBJECTIVES } from './objectives/scp-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
@@ -22,7 +20,6 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
@@ -46,10 +43,9 @@ export const stateMachine = createStateMachineSetup<
     edges: [],
     level_objectives: [],
     policy_creation_objectives: [],
-    edges_connection_objectives: [],
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
-    role_creation_objectives: [],
+    edges_connection_objectives: [],
     use_multi_account_canvas: false,
     side_panel_open: false,
     layout_groups: [...COMMON_LAYOUT_GROUPS, ...LAYOUT_GROUPS],
@@ -73,45 +69,14 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
     },
-    [StatefulStateMachineEvent.ADDIAMRoleNode]: {
-      actions: [
-        {
-          type: 'add_role_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            accountId: event.account_id,
-            label: event.label,
-          }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.AddIAMSCPNode]: {
+    [StatefulStateMachineEvent.AddIAMNode]: {
       actions: {
-        type: 'add_policy_node',
+        type: 'add_iam_node',
         params: ({ event }) => ({
           docString: event.doc_string,
           label: event.label,
-          policyNodeType: IAMNodeEntity.SCP,
-        }),
-      },
-    },
-    [StatefulStateMachineEvent.AddIAMPolicyNode]: {
-      actions: {
-        type: 'add_policy_node',
-        params: ({ event }) => ({
-          docString: event.doc_string,
-          label: event.label,
-          policyNodeType: IAMNodeEntity.Policy,
-        }),
-      },
-    },
-    [StatefulStateMachineEvent.AddIAMPermissionBoundaryNode]: {
-      actions: {
-        type: 'add_policy_node',
-        params: ({ event }) => ({
-          docString: event.doc_string,
-          label: event.label,
-          policyNodeType: IAMNodeEntity.PermissionBoundary,
+          accountId: event.account_id,
+          policyNodeType: event.node_entity,
         }),
       },
     },
@@ -224,7 +189,7 @@ export const stateMachine = createStateMachineSetup<
               params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
             },
             {
-              type: 'set_scp_creation_objectives',
+              type: 'append_creation_objectives',
               params: {
                 objectives: SCP_CREATION_OBJECTIVES[0],
               },
@@ -262,24 +227,19 @@ export const stateMachine = createStateMachineSetup<
     },
     inside_level: {
       entry: [
+        'clear_creation_objectives',
         { type: 'set_restricted_element_ids', params: { element_ids: [] } },
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
         {
-          type: 'set_scp_creation_objectives',
-          params: { objectives: SCP_CREATION_OBJECTIVES[1] },
+          type: 'append_creation_objectives',
+          params: {
+            objectives: SCP_CREATION_OBJECTIVES[1],
+          },
         },
         {
           type: 'set_edge_connection_objectives',
           params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
-        },
-        {
-          type: 'set_permission_policy_creation_objectives',
-          params: { objectives: POLICY_CREATION_OBJECTIVES[0] },
-        },
-        {
-          type: 'set_role_creation_objectives',
-          params: { objectives: ROLE_CREATION_OBJECTIVES[0] },
         },
         assign({
           initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,

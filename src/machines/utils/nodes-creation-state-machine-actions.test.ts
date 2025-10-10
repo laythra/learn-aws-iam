@@ -1,14 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 
-import {
-  createPermissionPolicy,
-  createUserGroupNode,
-} from './nodes-creation-state-machine-actions';
+import { createIAMNode, createUserGroupNode } from './nodes-creation-state-machine-actions';
 import { createMockContext } from '@/__test-helpers__/context';
 import {
-  createPolicyCreationObjective,
-  createUserGroupCreationObjective,
-} from '@/factories/objectives-factory';
+  createMockPolicyCreationObjective,
+  createMockUserGroupCreationObjective,
+} from '@/__test-helpers__/objectives';
 import { CreatableIAMNodeEntity, IAMNodeEntity } from '@/types';
 import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
@@ -35,7 +32,7 @@ describe('createPermissionPolicy', () => {
   it('creates a new policy node without a matching objective and adds it as unnecessary', () => {
     vi.mocked(findAnyValidObjective).mockReturnValue(undefined);
 
-    const result = createPermissionPolicy(mockContext, mockDocString, mockLabel);
+    const result = createIAMNode(mockContext, mockDocString, mockLabel, IAMNodeEntity.Policy);
 
     const createdNode = result.updatedContext.nodes.find(
       n => n.data.entity === IAMNodeEntity.Policy
@@ -53,9 +50,8 @@ describe('createPermissionPolicy', () => {
   });
 
   it('creates a new policy node with a matching objective and marks it as necessary', () => {
-    const mockObjective = createPolicyCreationObjective({
+    const mockObjective = createMockPolicyCreationObjective({
       on_finish_event: 'MOCK_EVENT',
-      initial_edges: [],
     });
     mockContext = createMockContext({
       policy_creation_objectives: [mockObjective],
@@ -63,7 +59,7 @@ describe('createPermissionPolicy', () => {
 
     vi.mocked(findAnyValidObjective).mockReturnValue(mockObjective);
 
-    const result = createPermissionPolicy(mockContext, mockDocString, mockLabel);
+    const result = createIAMNode(mockContext, mockDocString, mockLabel, IAMNodeEntity.Policy);
     const createdNode = result.updatedContext.nodes.find(
       n => n.data.entity === IAMNodeEntity.Policy
     );
@@ -87,7 +83,7 @@ describe.each([
 ])('createUserGroupNode (%s)', (_, entityType) => {
   it('creates node and returns event if valid objective is found', () => {
     const mockLabel = `mock_${entityType.toLowerCase()}`;
-    const mockObjective = createUserGroupCreationObjective({
+    const mockObjective = createMockUserGroupCreationObjective({
       on_finish_event: `${entityType}_CREATED`,
       entity_to_create: entityType as CreatableIAMNodeEntity,
     });

@@ -100,6 +100,7 @@ const calculateNodePositions = (
  */
 function getCanvasCenter(viewport: Viewport, sidePanelWidth: number): XYPosition {
   const { x, y, zoom } = viewport;
+
   const navbarHeight = theme.sizes.navbarHeightInPixels;
   const originX = (window.innerWidth - sidePanelWidth) / 2 / zoom - x;
   const originY = (window.innerHeight - navbarHeight) / 2 / zoom - y;

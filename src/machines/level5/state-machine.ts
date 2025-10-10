@@ -45,7 +45,7 @@ export const stateMachine = createStateMachineSetup<
     edges_connection_objectives: [],
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
-    role_creation_objectives: [],
+    // role_creation_objectives: [],
     restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
@@ -55,14 +55,6 @@ export const stateMachine = createStateMachineSetup<
         {
           type: 'add_iam_user_group_node',
           params: ({ event }) => ({ params: event.node_data, nodeType: event.node_entity }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.ADDIAMRoleNode]: {
-      actions: [
-        {
-          type: 'add_role_node',
-          params: ({ event }) => ({ docString: event.doc_string, label: event.label }),
         },
       ],
     },
@@ -76,6 +68,16 @@ export const stateMachine = createStateMachineSetup<
           }),
         },
       ],
+    },
+    [StatefulStateMachineEvent.AddIAMNode]: {
+      actions: {
+        type: 'add_iam_node',
+        params: ({ event }) => ({
+          docString: event.doc_string,
+          label: event.label,
+          policyNodeType: event.node_entity,
+        }),
+      },
     },
     [StatefulStateMachineEvent.DeleteEdge]: {
       actions: [
@@ -189,7 +191,7 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
             {
-              type: 'set_role_creation_objectives',
+              type: 'append_creation_objectives',
               params: { objectives: ROLE_CREATION_OBJECTIVES[0] },
             },
             {
@@ -336,10 +338,9 @@ export const stateMachine = createStateMachineSetup<
           params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
         },
         {
-          type: 'set_role_creation_objectives',
-          params: { objectives: ROLE_CREATION_OBJECTIVES[1] },
+          type: 'append_creation_objectives',
+          params: { objectives: ROLE_CREATION_OBJECTIVES[0] },
         },
-
         'hide_unncessary_edges_or_nodes_warning',
       ],
       initial: 'inside_level_popup1',

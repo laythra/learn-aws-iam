@@ -29,7 +29,6 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
   [
     {
       id: 'scp-1',
-      initial_edges: [],
       type: ObjectiveType.SCP_CREATION_OBJECTIVE,
       entity_id: SCPNodeID.BlockCloudTrailDeletionSCP,
       json_schema: blockTrailDeletionScpSchema,
@@ -38,13 +37,15 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
       initial_code: INITIAL_POLICIES.FIRST_SCP_OBJECTIVE_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.TopRightVertical,
-      blocked_edge_content: 'Access Blocked By SCP 🔒',
-      // Not using any external context because this function will get serialized
-      is_edge_blocked: edge => {
-        return (
-          edge.data?.target_node.data.entity.toString() === 'AWS Resource' &&
-          edge.data?.target_node.data.resource_type!.toString() === 'CloudTrail'
-        );
+      extra_data: {
+        blocked_edge_content: 'Access Blocked By SCP 🔒',
+        // Not using any external context because this function will get serialized
+        is_edge_blocked: edge => {
+          return (
+            edge.data?.target_node.data.entity.toString() === 'AWS Resource' &&
+            edge.data?.target_node.data.resource_type!.toString() === 'CloudTrail'
+          );
+        },
       },
       callout_message: OBJECTIVE_CALLOUT_MSG,
       hint_messages: [
@@ -62,7 +63,6 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
   [
     {
       id: 'scp-2',
-      initial_edges: [],
       type: ObjectiveType.SCP_CREATION_OBJECTIVE,
       entity_id: SCPNodeID.RestrictEC2RegionSCP,
       json_schema: ec2RegionRestrictionScpSchema,
@@ -71,10 +71,12 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.TopRightVertical,
-      blocked_edge_content: 'Access Blocked By SCP 🔒',
-      // Not using any external context because this function will get serialized
-      is_edge_blocked: () => {
-        return false;
+      extra_data: {
+        blocked_edge_content: 'Access Blocked By SCP 🔒',
+        // Not using any external context because this function will get serialized
+        is_edge_blocked: () => {
+          return false;
+        },
       },
     } satisfies Partial<IAMSCPCreationObjective<FinishEventMap>>,
   ].map(objective => createSCPCreationObjective(objective)),

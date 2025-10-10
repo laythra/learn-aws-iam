@@ -1,10 +1,8 @@
 import dynamodbRoleTrustPolicy from '../schemas/role/dynamodb-role-trust-policy-schema.json';
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { RoleNodeID } from '../types/node-id-enums';
-import {
-  createRoleCreationObjective,
-  RoleCreationObjectiveInput,
-} from '@/factories/objectives-factory';
+import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
+import { MANAGED_POLICIES } from '@/machines/consts';
 import { AccountID, IAMRoleCreationObjective } from '@/machines/types';
 import { CommonLayoutGroupID } from '@/types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
@@ -16,9 +14,10 @@ export const CALLOUT_MESSAGE1 = `
   * \`{ "Service": "<service-name>.amazonaws.com" }\` defines an **AWS Service** Principal.
 `;
 
-export const ROLE_CREATION_OBJECTIVES_RAW_DATA: RoleCreationObjectiveInput<FinishEventMap>[][] = [
+export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[][] = [
   [
     {
+      id: RoleNodeID.TrustingAccountDynamoDBReadRole,
       entity_id: RoleNodeID.TrustingAccountDynamoDBReadRole,
       json_schema: dynamodbRoleTrustPolicy,
       on_finish_event: RoleCreationFinishEvent.DYNAMODB_READ_ROLE_CREATED,
@@ -27,9 +26,11 @@ export const ROLE_CREATION_OBJECTIVES_RAW_DATA: RoleCreationObjectiveInput<Finis
       layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
       account_id: AccountID.Trusting,
       callout_message: CALLOUT_MESSAGE1,
-    },
-  ],
+      initial_code: MANAGED_POLICIES.EmptyPolicy,
+      extra_data: {
+        required_policies: [],
+        required_principles: [],
+      },
+    } satisfies Partial<IAMRoleCreationObjective<FinishEventMap>>,
+  ].map(objective => createRoleCreationObjective(objective)),
 ];
-
-export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[][] =
-  ROLE_CREATION_OBJECTIVES_RAW_DATA.map(objectives => objectives.map(createRoleCreationObjective));

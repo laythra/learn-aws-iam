@@ -5,7 +5,8 @@ s3-read-write-resource-policy-schema.json';
 import { FinishEventMap, ResourcePolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { ResourceNodeID, ResourcePolicyNodeID, UserNodeID } from '../types/node-id-enums';
 import { createEdge } from '@/factories/edge-factory';
-import { createResourcePolicyCreationObjective } from '@/factories/objectives-factory';
+import { createResourcePolicyCreationObjective } from '@/factories/nodes_creation_objectives/resource-policy-creation-objective-factory';
+// import { createResourcePolicyCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, IAMResourcePolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
@@ -33,6 +34,7 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
   [
     [
       {
+        id: 'resource-policy-1',
         type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
         entity_id: ResourcePolicyNodeID.TutorialResourceBasedPolicy,
         entity: IAMNodeEntity.ResourcePolicy,
@@ -43,19 +45,21 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
         initial_code: INITIAL_POLICIES.S3_READ_RESOURCE_BASED_POLICY,
         limit_new_lines: false,
         layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
-        resource_node_id: ResourceNodeID.TutorialS3Bucket,
         callout_message: OBJECTIVE1_CALLOUT_MSG,
-        initial_edges: [
-          createEdge({
-            rootOverrides: {
-              source: UserNodeID.TutorialFirstUser,
-              target: ResourceNodeID.TutorialS3Bucket,
-            },
-            dataOverrides: {
-              hovering_label: 'Has access through the resource policy',
-            },
-          }),
-        ],
+        extra_data: {
+          resource_node_id: ResourceNodeID.TutorialS3Bucket,
+          initial_edges: [
+            createEdge({
+              rootOverrides: {
+                source: UserNodeID.TutorialFirstUser,
+                target: ResourceNodeID.TutorialS3Bucket,
+              },
+              dataOverrides: {
+                hovering_label: 'Has access through the resource policy',
+              },
+            }),
+          ],
+        },
         help_badges: [
           {
             path: '/Statement/0/Resource',
@@ -82,6 +86,7 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
     ].map(objective => createResourcePolicyCreationObjective(objective)),
     [
       {
+        id: 'resource-policy-2',
         type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
         entity_id: ResourcePolicyNodeID.InsideLevelResourceBasedPolicy,
         entity: IAMNodeEntity.ResourcePolicy,
@@ -93,7 +98,10 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
         limit_new_lines: false,
         layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
         account_id: AccountID.Trusting,
-        resource_node_id: ResourceNodeID.InsideLevelS3Bucket,
+        extra_data: {
+          initial_edges: [],
+          resource_node_id: ResourceNodeID.InsideLevelS3Bucket,
+        },
       } satisfies Partial<IAMResourcePolicyCreationObjective<FinishEventMap>>,
     ].map(objective => createResourcePolicyCreationObjective(objective)),
   ];

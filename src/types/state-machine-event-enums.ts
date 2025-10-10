@@ -29,7 +29,7 @@ export enum StatelessStateMachineEvent {
 //  */
 export enum StatefulStateMachineEvent {
   AddIAMUserGroupNode = 'ADD_IAM_USER_GROUP_NODE',
-  AddIAMPolicyNode = 'ADD_IAM_POLICY_NODE',
+  AddIAMNode = 'ADD_IAM_POLICY_NODE',
   AddIAMResourcePolicyNode = 'ADD_IAM_RESOURCE_POLICY_NODE',
   ADDIAMRoleNode = 'ADD_IAM_ROLE_NODE',
   AddIAMSCPNode = 'ADD_IAM_SCP_NODE',

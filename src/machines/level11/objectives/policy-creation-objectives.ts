@@ -63,7 +63,6 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       id: 'policy-1',
       entity_id: PolicyNodeID.AccessDelegationPolicy,
       on_finish_event: PolicyCreationFinishEvent.ACCESS_DELEGATION_POLICY_CREATED,
-      granted_accesses: [],
       get_validate_function: nodes => {
         const pbNode = nodes.find(
           node => node.data.id === PermissionBoundaryID.SecretsReadingPermissionBoundary
@@ -73,6 +72,9 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
 
         const pbArn = generateArn(IAMNodeEntity.PermissionBoundary, pbNode.data.label);
         return AJV_COMPILER.compile(generateAssumeRolePolicySchema(pbArn));
+      },
+      extra_data: {
+        granted_accesses: [],
       },
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
