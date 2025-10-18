@@ -158,7 +158,6 @@ function createEdgesFromGrantedAccesses<
 ): IAMEdge[] {
   const allNodes = context.nodes;
   const applicableNodesFns = GetLevelObjectivesApplicableNodesFns(context.level_number);
-  console.log('The applicableNodesFns are:', applicableNodesFns);
   const nodesById = _.keyBy(allNodes, 'id');
   return grantedAccesses.flatMap(access => {
     const applicableNodes =
