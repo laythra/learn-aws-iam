@@ -6,7 +6,7 @@ import { BaseFinishEventMap, IAMPolicyCreationObjective, ObjectiveType } from '@
 import { IAMNodeEntity } from '@/types';
 
 export function createPolicyCreationObjective<
-  T extends IAMPolicyCreationObjective<BaseFinishEventMap>,
+  T extends IAMPolicyCreationObjective<BaseFinishEventMap, string>,
 >(overrides: CreationFactoryOverrides<T>): T {
   const factory = buildCreationObjectiveFactory<T>({
     entity: IAMNodeEntity.Policy,

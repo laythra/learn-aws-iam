@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
 import { resolveInitialEdges } from './initial-edges-resolver';
+import { GetLevelObjectivesApplicableNodesFns } from '../functions-registry';
 import { createMockContext } from '@/__test-helpers__/context';
 import { createAccountNode } from '@/factories/nodes/account-node-factory';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
@@ -20,6 +21,12 @@ type ExpectedEdge = {
   data?: Partial<IAMEdge['data']>;
 };
 
+vi.mock('@/machines/functions-registry', () => ({
+  GetLevelObjectivesApplicableNodesFns: vi.fn(() => ({})),
+  GetLevelGuardRailsBlockedEdgesFns: vi.fn(() => ({})),
+  GetLevelValidateFunctionsFns: vi.fn(() => ({})),
+}));
+
 describe('updateConnectionEdges', () => {
   /**
    * A convinience function to create a mock context with resolved edges and connections.
@@ -35,6 +42,17 @@ describe('updateConnectionEdges', () => {
     const { edges } = resolveInitialEdges(ctx);
     return { ...ctx, edges };
   };
+
+  beforeEach(() => {
+    vi.mocked(GetLevelObjectivesApplicableNodesFns).mockReturnValue(
+      new Proxy(
+        {},
+        {
+          get: () => (nodes: IAMAnyNode[]) => nodes,
+        }
+      )
+    );
+  });
 
   const expectEdges = (edges: IAMEdge[], expected: ExpectedEdge[]): void => {
     expect(edges).toHaveLength(expected.length);
@@ -91,6 +109,10 @@ describe('updateConnectionEdges', () => {
 
     it('skips extra edges (user → resource) when granted_access specifies\
        a source_node that does not match the user being connected', () => {
+      vi.mocked(GetLevelObjectivesApplicableNodesFns).mockImplementation(() => ({
+        NONE_MATCHING_FN: () => [],
+      }));
+
       const user = createUserNode({});
       const resource = createResourceNode({});
       const policy = createPolicyNode({
@@ -100,9 +122,7 @@ describe('updateConnectionEdges', () => {
               access_level: AccessLevel.Read,
               target_node: resource.id,
               target_handle: 'mock-target-handle',
-              applicable_nodes: () => {
-                return [];
-              },
+              applicable_nodes_fn_name: 'NONE_MATCHING_FN',
             },
           ],
         },

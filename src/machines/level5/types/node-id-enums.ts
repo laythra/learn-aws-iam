@@ -13,10 +13,10 @@ export const ResourceNodeID = {
 } as const;
 
 export const RoleNodeID = {
-  FinanceAuditorRole: uniqueId('role-'),
-  S3ReadAccessRole: uniqueId('role-'),
-  EC2Role: uniqueId('role-'),
-  LambdaRole: uniqueId('role-'),
+  FinanceAuditorRole: 'role-1',
+  S3ReadAccessRole: 'role-2',
+  EC2Role: 'role-3',
+  LambdaRole: 'role-4',
 } as const;
 
 export const PolicyNodeID = {

@@ -78,20 +78,12 @@ export type CreatableIAMNodeEntity =
   | IAMNodeEntity.Role
   | IAMNodeEntity.PermissionBoundary;
 
-export interface PolicyGrantedAccess {
+export interface PolicyGrantedAccess<TApplicableNodesFnName extends string = string> {
   readonly target_node: string;
   readonly access_level: AccessLevel;
   readonly source_handle?: string;
   readonly target_handle: string;
-  /**
-   * A function which returns the list of nodes to which the access is granted.
-   *
-   * This is useful for policies with conditional access,
-   * where the access is granted to a subset of nodes based on some condition.
-   * @param nodes The list of candidate nodes to which the access might be granted.
-   * @returns An array of nodes to which the access is granted.
-   */
-  readonly applicable_nodes?: (node: IAMAnyNode[]) => IAMAnyNode[];
+  readonly applicable_nodes_fn_name?: TApplicableNodesFnName;
 }
 
 export interface PolicyBlockedAccess {
@@ -206,15 +198,15 @@ interface IAMNodeData extends Record<string, unknown> {
   allowed_sources?: IAMNodeEntity[];
 }
 
-interface IAMGuardRailsNodeData extends IAMNodeData {
+interface IAMGuardRailsNodeData<TIsEdgeBlockedFnName extends string = string> extends IAMNodeData {
   entity: IAMNodeEntity.SCP | IAMNodeEntity.PermissionBoundary;
   editable: boolean;
 
   /**
-   * A function that defines the allowed accesses for this permission boundary.
-   * @param edge The edge to check against the allowed accesses.
-   * @returns The allowed nodes for this permission boundary.
+   * Defines a function name which determines whether an edge is blocked by this guard rails node.
    */
+
+  is_edge_blocked_new?: TIsEdgeBlockedFnName;
   is_edge_blocked?: (edge: IAMEdge) => boolean;
   content: string;
   blocked_edge_content: string;

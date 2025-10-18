@@ -56,7 +56,11 @@ export function getActorContext(
   level: number,
   snapshot?: Snapshot<unknown>
 ): ReturnType<typeof createActorContext<AnyLevelMachine>> {
-  return createActorContext(MACHINES[level], { snapshot: snapshot });
+  const actorCtx = createActorContext(MACHINES[level], {
+    snapshot: snapshot,
+  });
+
+  return actorCtx;
 }
 
 export function LevelsProgressionContext(): ReturnType<typeof getActorContext> {

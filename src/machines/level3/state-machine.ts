@@ -260,6 +260,7 @@ export const stateMachine = createStateMachineSetup<
       initial: 'popup1',
       entry: [
         'clear_creation_objectives',
+        'store_checkpoint',
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         'resolve_initial_edges',

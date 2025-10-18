@@ -1,6 +1,7 @@
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
+import { GetLevelValidateFunctions } from '../functions-registry';
 import {
   AccountID,
   BaseCreationObjective,
@@ -54,7 +55,7 @@ const nodesCreationMap: { [E in IAMCodeDefinedEntity]: CreateNodeFn<E> } = {
   [IAMNodeEntity.Role]: createRoleNode,
 };
 
-export function createNodeFromObjectiveNew<
+export function createNodeFromObjective<
   TFinishEventMap extends BaseFinishEventMap,
   E extends IAMCodeDefinedEntity,
 >(
@@ -66,7 +67,7 @@ export function createNodeFromObjectiveNew<
   const createNodeFn = nodesCreationMap[entityType];
   return createNodeFn({
     dataOverrides: {
-      id: targetValidObjective?.entity_id ?? _.uniqueId(`${entityType.toLowerCase()}-`),
+      id: targetValidObjective?.id ?? _.uniqueId(`${entityType.toLowerCase()}-`),
       content: docString,
       label: label,
       unnecessary_node: targetValidObjective === undefined,
@@ -98,15 +99,17 @@ export function createIAMNode<
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: string[];
 } {
+  const validateFunctions = GetLevelValidateFunctions(context.level_number);
   const targetValidObjective = findAnyValidObjective(
     context.policy_creation_objectives,
+    validateFunctions,
     context.nodes,
     docString,
     accountId,
     nodeEntity
   );
 
-  const newNode = createNodeFromObjectiveNew(docString, label, nodeEntity, targetValidObjective);
+  const newNode = createNodeFromObjective(docString, label, nodeEntity, targetValidObjective);
 
   const updatedContext = produce(context, draftContext => {
     if (targetValidObjective) {

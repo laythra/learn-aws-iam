@@ -5,13 +5,10 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
   // [
   //   {
   //     type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
-  //     entity_id: PolicyNodeID.SlackServiceManagePolicy,
   //     entity: IAMNodeEntity.Policy,
-  //     json_schema: slackServicePolicyNoTags,
   //     callout_message: OBJECTIVE1_CALLOUT_MSG,
   //     on_finish_event: PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_FIRST_TIME,
   //     resources_to_grant: [],
-  //     validate_function: AJV_COMPILER.compile(slackServicePolicyNoTags),
   //     hint_messages: [
   //       {
   //         title: 'Condition Operators',
@@ -38,9 +35,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
   // [
   //   {
   //     type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
-  //     entity_id: PolicyNodeID.SlackServiceManagePolicy,
   //     entity: IAMNodeEntity.Policy,
-  //     json_schema: slackServicePolicyWithTags,
   //     on_finish_event: PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_SECOND_TIME,
   //     resources_to_grant: [],
   //     hint_messages: [
@@ -53,7 +48,6 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
   //         content: OBJECTIVE2_HINT_MSG2,
   //       },
   //     ],
-  //     validate_function: AJV_COMPILER.compile(slackServicePolicyWithTags),
   //   },
   // ],
 ];

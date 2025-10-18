@@ -1,16 +1,11 @@
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
-import s3ReadPolicySchema from '../schemas/policy/s3-read-policy-schema.json';
-import s3ReadWriteResourcePolicySchema from '../schemas/policy/\
-s3-read-write-resource-policy-schema.json';
 import { FinishEventMap, ResourcePolicyCreationFinishEvent } from '../types/finish-event-enums';
-import { ResourceNodeID, ResourcePolicyNodeID, UserNodeID } from '../types/node-id-enums';
+import { ResourceNodeID, UserNodeID } from '../types/node-id-enums';
 import { createEdge } from '@/factories/edge-factory';
 import { createResourcePolicyCreationObjective } from '@/factories/nodes_creation_objectives/resource-policy-creation-objective-factory';
-// import { createResourcePolicyCreationObjective } from '@/factories/objectives-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { AccountID, IAMResourcePolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const OBJECTIVE1_CALLOUT_MSG = `
   The \`Principal\` takes the same format just like when creating a **Trust Policy**,
@@ -36,12 +31,8 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
       {
         id: 'resource-policy-1',
         type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
-        entity_id: ResourcePolicyNodeID.TutorialResourceBasedPolicy,
         entity: IAMNodeEntity.ResourcePolicy,
-        json_schema: s3ReadPolicySchema,
         on_finish_event: ResourcePolicyCreationFinishEvent.TUTORIAL_RESOURCE_BASED_POLICY_CREATED,
-        validate_inside_code_editor: true,
-        validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
         initial_code: INITIAL_POLICIES.S3_READ_RESOURCE_BASED_POLICY,
         limit_new_lines: false,
         layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
@@ -88,12 +79,8 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
       {
         id: 'resource-policy-2',
         type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
-        entity_id: ResourcePolicyNodeID.InsideLevelResourceBasedPolicy,
         entity: IAMNodeEntity.ResourcePolicy,
-        json_schema: s3ReadWriteResourcePolicySchema,
         on_finish_event: ResourcePolicyCreationFinishEvent.IN_LEVEL_RESOURCE_BASED_POLICY_CREATED,
-        validate_inside_code_editor: true,
-        validate_function: AJV_COMPILER.compile(s3ReadWriteResourcePolicySchema),
         initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
         limit_new_lines: false,
         layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,

@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import CodeMirror from '@uiw/react-codemirror';
+import { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 
 import { useCodeEditor } from '../../hooks/useCodeEditor';
@@ -10,10 +11,11 @@ import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { GetLevelValidateFunctions } from '@/machines/functions-registry';
 import {
   BaseFinishEventMap,
   IAMPolicyEditObjective,
-  IAMTrustPolicyEditObject,
+  IAMTrustPolicyEditObjective,
 } from '@/machines/types';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
@@ -37,8 +39,12 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
   errors,
   warnings,
 }) => {
-  const [policyEditObjectives, nodes] = LevelsProgressionContext().useSelector(
-    state => [state.context.policy_edit_objectives, state.context.nodes],
+  const [policyEditObjectives, nodes, levelNumber] = LevelsProgressionContext().useSelector(
+    state => [
+      state.context.policy_edit_objectives,
+      state.context.nodes,
+      state.context.level_number,
+    ],
     _.isEqual
   );
 
@@ -49,13 +55,19 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
 
   let objectiveToValidate:
     | IAMPolicyEditObjective<BaseFinishEventMap>
-    | IAMTrustPolicyEditObject<BaseFinishEventMap>
+    | IAMTrustPolicyEditObjective<BaseFinishEventMap>
     | undefined;
+
+  let objectiveValidationFn: ValidateFunction | undefined;
 
   if (selectedIAMEntity === IAMNodeEntity.Policy) {
     objectiveToValidate = policyEditObjectives.find(
-      objective => objective.entity_id === selectedNode?.data.id
+      objective => objective.id === selectedNode?.data.id
     );
+
+    objectiveValidationFn =
+      objectiveToValidate &&
+      GetLevelValidateFunctions(levelNumber)[objectiveToValidate?.id]?.(nodes);
   } else {
     // TODO: Support role editing
     throw new Error('Role editing is not supported yet');
@@ -67,7 +79,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
     const currentContent = editorView.current.state.doc.toString();
     const isHarmfulEdit = !isJSONValid(
       currentContent,
-      objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity]
+      objectiveValidationFn ?? GENERIC_VALIDATION_FNS[selectedIAMEntity]
     );
 
     if (currentContent === selectedNode.data.content) {
@@ -84,9 +96,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
     editorView,
     getWarnings,
     initialContent: JSON.parse(selectedNode.data.content ?? '{}'),
-    validateFns: [
-      objectiveToValidate?.validate_function ?? GENERIC_VALIDATION_FNS[selectedIAMEntity],
-    ],
+    validateFns: [objectiveValidationFn ?? GENERIC_VALIDATION_FNS[selectedIAMEntity]],
     helpBadges: objectiveToValidate?.help_badges ?? [],
   });
 

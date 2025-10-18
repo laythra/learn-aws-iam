@@ -13,13 +13,10 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       id: RoleNodeID.S3WriteAccessRole,
       finished: false,
       type: ObjectiveType.ROLE_CREATION_OBJECTIVE,
-      entity_id: RoleNodeID.S3WriteAccessRole,
       entity: IAMNodeEntity.Role,
-      json_schema: ec2RoleTrustPolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: RoleCreationFinishEvent.EC2_ROLE_CREATED,
       layout_group_id: CommonLayoutGroupID.BottomCenterVertical,
-      validate_function: AJV_COMPILER.compile(ec2RoleTrustPolicySchema),
       extra_data: {
         required_policies: [],
         required_principles: [],

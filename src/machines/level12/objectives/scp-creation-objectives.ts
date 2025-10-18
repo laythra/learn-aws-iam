@@ -30,10 +30,7 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
     {
       id: 'scp-1',
       type: ObjectiveType.SCP_CREATION_OBJECTIVE,
-      entity_id: SCPNodeID.BlockCloudTrailDeletionSCP,
-      json_schema: blockTrailDeletionScpSchema,
       on_finish_event: SCPCreationFinishEvent.BLOCK_CLOUDTRAIL_DELETION_SCP_CREATED,
-      validate_function: AJV_COMPILER.compile(blockTrailDeletionScpSchema),
       initial_code: INITIAL_POLICIES.FIRST_SCP_OBJECTIVE_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.TopRightVertical,
@@ -64,10 +61,7 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
     {
       id: 'scp-2',
       type: ObjectiveType.SCP_CREATION_OBJECTIVE,
-      entity_id: SCPNodeID.RestrictEC2RegionSCP,
-      json_schema: ec2RegionRestrictionScpSchema,
       on_finish_event: SCPCreationFinishEvent.RESTRICT_EC2_REGION_SCP_CREATED,
-      validate_function: AJV_COMPILER.compile(ec2RegionRestrictionScpSchema),
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.TopRightVertical,

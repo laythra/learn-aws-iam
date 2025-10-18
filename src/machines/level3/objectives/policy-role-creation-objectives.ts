@@ -1,38 +1,33 @@
+import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
-import cloudfrontReadPolicySchema from '../schemas/policy/cloudfront-read-policy-schema.json';
-import dynamoReadWritePolicySchema from '../schemas/policy/dynamo-db-read-write-policy-schema.json';
-import s3ReadPolicySchema from '../schemas/policy/s3-read-policy-schema.json';
-import s3ReadWritePolicySchema from '../schemas/policy/s3-read-write-policy-schema.json';
 import { FinishEventMap, NodeCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const CALLOUT_MESSAGE1 = `
   We can grant read access to objects within an S3 bucket using wildcards.
   Such as \`arn:aws:s3:::your_bucket_name/*\`
 `;
 
-export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
+export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
+  FinishEventMap,
+  ValidateFunctionsFnName
+>[][] = [
   [
     {
       id: PolicyNodeID.S3ReadPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.S3ReadPolicy,
       entity: IAMNodeEntity.Policy,
-      json_schema: s3ReadPolicySchema,
       layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
       initial_code: INITIAL_POLICIES.S3ReadAccess,
       callout_message: CALLOUT_MESSAGE1,
       on_finish_event: NodeCreationFinishEvent.S3_READ_POLICY_CREATED,
-      validate_inside_code_editor: true,
       extra_data: {
         granted_accesses: [],
       },
-      validate_function: AJV_COMPILER.compile(s3ReadPolicySchema),
       help_badges: [
         {
           path: '/Statement/0/Effect',
@@ -51,18 +46,15 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         },
       ],
       limit_new_lines: true,
-    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>>,
   ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
       id: PolicyNodeID.S3ReadWritePolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.S3ReadWritePolicy,
       entity: IAMNodeEntity.Policy,
-      json_schema: s3ReadWritePolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.S3_READ_WRITE_POLICY_CREATED,
-      validate_inside_code_editor: true,
       extra_data: {
         granted_accesses: [
           {
@@ -73,19 +65,14 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
           },
         ],
       },
-
-      validate_function: AJV_COMPILER.compile(s3ReadWritePolicySchema),
       layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
-    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>>,
     {
       id: PolicyNodeID.CloudFrontReadPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.CloudFrontReadPolicy,
       entity: IAMNodeEntity.Policy,
-      json_schema: cloudfrontReadPolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED,
-      validate_inside_code_editor: true,
       extra_data: {
         granted_accesses: [
           {
@@ -96,18 +83,14 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
           },
         ],
       },
-      validate_function: AJV_COMPILER.compile(cloudfrontReadPolicySchema),
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
-    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>>,
     {
       id: PolicyNodeID.DynamoDBReadWritePolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.DynamoDBReadWritePolicy,
       entity: IAMNodeEntity.Policy,
-      json_schema: dynamoReadWritePolicySchema,
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CREATED,
-      validate_inside_code_editor: true,
       extra_data: {
         granted_accesses: [
           {
@@ -118,8 +101,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
           },
         ],
       },
-      validate_function: AJV_COMPILER.compile(dynamoReadWritePolicySchema),
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
-    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>>,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

@@ -1,11 +1,8 @@
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
-import readSecretsPermissionBoundarySchema from '../schemas/policy/read-secrets-permission-boundary.json';
 import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/finish-event-enums';
-import { PermissionBoundaryID } from '../types/node-id-enums';
 import { createPermissionBoundaryCreationObjective } from '@/factories/nodes_creation_objectives/permission-boundary-creation-objective-factory';
 import { IAMPermissionBoundaryCreationObjective, ObjectiveType } from '@/machines/types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const OBJECTIVE_CALLOUT_MSG = `
   This objective requires creating a permission boundary which caps the permissions to:
@@ -59,12 +56,9 @@ export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreat
       {
         id: 'permission-boundary-1',
         type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE,
-        entity_id: PermissionBoundaryID.SecretsReadingPermissionBoundary,
         entity: IAMNodeEntity.PermissionBoundary,
-        json_schema: readSecretsPermissionBoundarySchema,
         on_finish_event:
           PermissionBoundaryCreationFinishEvent.READ_SECRETS_PERMISSION_BOUNDARY_CREATED,
-        validate_function: AJV_COMPILER.compile(readSecretsPermissionBoundarySchema),
         initial_code: INITIAL_POLICIES.READ_SECRETS_PERMISSION_BOUNDARY,
         limit_new_lines: false,
         layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,

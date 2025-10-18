@@ -58,6 +58,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const accountNodesWidth = _.sumBy(nodes, node =>
     node.data.entity === IAMNodeEntity.Account ? node.width! + 20 : 0
   );
+
   // If there are account nodes, set initial zoom to fit them within the viewport width
   const initialZoom = Math.min(hasAccountNodes ? window.innerWidth / accountNodesWidth : 1, 1);
   const [nodesState, edgesState] = useSelector(
@@ -171,6 +172,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         !params.target ||
         edgesManagementDisabled
       ) {
+        alert('Invalid connection');
         return;
       }
 

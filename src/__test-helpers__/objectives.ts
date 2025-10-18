@@ -17,7 +17,6 @@ export function createMockPolicyCreationObjective<TFinishEventMap extends BaseFi
     id: _.uniqueId('mock-policy-creation-objective-'),
     entity: IAMNodeEntity.Policy,
     type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-    entity_id: 'mock-policy-id',
     initial_code: MANAGED_POLICIES.EmptyPolicy,
     finished: false,
     on_finish_event: 'MOCK_FINISH_EVENT',

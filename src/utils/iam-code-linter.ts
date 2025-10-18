@@ -15,8 +15,7 @@ import {
 import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
 import iamRoleTurstPolicySchema from '@/schemas/aws-iam-role-trust-policy-schema.json';
 import sharedConditionSchema from '@/schemas/shared-condition-schema.json';
-import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
-import { IAMAnyNode } from '@/types/iam-node-types';
+import { IAMNodeEntity, IAMCodeDefinedEntity, IAMAnyNode } from '@/types';
 
 interface LintConfig {
   validateFunction: ValidateFunction;
@@ -37,13 +36,12 @@ export const GENERIC_VALIDATION_FNS = {
 
 export const getObjectiveValidationFunction = <TFinishEventMap extends BaseFinishEventMap>(
   objective: BaseCreationObjective<TFinishEventMap>,
-  nodes: IAMAnyNode[]
+  nodes: IAMAnyNode[],
+  validateFunctions: Record<string, (nodes: IAMAnyNode[]) => ValidateFunction>
 ): ValidateFunction => {
-  return (
-    objective.get_validate_function?.(nodes) ??
-    objective.validate_function ??
-    GENERIC_VALIDATION_FNS[objective.entity as IAMCodeDefinedEntity]
-  );
+  return validateFunctions[objective.id]
+    ? validateFunctions[objective.id](nodes)
+    : GENERIC_VALIDATION_FNS[objective.entity as IAMCodeDefinedEntity];
 };
 
 function lint(
@@ -107,6 +105,7 @@ type ObjectiveByEntity<E extends IAMNodeEntity> = E extends keyof ObjectiveEntit
 
 export function findAnyValidObjective<E extends IAMNodeEntity>(
   objectives: BaseCreationObjective<BaseFinishEventMap>[],
+  validateFunctions: Record<string, (nodes: IAMAnyNode[]) => ValidateFunction>,
   nodes: IAMAnyNode[],
   docString: string,
   accountId?: AccountID,
@@ -117,7 +116,7 @@ export function findAnyValidObjective<E extends IAMNodeEntity>(
     if (targetObjectiveEntity && objective.entity !== targetObjectiveEntity) return false;
 
     const validAccount = !objective.account_id || objective.account_id === accountId;
-    const validateFn = getObjectiveValidationFunction(objective, nodes);
+    const validateFn = getObjectiveValidationFunction(objective, nodes, validateFunctions);
     const isValidJSON = isJSONValid(docString, validateFn);
 
     return isValidJSON && validAccount;
