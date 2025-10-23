@@ -172,7 +172,6 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         !params.target ||
         edgesManagementDisabled
       ) {
-        alert('Invalid connection');
         return;
       }
 

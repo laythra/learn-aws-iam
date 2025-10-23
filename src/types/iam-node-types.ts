@@ -156,6 +156,7 @@ interface IAMNodeData extends Record<string, unknown> {
    * mainly used for multi-account scenarios
    */
   account_id?: string;
+  ou_id?: string;
   /**
    * Defines animations to play for the node
    */

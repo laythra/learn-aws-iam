@@ -1,5 +1,6 @@
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/finish-event-enums';
+import { PermissionBoundaryID } from '../types/node-id-enums';
 import { createPermissionBoundaryCreationObjective } from '@/factories/nodes_creation_objectives/permission-boundary-creation-objective-factory';
 import { IAMPermissionBoundaryCreationObjective, ObjectiveType } from '@/machines/types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
@@ -54,7 +55,7 @@ export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreat
   [
     [
       {
-        id: 'permission-boundary-1',
+        id: PermissionBoundaryID.PermissionBoundary1,
         type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE,
         entity: IAMNodeEntity.PermissionBoundary,
         on_finish_event:
