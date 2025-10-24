@@ -4,7 +4,10 @@ import {
   ObjectivesApplicableNodesFns as Level10ObjectivesApplicableNodesFns,
   ValidateFunctions as Level10ValidateFunctions,
 } from './level10/level-runtime-fns';
-import { ValidateFunctions as Level11ValidateFunctions } from './level11/level-runtime-fns';
+import {
+  ValidateFunctions as Level11ValidateFunctions,
+  GuardRailsBlockedEdgesFunctions as Level11GuardRailsBlockedEdgesFunctions,
+} from './level11/level-runtime-fns';
 import {
   ObjectivesApplicableNodesFns as Level12ObjectivesApplicableNodesFns,
   ValidateFunctions as Level12ValidateFunctions,
@@ -56,6 +59,7 @@ const FunctionsRegistry: Record<number, Partial<RegistryFns>> = {
   },
   11: {
     validate_functions: Level11ValidateFunctions,
+    objectives_guard_rails_blocked_edges_fns: Level11GuardRailsBlockedEdgesFunctions,
   },
   12: {
     objectives_applicable_nodes_fns: Level12ObjectivesApplicableNodesFns,

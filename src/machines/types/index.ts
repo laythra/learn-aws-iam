@@ -284,24 +284,28 @@ export interface IAMResourcePolicyCreationObjective<TFinishEventMap extends Base
   };
 }
 
-export interface IAMSCPCreationObjective<TFinishEventMap extends BaseFinishEventMap>
-  extends BaseCreationObjective<TFinishEventMap> {
+export interface IAMSCPCreationObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+  TIsEdgeBlockedFnName extends string = string,
+> extends BaseCreationObjective<TFinishEventMap> {
   readonly type: ObjectiveType.SCP_CREATION_OBJECTIVE;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE];
   readonly entity: IAMNodeEntity.SCP;
   readonly extra_data: {
-    readonly is_edge_blocked: (edge: IAMEdge) => boolean;
+    readonly is_edge_blocked_fn_name: TIsEdgeBlockedFnName;
     readonly blocked_edge_content: string;
   };
 }
 
-export interface IAMPermissionBoundaryCreationObjective<TFinishEventMap extends BaseFinishEventMap>
-  extends BaseCreationObjective<TFinishEventMap> {
+export interface IAMPermissionBoundaryCreationObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+  TIsEdgeBlockedFnName extends string = string,
+> extends BaseCreationObjective<TFinishEventMap> {
   readonly type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE];
   readonly entity: IAMNodeEntity.PermissionBoundary;
   readonly extra_data: {
-    readonly is_edge_blocked: (edge: IAMEdge) => boolean;
+    readonly is_edge_blocked_fn_name: TIsEdgeBlockedFnName;
     readonly blocked_edge_content: string;
   };
 }

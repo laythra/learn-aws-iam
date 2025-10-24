@@ -1,13 +1,10 @@
+import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
-import ec2RegionRestrictionScpSchema from '../schemas/policy/restrict-ec2-region-scp.json';
-import blockTrailDeletionScpSchema from '../schemas/policy/trails-deletion-scp.json';
 import { FinishEventMap, SCPCreationFinishEvent } from '../types/finish-event-enums';
-import { SCPNodeID } from '../types/node-id-enums';
 import { createSCPCreationObjective } from '@/factories/nodes_creation_objectives/scp-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
 import { IAMSCPCreationObjective, ObjectiveType } from '@/machines/types';
 import { CommonLayoutGroupID } from '@/types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const OBJECTIVE_CALLOUT_MSG = `
   We need to create a Service Control Policy (SCP) which blocks the
@@ -25,7 +22,10 @@ const ACTIONS_HINT_MSG = `
 `;
 
 // eslint-disable-next-line max-len
-export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][] = [
+export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<
+  FinishEventMap,
+  GuardRailsBlockedEdgesFnName
+>[][] = [
   [
     {
       id: 'scp-1',
@@ -36,13 +36,7 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
       layout_group_id: CommonLayoutGroupID.TopRightVertical,
       extra_data: {
         blocked_edge_content: 'Access Blocked By SCP 🔒',
-        // Not using any external context because this function will get serialized
-        is_edge_blocked: edge => {
-          return (
-            edge.data?.target_node.data.entity.toString() === 'AWS Resource' &&
-            edge.data?.target_node.data.resource_type!.toString() === 'CloudTrail'
-          );
-        },
+        is_edge_blocked_fn_name: 'SCP2BlockingFN',
       },
       callout_message: OBJECTIVE_CALLOUT_MSG,
       hint_messages: [
@@ -55,7 +49,7 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
           content: ACTIONS_HINT_MSG,
         },
       ],
-    } satisfies Partial<IAMSCPCreationObjective<FinishEventMap>>,
+    } satisfies Partial<IAMSCPCreationObjective<FinishEventMap, GuardRailsBlockedEdgesFnName>>,
   ].map(objective => createSCPCreationObjective(objective)),
   [
     {
@@ -67,11 +61,8 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<FinishEventMap>[][
       layout_group_id: CommonLayoutGroupID.TopRightVertical,
       extra_data: {
         blocked_edge_content: 'Access Blocked By SCP 🔒',
-        // Not using any external context because this function will get serialized
-        is_edge_blocked: () => {
-          return false;
-        },
+        is_edge_blocked_fn_name: 'SCP2BlockingFN',
       },
-    } satisfies Partial<IAMSCPCreationObjective<FinishEventMap>>,
+    } satisfies Partial<IAMSCPCreationObjective<FinishEventMap, GuardRailsBlockedEdgesFnName>>,
   ].map(objective => createSCPCreationObjective(objective)),
 ];

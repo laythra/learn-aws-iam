@@ -2,6 +2,7 @@ import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap } from '../types/finish-event-enums';
 import { PolicyCreationFinishEvent } from '../types/finish-event-enums';
+import { PolicyNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { IAMPolicyCreationObjective } from '@/machines/types';
 import { CommonLayoutGroupID } from '@/types';
@@ -60,7 +61,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
 >[][] = [
   [
     {
-      id: 'policy-1',
+      id: PolicyNodeID.AccessDelegationPolicy,
       on_finish_event: PolicyCreationFinishEvent.ACCESS_DELEGATION_POLICY_CREATED,
       extra_data: {
         granted_accesses: [],

@@ -2,7 +2,10 @@ import { describe, it, expect, vi } from 'vitest';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
 import { resolveInitialEdges } from './initial-edges-resolver';
-import { GetLevelObjectivesApplicableNodesFns } from '../functions-registry';
+import {
+  GetLevelGuardRailsBlockedEdgesFns,
+  GetLevelObjectivesApplicableNodesFns,
+} from '../functions-registry';
 import { createMockContext } from '@/__test-helpers__/context';
 import { createAccountNode } from '@/factories/nodes/account-node-factory';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
@@ -138,9 +141,13 @@ describe('updateConnectionEdges', () => {
        but a permission boundary blocks it', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});
+      vi.mocked(GetLevelGuardRailsBlockedEdgesFns).mockImplementation(() => ({
+        MOCK_BLOCKING_FN: (edge: IAMEdge) => edge.source === user.id && edge.target === resource.id,
+      }));
+
       const permissionBoundary = createPermissionBoundaryNode({
         dataOverrides: {
-          is_edge_blocked: edge => edge.source === user.id && edge.target === resource.id,
+          is_edge_blocked_fn_name: 'MOCK_BLOCKING_FN',
         },
       });
 
@@ -285,9 +292,12 @@ describe('updateConnectionEdges', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});
       const role = createRoleNode({});
+      vi.mocked(GetLevelGuardRailsBlockedEdgesFns).mockImplementation(() => ({
+        MOCK_BLOCKING_FN: (edge: IAMEdge) => edge.source === user.id && edge.target === resource.id,
+      }));
       const permissionBoundary = createPermissionBoundaryNode({
         dataOverrides: {
-          is_edge_blocked: edge => edge.source === user.id && edge.target === resource.id,
+          is_edge_blocked_fn_name: 'MOCK_BLOCKING_FN',
         },
       });
 
@@ -455,9 +465,14 @@ describe('updateConnectionEdges', () => {
     it('blocks access for nodes affected by the SCP in an account under the OU', () => {
       const userNode = createUserNode({ dataOverrides });
       const resourceNode = createResourceNode({ dataOverrides });
+      vi.mocked(GetLevelGuardRailsBlockedEdgesFns).mockImplementation(() => ({
+        MOCK_BLOCKING_FN: (edge: IAMEdge) =>
+          edge.source === userNode.id && edge.target === resourceNode.id,
+      }));
+
       const scpNode = createSCPNode({
         dataOverrides: {
-          is_edge_blocked: edge => edge.source === userNode.id && edge.target === resourceNode.id,
+          is_edge_blocked_fn_name: 'MOCK_BLOCKING_FN',
           ...dataOverrides,
         },
       });
@@ -507,9 +522,14 @@ describe('updateConnectionEdges', () => {
     it('blocks access for nodes affected by the SCP attached to the account', () => {
       const userNode = createUserNode({ dataOverrides });
       const resourceNode = createResourceNode({ dataOverrides });
+      vi.mocked(GetLevelGuardRailsBlockedEdgesFns).mockImplementation(() => ({
+        MOCK_BLOCKING_FN: (edge: IAMEdge) =>
+          edge.source === userNode.id && edge.target === resourceNode.id,
+      }));
+
       const scpNode = createSCPNode({
         dataOverrides: {
-          is_edge_blocked: edge => edge.source === userNode.id && edge.target === resourceNode.id,
+          is_edge_blocked_fn_name: 'MOCK_BLOCKING_FN',
         },
       });
 
@@ -572,6 +592,9 @@ describe('updateConnectionEdges', () => {
           ],
         },
       });
+      vi.mocked(GetLevelGuardRailsBlockedEdgesFns).mockImplementation(() => ({
+        MOCK_BLOCKING_FN: (edge: IAMEdge) => edge.source === user.id && edge.target === resource.id,
+      }));
 
       const ctx = createEdgeTestContext(
         [{ from: policy.id, to: user.id }],
@@ -580,7 +603,7 @@ describe('updateConnectionEdges', () => {
 
       const permissionBoundary = createPermissionBoundaryNode({
         dataOverrides: {
-          is_edge_blocked: edge => edge.source === user.id && edge.target === resource.id,
+          is_edge_blocked_fn_name: 'MOCK_BLOCKING_FN',
         },
       });
 

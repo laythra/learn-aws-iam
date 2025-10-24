@@ -3,7 +3,7 @@ import elasticacheManagementPolicySchema from './schemas/policy/elasticcache-pro
 import readSecretsPermissionBoundarySchema from './schemas/policy/read-secrets-permission-boundary.json';
 import { PermissionBoundaryID, PolicyNodeID } from './types/node-id-enums';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
-import { IAMAnyNode, IAMNodeEntity } from '@/types';
+import { IAMAnyNode, IAMEdge, IAMNodeEntity, IAMNodeResourceEntity } from '@/types';
 import { generateArn } from '@/utils/arn-generator';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
@@ -42,4 +42,24 @@ export const ObjectivesApplicableNodesFns = {
       .whereHasTag('squad', 'payments')
       .build(),
 } as const;
+
+export const GuardRailsBlockedEdgesFunctions = {
+  SCP1BlockingFN: (edge: IAMEdge) => {
+    return (
+      edge.data?.target_node.data.entity === IAMNodeEntity.Resource &&
+      edge.data?.target_node.data.resource_type &&
+      IAMNodeResourceEntity.CloudTrail
+    );
+  },
+  SCP2BlockingFN: (edge: IAMEdge) => {
+    return (
+      edge.data?.target_node.data.entity === IAMNodeEntity.Resource &&
+      edge.data?.target_node.data.resource_type &&
+      IAMNodeResourceEntity.CloudTrail
+    );
+  },
+};
+
 export type ValidateFunctionsFnName = keyof typeof ValidateFunctions;
+export type ObjectivesApplicableNodesFnName = keyof typeof ObjectivesApplicableNodesFns;
+export type GuardRailsBlockedEdgesFnName = keyof typeof GuardRailsBlockedEdgesFunctions;

@@ -58,7 +58,7 @@ function markBlockedEdges(
       if (!edge.data) return;
 
       const blockingGuardRail = guardRailsNodes.find(
-        guardRailsNode => guardRailsNode.data.is_edge_blocked?.(edge)
+        guardRailsNode => blockedEdgesFns[guardRailsNode.data.is_edge_blocked_fn_name]?.(edge)
       );
 
       if (!blockingGuardRail) {
@@ -240,7 +240,6 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
       const affectingPBNodes = selectAffectingPermissionBoundaryNodes(merged, principal);
       const affectingSCPNodes = selectAffectingSCPNodes(merged, principal);
       const guardRailsNodes = affectingPBNodes.concat(affectingSCPNodes);
-      debugger;
 
       if (guardRailsNodes.length === 0) return [];
 
@@ -249,8 +248,6 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
 
     draft.edges = _.uniqBy([...blockedEdges, ...merged], 'id') as WritableDraft<IAMEdge>[];
   });
-
-  debugger;
 
   return { updatedContext, events };
 }
