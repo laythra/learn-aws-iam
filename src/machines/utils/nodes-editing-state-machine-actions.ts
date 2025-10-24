@@ -16,11 +16,11 @@ export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends 
   events: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][];
 } {
   const targetEditObjective = context.policy_edit_objectives.find(
-    objective => objective.id === nodeId
+    objective => objective.id === nodeId && !objective.finished
   )!;
 
   const objectiveValidationFn = GetLevelValidateFunctions(context.level_number)[
-    targetEditObjective?.id
+    targetEditObjective?.validate_fn_name
   ]?.(context.nodes);
 
   if (!targetEditObjective || !isJSONValid(docString, objectiveValidationFn!)) {
@@ -34,6 +34,10 @@ export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends 
       .build()[0];
 
     if (!targetNode) return;
+
+    draftContext.policy_edit_objectives.find(
+      objective => objective.id === targetEditObjective.id
+    )!.finished = true;
 
     targetNode.data.content = docString;
     targetNode.data.editable = false;

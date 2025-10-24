@@ -321,8 +321,17 @@ export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEven
   };
 }
 
-export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {
+export interface IAMPolicyEditObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+  TValidateFn = string,
+> {
   readonly id: string;
+  /**
+   * Unique identifier for the objective.
+   * In creation objectives, the ID of the objective itself is sufficient to identify the validate function to use.
+   * In edit objectives, we use `validate_fn_name` since we can have multiple edit objectives for the same node.
+   */
+  readonly validate_fn_name: TValidateFn;
   readonly type: ObjectiveType.POLICY_EDIT_OBJECTIVE;
   readonly entity: IAMCodeDefinedEntity;
   readonly allow_new_lines?: boolean;
@@ -343,6 +352,7 @@ export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventM
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
   readonly hint_messages?: { title: string; content: string }[];
+  finished: boolean;
 }
 
 export interface IAMTrustPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {

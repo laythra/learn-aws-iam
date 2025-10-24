@@ -13,6 +13,7 @@ import {
   ValidateFunctions as Level12ValidateFunctions,
 } from './level12/level-runtime-fns';
 import { ValidateFunctions as Level3ValidateFunctions } from './level3/level-runtime-fns';
+import { ValidateFunctions as Level4ValidateFunctions } from './level4/level-runtime-fns';
 import { ValidateFunctions as Level5ValidateFunctions } from './level5/level-runtime-fns';
 import { ValidateFunctions as Level6ValidateFunctions } from './level6/level-runtime-fns';
 import { ValidateFunctions as Level7ValidateFunctions } from './level7/level-runtime-fns';
@@ -35,6 +36,9 @@ type RegistryFns = {
 const FunctionsRegistry: Record<number, Partial<RegistryFns>> = {
   3: {
     validate_functions: Level3ValidateFunctions,
+  },
+  4: {
+    validate_functions: Level4ValidateFunctions,
   },
   5: {
     validate_functions: Level5ValidateFunctions,

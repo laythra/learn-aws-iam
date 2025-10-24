@@ -1,4 +1,4 @@
-import { ObjectivesApplicableNodesFnName } from '../level-runtime-fns';
+import { ObjectivesApplicableNodesFnName, ValidateFunctionsFnName } from '../level-runtime-fns';
 import { FinishEventMap, PolicyEditFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/machines/types';
@@ -84,11 +84,15 @@ const GRANTED_RESOURCES: PolicyGrantedAccess<ObjectivesApplicableNodesFnName>[] 
   },
 ];
 
-export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] = [
+export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
+  FinishEventMap,
+  ValidateFunctionsFnName
+>[][] = [
   [
     {
       id: PolicyNodeID.SlackServiceManagePolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
+      validate_fn_name: 'slackManagePolicyValidateFn1',
       entity: IAMNodeEntity.Policy,
       callout_message: OBJECTIVE1_CALLOUT_MSG,
       on_finish_event: PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_FIRST_TIME,
@@ -114,12 +118,14 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           color: 'yellow',
         },
       ],
+      finished: false,
     },
   ],
   [
     {
       id: PolicyNodeID.SlackServiceManagePolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
+      validate_fn_name: 'slackManagePolicyValidateFn2',
       entity: IAMNodeEntity.Policy,
       on_finish_event: PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_SECOND_TIME,
       resources_to_grant: GRANTED_RESOURCES,
@@ -133,6 +139,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           content: OBJECTIVE2_HINT_MSG2,
         },
       ],
+      finished: false,
     },
   ],
 ];

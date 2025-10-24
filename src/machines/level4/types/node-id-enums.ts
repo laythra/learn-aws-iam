@@ -1,17 +1,17 @@
 import { uniqueId } from 'lodash';
 
 export const PolicyNodeID = {
-  DeveloperPolicy: uniqueId('policy-'),
-  DataScientistPolicy: uniqueId('policy-'),
-  InternPolicy: uniqueId('policy-'),
+  DeveloperPolicy: 'policy-1',
+  DataScientistPolicy: 'policy-2',
+  InternPolicy: 'policy-3',
 } as const;
 
 export const UserNodeID = {
-  Developer1: uniqueId('user-'),
-  Developer2: uniqueId('user-'),
-  DataScientist1: uniqueId('user-'),
-  Intern1: uniqueId('user-'),
-  Intern2: uniqueId('user-'),
+  Developer1: 'user-1',
+  Developer2: 'user-2',
+  DataScientist1: 'user-3',
+  Intern1: 'user-4',
+  Intern2: 'user-5',
 } as const;
 
 export const ResourceNodeID = {
