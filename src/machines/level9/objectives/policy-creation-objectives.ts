@@ -1,14 +1,10 @@
+import { ObjectivesApplicableNodesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
-import rdsSharedManagePolicySchema from '../schemas/policy/rds-shared-manage-policy.json';
-import rds1ManagePolicySchema from '../schemas/policy/rds1-manage-policy.json';
-import rds2managePolicySchema from '../schemas/policy/rds2-manage-policy.json';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { IAMNodeFilter } from '@/machines/utils/iam-node-filter';
-import { AccessLevel, CommonLayoutGroupID, IAMAnyNode, IAMNodeEntity } from '@/types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 const OBJECTIVE_CALLOUT_MSG = `
   We ultimately want to create two policies that allow connecting to the RDS instances
@@ -87,17 +83,16 @@ const SECOND_OBJECTIVE_HINT_MESSAGES = [
   },
 ];
 
-export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
+export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
+  FinishEventMap,
+  ObjectivesApplicableNodesFnName
+>[][] = [
   [
     {
       id: PolicyNodeID.RDSManagePolicy1,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.RDSManagePolicy1,
       entity: IAMNodeEntity.Policy,
-      json_schema: rds1ManagePolicySchema,
       on_finish_event: PolicyCreationFinishEvent.RDS1_MANAGE_POLICY_CREATED,
-      validate_inside_code_editor: true,
-      validate_function: AJV_COMPILER.compile(rds1ManagePolicySchema),
       initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
@@ -108,28 +103,21 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
             access_level: AccessLevel.Read,
             source_handle: 'right',
             target_handle: 'bottom',
-            applicable_nodes: (nodes: IAMAnyNode[]) =>
-              IAMNodeFilter.create()
-                .fromNodes(nodes)
-                .whereEntityIs(IAMNodeEntity.User)
-                .whereHasTag('application', 'peach-team')
-                .build(),
+            applicable_nodes_fn_name: 'peachTeamApplicableNodes',
           },
         ],
       },
       callout_message: OBJECTIVE_CALLOUT_MSG,
       hint_messages: SHARED_HINT_MESSAGES,
       help_badges: SHARED_HELP_BADGES,
-    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+    } satisfies Partial<
+      IAMPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+    >,
     {
       id: PolicyNodeID.RDSManagePolicy2,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.RDSManagePolicy2,
       entity: IAMNodeEntity.Policy,
-      json_schema: rds2managePolicySchema,
       on_finish_event: PolicyCreationFinishEvent.RDS2_MANAGE_POLICY_CREATED,
-      validate_inside_code_editor: true,
-      validate_function: AJV_COMPILER.compile(rds2managePolicySchema),
       initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
@@ -140,29 +128,22 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
             access_level: AccessLevel.Read,
             source_handle: 'left',
             target_handle: 'bottom',
-            applicable_nodes: (nodes: IAMAnyNode[]) =>
-              IAMNodeFilter.create()
-                .fromNodes(nodes)
-                .whereEntityIs(IAMNodeEntity.User)
-                .whereHasTag('application', 'bowser-force')
-                .build(),
+            applicable_nodes_fn_name: 'bowserForceApplicableNodes',
           },
         ],
       },
       hint_messages: SHARED_HINT_MESSAGES,
       help_badges: SHARED_HELP_BADGES,
-    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+    } satisfies Partial<
+      IAMPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+    >,
   ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
       id: PolicyNodeID.RDSSharedPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.RDSSharedPolicy,
       entity: IAMNodeEntity.Policy,
-      json_schema: rdsSharedManagePolicySchema,
       on_finish_event: PolicyCreationFinishEvent.RDS_SHARED_POLICY_CREATED,
-      validate_inside_code_editor: true,
-      validate_function: AJV_COMPILER.compile(rdsSharedManagePolicySchema),
       initial_code: INITIAL_POLICIES.SHARED_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
@@ -173,28 +154,20 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
             access_level: AccessLevel.Read,
             source_handle: 'right',
             target_handle: 'bottom',
-            applicable_nodes: (nodes: IAMAnyNode[]) =>
-              IAMNodeFilter.create()
-                .fromNodes(nodes)
-                .whereEntityIs(IAMNodeEntity.User)
-                .whereHasTag('application', 'peach-team')
-                .build(),
+            applicable_nodes_fn_name: 'peachTeamApplicableNodes',
           },
           {
             target_node: ResourceNodeID.RDS2,
             access_level: AccessLevel.Read,
             source_handle: 'left',
             target_handle: 'bottom',
-            applicable_nodes: (nodes: IAMAnyNode[]) =>
-              IAMNodeFilter.create()
-                .fromNodes(nodes)
-                .whereEntityIs(IAMNodeEntity.User)
-                .whereHasTag('application', 'bowser-force')
-                .build(),
+            applicable_nodes_fn_name: 'bowserForceApplicableNodes',
           },
         ],
       },
       hint_messages: SECOND_OBJECTIVE_HINT_MESSAGES,
-    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+    } satisfies Partial<
+      IAMPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+    >,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

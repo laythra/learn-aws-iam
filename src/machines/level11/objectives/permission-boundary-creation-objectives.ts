@@ -1,11 +1,10 @@
+import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
-import readSecretsPermissionBoundarySchema from '../schemas/policy/read-secrets-permission-boundary.json';
 import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/finish-event-enums';
 import { PermissionBoundaryID } from '../types/node-id-enums';
 import { createPermissionBoundaryCreationObjective } from '@/factories/nodes_creation_objectives/permission-boundary-creation-objective-factory';
 import { IAMPermissionBoundaryCreationObjective, ObjectiveType } from '@/machines/types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const OBJECTIVE_CALLOUT_MSG = `
   This objective requires creating a permission boundary which caps the permissions to:
@@ -52,45 +51,41 @@ const CONDITIONS2_HINT_MSG = `
   The missing value here is the team tag of the user making the request.
 `;
 
-// eslint-disable-next-line max-len
-export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreationObjective<FinishEventMap>[][] =
+export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreationObjective<
+  FinishEventMap,
+  GuardRailsBlockedEdgesFnName
+>[][] = [
   [
-    [
-      {
-        id: 'permission-boundary-1',
-        type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE,
-        entity_id: PermissionBoundaryID.SecretsReadingPermissionBoundary,
-        entity: IAMNodeEntity.PermissionBoundary,
-        json_schema: readSecretsPermissionBoundarySchema,
-        on_finish_event:
-          PermissionBoundaryCreationFinishEvent.READ_SECRETS_PERMISSION_BOUNDARY_CREATED,
-        validate_function: AJV_COMPILER.compile(readSecretsPermissionBoundarySchema),
-        initial_code: INITIAL_POLICIES.READ_SECRETS_PERMISSION_BOUNDARY,
-        limit_new_lines: false,
-        layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
-        extra_data: {
-          blocked_edge_content: 'Access Blocked By Permission Boundary 🔒',
-          // Not using any external context because this function will get serialized
-          is_edge_blocked: edge => {
-            return ['resource-secret-1', 'resource-secret-2'].includes(edge.target);
-          },
+    {
+      id: PermissionBoundaryID.SecretsReadingPermissionBoundary,
+      type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE,
+      entity: IAMNodeEntity.PermissionBoundary,
+      on_finish_event:
+        PermissionBoundaryCreationFinishEvent.READ_SECRETS_PERMISSION_BOUNDARY_CREATED,
+      initial_code: INITIAL_POLICIES.READ_SECRETS_PERMISSION_BOUNDARY,
+      limit_new_lines: false,
+      layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
+      extra_data: {
+        blocked_edge_content: 'Access Blocked By Permission Boundary 🔒',
+        is_edge_blocked_fn_name: 'permissionBoundary2BlockingFn',
+      },
+      callout_message: OBJECTIVE_CALLOUT_MSG,
+      hint_messages: [
+        {
+          title: 'Actions',
+          content: ACTIONS_HINT_MSG,
         },
-
-        callout_message: OBJECTIVE_CALLOUT_MSG,
-        hint_messages: [
-          {
-            title: 'Actions',
-            content: ACTIONS_HINT_MSG,
-          },
-          {
-            title: 'Conditions - Part 1',
-            content: CONDITIONS1_HINT_MSG,
-          },
-          {
-            title: 'Conditions - Part 2',
-            content: CONDITIONS2_HINT_MSG,
-          },
-        ],
-      } satisfies Partial<IAMPermissionBoundaryCreationObjective<FinishEventMap>>,
-    ].map(objective => createPermissionBoundaryCreationObjective(objective)),
-  ];
+        {
+          title: 'Conditions - Part 1',
+          content: CONDITIONS1_HINT_MSG,
+        },
+        {
+          title: 'Conditions - Part 2',
+          content: CONDITIONS2_HINT_MSG,
+        },
+      ],
+    } satisfies Partial<
+      IAMPermissionBoundaryCreationObjective<FinishEventMap, GuardRailsBlockedEdgesFnName>
+    >,
+  ].map(objective => createPermissionBoundaryCreationObjective(objective)),
+];

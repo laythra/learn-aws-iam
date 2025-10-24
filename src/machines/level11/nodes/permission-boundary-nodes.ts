@@ -1,15 +1,18 @@
+import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { PermissionBoundaryID } from '../types/node-id-enums';
 import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
 import { CommonLayoutGroupID, IAMPermissionBoundaryNode } from '@/types';
 
-const TUTORIAL_PERMISSION_BOUNDARY_NODES: Partial<IAMPermissionBoundaryNode['data']>[] = [
+const TUTORIAL_PERMISSION_BOUNDARY_NODES: Partial<
+  IAMPermissionBoundaryNode<GuardRailsBlockedEdgesFnName>['data']
+>[] = [
   {
     id: PermissionBoundaryID.PermissionBoundary1,
     label: 'SNSReadOnlyBoundary',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     content: JSON.stringify(INITIAL_POLICIES.SNS_READ_ONLY_BOUNDARY, null, 2),
-    is_edge_blocked: () => true,
+    is_edge_blocked_fn_name: 'permissionBoundary1BlockingFn',
     blocked_edge_content: 'Access Blocked By Permission Boundary 🔒',
   },
 ];

@@ -275,10 +275,6 @@ export const stateMachine = createStateMachineSetup<
               type: 'append_creation_objectives',
               params: { objectives: PERMISSION_BOUNDARY_CREATION_OBJECTIVES[0] },
             },
-            // {
-            //   type: 'set_permission_boundary_creation_objectives',
-            //   params: { objectives: PERMISSION_BOUNDARY_CREATION_OBJECTIVES[0] },
-            // },
           ],
           on: {
             [PermissionBoundaryCreationFinishEvent.READ_SECRETS_PERMISSION_BOUNDARY_CREATED]:

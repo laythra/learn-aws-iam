@@ -1,14 +1,11 @@
+import { ObjectivesApplicableNodesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
-import createRDSWithTagsPolicy from '../schemas/policy/create-rds-with-tags-policy.json';
-import manageTaggedRdsPolicy from '../schemas/policy/manage-tagged-rds-policy.json';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { IAMNodeFilter } from '@/machines/utils/iam-node-filter';
-import { AccessLevel, CommonLayoutGroupID, IAMAnyNode, IAMNodeEntity } from '@/types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 const OBJECTIVE1_CALLOUT_MSG = `
   This objective will require creating a policy with two statements:
@@ -109,17 +106,16 @@ const OBJECTIVE2_HELP_BADGES = [
   },
 ];
 
-export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
+export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
+  FinishEventMap,
+  ObjectivesApplicableNodesFnName
+>[][] = [
   [
     {
       id: PolicyNodeID.RDSManagePolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.TBACPolicy,
       entity: IAMNodeEntity.Policy,
-      json_schema: createRDSWithTagsPolicy,
       on_finish_event: PolicyCreationFinishEvent.ALLOW_CREATE_RDS_WITH_TAGS_POLICY_CREATED,
-      validate_inside_code_editor: true,
-      validate_function: AJV_COMPILER.compile(createRDSWithTagsPolicy),
       initial_code: INITIAL_POLICIES.POLICY_WITH_CONDITION,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
@@ -142,18 +138,16 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       extra_data: {
         granted_accesses: [],
       },
-    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+    } satisfies Partial<
+      IAMPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+    >,
   ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
       id: PolicyNodeID.TBACPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity_id: PolicyNodeID.RDSManagePolicy,
       entity: IAMNodeEntity.Policy,
-      json_schema: manageTaggedRdsPolicy,
       on_finish_event: PolicyCreationFinishEvent.MANAGE_RDS_POLICY_CREATED,
-      validate_inside_code_editor: true,
-      validate_function: AJV_COMPILER.compile(manageTaggedRdsPolicy),
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
@@ -164,36 +158,21 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
             target_handle: 'left',
             source_handle: 'right',
             target_node: ResourceNodeID.RDS1,
-            applicable_nodes: (nodes: IAMAnyNode[]) =>
-              IAMNodeFilter.create()
-                .fromNodes(nodes)
-                .whereEntityIs(IAMNodeEntity.User)
-                .whereHasTag('team', 'payments-team')
-                .build(),
+            applicable_nodes_fn_name: 'paymentsTeamApplicableNodes',
           },
           {
             access_level: AccessLevel.StartStopControl,
             target_handle: 'left',
             source_handle: 'right',
             target_node: ResourceNodeID.RDS2,
-            applicable_nodes: (nodes: IAMAnyNode[]) =>
-              IAMNodeFilter.create()
-                .fromNodes(nodes)
-                .whereEntityIs(IAMNodeEntity.User)
-                .whereHasTag('team', 'compliance-team')
-                .build(),
+            applicable_nodes_fn_name: 'complianceTeamApplicableNodes',
           },
           {
             access_level: AccessLevel.StartStopControl,
             target_handle: 'left',
             source_handle: 'right',
             target_node: ResourceNodeID.RDS3,
-            applicable_nodes: (nodes: IAMAnyNode[]) =>
-              IAMNodeFilter.create()
-                .fromNodes(nodes)
-                .whereEntityIs(IAMNodeEntity.User)
-                .whereHasTag('team', 'analytics-team')
-                .build(),
+            applicable_nodes_fn_name: 'analyticsTeamApplicableNodes',
           },
         ],
       },
@@ -213,6 +192,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
           content: OBJECTIVE2_HINT_MSG2,
         },
       ],
-    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+    } satisfies Partial<
+      IAMPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+    >,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

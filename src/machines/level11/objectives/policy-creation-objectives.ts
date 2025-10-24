@@ -1,13 +1,11 @@
+import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
-import { generateAssumeRolePolicySchema } from '../schemas/policy/delegating-permissions-policy';
 import { FinishEventMap } from '../types/finish-event-enums';
 import { PolicyCreationFinishEvent } from '../types/finish-event-enums';
-import { PermissionBoundaryID, PolicyNodeID } from '../types/node-id-enums';
+import { PolicyNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { IAMPolicyCreationObjective } from '@/machines/types';
-import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
-import { generateArn } from '@/utils/arn-generator.js';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
+import { CommonLayoutGroupID } from '@/types';
 
 const CALLOUT_MSG = `
   This objective requires creating a policy which allows a user
@@ -57,22 +55,14 @@ const CONDITIONS2_HINT_MSG = `
   What's the missing condition key here?
 `;
 
-export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
+export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
+  FinishEventMap,
+  ValidateFunctionsFnName
+>[][] = [
   [
     {
-      id: 'policy-1',
-      entity_id: PolicyNodeID.AccessDelegationPolicy,
+      id: PolicyNodeID.AccessDelegationPolicy,
       on_finish_event: PolicyCreationFinishEvent.ACCESS_DELEGATION_POLICY_CREATED,
-      get_validate_function: nodes => {
-        const pbNode = nodes.find(
-          node => node.data.id === PermissionBoundaryID.SecretsReadingPermissionBoundary
-        );
-
-        if (!pbNode) return;
-
-        const pbArn = generateArn(IAMNodeEntity.PermissionBoundary, pbNode.data.label);
-        return AJV_COMPILER.compile(generateAssumeRolePolicySchema(pbArn));
-      },
       extra_data: {
         granted_accesses: [],
       },
@@ -94,6 +84,6 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
           content: CONDITIONS2_HINT_MSG,
         },
       ],
-    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
+    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>>,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

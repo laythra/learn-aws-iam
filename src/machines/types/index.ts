@@ -1,6 +1,5 @@
 import type { PlacementWithLogical } from '@chakra-ui/react';
 import type { Edge } from '@xyflow/react';
-import { Schema, ValidateFunction } from 'ajv';
 import { DynamicAnimationOptions } from 'framer-motion';
 
 import { ElementID } from '@/config/element-ids';
@@ -229,21 +228,14 @@ export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> 
 };
 
 export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMap> {
+  /**
+   * Unique identifier for the objective.
+   * This ID is used as the node ID upon creation and as the objective's identifier in the state machine context.
+   */
   readonly id: string;
-  readonly entity_id: string;
   readonly entity: unknown;
   readonly type: ObjectiveType;
-  /**
-   * @deprecated We no longer use  `json_schema` in favor of `validate_function`
-   */
-  readonly json_schema?: Schema;
   readonly initial_code: object;
-  /**
-   * @deprecated all objectives should be validated inside the code editor
-   */
-  readonly validate_inside_code_editor?: boolean;
-  readonly validate_function?: ValidateFunction;
-  readonly get_validate_function?: (nodes: IAMAnyNode[]) => ValidateFunction | undefined;
   readonly on_finish_event:
     | TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE]
     | TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE]
@@ -269,13 +261,15 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
 // TODO: Create a common interface for IAMPolicyCreationObjective and IAMResourcePolicyCreationObjective
 // to avoid code duplication
 // TODO: Rename IAMPolicyCreationObjective to IAMPermissionPolicyCreationObjective
-export interface IAMPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>
-  extends BaseCreationObjective<TFinishEventMap> {
+export interface IAMPolicyCreationObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+  TApplicableNodesFnName extends string = string,
+> extends BaseCreationObjective<TFinishEventMap> {
   readonly entity: IAMNodeEntity.Policy;
   readonly type: ObjectiveType.POLICY_CREATION_OBJECTIVE;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE];
   readonly extra_data: {
-    granted_accesses: PolicyGrantedAccess[];
+    granted_accesses: PolicyGrantedAccess<TApplicableNodesFnName>[];
   };
 }
 
@@ -290,24 +284,28 @@ export interface IAMResourcePolicyCreationObjective<TFinishEventMap extends Base
   };
 }
 
-export interface IAMSCPCreationObjective<TFinishEventMap extends BaseFinishEventMap>
-  extends BaseCreationObjective<TFinishEventMap> {
+export interface IAMSCPCreationObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+  TIsEdgeBlockedFnName extends string = string,
+> extends BaseCreationObjective<TFinishEventMap> {
   readonly type: ObjectiveType.SCP_CREATION_OBJECTIVE;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.SCP_CREATION_OBJECTIVE];
   readonly entity: IAMNodeEntity.SCP;
   readonly extra_data: {
-    readonly is_edge_blocked: (edge: IAMEdge) => boolean;
+    readonly is_edge_blocked_fn_name: TIsEdgeBlockedFnName;
     readonly blocked_edge_content: string;
   };
 }
 
-export interface IAMPermissionBoundaryCreationObjective<TFinishEventMap extends BaseFinishEventMap>
-  extends BaseCreationObjective<TFinishEventMap> {
+export interface IAMPermissionBoundaryCreationObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+  TIsEdgeBlockedFnName extends string = string,
+> extends BaseCreationObjective<TFinishEventMap> {
   readonly type: ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.PERMISSION_BOUNDARY_CREATION_OBJECTIVE];
   readonly entity: IAMNodeEntity.PermissionBoundary;
   readonly extra_data: {
-    readonly is_edge_blocked: (edge: IAMEdge) => boolean;
+    readonly is_edge_blocked_fn_name: TIsEdgeBlockedFnName;
     readonly blocked_edge_content: string;
   };
 }
@@ -323,11 +321,19 @@ export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEven
   };
 }
 
-export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {
+export interface IAMPolicyEditObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+  TValidateFn = string,
+> {
+  readonly id: string;
+  /**
+   * Unique identifier for the objective.
+   * In creation objectives, the ID of the objective itself is sufficient to identify the validate function to use.
+   * In edit objectives, we use `validate_fn_name` since we can have multiple edit objectives for the same node.
+   */
+  readonly validate_fn_name: TValidateFn;
   readonly type: ObjectiveType.POLICY_EDIT_OBJECTIVE;
-  readonly entity_id: string;
   readonly entity: IAMCodeDefinedEntity;
-  readonly json_schema: Schema;
   readonly allow_new_lines?: boolean;
 
   /**
@@ -337,7 +343,6 @@ export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventM
   readonly callout_message?: string;
 
   readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_EDIT_OBJECTIVE];
-  readonly validate_function: ValidateFunction;
 
   /**
    * Resources to grant to the users/groups associated with the IAM Policy/Role.
@@ -347,13 +352,13 @@ export interface IAMPolicyEditObjective<TFinishEventMap extends BaseFinishEventM
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
   readonly hint_messages?: { title: string; content: string }[];
+  finished: boolean;
 }
 
-export interface IAMTrustPolicyEditObject<TFinishEventMap extends BaseFinishEventMap> {
+export interface IAMTrustPolicyEditObjective<TFinishEventMap extends BaseFinishEventMap> {
+  readonly id: string;
   readonly type: ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE;
-  readonly entity_id: string;
   readonly entity: IAMNodeEntity.Role;
-  readonly json_schema: Schema;
   readonly allow_new_lines?: boolean;
 
   /**
@@ -363,8 +368,6 @@ export interface IAMTrustPolicyEditObject<TFinishEventMap extends BaseFinishEven
   readonly description?: string;
 
   readonly on_finish_event: TFinishEventMap[ObjectiveType.TRUST_POLICY_EDIT_OBJECTIVE];
-  readonly validate_function: ValidateFunction;
-
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
 }

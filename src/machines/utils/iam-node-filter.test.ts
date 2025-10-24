@@ -267,8 +267,6 @@ describe('IAMIAMNodeFilter', () => {
         .whereEntityIs(IAMNodeEntity.Policy)
         .build();
 
-      console.log('The result is: ', result);
-
       expect(result).toHaveLength(4);
       expect(
         result.every(node => [IAMNodeEntity.User, IAMNodeEntity.Policy].includes(node.data.entity))

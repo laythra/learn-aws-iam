@@ -1,5 +1,4 @@
 import { createStore } from '@xstate/store';
-import serialize from 'serialize-javascript';
 import { Actor, AnyActorLogic } from 'xstate';
 
 import storage from '@/utils/storage';
@@ -42,7 +41,7 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
     storeLevelProgress: (context: CurrentLevelDetailsState, event) => {
       storage.setKey(
         `level${context.levelNumber}StateCheckpoint`,
-        serialize(event.actor.getPersistedSnapshot())
+        JSON.stringify(event.actor.getPersistedSnapshot())
       );
 
       return context;
@@ -57,7 +56,7 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
     // TODO: Remove this! Only used for testing and debugging purposes.
     storeSnapshotAtDisk: (context: CurrentLevelDetailsState, event) => {
       const snapshot = event.actor.getPersistedSnapshot();
-      const snapshotString = serialize(snapshot);
+      const snapshotString = JSON.stringify(snapshot);
 
       storage.setKey(`level${context.levelNumber}StateCheckpoint`, snapshotString);
 

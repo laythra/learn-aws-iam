@@ -78,20 +78,12 @@ export type CreatableIAMNodeEntity =
   | IAMNodeEntity.Role
   | IAMNodeEntity.PermissionBoundary;
 
-export interface PolicyGrantedAccess {
+export interface PolicyGrantedAccess<TApplicableNodesFnName extends string = string> {
   readonly target_node: string;
   readonly access_level: AccessLevel;
   readonly source_handle?: string;
   readonly target_handle: string;
-  /**
-   * A function which returns the list of nodes to which the access is granted.
-   *
-   * This is useful for policies with conditional access,
-   * where the access is granted to a subset of nodes based on some condition.
-   * @param nodes The list of candidate nodes to which the access might be granted.
-   * @returns An array of nodes to which the access is granted.
-   */
-  readonly applicable_nodes?: (node: IAMAnyNode[]) => IAMAnyNode[];
+  readonly applicable_nodes_fn_name?: TApplicableNodesFnName;
 }
 
 export interface PolicyBlockedAccess {
@@ -164,6 +156,7 @@ interface IAMNodeData extends Record<string, unknown> {
    * mainly used for multi-account scenarios
    */
   account_id?: string;
+  ou_id?: string;
   /**
    * Defines animations to play for the node
    */
@@ -206,16 +199,14 @@ interface IAMNodeData extends Record<string, unknown> {
   allowed_sources?: IAMNodeEntity[];
 }
 
-interface IAMGuardRailsNodeData extends IAMNodeData {
+interface IAMGuardRailsNodeData<TIsEdgeBlockedFnName extends string = string> extends IAMNodeData {
   entity: IAMNodeEntity.SCP | IAMNodeEntity.PermissionBoundary;
   editable: boolean;
 
   /**
-   * A function that defines the allowed accesses for this permission boundary.
-   * @param edge The edge to check against the allowed accesses.
-   * @returns The allowed nodes for this permission boundary.
+   * Defines a function name which determines whether an edge is blocked by this guard rails node.
    */
-  is_edge_blocked?: (edge: IAMEdge) => boolean;
+  is_edge_blocked_fn_name: TIsEdgeBlockedFnName;
   content: string;
   blocked_edge_content: string;
 }
@@ -264,11 +255,13 @@ interface IAMOUNodeData extends IAMNodeData {
   entity: IAMNodeEntity.OU;
 }
 
-interface IAMPermissionBoundaryNodeData extends IAMGuardRailsNodeData {
+interface IAMPermissionBoundaryNodeData<TIsEdgeBlockedFnName extends string = string>
+  extends IAMGuardRailsNodeData<TIsEdgeBlockedFnName> {
   entity: IAMNodeEntity.PermissionBoundary;
 }
 
-interface IAMSCPNodeData extends IAMGuardRailsNodeData {
+interface IAMSCPNodeData<TIsEdgeBlockedFnName extends string = string>
+  extends IAMGuardRailsNodeData<TIsEdgeBlockedFnName> {
   entity: IAMNodeEntity.SCP;
 }
 
@@ -280,10 +273,16 @@ export type IAMResourceNode = Node<IAMResourceNodeData, 'resource'>;
 export type IAMRoleNode = Node<IAMRoleNodeData, 'role'>;
 export type IAMAccountNode = Node<IAMAccountNodeData, 'account'>;
 export type IAMOUNode = Node<IAMOUNodeData, 'ou'>;
-export type IAMSCPNode = Node<IAMSCPNodeData, 'scp'>;
+export type IAMSCPNode<TIsEdgeBlockedFnName extends string = string> = Node<
+  IAMSCPNodeData<TIsEdgeBlockedFnName>,
+  'scp'
+>;
 
 export type IAMResourcePolicyNode = Node<IAMResourcePolicyNodeData, 'resource_policy'>;
-export type IAMPermissionBoundaryNode = Node<IAMPermissionBoundaryNodeData, 'permission_boundary'>;
+export type IAMPermissionBoundaryNode<TIsEdgeBlockedFnName extends string = string> = Node<
+  IAMPermissionBoundaryNodeData<TIsEdgeBlockedFnName>,
+  'permission_boundary'
+>;
 
 export type IAMNodeMap = {
   [IAMNodeEntity.Policy]: IAMPolicyNode;

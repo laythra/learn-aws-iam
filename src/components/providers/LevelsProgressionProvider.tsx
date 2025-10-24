@@ -21,7 +21,7 @@ const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ c
   let snapshot: Snapshot<unknown> | undefined = undefined;
 
   try {
-    snapshot = snapshotRaw ? eval('(' + snapshotRaw + ')') : undefined;
+    snapshot = snapshotRaw ? JSON.parse(snapshotRaw) : undefined;
   } catch {
     snapshot = undefined;
   }

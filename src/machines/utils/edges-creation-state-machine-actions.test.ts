@@ -1,7 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
 import { resolveInitialEdges } from './initial-edges-resolver';
+import {
+  GetLevelGuardRailsBlockedEdgesFns,
+  GetLevelObjectivesApplicableNodesFns,
+} from '../functions-registry';
 import { createMockContext } from '@/__test-helpers__/context';
 import { createAccountNode } from '@/factories/nodes/account-node-factory';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
@@ -20,6 +24,12 @@ type ExpectedEdge = {
   data?: Partial<IAMEdge['data']>;
 };
 
+vi.mock('@/machines/functions-registry', () => ({
+  GetLevelObjectivesApplicableNodesFns: vi.fn(() => ({})),
+  GetLevelGuardRailsBlockedEdgesFns: vi.fn(() => ({})),
+  GetLevelValidateFunctionsFns: vi.fn(() => ({})),
+}));
+
 describe('updateConnectionEdges', () => {
   /**
    * A convinience function to create a mock context with resolved edges and connections.
@@ -35,6 +45,17 @@ describe('updateConnectionEdges', () => {
     const { edges } = resolveInitialEdges(ctx);
     return { ...ctx, edges };
   };
+
+  beforeEach(() => {
+    vi.mocked(GetLevelObjectivesApplicableNodesFns).mockReturnValue(
+      new Proxy(
+        {},
+        {
+          get: () => (nodes: IAMAnyNode[]) => nodes,
+        }
+      )
+    );
+  });
 
   const expectEdges = (edges: IAMEdge[], expected: ExpectedEdge[]): void => {
     expect(edges).toHaveLength(expected.length);
@@ -91,6 +112,10 @@ describe('updateConnectionEdges', () => {
 
     it('skips extra edges (user → resource) when granted_access specifies\
        a source_node that does not match the user being connected', () => {
+      vi.mocked(GetLevelObjectivesApplicableNodesFns).mockImplementation(() => ({
+        NONE_MATCHING_FN: () => [],
+      }));
+
       const user = createUserNode({});
       const resource = createResourceNode({});
       const policy = createPolicyNode({
@@ -100,9 +125,7 @@ describe('updateConnectionEdges', () => {
               access_level: AccessLevel.Read,
               target_node: resource.id,
               target_handle: 'mock-target-handle',
-              applicable_nodes: () => {
-                return [];
-              },
+              applicable_nodes_fn_name: 'NONE_MATCHING_FN',
             },
           ],
         },
@@ -118,9 +141,13 @@ describe('updateConnectionEdges', () => {
        but a permission boundary blocks it', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});
+      vi.mocked(GetLevelGuardRailsBlockedEdgesFns).mockImplementation(() => ({
+        MOCK_BLOCKING_FN: (edge: IAMEdge) => edge.source === user.id && edge.target === resource.id,
+      }));
+
       const permissionBoundary = createPermissionBoundaryNode({
         dataOverrides: {
-          is_edge_blocked: edge => edge.source === user.id && edge.target === resource.id,
+          is_edge_blocked_fn_name: 'MOCK_BLOCKING_FN',
         },
       });
 
@@ -265,9 +292,12 @@ describe('updateConnectionEdges', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});
       const role = createRoleNode({});
+      vi.mocked(GetLevelGuardRailsBlockedEdgesFns).mockImplementation(() => ({
+        MOCK_BLOCKING_FN: (edge: IAMEdge) => edge.source === user.id && edge.target === resource.id,
+      }));
       const permissionBoundary = createPermissionBoundaryNode({
         dataOverrides: {
-          is_edge_blocked: edge => edge.source === user.id && edge.target === resource.id,
+          is_edge_blocked_fn_name: 'MOCK_BLOCKING_FN',
         },
       });
 
@@ -425,14 +455,25 @@ describe('updateConnectionEdges', () => {
   });
 
   describe('SCP -> OU', () => {
+    const ouNode = createOUNode({});
+    const accountNode = createAccountNode({});
+    const dataOverrides = {
+      account_id: accountNode.id,
+      ou_id: ouNode.id,
+    };
+
     it('blocks access for nodes affected by the SCP in an account under the OU', () => {
-      const accountNode = createAccountNode({});
-      const ouNode = createOUNode({});
-      const userNode = createUserNode({});
-      const resourceNode = createResourceNode({});
+      const userNode = createUserNode({ dataOverrides });
+      const resourceNode = createResourceNode({ dataOverrides });
+      vi.mocked(GetLevelGuardRailsBlockedEdgesFns).mockImplementation(() => ({
+        MOCK_BLOCKING_FN: (edge: IAMEdge) =>
+          edge.source === userNode.id && edge.target === resourceNode.id,
+      }));
+
       const scpNode = createSCPNode({
         dataOverrides: {
-          is_edge_blocked: edge => edge.source === userNode.id && edge.target === resourceNode.id,
+          is_edge_blocked_fn_name: 'MOCK_BLOCKING_FN',
+          ...dataOverrides,
         },
       });
       const policyNode = createPolicyNode({
@@ -444,6 +485,7 @@ describe('updateConnectionEdges', () => {
               target_handle: 'mock-target-handle',
             },
           ],
+          ...dataOverrides,
         },
       });
 
@@ -478,14 +520,19 @@ describe('updateConnectionEdges', () => {
     });
 
     it('blocks access for nodes affected by the SCP attached to the account', () => {
-      const accountNode = createAccountNode({});
-      const userNode = createUserNode({});
-      const resourceNode = createResourceNode({});
+      const userNode = createUserNode({ dataOverrides });
+      const resourceNode = createResourceNode({ dataOverrides });
+      vi.mocked(GetLevelGuardRailsBlockedEdgesFns).mockImplementation(() => ({
+        MOCK_BLOCKING_FN: (edge: IAMEdge) =>
+          edge.source === userNode.id && edge.target === resourceNode.id,
+      }));
+
       const scpNode = createSCPNode({
         dataOverrides: {
-          is_edge_blocked: edge => edge.source === userNode.id && edge.target === resourceNode.id,
+          is_edge_blocked_fn_name: 'MOCK_BLOCKING_FN',
         },
       });
+
       const policyNode = createPolicyNode({
         dataOverrides: {
           granted_accesses: [
@@ -495,6 +542,7 @@ describe('updateConnectionEdges', () => {
               target_handle: 'mock-target-handle',
             },
           ],
+          ...dataOverrides,
         },
       });
 
@@ -504,13 +552,18 @@ describe('updateConnectionEdges', () => {
             from: policyNode.id,
             to: userNode.id,
           },
+          {
+            from: scpNode.id,
+            to: ouNode.id,
+          },
         ],
-        [accountNode, userNode, resourceNode, policyNode, scpNode]
+        [accountNode, userNode, resourceNode, policyNode, scpNode, ouNode]
       );
 
       expectEdges(ctx.edges, [
         { source: policyNode.id, target: userNode.id },
         { source: userNode.id, target: resourceNode.id },
+        { source: scpNode.id, target: ouNode.id },
       ]);
 
       const { updatedContext } = updateConnectionEdges(ctx, scpNode, accountNode);
@@ -519,6 +572,46 @@ describe('updateConnectionEdges', () => {
         { source: policyNode.id, target: userNode.id, data: { is_blocked: false } },
         { source: scpNode.id, target: accountNode.id, data: { is_blocked: false } },
         { source: userNode.id, target: resourceNode.id, data: { is_blocked: true } },
+        { source: scpNode.id, target: ouNode.id, data: { is_blocked: false } },
+      ]);
+    });
+  });
+
+  describe('permission boundary → user', () => {
+    it('marks already existing edges affected by the permission boundary as blocked', () => {
+      const user = createUserNode({});
+      const resource = createResourceNode({});
+      const policy = createPolicyNode({
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
+      });
+      vi.mocked(GetLevelGuardRailsBlockedEdgesFns).mockImplementation(() => ({
+        MOCK_BLOCKING_FN: (edge: IAMEdge) => edge.source === user.id && edge.target === resource.id,
+      }));
+
+      const ctx = createEdgeTestContext(
+        [{ from: policy.id, to: user.id }],
+        [user, resource, policy]
+      );
+
+      const permissionBoundary = createPermissionBoundaryNode({
+        dataOverrides: {
+          is_edge_blocked_fn_name: 'MOCK_BLOCKING_FN',
+        },
+      });
+
+      const { updatedContext } = updateConnectionEdges(ctx, permissionBoundary, user);
+      expectEdges(updatedContext.edges, [
+        { source: permissionBoundary.id, target: user.id },
+        { source: policy.id, target: user.id },
+        { source: user.id, target: resource.id, data: { is_blocked: true } },
       ]);
     });
   });

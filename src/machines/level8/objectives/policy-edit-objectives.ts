@@ -1,11 +1,8 @@
-import slackServicePolicyNoTags from '../schemas/policy/slack-manage-service-policy-no-tags.json';
-import slackServicePolicyWithTags from '../schemas/policy/slack-manage-service-policy-with-tags.json';
+import { ObjectivesApplicableNodesFnName, ValidateFunctionsFnName } from '../level-runtime-fns';
 import { FinishEventMap, PolicyEditFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/machines/types';
-import { IAMNodeFilter } from '@/machines/utils/iam-node-filter';
-import { AccessLevel, HandleID, IAMAnyNode, IAMNodeEntity, PolicyGrantedAccess } from '@/types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
+import { AccessLevel, HandleID, IAMNodeEntity, PolicyGrantedAccess } from '@/types';
 
 const OBJECTIVE1_CALLOUT_MSG = `
   We need to edit this policy to ensure only
@@ -71,15 +68,14 @@ const OBJECTIVE2_HINT_MSG2 = `
 
   Which one do you think is best suited for this case?
 `;
-const GRANTED_RESOURCES: PolicyGrantedAccess[] = [
+const GRANTED_RESOURCES: PolicyGrantedAccess<ObjectivesApplicableNodesFnName>[] = [
   {
     access_level: AccessLevel.Read,
     target_node: ResourceNodeID.SlackIntegrationSecret,
     source_handle: HandleID.Top,
     target_handle: HandleID.Bottom,
-    applicable_nodes: (nodes: IAMAnyNode[]) =>
-      IAMNodeFilter.create().fromNodes(nodes).whereHasTag('role', 'senior').build(),
-  } satisfies PolicyGrantedAccess,
+    applicable_nodes_fn_name: 'seniorUsersApplicableNodes',
+  } satisfies PolicyGrantedAccess<ObjectivesApplicableNodesFnName>,
   {
     access_level: AccessLevel.Read,
     target_node: ResourceNodeID.SlackCrashlyticsNotifierService,
@@ -88,17 +84,19 @@ const GRANTED_RESOURCES: PolicyGrantedAccess[] = [
   },
 ];
 
-export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] = [
+export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
+  FinishEventMap,
+  ValidateFunctionsFnName
+>[][] = [
   [
     {
+      id: PolicyNodeID.SlackServiceManagePolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
-      entity_id: PolicyNodeID.SlackServiceManagePolicy,
+      validate_fn_name: 'slackManagePolicyValidateFn1',
       entity: IAMNodeEntity.Policy,
-      json_schema: slackServicePolicyNoTags,
       callout_message: OBJECTIVE1_CALLOUT_MSG,
       on_finish_event: PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_FIRST_TIME,
       resources_to_grant: GRANTED_RESOURCES,
-      validate_function: AJV_COMPILER.compile(slackServicePolicyNoTags),
       hint_messages: [
         {
           title: 'Condition Operators',
@@ -120,14 +118,15 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           color: 'yellow',
         },
       ],
+      finished: false,
     },
   ],
   [
     {
+      id: PolicyNodeID.SlackServiceManagePolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
-      entity_id: PolicyNodeID.SlackServiceManagePolicy,
+      validate_fn_name: 'slackManagePolicyValidateFn2',
       entity: IAMNodeEntity.Policy,
-      json_schema: slackServicePolicyWithTags,
       on_finish_event: PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_SECOND_TIME,
       resources_to_grant: GRANTED_RESOURCES,
       hint_messages: [
@@ -140,7 +139,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           content: OBJECTIVE2_HINT_MSG2,
         },
       ],
-      validate_function: AJV_COMPILER.compile(slackServicePolicyWithTags),
+      finished: false,
     },
   ],
 ];

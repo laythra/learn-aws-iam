@@ -1,11 +1,8 @@
-import dataScientistsPolicy from '../schemas/edit-objectives-schemas/data-scientists-policy.json';
-import developersPolicy from '../schemas/edit-objectives-schemas/developers-policy.json';
-import internsPolicy from '../schemas/edit-objectives-schemas/interns-policy.json';
+import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { FinishEventMap, NodeEditFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 const OBJECTIVE_CALLOUT_MSG = `
   IAM offers hundreds of actions across AWS services.
@@ -68,13 +65,16 @@ const OBJECTIVE3_HINT_MSG2 = `
   Clearly, there's something preventing the statement specifying the read access to take effect.
 `;
 
-export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] = [
+export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
+  FinishEventMap,
+  ValidateFunctionsFnName
+>[][] = [
   [
     {
+      id: PolicyNodeID.DeveloperPolicy,
+      validate_fn_name: PolicyNodeID.DeveloperPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
-      entity_id: PolicyNodeID.DeveloperPolicy,
       entity: IAMNodeEntity.Policy,
-      json_schema: developersPolicy,
       callout_message: OBJECTIVE_CALLOUT_MSG,
       on_finish_event: NodeEditFinishEvent.DEVELOPER_POLICY_EDITED,
       resources_to_grant: [
@@ -91,7 +91,6 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           source_handle: 'top',
         },
       ],
-      validate_function: AJV_COMPILER.compile(developersPolicy),
       hint_messages: [
         {
           title: 'Level Objective',
@@ -110,12 +109,13 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           content: OBJECTIVE1_HINT_MSG4,
         },
       ],
+      finished: false,
     },
     {
+      id: PolicyNodeID.DataScientistPolicy,
+      validate_fn_name: PolicyNodeID.DataScientistPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
-      entity_id: PolicyNodeID.DataScientistPolicy,
       entity: IAMNodeEntity.Policy,
-      json_schema: dataScientistsPolicy,
       on_finish_event: NodeEditFinishEvent.DATA_SCIENTIST_POLICY_EDITED,
       callout_message: OBJECTIVE_CALLOUT_MSG,
       resources_to_grant: [
@@ -132,7 +132,6 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           source_handle: 'top',
         },
       ],
-      validate_function: AJV_COMPILER.compile(dataScientistsPolicy),
       hint_messages: [
         {
           title: 'Level Objective',
@@ -147,12 +146,13 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           content: OBJECTIVE2_HINT_MSG3,
         },
       ],
+      finished: false,
     },
     {
+      id: PolicyNodeID.InternPolicy,
+      validate_fn_name: PolicyNodeID.InternPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
-      entity_id: PolicyNodeID.InternPolicy,
       entity: IAMNodeEntity.Policy,
-      json_schema: internsPolicy,
       on_finish_event: NodeEditFinishEvent.INTERN_POLICY_EDITED,
       callout_message: OBJECTIVE_CALLOUT_MSG2,
       resources_to_grant: [
@@ -163,7 +163,6 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           source_handle: 'top',
         },
       ],
-      validate_function: AJV_COMPILER.compile(internsPolicy),
       hint_messages: [
         {
           title: 'Level Objective',
@@ -174,6 +173,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<FinishEventMap>[][] 
           content: OBJECTIVE3_HINT_MSG2,
         },
       ],
+      finished: false,
     },
   ],
 ];

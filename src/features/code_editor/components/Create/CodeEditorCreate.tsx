@@ -12,6 +12,7 @@ import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { MANAGED_POLICIES } from '@/machines/config';
+import { GetLevelValidateFunctions } from '@/machines/functions-registry';
 import { AccountID } from '@/machines/types';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types';
@@ -32,14 +33,16 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   errors,
   warnings,
 }) => {
-  const [multiAccount, policyCreationObjectives, nodes] = LevelsProgressionContext().useSelector(
-    state => [
-      state.context.use_multi_account_canvas,
-      state.context.policy_creation_objectives,
-      state.context.nodes,
-    ],
-    _.isEqual
-  );
+  const [multiAccount, policyCreationObjectives, nodes, levelNumber] =
+    LevelsProgressionContext().useSelector(
+      state => [
+        state.context.use_multi_account_canvas,
+        state.context.policy_creation_objectives,
+        state.context.nodes,
+        state.context.level_number,
+      ],
+      _.isEqual
+    );
 
   const [selectedAccountId, labelError] = useSelector(
     codeEditorStateStore,
@@ -57,9 +60,11 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   const initialContent = objectiveToTargetInEditor?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
   const getWarnings = (): string[] => {
     if (!editorView.current) return [];
+    const validateFns = GetLevelValidateFunctions(levelNumber);
 
     const anyValidPolicy = findAnyValidObjective(
       unfinishedCreationObjectives,
+      validateFns,
       nodes,
       editorView.current.state.doc.toString(),
       selectedAccountId
@@ -68,9 +73,10 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     return anyValidPolicy ? [] : [NO_MATCHING_POLICY_WARNING];
   };
 
-  const validateFns = unfinishedCreationObjectives.filterMap(
-    obj => obj.get_validate_function?.(nodes) ?? obj.validate_function
-  );
+  const validateFns = unfinishedCreationObjectives.filterMap(obj => {
+    const validateFunctions = GetLevelValidateFunctions(levelNumber);
+    return validateFunctions?.[obj.id](nodes);
+  });
 
   const { onCreateEditor, validateChange, getContent, extensions, validateNodeLabel } =
     useCodeEditor({
