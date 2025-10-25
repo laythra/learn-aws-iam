@@ -1,4 +1,3 @@
-import { TUTORIAL_STEPS } from './tutorial-steps';
 import { test } from '../helpers/test-fixtures';
 import { ElementID } from '@/config/element-ids';
 // prettier-ignore
@@ -12,7 +11,14 @@ import {
 import { UserNodeID, ResourceNodeID, PolicyNodeID } from '@/machines/level1/types/node-id-enums';
 
 test.describe('Level 1 Tutorial Phase', () => {
-  test('Goes through the tutorial phase', async ({ page, tutorial, nodes, popups, goToLevel }) => {
+  test('Goes through the tutorial phase', async ({
+    page,
+    tutorial,
+    nodes,
+    edges,
+    popups,
+    goToLevel,
+  }) => {
     await goToLevel(1);
     await page.goto('http://localhost:5173');
 
@@ -25,26 +31,48 @@ test.describe('Level 1 Tutorial Phase', () => {
     await nodes.expectHidden(PolicyNodeID.S3ReadPolicy);
 
     // Go through initial user popovers
-    await tutorial.goThroughConsecutivePopovers(TUTORIAL_STEPS.INITIAL_USER_POPOVERS);
+    await tutorial.expectPopoverAndClickNext(
+      UserNodeID.TutorialUser,
+      POPOVER_TUTORIAL_MESSAGES[0].popover_title
+    );
+    await tutorial.expectPopoverAndClickNext(
+      UserNodeID.TutorialUser,
+      POPOVER_TUTORIAL_MESSAGES[1].popover_title
+    );
+    await tutorial.expectPopoverAndClickNext(
+      UserNodeID.TutorialUser,
+      POPOVER_TUTORIAL_MESSAGES[2].popover_title
+    );
 
     // Check S3 bucket appears
     await nodes.expectVisible(ResourceNodeID.PublicImagesS3Bucket);
     await nodes.expectHidden(PolicyNodeID.S3ReadPolicy);
 
     // Continue tutorial
-    await tutorial.clickGlobalNextButton();
+    await tutorial.expectPopoverAndClickNext(
+      ResourceNodeID.PublicImagesS3Bucket,
+      POPOVER_TUTORIAL_MESSAGES[3].popover_title
+    );
     await nodes.expectVisible(PolicyNodeID.S3ReadPolicy);
-    await tutorial.clickGlobalNextButton();
+    await tutorial.expectPopoverWithoutNextButton(
+      PolicyNodeID.S3ReadPolicy,
+      POPOVER_TUTORIAL_MESSAGES[5].popover_title
+    );
 
     // Connect policy to user
     await nodes.connectNodes(PolicyNodeID.S3ReadPolicy, UserNodeID.TutorialUser);
-    await nodes.expectEdgeVisible(PolicyNodeID.S3ReadPolicy, UserNodeID.TutorialUser);
-    await nodes.expectEdgeVisible(UserNodeID.TutorialUser, ResourceNodeID.PublicImagesS3Bucket);
+    await edges.expectVisible(PolicyNodeID.S3ReadPolicy, UserNodeID.TutorialUser);
+    await edges.expectVisible(UserNodeID.TutorialUser, ResourceNodeID.PublicImagesS3Bucket);
 
     // Access granted popover
     await tutorial.expectPopoverAndClickNext(
       UserNodeID.TutorialUser,
       POPOVER_TUTORIAL_MESSAGES[6].popover_title
+    );
+
+    await tutorial.expectPopoverWithoutNextButton(
+      ElementID.NewEntityBtn,
+      POPOVER_TUTORIAL_MESSAGES[7].popover_title
     );
 
     await popups.submitCreateEntityPopup(
@@ -63,10 +91,18 @@ test.describe('Level 1 Tutorial Phase', () => {
     );
 
     await nodes.connectNodes(PolicyNodeID.S3ReadPolicy, UserNodeID.FirstUser);
-    await nodes.expectEdgeVisible(PolicyNodeID.S3ReadPolicy, UserNodeID.FirstUser);
-    await nodes.expectEdgeVisible(UserNodeID.FirstUser, ResourceNodeID.PublicImagesS3Bucket);
+    await edges.expectVisible(PolicyNodeID.S3ReadPolicy, UserNodeID.FirstUser);
+    await edges.expectVisible(UserNodeID.FirstUser, ResourceNodeID.PublicImagesS3Bucket);
 
-    await tutorial.goThroughConsecutivePopovers(TUTORIAL_STEPS.FINAL_POPOVERS);
+    // Final popovers
+    await tutorial.expectPopoverAndClickNext(
+      UserNodeID.FirstUser,
+      POPOVER_TUTORIAL_MESSAGES[10].popover_title
+    );
+    await tutorial.expectPopoverAndClickNext(
+      ElementID.ObjectivesSidePanel,
+      POPOVER_TUTORIAL_MESSAGES[11].popover_title
+    );
 
     await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
   });
