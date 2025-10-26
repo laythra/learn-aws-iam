@@ -139,7 +139,6 @@ export const stateMachine = createStateMachineSetup<
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[1] },
             },
-            'store_checkpoint',
           ],
           on: {
             NEXT_POPOVER: 'tutorial_popover3',

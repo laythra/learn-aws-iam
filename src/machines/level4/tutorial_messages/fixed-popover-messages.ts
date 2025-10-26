@@ -42,14 +42,14 @@ const FIXED_POPOVER_MSG4 = `
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
   {
-    popover_title: 'Your Task as an IAM specialist',
+    popover_title: "TimeShift Labs' Current Situation",
     popover_content: FIXED_POPOVER_MSG1,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
   },
   {
-    popover_title: 'Your Task as an IAM specialist',
+    popover_title: "TimeShift Labs' Technical Hierarchy",
     popover_content: FIXED_POPOVER_MSG2,
     position: 'top-left',
     show_close_button: false,

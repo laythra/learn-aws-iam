@@ -1,11 +1,9 @@
-import ec2RoleTrustPolicySchema from '../schemas/policy/ec2-role-trust-policy.json';
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, RoleNodeID } from '../types/node-id-enums';
 import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
 import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[][] = [
   [

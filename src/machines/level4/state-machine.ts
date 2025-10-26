@@ -216,6 +216,7 @@ export const stateMachine = createStateMachineSetup<
                 },
                 completed: {
                   type: 'final',
+                  entry: ['store_checkpoint'],
                 },
               },
             },
@@ -237,6 +238,7 @@ export const stateMachine = createStateMachineSetup<
                 },
                 completed: {
                   type: 'final',
+                  entry: ['store_checkpoint'],
                 },
               },
             },
@@ -258,6 +260,7 @@ export const stateMachine = createStateMachineSetup<
                 },
                 completed: {
                   type: 'final',
+                  entry: ['store_checkpoint'],
                 },
               },
             },

@@ -59,6 +59,8 @@ export class NodeActions {
     await findNodePopover(this.page, nodeId, popoverType)
       .getByRole('button', { name: 'close' })
       .click();
+
+    await expect(findNodePopover(this.page, nodeId, popoverType)).not.toBeVisible();
   }
 
   async editPolicyNodeContent(nodeId: string, newContent: string): Promise<void> {
@@ -81,7 +83,7 @@ export class NodeActions {
     const submitButton = codeEditorPopup.getByRole('button', { name: 'Submit' });
 
     // wait for debounced button (500ms delay) to become clickable
-    await expect(submitButton).toBeEnabled({ timeout: 5000 });
+    await expect(submitButton).toBeEnabled({ timeout: 1000 });
 
     await submitButton.click();
   }
@@ -92,5 +94,9 @@ export class NodeActions {
 
     await node.click();
     await this.page.keyboard.press('Backspace');
+  }
+
+  async expectNodeContentButtonVisible(nodeId: string): Promise<void> {
+    await expect(findNodeContentButton(this.page, nodeId)).toBeVisible();
   }
 }
