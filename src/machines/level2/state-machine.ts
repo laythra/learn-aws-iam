@@ -199,7 +199,12 @@ export const stateMachine = createStateMachineSetup<
     },
     attach_nodes_to_group: {
       type: 'parallel',
-      entry: ['clear_edges', 'enable_edges_management_ability'],
+      entry: [
+        'clear_edges',
+        'enable_edges_management_ability',
+        'store_checkpoint',
+        { type: 'store_snapshot_to_disk', params: { filename: 'level2_stage2.txt' } },
+      ],
       onDone: [
         {
           guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
@@ -321,10 +326,15 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         create_your_user_popover: {
-          entry: {
-            type: 'show_popover_message',
-            params: { message: POPOVER_TUTORIAL_MESSAGES[5] },
-          },
+          entry: [
+            {
+              type: 'show_popover_message',
+
+              params: { message: POPOVER_TUTORIAL_MESSAGES[5] },
+            },
+            'store_checkpoint',
+            { type: 'store_snapshot_to_disk', params: { filename: 'level2_stage3.txt' } },
+          ],
           on: {
             NEXT_POPOVER: 'create_your_user',
           },

@@ -46,7 +46,13 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
     // role_creation_objectives: [],
-    restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
+    restricted_element_ids: [
+      ElementID.CreateEntitiesMenuItem,
+      ElementID.CodeEditorResourcePolicyTab,
+      ElementID.CodeEditorPolicyTab,
+      ElementID.CodeEditorSCPTab,
+      ElementID.CodeEditorPermissionBoundaryTab,
+    ],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
@@ -189,6 +195,7 @@ export const stateMachine = createStateMachineSetup<
         },
         create_your_first_role_popover: {
           entry: [
+            'store_checkpoint',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
             {
               type: 'append_creation_objectives',
@@ -238,10 +245,12 @@ export const stateMachine = createStateMachineSetup<
         },
         give_finance_user_s3_access: {
           type: 'parallel',
-          entry: {
-            type: 'show_popover_message',
-            params: { message: POPOVER_TUTORIAL_MESSAGES[5] },
-          },
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[5] },
+            },
+          ],
           onDone: {
             target: 'tutorial_finished_popover',
             actions: [
@@ -320,12 +329,12 @@ export const stateMachine = createStateMachineSetup<
     },
     inside_level: {
       entry: [
-        assign({
-          nodes: INITIAL_IN_LEVEL_NODES,
-          edges: [],
-          level_objectives: LEVEL_OBJECTIVES[1],
-          in_tutorial_state: false,
-        }),
+        'store_checkpoint',
+        { type: 'store_snapshot_to_disk', params: { filename: 'level5_stage2' } },
+        'disable_tutorial_state',
+        'clear_edges',
+        { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
+        { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
         {
           type: 'update_red_dot_visibility',
           params: {
@@ -339,7 +348,7 @@ export const stateMachine = createStateMachineSetup<
         },
         {
           type: 'append_creation_objectives',
-          params: { objectives: ROLE_CREATION_OBJECTIVES[0] },
+          params: { objectives: ROLE_CREATION_OBJECTIVES[1] },
         },
         'hide_unncessary_edges_or_nodes_warning',
       ],
@@ -348,7 +357,7 @@ export const stateMachine = createStateMachineSetup<
         inside_level_popup1: {
           entry: [
             'hide_fixed_popovers',
-            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[3] } },
           ],
           on: {
             NEXT_POPUP: 'inside_level_fixed_popover1',
@@ -364,7 +373,7 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         create_role_and_policy: {
-          entry: 'hide_fixed_popovers',
+          entry: ['hide_fixed_popovers'],
           onDone: 'level_finished_fixed_popover',
           type: 'parallel',
           states: {
@@ -397,6 +406,7 @@ export const stateMachine = createStateMachineSetup<
                         },
                         completed: {
                           type: 'final',
+                          entry: ['store_checkpoint'],
                         },
                       },
                     },
@@ -411,6 +421,7 @@ export const stateMachine = createStateMachineSetup<
                         },
                         completed: {
                           type: 'final',
+                          entry: ['store_checkpoint'],
                         },
                       },
                     },
@@ -450,6 +461,7 @@ export const stateMachine = createStateMachineSetup<
                         },
                         completed: {
                           type: 'final',
+                          entry: ['store_checkpoint'],
                         },
                       },
                     },
@@ -464,6 +476,7 @@ export const stateMachine = createStateMachineSetup<
                         },
                         completed: {
                           type: 'final',
+                          entry: ['store_checkpoint'],
                         },
                       },
                     },
@@ -504,7 +517,8 @@ export const stateMachine = createStateMachineSetup<
         level_finished_popup: {
           entry: [
             'hide_popovers',
-            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
+            'hide_unncessary_edges_or_nodes_warning',
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[4] } },
           ],
         },
       },

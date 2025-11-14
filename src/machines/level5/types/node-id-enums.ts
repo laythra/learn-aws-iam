@@ -1,15 +1,13 @@
-import { uniqueId } from 'lodash';
-
 export const UserNodeID = {
-  FinanceUser: uniqueId('user-'),
+  FinanceUser: 'user-1',
 } as const;
 
 export const ResourceNodeID = {
-  BillingAndCostManagement: uniqueId('resource-billing-'),
-  FinanceS3Bucket: uniqueId('resource-s3bucket-'),
-  LambdaFunction: uniqueId('resource-lambda-'),
-  ChatImagesS3Bucket: uniqueId('resource-s3bucket-'),
-  TimeshiftLabsEC2Instance: uniqueId('resource-ec2-'),
+  BillingAndCostManagement: 'resource-1',
+  FinanceS3Bucket: 'resource-2',
+  LambdaFunction: 'resource-3',
+  ChatImagesS3Bucket: 'resource-4',
+  TimeshiftLabsEC2Instance: 'resource-5',
 } as const;
 
 export const RoleNodeID = {
@@ -20,8 +18,8 @@ export const RoleNodeID = {
 } as const;
 
 export const PolicyNodeID = {
-  BillingPolicy: uniqueId('policy-'),
-  S3ReadPolicy: uniqueId('policy-'),
-  ChatImagesS3WritePolicy: uniqueId('policy-'),
-  ChatImagesS3ReadPolicy: uniqueId('policy-'),
+  BillingPolicy: 'policy-1',
+  S3ReadPolicy: 'policy-2',
+  ChatImagesS3WritePolicy: 'policy-3',
+  ChatImagesS3ReadPolicy: 'policy-4',
 } as const;

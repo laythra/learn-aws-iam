@@ -59,7 +59,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       entity: IAMNodeEntity.Role,
       initial_code: INITIAL_TRUST_POLICIES.TUTORIAL_ROLE_TRUST_POLICY2,
       on_finish_event: RoleCreationFinishEvent.TUTORIAL_ROLE_CREATED,
-      layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
+      layout_group_id: CommonLayoutGroupID.RightCenterVertical,
       callout_message: CALLOUT_MSG1,
       help_badges: [
         {
@@ -91,6 +91,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       entity: IAMNodeEntity.Role,
       initial_code: MANAGED_POLICIES.EmptyTrustPolicy,
       on_finish_event: RoleCreationFinishEvent.EC2_ROLE_CREATED,
+      layout_group_id: CommonLayoutGroupID.RightCenterVertical,
       help_badges: [],
       hint_messages: HINT_MESSAGES,
       callout_message: CALLOUT_MSG2,
@@ -104,6 +105,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       type: ObjectiveType.ROLE_CREATION_OBJECTIVE,
       entity: IAMNodeEntity.Role,
       initial_code: MANAGED_POLICIES.EmptyTrustPolicy,
+      layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
       on_finish_event: RoleCreationFinishEvent.LAMBDA_ROLE_CREATED,
       help_badges: [],
       hint_messages: HINT_MESSAGES,

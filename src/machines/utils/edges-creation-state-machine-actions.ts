@@ -372,10 +372,10 @@ const connectionStrategies = {
     );
   },
 
-  roleToResource: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+  resourceToRole: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-    roleNode: IAMRoleNode,
     resourceNode: IAMResourceNode,
+    roleNode: IAMRoleNode,
     isInitialEdge: boolean,
     options: PartialEdge = {}
   ) => {
@@ -386,7 +386,7 @@ const connectionStrategies = {
       .build()
       .map(edge => edge.data!.source_node as IAMPolicyNode);
 
-    return applyStrategy(context, roleNode, resourceNode, isInitialEdge, options, baseEdgeId =>
+    return applyStrategy(context, resourceNode, roleNode, isInitialEdge, options, baseEdgeId =>
       createEdgesFromGrantedAccesses(
         context,
         [resourceNode],
@@ -510,10 +510,10 @@ export function updateConnectionEdges<
   ) {
     return connectionStrategies.userToRole(context, sourceNode, targetNode, isInitialEdge, options);
   } else if (
-    isNodeOfEntity(sourceNode, IAMNodeEntity.Role) &&
-    isNodeOfEntity(targetNode, IAMNodeEntity.Resource)
+    isNodeOfEntity(sourceNode, IAMNodeEntity.Resource) &&
+    isNodeOfEntity(targetNode, IAMNodeEntity.Role)
   ) {
-    return connectionStrategies.roleToResource(
+    return connectionStrategies.resourceToRole(
       context,
       sourceNode,
       targetNode,

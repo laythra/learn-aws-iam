@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId.js';
 
 export const PolicyNodeID = {
   DeveloperPolicy: 'policy-1',

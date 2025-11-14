@@ -51,4 +51,16 @@ export class EdgeActions {
       await this.expectHidden(from, to);
     }
   }
+
+  /**
+   * Deletes the connection edge between two nodes.
+   * @param sourceId - The ID of the source node.
+   * @param targetId - The ID of the target node.
+   */
+  async deleteEdge(sourceId: string, targetId: string): Promise<void> {
+    const edge = findEdge(this.page, sourceId, targetId);
+
+    await edge.click({ force: true });
+    await this.page.keyboard.press('Backspace');
+  }
 }

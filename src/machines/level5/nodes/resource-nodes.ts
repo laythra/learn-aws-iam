@@ -23,7 +23,7 @@ const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
 const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.LambdaFunction,
-    label: 'Lambda Function',
+    label: 'lambda-fn',
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     image: IAMNodeImage.Lambda,
     resource_type: IAMNodeResourceEntity.Lambda,
@@ -31,7 +31,7 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.ChatImagesS3Bucket,
     label: 'chat-images',
-    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
+    layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,
   },
