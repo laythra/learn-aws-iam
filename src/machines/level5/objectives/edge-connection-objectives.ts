@@ -83,7 +83,8 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       on_finish_event: EdgeConnectionFinishEvent.LAMBDA_ROLE_ATTACHED_TO_LAMBDA_FUNCTION,
       is_finished: false,
       established_edge_hovering_label: 'Assumed by',
-      established_edge_target_handle: 'bottom',
+      established_edge_source_handle: 'left',
+      established_edge_target_handle: 'right',
     },
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
@@ -98,7 +99,8 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       on_finish_event: EdgeConnectionFinishEvent.EC2_ROLE_ATTACHED_TO_EC2_INSTANCE,
       is_finished: false,
       established_edge_hovering_label: 'Assumed by',
-      established_edge_target_handle: 'bottom',
+      established_edge_source_handle: 'right',
+      established_edge_target_handle: 'left',
     },
   ],
 ];

@@ -91,11 +91,15 @@ const POPUP_MSG4 = `
 
 const POPUP_MSG5 = `
   Using *IAM roles* is paramount when it comes to
-  establishing Service-To-Service communication inside your AWS account.
+  establishing Service-To-Service communication inside your AWS account.|lg
 
   Roles serve more complex use cases. In the upcoming level, we will learn how to use roles for
   establishing cross account access, where resources from your main AWS account
-  can be accessed from users (or even resources) in other accounts or vice-versa!
+  can be accessed from users (or even resources) in other accounts or vice-versa!|lg
+
+  &nbsp;
+
+  ***Oh, and great job completing Level 5! You're doing amazing so far*** 🚀
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
@@ -108,7 +112,7 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG2,
   },
   {
-    title: 'IAM Roles Trust Policies',
+    title: "Trust Policies and the 'Principal' Element",
     content: POPUP_MSG3,
   },
   {
@@ -116,7 +120,7 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG4,
   },
   {
-    title: 'Coming up next',
+    title: 'Coming up next 🚀',
     content: POPUP_MSG5,
     go_to_next_level_button: true,
   },
