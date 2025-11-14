@@ -371,9 +371,6 @@ export const createStateMachineSetup = <
       append_nodes: assign({
         nodes: ({ context }, { nodes }: { nodes: IAMAnyNode[] }) => [...context.nodes, ...nodes],
       }),
-      set_mutli_account_canvas: assign({
-        use_multi_account_canvas: true,
-      }),
       update_restricted_element_ids: assign({
         restricted_element_ids: (
           {},

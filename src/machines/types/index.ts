@@ -68,21 +68,15 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   level_title: string;
   nodes: IAMAnyNode[];
   policy_creation_objectives: BaseCreationObjective<TBaseFinishEventMap>[];
-  // resource_policy_creation_objectives?: IAMResourcePolicyCreationObjective<TBaseFinishEventMap>[];
-  // scp_creation_objectives?: IAMSCPCreationObjective<TBaseFinishEventMap>[];
   policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  // role_creation_objectives: IAMRoleCreationObjective<TBaseFinishEventMap>[];
   show_popovers: boolean;
   show_popups: boolean;
   show_fixed_popovers: boolean;
   fixed_popover_content?: FixedPopoverMessage;
   side_panel_open?: boolean;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
-  // eslint-disable-next-line
-  // permission_boundary_creation_objectives?: IAMPermissionBoundaryCreationObjective<TBaseFinishEventMap>[];
-  use_multi_account_canvas?: boolean;
   highlighted_element_id?: string;
   in_tutorial_state?: boolean;
   show_help_popover?: boolean;

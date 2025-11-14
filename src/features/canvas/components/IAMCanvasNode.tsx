@@ -119,7 +119,7 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
         ))}
 
         <Flex width='100%' alignItems='center'>
-          <Image src={loadLocalImage(image)} width='25%' objectFit='cover' mr='5%' />
+          <Image src={loadLocalImage(image)} width='30%' objectFit='cover' mr='5%' />
           <Box width='65%' textAlign='left'>
             <HStack spacing={0}>
               <Tooltip label={label}>
