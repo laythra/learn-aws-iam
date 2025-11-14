@@ -412,14 +412,14 @@ describe('updateConnectionEdges', () => {
     });
   });
 
-  describe('role → resource', () => {
+  describe('resource → role', () => {
     it('creates only a direct edge if role has no policies attached', () => {
       const role = createRoleNode({});
       const resource = createResourceNode({});
       const ctx = createEdgeTestContext([], [role, resource]);
 
-      const { updatedContext } = updateConnectionEdges(ctx, role, resource);
-      expectEdges(updatedContext.edges, [{ source: role.id, target: resource.id }]);
+      const { updatedContext } = updateConnectionEdges(ctx, resource, role);
+      expectEdges(updatedContext.edges, [{ source: resource.id, target: role.id }]);
     });
 
     it(`creates extra (resource → resource) edge
@@ -444,11 +444,11 @@ describe('updateConnectionEdges', () => {
         [role, resource1, resource2, policy]
       );
 
-      const { updatedContext } = updateConnectionEdges(ctx, role, resource1);
+      const { updatedContext } = updateConnectionEdges(ctx, resource1, role);
 
       expectEdges(updatedContext.edges, [
         { source: policy.id, target: role.id },
-        { source: role.id, target: resource1.id },
+        { source: resource1.id, target: role.id },
         { source: resource1.id, target: resource2.id },
       ]);
     });
