@@ -6,10 +6,8 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Box,
 } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
@@ -51,15 +49,6 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
             {popupContent.content}
           </Markdown>
           {popupContent.image && <HelpImage imagePath={popupContent.image} />}
-          {popupContent.lottie_animation && (
-            <Box height='250px' width='250px' position='absolute' right='0' bottom='0'>
-              <DotLottieReact
-                src={`lottie/${popupContent.lottie_animation}.lottie`}
-                loop={false}
-                autoplay
-              />
-            </Box>
-          )}
         </ModalBody>
 
         <ModalFooter>

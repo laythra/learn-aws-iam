@@ -210,15 +210,12 @@ export type LevelObjective<TObjectiveID, TFinishEventMap extends BaseFinishEvent
 export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> = {
   readonly type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE;
   readonly required_edges: Edge[];
-  /**
-   * @deprecated Use `granted_accesses` inside policies instead
-   */
-  locked_edges?: Edge[];
   readonly on_finish_event: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE];
   readonly is_finished: boolean;
   readonly established_edge_hovering_label: AccessLevel | string;
   readonly established_edge_target_handle?: string;
   readonly established_edge_source_handle?: string;
+  is_edge_creation_blocked?: boolean;
 };
 
 export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMap> {

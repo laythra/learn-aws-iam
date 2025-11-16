@@ -19,6 +19,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       is_finished: false,
       established_edge_hovering_label: 'Attached To',
       established_edge_target_handle: 'bottom',
+      established_edge_source_handle: 'top',
     },
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
@@ -32,8 +33,9 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       ],
       on_finish_event: EdgeConnectionFinishEvent.ASSUME_ROLE_POLICY_ATTACHED_TO_IAM_USER,
       is_finished: false,
+      established_edge_source_handle: 'left',
       established_edge_hovering_label: 'Assumed by',
-      established_edge_target_handle: 'bottom',
+      established_edge_target_handle: 'right',
     },
     {
       type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE,
@@ -48,7 +50,8 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       on_finish_event: EdgeConnectionFinishEvent.IAM_USER_ATTACHED_TO_DYNAMO_READ_ROLE,
       is_finished: false,
       established_edge_hovering_label: 'Assumed By',
-      established_edge_target_handle: 'bottom',
+      established_edge_target_handle: 'right',
+      established_edge_source_handle: 'left',
     },
   ],
 ];

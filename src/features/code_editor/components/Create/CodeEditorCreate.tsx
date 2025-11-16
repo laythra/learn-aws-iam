@@ -55,7 +55,6 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   );
 
   const objectiveToTargetInEditor = unfinishedCreationObjectives[0];
-
   const initialContent = objectiveToTargetInEditor?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
   const getWarnings = (): string[] => {
     if (!editorView.current) return [];

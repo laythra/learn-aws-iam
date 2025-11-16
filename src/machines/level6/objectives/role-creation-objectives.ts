@@ -17,10 +17,12 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
     {
       id: RoleNodeID.TrustingAccountDynamoDBReadRole,
       on_finish_event: RoleCreationFinishEvent.DYNAMODB_READ_ROLE_CREATED,
-      layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
+      layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
       account_id: AccountID.Trusting,
+      created_node_parent_id: AccountID.Trusting,
       callout_message: CALLOUT_MESSAGE1,
-      initial_code: MANAGED_POLICIES.EmptyPolicy,
+      initial_code: MANAGED_POLICIES.EmptyTrustPolicy,
+
       extra_data: {
         required_policies: [],
         required_principles: [],

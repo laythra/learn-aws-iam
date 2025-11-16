@@ -1,4 +1,3 @@
-import { TUTORIAL_FINISHED_POPUP_MESSAGE } from '@/machines/config';
 import { PopupTutorialMessage } from '@/machines/types';
 const POPUP_MSG1 = `
   **IAM Roles** are quite powerful in the realm of AWS.
@@ -47,10 +46,6 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
     title: 'Cross-Account Access Wrap-up',
     content: POPUP_MSG3,
-  },
-  {
-    title: 'Congratunlations! Tutorial Wrap-up',
-    content: TUTORIAL_FINISHED_POPUP_MESSAGE,
     go_to_next_level_button: true,
   },
 ];

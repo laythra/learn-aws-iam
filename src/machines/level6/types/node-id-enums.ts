@@ -1,17 +1,21 @@
+export const AccountID = {
+  TrustingAccount: '123456789012',
+  TrustedAccount: '987654321098',
+} as const;
+
 export enum UserNodeID {
-  TrustedAccountIAMUser = 'arn:aws:iam::123456789012:user/richard',
+  TrustedAccountIAMUser = 'user-1',
 }
 
 export enum ResourceNodeID {
-  TrustingAccountDynamoDBTable = 'arn:aws:dynamodb:us-west-2:123456789012:table/finance-reports',
+  TrustingAccountDynamoDBTable = 'resource-dynamodb-1',
 }
 
 export enum RoleNodeID {
-  TrustingAccountDynamoDBReadRole = 'arn:aws:iam::123456789012:role/finance-reports-read-role',
+  TrustingAccountDynamoDBReadRole = 'resource-role-1',
 }
 
 export enum PolicyNodeID {
-  // eslint-disable-next-line
-  TrustingAccountFinanceReportsReadPolicy = 'arn:aws:iam::123456789012:policy/finance-reports-read-policy',
-  TrustedAccountAssumeRolePolicy = 'arn:aws:iam::123456789012:policy/assume-role-policy',
+  TrustingAccountFinanceReportsReadPolicy = 'resource-policy-1',
+  TrustedAccountAssumeRolePolicy = 'resource-policy-2',
 }
