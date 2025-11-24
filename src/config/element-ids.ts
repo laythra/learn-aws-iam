@@ -24,6 +24,7 @@ export enum ElementID {
   RightSidePanelToggleButton = 'right-side-panel-toggle-button',
   TutorialPopoverCloseButton = 'tutorial-popover-close-button',
   ResetZoomButton = 'reset-zoom-button',
+  AccountSelectionDropdown = 'account-select-dropdown',
 }
 
 export type CodeEditorTabsElementID =

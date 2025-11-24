@@ -11,6 +11,7 @@ import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { ElementID } from '@/config/element-ids';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { GetLevelValidateFunctions } from '@/machines/functions-registry';
 import { AccountID } from '@/machines/types';
@@ -105,6 +106,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
           mb={4}
           width='40%'
           value={selectedAccountId}
+          data-element-id={ElementID.AccountSelectionDropdown}
           onChange={e => {
             codeEditorStateStore.send({
               type: 'setSelectedAccount',
@@ -112,8 +114,17 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
             });
           }}
         >
-          <option value={AccountID.Trusting}>Trusting Account</option>
-          <option value={AccountID.Trusted}>Trusted Account</option>
+          {nodes
+            .filter(node => node.data.entity === IAMNodeEntity.Account)
+            .map(accountNode => (
+              <option
+                key={accountNode.id}
+                value={accountNode.id}
+                data-element-id={`account-option-${accountNode.id}`}
+              >
+                {accountNode.data.label}
+              </option>
+            ))}
         </Select>
       )}
 

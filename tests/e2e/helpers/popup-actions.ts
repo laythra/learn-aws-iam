@@ -25,7 +25,8 @@ export class PopupActions {
     expectedVisibleTabs: CodeEditorTabsElementID[],
     targetTab: CodeEditorTabsElementID,
     policyName: string,
-    policyContent: string
+    policyContent: string,
+    accountId?: string
   ): Promise<void> {
     const newEntityBtn = this.page.getByTestId(ElementID.NewEntityBtn);
     await expect(newEntityBtn).toBeVisible();
@@ -42,8 +43,13 @@ export class PopupActions {
     await this.page.getByTestId(targetTab).click();
     await popup.getByRole('textbox').first().fill(policyName);
     await popup.getByRole('textbox').last().fill(policyContent);
-    await popup.getByRole('button', { name: 'submit' }).click();
 
+    if (accountId) {
+      const accountDropdown = popup.getByTestId(ElementID.AccountSelectionDropdown);
+      await accountDropdown.selectOption(accountId);
+    }
+
+    await popup.getByRole('button', { name: 'submit' }).click();
     await expect(popup).not.toBeVisible();
   }
 }

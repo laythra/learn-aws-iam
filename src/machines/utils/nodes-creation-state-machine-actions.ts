@@ -62,7 +62,8 @@ export function createNodeFromObjective<
   docString: string,
   label: string,
   entityType: E,
-  targetValidObjective?: BaseCreationObjective<TFinishEventMap>
+  targetValidObjective?: BaseCreationObjective<TFinishEventMap>,
+  accountId?: AccountID
 ): NodeFor<E> {
   const createNodeFn = nodesCreationMap[entityType];
   return createNodeFn({
@@ -71,16 +72,16 @@ export function createNodeFromObjective<
       content: docString,
       label: label,
       unnecessary_node: targetValidObjective === undefined,
-      account_id: targetValidObjective?.account_id,
+      account_id: targetValidObjective?.account_id ?? accountId,
       layout_group_id:
         targetValidObjective?.layout_group_id ?? CommonLayoutGroupID.CenterHorizontal,
       entity: entityType,
       editable: false,
-      parent_id: targetValidObjective?.created_node_parent_id,
+      parent_id: targetValidObjective?.created_node_parent_id ?? accountId,
       ...targetValidObjective?.extra_data,
     } as NodeDataFor<E>,
     rootOverrides: {
-      parentId: targetValidObjective?.created_node_parent_id,
+      parentId: targetValidObjective?.created_node_parent_id ?? accountId,
     },
   });
 }
@@ -109,7 +110,13 @@ export function createIAMNode<
     nodeEntity
   );
 
-  const newNode = createNodeFromObjective(docString, label, nodeEntity, targetValidObjective);
+  const newNode = createNodeFromObjective(
+    docString,
+    label,
+    nodeEntity,
+    targetValidObjective,
+    accountId
+  );
 
   const updatedContext = produce(context, draftContext => {
     if (targetValidObjective) {
