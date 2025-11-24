@@ -377,6 +377,12 @@ export const createStateMachineSetup = <
           { restricted_element_ids }: { restricted_element_ids: string[] }
         ) => restricted_element_ids,
       }),
+      update_blocked_connections: assign({
+        blocked_connections: (
+          {},
+          { blocked_connections }: { blocked_connections: { from: string; to: string }[] }
+        ) => blocked_connections,
+      }),
       hide_help_popover: assign({
         show_help_popover: false,
       }),

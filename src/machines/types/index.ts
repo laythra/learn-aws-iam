@@ -93,6 +93,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   show_unncessary_edges_or_nodes_warning?: boolean;
   initial_node_connections?: InitialNodeConnection[];
   layout_groups: NodeLayoutGroup[];
+  blocked_connections?: { from: string; to: string }[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine

@@ -14,6 +14,7 @@ import {
   PolicyCreationFinishEvent,
   RoleCreationFinishEvent,
 } from './types/finish-event-enums';
+import { RoleNodeID, UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
@@ -136,7 +137,21 @@ export const stateMachine = createStateMachineSetup<
     },
     inside_level: {
       initial: 'entities_creation',
-      entry: ['disable_tutorial_state', 'clear_creation_objectives'],
+      entry: [
+        'disable_tutorial_state',
+        'clear_creation_objectives',
+        {
+          type: 'update_blocked_connections',
+          params: {
+            blocked_connections: [
+              {
+                from: UserNodeID.TrustedAccountIAMUser,
+                to: RoleNodeID.TrustingAccountDynamoDBReadRole,
+              },
+            ],
+          },
+        },
+      ],
       states: {
         entities_creation: {
           entry: [
@@ -248,9 +263,11 @@ export const stateMachine = createStateMachineSetup<
                       'completed',
                   },
                 },
-
                 completed: {
-                  entry: ['store_checkpoint'],
+                  entry: [
+                    'store_checkpoint',
+                    { type: 'update_blocked_connections', params: { blocked_connections: [] } },
+                  ],
                   type: 'final',
                 },
               },

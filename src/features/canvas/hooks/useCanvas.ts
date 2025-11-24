@@ -42,7 +42,7 @@ const DEFAULT_LAYOUT_GROUP = createHorizontalGroup('default-layout-group', 'cent
 export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const theme = useTheme<CustomTheme>();
   const toast = useToast();
-  const [nodes, edges, sidePanelOpened, edgesManagementDisabled, layoutGroups] =
+  const [nodes, edges, sidePanelOpened, edgesManagementDisabled, layoutGroups, blockedConnections] =
     LevelsProgressionContext().useSelector(
       state => [
         state.context.nodes,
@@ -50,6 +50,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         state.context.side_panel_open,
         state.context.edges_management_disabled,
         state.context.layout_groups,
+        state.context.blocked_connections,
       ],
       _.isEqual
     );
@@ -164,6 +165,15 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     });
   }, []);
 
+  const showInsufficientPermissionsToast = useCallback(() => {
+    toast({
+      title: 'Insufficient Permissions to Create Connection',
+      status: 'error',
+      duration: 3000,
+      isClosable: true,
+    });
+  }, []);
+
   const onConnect = useCallback(
     (params: Connection) => {
       if (
@@ -183,13 +193,22 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         return;
       }
 
+      const isBlockedConnection = blockedConnections?.some(blockedConn => {
+        return blockedConn.from === sourceNode.id && blockedConn.to === targetNode.id;
+      });
+
+      if (isBlockedConnection) {
+        showInsufficientPermissionsToast();
+        return;
+      }
+
       levelActor.send({
         type: StatefulStateMachineEvent.ConnectNodes,
         sourceNode,
         targetNode,
       });
     },
-    [nodes, edgesManagementDisabled]
+    [nodes, edgesManagementDisabled, blockedConnections]
   );
 
   const onEdgeDelete = useCallback((targetEdges: IAMEdge[]) => {
