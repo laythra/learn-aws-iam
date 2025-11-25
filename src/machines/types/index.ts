@@ -68,21 +68,15 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   level_title: string;
   nodes: IAMAnyNode[];
   policy_creation_objectives: BaseCreationObjective<TBaseFinishEventMap>[];
-  // resource_policy_creation_objectives?: IAMResourcePolicyCreationObjective<TBaseFinishEventMap>[];
-  // scp_creation_objectives?: IAMSCPCreationObjective<TBaseFinishEventMap>[];
   policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
   popover_content?: PopoverTutorialMessage;
   popup_content?: PopupTutorialMessage;
-  // role_creation_objectives: IAMRoleCreationObjective<TBaseFinishEventMap>[];
   show_popovers: boolean;
   show_popups: boolean;
   show_fixed_popovers: boolean;
   fixed_popover_content?: FixedPopoverMessage;
   side_panel_open?: boolean;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
-  // eslint-disable-next-line
-  // permission_boundary_creation_objectives?: IAMPermissionBoundaryCreationObjective<TBaseFinishEventMap>[];
-  use_multi_account_canvas?: boolean;
   highlighted_element_id?: string;
   in_tutorial_state?: boolean;
   show_help_popover?: boolean;
@@ -99,6 +93,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   show_unncessary_edges_or_nodes_warning?: boolean;
   initial_node_connections?: InitialNodeConnection[];
   layout_groups: NodeLayoutGroup[];
+  blocked_connections?: { from: string; to: string }[];
 }
 
 // Serves as a list of all events that the UI elements can send to the state machine
@@ -216,15 +211,12 @@ export type LevelObjective<TObjectiveID, TFinishEventMap extends BaseFinishEvent
 export type EdgeConnectionObjective<TFinishEventMap extends BaseFinishEventMap> = {
   readonly type: ObjectiveType.EDGE_CONNECTION_OBJECTIVE;
   readonly required_edges: Edge[];
-  /**
-   * @deprecated Use `granted_accesses` inside policies instead
-   */
-  locked_edges?: Edge[];
   readonly on_finish_event: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE];
   readonly is_finished: boolean;
   readonly established_edge_hovering_label: AccessLevel | string;
   readonly established_edge_target_handle?: string;
   readonly established_edge_source_handle?: string;
+  is_edge_creation_blocked?: boolean;
 };
 
 export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMap> {

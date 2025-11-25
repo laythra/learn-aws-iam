@@ -11,11 +11,12 @@ import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { ElementID } from '@/config/element-ids';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { GetLevelValidateFunctions } from '@/machines/functions-registry';
 import { AccountID } from '@/machines/types';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
-import { IAMCodeDefinedEntity } from '@/types';
+import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
 import { findAnyValidObjective, GENERIC_VALIDATION_FNS } from '@/utils/iam-code-linter';
 
 interface CodeEditorCreateProps {
@@ -33,16 +34,14 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   errors,
   warnings,
 }) => {
-  const [multiAccount, policyCreationObjectives, nodes, levelNumber] =
-    LevelsProgressionContext().useSelector(
-      state => [
-        state.context.use_multi_account_canvas,
-        state.context.policy_creation_objectives,
-        state.context.nodes,
-        state.context.level_number,
-      ],
-      _.isEqual
-    );
+  const [policyCreationObjectives, nodes, levelNumber] = LevelsProgressionContext().useSelector(
+    state => [
+      state.context.policy_creation_objectives,
+      state.context.nodes,
+      state.context.level_number,
+    ],
+    _.isEqual
+  );
 
   const [selectedAccountId, labelError] = useSelector(
     codeEditorStateStore,
@@ -50,13 +49,13 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     _.isEqual
   );
 
+  const multiAccount = nodes.some(node => node.data.entity === IAMNodeEntity.Account);
   const editorView = useRef<EditorView | null>(null);
   const unfinishedCreationObjectives = policyCreationObjectives.filter(
     objective => !objective.finished && objective.entity === selectedIAMEntity
   );
 
   const objectiveToTargetInEditor = unfinishedCreationObjectives[0];
-
   const initialContent = objectiveToTargetInEditor?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
   const getWarnings = (): string[] => {
     if (!editorView.current) return [];
@@ -107,6 +106,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
           mb={4}
           width='40%'
           value={selectedAccountId}
+          data-element-id={ElementID.AccountSelectionDropdown}
           onChange={e => {
             codeEditorStateStore.send({
               type: 'setSelectedAccount',
@@ -114,8 +114,17 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
             });
           }}
         >
-          <option value={AccountID.Trusting}>Trusting Account</option>
-          <option value={AccountID.Trusted}>Trusted Account</option>
+          {nodes
+            .filter(node => node.data.entity === IAMNodeEntity.Account)
+            .map(accountNode => (
+              <option
+                key={accountNode.id}
+                value={accountNode.id}
+                data-element-id={`account-option-${accountNode.id}`}
+              >
+                {accountNode.data.label}
+              </option>
+            ))}
         </Select>
       )}
 

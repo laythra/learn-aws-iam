@@ -4,6 +4,7 @@ import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
+import { ROLE_CREATION_OBJECTIVES } from './objectives/role-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
@@ -13,6 +14,7 @@ import {
   PolicyCreationFinishEvent,
   RoleCreationFinishEvent,
 } from './types/finish-event-enums';
+import { RoleNodeID, UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
@@ -46,9 +48,13 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
-    use_multi_account_canvas: true,
     side_panel_open: false,
-    restricted_element_ids: [ElementID.CreateEntitiesMenuItem],
+    restricted_element_ids: [
+      ElementID.CreateEntitiesMenuItem,
+      ElementID.CodeEditorResourcePolicyTab,
+      ElementID.CodeEditorSCPTab,
+      ElementID.CodeEditorPermissionBoundaryTab,
+    ],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
@@ -67,6 +73,7 @@ export const stateMachine = createStateMachineSetup<
           docString: event.doc_string,
           label: event.label,
           policyNodeType: event.node_entity,
+          accountId: event.account_id,
         }),
       },
     },
@@ -130,14 +137,28 @@ export const stateMachine = createStateMachineSetup<
     },
     inside_level: {
       initial: 'entities_creation',
-      entry: ['disable_tutorial_state', 'clear_creation_objectives'],
+      entry: [
+        'disable_tutorial_state',
+        'clear_creation_objectives',
+        {
+          type: 'update_blocked_connections',
+          params: {
+            blocked_connections: [
+              {
+                from: UserNodeID.TrustedAccountIAMUser,
+                to: RoleNodeID.TrustingAccountDynamoDBReadRole,
+              },
+            ],
+          },
+        },
+      ],
       states: {
         entities_creation: {
           entry: [
             {
               type: 'append_creation_objectives',
               params: {
-                objectives: POLICY_CREATION_OBJECTIVES[0],
+                objectives: [...POLICY_CREATION_OBJECTIVES[0], ...ROLE_CREATION_OBJECTIVES[0]],
               },
             },
             'show_side_panel',
@@ -169,6 +190,7 @@ export const stateMachine = createStateMachineSetup<
                 },
                 completed: {
                   entry: [
+                    'store_checkpoint',
                     {
                       type: 'finish_level_objective',
                       params: { id: LevelObjectiveID.CREATE_DESTINATION_POLICY },
@@ -183,30 +205,31 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 in_progress: {
                   on: {
-                    [RoleCreationFinishEvent.DYNAMODB_READ_ROLE_CREATED]: 'completed',
+                    [RoleCreationFinishEvent.DYNAMODB_READ_ROLE_CREATED]:
+                      'create_policy_for_assuming_role',
                   },
                 },
-                completed: {
+                create_policy_for_assuming_role: {
                   entry: [
+                    'store_checkpoint',
                     {
                       type: 'finish_level_objective',
                       params: { id: LevelObjectiveID.CREATE_IAM_USER_ROLE },
                     },
+                    {
+                      type: 'append_creation_objectives',
+                      params: {
+                        objectives: POLICY_CREATION_OBJECTIVES[1],
+                      },
+                    },
                   ],
-                  type: 'final',
-                },
-              },
-            },
-            create_iam_policy_for_assuming_role: {
-              initial: 'in_progress',
-              states: {
-                in_progress: {
                   on: {
                     [PolicyCreationFinishEvent.ASSUME_ROLE_POLICY_CREATED]: 'completed',
                   },
                 },
                 completed: {
                   entry: [
+                    'store_checkpoint',
                     {
                       type: 'finish_level_objective',
                       params: { id: LevelObjectiveID.CREATE_IAM_POLICY_FOR_ASSUMING_ROLE },
@@ -226,6 +249,7 @@ export const stateMachine = createStateMachineSetup<
                   },
                 },
                 completed: {
+                  entry: ['store_checkpoint'],
                   type: 'final',
                 },
               },
@@ -240,6 +264,10 @@ export const stateMachine = createStateMachineSetup<
                   },
                 },
                 completed: {
+                  entry: [
+                    'store_checkpoint',
+                    { type: 'update_blocked_connections', params: { blocked_connections: [] } },
+                  ],
                   type: 'final',
                 },
               },
@@ -252,7 +280,9 @@ export const stateMachine = createStateMachineSetup<
                     [EdgeConnectionFinishEvent.IAM_USER_ATTACHED_TO_DYNAMO_READ_ROLE]: 'completed',
                   },
                 },
+
                 completed: {
+                  entry: ['store_checkpoint'],
                   type: 'final',
                 },
               },
@@ -260,10 +290,13 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         level_finished_popover: {
-          entry: {
-            type: 'show_popover_message',
-            params: { message: POPOVER_TUTORIAL_MESSAGES[0] },
-          },
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[0] },
+            },
+            'store_checkpoint',
+          ],
           on: {
             NEXT_POPOVER: [
               {
@@ -287,14 +320,9 @@ export const stateMachine = createStateMachineSetup<
         level_finished_popup: {
           entry: [
             'hide_popovers',
+            'hide_unncessary_edges_or_nodes_warning',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },
           ],
-          on: {
-            NEXT_POPUP: 'tutorial_finished_popup',
-          },
-        },
-        tutorial_finished_popup: {
-          entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[3] } }],
         },
       },
     },

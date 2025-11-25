@@ -1,9 +1,11 @@
+import { INITIAL_IN_LEVEL_ACCOUNT_NODES } from './account-nodes';
 import { INITIAL_IN_LEVEL_RESOURCE_NODES } from './resource-nodes';
 import { INITIAL_IN_LEVEL_USER_NODES } from './user-nodes';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
 export const INITIAL_TUTORIAL_NODES: IAMAnyNode[] = [];
 export const INITIAL_IN_LEVEL_NODES: IAMAnyNode[] = [
+  ...INITIAL_IN_LEVEL_ACCOUNT_NODES,
   ...INITIAL_IN_LEVEL_RESOURCE_NODES,
   ...INITIAL_IN_LEVEL_USER_NODES,
 ];

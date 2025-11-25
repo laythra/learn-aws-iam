@@ -371,14 +371,17 @@ export const createStateMachineSetup = <
       append_nodes: assign({
         nodes: ({ context }, { nodes }: { nodes: IAMAnyNode[] }) => [...context.nodes, ...nodes],
       }),
-      set_mutli_account_canvas: assign({
-        use_multi_account_canvas: true,
-      }),
       update_restricted_element_ids: assign({
         restricted_element_ids: (
           {},
           { restricted_element_ids }: { restricted_element_ids: string[] }
         ) => restricted_element_ids,
+      }),
+      update_blocked_connections: assign({
+        blocked_connections: (
+          {},
+          { blocked_connections }: { blocked_connections: { from: string; to: string }[] }
+        ) => blocked_connections,
       }),
       hide_help_popover: assign({
         show_help_popover: false,

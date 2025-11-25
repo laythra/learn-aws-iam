@@ -44,7 +44,6 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
     role_creation_objectives: [],
-    use_multi_account_canvas: false,
     side_panel_open: false,
     all_policy_creation_objectives: [],
     restricted_element_ids: [ElementID.CodeEditorSCPTab, ElementID.CodeEditorRoleTab],
@@ -225,7 +224,6 @@ export const stateMachine = createStateMachineSetup<
             isVisible: false,
           },
         },
-        assign({ use_multi_account_canvas: true }),
       ],
       states: {
         tutorial_popup3: {
