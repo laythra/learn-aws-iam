@@ -1,15 +1,13 @@
-import { useEffect, useRef, useState, memo } from 'react';
+import { useEffect, useRef, memo, useState } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import { Handle } from '@xyflow/react';
-import { useAnimate } from 'framer-motion';
-import _ from 'lodash';
+import { motion } from 'framer-motion';
 
 import ARNIconButton from './ARNIconButton';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
-import { ShimmerBackground } from './ShimmerBackground';
 import TagsIconButton from './TagsIconButton';
 import { CanvasStore } from '../stores/canvas-store';
 import { WithPopoverBox } from '@/components/Decorated';
@@ -24,11 +22,7 @@ export interface IAMCanvasNodeProps {
   id: string;
 }
 
-enum AnimationState {
-  Pending,
-  Playing,
-  Finished,
-}
+const MotionFlex = motion(Flex);
 
 /**
  * `IAMCanvasNode` renders a generic square node with a label and an icon.
@@ -39,11 +33,9 @@ enum AnimationState {
  * @param `data` The node data passed from React Flow.
  */
 export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
-  const { entity, label, handles, image, content, animations, tags } = data;
+  const { entity, label, handles, image, content, tags } = data;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
   const selectedNodeId = useSelector(CanvasStore, state => state.context.selectedNodeId);
-  const [animationsState, setAnimationsState] = useState<Record<string, AnimationState>>({});
-  const [scope, animate] = useAnimate();
 
   const theme = useTheme<CustomTheme>();
 
@@ -56,47 +48,35 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
     ? generateArn(resourceType || entity, label, data.account_id)
     : undefined;
 
+  const [showCreationPulse, setShowCreationPulse] = useState(true);
+
   useEffect(() => {
-    // TODO: Figure out a better way to handle animations
-    const playAnimations = async (): Promise<void> => {
-      if (!data.animations) return;
-
-      // Fetch animations that haven't been played yet
-      const animationsToPlay = _.pickBy(data.animations, (value, key) => !animationsState[key]);
-
-      if (Object.keys(animationsToPlay).length > 0) {
-        setAnimationsState(currentState => ({
-          ...currentState,
-          ...Object.fromEntries(
-            Object.keys(animationsToPlay).map(key => [key, AnimationState.Playing])
-          ),
-        }));
-      }
-
-      // Play animations
-      for (const pendingAnimations of Object.values(animationsToPlay)) {
-        await Promise.all(
-          pendingAnimations.map(({ element_class, keyframes, options }) =>
-            animate(element_class, keyframes, options)
-          )
-        );
-      }
-
-      setAnimationsState(currentState => ({
-        ...currentState,
-        ...Object.fromEntries(
-          Object.keys(animationsToPlay).map(key => [key, AnimationState.Finished])
-        ),
-      }));
-    };
-
-    playAnimations();
-  }, [animations]);
+    const t = setTimeout(() => setShowCreationPulse(false), 8000);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
-    <>
-      <Flex
-        ref={scope}
+    <Box position='relative' data-element-id={id}>
+      {showCreationPulse && (
+        <motion.div
+          style={{
+            position: 'absolute',
+            inset: '-10px',
+            borderRadius: '18px',
+            background:
+              'linear-gradient(135deg, rgba(147, 197, 253, 0.45), rgba(191, 219, 254, 0.12))',
+            boxShadow: '0 8px 25px rgba(96, 165, 250, 0.25), 0 0 18px rgba(59, 130, 246, 0.2)',
+            filter: 'blur(2.5px)',
+            pointerEvents: 'none',
+            zIndex: 0,
+          }}
+          initial={{ scale: 0.85, opacity: 0.85 }}
+          animate={{ scale: 1.25, opacity: 0 }}
+          transition={{ duration: 3, ease: [0.2, 0.8, 0.3, 1] }}
+        />
+      )}
+
+      <MotionFlex
         id={id}
         direction='column'
         justifyContent='center'
@@ -112,8 +92,11 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
         borderWidth='2px'
         borderColor={isSelected ? 'blue.500' : 'gray.200'}
         onClick={handleClick}
+        initial={{ scale: 0.85, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.25, ease: 'easeOut' }}
+        zIndex={1}
       >
-        <ShimmerBackground className='shimmer' />
         {handles.map(handle => (
           <Handle key={handle.id} {...handle} />
         ))}
@@ -155,8 +138,9 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
             </Text>
           </Box>
         </Flex>
-      </Flex>
-      <HStack position='absolute' top={1} right={2}>
+      </MotionFlex>
+
+      <HStack position='absolute' top={1} right={2} zIndex={2}>
         {tags && (
           <TagsIconButton
             placement='top-end'
@@ -186,7 +170,7 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
           />
         )}
       </HStack>
-    </>
+    </Box>
   );
 };
 

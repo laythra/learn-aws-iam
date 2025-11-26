@@ -158,13 +158,6 @@ interface IAMNodeData extends Record<string, unknown> {
   account_id?: string;
   ou_id?: string;
   /**
-   * Defines animations to play for the node
-   */
-  animations?: Record<
-    string,
-    { element_class: string; keyframes: DOMKeyframesDefinition; options: DynamicAnimationOptions }[]
-  >;
-  /**
    * Defines whether the node is required for the user to complete the level
    */
   unnecessary_node?: boolean;
@@ -197,6 +190,7 @@ interface IAMNodeData extends Record<string, unknown> {
    * Defines which node entities can connect to this node
    */
   allowed_sources?: IAMNodeEntity[];
+  show_pulse_animation?: boolean;
 }
 
 interface IAMGuardRailsNodeData<TIsEdgeBlockedFnName extends string = string> extends IAMNodeData {
@@ -329,6 +323,7 @@ interface IAMEdgeData extends Record<string, unknown> {
   is_blocked?: boolean;
   parent_edge_id?: string;
   attached_as: IAMNodeEntity;
+  show_success_pulse?: boolean;
 }
 
 export type PartialEdge = Omit<Partial<IAMEdge>, 'data'> & {

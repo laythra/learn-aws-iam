@@ -1,6 +1,5 @@
 import { HandleProps } from '@xyflow/react';
 
-import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
 import { IAMAnyNode, IAMNodeEntity, IAMNodeMap } from '@/types';
 
 interface BaseFactoryConfig<T, E extends IAMNodeEntity> {
@@ -86,11 +85,10 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
       entity,
       image,
       initial_position,
-      animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
       layout_direction: 'horizontal',
       vertical_spacing: height + 20, // 20 so nodes don't completely overlap on each other
       horizontal_spacing: width + 20, // 20 so nodes don't completely overlap on each other
-      ...additionalData,
+      show_pulse_animation: true,
     } as T,
   };
 

@@ -79,6 +79,7 @@ export function createNodeFromObjective<
       editable: false,
       parent_id: targetValidObjective?.created_node_parent_id ?? accountId,
       ...targetValidObjective?.extra_data,
+      show_pulse_animation: targetValidObjective !== undefined,
     } as NodeDataFor<E>,
     rootOverrides: {
       parentId: targetValidObjective?.created_node_parent_id ?? accountId,
