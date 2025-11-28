@@ -8,6 +8,7 @@ import { HelpButton } from '@/components/HelpComponents/HelpButton';
 import { HelpPopover } from '@/components/HelpComponents/HelpPopover';
 import { Navbar } from '@/components/Navbar';
 import { FixedPopover } from '@/components/Popover/FixedPopover';
+import { ObjectiveCompleteToast } from '@/components/Popover/ObjectiveCompleteToast';
 import { MobileWarningPopup } from '@/components/Popup/MobileWarningPopup';
 import { TutorialPopup } from '@/components/Popup/TutorialPopup';
 import RightSidePanel from '@/components/SidePanels/RightSidePanel';
@@ -34,6 +35,7 @@ const CanvasContainer: React.FC<CanvasContainerProps> = () => {
       </Box>
       <FixedPopover />
       <UnnecessaryEdgesNodesWarning />
+      <ObjectiveCompleteToast />
       <RightSidePanel />
     </Flex>
   );

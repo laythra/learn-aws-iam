@@ -2,7 +2,6 @@ import { HandleProps, Position } from '@xyflow/react';
 import { describe, it, expect } from 'vitest';
 
 import { createNodeFactory } from './create-node-factory';
-import { getNodeAnimations, NODE_ANIMATION_ID } from '@/config/node-animations';
 import { IAMAnyNode, IAMNodeEntity } from '@/types';
 
 describe('createNodeFactory', () => {
@@ -51,7 +50,6 @@ describe('createNodeFactory', () => {
         label: IAMNodeEntity.User,
         handles: defaultHandles,
         customField: 'customValue',
-        animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
         ...baseExpectedData,
       },
     });
@@ -75,7 +73,6 @@ describe('createNodeFactory', () => {
         id: 'custom-id',
         label: IAMNodeEntity.User,
         handles: defaultHandles,
-        animations: getNodeAnimations(NODE_ANIMATION_ID.ShimmerBackground),
         customField: 'customValue',
         ...baseExpectedData,
       },
@@ -88,7 +85,6 @@ describe('createNodeFactory', () => {
       customField: 'custom-value',
       label: "musashi, you've become kinder",
       handles: [],
-      animations: {},
     } satisfies Partial<IAMAnyNode['data']>;
     const node = factory({
       dataOverrides,
@@ -120,7 +116,7 @@ describe('createNodeFactory', () => {
       customField: 'combinedValue',
       label: 'Overridden Label',
       handles: [],
-      animations: {},
+      show_pulse_animation: true,
     } satisfies Partial<IAMAnyNode['data']>;
 
     const node = factory({

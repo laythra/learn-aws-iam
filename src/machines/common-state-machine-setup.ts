@@ -64,6 +64,10 @@ export const createStateMachineSetup = <
     types: {} as {
       context: GenericContext<TLevelObjectiveID, TFinishEventMap>;
       events: GenericEventData<TFinishEventMap>;
+      emitted: {
+        type: 'OBJECTIVE_COMPLETED';
+        message: string;
+      };
     },
     guards: {
       no_unnecessary_edges: ({ context }) => {
@@ -224,10 +228,21 @@ export const createStateMachineSetup = <
       hide_fixed_popovers: assign({ show_fixed_popovers: false }),
       hide_popups: assign({ show_popups: false }),
       hide_popovers: assign({ show_popovers: false }),
-      change_objective_progress: assign({
-        level_objectives: ({ context }, { id, finished }: { id: string; finished: boolean }) =>
-          changeLevelObjectiveProgress(context, id, finished),
-      }),
+      change_objective_progress: enqueueActions(
+        ({ context, enqueue }, { id, finished }: { id: string; finished: boolean }) => {
+          const updatedLevelObjectives = changeLevelObjectiveProgress(context, id, finished);
+
+          enqueue.assign({
+            level_objectives: updatedLevelObjectives,
+          });
+
+          // Emit event to notify `ObjectiveCompletePopover` components about objective progress change
+          enqueue.emit(({ context: emissionCtx }) => ({
+            type: 'OBJECTIVE_COMPLETED',
+            message: emissionCtx.level_objectives.find(obj => obj.id === id)!.label,
+          }));
+        }
+      ),
       add_new_level_objective: assign({
         level_objectives: (
           { context },

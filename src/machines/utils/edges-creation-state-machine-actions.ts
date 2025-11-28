@@ -48,12 +48,6 @@ function isEdgeConnectionValid<TFinishEventMap extends BaseFinishEventMap>(
   return objective.required_edges.some(edge => edge.id === newEdgeId);
 }
 
-function isEdgeConnectionBlockedFromCreation<TFinishEventMap extends BaseFinishEventMap>(
-  objective: EdgeConnectionObjective<TFinishEventMap>
-): boolean {
-  return objective.is_edge_creation_blocked === true;
-}
-
 function markBlockedEdges(
   blockedEdgesFns: Record<string, (edge: IAMEdge) => boolean>,
   guardRailsNodes: IAMGuardRailsNode[],
@@ -118,10 +112,6 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
         return;
       }
 
-      if (isEdgeConnectionBlockedFromCreation(objective)) {
-        return;
-      }
-
       validEdge = createEdge({
         rootOverrides: {
           source: sourceNode.id,
@@ -135,6 +125,7 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
           source_node: sourceNode,
           target_node: targetNode,
           attached_as: sourceNode.data.entity,
+          show_success_pulse: true,
         },
       });
 
@@ -190,6 +181,7 @@ function createEdgesFromGrantedAccesses<
           source_node: node,
           target_node: nodesById[access.target_node],
           attached_as: node.data.entity,
+          show_success_pulse: true,
         },
       })
     );

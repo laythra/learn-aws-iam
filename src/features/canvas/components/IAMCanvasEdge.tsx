@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, memo } from 'react';
 
 import { Box, useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import { getBezierPath, EdgeLabelRenderer, EdgeProps, BaseEdge } from '@xyflow/react';
+import { motion } from 'framer-motion';
 import _ from 'lodash';
 
 import { CanvasStore } from '../stores/canvas-store';
@@ -39,12 +40,36 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
     hovering_color: edgeHoverColor = theme.colors.blue[500],
     stroke_width: strokeWidth = 1,
     persistent_label: persistentLabel,
+    show_success_pulse: showSuccessPulse,
   } = data || {};
 
   const isEdgeHighlighted = clickedEdgeId === id || hoveredOverEdgeId === id;
-  const edgeStrokeColor = isEdgeHighlighted ? edgeHoverColor : edgeColor;
-  const edgeStrokeWidth = isEdgeHighlighted ? strokeWidth + 2 : strokeWidth;
+
+  const baseStrokeColor = edgeColor;
+  const baseStrokeWidth = strokeWidth;
+
+  const highlightStrokeColor = edgeHoverColor;
+  const highlightStrokeWidth = strokeWidth + 2;
+
+  const edgeStrokeColor = isEdgeHighlighted ? highlightStrokeColor : baseStrokeColor;
+  const edgeStrokeWidth = isEdgeHighlighted ? highlightStrokeWidth : baseStrokeWidth;
   const shouldShowLabel = persistentLabel || isEdgeHighlighted;
+  const animatedStrokeColor = '#38bdf8';
+
+  const [showPulse, setShowPulse] = React.useState<boolean>(showSuccessPulse || false);
+
+  if (showPulse) {
+    console.log('Rendering pulse for edge:', id);
+  }
+
+  useEffect(() => {
+    if (showPulse) {
+      const timeout = setTimeout(() => {
+        setShowPulse(false);
+      }, 7000);
+      return () => clearTimeout(timeout);
+    }
+  }, [showPulse]);
 
   return (
     <>
@@ -56,6 +81,29 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
             strokeWidth: edgeStrokeWidth,
           }}
         />
+
+        {showPulse && (
+          <motion.path
+            d={edgePath}
+            fill='none'
+            strokeLinecap='round'
+            initial={{
+              stroke: baseStrokeColor,
+              strokeWidth: baseStrokeWidth,
+              opacity: 0,
+            }}
+            animate={{
+              stroke: [baseStrokeColor, animatedStrokeColor, baseStrokeColor],
+              strokeWidth: [baseStrokeWidth, highlightStrokeWidth, baseStrokeWidth],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 7,
+              times: [0, 0.25 / 7, 1],
+              ease: 'easeInOut',
+            }}
+          />
+        )}
       </g>
       {data?.hovering_label && (
         <EdgeLabelRenderer>
@@ -80,4 +128,4 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
   );
 };
 
-export default IAMCanvasEdge;
+export default memo(IAMCanvasEdge);

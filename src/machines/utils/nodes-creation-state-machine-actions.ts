@@ -78,6 +78,7 @@ export function createNodeFromObjective<
       entity: entityType,
       editable: false,
       parent_id: targetValidObjective?.created_node_parent_id ?? accountId,
+      show_pulse_animation: targetValidObjective !== undefined,
       ...targetValidObjective?.extra_data,
     } as NodeDataFor<E>,
     rootOverrides: {
@@ -155,6 +156,7 @@ export function createUserGroupNode<TLevelObjectiveID, TFinishEventMap extends B
         id: targetObjective?.entity_id ?? _.uniqueId('node_'),
         layout_group_id: targetObjective?.layout_group_id,
         unnecessary_node: targetObjective === undefined,
+        show_pulse_animation: targetObjective !== undefined,
         ...props,
       },
       rootOverrides: {
