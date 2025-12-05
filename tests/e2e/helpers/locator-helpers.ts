@@ -54,7 +54,7 @@ export const findNodeButton = (page: Page, buttonTestId: string): Locator => {
   return page.getByTestId(buttonTestId);
 };
 
-export const fixedFixedPopover = (page: Page, popoverTitle: string): Locator => {
+export const findFixedPopover = (page: Page, popoverTitle: string): Locator => {
   return page.getByRole('dialog').filter({ hasText: popoverTitle });
 };
 
