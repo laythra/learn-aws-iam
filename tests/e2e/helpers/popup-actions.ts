@@ -56,7 +56,7 @@ export class PopupActions {
   async expectLevelObjectiveCompleteToastAndClose(objectiveDescription: string): Promise<void> {
     const toast = findObjectiveCompleteToast(this.page, objectiveDescription);
     await expect(toast).toBeVisible();
-    // await toast.getByRole('button', { name: 'close' }).click();
-    // await expect(toast).not.toBeVisible();
+    await toast.getByRole('button', { name: 'close' }).click();
+    await expect(toast).not.toBeVisible();
   }
 }

@@ -1,4 +1,5 @@
 import { EdgeActions } from '../helpers/edge-actions';
+import { findUnnecessaryNode } from '../helpers/locator-helpers';
 import { NodeActions } from '../helpers/node-actions';
 import { PopupActions } from '../helpers/popup-actions';
 import { test } from '../helpers/test-fixtures';
@@ -72,19 +73,11 @@ test.describe('Level 1 Entire Flow', () => {
     );
   };
 
-  const createCustomUserNode = async (
-    tutorial: TutorialActions,
-    popups: PopupActions
-  ): Promise<void> => {
+  const createCustomUserNode = async (popups: PopupActions, name: string): Promise<void> => {
     await popups.submitCreateEntityPopup(
-      'CustomUser',
+      name,
       ElementID.CreateEntitiesMenuItem,
       ElementID.IAMIdentityCreatorPopup
-    );
-
-    await tutorial.expectPopoverWithoutNextButton(
-      UserNodeID.FirstUser,
-      POPOVER_TUTORIAL_MESSAGES[7].popover_title
     );
   };
 
@@ -97,14 +90,7 @@ test.describe('Level 1 Entire Flow', () => {
     await edges.expectVisible(UserNodeID.FirstUser, ResourceNodeID.PublicImagesS3Bucket);
   };
 
-  test('Go Through Entire Flow', async ({
-    tutorial,
-    edges,
-    nodes,
-    popups,
-    goToLevelAtStage,
-    page,
-  }) => {
+  test('Go Through Entire Flow', async ({ tutorial, edges, nodes, popups, goToLevelAtStage }) => {
     await goToLevelAtStage(1, ENCODED_LEVEL_STAGES, 'stage1');
 
     await test.step('Go Through Initial Tutorial', async () => {
@@ -117,53 +103,92 @@ test.describe('Level 1 Entire Flow', () => {
     });
 
     await test.step('Create Custom User Node', async () => {
-      await createCustomUserNode(tutorial, popups);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].label);
+      await createCustomUserNode(popups, 'FirstUser');
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
+      await tutorial.expectPopoverWithoutNextButton(
+        UserNodeID.FirstUser,
+        POPOVER_TUTORIAL_MESSAGES[9].popover_title
+      );
     });
 
     await test.step('Connect Policy to Custom User', async () => {
       await connectPolicyToCustomUser(nodes, edges);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].label);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].id);
+    });
+
+    await test.step('Complete Level', async () => {
+      await tutorial.expectPopoverAndClickNext(
+        UserNodeID.FirstUser,
+        POPOVER_TUTORIAL_MESSAGES[10].popover_title
+      );
+
+      await tutorial.expectPopoverAndClickNext(
+        ElementID.ObjectivesSidePanel,
+        POPOVER_TUTORIAL_MESSAGES[11].popover_title
+      );
+
+      await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
     });
   });
 
-  // test('Go Through Entire Flow while creating unnecessary nodes/edges', async ({
-  //   page,
-  //   tutorial,
-  //   edges,
-  //   nodes,
-  //   popups,
-  //   goToLevel,
-  // }) => {
-  //   test.step('Go Through Initial Tutorial', async () => {
-  //     await goThroughInitialTutorial(tutorial, nodes);
-  //   });
+  test('Go Through Entire Flow while creating unnecessary nodes/edges', async ({
+    page,
+    tutorial,
+    edges,
+    nodes,
+    popups,
+    goToLevelAtStage,
+  }) => {
+    await goToLevelAtStage(1, ENCODED_LEVEL_STAGES, 'stage1');
 
-  //   test.step('Connect Policy to Tutorial User', async () => {
-  //     await connectPolicyToTutorialUser(nodes, edges, tutorial);
-  //   });
+    await test.step('Go Through Initial Tutorial', async () => {
+      await goThroughInitialTutorial(tutorial, nodes);
+    });
 
-  //   test.step('Create Custom User Node with an Unnecessary Node', async () => {
-  //     await createCustomUserNode(tutorial, popups);
-  //     // Create an unnecessary node
-  //     await popups.submitCreateEntityPopup(
-  //       'CustomUser',
-  //       ElementID.CreateEntitiesMenuItem,
-  //       ElementID.IAMIdentityCreatorPopup
-  //     );
-  //   });
+    await test.step('Connect Policy to Tutorial User', async () => {
+      await connectPolicyToTutorialUser(nodes, edges, tutorial);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0].id);
+    });
 
-  //   test.step('Connect Policy to Custom User', async () => {
-  //     await connectPolicyToCustomUser(nodes, edges);
-  //   });
+    await test.step('Create Custom User Node with an Unnecessary Node', async () => {
+      await createCustomUserNode(popups, 'FirstUser');
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
+      await tutorial.expectPopoverWithoutNextButton(
+        UserNodeID.FirstUser,
+        POPOVER_TUTORIAL_MESSAGES[9].popover_title
+      );
 
-  //   test.step('Handle Unnecessary Nodes/Edges warning', async () => {
-  //     await tutorial.expectUnnecessaryEdgesNodesWarning(true);
-  //     const unnecessaryNode = findUnnecessaryNode(page);
-  //     await unnecessaryNode.click();
-  //     await page.keyboard.press('Backspace');
+      await createCustomUserNode(popups, 'UnnecessaryUser');
+    });
 
-  //     await tutorial.expectUnnecessaryEdgesNodesWarning(false);
-  //   });
-  // });
+    await test.step('Connect Policy to Custom User', async () => {
+      await connectPolicyToCustomUser(nodes, edges);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].id);
+    });
+
+    await test.step('Complete Level', async () => {
+      await tutorial.expectPopoverAndClickNext(
+        UserNodeID.FirstUser,
+        POPOVER_TUTORIAL_MESSAGES[10].popover_title
+      );
+
+      await tutorial.expectPopoverAndClickNext(
+        ElementID.ObjectivesSidePanel,
+        POPOVER_TUTORIAL_MESSAGES[11].popover_title
+      );
+    });
+
+    await test.step('Expect and handle Unnecessary Nodes/Edges warning', async () => {
+      await tutorial.expectUnnecessaryEdgesNodesWarning(true);
+      const unnecessaryNode = findUnnecessaryNode(page);
+      await unnecessaryNode.click();
+      await page.keyboard.press('Backspace');
+
+      await tutorial.expectUnnecessaryEdgesNodesWarning(false);
+    });
+
+    await test.step('Go Through Last Popup', async () => {
+      await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
+    });
+  });
 });
