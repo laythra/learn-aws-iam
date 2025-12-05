@@ -56,7 +56,7 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
   }, []);
 
   return (
-    <Box position='relative' data-element-id={id}>
+    <Box position='relative'>
       {showCreationPulse && (
         <motion.div
           style={{
