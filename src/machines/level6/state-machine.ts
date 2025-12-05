@@ -89,6 +89,14 @@ export const stateMachine = createStateMachineSetup<
       ],
     },
     [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
+    [StatefulStateMachineEvent.DeleteNode]: {
+      actions: [
+        {
+          type: 'delete_node',
+          params: ({ event }) => ({ node: event.node }),
+        },
+      ],
+    },
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
   },
   states: {

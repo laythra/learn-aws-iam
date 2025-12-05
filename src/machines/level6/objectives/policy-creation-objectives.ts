@@ -25,7 +25,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       limit_new_lines: false,
       account_id: AccountID.Trusting,
       created_node_parent_id: AccountID.Trusting,
-      layout_group_id: CommonLayoutGroupID.CenterHorizontal,
+      layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
   [
