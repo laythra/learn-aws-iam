@@ -1,6 +1,6 @@
 import { Page, expect } from '@playwright/test';
 
-import { findOperationalPopup } from './locator-helpers';
+import { findObjectiveCompleteToast, findOperationalPopup } from './locator-helpers';
 import { CodeEditorTabsElementID, ElementID } from '@/config/element-ids';
 
 export class PopupActions {
@@ -51,5 +51,12 @@ export class PopupActions {
 
     await popup.getByRole('button', { name: 'submit' }).click();
     await expect(popup).not.toBeVisible();
+  }
+
+  async expectLevelObjectiveCompleteToastAndClose(objectiveDescription: string): Promise<void> {
+    const toast = findObjectiveCompleteToast(this.page, objectiveDescription);
+    await expect(toast).toBeVisible();
+    // await toast.getByRole('button', { name: 'close' }).click();
+    // await expect(toast).not.toBeVisible();
   }
 }

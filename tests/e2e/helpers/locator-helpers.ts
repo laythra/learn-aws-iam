@@ -77,3 +77,9 @@ export const findNodePopover = (
 ): Locator => {
   return page.getByTestId(`${nodeId}-${popoverType}`);
 };
+
+export const findObjectiveCompleteToast = (page: Page, objectiveId: string): Locator => {
+  return page.locator(
+    `[data-element-id="objective-complete-toast"][data-objective-id="${objectiveId}"]`
+  );
+};

@@ -67,6 +67,7 @@ export const createStateMachineSetup = <
       emitted: {
         type: 'OBJECTIVE_COMPLETED';
         message: string;
+        objective_id: string;
       };
     },
     guards: {
@@ -240,6 +241,7 @@ export const createStateMachineSetup = <
           enqueue.emit(({ context: emissionCtx }) => ({
             type: 'OBJECTIVE_COMPLETED',
             message: emissionCtx.level_objectives.find(obj => obj.id === id)!.label,
+            objective_id: id,
           }));
         }
       ),
