@@ -24,6 +24,7 @@ export const ObjectiveCompleteToast: React.FC<ObjectiveCompletePopoverProps> = (
         render: ({ onClose }) => (
           <Box
             bg='white'
+            data-element-id='objective-complete-toast'
             boxShadow='0 4px 12px rgba(0, 0, 0, 0.15)'
             borderRadius='lg'
             borderLeftWidth='4px'
