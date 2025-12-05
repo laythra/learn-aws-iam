@@ -1,4 +1,4 @@
-import { assign } from 'xstate';
+import { and, assign, not } from 'xstate';
 
 import { INITIAL_TUTORIAL_NODES } from './nodes';
 import { INITIAL_TUTORIAL_RESOURCE_NODES } from './nodes/resource-nodes';
@@ -114,7 +114,7 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
       initial: 'welcoming_message',
-      onDone: 'finished_level',
+      onDone: 'level_conclusion',
       states: {
         welcoming_message: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
@@ -281,15 +281,6 @@ export const stateMachine = createStateMachineSetup<
             params: { message: POPOVER_TUTORIAL_MESSAGES[10] },
           },
           on: {
-            NEXT_POPOVER: 'level_objectives_popover',
-          },
-        },
-        level_objectives_popover: {
-          entry: [
-            'show_side_panel',
-            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[11] } },
-          ],
-          on: {
             NEXT_POPOVER: 'completed',
           },
         },
@@ -299,22 +290,39 @@ export const stateMachine = createStateMachineSetup<
         },
       },
     },
-    finished_level: {
-      initial: 'finished_level_popup',
-      entry: [
-        assign({
-          level_finished: true,
-        }),
-      ],
+    level_conclusion: {
+      initial: 'level_objectives_popover',
       states: {
-        finished_level_popup: {
-          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
+        level_objectives_popover: {
+          entry: [
+            'show_side_panel',
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[11] } },
+          ],
           on: {
-            NEXT_POPUP: 'finished_level',
+            NEXT_POPOVER: [
+              {
+                guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+                target: 'level_complete',
+              },
+              {
+                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
+                target: 'remove_unnecessary_edges_and_nodes_final',
+              },
+            ],
           },
         },
-        finished_level: {
-          type: 'final',
+        remove_unnecessary_edges_and_nodes_final: {
+          entry: ['show_unncessary_edges_or_nodes_warning', 'hide_popovers'],
+          always: {
+            guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
+            target: 'level_complete',
+          },
+        },
+        level_complete: {
+          entry: [
+            'hide_unncessary_edges_or_nodes_warning',
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
+          ],
         },
       },
     },
