@@ -27,8 +27,8 @@ export const ObjectivesApplicableNodesFns = {
 } as const;
 
 export const ValidateFunctions = {
-  [PolicyNodeID.RDSManagePolicy]: () => AJV_COMPILER.compile(createRDSWithTagsPolicy),
-  [PolicyNodeID.TBACPolicy]: () => AJV_COMPILER.compile(manageTaggedRdsPolicy),
+  [PolicyNodeID.TBACPolicy]: () => AJV_COMPILER.compile(createRDSWithTagsPolicy),
+  [PolicyNodeID.RDSManagePolicy]: () => AJV_COMPILER.compile(manageTaggedRdsPolicy),
 } as const;
 
 export type ValidateFunctionsFnName = keyof typeof ValidateFunctions;

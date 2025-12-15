@@ -211,7 +211,6 @@ test.describe('Complete Level - End to End', () => {
       );
     }
 
-    // Final tutorial messages
     await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[3].popover_title);
     await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
   });

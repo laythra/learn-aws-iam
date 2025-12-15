@@ -1,15 +1,13 @@
-import _ from 'lodash';
-
 export const UserNodeID = {
-  TutorialUser: _.uniqueId('user-'),
-  TutorialUser2: _.uniqueId('user-'),
-  FirstUser: _.uniqueId('user-'),
+  TutorialUser: 'user-1',
+  TutorialUser2: 'user-2',
+  FirstUser: 'user-3',
 };
 
 export const ResourceNodeID = {
-  PublicImagesS3Bucket: _.uniqueId('resource-s3bucket-'),
+  PublicImagesS3Bucket: 'resource-s3bucket-1',
 };
 
 export const PolicyNodeID = {
-  S3ReadPolicy: _.uniqueId('policy-'),
+  S3ReadPolicy: 'policy-1',
 };

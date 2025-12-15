@@ -54,7 +54,7 @@ export const findNodeButton = (page: Page, buttonTestId: string): Locator => {
   return page.getByTestId(buttonTestId);
 };
 
-export const fixedFixedPopover = (page: Page, popoverTitle: string): Locator => {
+export const findFixedPopover = (page: Page, popoverTitle: string): Locator => {
   return page.getByRole('dialog').filter({ hasText: popoverTitle });
 };
 
@@ -76,4 +76,10 @@ export const findNodePopover = (
   popoverType: 'content' | 'arn' | 'tags'
 ): Locator => {
   return page.getByTestId(`${nodeId}-${popoverType}`);
+};
+
+export const findObjectiveCompleteToast = (page: Page, objectiveId: string): Locator => {
+  return page.locator(
+    `[data-element-id="objective-complete-toast"][data-objective-id="${objectiveId}"]`
+  );
 };

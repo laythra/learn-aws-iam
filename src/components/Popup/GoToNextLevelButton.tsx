@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import CurrentLevelDetailsStore from '@/stores/current-level-details-store';
 
 const MotionButton = motion(Button);
-const LAST_LEVEL_NUMBER = 6;
+const LAST_LEVEL_NUMBER = 12;
 interface GoToNextLevelButtonProps {}
 
 export const GoToNextLevelButton: React.FC<GoToNextLevelButtonProps> = () => {

@@ -213,10 +213,10 @@ test.describe('Stage 2 - Creating Cross Account Access in all orders', () => {
     await test.step('Complete stage 2 - Create all entities and connections', async () => {
       await createDynamoDBReadRole(nodes, popups);
       await createAssumeRolePolicy(nodes, popups);
+      await connectAssumeRolePolicyToUser(nodes);
       await connectUserToRole(nodes);
       await createDynamoDBReadPolicy(nodes, popups);
       await connectDynamoDBPolicyToRole(nodes);
-      await connectAssumeRolePolicyToUser(nodes);
     });
 
     await test.step('Verify level completion', async () => {

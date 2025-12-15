@@ -1,6 +1,6 @@
 import { Page, expect } from '@playwright/test';
 
-import { findPopover, findTutorialPopup, fixedFixedPopover } from './locator-helpers';
+import { findPopover, findTutorialPopup, findFixedPopover } from './locator-helpers';
 
 export class TutorialActions {
   constructor(private readonly page: Page) {}
@@ -19,7 +19,7 @@ export class TutorialActions {
   }
 
   async expectFixedPopoverAndClickNext(title: string): Promise<void> {
-    const fixedPopover = fixedFixedPopover(this.page, title);
+    const fixedPopover = findFixedPopover(this.page, title);
     await expect(fixedPopover).toBeVisible();
     await fixedPopover.getByRole('button', { name: /next/i }).click();
   }
@@ -31,9 +31,17 @@ export class TutorialActions {
   }
 
   async expectFixedPopoverWithoutNextButton(title: string): Promise<void> {
-    const fixedPopover = fixedFixedPopover(this.page, title);
+    const fixedPopover = findFixedPopover(this.page, title);
     await expect(fixedPopover).toBeVisible();
     await expect(fixedPopover.getByRole('button', { name: /next/i })).toHaveCount(0);
+  }
+
+  async closePopover(nodeId: string, title: string): Promise<void> {
+    const popover = findPopover(this.page, nodeId, title);
+    await expect(popover).toBeVisible();
+
+    await popover.getByRole('button', { name: /close/i }).click();
+    await expect(popover).not.toBeVisible();
   }
 
   async expectUnnecessaryEdgesNodesWarning(isVisible: boolean): Promise<void> {
