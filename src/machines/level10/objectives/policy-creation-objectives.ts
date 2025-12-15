@@ -112,7 +112,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
 >[][] = [
   [
     {
-      id: PolicyNodeID.RDSManagePolicy,
+      id: PolicyNodeID.TBACPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity: IAMNodeEntity.Policy,
       on_finish_event: PolicyCreationFinishEvent.ALLOW_CREATE_RDS_WITH_TAGS_POLICY_CREATED,
@@ -144,7 +144,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
   ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
-      id: PolicyNodeID.TBACPolicy,
+      id: PolicyNodeID.RDSManagePolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity: IAMNodeEntity.Policy,
       on_finish_event: PolicyCreationFinishEvent.MANAGE_RDS_POLICY_CREATED,
