@@ -64,10 +64,9 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
     objectiveToValidate = policyEditObjectives.find(
       objective => objective.id === selectedNode?.data.id
     );
-
     objectiveValidationFn =
       objectiveToValidate &&
-      GetLevelValidateFunctions(levelNumber)[objectiveToValidate?.id]?.(nodes);
+      GetLevelValidateFunctions(levelNumber)[objectiveToValidate?.validate_fn_name]?.(nodes);
   } else {
     // TODO: Support role editing
     throw new Error('Role editing is not supported yet');
