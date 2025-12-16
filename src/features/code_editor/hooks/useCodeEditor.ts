@@ -1,4 +1,4 @@
-import { useEffect, MutableRefObject, useState } from 'react';
+import { useEffect, MutableRefObject, useState, useMemo } from 'react';
 
 import { json } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
@@ -27,7 +27,6 @@ interface UseCodeEditorOptions {
 interface UseCodeEditorReturn {
   onCreateEditor: (view: EditorView) => void;
   validateChange: () => void;
-  getContent: () => string;
   extensions: Extension[];
   validateNodeLabel: (label: string) => void;
 }
@@ -69,10 +68,14 @@ export function useCodeEditor({
     });
   };
 
-  const validateChange = _.debounce(() => {
-    setCodeErrorsAndWarnings();
-    codeEditorStateStore.send({ type: 'setIsValidating', payload: false });
-  }, 500);
+  const validateChange = useMemo(
+    () =>
+      _.debounce(() => {
+        setCodeErrorsAndWarnings();
+        codeEditorStateStore.send({ type: 'setIsValidating', payload: false });
+      }, 500),
+    [nodeId, selectedIAMEntity]
+  );
 
   useEffect(() => {
     if (!editorViewState) return;
@@ -86,10 +89,6 @@ export function useCodeEditor({
     editorView.current = view;
 
     validateChange();
-  };
-
-  const getContent = (): string => {
-    return content[selectedIAMEntity][nodeId];
   };
 
   const validateNodeLabel = _.debounce((label: string): void => {
@@ -112,7 +111,6 @@ export function useCodeEditor({
   return {
     onCreateEditor,
     validateChange,
-    getContent,
     extensions,
     validateNodeLabel,
   };
