@@ -309,6 +309,7 @@ export const stateMachine = createStateMachineSetup<
             },
             {
               type: 'update_restricted_element_ids',
+              // TODO: move bulky logic to the action itself
               params: ({ context }) => ({
                 restricted_element_ids: (context.restricted_element_ids ?? [])
                   .filter(id => id !== ElementID.CodeEditorPolicyTab)
