@@ -41,7 +41,14 @@ export class PopupActions {
     }
 
     await this.page.getByTestId(targetTab).click();
-    await popup.getByRole('textbox').first().fill(policyName);
+    const nameField = popup.getByRole('textbox').first();
+    const editField = popup.getByRole('textbox').last();
+    await nameField.fill(policyName);
+
+    // CodeMirror (editor) is not a real textarea; fill() can append instead of replace content
+    await editField.click();
+    await this.page.keyboard.press('Control+A');
+    await this.page.keyboard.press('Backspace');
     await popup.getByRole('textbox').last().fill(policyContent);
 
     if (accountId) {
