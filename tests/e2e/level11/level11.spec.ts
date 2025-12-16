@@ -131,13 +131,7 @@ test.describe('Stage 3 - Connect Nodes and Complete Level', () => {
     await goToLevelAtStage(11, ENCODED_LEVEL_STAGES, 'stage3');
 
     await test.step('Connect permission boundary to role', async () => {
-      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
-      await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Cloud,
-        POPOVER_TUTORIAL_MESSAGES[9].popover_title
-      );
-
-      // Manual connection required by user
+      await tutorial.expectFixedPopoverWithoutNextButton(FIXED_POPOVER_MESSAGES[1].popover_title);
       await nodes.connectNodes(
         PermissionBoundaryID.SecretsReadingPermissionBoundary,
         RoleNodeID.Role1
@@ -153,14 +147,21 @@ test.describe('Stage 3 - Connect Nodes and Complete Level', () => {
       await edges.expectVisible(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Cloud);
     });
 
-    await test.step('Proceed through final tutorial stages with auto-connections', async () => {
+    await test.step('Proceed through following popovers and fixed popovers', async () => {
+      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
+      await tutorial.expectPopoverAndClickNext(
+        UserNodeID.Cloud,
+        POPOVER_TUTORIAL_MESSAGES[9].popover_title
+      );
+
       await tutorial.expectPopoverAndClickNext(
         PolicyNodeID.FullAccessPolicy,
         POPOVER_TUTORIAL_MESSAGES[10].popover_title
       );
+    });
 
+    await test.step('Proceed through final tutorial stages with auto-connections', async () => {
       await edges.expectVisible(PolicyNodeID.FullAccessPolicy, RoleNodeID.Role1);
-
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.Tifa,
         POPOVER_TUTORIAL_MESSAGES[11].popover_title
@@ -180,12 +181,7 @@ test.describe('Stage 3 - Connect Nodes and Complete Level', () => {
     await goToLevelAtStage(11, ENCODED_LEVEL_STAGES, 'stage3');
 
     await test.step('Connect delegation policy to Cloud user first', async () => {
-      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
-      await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Cloud,
-        POPOVER_TUTORIAL_MESSAGES[9].popover_title
-      );
-
+      await tutorial.expectFixedPopoverWithoutNextButton(FIXED_POPOVER_MESSAGES[1].popover_title);
       await nodes.connectNodes(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Cloud);
       await edges.expectVisible(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Cloud);
     });
@@ -201,12 +197,20 @@ test.describe('Stage 3 - Connect Nodes and Complete Level', () => {
       );
     });
 
-    await test.step('Complete remaining tutorial steps with auto-connections', async () => {
+    await test.step('Proceed through following popovers and fixed popovers', async () => {
+      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
+      await tutorial.expectPopoverAndClickNext(
+        UserNodeID.Cloud,
+        POPOVER_TUTORIAL_MESSAGES[9].popover_title
+      );
+
       await tutorial.expectPopoverAndClickNext(
         PolicyNodeID.FullAccessPolicy,
         POPOVER_TUTORIAL_MESSAGES[10].popover_title
       );
+    });
 
+    await test.step('Complete remaining tutorial steps with auto-connections', async () => {
       await edges.expectVisible(PolicyNodeID.FullAccessPolicy, RoleNodeID.Role1);
 
       await tutorial.expectPopoverAndClickNext(
