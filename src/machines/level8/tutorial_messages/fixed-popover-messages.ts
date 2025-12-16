@@ -7,7 +7,7 @@ const FIXED_POPOVER_MSG1 = `
   to have visibility into the actual token for debugging purposes.”
 
   How can we know if a user is a senior developer?
-  By checking if their username starts with \`senior-\`
+  ***By checking if their username starts with \`senior-\`***
 `;
 
 const FIXED_POPOVER_MSG2 = `
@@ -26,7 +26,7 @@ const FIXED_POPOVER_MSG3 = `
 
   The tag you're currently viewing has a key of \`role\` and a value of \`senior\` or \`junior\`.
 
-  Close the popover to continue editing the policy.
+  **Close the popover to continue editing the policy.**
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [

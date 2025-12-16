@@ -323,6 +323,12 @@ export const createStateMachineSetup = <
           { objectives }: { objectives: BaseCreationObjective<TFinishEventMap>[] }
         ) => [...context.policy_creation_objectives, ...objectives],
       }),
+      append_edit_objectives: assign({
+        policy_edit_objectives: (
+          { context },
+          { objectives }: { objectives: IAMPolicyEditObjective<TFinishEventMap>[] }
+        ) => [...context.policy_edit_objectives, ...objectives],
+      }),
       set_edge_connection_objectives: enqueueActions(
         (
           { enqueue },
