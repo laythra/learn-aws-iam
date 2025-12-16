@@ -46,7 +46,7 @@ const POPUP_MSG2 = `
 `;
 
 const POPUP_MSG5 = `
-  Congratulations on completing Level 8! 🎉
+  Congratulations on completing Level 8! 🎉|xl
 
   You have successfully learned how to create more sohisticated IAM policies
   using conditions to restrict access based on user roles and attributes,

@@ -144,9 +144,14 @@ export const stateMachine = createStateMachineSetup<
         edit_policy: {
           entry: [
             'hide_popovers',
-            assign({
-              policy_edit_objectives: POLICY_EDIT_OBJECTIVES[0], // TODO: Move into `objectives_map`
-            }),
+            { type: 'append_edit_objectives', params: { objectives: POLICY_EDIT_OBJECTIVES[0] } },
+            {
+              type: 'update_red_dot_visibility',
+              params: {
+                elementIds: [ElementID.IAMNodeContentEditButton],
+                isVisible: true,
+              },
+            },
           ],
           on: {
             [PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_FIRST_TIME]: {
@@ -165,6 +170,14 @@ export const stateMachine = createStateMachineSetup<
         fixed_popover2: {
           entry: [
             'hide_popovers',
+            'store_checkpoint',
+            {
+              type: 'update_red_dot_visibility',
+              params: {
+                elementIds: [ElementID.IAMNodeContentEditButton],
+                isVisible: false,
+              },
+            },
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
           ],
           on: {
@@ -193,6 +206,13 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
+            {
+              type: 'update_red_dot_visibility',
+              params: {
+                elementIds: [ElementID.IAMNodeContentEditButton],
+                isVisible: true,
+              },
+            },
           ],
           on: {
             [StatelessStateMachineEvent.IAMNodeContentOpened]: 'edit_policy_again',

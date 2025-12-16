@@ -7,7 +7,7 @@ const POPOVER_MSG1 = `
 `;
 
 const POPOVER_MSG2 = `
-  View the policy's content and click on the Edit button on the right side to edit it.
+  View the policy's content and **click on the Edit button on the right side to edit it**.
 `;
 
 const POPOVER_MSG3 = `
