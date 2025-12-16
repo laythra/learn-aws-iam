@@ -77,17 +77,14 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     return validateFunctions?.[obj.id](nodes);
   });
 
-  const { onCreateEditor, validateChange, getContent, extensions, validateNodeLabel } =
-    useCodeEditor({
-      nodeId,
-      editorView,
-      getWarnings,
-      initialContent: initialContent,
-      validateFns: _.isEmpty(validateFns)
-        ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]]
-        : validateFns,
-      helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
-    });
+  const { onCreateEditor, validateChange, extensions, validateNodeLabel } = useCodeEditor({
+    nodeId,
+    editorView,
+    getWarnings,
+    initialContent,
+    validateFns: _.isEmpty(validateFns) ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]] : validateFns,
+    helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
+  });
 
   useEffect(() => {
     validateChange();
@@ -149,7 +146,10 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
           Code
         </FormLabel>
         <CodeMirror
-          value={getContent() ?? JSON.stringify(initialContent, null, 2)}
+          // Stable initial value only — do not control CodeMirror via React.
+          // Re-applying `value` after mount causes cursor jumps and input rollbacks
+          // (also breaks Playwright due to render/typing race conditions).
+          value={JSON.stringify(initialContent, null, 2)}
           onChange={newContent => {
             codeEditorStateStore.send({
               type: 'setContent',
@@ -157,7 +157,6 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
               nodeId,
               entity: selectedIAMEntity as IAMCodeDefinedEntity,
             });
-
             validateChange();
           }}
           height='250px'
