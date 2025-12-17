@@ -185,6 +185,8 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         return;
       }
 
+      // TODO: Instead of sending the actual nodes here, we can just send their IDs and let the state machine look them up.
+      // This would help us a lot later when wanting to raise events internally within the state machine since we might not have access to the full nodes data.
       const sourceNode = _.find<IAMAnyNode>(nodes, { id: params.source })!;
       const targetNode = _.find<IAMAnyNode>(nodes, { id: params.target })!;
 

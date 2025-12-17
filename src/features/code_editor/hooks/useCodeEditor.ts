@@ -40,9 +40,9 @@ export function useCodeEditor({
   getWarnings,
 }: UseCodeEditorOptions): UseCodeEditorReturn {
   const levelActor = LevelsProgressionContext().useActorRef();
-  const { selectedIAMEntity, content } = useSelector(
+  const { selectedIAMEntity, selectedAccountId } = useSelector(
     codeEditorStateStore,
-    state => _.pick(state.context, ['selectedIAMEntity', 'content']),
+    state => _.pick(state.context, ['selectedIAMEntity', 'selectedAccountId']),
     _.isEqual
   );
 
@@ -50,7 +50,6 @@ export function useCodeEditor({
 
   const setCodeErrorsAndWarnings = (): void => {
     if (!editorView.current) return;
-
     const lintingErrors = validateFns.flatMap(validateFn =>
       getLintingErrors(editorView.current!, validateFn!)
     );
@@ -68,13 +67,14 @@ export function useCodeEditor({
     });
   };
 
+  // needless to say, this useMemo is to prevent creating a new debounced function on each render
   const validateChange = useMemo(
     () =>
       _.debounce(() => {
         setCodeErrorsAndWarnings();
         codeEditorStateStore.send({ type: 'setIsValidating', payload: false });
       }, 500),
-    [nodeId, selectedIAMEntity]
+    [nodeId, selectedIAMEntity, selectedAccountId]
   );
 
   useEffect(() => {

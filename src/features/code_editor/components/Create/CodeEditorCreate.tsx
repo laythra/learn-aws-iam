@@ -90,6 +90,13 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   }, [selectedAccountId]);
 
   useEffect(() => {
+    const accountNodes = nodes.filter(node => node.data.entity === IAMNodeEntity.Account);
+    if (accountNodes.length > 0) {
+      codeEditorStateStore.send({
+        type: 'setSelectedAccount',
+        selectedAccountId: accountNodes[0].id,
+      });
+    }
     validateNodeLabel('');
   }, []);
 
