@@ -93,6 +93,7 @@ export function createIAMNode<
   accountId?: string
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
+  edgesToCreate: { from: string; to: string }[];
   events: string[];
 } {
   const validateFunctions = GetLevelValidateFunctions(context.level_number);
@@ -126,6 +127,7 @@ export function createIAMNode<
   return {
     updatedContext,
     events: targetValidObjective ? [targetValidObjective.on_finish_event] : [],
+    edgesToCreate: targetValidObjective?.initial_edges ?? [],
   };
 }
 

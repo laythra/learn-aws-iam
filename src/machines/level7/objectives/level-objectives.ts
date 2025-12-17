@@ -8,18 +8,20 @@ const Objective1Description = `
 `;
 
 const Objective2Description = `
-  Create a **Resource Based Policy** which
-  allows *read/write* access to the **S3 Bucket** \`public-images\`
-`;
 
-const Objective3Description = `
-  Create an **IAM Policy** in the *Originating Account* which should allow
+  Create an **Identity Based Policy** in the *Originating Account* which should allow
   the **IAM User** \`leon-kennedy\` to read/write to the **S3 Bucket** \`public-images\`
 `;
 
-const Objective4Description = `
-  Grant the **IAM User** \`leon-kennedy\` in the *Trusted Account*
+const Objective3Description = `
+  Grant the **IAM User** \`leon-kennedy\` in the *Trusted Account* the ability to
+  read/write to the **S3 Bucket** \`rpd-case-files\` by attaching the previously created
+  **Identity Based Policy**
+`;
 
+const Objective4Description = `
+  Create a **Resource Based Policy** which
+  allows *read/write* access to the **S3 Bucket** \`public-images\`
 `;
 
 const OBJECTIVE2_HINT = `
@@ -53,16 +55,9 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.CREATE_IN_LEVEL_RESOURCE_BASED_POLICY,
+      id: LevelObjectiveID.CREATE_IN_LEVEL_IDENTITY_POLICY,
       label: Objective2Description,
       hint_text: OBJECTIVE2_HINT,
-    },
-    {
-      type: ObjectiveType.LEVEL_OBJECTIVE,
-      finished: false,
-      id: LevelObjectiveID.CREATE_IN_LEVEL_IDENTITY_POLICY,
-      label: Objective3Description,
-      hint_text: OBJECTIVE3_HINT,
     },
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
@@ -70,6 +65,15 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
       id: LevelObjectiveID.ATTACH_IDENTITY_BASED_POLICY_TO_USER,
       label: Objective4Description,
       hint_text: OBJECTIVE4_HINT,
+    },
+  ],
+  [
+    {
+      type: ObjectiveType.LEVEL_OBJECTIVE,
+      finished: false,
+      id: LevelObjectiveID.CREATE_IN_LEVEL_RESOURCE_BASED_POLICY,
+      label: Objective3Description,
+      hint_text: OBJECTIVE3_HINT,
     },
   ],
 ];

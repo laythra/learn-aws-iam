@@ -27,6 +27,7 @@ import {
   IAMOUNode,
   IAMPolicyNode,
   IAMResourceNode,
+  IAMResourcePolicyNode,
   IAMRoleNode,
   IAMSCPNode,
   IAMUserNode,
@@ -415,9 +416,9 @@ const connectionStrategies = {
   ) => {
     return applyStrategy(context, SCPNode, AccountNode, isInitialEdge, options, () => []);
   },
-  PolicyToResource: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
+  policyToResource: <TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
     context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-    policyNode: IAMPolicyNode,
+    policyNode: IAMResourcePolicyNode,
     resourceNode: IAMResourceNode,
     isInitialEdge: boolean,
     options: PartialEdge = {}
@@ -554,10 +555,10 @@ export function updateConnectionEdges<
       options
     );
   } else if (
-    isNodeOfEntity(sourceNode, IAMNodeEntity.Policy) &&
+    isNodeOfEntity(sourceNode, IAMNodeEntity.ResourcePolicy) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.Resource)
   ) {
-    return connectionStrategies.PolicyToResource(
+    return connectionStrategies.policyToResource(
       context,
       sourceNode,
       targetNode,

@@ -36,6 +36,7 @@ import {
   IAMPolicyNode,
   IAMUserNode,
 } from '@/types/iam-node-types';
+import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 /**
  * Defines a common state machine setup for all levels
@@ -84,15 +85,17 @@ export const createStateMachineSetup = <
           {
             sourceNode,
             targetNode,
+            isInternalConnection,
           }: {
             sourceNode: IAMAnyNode;
             targetNode: IAMAnyNode;
+            isInternalConnection?: boolean;
           }
         ) => {
           const { updatedContext, events } = updateConnectionEdges<
             TLevelObjectiveID,
             TFinishEventMap
-          >(context, sourceNode, targetNode);
+          >(context, sourceNode, targetNode, isInternalConnection ?? false);
 
           const updatedEdges = _.chain(updatedContext.edges)
             .sortBy(e => e.data?.unnecessary_edge)
@@ -286,17 +289,27 @@ export const createStateMachineSetup = <
             accountId
           );
 
-          const { updatedContext } = createPolicyResult;
+          const { updatedContext, edgesToCreate } = createPolicyResult;
+          const updatedContextNodes = updatedContext.nodes;
+          const nodesById = _.keyBy(updatedContextNodes, 'id');
 
           enqueue.assign({
-            nodes: updatedContext.nodes,
-            edges: updatedContext.edges,
+            nodes: updatedContextNodes,
             policy_creation_objectives: updatedContext.policy_creation_objectives,
           });
 
           createPolicyResult.events.forEach(event => {
             // TODO:  Remove the `as` cast
             enqueue.raise({ type: event as TFinishEventMap[keyof TFinishEventMap] & string });
+          });
+
+          edgesToCreate.forEach(edge => {
+            enqueue.raise({
+              type: StatefulStateMachineEvent.ConnectNodes,
+              sourceNode: nodesById[edge.from],
+              targetNode: nodesById[edge.to],
+              isInternalConnection: true,
+            });
           });
         }
       ),
@@ -393,11 +406,22 @@ export const createStateMachineSetup = <
       append_nodes: assign({
         nodes: ({ context }, { nodes }: { nodes: IAMAnyNode[] }) => [...context.nodes, ...nodes],
       }),
+      // TODO: What's the difference between this and `set_restricted_element_ids`?
       update_restricted_element_ids: assign({
         restricted_element_ids: (
           {},
           { restricted_element_ids }: { restricted_element_ids: string[] }
         ) => restricted_element_ids,
+      }),
+      remove_restricted_element_ids: assign({
+        restricted_element_ids: ({ context }, { element_ids }: { element_ids: string[] }) =>
+          context.restricted_element_ids?.filter(id => !element_ids.includes(id)),
+      }),
+      add_restricted_element_ids: assign({
+        restricted_element_ids: ({ context }, { element_ids }: { element_ids: string[] }) => [
+          ...(context.restricted_element_ids || []),
+          ...element_ids,
+        ],
       }),
       update_blocked_connections: assign({
         blocked_connections: (

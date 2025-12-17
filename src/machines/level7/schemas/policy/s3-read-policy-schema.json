@@ -38,7 +38,8 @@
                     "s3:GetObject"
                   ]
                 },
-                "minItems": 1
+                "minItems": 1,
+                "maxItems": 1
               },
               {
                 "type": "string",
@@ -50,7 +51,7 @@
           },
           "Resource": {
             "type": "string",
-            "const": "arn:aws:s3:::public-images/*"
+            "const": "arn:aws:s3:::umbrella-files/*"
           },
           "Principal": {
             "type": "object",

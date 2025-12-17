@@ -18,8 +18,8 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
     label: 'leon-kennedy',
     layout_group_id: CommonLayoutGroupID.RightCenterVertical,
     image: IAMNodeImage.User,
-    account_id: AccountID.TrustingAccount,
-    parent_id: AccountID.TrustingAccount,
+    account_id: AccountID.TrustedAccount,
+    parent_id: AccountID.TrustedAccount,
   },
 ];
 
@@ -28,5 +28,5 @@ export const INITIAL_TUTORIAL_USER_NODES: IAMUserNode[] = TUTORIAL_USER_NODES.ma
 );
 
 export const INITIAL_IN_LEVEL_USER_NODES: IAMUserNode[] = IN_LEVEL_USER_NODES.map(nodeData =>
-  createUserNode({ dataOverrides: nodeData })
+  createUserNode({ dataOverrides: nodeData, rootOverrides: { parentId: nodeData.parent_id } })
 );

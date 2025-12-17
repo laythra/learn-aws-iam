@@ -42,7 +42,7 @@
           },
           "Resource": {
             "type": "string",
-            "const": "arn:aws:s3:::public-images/*"
+            "const": "arn:aws:s3:::rpd-case-files/*"
           },
           "Principal": {
             "type": "object",

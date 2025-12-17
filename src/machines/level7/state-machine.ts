@@ -27,8 +27,7 @@ export const stateMachine = createStateMachineSetup<
   FinishEventMap
 >().createMachine({
   id: 'level7_state_machine',
-  // initial: 'inside_tutorial',
-  initial: 'inside_level',
+  initial: 'inside_tutorial',
   context: {
     level_title: 'Resource Based Policies',
     level_description: 'Resource Based Policies',
@@ -46,7 +45,11 @@ export const stateMachine = createStateMachineSetup<
     role_creation_objectives: [],
     side_panel_open: false,
     all_policy_creation_objectives: [],
-    restricted_element_ids: [ElementID.CodeEditorSCPTab, ElementID.CodeEditorRoleTab],
+    restricted_element_ids: [
+      ElementID.CodeEditorSCPTab,
+      ElementID.CodeEditorRoleTab,
+      ElementID.CodeEditorPermissionBoundaryTab,
+    ],
     resource_policy_creation_objectives: [],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
@@ -92,7 +95,11 @@ export const stateMachine = createStateMachineSetup<
       actions: [
         {
           type: 'connect_nodes',
-          params: ({ event }) => ({ sourceNode: event.sourceNode, targetNode: event.targetNode }),
+          params: ({ event }) => ({
+            sourceNode: event.sourceNode,
+            targetNode: event.targetNode,
+            isInternalConnection: event.isInternalConnection,
+          }),
         },
       ],
     },
@@ -129,6 +136,7 @@ export const stateMachine = createStateMachineSetup<
   states: {
     inside_tutorial: {
       entry: [
+        'enable_tutorial_state',
         { type: 'assign_nodes', params: { nodes: INITIAL_TUTORIAL_NODES } },
         {
           type: 'update_whitelisted_element_ids',
@@ -165,8 +173,8 @@ export const stateMachine = createStateMachineSetup<
         },
         fixed_popover1: {
           entry: [
-            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
             'hide_popups',
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
           ],
           on: {
             NEXT_FIXED_POPOVER: 'create_resource_based_policy',
@@ -213,10 +221,11 @@ export const stateMachine = createStateMachineSetup<
     inside_level: {
       initial: 'tutorial_popup3',
       entry: [
+        'store_checkpoint',
+        { type: 'store_snapshot_to_disk', params: { filename: 'level7_stage2' } }, // TODO: Remove this line after testing
         'disable_tutorial_state',
         'clear_edges',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
-        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
         {
           type: 'update_red_dot_visibility',
           params: {
@@ -255,101 +264,129 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
           ],
           on: {
-            NEXT_POPOVER: 'create_nodes_and_edges',
+            NEXT_POPOVER: 'create_identity_policy',
           },
         },
-        create_nodes_and_edges: {
-          type: 'parallel',
-          onDone: 'create_and_attach_policies_completed',
+        create_identity_policy: {
           entry: [
             'hide_popovers',
             {
-              type: 'set_edge_connection_objectives',
-              params: {
-                objectives: EDGE_CONNECTION_OBJECTIVES[0],
-              },
+              type: 'update_red_dot_visibility',
+              params: { elementIds: [ElementID.NewEntityBtn], isVisible: true },
+            },
+            {
+              type: 'add_restricted_element_ids',
+              params: { element_ids: [ElementID.CodeEditorResourcePolicyTab] },
             },
             {
               type: 'append_creation_objectives',
               params: {
-                objectives: [
-                  ...RESOURCE_POLICY_CREATION_OBJECTIVES[1],
-                  ...POLICY_CREATION_OBJECTIVES[0],
-                ],
+                objectives: POLICY_CREATION_OBJECTIVES[0],
               },
             },
-            'show_side_panel',
+            {
+              type: 'add_new_level_objective',
+              params: { objectives: LEVEL_OBJECTIVES[1] },
+            },
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[4] },
+            },
           ],
-          states: {
-            create_identity_policy: {
-              initial: 'in_progress',
-              states: {
-                in_progress: {
-                  on: {
-                    [ResourcePolicyCreationFinishEvent.IN_LEVEL_IDENTITY_POLICY_CREATED]: {
-                      target: 'finished',
-                      actions: [
-                        {
-                          type: 'finish_level_objective',
-                          params: { id: LevelObjectiveID.CREATE_IN_LEVEL_IDENTITY_POLICY },
-                        },
-                      ],
-                    },
-                  },
+          on: {
+            [ResourcePolicyCreationFinishEvent.IN_LEVEL_IDENTITY_POLICY_CREATED]: {
+              target: 'attach_identity_policy_to_user',
+              actions: [
+                {
+                  type: 'finish_level_objective',
+                  params: { id: LevelObjectiveID.CREATE_IN_LEVEL_IDENTITY_POLICY },
                 },
-                finished: {
-                  type: 'final',
-                },
-              },
+              ],
             },
-            create_resource_policy: {
-              initial: 'in_progress',
-              states: {
-                in_progress: {
-                  on: {
-                    [ResourcePolicyCreationFinishEvent.IN_LEVEL_RESOURCE_BASED_POLICY_CREATED]: {
-                      target: 'finished',
-                      actions: [
-                        {
-                          type: 'finish_level_objective',
-                          params: { id: LevelObjectiveID.CREATE_IN_LEVEL_RESOURCE_BASED_POLICY },
-                        },
-                      ],
-                    },
-                  },
-                },
-                finished: {
-                  type: 'final',
-                },
-              },
+          },
+        },
+        attach_identity_policy_to_user: {
+          entry: [
+            {
+              type: 'set_edge_connection_objectives',
+              params: { objectives: EDGE_CONNECTION_OBJECTIVES[0] },
             },
-            attach_identity_policy_to_user: {
-              initial: 'in_progress',
-              states: {
-                in_progress: {
-                  on: {
-                    [EdgeConnectionFinishEvent.IDENTITY_POLICY_ATTACHED_TO_IAM_USER]: {
-                      target: 'finished',
-                      actions: [
-                        {
-                          type: 'finish_level_objective',
-                          params: { id: LevelObjectiveID.ATTACH_IDENTITY_BASED_POLICY_TO_USER },
-                        },
-                      ],
-                    },
-                  },
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[5] },
+            },
+            {
+              type: 'update_red_dot_visibility',
+              params: { elementIds: [ElementID.NewEntityBtn], isVisible: false },
+            },
+          ],
+          on: {
+            [EdgeConnectionFinishEvent.IDENTITY_POLICY_ATTACHED_TO_IAM_USER]: {
+              target: 'popover6',
+              actions: [
+                {
+                  type: 'finish_level_objective',
+                  params: { id: LevelObjectiveID.ATTACH_IDENTITY_BASED_POLICY_TO_USER },
                 },
-                finished: {
-                  type: 'final',
+              ],
+            },
+          },
+        },
+        popover6: {
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[6] },
+            },
+          ],
+          on: {
+            NEXT_POPOVER: 'create_resource_policy',
+          },
+        },
+        create_resource_policy: {
+          entry: [
+            'store_checkpoint',
+            {
+              type: 'store_snapshot_to_disk',
+              params: { filename: 'level7_stage3' },
+            }, // TODO: Remove this line after testing
+            {
+              type: 'update_red_dot_visibility',
+              params: { elementIds: [ElementID.NewEntityBtn], isVisible: true },
+            },
+            {
+              type: 'add_restricted_element_ids',
+              params: { element_ids: [ElementID.CodeEditorPolicyTab] },
+            },
+            {
+              type: 'remove_restricted_element_ids',
+              params: { element_ids: [ElementID.CodeEditorResourcePolicyTab] },
+            },
+            { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[2] } },
+            {
+              type: 'append_creation_objectives',
+              params: { objectives: RESOURCE_POLICY_CREATION_OBJECTIVES[1] },
+            },
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[7] },
+            },
+          ],
+          on: {
+            [ResourcePolicyCreationFinishEvent.IN_LEVEL_RESOURCE_BASED_POLICY_CREATED]: {
+              target: 'create_and_attach_policies_completed',
+              actions: [
+                {
+                  type: 'finish_level_objective',
+                  params: { id: LevelObjectiveID.CREATE_IN_LEVEL_RESOURCE_BASED_POLICY },
                 },
-              },
+              ],
             },
           },
         },
         create_and_attach_policies_completed: {
           entry: [
-            'hide_unncessary_edges_or_nodes_warning',
-            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[4] } },
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[8] } },
           ],
           on: {
             NEXT_POPOVER: 'fixed_popover3',

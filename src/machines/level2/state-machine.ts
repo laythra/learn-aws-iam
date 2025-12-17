@@ -153,7 +153,6 @@ export const stateMachine = createStateMachineSetup<
     create_group_popover: {
       entry: [
         { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
-        'show_side_panel',
         'clear_edges',
         {
           type: 'update_whitelisted_element_ids',

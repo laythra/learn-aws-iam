@@ -1,10 +1,10 @@
 // eslint-disable-next-line max-len
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
-import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { AccountID, PolicyNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
   [
@@ -18,14 +18,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
       extra_data: {
-        granted_accesses: [
-          {
-            target_node: ResourceNodeID.InsideLevelS3Bucket,
-            access_level: AccessLevel.ReadWrite,
-            target_handle: 'right',
-            source_handle: 'left',
-          },
-        ],
+        granted_accesses: [],
       },
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
