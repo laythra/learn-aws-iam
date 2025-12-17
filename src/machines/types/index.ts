@@ -121,7 +121,7 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
   | {
       type: StatefulStateMachineEvent.ADDIAMRoleNode;
       doc_string: string;
-      account_id?: AccountID;
+      account_id?: string;
       label: string;
     }
   | {
@@ -133,14 +133,14 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: StatefulStateMachineEvent.AddIAMNode;
       doc_string: string;
       label: string;
-      account_id?: AccountID;
+      account_id?: string;
       node_entity: IAMCodeDefinedEntity;
     }
   | {
       type: StatefulStateMachineEvent.AddIAMResourcePolicyNode;
       doc_string: string;
       label: string;
-      account_id?: AccountID;
+      account_id?: string;
     }
   | {
       type: StatefulStateMachineEvent.AddIAMSCPNode;
@@ -151,7 +151,7 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: StatefulStateMachineEvent.AddIAMPermissionBoundaryNode;
       doc_string: string;
       label: string;
-      account_id?: AccountID;
+      account_id?: string;
     }
   | {
       type: StatefulStateMachineEvent.ConnectNodes;
@@ -237,12 +237,13 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
   readonly help_badges?: HelpBadge[];
   readonly limit_new_lines?: boolean;
   readonly initial_position?: string;
-  readonly account_id?: AccountID;
+  readonly account_id?: string;
   readonly created_node_initial_position?: string;
   readonly callout_message?: string;
   readonly hint_messages?: { title: string; content: string }[];
   readonly created_node_parent_id?: string;
   readonly layout_group_id?: string;
+  readonly initial_edges?: { from: string; to: string }[];
   finished: boolean;
   /**
    * Extra data overridable by each objective type
@@ -265,14 +266,16 @@ export interface IAMPolicyCreationObjective<
   };
 }
 
-export interface IAMResourcePolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>
-  extends BaseCreationObjective<TFinishEventMap> {
+export interface IAMResourcePolicyCreationObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+  TApplicableNodesFnName extends string = string,
+> extends BaseCreationObjective<TFinishEventMap> {
   readonly entity: IAMNodeEntity.ResourcePolicy;
   readonly type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE];
   readonly extra_data: {
-    readonly initial_edges: IAMEdge[];
     readonly resource_node_id: string;
+    readonly granted_accesses?: PolicyGrantedAccess<TApplicableNodesFnName>[];
   };
 }
 
@@ -374,10 +377,5 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
   readonly layout_group_id?: string;
   finished: boolean;
 };
-
-export enum AccountID {
-  Trusting = '123456789012',
-  Trusted = '987654321098',
-}
 
 export type HelpTip = 'ConnectNodes' | 'CreatePolicies';

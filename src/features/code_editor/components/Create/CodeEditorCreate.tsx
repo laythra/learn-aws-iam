@@ -14,7 +14,6 @@ import { LevelsProgressionContext } from '@/components/providers/level-actor-con
 import { ElementID } from '@/config/element-ids';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { GetLevelValidateFunctions } from '@/machines/functions-registry';
-import { AccountID } from '@/machines/types';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
 import { findAnyValidObjective, GENERIC_VALIDATION_FNS } from '@/utils/iam-code-linter';
@@ -107,7 +106,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
           onChange={e => {
             codeEditorStateStore.send({
               type: 'setSelectedAccount',
-              selectedAccountId: e.target.value as AccountID,
+              selectedAccountId: e.target.value,
             });
           }}
         >

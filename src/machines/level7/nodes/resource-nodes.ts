@@ -1,6 +1,5 @@
-import { ResourceNodeID } from '../types/node-id-enums';
+import { AccountID, ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
-import { AccountID } from '@/machines/types';
 import type { IAMResourceNode } from '@/types';
 import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types';
 
@@ -11,7 +10,6 @@ const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
     layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,
-    account_id: AccountID.Trusting,
   },
 ];
 
@@ -22,7 +20,8 @@ const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
     layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,
-    account_id: AccountID.Trusting,
+    account_id: AccountID.TrustingAccount,
+    parent_id: AccountID.TrustingAccount,
   },
 ];
 
