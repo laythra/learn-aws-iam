@@ -1,11 +1,11 @@
+import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, ResourcePolicyCreationFinishEvent } from '../types/finish-event-enums';
-import { ResourceNodeID, UserNodeID } from '../types/node-id-enums';
-import { createEdge } from '@/factories/edge-factory';
+import { ResourceNodeID, ResourcePolicyNodeID } from '../types/node-id-enums';
 import { createResourcePolicyCreationObjective } from '@/factories/nodes_creation_objectives/resource-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { AccountID, IAMResourcePolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import { IAMResourcePolicyCreationObjective, ObjectiveType } from '@/machines/types';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 const OBJECTIVE1_CALLOUT_MSG = `
   The \`Principal\` takes the same format just like when creating a **Trust Policy**,
@@ -25,70 +25,91 @@ const OBJECTIVE1_HINT_MSG2 = `
 `;
 
 // eslint-disable-next-line max-len
-export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjective<FinishEventMap>[][] =
+export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjective<
+  FinishEventMap,
+  ValidateFunctionsFnName
+>[][] = [
   [
-    [
-      {
-        id: 'resource-policy-1',
-        type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
-        entity: IAMNodeEntity.ResourcePolicy,
-        on_finish_event: ResourcePolicyCreationFinishEvent.TUTORIAL_RESOURCE_BASED_POLICY_CREATED,
-        initial_code: INITIAL_POLICIES.S3_READ_RESOURCE_BASED_POLICY,
-        limit_new_lines: false,
-        layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
-        callout_message: OBJECTIVE1_CALLOUT_MSG,
-        extra_data: {
-          resource_node_id: ResourceNodeID.TutorialS3Bucket,
-          initial_edges: [
-            createEdge({
-              rootOverrides: {
-                source: UserNodeID.TutorialFirstUser,
-                target: ResourceNodeID.TutorialS3Bucket,
-              },
-              dataOverrides: {
-                hovering_label: 'Has access through the resource policy',
-              },
-            }),
-          ],
+    {
+      id: 'resource-policy-1',
+      type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
+      entity: IAMNodeEntity.ResourcePolicy,
+      on_finish_event: ResourcePolicyCreationFinishEvent.TUTORIAL_RESOURCE_BASED_POLICY_CREATED,
+      initial_code: INITIAL_POLICIES.S3_READ_RESOURCE_BASED_POLICY,
+      limit_new_lines: false,
+      layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
+      callout_message: OBJECTIVE1_CALLOUT_MSG,
+      initial_edges: [
+        {
+          from: ResourcePolicyNodeID.TutorialResourceBasedPolicy,
+          to: ResourceNodeID.TutorialS3Bucket,
         },
-        help_badges: [
+      ],
+      extra_data: {
+        resource_node_id: ResourceNodeID.TutorialS3Bucket,
+        granted_accesses: [
           {
-            path: '/Statement/0/Resource',
-            content: 'The resource the policy is applied to',
-            color: 'yellow',
-          },
-          {
-            path: '/Statement/0/Principal',
-            content: 'The Principal which is allowed/denied access to the resource',
-            color: 'yellow',
+            target_node: ResourceNodeID.TutorialS3Bucket,
+            target_handle: 'right',
+            source_handle: 'left',
+            access_level: AccessLevel.Read,
           },
         ],
-        hint_messages: [
+      },
+      help_badges: [
+        {
+          path: '/Statement/0/Resource',
+          content: 'The resource the policy is applied to',
+          color: 'yellow',
+        },
+        {
+          path: '/Statement/0/Principal',
+          content: 'The Principal which is allowed/denied access to the resource',
+          color: 'yellow',
+        },
+      ],
+      hint_messages: [
+        {
+          title: 'Hint #1',
+          content: OBJECTIVE1_HINT_MSG1,
+        },
+        {
+          title: 'Hint #2',
+          content: OBJECTIVE1_HINT_MSG2,
+        },
+      ],
+    } satisfies Partial<
+      IAMResourcePolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
+    >,
+  ].map(objective => createResourcePolicyCreationObjective(objective)),
+  [
+    {
+      id: 'resource-policy-2',
+      type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
+      entity: IAMNodeEntity.ResourcePolicy,
+      on_finish_event: ResourcePolicyCreationFinishEvent.IN_LEVEL_RESOURCE_BASED_POLICY_CREATED,
+      initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
+      limit_new_lines: false,
+      layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
+      initial_edges: [
+        {
+          from: ResourcePolicyNodeID.InsideLevelResourceBasedPolicy,
+          to: ResourceNodeID.InsideLevelS3Bucket,
+        },
+      ],
+      extra_data: {
+        resource_node_id: ResourceNodeID.InsideLevelS3Bucket,
+        granted_accesses: [
           {
-            title: 'Hint #1',
-            content: OBJECTIVE1_HINT_MSG1,
-          },
-          {
-            title: 'Hint #2',
-            content: OBJECTIVE1_HINT_MSG2,
+            target_node: ResourceNodeID.InsideLevelS3Bucket,
+            target_handle: 'right',
+            source_handle: 'left',
+            access_level: AccessLevel.Read,
           },
         ],
-      } satisfies Partial<IAMResourcePolicyCreationObjective<FinishEventMap>>,
-    ].map(objective => createResourcePolicyCreationObjective(objective)),
-    [
-      {
-        id: 'resource-policy-2',
-        type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
-        entity: IAMNodeEntity.ResourcePolicy,
-        on_finish_event: ResourcePolicyCreationFinishEvent.IN_LEVEL_RESOURCE_BASED_POLICY_CREATED,
-        initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
-        limit_new_lines: false,
-        layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
-        account_id: AccountID.Trusting,
-        extra_data: {
-          initial_edges: [],
-          resource_node_id: ResourceNodeID.InsideLevelS3Bucket,
-        },
-      } satisfies Partial<IAMResourcePolicyCreationObjective<FinishEventMap>>,
-    ].map(objective => createResourcePolicyCreationObjective(objective)),
-  ];
+      },
+    } satisfies Partial<
+      IAMResourcePolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
+    >,
+  ].map(objective => createResourcePolicyCreationObjective(objective)),
+];

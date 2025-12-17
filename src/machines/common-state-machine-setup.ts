@@ -17,7 +17,6 @@ import {
 } from './utils/nodes-editing-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
 import type {
-  AccountID,
   BaseCreationObjective,
   BaseFinishEventMap,
   EdgeConnectionObjective,
@@ -274,7 +273,7 @@ export const createStateMachineSetup = <
             policyNodeType,
           }: {
             docString: string;
-            accountId?: AccountID;
+            accountId?: string;
             label: string;
             policyNodeType: IAMCodeDefinedEntity;
           }

@@ -1,4 +1,5 @@
-import { AccountID, PopupTutorialMessage } from '@/machines/types';
+import { AccountID } from '../types/node-id-enums';
+import { PopupTutorialMessage } from '@/machines/types';
 const POPUP_MSG1 = `
   All the policies we've dealt with so far granted permissions
   to users & roles. these policies are known as **Identity-Based Policies**.
@@ -25,7 +26,7 @@ const POPUP_MSG2 = `
         "Action": ["s3:GetObject"], ::badge[READING OBJECTS]::
         "Resource": "arn:aws:s3:::my-bucket/*", ::badge[THIS SPECIFIC BUCKET]::
         "Principal": { ::badge[IAM USER THAT IS ALLOWED ACCESS]::
-          "AWS": "arn:aws:iam::${AccountID.Trusted}:user/leon-kennedy"
+          "AWS": "arn:aws:iam::${AccountID.TrustedAccount}:user/leon-kennedy"
         }
       }
     ]

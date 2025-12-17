@@ -4,7 +4,6 @@ import { produce } from 'immer';
 import { reduce } from 'lodash';
 
 import { IAMCodeDefinedEntities } from '@/config/consts';
-import { AccountID } from '@/machines/types';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
 
 type CodeEditorEvents = {
@@ -20,7 +19,7 @@ type CodeEditorEvents = {
   deinitializeCodeEditor: { nodeId: string };
   selectPolicy: { policyId: string };
   deselectPolicy: { policyId: string };
-  setSelectedAccount: { selectedAccountId: AccountID };
+  setSelectedAccount: { selectedAccountId: string };
   showHelpPopup: { type: string; entity: IAMCodeDefinedEntity };
   hideHelpPopup: { type: string };
   setNodeLabel: { label: string };
@@ -42,7 +41,7 @@ export type CodeEditorState = {
   isValidating?: boolean;
   isCodeEditorInitialized: boolean;
   selectedPolicies: string[];
-  selectedAccountId?: AccountID;
+  selectedAccountId?: string;
   helpPopupInfo: {
     isOpen: boolean;
     entity: IAMCodeDefinedEntity;
@@ -83,7 +82,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
     selectedIAMEntity: IAMNodeEntity.Policy,
     isCodeEditorInitialized: false,
     selectedPolicies: [],
-    selectedAccountId: AccountID.Trusted,
+    selectedAccountId: undefined,
     helpPopupInfo: { isOpen: false, entity: IAMNodeEntity.Policy },
     labelError: undefined,
     isOpen: false,
@@ -151,7 +150,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents>(produc
         selectedPolicy => selectedPolicy !== event.policyId
       );
     },
-    setSelectedAccount: (context: CodeEditorState, event: { selectedAccountId: AccountID }) => {
+    setSelectedAccount: (context: CodeEditorState, event: { selectedAccountId: string }) => {
       context.isValidating = true;
       context.selectedAccountId = event.selectedAccountId;
     },

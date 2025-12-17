@@ -1,8 +1,8 @@
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
-import { RoleNodeID } from '../types/node-id-enums';
+import { AccountID, RoleNodeID } from '../types/node-id-enums';
 import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
-import { AccountID, IAMRoleCreationObjective } from '@/machines/types';
+import { IAMRoleCreationObjective } from '@/machines/types';
 import { CommonLayoutGroupID } from '@/types';
 
 export const CALLOUT_MESSAGE1 = `
@@ -18,8 +18,8 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       id: RoleNodeID.TrustingAccountDynamoDBReadRole,
       on_finish_event: RoleCreationFinishEvent.DYNAMODB_READ_ROLE_CREATED,
       layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
-      account_id: AccountID.Trusting,
-      created_node_parent_id: AccountID.Trusting,
+      account_id: AccountID.TrustingAccount,
+      created_node_parent_id: AccountID.TrustingAccount,
       callout_message: CALLOUT_MESSAGE1,
       initial_code: MANAGED_POLICIES.EmptyTrustPolicy,
 

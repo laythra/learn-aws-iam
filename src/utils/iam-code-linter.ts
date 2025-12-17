@@ -3,7 +3,6 @@ import { EditorView } from '@codemirror/view';
 import Ajv, { ValidateFunction } from 'ajv';
 
 import {
-  AccountID,
   BaseCreationObjective,
   BaseFinishEventMap,
   IAMPermissionBoundaryCreationObjective,
@@ -108,7 +107,7 @@ export function findAnyValidObjective<E extends IAMNodeEntity>(
   validateFunctions: Record<string, (nodes: IAMAnyNode[]) => ValidateFunction>,
   nodes: IAMAnyNode[],
   docString: string,
-  accountId?: AccountID,
+  accountId?: string,
   targetObjectiveEntity?: IAMNodeEntity
 ): ObjectiveByEntity<E> | undefined {
   return objectives.find(objective => {

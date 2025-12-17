@@ -2,13 +2,7 @@ import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
 import { GetLevelValidateFunctions } from '../functions-registry';
-import {
-  AccountID,
-  BaseCreationObjective,
-  BaseFinishEventMap,
-  GenericContext,
-  ObjectiveType,
-} from '../types';
+import { BaseCreationObjective, BaseFinishEventMap, GenericContext, ObjectiveType } from '../types';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
 import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
@@ -63,7 +57,7 @@ export function createNodeFromObjective<
   label: string,
   entityType: E,
   targetValidObjective?: BaseCreationObjective<TFinishEventMap>,
-  accountId?: AccountID
+  accountId?: string
 ): NodeFor<E> {
   const createNodeFn = nodesCreationMap[entityType];
   return createNodeFn({
@@ -96,7 +90,7 @@ export function createIAMNode<
   docString: string,
   label: string,
   nodeEntity: TNode['data']['entity'],
-  accountId?: AccountID
+  accountId?: string
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: string[];

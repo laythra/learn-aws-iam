@@ -1,8 +1,8 @@
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
-import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
-import { AccountID, IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
+import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
@@ -23,8 +23,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         ],
       },
       limit_new_lines: false,
-      account_id: AccountID.Trusting,
-      created_node_parent_id: AccountID.Trusting,
+      account_id: AccountID.TrustingAccount,
+      created_node_parent_id: AccountID.TrustingAccount,
       layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
@@ -39,8 +39,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventM
         granted_accesses: [],
       },
       limit_new_lines: false,
-      account_id: AccountID.Trusted,
-      created_node_parent_id: AccountID.Trusted,
+      account_id: AccountID.TrustedAccount,
+      created_node_parent_id: AccountID.TrustedAccount,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
