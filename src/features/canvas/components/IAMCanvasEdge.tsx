@@ -58,10 +58,6 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
 
   const [showPulse, setShowPulse] = React.useState<boolean>(showSuccessPulse || false);
 
-  if (showPulse) {
-    console.log('Rendering pulse for edge:', id);
-  }
-
   useEffect(() => {
     if (showPulse) {
       const timeout = setTimeout(() => {

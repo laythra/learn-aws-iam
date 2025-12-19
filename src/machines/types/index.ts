@@ -157,6 +157,7 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: StatefulStateMachineEvent.ConnectNodes;
       sourceNode: IAMAnyNode;
       targetNode: IAMAnyNode;
+      isInternalConnection?: boolean;
     }
   | {
       type: StatefulStateMachineEvent.DeleteEdge;

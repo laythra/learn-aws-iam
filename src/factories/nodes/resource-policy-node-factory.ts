@@ -7,7 +7,7 @@ export const createResourcePolicyNode = createNodeFactory<
   IAMResourcePolicyNode['data'],
   IAMNodeEntity.ResourcePolicy
 >({
-  type: 'policy',
+  type: 'resource_policy',
   entity: IAMNodeEntity.ResourcePolicy,
   image: IAMNodeImage.Policy,
   defaultHandles: [

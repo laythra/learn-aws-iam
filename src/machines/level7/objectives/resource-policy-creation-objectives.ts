@@ -1,7 +1,7 @@
 import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, ResourcePolicyCreationFinishEvent } from '../types/finish-event-enums';
-import { ResourceNodeID, ResourcePolicyNodeID } from '../types/node-id-enums';
+import { AccountID, ResourceNodeID, ResourcePolicyNodeID } from '../types/node-id-enums';
 import { createResourcePolicyCreationObjective } from '@/factories/nodes_creation_objectives/resource-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMResourcePolicyCreationObjective, ObjectiveType } from '@/machines/types';
@@ -37,7 +37,7 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
       on_finish_event: ResourcePolicyCreationFinishEvent.TUTORIAL_RESOURCE_BASED_POLICY_CREATED,
       initial_code: INITIAL_POLICIES.S3_READ_RESOURCE_BASED_POLICY,
       limit_new_lines: false,
-      layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
+      layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
       callout_message: OBJECTIVE1_CALLOUT_MSG,
       initial_edges: [
         {
@@ -89,6 +89,8 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
       entity: IAMNodeEntity.ResourcePolicy,
       on_finish_event: ResourcePolicyCreationFinishEvent.IN_LEVEL_RESOURCE_BASED_POLICY_CREATED,
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
+      account_id: AccountID.TrustingAccount,
+      created_node_parent_id: AccountID.TrustingAccount,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
       initial_edges: [

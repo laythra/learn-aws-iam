@@ -6,8 +6,8 @@ import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/type
 const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.TutorialS3Bucket,
-    label: 'public-images',
-    layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
+    label: 'umbrella-files',
+    layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,
   },
@@ -16,8 +16,8 @@ const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
 const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.InsideLevelS3Bucket,
-    label: 'public-images',
-    layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
+    label: 'rpd-case-files',
+    layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,
     account_id: AccountID.TrustingAccount,
@@ -30,5 +30,6 @@ export const INITIAL_TUTORIAL_RESOURCE_NODES: IAMResourceNode[] = TUTORIAL_RESOU
 );
 
 export const INITIAL_IN_LEVEL_RESOURCE_NODES: IAMResourceNode[] = IN_LEVEL_RESOURCE_NODES.map(
-  nodeData => createResourceNode({ dataOverrides: nodeData })
+  nodeData =>
+    createResourceNode({ dataOverrides: nodeData, rootOverrides: { parentId: nodeData.parent_id } })
 );

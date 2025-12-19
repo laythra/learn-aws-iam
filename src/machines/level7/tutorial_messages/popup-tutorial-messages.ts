@@ -1,5 +1,6 @@
 import { AccountID } from '../types/node-id-enums';
 import { PopupTutorialMessage } from '@/machines/types';
+
 const POPUP_MSG1 = `
   All the policies we've dealt with so far granted permissions
   to users & roles. these policies are known as **Identity-Based Policies**.
@@ -61,11 +62,11 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG1,
   },
   {
-    title: 'Resource Based Policies',
+    title: 'haha',
     content: POPUP_MSG2,
   },
   {
-    title: 'Resource Based Policies',
+    title: 'Resource Based Policies Recap',
     content: POPUP_MSG3,
   },
   {
