@@ -49,6 +49,7 @@ export const stateMachine = createStateMachineSetup<
       ElementID.CodeEditorSCPTab,
       ElementID.CodeEditorRoleTab,
       ElementID.CodeEditorPermissionBoundaryTab,
+      ElementID.CreateEntitiesMenuItem,
     ],
     resource_policy_creation_objectives: [],
     layout_groups: COMMON_LAYOUT_GROUPS,
@@ -419,15 +420,16 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         remove_unnecessary_edges_and_nodes: {
-          entry: ['show_unncessary_edges_or_nodes_warning', 'hide_popovers'],
+          entry: ['show_unncessary_edges_or_nodes_warning', 'hide_fixed_popovers'],
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
-            target: 'create_and_attach_policies_completed',
+            target: 'level_completed',
           },
         },
         level_completed: {
           entry: [
             'hide_fixed_popovers',
+            'hide_unncessary_edges_or_nodes_warning',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[3] } },
           ],
           type: 'final',

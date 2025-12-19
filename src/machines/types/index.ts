@@ -244,7 +244,10 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
   readonly hint_messages?: { title: string; content: string }[];
   readonly created_node_parent_id?: string;
   readonly layout_group_id?: string;
-  readonly initial_edges?: { from: string; to: string }[];
+  readonly initial_edges?: {
+    from: string;
+    to: string;
+  }[];
   finished: boolean;
   /**
    * Extra data overridable by each objective type
