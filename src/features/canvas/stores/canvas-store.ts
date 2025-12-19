@@ -31,6 +31,7 @@ type CanvasStoreEvents = {
   updateSelectedNodeId: { nodeId: string };
   openNodePanel: { nodeId: string; panel: 'content' | 'tags' | 'arn' | undefined };
   closeAllNodePanels: unknown; // No payload needed for this event
+  clearCanvas: unknown;
 };
 
 export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStoreEvents>(produce, {
@@ -78,6 +79,10 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
       context.nodeIdWithOpenedContent = undefined;
       context.nodeIdWithOpenedTags = undefined;
       context.nodeIdWithOpenedARN = undefined;
+    },
+    clearCanvas(context: CanvasStoreState) {
+      context.nodes = [];
+      context.edges = [];
     },
   },
 });

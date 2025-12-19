@@ -42,18 +42,26 @@ const DEFAULT_LAYOUT_GROUP = createHorizontalGroup('default-layout-group', 'cent
 export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const theme = useTheme<CustomTheme>();
   const toast = useToast();
-  const [nodes, edges, sidePanelOpened, edgesManagementDisabled, layoutGroups, blockedConnections] =
-    LevelsProgressionContext().useSelector(
-      state => [
-        state.context.nodes,
-        state.context.edges,
-        state.context.side_panel_open,
-        state.context.edges_management_disabled,
-        state.context.layout_groups,
-        state.context.blocked_connections,
-      ],
-      _.isEqual
-    );
+  const [
+    nodes,
+    edges,
+    sidePanelOpened,
+    edgesManagementDisabled,
+    layoutGroups,
+    blockedConnections,
+    levelNumber,
+  ] = LevelsProgressionContext().useSelector(
+    state => [
+      state.context.nodes,
+      state.context.edges,
+      state.context.side_panel_open,
+      state.context.edges_management_disabled,
+      state.context.layout_groups,
+      state.context.blocked_connections,
+      state.context.level_number,
+    ],
+    _.isEqual
+  );
 
   const hasAccountNodes = nodes.some(node => node.data.entity === IAMNodeEntity.Account);
   const accountNodesWidth = _.sumBy(nodes, node =>
@@ -73,10 +81,16 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
 
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<IAMAnyNode, IAMEdge>>();
 
+  // Ensure canvas is cleared when switching levels, to avoid cross-level node/edge residue
+  useEffect(() => {
+    CanvasStore.send({ type: 'clearCanvas' });
+  }, [levelNumber]);
+
   useEffect(() => {
     CanvasStore.send({ type: 'setEdges', edges });
   }, [edges]);
 
+  // Used to reposition nodes when the side panel is opened, to ensure no nodes are hidden behind it
   useEffect(() => {
     if (!rfInstance) return;
 
@@ -98,6 +112,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     CanvasStore.send({ type: 'setNodes', nodes: newNodesState });
   }, [sidePanelOpened]);
 
+  // Adds newly added nodes to the canvas with their initial positions
   useEffect(() => {
     if (!rfInstance) return;
 
