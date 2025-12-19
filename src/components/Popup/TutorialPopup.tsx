@@ -41,7 +41,7 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
         maxW={theme.sizes.modalsMaxWidthInPixels}
         data-element-id={popupContent.id || 'default-popup-id'} // TODO: Remove fallback ID when all popups have IDs
       >
-        <ModalHeader fontWeight='700' fontSize={24} pt={6}>
+        <ModalHeader fontWeight='700' fontSize={24} pt={6} data-element-id='tutorial-popup-title'>
           {popupContent.title}
         </ModalHeader>
         <ModalBody overflow='auto'>

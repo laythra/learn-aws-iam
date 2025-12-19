@@ -330,6 +330,11 @@ export type PartialEdge = Omit<Partial<IAMEdge>, 'data'> & {
   data?: Partial<IAMEdge['data']>;
 };
 
+/**
+ * Defines common layout group IDs for node placement within the canvas.
+ * These IDs represent logical groupings of nodes based on their intended position
+ * and layout direction within the canvas. check `nodes-position.ts` for more details.
+ */
 export enum CommonLayoutGroupID {
   CenterHorizontal = 'center-horizontal',
   CenterVertical = 'center-vertical',

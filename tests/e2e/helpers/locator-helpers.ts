@@ -34,8 +34,10 @@ export const findEdge = (page: Page, sourceNode: string, targetNode: string): Lo
  * @param popupTitle
  * @returns
  */
-export const findTutorialPopup = (page: Page, popupTitle: string): Locator => {
-  return page.getByRole('dialog').filter({ hasText: popupTitle });
+export const findTutorialPopup = (page: Page, title: string): Locator => {
+  return page.getByRole('dialog').filter({
+    has: page.getByTestId('tutorial-popup-title').filter({ hasText: title }),
+  });
 };
 
 /**

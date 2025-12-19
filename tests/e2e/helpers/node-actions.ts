@@ -9,6 +9,7 @@ import {
   findNodeTagsButton,
   findNodeArnButton,
   findNodePopover,
+  findUnnecessaryNode,
 } from './locator-helpers';
 import { ElementID } from '@/config/element-ids';
 
@@ -98,5 +99,11 @@ export class NodeActions {
 
   async expectNodeContentButtonVisible(nodeId: string): Promise<void> {
     await expect(findNodeContentButton(this.page, nodeId)).toBeVisible();
+  }
+
+  async deleteUnnecessaryNode(): Promise<void> {
+    const unnecessaryNode = findUnnecessaryNode(this.page);
+    const unnecessaryNodeId = await unnecessaryNode.getAttribute('data-element-id');
+    await this.deleteNode(unnecessaryNodeId!);
   }
 }

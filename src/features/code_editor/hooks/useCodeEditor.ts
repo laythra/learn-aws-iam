@@ -67,7 +67,6 @@ export function useCodeEditor({
     });
   };
 
-  // needless to say, this useMemo is to prevent creating a new debounced function on each render
   const validateChange = useMemo(
     () =>
       _.debounce(() => {

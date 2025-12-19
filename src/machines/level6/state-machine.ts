@@ -104,9 +104,7 @@ export const stateMachine = createStateMachineSetup<
       initial: 'tutorial_popup1',
       onDone: 'inside_level',
       entry: [
-        assign({
-          nodes: INITIAL_IN_LEVEL_NODES,
-        }),
+        { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         'enable_tutorial_state',
       ],
       states: {
