@@ -21,7 +21,7 @@ export const LAYOUT_DIRECTIONS = ['horizontal', 'vertical'] as const;
 export type ValidInitialPosition = (typeof VALID_INITIAL_POSITIONS)[number];
 export type LayoutDirection = (typeof LAYOUT_DIRECTIONS)[number];
 
-// Should we cache this?
+// Should we memoize this?
 const calculateNodePositions = (
   originX: number,
   originY: number,
