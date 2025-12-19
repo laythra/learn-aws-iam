@@ -1,12 +1,9 @@
-import { Badge, ChakraProvider } from '@chakra-ui/react';
 import { StateEffect, StateField } from '@codemirror/state';
 import { EditorView, Decoration, DecorationSet, WidgetType } from '@codemirror/view';
 import { parse } from 'json-source-map';
 import _ from 'lodash';
-import { createRoot } from 'react-dom/client';
 
 import { HelpBadge } from '@/machines/types';
-import { theme } from '@/theme';
 
 class BadgeWidget extends WidgetType {
   content: string;
@@ -18,19 +15,17 @@ class BadgeWidget extends WidgetType {
     this.color = color;
   }
 
+  // Ideally this would reuse Chakra's <Badge /> component.
+  // However, CodeMirror widgets are imperative DOM islands, while Chakra
+  // assumes a single declarative React tree with a single provider.
+  // Using Chakra here would require portals or a separate React root per badge,
+  // which is fragile and introduces unnecessary complexity.
+  // The styling here is kept minimal to match Chakra's default badge styles. Check `index.css` for more details.
   toDOM(): HTMLElement {
-    const badgeElement = document.createElement('span');
-    badgeElement.style.margin = '10px';
-    const root = createRoot(badgeElement);
-
-    // TODO: Defining the ChakraProvider here is a hack to get the Badge component to render properly
-    // We need to get it to use the global top level ChakraProvider instead. maybe use a portal?
-    root.render(
-      <ChakraProvider theme={theme}>
-        <Badge colorScheme={this.color}>{this.content}</Badge>
-      </ChakraProvider>
-    );
-    return badgeElement;
+    const el = document.createElement('span');
+    el.className = `cm-badge cm-badge-${this.color}`;
+    el.textContent = this.content;
+    return el;
   }
 
   ignoreEvent(): boolean {
