@@ -1,8 +1,8 @@
 export const AccountID = {
-  TutorialStagingAccount: 'staging-account-1',
-  TutorialProdAccount: 'prod-account-1',
-  InLevelStagingAccount: 'staging-account-2',
-  InLevelProdAccount: 'prod-account-2',
+  TutorialStagingAccount: '12345678901',
+  TutorialProdAccount: '98765432109',
+  InLevelStagingAccount: '12345678901',
+  InLevelProdAccount: '98765432109',
 };
 
 export const GroupNodeID = {
@@ -44,8 +44,7 @@ export const SCPNodeID = {
 } as const;
 
 export const PermissionBoundaryID = {
-  PermissionBoundary1: 'PB1',
-  SecretsReadingPermissionBoundary: 'PB2',
+  Ec2LaunchPermissionBoundary: 'PB-EC2-Launch',
 } as const;
 
 export const ResourceNodeID = {
@@ -64,9 +63,11 @@ export const PolicyNodeID = {
   TutorialProdCloudTrailAccess: 'policy-prod-cloudtrail-access',
   S3WriteAccessPolicy: 'policy-s3-write-access',
   ElasticCacheManagementPolicy: 'policy-elasticache-management',
+  RunEc2InstancesPolicy: 'policy-run-ec2-instances',
+  AccessDelegationPolicy: 'policy-access-delegation',
 } as const;
 
 export const RoleNodeID = {
-  Role1: 'role-1',
+  EC2LaunchRole: 'role-ec2-launch',
   S3WriteAccessRole: 'role-s3-write-access',
 } as const;

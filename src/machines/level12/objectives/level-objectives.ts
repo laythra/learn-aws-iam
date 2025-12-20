@@ -11,8 +11,9 @@ const Objective2Description = `
 `;
 
 const Objective3Description = `
-  Enable ***DevOps*** users to assign \`ec2:RunInstances\` permissions to
-  users belonging to the backend team, ensuring they cannot grant more permissions than intended.
+  Enable ***DevOps*** users to assign \`ec2:RunInstances\`
+  permissions through the IAM Role \`ec2-launch-role\` to users belonging to the backend team,
+  ensuring they cannot grant more permissions than intended.
 `;
 
 const Objective4Description = `

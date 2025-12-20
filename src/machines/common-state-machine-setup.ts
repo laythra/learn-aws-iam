@@ -262,9 +262,19 @@ export const createStateMachineSetup = <
       set_restricted_element_ids: assign({
         restricted_element_ids: (__, { element_ids }: { element_ids: ElementID[] }) => element_ids,
       }),
-      finish_level_objective: assign({
-        level_objectives: ({ context }, { id }: { id: string }) =>
-          editObjectiveState(context, id, true),
+      finish_level_objective: enqueueActions(({ context, enqueue }, { id }: { id: string }) => {
+        const updatedLevelObjectives = changeLevelObjectiveProgress(context, id, true);
+
+        enqueue.assign({
+          level_objectives: updatedLevelObjectives,
+        });
+
+        // Emit event to notify `ObjectiveCompletePopover` components about objective progress change
+        // enqueue.emit(({ context: emissionCtx }) => ({
+        //   type: 'OBJECTIVE_COMPLETED',
+        //   message: emissionCtx.level_objectives.find(obj => obj.id === id)!.label,
+        //   objective_id: id,
+        // }));
       }),
       add_iam_node: enqueueActions(
         (
@@ -340,6 +350,12 @@ export const createStateMachineSetup = <
           { context },
           { objectives }: { objectives: IAMPolicyEditObjective<TFinishEventMap>[] }
         ) => [...context.policy_edit_objectives, ...objectives],
+      }),
+      set_creation_objectives: assign({
+        policy_creation_objectives: (
+          {},
+          { objectives }: { objectives: BaseCreationObjective<TFinishEventMap>[] }
+        ) => objectives,
       }),
       set_edge_connection_objectives: enqueueActions(
         (

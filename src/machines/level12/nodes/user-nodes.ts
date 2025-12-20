@@ -110,13 +110,13 @@ const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
 export const INITIAL_TUTORIAL_USER_NODES: IAMUserNode[] = TUTORIAL_USER_NODES.map(node =>
   createUserNode({
     dataOverrides: node,
-    rootOverrides: { draggable: true, parentId: node.parent_id, extent: 'parent' },
+    rootOverrides: { parentId: node.parent_id, extent: 'parent' },
   })
 );
 
 export const INITIAL_IN_LEVEL_USER_NODES: IAMUserNode[] = IN_LEVEL_USER_NODES.map(node =>
   createUserNode({
     dataOverrides: node,
-    rootOverrides: { draggable: true, parentId: node.parent_id, extent: 'parent' },
+    rootOverrides: { parentId: node.parent_id, extent: 'parent' },
   })
 );

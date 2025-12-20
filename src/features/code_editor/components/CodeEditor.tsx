@@ -103,7 +103,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
       <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor} id='modal_content'>
         <ModalOverlay />
         <ModalContent
-          maxW={theme.sizes.modalsMaxWidthInPixels}
+          maxW={theme.sizes.modalsMaxWidthInPixels + 300}
           maxH={theme.sizes.codeEditorMaxHeightInPixels}
           data-element-id={ElementID.CodeEditorPopup}
         >

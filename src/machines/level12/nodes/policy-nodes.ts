@@ -8,7 +8,7 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
     id: PolicyNodeID.TutorialProdCloudTrailAccess,
     label: 'cloudtrail-access',
     content: JSON.stringify(INITIAL_POLICIES.CLOUDTRAIL_DELETE_POLICY, null, 2),
-    layout_group_id: CommonLayoutGroupID.RightCenterVertical,
+    layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
     parent_id: AccountID.TutorialProdAccount,
     account_id: AccountID.TutorialProdAccount,
     granted_accesses: [
@@ -25,7 +25,7 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
     id: PolicyNodeID.TutorialStagingCloudTrailAccess,
     label: 'cloudtrail-access',
     content: JSON.stringify(INITIAL_POLICIES.CLOUDTRAIL_DELETE_POLICY, null, 2),
-    layout_group_id: CommonLayoutGroupID.RightCenterVertical,
+    layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
     parent_id: AccountID.TutorialStagingAccount,
     account_id: AccountID.TutorialStagingAccount,
     granted_accesses: [

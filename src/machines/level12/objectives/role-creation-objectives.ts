@@ -20,6 +20,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
         required_principles: [],
       },
       created_node_parent_id: AccountID.InLevelStagingAccount,
+      account_id: AccountID.InLevelStagingAccount,
     } satisfies Partial<IAMRoleCreationObjective<FinishEventMap>>,
   ].map(objective => createRoleCreationObjective(objective)),
 ];

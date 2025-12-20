@@ -92,6 +92,6 @@ export const INITIAL_IN_LEVEL_RESOURCE_NODES: IAMResourceNode[] = IN_LEVEL_RESOU
   nodeData =>
     createResourceNode({
       dataOverrides: nodeData,
-      rootOverrides: { draggable: false, extent: 'parent', parentId: nodeData.parent_id },
+      rootOverrides: { draggable: true, extent: 'parent', parentId: nodeData.parent_id },
     })
 );

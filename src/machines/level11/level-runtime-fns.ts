@@ -6,7 +6,7 @@ import {
   ResourceNodeID,
   UserNodeID,
 } from './types/node-id-enums';
-import { IAMAnyNode, IAMNodeEntity } from '@/types';
+import { IAMAnyNode, IAMEdge, IAMNodeEntity } from '@/types';
 import { generateArn } from '@/utils/arn-generator';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
@@ -24,11 +24,10 @@ export const ValidateFunctions = {
 } as const;
 
 export const GuardRailsBlockedEdgesFunctions = {
-  permissionBoundary1BlockingFn: (edge: { source: string; target: string }) => {
-    debugger;
+  permissionBoundary1BlockingFn: (edge: IAMEdge) => {
     return edge.source === UserNodeID.Sephiroth && edge.target === ResourceNodeID.S3BucketTutorial;
   },
-  permissionBoundary2BlockingFn: (edge: { source: string; target: string }) => {
+  permissionBoundary2BlockingFn: (edge: IAMEdge) => {
     return [ResourceNodeID.Secret1, ResourceNodeID.Secret2].includes(edge.target);
   },
 };
