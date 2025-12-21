@@ -5,15 +5,15 @@ import { CommonLayoutGroupID, IAMGroupNode } from '@/types';
 const TUTORIAL_GROUP_NODES: Partial<IAMGroupNode['data']>[] = [
   {
     id: GroupNodeID.TutorialEldianGroup,
-    label: 'Marliyans',
-    layout_group_id: CommonLayoutGroupID.RightCenterVertical,
+    label: 'Eldians',
+    layout_group_id: CommonLayoutGroupID.TopRightHorizontal,
     parent_id: AccountID.TutorialProdAccount,
     account_id: AccountID.TutorialProdAccount,
   },
   {
     id: GroupNodeID.TutorialMarleyGroup,
     label: 'Marliyans',
-    layout_group_id: CommonLayoutGroupID.RightCenterVertical,
+    layout_group_id: CommonLayoutGroupID.TopRightHorizontal,
     parent_id: AccountID.TutorialStagingAccount,
     account_id: AccountID.TutorialStagingAccount,
   },
@@ -23,21 +23,21 @@ const IN_LEVEL_GROUP_NODES: Partial<IAMGroupNode['data']>[] = [
   {
     id: GroupNodeID.InLevelNotificationsTeamGroup,
     label: 'Notifications Team',
-    layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
+    layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
     parent_id: AccountID.InLevelProdAccount,
     account_id: AccountID.InLevelProdAccount,
   },
   {
     id: GroupNodeID.InLevelSearchTeamGroup,
     label: 'Search Team',
-    layout_group_id: CommonLayoutGroupID.BottomCenterVertical,
+    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     parent_id: AccountID.InLevelProdAccount,
     account_id: AccountID.InLevelProdAccount,
   },
   {
     id: GroupNodeID.InLevelPaymentsTeamGroup,
     label: 'Payments Team',
-    layout_group_id: CommonLayoutGroupID.BottomRightVertical,
+    layout_group_id: CommonLayoutGroupID.RightCenterHorizontal,
     parent_id: AccountID.InLevelProdAccount,
     account_id: AccountID.InLevelProdAccount,
   },

@@ -50,12 +50,14 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
 
   const multiAccount = nodes.some(node => node.data.entity === IAMNodeEntity.Account);
   const editorView = useRef<EditorView | null>(null);
+  const showMultiAccountDropdown = multiAccount && selectedIAMEntity !== IAMNodeEntity.SCP;
   const unfinishedCreationObjectives = policyCreationObjectives.filter(
     objective => !objective.finished && objective.entity === selectedIAMEntity
   );
 
   const objectiveToTargetInEditor = unfinishedCreationObjectives[0];
   const initialContent = objectiveToTargetInEditor?.initial_code ?? MANAGED_POLICIES.EmptyPolicy;
+
   const getWarnings = (): string[] => {
     if (!editorView.current) return [];
     const validateFns = GetLevelValidateFunctions(levelNumber);
@@ -73,17 +75,21 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
 
   const validateFns = unfinishedCreationObjectives.filterMap(obj => {
     const validateFunctions = GetLevelValidateFunctions(levelNumber);
+    console.log('The obj id is:', obj.id);
     return validateFunctions?.[obj.id](nodes);
   });
 
-  const { onCreateEditor, validateChange, extensions, validateNodeLabel } = useCodeEditor({
-    nodeId,
-    editorView,
-    getWarnings,
-    initialContent,
-    validateFns: _.isEmpty(validateFns) ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]] : validateFns,
-    helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
-  });
+  const { onCreateEditor, validateChange, extensions, validateNodeLabel, getContent } =
+    useCodeEditor({
+      nodeId,
+      editorView,
+      getWarnings,
+      initialContent,
+      validateFns: _.isEmpty(validateFns)
+        ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]]
+        : validateFns,
+      helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
+    });
 
   useEffect(() => {
     validateChange();
@@ -102,7 +108,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
 
   return (
     <>
-      {multiAccount && (
+      {showMultiAccountDropdown && (
         <Select
           size='md'
           variant='filled'
@@ -155,7 +161,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
           // Stable initial value only — do not control CodeMirror via React.
           // Re-applying `value` after mount causes cursor jumps and input rollbacks
           // (also breaks Playwright due to render/typing race conditions).
-          value={JSON.stringify(initialContent, null, 2)}
+          value={getContent() ?? JSON.stringify(initialContent, null, 2)}
           onChange={newContent => {
             codeEditorStateStore.send({
               type: 'setContent',

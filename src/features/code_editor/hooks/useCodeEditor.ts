@@ -29,6 +29,7 @@ interface UseCodeEditorReturn {
   validateChange: () => void;
   extensions: Extension[];
   validateNodeLabel: (label: string) => void;
+  getContent: () => string;
 }
 
 export function useCodeEditor({
@@ -40,9 +41,9 @@ export function useCodeEditor({
   getWarnings,
 }: UseCodeEditorOptions): UseCodeEditorReturn {
   const levelActor = LevelsProgressionContext().useActorRef();
-  const { selectedIAMEntity, selectedAccountId } = useSelector(
+  const { selectedIAMEntity, selectedAccountId, content } = useSelector(
     codeEditorStateStore,
-    state => _.pick(state.context, ['selectedIAMEntity', 'selectedAccountId']),
+    state => _.pick(state.context, ['selectedIAMEntity', 'selectedAccountId', 'content']),
     _.isEqual
   );
 
@@ -50,9 +51,11 @@ export function useCodeEditor({
 
   const setCodeErrorsAndWarnings = (): void => {
     if (!editorView.current) return;
+
     const lintingErrors = validateFns.flatMap(validateFn =>
       getLintingErrors(editorView.current!, validateFn!)
     );
+
     const allErrors = _.uniqBy(lintingErrors, 'from');
     const hasErrors = validateFns.every(
       validateFn => getLintingErrors(editorView.current!, validateFn!).length > 0
@@ -75,6 +78,10 @@ export function useCodeEditor({
       }, 500),
     [nodeId, selectedIAMEntity, selectedAccountId]
   );
+
+  const getContent = (): string => {
+    return content[selectedIAMEntity][nodeId];
+  };
 
   useEffect(() => {
     if (!editorViewState) return;
@@ -112,5 +119,6 @@ export function useCodeEditor({
     validateChange,
     extensions,
     validateNodeLabel,
+    getContent,
   };
 }

@@ -65,18 +65,18 @@ export const INITIAL_IN_LEVEL_CONNECTIONS: InitialNodeConnection[] = [
     from: id,
     to: GroupNodeID.InLevelNotificationsTeamGroup,
     source_handle: HandleID.Right,
-    target_handle: HandleID.Top,
+    target_handle: HandleID.Bottom,
   })),
   ...[UserNodeID.Karim, UserNodeID.Yasmin].map(id => ({
     from: id,
     to: GroupNodeID.InLevelSearchTeamGroup,
     source_handle: HandleID.Right,
-    target_handle: HandleID.Top,
+    target_handle: HandleID.Bottom,
   })),
   ...[UserNodeID.Omar, UserNodeID.Rania].map(id => ({
     from: id,
     to: GroupNodeID.InLevelPaymentsTeamGroup,
     source_handle: HandleID.Right,
-    target_handle: HandleID.Top,
+    target_handle: HandleID.Bottom,
   })),
 ];

@@ -5,6 +5,8 @@ import { LAYOUT_GROUPS } from './layout-groups';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
+import { PERMISSION_BOUNDARY_CREATION_OBJECTIVES } from './objectives/permission-boundary-creation-objectives';
+import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
 import { SCP_CREATION_OBJECTIVES } from './objectives/scp-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
@@ -12,6 +14,7 @@ import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-mess
 import {
   EdgeConnectionFinishEvent,
   FinishEventMap,
+  PermissionBoundaryCreationFinishEvent,
   PolicyCreationFinishEvent,
   RoleCreationFinishEvent,
   SCPCreationFinishEvent,
@@ -19,6 +22,7 @@ import {
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
+import { ROLE_CREATION_OBJECTIVES } from '../level12/objectives/role-creation-objectives';
 import { ElementID } from '@/config/element-ids';
 import {
   StatefulStateMachineEvent,
@@ -32,9 +36,8 @@ export const stateMachine = createStateMachineSetup<
   id: 'level12_state_machine',
   initial: 'inside_level',
   context: {
-    level_title: 'Permission Boundaries',
-    level_description:
-      'Permission Boundaries allow you to control the maximum permissions a user / role can have.',
+    level_title: 'Final Level',
+    level_description: 'Final Level',
     level_number: 12,
     show_popovers: false,
     show_popups: false,
@@ -46,7 +49,6 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
     edges_connection_objectives: [],
-    use_multi_account_canvas: false,
     side_panel_open: false,
     layout_groups: [...COMMON_LAYOUT_GROUPS, ...LAYOUT_GROUPS],
     restricted_element_ids: [
@@ -227,14 +229,24 @@ export const stateMachine = createStateMachineSetup<
     },
     inside_level: {
       entry: [
-        'clear_creation_objectives',
-        { type: 'set_restricted_element_ids', params: { element_ids: [] } },
+        // 'store_checkpoint',
+        {
+          type: 'set_restricted_element_ids',
+          params: {
+            element_ids: [ElementID.CodeEditorResourcePolicyTab],
+          },
+        },
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
         {
-          type: 'append_creation_objectives',
+          type: 'set_creation_objectives',
           params: {
-            objectives: SCP_CREATION_OBJECTIVES[1],
+            objectives: [
+              ...SCP_CREATION_OBJECTIVES[1],
+              ...POLICY_CREATION_OBJECTIVES[0],
+              ...ROLE_CREATION_OBJECTIVES[0],
+              ...PERMISSION_BOUNDARY_CREATION_OBJECTIVES[0],
+            ],
           },
         },
         {
@@ -246,11 +258,30 @@ export const stateMachine = createStateMachineSetup<
         }),
         'resolve_initial_edges', // TODO: Can't we pass the connections directly?
       ],
-      initial: 'in_progress',
+      initial: 'popup3',
       states: {
+        popup3: {
+          entry: [
+            {
+              type: 'show_popup_message',
+              params: { message: POPUP_TUTORIAL_MESSAGES[2] },
+            },
+          ],
+          on: {
+            NEXT_POPUP: 'in_progress',
+          },
+        },
         in_progress: {
           onDone: 'completed',
           type: 'parallel',
+          entry: [
+            'hide_popups',
+            'show_side_panel',
+            {
+              type: 'update_red_dot_visibility',
+              params: { elementIds: [ElementID.RightSidePanelToggleButton], isVisible: true },
+            },
+          ],
           states: {
             objective1: {
               initial: 'create_scp',
@@ -278,6 +309,91 @@ export const stateMachine = createStateMachineSetup<
                     type: 'finish_level_objective',
                     params: { id: LevelObjectiveID.RESTRICT_EC2_REGION },
                   },
+                  type: 'final',
+                },
+              },
+            },
+            objective2: {
+              initial: 'create_permission_boundary',
+              onDone: {
+                actions: [
+                  {
+                    type: 'show_popover_message',
+                    params: { message: POPOVER_TUTORIAL_MESSAGES[6] },
+                  },
+                  {
+                    type: 'finish_level_objective',
+                    params: { id: LevelObjectiveID.DELEGATE_EC2_LAUNCHING },
+                  },
+                ],
+              },
+              states: {
+                create_permission_boundary: {
+                  on: {
+                    [PermissionBoundaryCreationFinishEvent.ROLE_DELEGATION_PB_CREATED]:
+                      'create_policy_and_attach_pb',
+                  },
+                },
+                create_policy_and_attach_pb: {
+                  type: 'parallel',
+                  onDone: 'finished',
+                  entry: [
+                    {
+                      type: 'append_creation_objectives',
+                      params: {
+                        objectives: POLICY_CREATION_OBJECTIVES[1],
+                      },
+                    },
+                    {
+                      type: 'show_popover_message',
+                      params: { message: POPOVER_TUTORIAL_MESSAGES[5] },
+                    },
+                  ],
+                  states: {
+                    create_policy: {
+                      initial: 'in_progress',
+                      states: {
+                        in_progress: {
+                          on: {
+                            [PolicyCreationFinishEvent.ACCESS_DELEGATION_POLICY_CREATED]:
+                              'finished',
+                          },
+                        },
+                        finished: {
+                          type: 'final',
+                        },
+                      },
+                    },
+                    attach_permission_boundary_to_role: {
+                      initial: 'in_progress',
+                      states: {
+                        in_progress: {
+                          on: {
+                            [EdgeConnectionFinishEvent.EC2_LAUNCH_PB_ATTACHED_TO_ROLE]: 'finished',
+                          },
+                        },
+                        finished: {
+                          type: 'final',
+                        },
+                      },
+                    },
+                    attach_policy_to_user: {
+                      initial: 'in_progress',
+                      states: {
+                        in_progress: {
+                          on: {
+                            [EdgeConnectionFinishEvent.ACCESS_DELEGATION_POLICY_ATTACHED_TO_USER]:
+                              'finished',
+                          },
+                        },
+                        finished: {
+                          type: 'final',
+                        },
+                      },
+                    },
+                  },
+                },
+                finished: {
                   type: 'final',
                 },
               },
@@ -323,7 +439,7 @@ export const stateMachine = createStateMachineSetup<
                     },
                     attach_permission_policy: {
                       on: {
-                        [EdgeConnectionFinishEvent.PERMISSION_POLICY_ATTACHED_TO_ROLE]: 'finished',
+                        [EdgeConnectionFinishEvent.S3_WRITE_POLICY_ATTACHED_TO_ROLE]: 'finished',
                       },
                     },
                     finished: {
@@ -412,7 +528,7 @@ export const stateMachine = createStateMachineSetup<
               entry: [
                 {
                   type: 'show_popup_message',
-                  params: { message: POPUP_TUTORIAL_MESSAGES[2] },
+                  params: { message: POPUP_TUTORIAL_MESSAGES[3] },
                 },
               ],
             },

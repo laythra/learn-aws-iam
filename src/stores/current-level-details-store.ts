@@ -29,7 +29,9 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
     reloadCount: 0,
   },
   {
+    // TODO: These should be referentially transparent functions...
     setLevelNumber: (context: CurrentLevelDetailsState, event: { levelNumber: number }) => {
+      storage.removeKey(`level${context.levelNumber}StateCheckpoint`);
       storage.setKey('currentLevel', event.levelNumber.toString());
       return { ...context, levelNumber: event.levelNumber };
     },

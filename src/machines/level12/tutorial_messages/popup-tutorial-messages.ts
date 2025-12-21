@@ -26,6 +26,17 @@ const POPUP_MSG2 = `
 `;
 
 const POPUP_MSG3 = `
+  Everything we've learned so far will be put to the test in this ultimate challenge.
+  You'll need to design and implement a comprehensive IAM strategy that incorporates
+  users, groups, roles, policies, permission boundaries, and SCPs to meet complex requirements.|lg
+
+  The right side panel contains all the information you'll need to succeed,
+  including objectives, hints, and resources.|lg
+
+  Good luck, and may your IAM mastery shine through! 🌟|xl
+`;
+
+const POPUP_MSG4 = `
   Congratulations! You've now mastered AWS IAM, conquering users, groups, roles, policies,
   permission boundaries, and many more!|lg
 
@@ -56,7 +67,11 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG2,
   },
   {
-    title: 'Officialy an IAM Master 🔥',
+    title: 'The Ultimate Challenge Awaits',
     content: POPUP_MSG3,
+  },
+  {
+    title: 'Officialy an IAM Master 🔥',
+    content: POPUP_MSG4,
   },
 ];

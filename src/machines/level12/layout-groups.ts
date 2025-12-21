@@ -8,6 +8,7 @@ export enum LayoutGroupID {
   InLevelNotificationsSquadLayoutGroup = 'in-level-notifications-squad-layout-group',
   InLevelSearchSquadLayoutGroup = 'in-level-search-squad-layout-group',
   InLevelGroupNodesLayoutGroup = 'in-level-group-nodes-layout-group',
+  InLevelElasticCacheMgmtPolicyLayoutGroup = 'in-level-elasticache-mgmt-policy-layout-group',
 }
 
 const IN_LEVEL_USERS_LAYOUT_GROUP = createVerticalGroup(
@@ -19,28 +20,28 @@ const IN_LEVEL_USERS_LAYOUT_GROUP = createVerticalGroup(
 
 const IN_LEVEL_ELASTICACHE_LAYOUT_GROUP = createHorizontalGroup(
   LayoutGroupID.InLevelElasticCacheLayoutGroup,
-  'top-right',
-  theme.sizes.iamNodeWidthInPixels - 100,
-  { left: 0, top: 0 }
+  'top-center',
+  theme.sizes.iamNodeWidthInPixels + 20,
+  { left: 0, top: 40 }
 );
 
 const IN_LEVEL_PAYMENTS_TEAM_USERS_LAYOUT_GROUP = createVerticalGroup(
   LayoutGroupID.InLevelPaymentsSquadLayoutGroup,
-  'right-center',
+  'bottom-right',
   theme.sizes.iamNodeHeightInPixels - 20,
   { left: 0, top: 0 }
 );
 
 const IN_LEVEL_NOTIFICATIONS_TEAM_USERS_LAYOUT_GROUP = createVerticalGroup(
   LayoutGroupID.InLevelNotificationsSquadLayoutGroup,
-  'center',
+  'bottom-center',
   theme.sizes.iamNodeHeightInPixels - 20,
   { left: 0, top: 0 }
 );
 
 const IN_LEVEL_SEARCH_TEAM_USERS_LAYOUT_GROUP = createVerticalGroup(
   LayoutGroupID.InLevelSearchSquadLayoutGroup,
-  'left-center',
+  'bottom-left',
   theme.sizes.iamNodeHeightInPixels - 20,
   { left: 0, top: 0 }
 );
@@ -52,6 +53,13 @@ const IN_LEVEL_GROUP_NODES_LAYOUT_GROUP = createHorizontalGroup(
   { left: 0, top: -100 }
 );
 
+const ELASTICACHE_MANAGEMENT_POLICY_LAYOUT_GROUP = createHorizontalGroup(
+  LayoutGroupID.InLevelElasticCacheMgmtPolicyLayoutGroup,
+  'top-center',
+  theme.sizes.iamNodeWidthInPixels,
+  { left: 0, top: theme.sizes.iamNodeHeightInPixels + 20 }
+);
+
 export const LAYOUT_GROUPS = [
   IN_LEVEL_USERS_LAYOUT_GROUP,
   IN_LEVEL_ELASTICACHE_LAYOUT_GROUP,
@@ -59,4 +67,5 @@ export const LAYOUT_GROUPS = [
   IN_LEVEL_SEARCH_TEAM_USERS_LAYOUT_GROUP,
   IN_LEVEL_NOTIFICATIONS_TEAM_USERS_LAYOUT_GROUP,
   IN_LEVEL_GROUP_NODES_LAYOUT_GROUP,
+  ELASTICACHE_MANAGEMENT_POLICY_LAYOUT_GROUP,
 ];

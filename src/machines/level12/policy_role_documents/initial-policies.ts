@@ -26,4 +26,21 @@ export const INITIAL_POLICIES = {
       },
     ],
   },
+  EC2_TRUST_POLICY: {
+    Version: '2012-10-17',
+    Statement: [
+      {
+        Effect: 'Allow',
+        Principal: {
+          Service: 'ec2.amazonaws.com',
+        },
+        Action: 'sts:AssumeRole',
+        Condition: {
+          StringEquals: {
+            'aws:PrincipalTag/team': 'backend',
+          },
+        },
+      },
+    ],
+  },
 };
