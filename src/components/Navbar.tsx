@@ -56,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
         <HStack spacing={4}>
           {(import.meta.env.VITE_APP_ENV || 'development') === 'development' && (
             <HStack>
-              <Text>{JSON.stringify(value)}</Text>
+              {/* <Text>{JSON.stringify(value)}</Text> */}
               <Input
                 name='level_number'
                 value={pseudoLevelNumber}
