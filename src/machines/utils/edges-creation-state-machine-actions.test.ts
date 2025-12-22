@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 
+import { applyInitialNodeConnections } from './apply-initial-edges-state-machine-actions';
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
-import { resolveInitialEdges } from './initial-edges-resolver';
 import {
   GetLevelGuardRailsBlockedEdgesFns,
   GetLevelObjectivesApplicableNodesFns,
@@ -41,8 +41,8 @@ describe('updateConnectionEdges', () => {
     connections: { from: string; to: string }[] = [],
     nodes: IAMAnyNode[]
   ): ReturnType<typeof createMockContext> => {
-    const ctx = createMockContext({ nodes, initial_node_connections: connections });
-    const { edges } = resolveInitialEdges(ctx);
+    const ctx = createMockContext({ nodes });
+    const { edges } = applyInitialNodeConnections(ctx, connections);
     return { ...ctx, edges };
   };
 

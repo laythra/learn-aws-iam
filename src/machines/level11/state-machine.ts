@@ -1,6 +1,4 @@
-import { assign } from 'xstate';
-
-import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
+import { INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
 import { LAYOUT_GROUPS } from './layout-groups';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
@@ -47,8 +45,6 @@ export const stateMachine = createStateMachineSetup<
     edges_connection_objectives: [],
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
-    role_creation_objectives: [],
-    use_multi_account_canvas: false,
     side_panel_open: false,
     layout_groups: [...COMMON_LAYOUT_GROUPS, ...LAYOUT_GROUPS],
     restricted_element_ids: [
@@ -122,10 +118,10 @@ export const stateMachine = createStateMachineSetup<
           params: { nodes: INITIAL_TUTORIAL_NODES },
         },
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
-        assign({
-          initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
-        }),
-        'resolve_initial_edges', // TODO: Can't we pass the connections directly?
+        {
+          type: 'apply_initial_node_connections',
+          params: { initialConnections: INITIAL_TUTORIAL_CONNECTIONS },
+        },
         'disable_edges_management_ability',
       ],
       initial: 'popup1',

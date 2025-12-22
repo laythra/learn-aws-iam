@@ -1,4 +1,4 @@
-import { and, assign, not } from 'xstate';
+import { and, not } from 'xstate';
 
 import { INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
@@ -111,13 +111,13 @@ export const stateMachine = createStateMachineSetup<
       entry: [
         { type: 'assign_nodes', params: { nodes: INITIAL_TUTORIAL_NODES } },
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
-        assign({
-          initial_node_connections: INITIAL_TUTORIAL_CONNECTIONS,
-        }),
-        'resolve_initial_edges',
         {
           type: 'set_edge_connection_objectives',
           params: { objectives: EDGE_CONNECTION_OBJECTIVES[0] },
+        },
+        {
+          type: 'apply_initial_node_connections',
+          params: { initialConnections: INITIAL_TUTORIAL_CONNECTIONS },
         },
         'enable_tutorial_state',
         'show_side_panel',

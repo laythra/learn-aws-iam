@@ -91,7 +91,6 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
   elements_with_animated_red_dot?: ElementID[];
   show_unncessary_edges_or_nodes_warning?: boolean;
-  initial_node_connections?: InitialNodeConnection[];
   layout_groups: NodeLayoutGroup[];
   blocked_connections?: { from: string; to: string }[];
 }

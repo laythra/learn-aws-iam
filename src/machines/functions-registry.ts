@@ -1,3 +1,19 @@
+/**
+ * Centralized registry for level-specific runtime functions.
+ *
+ * State machines in XState must be serializable, meaning they cannot directly contain
+ * function references. This registry allows functions to be stored separately and
+ * hydrated at runtime based on the level number.
+ *
+ * Registered function types:
+ * - validate_functions: JSON schema validators for level objectives
+ * - objectives_applicable_nodes_fns: Filter functions to determine which nodes are valid targets for objectives
+ * - objectives_guard_rails_blocked_edges_fns: Functions that determine if an edge should be blocked by guard rails
+ *
+ * @example
+ * const validators = GetLevelValidateFunctions(3);
+ * const applicableNodes = GetLevelObjectivesApplicableNodesFns(8);
+ */
 import { ValidateFunction } from 'ajv';
 
 import {
