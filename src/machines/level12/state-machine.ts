@@ -114,6 +114,21 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
     },
+    [StatelessStateMachineEvent.AggregateUserNodes]: {
+      actions: [
+        {
+          type: 'aggregate_user_nodes',
+        },
+      ],
+    },
+    [StatefulStateMachineEvent.DeaggregateUserNodes]: {
+      actions: [
+        {
+          type: 'deaggregate_user_nodes',
+          params: ({ event }) => ({ nodeId: event.nodeId }),
+        },
+      ],
+    },
     [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
     [StatelessStateMachineEvent.HideHelpPopover]: { actions: 'hide_help_popover' },
     [StatelessStateMachineEvent.ShowHelpPopover]: { actions: 'show_help_popover' },

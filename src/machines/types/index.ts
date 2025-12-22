@@ -167,6 +167,10 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: StatefulStateMachineEvent.DeleteNode;
       node: IAMAnyNode;
     }
+  | {
+      type: StatefulStateMachineEvent.DeaggregateUserNodes;
+      nodeId: string;
+    }
   | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };
 
 export type FixedPopoverMessage = {

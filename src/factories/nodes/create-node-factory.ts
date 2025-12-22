@@ -102,7 +102,8 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
     return {
       ...TEMPLATE_NODE,
       ...rootOverrides,
-      id: dataOverrides?.id ?? TEMPLATE_NODE.id,
+      // I don't know if needing two redundant id fields is of any good reason
+      id: dataOverrides?.id ?? rootOverrides?.id ?? TEMPLATE_NODE.id,
       deletable: dataOverrides?.unnecessary_node,
       data: {
         ...TEMPLATE_NODE.data,

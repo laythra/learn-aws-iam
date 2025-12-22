@@ -2,7 +2,6 @@ import _ from 'lodash';
 import { setup, enqueueActions, assign, AnyActorLogic, Actor } from 'xstate';
 
 import {
-  editObjectiveState,
   changeLevelObjectiveProgress,
   getElementsWithRedDot,
 } from './utils/common-state-machine-actions';
@@ -15,6 +14,10 @@ import {
   editNodeAttributes,
   editPermissionPolicy,
 } from './utils/nodes-editing-state-machine-actions';
+import {
+  aggregateUserNodes,
+  deaggregateUserNodes,
+} from './utils/user-node-aggregation-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
 import type {
   BaseCreationObjective,
@@ -459,6 +462,35 @@ export const createStateMachineSetup = <
           });
         });
       }),
+      aggregate_user_nodes: enqueueActions(({ context, enqueue }) => {
+        const updatedContext = aggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(context);
+
+        enqueue.assign({
+          nodes: updatedContext.nodes,
+          edges: updatedContext.edges,
+        });
+      }),
+      deaggregate_user_nodes: enqueueActions(
+        ({ context, enqueue }, { nodeId }: { nodeId: string }) => {
+          const updatedContext = deaggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(
+            context,
+            nodeId
+          );
+
+          console.log('Is the new context the same as the old one?', context === updatedContext);
+          console.log(
+            'The old nodes were:',
+            context.nodes.length,
+            "The new one's are:",
+            updatedContext.nodes.length
+          );
+
+          enqueue.assign({
+            nodes: updatedContext.nodes,
+            edges: updatedContext.edges,
+          });
+        }
+      ),
       // TODO: Remove this! Only used for testing and debugging purposes.
       store_snapshot_to_disk: enqueueActions(({ self }, { filename }: { filename: string }) => {
         queueMicrotask(() => {

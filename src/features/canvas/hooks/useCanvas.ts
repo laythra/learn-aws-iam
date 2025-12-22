@@ -92,7 +92,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
 
   // Used to reposition nodes when the side panel is opened, to ensure no nodes are hidden behind it
   useEffect(() => {
-    if (!rfInstance) return;
+    if (!rfInstance || hasAccountNodes) return;
 
     const nodeWidth = theme.sizes.iamNodeWidthInPixels;
     const sidePanelPos = rfInstance.screenToFlowPosition({
@@ -113,6 +113,15 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   }, [sidePanelOpened]);
 
   // Adds newly added nodes to the canvas with their initial positions
+  // TODO: This useEffect is easily the smelliest useEffect of the codebase.
+  // i'm relying on react's "accidental" re-runs of useEffect to detect newly added nodes,
+  // which is very fragile and can easily break in the future.
+  // A better approach would be to have a dedicated event that gets emitted
+  // that notifies about newly added nodes, and listen to that event instead.
+  // The event should be purely Domain driven, like "NODE_ADDED" or "NODES_DELETED"
+  // In such events, diffing would no longer be necessary since we would receive
+  // the exact nodes that were added/removed.
+  // Plus, testing this is a nightmare as of now.
   useEffect(() => {
     if (!rfInstance) return;
 
@@ -144,20 +153,21 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         const layoutGroup = layoutGroupsById[node.data.layout_group_id];
         const parentNode = node.parentId ? nodeById[node.parentId] : undefined;
 
-        // Ensures existing nodes' position remains unchanged
+        // Ensures existing nodes' positions remain unchanged
         // since the user might have moved them and we don't want to override that
         if (existingNode) {
           return {
             ...existingNode,
             data: { ...existingNode.data, ...node.data },
             position: existingNode.position,
+            hidden: node.hidden,
           };
         }
 
         const initialPosition = getNodeInitialPosition(
           node,
           reactFlowViewport,
-          nodesGroup.length,
+          nodesGroup.filter(n => !n.hidden).length,
           nodeIndex,
           sidePanelWidth,
           layoutGroup ?? DEFAULT_LAYOUT_GROUP,

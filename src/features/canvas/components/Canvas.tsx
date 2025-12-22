@@ -28,6 +28,7 @@ const nodeTypes = {
   ou: IAMCanvasNode,
   scp: IAMCanvasNode,
   resource_policy: IAMCanvasNode,
+  user_aggregated: IAMCanvasNode,
 };
 
 const edgeTypes = {

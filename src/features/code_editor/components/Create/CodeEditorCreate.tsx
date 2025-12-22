@@ -75,7 +75,6 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
 
   const validateFns = unfinishedCreationObjectives.filterMap(obj => {
     const validateFunctions = GetLevelValidateFunctions(levelNumber);
-    console.log('The obj id is:', obj.id);
     return validateFunctions?.[obj.id](nodes);
   });
 
