@@ -107,10 +107,10 @@ export const stateMachine = createStateMachineSetup<
       onDone: 'inside_level',
       entry: [
         { type: 'assign_nodes', params: { nodes: INITIAL_TUTORIAL_NODES } },
-        assign({
-          initial_node_connections: INITIAL_TUTORIAL_CONNECTIONS,
-        }),
-        'resolve_initial_edges',
+        {
+          type: 'apply_initial_node_connections',
+          params: { initialConnections: INITIAL_TUTORIAL_CONNECTIONS },
+        },
       ],
       states: {
         popup1: {

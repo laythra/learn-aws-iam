@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import { setup, enqueueActions, assign, AnyActorLogic, Actor } from 'xstate';
 
+import { applyInitialNodeConnections } from './utils/apply-initial-edges-state-machine-actions';
 import {
   changeLevelObjectiveProgress,
   getElementsWithRedDot,
 } from './utils/common-state-machine-actions';
 import { updateConnectionEdges } from './utils/edges-creation-state-machine-actions';
 import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-actions';
-import { resolveInitialEdges } from './utils/initial-edges-resolver';
 import { createIAMNode, createUserGroupNode } from './utils/nodes-creation-state-machine-actions';
 import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
 import {
@@ -25,6 +25,7 @@ import type {
   EdgeConnectionObjective,
   FixedPopoverMessage,
   IAMPolicyEditObjective,
+  IAMUserGroupCreationObjective,
   PopoverTutorialMessage,
   PopupTutorialMessage,
 } from '@/machines/types';
@@ -186,6 +187,12 @@ export const createStateMachineSetup = <
           events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
+      set_user_group_creation_objectives: assign({
+        user_group_creation_objectives: (
+          __,
+          { objectives }: { objectives: IAMUserGroupCreationObjective<TFinishEventMap>[] }
+        ) => objectives,
+      }),
       edit_policy_node: enqueueActions(
         ({ context, enqueue }, { docString, nodeId }: { docString: string; nodeId: string }) => {
           const editPolicyResult = editPermissionPolicy<TLevelObjectiveID, TFinishEventMap>(
@@ -412,13 +419,18 @@ export const createStateMachineSetup = <
       }),
       // TODO: Create an initial nodes resolver just like we have for edges
       // Benificial for performing side effects when nodes are added, such as creating their associated edges and whatnot
-      resolve_initial_edges: enqueueActions(({ context, enqueue }) => {
-        const initialEdgesConfig = resolveInitialEdges(context);
+      apply_initial_node_connections: enqueueActions(
+        (
+          { context, enqueue },
+          { initialConnections }: { initialConnections: { from: string; to: string }[] }
+        ) => {
+          const initialEdgesConfig = applyInitialNodeConnections(context, initialConnections);
 
-        enqueue.assign({
-          edges: initialEdgesConfig.edges,
-        });
-      }),
+          enqueue.assign({
+            edges: initialEdgesConfig.edges,
+          });
+        }
+      ),
       assign_nodes: assign({
         nodes: (__, { nodes }: { nodes: IAMAnyNode[] }) => nodes,
       }),

@@ -3,20 +3,20 @@
 import _ from 'lodash';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
-import { BaseFinishEventMap, GenericContext } from '../types';
+import { BaseFinishEventMap, GenericContext, InitialNodeConnection } from '../types';
 import { HandleID, IAMEdge } from '@/types';
 
-export function resolveInitialEdges<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>
+export function applyInitialNodeConnections<
+  TLevelObjectiveID,
+  TFinishEventMap extends BaseFinishEventMap,
+>(
+  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
+  initialConnections: InitialNodeConnection[]
 ): { edges: IAMEdge[] } {
-  if (!context.initial_node_connections) {
-    return { edges: [] };
-  }
-
   const nodeById = _.keyBy(context.nodes, 'id');
   let updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap> = context;
 
-  context.initial_node_connections.forEach(connection => {
+  initialConnections.forEach(connection => {
     ({ updatedContext } = updateConnectionEdges(
       updatedContext,
       nodeById[connection.from],

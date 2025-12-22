@@ -1,4 +1,4 @@
-import { and, assign, not } from 'xstate';
+import { and, not } from 'xstate';
 
 import { INITIAL_CONNECTIONS } from './initial-connections';
 import { INITIAL_LEVEL_NODES } from './nodes';
@@ -46,11 +46,9 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
-    role_creation_objectives: [],
     identity_creation_popup_default_value: IAMNodeEntity.Group,
     in_tutorial_state: true,
     edges_management_disabled: true,
-    initial_node_connections: INITIAL_CONNECTIONS,
     restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
@@ -91,11 +89,15 @@ export const stateMachine = createStateMachineSetup<
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
   },
   entry: [
-    assign({
-      nodes: INITIAL_LEVEL_NODES,
-      user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
-    }),
-    'resolve_initial_edges',
+    { type: 'assign_nodes', params: { nodes: INITIAL_LEVEL_NODES } },
+    {
+      type: 'apply_initial_node_connections',
+      params: { initialConnections: INITIAL_CONNECTIONS },
+    },
+    {
+      type: 'set_user_group_creation_objectives',
+      params: { objectives: USER_GROUP_CREATION_OBJECTIVES },
+    },
   ],
   states: {
     tutorial_popup1: {

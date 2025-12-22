@@ -1,5 +1,3 @@
-import { assign } from 'xstate';
-
 import { INITIAL_IN_LEVEL_CONNECTIONS, INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
 import { LAYOUT_GROUPS } from './layout-groups';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
@@ -140,10 +138,10 @@ export const stateMachine = createStateMachineSetup<
           type: 'assign_nodes',
           params: { nodes: INITIAL_TUTORIAL_NODES },
         },
-        assign({
-          initial_node_connections: INITIAL_TUTORIAL_CONNECTIONS,
-        }),
-        'resolve_initial_edges', // TODO: Can't we pass the connections directly?
+        {
+          type: 'apply_initial_node_connections',
+          params: { initialConnections: INITIAL_TUTORIAL_CONNECTIONS },
+        },
       ],
       initial: 'popup1',
       onDone: 'inside_level',
@@ -268,10 +266,10 @@ export const stateMachine = createStateMachineSetup<
           type: 'set_edge_connection_objectives',
           params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
         },
-        assign({
-          initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
-        }),
-        'resolve_initial_edges', // TODO: Can't we pass the connections directly?
+        {
+          type: 'apply_initial_node_connections',
+          params: { initialConnections: INITIAL_IN_LEVEL_CONNECTIONS },
+        },
       ],
       initial: 'popup3',
       states: {

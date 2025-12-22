@@ -263,13 +263,12 @@ export const stateMachine = createStateMachineSetup<
         'store_checkpoint',
         { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
-        'resolve_initial_edges',
+        {
+          type: 'apply_initial_node_connections',
+          params: { initialConnections: INITIAL_IN_LEVEL_CONNECTIONS },
+        },
         'disable_tutorial_state',
         'show_side_panel',
-        assign({
-          initial_node_connections: INITIAL_IN_LEVEL_CONNECTIONS,
-        }),
-        'resolve_initial_edges',
       ],
       states: {
         popup1: {

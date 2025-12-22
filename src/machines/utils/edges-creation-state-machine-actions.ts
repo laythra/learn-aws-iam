@@ -570,6 +570,13 @@ export function updateConnectionEdges<
   return connectionStrategies.anyToAny(context, sourceNode, targetNode, isInitialEdge, options);
 }
 
+/**
+ * Refreshes all connections originating from a policy node, recreating edges based on current granted accesses.
+ * Useful when a policy gets updated and its connections need to be recalibrated.
+ * @param context
+ * @param policyNode
+ * @returns Updated context with refreshed connections
+ */
 export function refreshPolicyConnections<
   TLevelObjectiveID,
   TFinishEventMap extends BaseFinishEventMap,
