@@ -6,7 +6,9 @@ import { useSelector } from '@xstate/store/react';
 import { Handle } from '@xyflow/react';
 import { motion } from 'framer-motion';
 
+import AggregatedUsersListButton from './AggregatedUsersListButton';
 import ARNIconButton from './ARNIconButton';
+import DeaggregateUserNodesButton from './DeaggregateUserNodesButton';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
 import TagsIconButton from './TagsIconButton';
 import { CanvasStore } from '../stores/canvas-store';
@@ -35,6 +37,7 @@ const MotionFlex = motion(Flex);
 export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const { entity, label, handles, image, content, tags } = data;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
+  const isAggregatedNode = data.entity === IAMNodeEntity.AggregatedUsers;
   const selectedNodeId = useSelector(CanvasStore, state => state.context.selectedNodeId);
 
   const theme = useTheme<CustomTheme>();
@@ -169,6 +172,15 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
             placement='top-end'
           />
         )}
+        {isAggregatedNode && (
+          <AggregatedUsersListButton
+            nodeId={id}
+            users={data.aggregated_user_ids}
+            onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+            placement='start-end'
+          />
+        )}
+        {isAggregatedNode && <DeaggregateUserNodesButton nodeId={id} placement='top-end' />}
       </HStack>
     </Box>
   );

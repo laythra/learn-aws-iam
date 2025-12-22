@@ -21,6 +21,7 @@ export enum AccessLevel {
 
 export enum IAMNodeEntity {
   User = 'IAM User',
+  AggregatedUsers = 'Aggregated IAM Users',
   Group = 'IAM Group',
   Role = 'IAM Role',
   Policy = 'IAM Policy',
@@ -208,6 +209,15 @@ interface IAMGuardRailsNodeData<TIsEdgeBlockedFnName extends string = string> ex
 interface IAMUserNodeData extends IAMNodeData {
   entity: IAMNodeEntity.User;
   allowed_sources: [IAMNodeEntity.Policy, IAMNodeEntity.PermissionBoundary];
+  aggregated?: boolean;
+}
+
+interface IAMAggregatedUsersNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.AggregatedUsers;
+  allowed_sources: [IAMNodeEntity.Policy, IAMNodeEntity.PermissionBoundary];
+  aggregated?: boolean;
+  aggregated_user_ids: string[];
+  original_edge_mappings: Record<string, string>; // Maps original user IDs to edge IDs
 }
 
 interface IAMGroupNodeData extends IAMNodeData {
@@ -260,6 +270,7 @@ interface IAMSCPNodeData<TIsEdgeBlockedFnName extends string = string>
 }
 
 export type IAMUserNode = Node<IAMUserNodeData, 'user'>;
+export type IAMAggregatedUsersNode = Node<IAMAggregatedUsersNodeData, 'user_aggregated'>;
 // 'group' is reserved in @xyflow/react, we're using 'iam_group' instead
 export type IAMGroupNode = Node<IAMGroupNodeData, 'iam_group'>;
 export type IAMPolicyNode = Node<IAMPolicyNodeData, 'policy'>;
@@ -289,6 +300,7 @@ export type IAMNodeMap = {
   [IAMNodeEntity.SCP]: IAMSCPNode;
   [IAMNodeEntity.ResourcePolicy]: IAMResourcePolicyNode;
   [IAMNodeEntity.PermissionBoundary]: IAMPermissionBoundaryNode;
+  [IAMNodeEntity.AggregatedUsers]: IAMAggregatedUsersNode;
 };
 
 export type IAMAnyNode = IAMNodeMap[keyof IAMNodeMap];

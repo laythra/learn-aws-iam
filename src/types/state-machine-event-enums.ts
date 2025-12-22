@@ -21,6 +21,7 @@ export enum StatelessStateMachineEvent {
   HideHelpPopover = 'HIDE_HELP_POPOVER',
   ShowHelpPopover = 'SHOW_HELP_POPOVER',
   SidePanelOpened = 'SIDE_PANEL_OPENED',
+  AggregateUserNodes = 'AGGREGATE_USER_NODES',
 }
 
 // /**
@@ -40,4 +41,5 @@ export enum StatefulStateMachineEvent {
   ConnectNodes = 'CONNECT_NODES',
   DeleteEdge = 'DELETE_EDGE',
   DeleteNode = 'DELETE_NODE',
+  DeaggregateUserNodes = 'DEAGGREGATE_USER_NODES',
 }

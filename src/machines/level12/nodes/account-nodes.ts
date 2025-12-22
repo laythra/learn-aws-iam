@@ -41,7 +41,7 @@ export const INITIAL_IN_LEVEL_ACCOUNT_NODES: IAMAccountNode[] = IN_LEVEL_ACCOUNT
     createAccountNode({
       dataOverrides: nodeData,
       rootOverrides: {
-        draggable: false,
+        draggable: true,
         height: window.innerHeight * 0.7,
         width: window.innerWidth * 0.5,
       },
