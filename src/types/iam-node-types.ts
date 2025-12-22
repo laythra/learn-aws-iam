@@ -243,6 +243,7 @@ interface IAMResourceNodeData extends IAMNodeData {
 
 interface IAMAccountNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Account;
+  collapsed?: boolean;
 }
 
 interface IAMOUNodeData extends IAMNodeData {

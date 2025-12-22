@@ -69,7 +69,11 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   );
 
   // If there are account nodes, set initial zoom to fit them within the viewport width
-  const initialZoom = Math.min(hasAccountNodes ? window.innerWidth / accountNodesWidth : 1, 1);
+  const initialZoom = Math.min(
+    hasAccountNodes ? (window.innerWidth / accountNodesWidth) * 0.9 : 1,
+    1
+  );
+
   const [nodesState, edgesState] = useSelector(
     CanvasStore,
     state => [state.context.nodes, state.context.edges],

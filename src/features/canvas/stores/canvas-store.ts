@@ -7,7 +7,7 @@ import {
 } from '@xyflow/react';
 import { produce } from 'immer';
 
-import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
+import { IAMAnyNode, IAMEdge, IAMNodeEntity } from '@/types/iam-node-types';
 
 type CanvasStoreState = {
   nodes: IAMAnyNode[];
@@ -32,6 +32,9 @@ type CanvasStoreEvents = {
   openNodePanel: { nodeId: string; panel: 'content' | 'tags' | 'arn' | undefined };
   closeAllNodePanels: unknown; // No payload needed for this event
   clearCanvas: unknown;
+  toggleAccountCollapse: {
+    accountId: string;
+  };
 };
 
 export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStoreEvents>(produce, {
@@ -83,6 +86,26 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
     clearCanvas(context: CanvasStoreState) {
       context.nodes = [];
       context.edges = [];
+    },
+    toggleAccountCollapse(
+      context: CanvasStoreState,
+      event: {
+        accountId: string;
+      }
+    ) {
+      const accountNode = context.nodes.find(
+        node => node.id === event.accountId && node.data.entity === IAMNodeEntity.Account
+      );
+
+      if (!accountNode) return;
+
+      const isCollapsed = accountNode.data.collapsed;
+      accountNode.data.collapsed = !isCollapsed;
+
+      const childNodes = context.nodes.filter(node => node.parentId === event.accountId);
+      childNodes.forEach(childNode => {
+        childNode.hidden = !isCollapsed;
+      });
     },
   },
 });

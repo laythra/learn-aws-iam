@@ -12,6 +12,7 @@ const TUTORIAL_ACCOUNT_NODES: Partial<IAMAccountNode['data']>[] = [
     id: AccountID.TutorialProdAccount,
     label: 'Production Account',
     layout_group_id: CommonLayoutGroupID.RightCenterHorizontal,
+    collapsed: true,
   },
 ];
 
