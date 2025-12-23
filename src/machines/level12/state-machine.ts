@@ -52,7 +52,7 @@ export const stateMachine = createStateMachineSetup<
     restricted_element_ids: [
       ElementID.CodeEditorRoleTab,
       ElementID.CodeEditorResourcePolicyTab,
-      ElementID.CreateEntitiesMenuItem,
+      ElementID.CreateUserGroupMenuItem,
       ElementID.CodeEditorPolicyTab,
       ElementID.CodeEditorRoleTab,
       ElementID.CodeEditorResourcePolicyTab,

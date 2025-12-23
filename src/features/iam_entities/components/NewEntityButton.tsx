@@ -5,10 +5,7 @@ import _ from 'lodash';
 import { IdentityCreationPopup } from './IdentityCreationPopup';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
-import {
-  GuardedMenuItemWithEventAndPopover,
-  TutorialGuardedMenuButton,
-} from '@/components/Decorated';
+import { GuardedMenuItemWithPopover, TutorialGuardedMenuButton } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { withPopover } from '@/decorators/withPopover';
@@ -32,6 +29,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
     ],
     _.isEqual
   );
+
   // To keep the user focused on a shown tutorial popover,
   // we disable the button if a popover with a next button is shown.
   const disableEntityButton =
@@ -67,21 +65,19 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
           {!disableEntityButton && isRedDotEnabled(ElementID.NewEntityBtn) && <AnimatedRedDot />}
         </Box>
         <MenuList>
-          <GuardedMenuItemWithEventAndPopover
-            data-element-id={ElementID.CreateEntitiesMenuItem}
-            event={StatelessStateMachineEvent.CreateIAMIdentityPopupOpened}
+          <GuardedMenuItemWithPopover
+            data-element-id={ElementID.CreateUserGroupMenuItem}
             onClick={openIdentityCreator}
           >
             Users & Groups
-          </GuardedMenuItemWithEventAndPopover>
+          </GuardedMenuItemWithPopover>
 
-          <GuardedMenuItemWithEventAndPopover
+          <GuardedMenuItemWithPopover
             onClick={openCodeEditor}
             data-element-id={ElementID.CreateRolesAndPoliciesMenuItem}
-            event={StatelessStateMachineEvent.CreateIAMPolicyRoleWindowOpened}
           >
             Roles & Policies
-          </GuardedMenuItemWithEventAndPopover>
+          </GuardedMenuItemWithPopover>
         </MenuList>
       </Menu>
     </>

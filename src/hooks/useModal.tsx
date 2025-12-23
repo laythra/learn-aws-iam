@@ -5,6 +5,7 @@ import { ModalContextState } from '@/types';
 
 const useModal = (): ModalContextState => {
   const context = useContext(ModalContext);
+
   if (!context) {
     throw new Error('useModal must be used within a ModalProvider');
   }

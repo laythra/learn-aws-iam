@@ -138,8 +138,12 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
                 index={iamIdentityEntity === IAMNodeEntity.User ? 0 : 1}
               >
                 <TabList>
-                  <Tab isDisabled={isUserTabRestricted}>{IAMNodeEntity.User}</Tab>
-                  <Tab isDisabled={isGroupTabRestricted}>{IAMNodeEntity.Group}</Tab>
+                  <Tab isDisabled={isUserTabRestricted} data-element-id={ElementID.CreateUserTab}>
+                    {IAMNodeEntity.User}
+                  </Tab>
+                  <Tab isDisabled={isGroupTabRestricted} data-element-id={ElementID.CreateGroupTab}>
+                    {IAMNodeEntity.Group}
+                  </Tab>
                 </TabList>
               </Tabs>
             </WithPopoverBox>

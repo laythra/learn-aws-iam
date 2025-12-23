@@ -90,10 +90,14 @@ export const stateMachine = createStateMachineSetup<
   states: {
     inside_tutorial: {
       entry: [
-        assign({
-          nodes: INITIAL_TUTORIAL_USER_NODES,
-          user_group_creation_objectives: USER_GROUP_CREATION_OBJECTIVES,
-        }),
+        {
+          type: 'assign_nodes',
+          params: { nodes: INITIAL_TUTORIAL_USER_NODES },
+        },
+        {
+          type: 'set_user_group_creation_objectives',
+          params: { objectives: USER_GROUP_CREATION_OBJECTIVES },
+        },
         {
           type: 'set_edge_connection_objectives',
           params: { objectives: EDGE_CONNECTION_OBJECTIVES[0] },
@@ -185,10 +189,9 @@ export const stateMachine = createStateMachineSetup<
               target: 'policy_attached_to_tutorial_user_popover',
               actions: [
                 {
-                  type: 'change_objective_progress',
+                  type: 'finish_level_objective',
                   params: {
                     id: LevelObjectiveID.ConnectionTutorialPolicyToTutorialUser,
-                    finished: true,
                   },
                 },
               ],
@@ -212,7 +215,7 @@ export const stateMachine = createStateMachineSetup<
               params: {
                 whitelisted_element_ids: [
                   ElementID.NewEntityBtn,
-                  ElementID.CreateEntitiesMenuItem,
+                  ElementID.CreateUserGroupMenuItem,
                   ElementID.IdentityCreationPopupUserTab,
                 ],
               },
@@ -240,8 +243,8 @@ export const stateMachine = createStateMachineSetup<
             [NodeCreationFinishEvent.USER_NODE_CREATED]: {
               actions: [
                 {
-                  type: 'change_objective_progress',
-                  params: { id: LevelObjectiveID.CreateIAMUser, finished: true },
+                  type: 'finish_level_objective',
+                  params: { id: LevelObjectiveID.CreateIAMUser },
                 },
               ],
               target: 'connect_iam_policy_to_user',
@@ -260,8 +263,8 @@ export const stateMachine = createStateMachineSetup<
             [EdgeConnectionFinishEvent.PolicyAttachedToCreatedUser]: {
               actions: [
                 {
-                  type: 'change_objective_progress',
-                  params: { id: LevelObjectiveID.GrantIAMUserReadAccessToS3Bucket, finished: true },
+                  type: 'finish_level_objective',
+                  params: { id: LevelObjectiveID.GrantIAMUserReadAccessToS3Bucket },
                 },
                 {
                   type: 'update_red_dot_visibility',

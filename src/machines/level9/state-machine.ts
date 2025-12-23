@@ -117,7 +117,7 @@ export const stateMachine = createStateMachineSetup<
           params: { initialConnections: INITIAL_IN_LEVEL_CONNECTIONS },
         },
         'disable_edges_management_ability',
-        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
+        { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
       ],
       initial: 'popup1',
       states: {
@@ -257,7 +257,7 @@ export const stateMachine = createStateMachineSetup<
         create_new_policy: {
           entry: [
             'hide_fixed_popovers',
-            { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
+            { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
             {
               type: 'delete_nodes',

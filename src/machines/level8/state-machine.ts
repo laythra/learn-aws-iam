@@ -97,7 +97,7 @@ export const stateMachine = createStateMachineSetup<
           params: { initialConnections: INITIAL_IN_LEVEL_CONNECTIONS },
         },
         'disable_edges_management_ability',
-        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
+        { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
       ],
       initial: 'popup1',
       states: {
@@ -227,7 +227,7 @@ export const stateMachine = createStateMachineSetup<
                 attributes: { editable: true },
               },
             },
-            { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
+            { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
             assign({
               policy_edit_objectives: POLICY_EDIT_OBJECTIVES[1], // TODO: Move into `objectives_map`
             }),

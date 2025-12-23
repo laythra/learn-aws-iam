@@ -118,7 +118,7 @@ export const stateMachine = createStateMachineSetup<
           type: 'assign_nodes',
           params: { nodes: [...INITIAL_IN_LEVEL_USER_NODES, ...INITIAL_IN_LEVEL_GROUP_NODES] },
         },
-        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
+        { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
         {
           type: 'apply_initial_node_connections',
           params: { initialConnections: INITIAL_IN_LEVEL_CONNECTIONS },
@@ -264,7 +264,7 @@ export const stateMachine = createStateMachineSetup<
               params: { message: POPOVER_TUTORIAL_MESSAGES[2] },
             },
             {
-              type: 'add_new_level_objective',
+              type: 'append_level_objectives',
               params: { objectives: LEVEL_OBJECTIVES[1] },
             },
             {

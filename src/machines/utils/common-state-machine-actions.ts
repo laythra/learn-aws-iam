@@ -4,22 +4,6 @@ import _ from 'lodash';
 import { BaseFinishEventMap, GenericContext, LevelObjective } from '../types';
 import { ElementID } from '@/config/element-ids';
 
-export function changeLevelObjectiveProgress<
-  TLevelObjectiveID,
-  TFinishEventMap extends BaseFinishEventMap,
->(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  id: string,
-  finished: boolean
-): LevelObjective<TLevelObjectiveID, TFinishEventMap>[] {
-  return produce(context.level_objectives, draftLevelObjectives => {
-    const targetObjective = draftLevelObjectives.find(objective => objective.id === id);
-    if (!targetObjective) return;
-
-    targetObjective.finished = finished;
-  });
-}
-
 /**
  *  Edits the state of an objective, namely the `finished` property.
  * @param context The current state machine context
