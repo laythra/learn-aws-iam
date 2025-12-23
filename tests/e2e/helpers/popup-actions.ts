@@ -2,6 +2,7 @@ import { Page, expect } from '@playwright/test';
 
 import { findObjectiveCompleteToast, findOperationalPopup } from './locator-helpers';
 import { CodeEditorTabsElementID, ElementID } from '@/config/element-ids';
+import { IAMNodeEntity } from '@/types';
 
 export class PopupActions {
   constructor(private page: Page) {}
@@ -10,11 +11,21 @@ export class PopupActions {
     await expect(findOperationalPopup(this.page, popupId)).toBeVisible();
   }
 
-  async submitCreateEntityPopup(name: string, menuItemId: string, popupId: string): Promise<void> {
+  async createUserGroupNode(
+    name: string,
+    menuItemId: string,
+    popupId: string,
+    entity: IAMNodeEntity.User | IAMNodeEntity.Group
+  ): Promise<void> {
     const newEntityBtn = this.page.getByTestId(ElementID.NewEntityBtn);
     await expect(newEntityBtn).toBeVisible();
     await newEntityBtn.click();
+
     await this.page.getByTestId(menuItemId).click();
+    const targetTab =
+      entity === IAMNodeEntity.User ? ElementID.CreateUserTab : ElementID.CreateGroupTab;
+    await this.page.getByTestId(popupId).getByTestId(targetTab).click();
+
     const popup = this.page.getByTestId(popupId);
     await popup.getByRole('textbox').fill(name);
     await popup.getByRole('button', { name: 'submit' }).click();

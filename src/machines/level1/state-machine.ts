@@ -215,7 +215,7 @@ export const stateMachine = createStateMachineSetup<
               params: {
                 whitelisted_element_ids: [
                   ElementID.NewEntityBtn,
-                  ElementID.CreateEntitiesMenuItem,
+                  ElementID.CreateUserGroupMenuItem,
                   ElementID.IdentityCreationPopupUserTab,
                 ],
               },

@@ -6,7 +6,7 @@ export enum ElementID {
   CodeEditorRoleTab = 'code-editor-role-tab',
   CodeEditorSCPTab = 'code-editor-scp-tab',
   CodeEditorPermissionBoundaryTab = 'code-editor-permission-boundary-tab',
-  CreateEntitiesMenuItem = 'create-entities-menu-item',
+  CreateUserGroupMenuItem = 'create-entities-menu-item',
   CreateRolesAndPoliciesMenuItem = 'create-roles-and-policies-menu-item',
   IAMIdentityCreatorPopup = 'iam-identity-creator-popup',
   IAMIdentityNameInput = 'iam-identity-name',
@@ -25,6 +25,8 @@ export enum ElementID {
   TutorialPopoverCloseButton = 'tutorial-popover-close-button',
   ResetZoomButton = 'reset-zoom-button',
   AccountSelectionDropdown = 'account-select-dropdown',
+  CreateGroupTab = 'create-group-tab',
+  CreateUserTab = 'create-user-tab',
 }
 
 export type CodeEditorTabsElementID =

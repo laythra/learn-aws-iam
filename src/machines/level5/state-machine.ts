@@ -47,7 +47,7 @@ export const stateMachine = createStateMachineSetup<
     user_group_creation_objectives: [],
     // role_creation_objectives: [],
     restricted_element_ids: [
-      ElementID.CreateEntitiesMenuItem,
+      ElementID.CreateUserGroupMenuItem,
       ElementID.CodeEditorResourcePolicyTab,
       ElementID.CodeEditorPolicyTab,
       ElementID.CodeEditorSCPTab,

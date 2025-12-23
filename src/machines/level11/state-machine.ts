@@ -51,7 +51,7 @@ export const stateMachine = createStateMachineSetup<
       ElementID.CodeEditorRoleTab,
       ElementID.CodeEditorSCPTab,
       ElementID.CodeEditorResourcePolicyTab,
-      ElementID.CreateEntitiesMenuItem,
+      ElementID.CreateUserGroupMenuItem,
     ],
   },
   on: {
