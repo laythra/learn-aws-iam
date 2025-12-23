@@ -7,6 +7,7 @@ import { NodeActions } from '../helpers/node-actions';
 import { test } from '../helpers/test-fixtures';
 import { getTestSolution } from '../helpers/test-solutions';
 import { TutorialActions } from '../helpers/tutorial-actions';
+import { LEVEL_OBJECTIVES } from '@/machines/level8/objectives/level-objectives';
 import { FIXED_POPOVER_MESSAGES } from '@/machines/level8/tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from '@/machines/level8/tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from '@/machines/level8/tutorial_messages/popup-tutorial-messages';
@@ -115,57 +116,61 @@ test.describe('Stage 1 - Initial tutorial and first edit', () => {
     tutorial,
     nodes,
     edges,
+    popups,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(8, ENCODED_LEVEL_STAGES, 'stage1');
 
-    await test.step('Initial Popups', async () => {
+    await test.step('Complete initial tutorial', async () => {
       await completeInitialTutorial(tutorial);
     });
 
-    await test.step('Check initial nodes and edges visibility', async () => {
+    await test.step('Verify initial nodes and edges visibility', async () => {
       await verifyInitialLevelSetup(nodes, edges);
     });
 
-    await test.step('Edit Policy', async () => {
+    await test.step('Edit policy to restrict junior users', async () => {
       await nodes.editPolicyNodeContent(
         PolicyNodeID.SlackServiceManagePolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy1')
       );
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
     });
 
-    await test.step('Check edges visibility after policy edit', async () => {
+    await test.step('Verify edges visibility after policy edit', async () => {
       await verifyLevelSetupAfterPolicyEdit(edges);
     });
   });
 });
 
 test.describe('Stage 2 - Post-first-edit tutorial popovers', () => {
-  test('Stage 2 - Goes through initial tutorial phase and completes first edit objective', async ({
+  test('Complete post-edit tutorial and second policy edit', async ({
     page,
     tutorial,
     nodes,
     edges,
+    popups,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(8, ENCODED_LEVEL_STAGES, 'stage2');
 
-    await test.step('Go Through first post-edit tutorial popovers', async () => {
+    await test.step('Go through first post-edit tutorial popovers', async () => {
       await goThroughPopoversAfterFirstEdit(page, tutorial, nodes);
     });
 
-    await test.step('Edit Policy Again', async () => {
+    await test.step('Edit policy again to use tags instead of username prefix', async () => {
       await nodes.editPolicyNodeContent(
         PolicyNodeID.SlackServiceManagePolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
     });
 
-    await test.step('Check edges visibility after second policy edit', async () => {
+    await test.step('Verify edges visibility after second policy edit', async () => {
       await verifyLevelSetupAfterPolicyEdit(edges);
     });
 
-    await test.step('Go Through second post-edit tutorial popovers', async () => {
+    await test.step('Go through second post-edit tutorial popovers', async () => {
       await goThroughPopoversAfterSecondEdit(tutorial);
     });
   });
@@ -173,49 +178,34 @@ test.describe('Stage 2 - Post-first-edit tutorial popovers', () => {
 
 test.describe('Complete Level - End to End', () => {
   test('Complete entire level flow from start to finish', async ({
+    page,
     tutorial,
     nodes,
     edges,
-    page,
+    popups,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(8, ENCODED_LEVEL_STAGES, 'stage1');
 
-    await test.step('Go Through Initial Tutorial', async () => {
+    await test.step('Complete Stage 1 - Initial tutorial and first policy edit', async () => {
       await completeInitialTutorial(tutorial);
-    });
-
-    await test.step('Check initial nodes and edges visibility', async () => {
       await verifyInitialLevelSetup(nodes, edges);
-    });
-
-    await test.step('Edit Policy', async () => {
       await nodes.editPolicyNodeContent(
         PolicyNodeID.SlackServiceManagePolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy1')
       );
-    });
-
-    await test.step('Check edges visibility after policy edit', async () => {
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
       await verifyLevelSetupAfterPolicyEdit(edges);
     });
 
-    await test.step('Go Through first post-edit tutorial popovers', async () => {
+    await test.step('Complete Stage 2 - Post-edit tutorial and second policy edit', async () => {
       await goThroughPopoversAfterFirstEdit(page, tutorial, nodes);
-    });
-
-    await test.step('Edit Policy Again', async () => {
       await nodes.editPolicyNodeContent(
         PolicyNodeID.SlackServiceManagePolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
-    });
-
-    await test.step('Check edges visibility after second policy edit', async () => {
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
       await verifyLevelSetupAfterPolicyEdit(edges);
-    });
-
-    await test.step('Go Through second post-edit tutorial popovers', async () => {
       await goThroughPopoversAfterSecondEdit(tutorial);
     });
   });

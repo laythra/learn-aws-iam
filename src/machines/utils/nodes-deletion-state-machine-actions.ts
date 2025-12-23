@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 
 import { deleteConnectionEdges } from './edges-deletion-state-machine-actions';
-import { BaseFinishEventMap, GenericContext } from '../types';
+import { BaseFinishEventMap, GenericContext } from '@/machines/types';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
 /**

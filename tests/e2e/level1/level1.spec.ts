@@ -10,6 +10,7 @@ import { LEVEL_OBJECTIVES } from '@/machines/level1/objectives/level-objectives'
 import { POPOVER_TUTORIAL_MESSAGES } from '@/machines/level1/tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from '@/machines/level1/tutorial_messages/popup-tutorial-messages';
 import { UserNodeID, ResourceNodeID, PolicyNodeID } from '@/machines/level1/types/node-id-enums';
+import { IAMNodeEntity } from '@/types';
 
 test.describe('Level 1 Entire Flow', () => {
   const goThroughInitialTutorial = async (
@@ -74,10 +75,11 @@ test.describe('Level 1 Entire Flow', () => {
   };
 
   const createCustomUserNode = async (popups: PopupActions, name: string): Promise<void> => {
-    await popups.submitCreateEntityPopup(
+    await popups.createUserGroupNode(
       name,
-      ElementID.CreateEntitiesMenuItem,
-      ElementID.IAMIdentityCreatorPopup
+      ElementID.CreateUserGroupMenuItem,
+      ElementID.IAMIdentityCreatorPopup,
+      IAMNodeEntity.User
     );
   };
 
