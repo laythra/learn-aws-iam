@@ -6,6 +6,7 @@ import { test } from '../helpers/test-fixtures';
 import { getTestSolution } from '../helpers/test-solutions';
 import { TutorialActions } from '../helpers/tutorial-actions';
 import { ElementID } from '@/config/element-ids';
+import { LEVEL_OBJECTIVES } from '@/machines/level5/objectives/level-objectives';
 import { FIXED_POPOVER_MESSAGES } from '@/machines/level5/tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from '@/machines/level5/tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from '@/machines/level5/tutorial_messages/popup-tutorial-messages';
@@ -16,7 +17,6 @@ import {
   UserNodeID,
 } from '@/machines/level5/types/node-id-enums';
 
-// Shared helper functions
 const completeInitialPopupTutorial = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
@@ -53,10 +53,12 @@ const completeTrustPolicyExplanation = async (
 const attachFinanceUserToAuditorRole = async (
   tutorial: TutorialActions,
   nodes: NodeActions,
-  edges: EdgeActions
+  edges: EdgeActions,
+  popups: PopupActions
 ): Promise<void> => {
   await tutorial.expectFixedPopoverWithoutNextButton(FIXED_POPOVER_MESSAGES[1].popover_title);
   await nodes.connectNodes(UserNodeID.FinanceUser, RoleNodeID.FinanceAuditorRole);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
 
   await edges.expectVisible(UserNodeID.FinanceUser, ResourceNodeID.BillingAndCostManagement);
 
@@ -84,6 +86,7 @@ const createS3ReadAccessRole = async (
   );
 
   await nodes.expectVisible(RoleNodeID.S3ReadAccessRole);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
 
   await tutorial.expectPopoverAndClickNext(
     RoleNodeID.S3ReadAccessRole,
@@ -101,10 +104,12 @@ const createS3ReadAccessRole = async (
 
 const attachS3RoleToPolicyAndUser = async (
   tutorial: TutorialActions,
-  nodes: NodeActions
+  nodes: NodeActions,
+  popups: PopupActions
 ): Promise<void> => {
   await nodes.connectNodes(PolicyNodeID.S3ReadPolicy, RoleNodeID.S3ReadAccessRole);
   await nodes.connectNodes(UserNodeID.FinanceUser, RoleNodeID.S3ReadAccessRole);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][2].id);
 
   await tutorial.expectPopoverAndClickNext(
     UserNodeID.FinanceUser,
@@ -121,7 +126,8 @@ const createServiceRole = async (
   solutionKey: 'role1' | 'role2' | 'role3',
   roleId: string,
   policyId: string,
-  resourceId: string
+  resourceId: string,
+  objectiveId: string
 ): Promise<void> => {
   await popups.submitCreatePolicyPopup(
     [ElementID.CodeEditorRoleTab],
@@ -135,11 +141,17 @@ const createServiceRole = async (
 
   await nodes.connectNodes(policyId, roleId);
   await nodes.connectNodes(resourceId, roleId);
+  await popups.expectLevelObjectiveCompleteToastAndClose(objectiveId);
 };
 
 const expectLevelFinalMessages = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[4].popover_title);
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[4].title);
+};
+
+const completeStage2IntroPopups = async (tutorial: TutorialActions): Promise<void> => {
+  await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[3].title);
+  await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[3].popover_title);
 };
 
 test.describe('Stage 1 - IAM Roles Tutorial Introduction', () => {
@@ -159,7 +171,7 @@ test.describe('Stage 1 - IAM Roles Tutorial Introduction', () => {
     });
 
     await test.step('Attach finance user to finance auditor role', async () => {
-      await attachFinanceUserToAuditorRole(tutorial, nodes, edges);
+      await attachFinanceUserToAuditorRole(tutorial, nodes, edges, popups);
     });
 
     await test.step('Create S3 read access role', async () => {
@@ -167,7 +179,7 @@ test.describe('Stage 1 - IAM Roles Tutorial Introduction', () => {
     });
 
     await test.step('Attach S3 role to policy and user', async () => {
-      await attachS3RoleToPolicyAndUser(tutorial, nodes);
+      await attachS3RoleToPolicyAndUser(tutorial, nodes, popups);
     });
   });
 
@@ -185,12 +197,11 @@ test.describe('Stage 1 - IAM Roles Tutorial Introduction', () => {
       await verifyInitialLevelSetup(nodes, edges);
       await completeTrustPolicyExplanation(tutorial, nodes);
 
-      // Create an unnecessary edge from Policy to User
       await nodes.connectNodes(PolicyNodeID.BillingPolicy, UserNodeID.FinanceUser);
 
-      await attachFinanceUserToAuditorRole(tutorial, nodes, edges);
+      await attachFinanceUserToAuditorRole(tutorial, nodes, edges, popups);
       await createS3ReadAccessRole(tutorial, nodes, popups);
-      await attachS3RoleToPolicyAndUser(tutorial, nodes);
+      await attachS3RoleToPolicyAndUser(tutorial, nodes, popups);
     });
 
     await test.step('Verify unnecessary edges warning appears', async () => {
@@ -208,59 +219,77 @@ test.describe('Stage 2 - Creating Service Roles in all orders', () => {
   test('Create Lambda first, then EC2', async ({ nodes, popups, tutorial, goToLevelAtStage }) => {
     await goToLevelAtStage(5, ENCODED_LEVEL_STAGES, 'stage2');
 
-    await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[3].title);
-    await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[3].popover_title);
+    await test.step('Complete stage 2 intro popups', async () => {
+      await completeStage2IntroPopups(tutorial);
+    });
 
-    await createServiceRole(
-      nodes,
-      popups,
-      'lambda-service-role',
-      'role3',
-      RoleNodeID.LambdaRole,
-      PolicyNodeID.ChatImagesS3ReadPolicy,
-      ResourceNodeID.LambdaFunction
-    );
+    await test.step('Create Lambda service role', async () => {
+      await createServiceRole(
+        nodes,
+        popups,
+        'lambda-service-role',
+        'role3',
+        RoleNodeID.LambdaRole,
+        PolicyNodeID.ChatImagesS3ReadPolicy,
+        ResourceNodeID.LambdaFunction,
+        LEVEL_OBJECTIVES[1][1].id
+      );
+    });
 
-    await createServiceRole(
-      nodes,
-      popups,
-      'ec2-writer-role',
-      'role2',
-      RoleNodeID.EC2Role,
-      PolicyNodeID.ChatImagesS3WritePolicy,
-      ResourceNodeID.TimeshiftLabsEC2Instance
-    );
+    await test.step('Create EC2 service role', async () => {
+      await createServiceRole(
+        nodes,
+        popups,
+        'ec2-writer-role',
+        'role2',
+        RoleNodeID.EC2Role,
+        PolicyNodeID.ChatImagesS3WritePolicy,
+        ResourceNodeID.TimeshiftLabsEC2Instance,
+        LEVEL_OBJECTIVES[1][0].id
+      );
+    });
 
-    await expectLevelFinalMessages(tutorial);
+    await test.step('Complete level finish messages', async () => {
+      await expectLevelFinalMessages(tutorial);
+    });
   });
 
   test('Create EC2 first, then Lambda', async ({ nodes, popups, tutorial, goToLevelAtStage }) => {
     await goToLevelAtStage(5, ENCODED_LEVEL_STAGES, 'stage2');
 
-    await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[3].title);
-    await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[3].popover_title);
+    await test.step('Complete stage 2 intro popups', async () => {
+      await completeStage2IntroPopups(tutorial);
+    });
 
-    await createServiceRole(
-      nodes,
-      popups,
-      'ec2-writer-role',
-      'role2',
-      RoleNodeID.EC2Role,
-      PolicyNodeID.ChatImagesS3WritePolicy,
-      ResourceNodeID.TimeshiftLabsEC2Instance
-    );
+    await test.step('Create EC2 service role', async () => {
+      await createServiceRole(
+        nodes,
+        popups,
+        'ec2-writer-role',
+        'role2',
+        RoleNodeID.EC2Role,
+        PolicyNodeID.ChatImagesS3WritePolicy,
+        ResourceNodeID.TimeshiftLabsEC2Instance,
+        LEVEL_OBJECTIVES[1][0].id
+      );
+    });
 
-    await createServiceRole(
-      nodes,
-      popups,
-      'lambda-service-role',
-      'role3',
-      RoleNodeID.LambdaRole,
-      PolicyNodeID.ChatImagesS3ReadPolicy,
-      ResourceNodeID.LambdaFunction
-    );
+    await test.step('Create Lambda service role', async () => {
+      await createServiceRole(
+        nodes,
+        popups,
+        'lambda-service-role',
+        'role3',
+        RoleNodeID.LambdaRole,
+        PolicyNodeID.ChatImagesS3ReadPolicy,
+        ResourceNodeID.LambdaFunction,
+        LEVEL_OBJECTIVES[1][1].id
+      );
+    });
 
-    await expectLevelFinalMessages(tutorial);
+    await test.step('Complete level finish messages', async () => {
+      await expectLevelFinalMessages(tutorial);
+    });
   });
 
   test('Verify unnecessary edges / nodes warning appears', async ({
@@ -273,8 +302,7 @@ test.describe('Stage 2 - Creating Service Roles in all orders', () => {
     await goToLevelAtStage(5, ENCODED_LEVEL_STAGES, 'stage2');
 
     await test.step('Complete stage 2 with unnecessary edge', async () => {
-      await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[3].title);
-      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[3].popover_title);
+      await completeStage2IntroPopups(tutorial);
 
       await createServiceRole(
         nodes,
@@ -283,10 +311,10 @@ test.describe('Stage 2 - Creating Service Roles in all orders', () => {
         'role2',
         RoleNodeID.EC2Role,
         PolicyNodeID.ChatImagesS3WritePolicy,
-        ResourceNodeID.TimeshiftLabsEC2Instance
+        ResourceNodeID.TimeshiftLabsEC2Instance,
+        LEVEL_OBJECTIVES[1][0].id
       );
 
-      // Create unnecessary edge from EC2 Role to S3 Read Policy
       await nodes.connectNodes(PolicyNodeID.ChatImagesS3ReadPolicy, RoleNodeID.EC2Role);
 
       await createServiceRole(
@@ -296,7 +324,8 @@ test.describe('Stage 2 - Creating Service Roles in all orders', () => {
         'role3',
         RoleNodeID.LambdaRole,
         PolicyNodeID.ChatImagesS3ReadPolicy,
-        ResourceNodeID.LambdaFunction
+        ResourceNodeID.LambdaFunction,
+        LEVEL_OBJECTIVES[1][1].id
       );
 
       await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[4].popover_title);
@@ -323,26 +352,17 @@ test.describe('Complete Level - End to End', () => {
   }) => {
     await goToLevelAtStage(5, ENCODED_LEVEL_STAGES, 'stage1');
 
-    await test.step('Complete initial popup tutorial', async () => {
+    await test.step('Complete Stage 1 - Tutorial introduction and role basics', async () => {
       await completeInitialPopupTutorial(tutorial);
-    });
-
-    await test.step('Complete role trust policy explanation and attach user', async () => {
+      await verifyInitialLevelSetup(nodes, edges);
       await completeTrustPolicyExplanation(tutorial, nodes);
-      await attachFinanceUserToAuditorRole(tutorial, nodes, edges);
-    });
-
-    await test.step('Create S3 read access role', async () => {
+      await attachFinanceUserToAuditorRole(tutorial, nodes, edges, popups);
       await createS3ReadAccessRole(tutorial, nodes, popups);
+      await attachS3RoleToPolicyAndUser(tutorial, nodes, popups);
     });
 
-    await test.step('Attach S3 role to policy and user', async () => {
-      await attachS3RoleToPolicyAndUser(tutorial, nodes);
-    });
-
-    await test.step('Create service roles (Lambda and EC2)', async () => {
-      await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[3].title);
-      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[3].popover_title);
+    await test.step('Complete Stage 2 - Create service roles', async () => {
+      await completeStage2IntroPopups(tutorial);
 
       await createServiceRole(
         nodes,
@@ -351,7 +371,8 @@ test.describe('Complete Level - End to End', () => {
         'role3',
         RoleNodeID.LambdaRole,
         PolicyNodeID.ChatImagesS3ReadPolicy,
-        ResourceNodeID.LambdaFunction
+        ResourceNodeID.LambdaFunction,
+        LEVEL_OBJECTIVES[1][1].id
       );
 
       await createServiceRole(
@@ -361,7 +382,8 @@ test.describe('Complete Level - End to End', () => {
         'role2',
         RoleNodeID.EC2Role,
         PolicyNodeID.ChatImagesS3WritePolicy,
-        ResourceNodeID.TimeshiftLabsEC2Instance
+        ResourceNodeID.TimeshiftLabsEC2Instance,
+        LEVEL_OBJECTIVES[1][0].id
       );
 
       await expectLevelFinalMessages(tutorial);

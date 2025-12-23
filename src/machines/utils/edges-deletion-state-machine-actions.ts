@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 
-import { BaseFinishEventMap, GenericContext } from '../types';
+import { BaseFinishEventMap, GenericContext } from '@/machines/types';
 
 /**
  * Deletes an edge from the context and all its children

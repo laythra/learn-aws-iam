@@ -1,10 +1,13 @@
 import { ENCODED_LEVEL_STAGES } from './data';
+import { EdgeActions } from '../helpers/edge-actions';
+import { NodeActions } from '../helpers/node-actions';
+import { PopupActions } from '../helpers/popup-actions';
 import { test } from '../helpers/test-fixtures';
+import { TutorialActions } from '../helpers/tutorial-actions';
 import { ElementID } from '@/config/element-ids';
 // prettier-ignore
-import {
-  FIXED_POPOVER_MESSAGES
-} from '@/machines/level2/tutorial_messages/fixed-popover-messages';
+import { LEVEL_OBJECTIVES } from '@/machines/level2/objectives/level-objectives';
+import { FIXED_POPOVER_MESSAGES } from '@/machines/level2/tutorial_messages/fixed-popover-messages';
 // prettier-ignore
 import {
   POPOVER_TUTORIAL_MESSAGES
@@ -19,58 +22,138 @@ import {
   ResourceNodeID,
   UserNodeID,
 } from '@/machines/level2/types/node-id-enums';
+import { IAMNodeEntity } from '@/types';
+
+const createCustomGroupNode = async (popups: PopupActions, name: string): Promise<void> => {
+  await popups.createUserGroupNode(
+    name,
+    ElementID.CreateUserGroupMenuItem,
+    ElementID.IAMIdentityCreatorPopup,
+    IAMNodeEntity.Group
+  );
+};
+
+const createCustomUserNode = async (popups: PopupActions, name: string): Promise<void> => {
+  await popups.createUserGroupNode(
+    name,
+    ElementID.CreateUserGroupMenuItem,
+    ElementID.IAMIdentityCreatorPopup,
+    IAMNodeEntity.User
+  );
+};
+
+const verifyLevelInitialSetup = async (nodes: NodeActions, edges: EdgeActions): Promise<void> => {
+  await nodes.expectVisible(
+    UserNodeID.FirstUser,
+    PolicyNodeID.PolicyNode1,
+    PolicyNodeID.PolicyNode2,
+    PolicyNodeID.PolicyNode3,
+    ResourceNodeID.S3Bucket,
+    ResourceNodeID.EC2Instance,
+    ResourceNodeID.DynamoDBTable
+  );
+
+  await edges.expectVisible(PolicyNodeID.PolicyNode1, UserNodeID.FirstUser);
+  await edges.expectVisible(PolicyNodeID.PolicyNode2, UserNodeID.FirstUser);
+  await edges.expectVisible(PolicyNodeID.PolicyNode3, UserNodeID.FirstUser);
+};
+
+const goThroughInitialTutorial = async (tutorial: TutorialActions): Promise<void> => {
+  await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);
+  await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[0].popover_title);
+  await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[1].popover_title);
+  await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
+};
+
+const completeStage1IntroTutorial = async (tutorial: TutorialActions): Promise<void> => {
+  await tutorial.expectPopoverAndClickNext(
+    UserNodeID.FirstUser,
+    POPOVER_TUTORIAL_MESSAGES[0].popover_title
+  );
+
+  await tutorial.expectPopoverWithoutNextButton(
+    ElementID.NewEntityBtn,
+    POPOVER_TUTORIAL_MESSAGES[1].popover_title
+  );
+};
+
+const verifyStage2InitialSetup = async (nodes: NodeActions): Promise<void> => {
+  await nodes.expectVisible(GroupNodeID.FirstGroup);
+  await nodes.expectMultipleVisible([
+    UserNodeID.FirstUser,
+    PolicyNodeID.PolicyNode1,
+    PolicyNodeID.PolicyNode2,
+    PolicyNodeID.PolicyNode3,
+  ]);
+};
+
+const connectAllPoliciesToGroup = async (nodes: NodeActions, edges: EdgeActions): Promise<void> => {
+  await nodes.connectNodes(PolicyNodeID.PolicyNode1, GroupNodeID.FirstGroup);
+  await edges.expectVisible(PolicyNodeID.PolicyNode1, GroupNodeID.FirstGroup);
+
+  await nodes.connectNodes(PolicyNodeID.PolicyNode2, GroupNodeID.FirstGroup);
+  await edges.expectVisible(PolicyNodeID.PolicyNode2, GroupNodeID.FirstGroup);
+
+  await nodes.connectNodes(PolicyNodeID.PolicyNode3, GroupNodeID.FirstGroup);
+  await edges.expectVisible(PolicyNodeID.PolicyNode3, GroupNodeID.FirstGroup);
+};
+
+const completeStage3IntroTutorial = async (tutorial: TutorialActions): Promise<void> => {
+  await tutorial.expectPopoverAndClickNext(
+    GroupNodeID.FirstGroup,
+    POPOVER_TUTORIAL_MESSAGES[5].popover_title
+  );
+};
+
+const completeLevelFinishPopups = async (tutorial: TutorialActions): Promise<void> => {
+  await tutorial.expectPopoverAndClickNext(
+    UserNodeID.SecondUser,
+    POPOVER_TUTORIAL_MESSAGES[6].popover_title
+  );
+
+  await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
+};
 
 test.describe('Stage 1 - Introduction to IAM Groups', () => {
-  test('Initial Tutorial and Setup Flow', async ({ tutorial, nodes, edges, goToLevelAtStage }) => {
+  test('Initial Tutorial and Setup Flow', async ({
+    tutorial,
+    nodes,
+    edges,
+    goToLevelAtStage,
+    popups,
+  }) => {
     await goToLevelAtStage(2, ENCODED_LEVEL_STAGES, 'stage1');
 
     await test.step('Complete initial popup tutorial about IAM Groups', async () => {
-      await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);
-    });
-
-    await test.step('Navigate through fixed popovers explaining current setup', async () => {
-      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[0].popover_title);
-      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[1].popover_title);
-      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
+      await goThroughInitialTutorial(tutorial);
     });
 
     await test.step('Verify initial setup with user, policies, and resources', async () => {
-      await nodes.expectVisible(
-        UserNodeID.FirstUser,
-        PolicyNodeID.PolicyNode1,
-        PolicyNodeID.PolicyNode2,
-        PolicyNodeID.PolicyNode3,
-        ResourceNodeID.S3Bucket,
-        ResourceNodeID.EC2Instance,
-        ResourceNodeID.DynamoDBTable
-      );
-
-      // Verify initial connections from policies to user
-      await edges.expectVisible(PolicyNodeID.PolicyNode1, UserNodeID.FirstUser);
-      await edges.expectVisible(PolicyNodeID.PolicyNode2, UserNodeID.FirstUser);
-      await edges.expectVisible(PolicyNodeID.PolicyNode3, UserNodeID.FirstUser);
+      await verifyLevelInitialSetup(nodes, edges);
     });
 
     await test.step('Introduction to creating IAM Group', async () => {
-      await tutorial.expectPopoverAndClickNext(
-        UserNodeID.FirstUser,
-        POPOVER_TUTORIAL_MESSAGES[0].popover_title
-      );
+      await completeStage1IntroTutorial(tutorial);
+    });
 
-      await tutorial.expectPopoverWithoutNextButton(
-        ElementID.NewEntityBtn,
-        POPOVER_TUTORIAL_MESSAGES[1].popover_title
-      );
+    await test.step('Create first IAM Group', async () => {
+      await createCustomGroupNode(popups, 'DevTeam');
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
     });
   });
 });
 
 test.describe('Stage 2 - Attach Users and Policies to Group', () => {
-  test('Connect user first, then all policies', async ({ nodes, edges, goToLevelAtStage }) => {
+  test('Connect user first, then all policies', async ({
+    nodes,
+    edges,
+    goToLevelAtStage,
+    popups,
+  }) => {
     await goToLevelAtStage(2, ENCODED_LEVEL_STAGES, 'stage2');
 
     await test.step('Verify group already exists from previous stage', async () => {
-      await nodes.expectVisible(GroupNodeID.FirstGroup);
+      await verifyStage2InitialSetup(nodes);
     });
 
     await test.step('Connect user to group first', async () => {
@@ -79,14 +162,8 @@ test.describe('Stage 2 - Attach Users and Policies to Group', () => {
     });
 
     await test.step('Connect all policies to group', async () => {
-      await nodes.connectNodes(PolicyNodeID.PolicyNode1, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode1, GroupNodeID.FirstGroup);
-
-      await nodes.connectNodes(PolicyNodeID.PolicyNode2, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode2, GroupNodeID.FirstGroup);
-
-      await nodes.connectNodes(PolicyNodeID.PolicyNode3, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode3, GroupNodeID.FirstGroup);
+      await connectAllPoliciesToGroup(nodes, edges);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 
@@ -98,14 +175,7 @@ test.describe('Stage 2 - Attach Users and Policies to Group', () => {
     });
 
     await test.step('Connect all policies to group first', async () => {
-      await nodes.connectNodes(PolicyNodeID.PolicyNode1, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode1, GroupNodeID.FirstGroup);
-
-      await nodes.connectNodes(PolicyNodeID.PolicyNode2, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode2, GroupNodeID.FirstGroup);
-
-      await nodes.connectNodes(PolicyNodeID.PolicyNode3, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode3, GroupNodeID.FirstGroup);
+      await connectAllPoliciesToGroup(nodes, edges);
     });
 
     await test.step('Connect user to group', async () => {
@@ -177,7 +247,6 @@ test.describe('Stage 2 - Attach Users and Policies to Group', () => {
     });
 
     await test.step('Add unnecessary edge first (policy to user directly)', async () => {
-      // Connect an old-style direct connection that should no longer exist
       await nodes.connectNodes(PolicyNodeID.PolicyNode1, UserNodeID.FirstUser);
       await edges.expectVisible(PolicyNodeID.PolicyNode1, UserNodeID.FirstUser);
     });
@@ -186,18 +255,10 @@ test.describe('Stage 2 - Attach Users and Policies to Group', () => {
       await nodes.connectNodes(UserNodeID.FirstUser, GroupNodeID.FirstGroup);
       await edges.expectVisible(UserNodeID.FirstUser, GroupNodeID.FirstGroup);
 
-      await nodes.connectNodes(PolicyNodeID.PolicyNode1, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode1, GroupNodeID.FirstGroup);
-
-      await nodes.connectNodes(PolicyNodeID.PolicyNode2, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode2, GroupNodeID.FirstGroup);
-
-      await nodes.connectNodes(PolicyNodeID.PolicyNode3, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode3, GroupNodeID.FirstGroup);
+      await connectAllPoliciesToGroup(nodes, edges);
     });
 
     await test.step('Verify unnecessary edges warning appears', async () => {
-      // The warning should appear because Policy1->User1 edge is unnecessary
       await tutorial.expectUnnecessaryEdgesNodesWarning(true);
     });
   });
@@ -220,18 +281,11 @@ test.describe('Stage 3 - Create Second User and Attach to Group', () => {
     });
 
     await test.step('Skip the tutorial popover', async () => {
-      await tutorial.expectPopoverAndClickNext(
-        GroupNodeID.FirstGroup,
-        POPOVER_TUTORIAL_MESSAGES[5].popover_title
-      );
+      await completeStage3IntroTutorial(tutorial);
     });
 
     await test.step('Create second user', async () => {
-      await popups.submitCreateEntityPopup(
-        'User2',
-        ElementID.CreateEntitiesMenuItem,
-        ElementID.IAMIdentityCreatorPopup
-      );
+      await createCustomUserNode(popups, 'User2');
       await nodes.expectVisible(UserNodeID.SecondUser);
     });
 
@@ -240,15 +294,8 @@ test.describe('Stage 3 - Create Second User and Attach to Group', () => {
       await edges.expectVisible(UserNodeID.SecondUser, GroupNodeID.FirstGroup);
     });
 
-    await test.step('Verify level completion popover appears', async () => {
-      await tutorial.expectPopoverAndClickNext(
-        UserNodeID.SecondUser,
-        POPOVER_TUTORIAL_MESSAGES[6].popover_title
-      );
-    });
-
-    await test.step('Verify level complete popup appears', async () => {
-      await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
+    await test.step('Verify level completion', async () => {
+      await completeLevelFinishPopups(tutorial);
     });
   });
 
@@ -262,24 +309,16 @@ test.describe('Stage 3 - Create Second User and Attach to Group', () => {
     await goToLevelAtStage(2, ENCODED_LEVEL_STAGES, 'stage3');
 
     await test.step('Skip the tutorial popover', async () => {
-      await tutorial.expectPopoverAndClickNext(
-        GroupNodeID.FirstGroup,
-        POPOVER_TUTORIAL_MESSAGES[5].popover_title
-      );
+      await completeStage3IntroTutorial(tutorial);
     });
 
     await test.step('Create unnecessary edge before completing level', async () => {
-      // Add a direct policy to user connection (old style, unnecessary)
       await nodes.connectNodes(PolicyNodeID.PolicyNode1, UserNodeID.FirstUser);
       await edges.expectVisible(PolicyNodeID.PolicyNode1, UserNodeID.FirstUser);
     });
 
     await test.step('Create second user and attach to group', async () => {
-      await popups.submitCreateEntityPopup(
-        'User2',
-        ElementID.CreateEntitiesMenuItem,
-        ElementID.IAMIdentityCreatorPopup
-      );
+      await createCustomUserNode(popups, 'JaneDevOps');
       await nodes.expectVisible(UserNodeID.SecondUser);
 
       await nodes.connectNodes(UserNodeID.SecondUser, GroupNodeID.FirstGroup);
@@ -301,96 +340,49 @@ test.describe('Stage 3 - Create Second User and Attach to Group', () => {
 
 test.describe('Complete Level - End to End', () => {
   test('Complete full level flow - user first approach', async ({
-    page,
     tutorial,
     nodes,
     edges,
     popups,
-    goToLevel,
+    goToLevelAtStage,
   }) => {
-    await test.step('Navigate to Level 2', async () => {
-      await goToLevel(2);
-      await page.goto('http://localhost:5173');
-    });
+    await goToLevelAtStage(2, ENCODED_LEVEL_STAGES, 'stage1');
 
-    await test.step('Complete initial IAM Groups introduction', async () => {
-      await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);
+    await test.step('Complete Stage 1 - Initial tutorial and group creation', async () => {
+      await goThroughInitialTutorial(tutorial);
+      await verifyLevelInitialSetup(nodes, edges);
+      await completeStage1IntroTutorial(tutorial);
 
-      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[0].popover_title);
-      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[1].popover_title);
-      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
-
-      await nodes.expectVisible(
-        UserNodeID.FirstUser,
-        PolicyNodeID.PolicyNode1,
-        PolicyNodeID.PolicyNode2,
-        PolicyNodeID.PolicyNode3,
-        ResourceNodeID.S3Bucket,
-        ResourceNodeID.EC2Instance,
-        ResourceNodeID.DynamoDBTable
-      );
-
-      await tutorial.expectPopoverAndClickNext(
-        UserNodeID.FirstUser,
-        POPOVER_TUTORIAL_MESSAGES[0].popover_title
-      );
-
-      await tutorial.expectPopoverWithoutNextButton(
-        ElementID.NewEntityBtn,
-        POPOVER_TUTORIAL_MESSAGES[1].popover_title
-      );
-    });
-
-    await test.step('Create group and attach user first, then policies', async () => {
-      await popups.submitCreateEntityPopup(
-        'DevTeam',
-        ElementID.CreateEntitiesMenuItem,
-        ElementID.IAMIdentityCreatorPopup
-      );
-
+      await createCustomGroupNode(popups, 'DevTeam');
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
       await nodes.expectVisible(GroupNodeID.FirstGroup);
+    });
 
+    await test.step('Complete Stage 2 - Attach user and policies to group', async () => {
       await nodes.connectNodes(UserNodeID.FirstUser, GroupNodeID.FirstGroup);
       await edges.expectVisible(UserNodeID.FirstUser, GroupNodeID.FirstGroup);
 
-      await nodes.connectNodes(PolicyNodeID.PolicyNode1, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode1, GroupNodeID.FirstGroup);
-
-      await nodes.connectNodes(PolicyNodeID.PolicyNode2, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode2, GroupNodeID.FirstGroup);
-
-      await nodes.connectNodes(PolicyNodeID.PolicyNode3, GroupNodeID.FirstGroup);
-      await edges.expectVisible(PolicyNodeID.PolicyNode3, GroupNodeID.FirstGroup);
+      await connectAllPoliciesToGroup(nodes, edges);
 
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.FirstUser,
         POPOVER_TUTORIAL_MESSAGES[4].popover_title
       );
+
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
 
-    await test.step('Create second user and attach to group', async () => {
-      await tutorial.expectPopoverAndClickNext(
-        GroupNodeID.FirstGroup,
-        POPOVER_TUTORIAL_MESSAGES[5].popover_title
-      );
+    await test.step('Complete Stage 3 - Create second user and finish level', async () => {
+      await completeStage3IntroTutorial(tutorial);
 
-      await popups.submitCreateEntityPopup(
-        'JaneDevOps',
-        ElementID.CreateEntitiesMenuItem,
-        ElementID.IAMIdentityCreatorPopup
-      );
-
+      await createCustomUserNode(popups, 'JaneDevOps');
       await nodes.expectVisible(UserNodeID.SecondUser);
 
       await nodes.connectNodes(UserNodeID.SecondUser, GroupNodeID.FirstGroup);
       await edges.expectVisible(UserNodeID.SecondUser, GroupNodeID.FirstGroup);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
 
-      await tutorial.expectPopoverAndClickNext(
-        UserNodeID.SecondUser,
-        POPOVER_TUTORIAL_MESSAGES[6].popover_title
-      );
-
-      await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
+      await completeLevelFinishPopups(tutorial);
     });
   });
 });
