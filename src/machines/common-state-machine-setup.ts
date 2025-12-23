@@ -2,10 +2,7 @@ import _ from 'lodash';
 import { setup, enqueueActions, assign, AnyActorLogic, Actor } from 'xstate';
 
 import { applyInitialNodeConnections } from './utils/apply-initial-edges-state-machine-actions';
-import {
-  changeLevelObjectiveProgress,
-  getElementsWithRedDot,
-} from './utils/common-state-machine-actions';
+import { editObjectiveState, getElementsWithRedDot } from './utils/common-state-machine-actions';
 import { updateConnectionEdges } from './utils/edges-creation-state-machine-actions';
 import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-actions';
 import { createIAMNode, createUserGroupNode } from './utils/nodes-creation-state-machine-actions';
@@ -152,19 +149,14 @@ export const createStateMachineSetup = <
         });
       }),
       delete_nodes: enqueueActions(({ context, enqueue }, { nodeIds }: { nodeIds: string[] }) => {
-        const nodes = context.nodes.filter(node => nodeIds.includes(node.id));
-        let updatedContext = context;
-
-        nodes.forEach(node => {
-          ({ updatedContext } = deleteNode<TLevelObjectiveID, TFinishEventMap>(
-            updatedContext,
-            node
-          ));
-        });
-
-        enqueue.assign({
-          nodes: updatedContext.nodes,
-          edges: updatedContext.edges,
+        nodeIds.forEach(nodeId => {
+          const node = context.nodes.find(n => n.id === nodeId);
+          if (node) {
+            enqueue.raise({
+              type: StatefulStateMachineEvent.DeleteNode,
+              node,
+            });
+          }
         });
       }),
       add_iam_user_group_node: enqueueActions(
@@ -241,23 +233,7 @@ export const createStateMachineSetup = <
       hide_fixed_popovers: assign({ show_fixed_popovers: false }),
       hide_popups: assign({ show_popups: false }),
       hide_popovers: assign({ show_popovers: false }),
-      change_objective_progress: enqueueActions(
-        ({ context, enqueue }, { id, finished }: { id: string; finished: boolean }) => {
-          const updatedLevelObjectives = changeLevelObjectiveProgress(context, id, finished);
-
-          enqueue.assign({
-            level_objectives: updatedLevelObjectives,
-          });
-
-          // Emit event to notify `ObjectiveCompletePopover` components about objective progress change
-          enqueue.emit(({ context: emissionCtx }) => ({
-            type: 'OBJECTIVE_COMPLETED',
-            message: emissionCtx.level_objectives.find(obj => obj.id === id)!.label,
-            objective_id: id,
-          }));
-        }
-      ),
-      add_new_level_objective: assign({
+      append_level_objectives: assign({
         level_objectives: (
           { context },
           { objectives }: { objectives: LevelObjective<TLevelObjectiveID, TFinishEventMap>[] }
@@ -273,18 +249,18 @@ export const createStateMachineSetup = <
         restricted_element_ids: (__, { element_ids }: { element_ids: ElementID[] }) => element_ids,
       }),
       finish_level_objective: enqueueActions(({ context, enqueue }, { id }: { id: string }) => {
-        const updatedLevelObjectives = changeLevelObjectiveProgress(context, id, true);
+        const updatedLevelObjectives = editObjectiveState(context, id, true);
 
         enqueue.assign({
           level_objectives: updatedLevelObjectives,
         });
 
         // Emit event to notify `ObjectiveCompletePopover` components about objective progress change
-        // enqueue.emit(({ context: emissionCtx }) => ({
-        //   type: 'OBJECTIVE_COMPLETED',
-        //   message: emissionCtx.level_objectives.find(obj => obj.id === id)!.label,
-        //   objective_id: id,
-        // }));
+        enqueue.emit(({ context: emissionCtx }) => ({
+          type: 'OBJECTIVE_COMPLETED',
+          message: emissionCtx.level_objectives.find(obj => obj.id === id)!.label,
+          objective_id: id,
+        }));
       }),
       add_iam_node: enqueueActions(
         (
@@ -487,14 +463,6 @@ export const createStateMachineSetup = <
           const updatedContext = deaggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(
             context,
             nodeId
-          );
-
-          console.log('Is the new context the same as the old one?', context === updatedContext);
-          console.log(
-            'The old nodes were:',
-            context.nodes.length,
-            "The new one's are:",
-            updatedContext.nodes.length
           );
 
           enqueue.assign({

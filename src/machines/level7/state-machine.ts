@@ -49,7 +49,7 @@ export const stateMachine = createStateMachineSetup<
       ElementID.CodeEditorSCPTab,
       ElementID.CodeEditorRoleTab,
       ElementID.CodeEditorPermissionBoundaryTab,
-      ElementID.CreateEntitiesMenuItem,
+      ElementID.CreateUserGroupMenuItem,
     ],
     resource_policy_creation_objectives: [],
     layout_groups: COMMON_LAYOUT_GROUPS,
@@ -149,7 +149,7 @@ export const stateMachine = createStateMachineSetup<
             ],
           },
         },
-        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
+        { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
         {
           type: 'append_creation_objectives',
           params: {
@@ -286,7 +286,7 @@ export const stateMachine = createStateMachineSetup<
               },
             },
             {
-              type: 'add_new_level_objective',
+              type: 'append_level_objectives',
               params: { objectives: LEVEL_OBJECTIVES[1] },
             },
             {
@@ -363,7 +363,7 @@ export const stateMachine = createStateMachineSetup<
               type: 'remove_restricted_element_ids',
               params: { element_ids: [ElementID.CodeEditorResourcePolicyTab] },
             },
-            { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[2] } },
+            { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[2] } },
             {
               type: 'append_creation_objectives',
               params: { objectives: RESOURCE_POLICY_CREATION_OBJECTIVES[1] },

@@ -3,7 +3,7 @@ import { and, not } from 'xstate';
 import { INITIAL_CONNECTIONS } from './initial-connections';
 import { INITIAL_LEVEL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
-import { HIDDEN_LEVEL_OBJECTIVES, LEVEL_OBJECTIVES } from './objectives/level-objectives';
+import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { USER_GROUP_CREATION_OBJECTIVES } from './objectives/user-group-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
@@ -41,7 +41,7 @@ export const stateMachine = createStateMachineSetup<
     show_fixed_popovers: false,
     nodes: [],
     edges: [],
-    level_objectives: LEVEL_OBJECTIVES,
+    level_objectives: LEVEL_OBJECTIVES[0],
     policy_creation_objectives: [],
     policy_edit_objectives: [],
     edges_connection_objectives: [],
@@ -161,7 +161,7 @@ export const stateMachine = createStateMachineSetup<
           params: {
             whitelisted_element_ids: [
               ElementID.NewEntityBtn,
-              ElementID.CreateEntitiesMenuItem,
+              ElementID.CreateUserGroupMenuItem,
               ElementID.IdentityCreationPopupGroupTab,
             ],
           },
@@ -179,8 +179,8 @@ export const stateMachine = createStateMachineSetup<
         [UserGroupCreationFinishEvent.GroupCreated]: {
           actions: [
             {
-              type: 'change_objective_progress',
-              params: { id: 'create_iam_group', finished: true },
+              type: 'finish_level_objective',
+              params: { id: 'create_iam_group' },
             },
           ],
           target: 'attach_nodes_to_group_tooltip',
@@ -211,8 +211,8 @@ export const stateMachine = createStateMachineSetup<
           guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
           actions: [
             {
-              type: 'change_objective_progress',
-              params: { id: LevelObjectiveID.MakeScalingEasier, finished: true },
+              type: 'finish_level_objective',
+              params: { id: LevelObjectiveID.MakeScalingEasier },
             },
           ],
           target: 'remove_unnecessary_edges_and_nodes',
@@ -221,8 +221,8 @@ export const stateMachine = createStateMachineSetup<
           guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
           actions: [
             {
-              type: 'change_objective_progress',
-              params: { id: LevelObjectiveID.MakeScalingEasier, finished: true },
+              type: 'finish_level_objective',
+              params: { id: LevelObjectiveID.MakeScalingEasier },
             },
           ],
           target: 'attach_your_user_to_group',
@@ -312,8 +312,8 @@ export const stateMachine = createStateMachineSetup<
       entry: [
         'hide_unncessary_edges_or_nodes_warning',
         {
-          type: 'add_new_level_objective',
-          params: { objectives: HIDDEN_LEVEL_OBJECTIVES },
+          type: 'append_level_objectives',
+          params: { objectives: LEVEL_OBJECTIVES[1] },
         },
       ],
       states: {
@@ -360,8 +360,8 @@ export const stateMachine = createStateMachineSetup<
             [EdgeConnectionFinishEvent.User2AttachedToGroup]: {
               actions: [
                 {
-                  type: 'change_objective_progress',
-                  params: { id: LevelObjectiveID.AttachUserToGroup, finished: true },
+                  type: 'finish_level_objective',
+                  params: { id: LevelObjectiveID.AttachUserToGroup },
                 },
               ],
               target: 'user_attached',

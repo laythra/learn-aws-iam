@@ -117,7 +117,7 @@ export const stateMachine = createStateMachineSetup<
           type: 'assign_nodes',
           params: { nodes: INITIAL_TUTORIAL_NODES },
         },
-        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[0] } },
+        { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
         {
           type: 'apply_initial_node_connections',
           params: { initialConnections: INITIAL_TUTORIAL_CONNECTIONS },
@@ -203,7 +203,7 @@ export const stateMachine = createStateMachineSetup<
         'store_checkpoint',
         'hide_popovers',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
-        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
+        { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
       ],
       initial: 'popup3',
       states: {

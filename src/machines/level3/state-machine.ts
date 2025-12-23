@@ -261,7 +261,7 @@ export const stateMachine = createStateMachineSetup<
       entry: [
         'clear_creation_objectives',
         'store_checkpoint',
-        { type: 'add_new_level_objective', params: { objectives: LEVEL_OBJECTIVES[1] } },
+        { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         {
           type: 'apply_initial_node_connections',

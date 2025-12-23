@@ -50,7 +50,7 @@ export const stateMachine = createStateMachineSetup<
     role_creation_objectives: [],
     side_panel_open: false,
     restricted_element_ids: [
-      ElementID.CreateEntitiesMenuItem,
+      ElementID.CreateUserGroupMenuItem,
       ElementID.CodeEditorResourcePolicyTab,
       ElementID.CodeEditorSCPTab,
       ElementID.CodeEditorPermissionBoundaryTab,
