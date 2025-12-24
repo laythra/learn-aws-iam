@@ -5,9 +5,9 @@ import { applyInitialNodeConnections } from './utils/apply-initial-edges-state-m
 import { editObjectiveState, getElementsWithRedDot } from './utils/common-state-machine-actions';
 import {
   applyGuardRailBlockingToEdges,
+  deleteConnectionEdges,
   updateConnectionEdges,
 } from './utils/edges-creation-state-machine-actions';
-import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-actions';
 import { createIAMNode, createUserGroupNode } from './utils/nodes-creation-state-machine-actions';
 import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
 import {
@@ -182,10 +182,12 @@ export const createStateMachineSetup = <
       delete_node: enqueueActions(({ context, enqueue }, { node }: { node: IAMAnyNode }) => {
         const { updatedContext } = deleteNode<TLevelObjectiveID, TFinishEventMap>(context, node);
 
-        enqueue.assign({
-          nodes: updatedContext.nodes,
-          edges: updatedContext.edges,
-        });
+        const edgesToDelete = updatedContext.edges
+          .filter(edge => edge.source === node.id || edge.target === node.id)
+          .map(edge => edge.id);
+
+        enqueue.assign({ nodes: updatedContext.nodes, edges: updatedContext.edges });
+        enqueue.raise({ type: StatefulStateMachineEvent.DeleteEdges, edgeIds: edgesToDelete });
       }),
       delete_nodes: enqueueActions(({ context, enqueue }, { nodeIds }: { nodeIds: string[] }) => {
         nodeIds.forEach(nodeId => {

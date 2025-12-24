@@ -167,6 +167,10 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       node: IAMAnyNode;
     }
   | {
+      type: StatefulStateMachineEvent.DeleteEdges;
+      edgeIds: string[];
+    }
+  | {
       type: StatefulStateMachineEvent.DeaggregateUserNodes;
       nodeId: string;
     }
