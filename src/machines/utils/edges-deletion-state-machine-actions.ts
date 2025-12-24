@@ -20,6 +20,7 @@ export function deleteConnectionEdges<
   const updatedContext = produce(context, draftContext => {
     const deletedEdges: string[] = [];
 
+    // Using basic recursion to delete edges and their dependents
     function deleteEdge(edgeId: string): void {
       const dependents = draftContext.edges.filter(edge => edge.data!.parent_edge_id === edgeId);
 

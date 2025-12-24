@@ -3,7 +3,10 @@ import { setup, enqueueActions, assign, AnyActorLogic, Actor } from 'xstate';
 
 import { applyInitialNodeConnections } from './utils/apply-initial-edges-state-machine-actions';
 import { editObjectiveState, getElementsWithRedDot } from './utils/common-state-machine-actions';
-import { updateConnectionEdges } from './utils/edges-creation-state-machine-actions';
+import {
+  applyGuardRailBlockingToEdges,
+  updateConnectionEdges,
+} from './utils/edges-creation-state-machine-actions';
 import { deleteConnectionEdges } from './utils/edges-deletion-state-machine-actions';
 import { createIAMNode, createUserGroupNode } from './utils/nodes-creation-state-machine-actions';
 import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
@@ -42,7 +45,7 @@ import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 /**
  * Defines a common state machine setup for all levels
  *
- * This is best way in which we can share common actions among different state machines
+ * This is best way through which we can share common actions among different state machines
  * without having to redefine the same actions in each one, which would surely be harder to maintain.
  * We still need to define the various top-level events for each state machine,
  * ie: `ADD_IAM_USER_NODE`, `ADD_IAM_POLICY_NODE`, etc.
@@ -65,11 +68,24 @@ export const createStateMachineSetup = <
     types: {} as {
       context: GenericContext<TLevelObjectiveID, TFinishEventMap>;
       events: GenericEventData<TFinishEventMap>;
-      emitted: {
-        type: 'OBJECTIVE_COMPLETED';
-        message: string;
-        objective_id: string;
-      };
+      emitted:
+        | {
+            type: 'OBJECTIVE_COMPLETED';
+            message: string;
+            objective_id: string;
+          }
+        | {
+            type: 'EDGES_DELETED';
+            edgeIds: string[];
+          }
+        | {
+            type: 'EDGES_RESET';
+            edges: IAMEdge[];
+          }
+        | {
+            type: 'EDGES_ADDED';
+            edges: IAMEdge[];
+          };
     },
     guards: {
       no_unnecessary_edges: ({ context }) => {
@@ -93,19 +109,26 @@ export const createStateMachineSetup = <
             isInternalConnection?: boolean;
           }
         ) => {
-          const { updatedContext, events } = updateConnectionEdges<
+          const { updatedContext, events, newlyAddedEdges } = updateConnectionEdges<
             TLevelObjectiveID,
             TFinishEventMap
           >(context, sourceNode, targetNode, isInternalConnection ?? false);
 
-          const updatedEdges = _.chain(updatedContext.edges)
-            .sortBy(e => e.data?.unnecessary_edge)
-            .uniqBy('id')
-            .value();
+          const { edgesAfterBlocking, newlyAddedEdgesAfterBlocking } =
+            applyGuardRailBlockingToEdges(
+              updatedContext.edges,
+              newlyAddedEdges,
+              context.level_number
+            );
 
           enqueue.assign({
-            edges: updatedEdges,
+            edges: edgesAfterBlocking,
           });
+
+          enqueue.emit(() => ({
+            type: 'EDGES_ADDED',
+            edges: newlyAddedEdgesAfterBlocking,
+          }));
 
           events.forEach(event => enqueue.raise({ type: event }));
         }
@@ -139,6 +162,22 @@ export const createStateMachineSetup = <
         );
 
         enqueue.assign({ edges: updatedContext.edges });
+        enqueue.emit(() => ({
+          type: 'EDGES_DELETED',
+          edgeIds: [edge.id],
+        }));
+      }),
+      delete_edges: enqueueActions(({ context, enqueue }, { edgeIds }: { edgeIds: string[] }) => {
+        const { updatedContext } = deleteConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
+          context,
+          edgeIds
+        );
+
+        enqueue.assign({ edges: updatedContext.edges });
+        enqueue.emit(() => ({
+          type: 'EDGES_DELETED',
+          edgeIds,
+        }));
       }),
       delete_node: enqueueActions(({ context, enqueue }, { node }: { node: IAMAnyNode }) => {
         const { updatedContext } = deleteNode<TLevelObjectiveID, TFinishEventMap>(context, node);
@@ -388,7 +427,15 @@ export const createStateMachineSetup = <
       hide_unncessary_edges_or_nodes_warning: assign({
         show_unncessary_edges_or_nodes_warning: false,
       }),
-      clear_edges: assign({ edges: [] }),
+      // clear_edges: assign({ edges: [] }),
+      clear_edges: enqueueActions(({ enqueue }) => {
+        enqueue.emit(() => ({
+          type: 'EDGES_RESET',
+          edges: [],
+        }));
+
+        enqueue.assign({ edges: [] });
+      }),
       clear_nodes: assign({ nodes: [] }),
       clear_creation_objectives: assign({
         policy_creation_objectives: [],
@@ -405,6 +452,11 @@ export const createStateMachineSetup = <
           enqueue.assign({
             edges: initialEdgesConfig.edges,
           });
+
+          enqueue.emit(() => ({
+            type: 'EDGES_RESET',
+            edges: initialEdgesConfig.edges,
+          }));
         }
       ),
       assign_nodes: assign({

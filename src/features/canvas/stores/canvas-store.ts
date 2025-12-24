@@ -28,6 +28,7 @@ type CanvasStoreEvents = {
   hoverOverEdge: { edgeId?: string };
   setNodes: { nodes: IAMAnyNode[] };
   setEdges: { edges: IAMEdge[] };
+  syncEdgesFromMachine: { edges: IAMEdge[] };
   updateNodePosition: { nodeId: string; position: { x: number; y: number } };
   updateSelectedNodeId: { nodeId: string };
   openNodePanel: { nodeId: string; panel: 'content' | 'tags' | 'arn' | 'users-list' | undefined };
@@ -36,67 +37,70 @@ type CanvasStoreEvents = {
   toggleAccountCollapse: {
     accountId: string;
   };
+  markEdgesForDeletion: { edgeIds: string[] };
+  finalizeEdgeDeletion: { edgeId: string };
+  addEdges: { edges: IAMEdge[] };
 };
 
 export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStoreEvents>(produce, {
   context: { nodes: [], edges: [] },
   on: {
-    changeNodesState: (context: CanvasStoreState, event: { changes: NodeChange<IAMAnyNode>[] }) => {
-      context.nodes = applyNodeChanges(event.changes, context.nodes);
+    changeNodesState: (ctx: CanvasStoreState, event: { changes: NodeChange<IAMAnyNode>[] }) => {
+      ctx.nodes = applyNodeChanges(event.changes, ctx.nodes);
     },
-    changeEdgesState: (context: CanvasStoreState, event: { changes: EdgeChange<IAMEdge>[] }) => {
-      context.edges = applyEdgeChanges(event.changes, context.edges);
+    changeEdgesState: (ctx: CanvasStoreState, event: { changes: EdgeChange<IAMEdge>[] }) => {
+      ctx.edges = applyEdgeChanges(event.changes, ctx.edges);
     },
-    hoverOverEdge: (context: CanvasStoreState, event: { edgeId?: string }) => {
-      context.hoveredOverEdgeId = event.edgeId;
+    hoverOverEdge: (ctx: CanvasStoreState, event: { edgeId?: string }) => {
+      ctx.hoveredOverEdgeId = event.edgeId;
     },
-    selectEdge: (context: CanvasStoreState, event: { edgeId?: string }) => {
-      context.selectedEdgeId = event.edgeId;
+    selectEdge: (ctx: CanvasStoreState, event: { edgeId?: string }) => {
+      ctx.selectedEdgeId = event.edgeId;
     },
-    setNodes: (context: CanvasStoreState, event: { nodes: IAMAnyNode[] }) => {
-      context.nodes = event.nodes;
+    setNodes: (ctx: CanvasStoreState, event: { nodes: IAMAnyNode[] }) => {
+      ctx.nodes = event.nodes;
     },
-    setEdges: (context: CanvasStoreState, event: { edges: IAMEdge[] }) => {
-      context.edges = event.edges;
+    setEdges: (ctx: CanvasStoreState, event: { edges: IAMEdge[] }) => {
+      ctx.edges = event.edges;
     },
     updateNodePosition(
-      context: CanvasStoreState,
+      ctx: CanvasStoreState,
       event: { nodeId: string; position: { x: number; y: number } }
     ) {
-      context.nodes.find(nd => nd.id === event.nodeId)!.position = event.position;
+      ctx.nodes.find(nd => nd.id === event.nodeId)!.position = event.position;
     },
-    updateSelectedNodeId(context: CanvasStoreState, event: { nodeId: string }) {
-      context.selectedNodeId = event.nodeId;
-      context.nodes.forEach(node => (node.zIndex = 0));
-      context.nodes.find(node => node.id == event.nodeId)!.zIndex = 10000;
+    updateSelectedNodeId(ctx: CanvasStoreState, event: { nodeId: string }) {
+      ctx.selectedNodeId = event.nodeId;
+      ctx.nodes.forEach(node => (node.zIndex = 0));
+      ctx.nodes.find(node => node.id == event.nodeId)!.zIndex = 10000;
     },
     openNodePanel(
-      context: CanvasStoreState,
+      ctx: CanvasStoreState,
       event: { nodeId: string; panel: 'content' | 'tags' | 'arn' | 'users-list' | undefined }
     ) {
-      context.selectedNodeId = event.nodeId;
-      context.nodeIdWithOpenedContent = event.panel === 'content' ? event.nodeId : undefined;
-      context.nodeIdWithOpenedTags = event.panel === 'tags' ? event.nodeId : undefined;
-      context.nodeIdWithOpenedARN = event.panel === 'arn' ? event.nodeId : undefined;
-      context.nodeIdWithOpenedUsersList = event.panel === 'users-list' ? event.nodeId : undefined;
+      ctx.selectedNodeId = event.nodeId;
+      ctx.nodeIdWithOpenedContent = event.panel === 'content' ? event.nodeId : undefined;
+      ctx.nodeIdWithOpenedTags = event.panel === 'tags' ? event.nodeId : undefined;
+      ctx.nodeIdWithOpenedARN = event.panel === 'arn' ? event.nodeId : undefined;
+      ctx.nodeIdWithOpenedUsersList = event.panel === 'users-list' ? event.nodeId : undefined;
     },
-    closeAllNodePanels(context: CanvasStoreState) {
-      context.nodeIdWithOpenedContent = undefined;
-      context.nodeIdWithOpenedTags = undefined;
-      context.nodeIdWithOpenedARN = undefined;
-      context.nodeIdWithOpenedUsersList = undefined;
+    closeAllNodePanels(ctx: CanvasStoreState) {
+      ctx.nodeIdWithOpenedContent = undefined;
+      ctx.nodeIdWithOpenedTags = undefined;
+      ctx.nodeIdWithOpenedARN = undefined;
+      ctx.nodeIdWithOpenedUsersList = undefined;
     },
-    clearCanvas(context: CanvasStoreState) {
-      context.nodes = [];
-      context.edges = [];
+    clearCanvas(ctx: CanvasStoreState) {
+      ctx.nodes = [];
+      ctx.edges = [];
     },
     toggleAccountCollapse(
-      context: CanvasStoreState,
+      ctx: CanvasStoreState,
       event: {
         accountId: string;
       }
     ) {
-      const accountNode = context.nodes.find(
+      const accountNode = ctx.nodes.find(
         node => node.id === event.accountId && node.data.entity === IAMNodeEntity.Account
       );
 
@@ -105,10 +109,42 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
       const isCollapsed = accountNode.data.collapsed;
       accountNode.data.collapsed = !isCollapsed;
 
-      const childNodes = context.nodes.filter(node => node.parentId === event.accountId);
+      const childNodes = ctx.nodes.filter(node => node.parentId === event.accountId);
       childNodes.forEach(childNode => {
         childNode.hidden = !isCollapsed;
       });
+    },
+    markEdgesForDeletion(ctx: CanvasStoreState, event: { edgeIds: string[] }) {
+      console.log('Marking edges for deletion:', event.edgeIds);
+      ctx.edges.forEach(edge => {
+        if (event.edgeIds.includes(edge.id) && edge.data) {
+          edge.data.deletion_in_progress = true;
+        }
+      });
+    },
+    finalizeEdgeDeletion(ctx: CanvasStoreState, event: { edgeId: string }) {
+      ctx.edges = ctx.edges.filter(edge => edge.id !== event.edgeId);
+    },
+    syncEdgesFromMachine: (ctx, { edges: machineEdges }) => {
+      const deletingIds = new Set(
+        ctx.edges.filter((e: IAMEdge) => e.data?.deletion_in_progress).map((e: IAMEdge) => e.id)
+      );
+
+      const nextEdges = machineEdges.map(edge => {
+        const existing = ctx.edges.find((e: IAMEdge) => e.id === edge.id);
+        return existing ?? edge;
+      });
+
+      for (const edge of ctx.edges) {
+        if (deletingIds.has(edge.id) && !nextEdges.some((e: IAMEdge) => e.id === edge.id)) {
+          nextEdges.push(edge);
+        }
+      }
+
+      ctx.edges = nextEdges;
+    },
+    addEdges(ctx: CanvasStoreState, event: { edges: IAMEdge[] }) {
+      ctx.edges.push(...event.edges);
     },
   },
 });
