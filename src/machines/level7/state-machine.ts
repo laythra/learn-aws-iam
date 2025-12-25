@@ -20,7 +20,10 @@ import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { ElementID } from '@/config/element-ids';
-import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
+import {
+  StatefulStateMachineEvent,
+  StatelessStateMachineEvent,
+} from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -55,7 +58,6 @@ export const stateMachine = createStateMachineSetup<
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
-    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [
         {
@@ -63,6 +65,17 @@ export const stateMachine = createStateMachineSetup<
           params: ({ event }) => ({ params: event.node_data, nodeType: event.node_entity }),
         },
       ],
+    },
+    [StatefulStateMachineEvent.AddIAMNode]: {
+      actions: {
+        type: 'add_iam_node',
+        params: ({ event }) => ({
+          docString: event.doc_string,
+          label: event.label,
+          policyNodeType: event.node_entity,
+          accountId: event.account_id,
+        }),
+      },
     },
     [StatefulStateMachineEvent.ConnectNodes]: {
       actions: [
@@ -92,19 +105,18 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
     },
-    [StatefulStateMachineEvent.AddIAMNode]: {
+    [StatefulStateMachineEvent.EditIAMPolicyNode]: {
       actions: [
         {
-          type: 'add_iam_node',
-          params: ({ event }) => ({
-            docString: event.doc_string,
-            label: event.label,
-            accountId: event.account_id,
-            policyNodeType: event.node_entity,
-          }),
+          type: 'edit_policy_node',
+          params: ({ event }) => ({ nodeId: event.node_id, docString: event.doc_string }),
         },
       ],
     },
+    [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
+    [StatelessStateMachineEvent.HideHelpPopover]: { actions: 'hide_help_popover' },
+    [StatelessStateMachineEvent.ShowHelpPopover]: { actions: 'show_help_popover' },
+    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
   },
   states: {
     inside_tutorial: {

@@ -1,4 +1,5 @@
 export enum PolicyNodeID {
+  S3ListBucketsPolicy = 'policy-s3-list-buckets',
   S3ReadPolicy = 'policy-s3-read',
   S3ReadWritePolicy = 'policy-s3-read-write',
   DynamoDBReadWritePolicy = 'policy-dynamodb-read-write',
