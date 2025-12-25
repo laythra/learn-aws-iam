@@ -2,7 +2,6 @@ import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
 import { ConnectionFilter } from './connection-filter';
-import { deleteConnectionEdges } from './edges-deletion-state-machine-actions';
 import { IAMNodeFilter } from './iam-node-filter';
 import { selectAffectingPermissionBoundaryNodes, selectAffectingSCPNodes } from './node-selectors';
 import {
@@ -23,7 +22,6 @@ import {
   IAMAnyNode,
   IAMEdge,
   IAMGroupNode,
-  IAMGuardRailsNode,
   IAMOUNode,
   IAMPolicyNode,
   IAMResourceNode,
@@ -47,32 +45,6 @@ function isEdgeConnectionValid<TFinishEventMap extends BaseFinishEventMap>(
   newEdgeId: string
 ): boolean {
   return objective.required_edges.some(edge => edge.id === newEdgeId);
-}
-
-function markBlockedEdges(
-  blockedEdgesFns: Record<string, (edge: IAMEdge) => boolean>,
-  guardRailsNodes: IAMGuardRailsNode[],
-  edges: IAMEdge[]
-): IAMEdge[] {
-  return produce(edges, draftEdges => {
-    draftEdges.forEach(edge => {
-      if (!edge.data) return;
-
-      const blockingGuardRail = guardRailsNodes.find(
-        guardRailsNode => blockedEdgesFns[guardRailsNode.data.is_edge_blocked_fn_name]?.(edge)
-      );
-
-      if (!blockingGuardRail) {
-        edge.data.is_blocked = false;
-      } else {
-        edge.data.is_blocked = true;
-        edge.data.hovering_label = blockingGuardRail.data.blocked_edge_content;
-        edge.data.persistent_label = '🔒';
-        edge.data.color = theme.colors.red[500];
-        edge.data.hovering_color = theme.colors.red[500];
-      }
-    });
-  });
 }
 
 function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
@@ -199,6 +171,7 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][];
+  newlyAddedEdges: IAMEdge[];
 } {
   let baseEdge: IAMEdge;
   let events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][];
@@ -228,31 +201,19 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
     ({ edge: baseEdge, events } = createEdgeWithEvents(context, source, target, options));
   }
 
-  // TODO: Should we compute extra edges only if the established edge wasn't an initial edge?
   const extraEdges = computeExtraEdges(baseEdge.id) as WritableDraft<IAMEdge>[];
-  const blockedEdgesFns = GetLevelGuardRailsBlockedEdgesFns(context.level_number);
-  const isPricipalEntity = (e: IAMNodeEntity): boolean =>
-    e == IAMNodeEntity.User || e == IAMNodeEntity.Role;
   const updatedContext = produce(context, draft => {
-    const merged = [baseEdge, ...extraEdges, ...draft.edges];
-    const principals = [baseEdge, ...extraEdges]
-      .map(e => e.data?.target_node)
-      .filter(node => node && isPricipalEntity(node.data.entity)) as IAMAnyNode[];
-
-    const blockedEdges = principals.flatMap(principal => {
-      const affectingPBNodes = selectAffectingPermissionBoundaryNodes(merged, principal);
-      const affectingSCPNodes = selectAffectingSCPNodes(merged, principal);
-      const guardRailsNodes = affectingPBNodes.concat(affectingSCPNodes);
-
-      if (guardRailsNodes.length === 0) return [];
-
-      return markBlockedEdges(blockedEdgesFns, guardRailsNodes, merged) as WritableDraft<IAMEdge>[];
-    });
-
-    draft.edges = _.uniqBy([...blockedEdges, ...merged], 'id') as WritableDraft<IAMEdge>[];
+    draft.edges = _.chain([...extraEdges, ...draft.edges, baseEdge])
+      .sortBy(e => e.data?.unnecessary_edge)
+      .uniqBy('id')
+      .value() as WritableDraft<IAMEdge>[];
   });
 
-  return { updatedContext, events };
+  return {
+    updatedContext,
+    events,
+    newlyAddedEdges: _.differenceBy([baseEdge, ...extraEdges], context.edges, 'id'),
+  };
 }
 
 const connectionStrategies = {
@@ -462,6 +423,7 @@ export function updateConnectionEdges<
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.EDGE_CONNECTION_OBJECTIVE][];
+  newlyAddedEdges: IAMEdge[];
 } {
   if (
     isNodeOfEntity(sourceNode, IAMNodeEntity.Policy) &&
@@ -527,22 +489,7 @@ export function updateConnectionEdges<
     isNodeOfEntity(sourceNode, IAMNodeEntity.SCP) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.OU)
   ) {
-    const blockedEdgesFns = GetLevelGuardRailsBlockedEdgesFns(context.level_number);
-    const updatedContext = produce(context, draftContext => {
-      draftContext.edges = markBlockedEdges(
-        blockedEdgesFns,
-        [sourceNode],
-        draftContext.edges
-      ) as WritableDraft<IAMEdge>[];
-    });
-
-    return connectionStrategies.SCPToOU(
-      updatedContext,
-      sourceNode,
-      targetNode,
-      isInitialEdge,
-      options
-    );
+    return connectionStrategies.SCPToOU(context, sourceNode, targetNode, isInitialEdge, options);
   } else if (
     isNodeOfEntity(sourceNode, IAMNodeEntity.SCP) &&
     isNodeOfEntity(targetNode, IAMNodeEntity.Account)
@@ -570,42 +517,83 @@ export function updateConnectionEdges<
   return connectionStrategies.anyToAny(context, sourceNode, targetNode, isInitialEdge, options);
 }
 
+export function applyGuardRailBlockingToEdges(
+  edges: IAMEdge[],
+  newlyAddedEdges: IAMEdge[],
+  level_number: number
+): { edgesAfterBlocking: IAMEdge[]; newlyAddedEdgesAfterBlocking: IAMEdge[] } {
+  const blockedEdgesFns = GetLevelGuardRailsBlockedEdgesFns(level_number);
+  const isPrincipalEntity = (e: IAMNodeEntity): boolean =>
+    e == IAMNodeEntity.User || e == IAMNodeEntity.Role;
+  const principals = edges
+    .map(e => e.data?.target_node)
+    .filter(node => node && isPrincipalEntity(node.data.entity)) as IAMAnyNode[];
+
+  const guardRailsNodes = principals.flatMap(principal => {
+    const affectingPBNodes = selectAffectingPermissionBoundaryNodes(edges, principal);
+    const affectingSCPNodes = selectAffectingSCPNodes(edges, principal);
+    return affectingPBNodes.concat(affectingSCPNodes);
+  });
+
+  if (guardRailsNodes.length === 0)
+    return { edgesAfterBlocking: edges, newlyAddedEdgesAfterBlocking: newlyAddedEdges };
+
+  const updatedEdges = produce(edges, draftEdges => {
+    draftEdges.forEach(edge => {
+      if (!edge.data) return;
+      const blockingGuardRail = guardRailsNodes.find(
+        guardRailsNode => blockedEdgesFns[guardRailsNode.data.is_edge_blocked_fn_name]?.(edge)
+      );
+      if (!blockingGuardRail) {
+        edge.data.is_blocked = false;
+      } else {
+        edge.data.is_blocked = true;
+        edge.data.hovering_label = blockingGuardRail.data.blocked_edge_content;
+        edge.data.persistent_label = '🔒';
+        edge.data.color = theme.colors.red[500];
+        edge.data.hovering_color = theme.colors.red[500];
+      }
+    });
+  });
+  return {
+    edgesAfterBlocking: updatedEdges,
+    newlyAddedEdgesAfterBlocking: _.intersectionBy(updatedEdges, newlyAddedEdges, 'id'),
+  };
+}
+
 /**
- * Refreshes all connections originating from a policy node, recreating edges based on current granted accesses.
- * Useful when a policy gets updated and its connections need to be recalibrated.
- * @param context
- * @param policyNode
- * @returns Updated context with refreshed connections
+ * Deletes an edge from the context and all its children
+ *  and updates connection objectives and node associations.
+ *
+ * @param context - The current generic context containing nodes, edges, and objectives.
+ * @param edgeToDelete - The edge that should be deleted.
+ * @returns An object with the updated edges list and any events related to connection objectives.
  */
-export function refreshPolicyConnections<
+export function deleteConnectionEdges<
   TLevelObjectiveID,
   TFinishEventMap extends BaseFinishEventMap,
 >(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  policyNode: IAMPolicyNode
+  edgesToDelete: string[]
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
+  deletedEdges: IAMEdge[];
 } {
-  const nodeById = _.keyBy(context.nodes, 'id');
-  const edgeById = _.keyBy(context.edges, 'id');
+  const deletedEdgeIds: string[] = [];
+  const updatedContext = produce(context, draftContext => {
+    // Using basic recursion to delete edges and their dependents
+    function deleteEdge(edgeId: string): void {
+      const dependents = draftContext.edges.filter(edge => edge.data!.parent_edge_id === edgeId);
 
-  const edgesToDelete = ConnectionFilter.create()
-    .fromEdges(context.edges)
-    .whereSourceIs(policyNode.id)
-    .mapToEdgeIds();
+      dependents.forEach(edge => deleteEdge(edge.id));
+      deletedEdgeIds.push(edgeId);
+    }
 
-  let { updatedContext } = deleteConnectionEdges(context, edgesToDelete);
-
-  edgesToDelete.forEach(edgeId => {
-    const edge = edgeById[edgeId];
-
-    ({ updatedContext } = updateConnectionEdges(
-      updatedContext,
-      policyNode,
-      nodeById[edge.target],
-      true
-    ));
+    edgesToDelete.forEach(deleteEdge);
+    draftContext.edges = draftContext.edges.filter(edge => !deletedEdgeIds.includes(edge.id));
   });
 
-  return { updatedContext };
+  const deletedEdges = context.edges.filter(edge => deletedEdgeIds.includes(edge.id));
+
+  return { updatedContext, deletedEdges };
 }

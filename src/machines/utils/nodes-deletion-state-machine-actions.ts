@@ -1,6 +1,5 @@
 import { produce } from 'immer';
 
-import { deleteConnectionEdges } from './edges-deletion-state-machine-actions';
 import { BaseFinishEventMap, GenericContext } from '@/machines/types';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
@@ -16,17 +15,9 @@ export function deleteNode<TLevelObjectiveID, TFinishEventMap extends BaseFinish
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   nodeToDelete: IAMAnyNode
 ): { updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap> } {
-  let updatedContext = produce(context, draftContext => {
+  const updatedContext = produce(context, draftContext => {
     draftContext.nodes = draftContext.nodes.filter(node => node.id !== nodeToDelete.id);
   });
-  const edgesToDelete = updatedContext.edges
-    .filter(edge => edge.source === nodeToDelete.id || edge.target === nodeToDelete.id)
-    .map(edge => edge.id);
-
-  ({ updatedContext } = deleteConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
-    updatedContext,
-    edgesToDelete
-  ));
 
   return { updatedContext };
 }

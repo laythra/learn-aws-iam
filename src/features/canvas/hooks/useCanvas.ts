@@ -42,24 +42,21 @@ const DEFAULT_LAYOUT_GROUP = createHorizontalGroup('default-layout-group', 'cent
 export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const theme = useTheme<CustomTheme>();
   const toast = useToast();
-  const [
-    nodes,
-    edges,
-    sidePanelOpened,
-    edgesManagementDisabled,
-    layoutGroups,
-    blockedConnections,
-    levelNumber,
-  ] = LevelsProgressionContext().useSelector(
-    state => [
-      state.context.nodes,
-      state.context.edges,
-      state.context.side_panel_open,
-      state.context.edges_management_disabled,
-      state.context.layout_groups,
-      state.context.blocked_connections,
-      state.context.level_number,
-    ],
+  const [nodes, sidePanelOpened, edgesManagementDisabled, layoutGroups, blockedConnections] =
+    LevelsProgressionContext().useSelector(
+      state => [
+        state.context.nodes,
+        state.context.side_panel_open,
+        state.context.edges_management_disabled,
+        state.context.layout_groups,
+        state.context.blocked_connections,
+      ],
+      _.isEqual
+    );
+
+  const [nodesState, edgesState] = useSelector(
+    CanvasStore,
+    state => [state.context.nodes, state.context.edges],
     _.isEqual
   );
 
@@ -74,25 +71,48 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     1
   );
 
-  const [nodesState, edgesState] = useSelector(
-    CanvasStore,
-    state => [state.context.nodes, state.context.edges],
-    _.isEqual
-  );
-
   const levelActor = LevelsProgressionContext().useActorRef();
   const sidePanelWidth = sidePanelOpened ? window.innerWidth * 0.2 : 0;
 
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<IAMAnyNode, IAMEdge>>();
 
-  // Ensure canvas is cleared when switching levels, to avoid cross-level node/edge residue
   useEffect(() => {
-    CanvasStore.send({ type: 'clearCanvas' });
-  }, [levelNumber]);
+    const snapshot = levelActor.getSnapshot();
 
-  useEffect(() => {
-    CanvasStore.send({ type: 'setEdges', edges });
-  }, [edges]);
+    CanvasStore.send({
+      type: 'setEdges',
+      edges: snapshot.context.edges,
+    });
+
+    const edgesDeletedSub = levelActor.on('EDGES_DELETED', ({ edgeIds }: { edgeIds: string[] }) => {
+      // TODO: What we really want here is to have a two-step deletion process for edges:
+      // 1. Mark edges for deletion (this is where we can trigger animations)
+      // 2. Finalize edges deletion (actually remove them from the state, happens after animation completes)
+
+      // CanvasStore.send({ type: 'markEdgesForDeletion', edgeIds });
+      CanvasStore.send({ type: 'finalizeEdgesDeletion', edgeIds });
+    });
+
+    const edgesAddedSub = levelActor.on(
+      'EDGES_ADDED',
+      ({ edges: newEdges }: { edges: IAMEdge[] }) => {
+        CanvasStore.send({ type: 'addEdges', edges: newEdges });
+      }
+    );
+
+    const edgesResetSub = levelActor.on(
+      'EDGES_RESET',
+      ({ edges: newEdges }: { edges: IAMEdge[] }) => {
+        CanvasStore.send({ type: 'setEdges', edges: newEdges });
+      }
+    );
+
+    return () => {
+      edgesDeletedSub.unsubscribe();
+      edgesAddedSub.unsubscribe();
+      edgesResetSub.unsubscribe();
+    };
+  }, [levelActor]);
 
   // Used to reposition nodes when the side panel is opened, to ensure no nodes are hidden behind it
   useEffect(() => {
