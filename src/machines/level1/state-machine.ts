@@ -1,6 +1,6 @@
-import { and, assign, not } from 'xstate';
+import { and, not } from 'xstate';
 
-import { INITIAL_TUTORIAL_NODES } from './nodes';
+import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/policy-nodes';
 import { INITIAL_TUTORIAL_RESOURCE_NODES } from './nodes/resource-nodes';
 import { INITIAL_TUTORIAL_USER_NODES } from './nodes/user-nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
@@ -156,9 +156,7 @@ export const stateMachine = createStateMachineSetup<
           on: {
             NEXT_POPOVER: 'tutorial_popover4',
           },
-          exit: assign({
-            nodes: [...INITIAL_TUTORIAL_USER_NODES, ...INITIAL_TUTORIAL_RESOURCE_NODES],
-          }),
+          exit: { type: 'append_nodes', params: { nodes: INITIAL_TUTORIAL_RESOURCE_NODES } },
         },
         tutorial_popover4: {
           entry: {
@@ -168,7 +166,7 @@ export const stateMachine = createStateMachineSetup<
           on: {
             NEXT_POPOVER: 'tutorial_popover5',
           },
-          exit: assign({ nodes: INITIAL_TUTORIAL_NODES }),
+          exit: { type: 'append_nodes', params: { nodes: INITIAL_TUTORIAL_POLICY_NODES } },
         },
         tutorial_popover5: {
           entry: {

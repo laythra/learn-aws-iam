@@ -1,6 +1,6 @@
-import { ValidInitialPosition } from '@/features/canvas/utils/nodes-position';
 import { theme } from '@/theme';
 import { NodeLayoutGroup } from '@/types';
+import { ValidInitialPosition } from '@/utils/node-postition-geomtery'; // TOOD: Fix cyclic dependency
 
 const DEFAULT_HORIZONTAL_SPACING = theme.sizes.iamNodeWidthInPixels + 20;
 const DEFAULT_VERTICAL_SPACING = theme.sizes.iamNodeHeightInPixels + 20;

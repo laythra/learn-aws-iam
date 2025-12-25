@@ -1,7 +1,7 @@
 import { Edge, HandleProps, Node } from '@xyflow/react';
 import { DOMKeyframesDefinition, DynamicAnimationOptions } from 'framer-motion';
 
-import { ValidInitialPosition } from '@/features/canvas/utils/nodes-position';
+import { ValidInitialPosition } from '@/utils/node-postition-geomtery';
 
 export enum HandleID {
   Top = 'top',

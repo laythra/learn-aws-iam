@@ -94,6 +94,7 @@ export function createIAMNode<
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   edgesToCreate: { from: string; to: string }[];
+  createdNode: TNode;
   events: string[];
 } {
   const validateFunctions = GetLevelValidateFunctions(context.level_number);
@@ -128,6 +129,7 @@ export function createIAMNode<
     updatedContext,
     events: targetValidObjective ? [targetValidObjective.on_finish_event] : [],
     edgesToCreate: targetValidObjective?.initial_edges ?? [],
+    createdNode: newNode as TNode,
   };
 }
 
@@ -140,35 +142,42 @@ export function createUserGroupNode<TLevelObjectiveID, TFinishEventMap extends B
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE][];
+  createdNode: IAMGroupNode | IAMUserNode;
 } {
-  let events: TFinishEventMap[ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE][] = [];
-  const updatedContext = produce(context, draftContext => {
-    const targetObjective = draftContext.user_group_creation_objectives.find(
-      objective => objective.entity_to_create === nodeType && !objective.finished
-    );
-    const creationFunc = nodeType === IAMNodeEntity.Group ? createGroupNode : createUserNode;
-    const newNode = creationFunc({
-      dataOverrides: {
-        id: targetObjective?.entity_id ?? _.uniqueId('node_'),
-        layout_group_id: targetObjective?.layout_group_id,
-        unnecessary_node: targetObjective === undefined,
-        show_pulse_animation: targetObjective !== undefined,
-        ...props,
-      },
-      rootOverrides: {
-        parentId: targetObjective?.created_node_parent_id,
-      },
-    });
+  const targetObjective = context.user_group_creation_objectives.find(
+    objective => objective.entity_to_create === nodeType && !objective.finished
+  );
 
-    draftContext.nodes.push(newNode as WritableDraft<IAMGroupNode | IAMUserNode>);
+  const creationFunc = nodeType === IAMNodeEntity.Group ? createGroupNode : createUserNode;
+  const createdNode = creationFunc({
+    dataOverrides: {
+      id: targetObjective?.entity_id ?? _.uniqueId('node_'),
+      layout_group_id: targetObjective?.layout_group_id ?? CommonLayoutGroupID.TopLeftVertical,
+      unnecessary_node: targetObjective === undefined,
+      show_pulse_animation: targetObjective !== undefined,
+      ...props,
+    },
+    rootOverrides: {
+      parentId: targetObjective?.created_node_parent_id,
+    },
+  });
+
+  const events: TFinishEventMap[ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE][] = targetObjective
+    ? [targetObjective.on_finish_event]
+    : [];
+
+  const updatedContext = produce(context, draftContext => {
+    draftContext.nodes.push(createdNode as WritableDraft<IAMGroupNode | IAMUserNode>);
     if (targetObjective) {
-      targetObjective.finished = true;
-      events = [targetObjective.on_finish_event];
+      draftContext.user_group_creation_objectives.find(
+        objective => objective.entity_to_create === nodeType && !objective.finished
+      )!.finished = true;
     }
   });
 
   return {
     updatedContext,
     events,
+    createdNode,
   };
 }

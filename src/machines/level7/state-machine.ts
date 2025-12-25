@@ -1,4 +1,4 @@
-import { and, assign, not } from 'xstate';
+import { and, not } from 'xstate';
 
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
@@ -55,34 +55,6 @@ export const stateMachine = createStateMachineSetup<
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
-    ADD_EDGE: {
-      actions: assign({
-        edges: ({ context, event }) => [...context.edges, event.edge],
-      }),
-    },
-    SET_NODES: {
-      actions: assign({
-        nodes: ({ event }) => event.nodes,
-      }),
-    },
-    SET_EDGES: {
-      actions: [
-        assign({
-          edges: ({ event }) => event.edges,
-        }),
-      ],
-    },
-    SHOW_POPOVER: {
-      actions: assign({
-        popover_content: ({ event }) => event.popover_content,
-        show_popovers: true,
-      }),
-    },
-    HIDE_POPOVERS: {
-      actions: assign({
-        show_popovers: false,
-      }),
-    },
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
     [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
       actions: [

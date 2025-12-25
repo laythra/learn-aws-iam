@@ -1,4 +1,4 @@
-import { and, assign, not } from 'xstate';
+import { and, not } from 'xstate';
 
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
@@ -127,9 +127,7 @@ export const stateMachine = createStateMachineSetup<
             'hide_popups',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
             'show_side_panel',
-            assign({
-              level_objectives: LEVEL_OBJECTIVES[0],
-            }),
+            { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
           ],
           exit: 'hide_fixed_popovers',
           on: {

@@ -7,9 +7,7 @@ import _ from 'lodash';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { isValidConnection } from '../utils/edges-creation';
-import { getNodeInitialPosition } from '../utils/nodes-position';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
-import { createHorizontalGroup } from '@/factories/layout-group-factory';
 import { CustomTheme } from '@/types';
 import { IAMAnyNode, IAMEdge, IAMNodeEntity } from '@/types/iam-node-types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -29,15 +27,11 @@ interface UseCanvasReturn {
   initialZoom: number;
 }
 
-const DEFAULT_LAYOUT_GROUP = createHorizontalGroup('default-layout-group', 'center', 10, {
-  top: 100,
-  left: 100,
-});
-
 /**
- * A hook that's responsible for managing the canvas state, which includes nodes, edges, and the ReactFlow instance.
- * Used in both Canvas and MultiAccountCanvas
- *  @returns {UseCanvasReturn} Object containing canvas state and handlers.
+ * A hook that manages the canvas state, including nodes, edges, and the ReactFlow instance.
+ * Used only in the `Canvas` component. This hook was created to support multiple canvas components
+ * that previously shared this logic.
+ * @returns {UseCanvasReturn} Object containing canvas state and handlers.
  */
 export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
   const theme = useTheme<CustomTheme>();
@@ -76,8 +70,23 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
 
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<IAMAnyNode, IAMEdge>>();
 
+  // This useEffect sets up subscriptions to the level actor to listen for node and edge changes.
+  // It acts as the synchronization layer between the state machine and the canvas store.
+  // Each event is handled separately to make integrating animations easier in the future.
+  // For example, when edges are deleted, we might wanna trigger a fade-out animation before actually removing them from the state.
+  // Therefore, we separate the "mark for deletion" and "finalize deletion" steps.
   useEffect(() => {
+    if (!rfInstance) return;
+
     const snapshot = levelActor.getSnapshot();
+
+    CanvasStore.send({
+      type: 'setNodes',
+      nodes: snapshot.context.nodes,
+      layoutGroups,
+      sidePanelWidth,
+      reactFlowViewport: rfInstance.getViewport(),
+    });
 
     CanvasStore.send({
       type: 'setEdges',
@@ -93,10 +102,27 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
       CanvasStore.send({ type: 'finalizeEdgesDeletion', edgeIds });
     });
 
+    const nodesDeletedSub = levelActor.on('NODES_DELETED', ({ nodeIds }: { nodeIds: string[] }) => {
+      CanvasStore.send({ type: 'markNodesForDeletion', nodeIds });
+    });
+
     const edgesAddedSub = levelActor.on(
       'EDGES_ADDED',
       ({ edges: newEdges }: { edges: IAMEdge[] }) => {
         CanvasStore.send({ type: 'addEdges', edges: newEdges });
+      }
+    );
+
+    const nodesAddedSub = levelActor.on(
+      'NODES_ADDED',
+      ({ nodes: newNodes }: { nodes: IAMAnyNode[] }) => {
+        CanvasStore.send({
+          type: 'addNodes',
+          nodes: newNodes,
+          layoutGroups,
+          sidePanelWidth,
+          reactFlowViewport: rfInstance.getViewport(),
+        });
       }
     );
 
@@ -107,103 +133,45 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
       }
     );
 
+    const nodesResetSub = levelActor.on(
+      'NODES_RESET',
+      ({ nodes: newNodes }: { nodes: IAMAnyNode[] }) => {
+        CanvasStore.send({
+          type: 'setNodes',
+          nodes: newNodes,
+          layoutGroups,
+          sidePanelWidth,
+          reactFlowViewport: rfInstance.getViewport(),
+        });
+      }
+    );
+
+    const nodeUpdatedSub = levelActor.on('NODE_UPDATED', ({ node }: { node: IAMAnyNode }) => {
+      CanvasStore.send({ type: 'nodeDataUpdated', node });
+    });
+
     return () => {
       edgesDeletedSub.unsubscribe();
       edgesAddedSub.unsubscribe();
       edgesResetSub.unsubscribe();
+      nodesDeletedSub.unsubscribe();
+      nodesAddedSub.unsubscribe();
+      nodesResetSub.unsubscribe();
+      nodeUpdatedSub.unsubscribe();
     };
-  }, [levelActor]);
+  }, [levelActor, rfInstance, sidePanelWidth]);
 
   // Used to reposition nodes when the side panel is opened, to ensure no nodes are hidden behind it
   useEffect(() => {
     if (!rfInstance || hasAccountNodes) return;
 
-    const nodeWidth = theme.sizes.iamNodeWidthInPixels;
-    const sidePanelPos = rfInstance.screenToFlowPosition({
-      x: window.innerWidth - sidePanelWidth,
-      y: 0,
+    CanvasStore.send({
+      type: 'adjustForSidePanelWidthChange',
+      sidePanelWidth,
+      viewport: rfInstance.getViewport(),
+      nodeWidth: theme.sizes.iamNodeWidthInPixels,
     });
-
-    const newNodesState = nodesState.map(node => {
-      if (node.position.x + nodeWidth >= sidePanelPos.x) {
-        const newNodePosX = sidePanelPos.x - 10 - nodeWidth;
-        return { ...node, position: { ...node.position, x: newNodePosX } };
-      }
-
-      return node;
-    });
-
-    CanvasStore.send({ type: 'setNodes', nodes: newNodesState });
-  }, [sidePanelOpened]);
-
-  // Adds newly added nodes to the canvas with their initial positions
-  // TODO: This useEffect is easily the smelliest useEffect of the codebase.
-  // i'm relying on react's "accidental" re-runs of useEffect to detect newly added nodes,
-  // which is very fragile and can easily break in the future.
-  // A better approach would be to have a dedicated event that gets emitted
-  // that notifies about newly added nodes, and listen to that event instead.
-  // The event should be purely Domain driven, like "NODE_ADDED" or "NODES_DELETED"
-  // In such events, diffing would no longer be necessary since we would receive
-  // the exact nodes that were added/removed.
-  // Plus, testing this is a nightmare as of now.
-  useEffect(() => {
-    if (!rfInstance) return;
-
-    const layoutGroupsById = _.keyBy(layoutGroups, 'id');
-    const reactFlowViewport = rfInstance.getViewport();
-
-    // This section organizes nodes into groups based on their relationships.
-    // Nodes with a parent are grouped separately, as are account nodes.
-    const nodeGroups = _.groupBy(nodes, node => {
-      const isAccountNode = node.data.entity === IAMNodeEntity.Account;
-      const hasParent = !!node.parentId;
-
-      if (hasParent) {
-        return `child-${node.parentId}-${node.data.layout_group_id}`;
-      }
-
-      if (isAccountNode) {
-        return `account-${node.data.layout_group_id}`;
-      }
-
-      return node.data.layout_group_id;
-    });
-
-    const nodeById = _.keyBy(nodes, 'id');
-
-    const newNodes = Object.values(nodeGroups).flatMap(nodesGroup => {
-      return nodesGroup.map((node, nodeIndex) => {
-        const existingNode = _.find(nodesState, { id: node.id });
-        const layoutGroup = layoutGroupsById[node.data.layout_group_id];
-        const parentNode = node.parentId ? nodeById[node.parentId] : undefined;
-
-        // Ensures existing nodes' positions remain unchanged
-        // since the user might have moved them and we don't want to override that
-        if (existingNode) {
-          return {
-            ...existingNode,
-            data: { ...existingNode.data, ...node.data },
-            position: existingNode.position,
-            hidden: node.hidden,
-          };
-        }
-
-        const initialPosition = getNodeInitialPosition(
-          node,
-          reactFlowViewport,
-          nodesGroup.filter(n => !n.hidden).length,
-          nodeIndex,
-          sidePanelWidth,
-          layoutGroup ?? DEFAULT_LAYOUT_GROUP,
-          parentNode
-        );
-
-        return { ...node, position: initialPosition };
-      });
-    }) as IAMAnyNode[];
-
-    CanvasStore.send({ type: 'setNodes', nodes: newNodes });
-  }, [nodes, rfInstance]);
+  }, [sidePanelWidth]);
 
   const showInvalidConnectionToast = useCallback(() => {
     toast({
@@ -234,8 +202,8 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         return;
       }
 
-      // TODO: Instead of sending the actual nodes here, we can just send their IDs and let the state machine look them up.
-      // This would help us a lot later when wanting to raise events internally within the state machine since we might not have access to the full nodes data.
+      // TODO: Consider sending only node IDs instead of full node objects, and let the state machine look them up.
+      // This would simplify internal state machine events where full node data may not be readily available.
       const sourceNode = _.find<IAMAnyNode>(nodes, { id: params.source })!;
       const targetNode = _.find<IAMAnyNode>(nodes, { id: params.target })!;
 
