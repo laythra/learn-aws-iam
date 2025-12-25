@@ -156,24 +156,22 @@ export const createStateMachineSetup = <
         }
       ),
       delete_edge: enqueueActions(({ context, enqueue }, { edge }: { edge: IAMEdge }) => {
-        const { updatedContext } = deleteConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
-          context,
-          [edge.id]
-        );
+        const {
+          updatedContext: { edges },
+        } = deleteConnectionEdges(context, [edge.id]);
 
-        enqueue.assign({ edges: updatedContext.edges });
+        enqueue.assign({ edges });
         enqueue.emit(() => ({
           type: 'EDGES_DELETED',
           edgeIds: [edge.id],
         }));
       }),
       delete_edges: enqueueActions(({ context, enqueue }, { edgeIds }: { edgeIds: string[] }) => {
-        const { updatedContext } = deleteConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
-          context,
-          edgeIds
-        );
+        const {
+          updatedContext: { edges },
+        } = deleteConnectionEdges(context, edgeIds);
 
-        enqueue.assign({ edges: updatedContext.edges });
+        enqueue.assign({ edges });
         enqueue.emit(() => ({
           type: 'EDGES_DELETED',
           edgeIds,
@@ -234,12 +232,40 @@ export const createStateMachineSetup = <
             docString
           );
 
-          const { updatedContext } = editPolicyResult;
+          let { updatedContext } = editPolicyResult;
+          let newlyAddedEdges: IAMEdge[] = [];
+          let deletedEdges: IAMEdge[] = [];
+
+          // Deleting existing connection edges to recreating them
+          ({ updatedContext, deletedEdges } = deleteConnectionEdges<
+            TLevelObjectiveID,
+            TFinishEventMap
+          >(
+            updatedContext,
+            editPolicyResult.edgesToRefresh.map(edge => edge.id)
+          ));
+
+          const nodeById = _.keyBy(updatedContext.nodes, 'id');
+
+          editPolicyResult.edgesToRefresh.forEach(edge => {
+            const sourceNode = nodeById[edge.source];
+            const targetNode = nodeById[edge.target];
+
+            ({ updatedContext, newlyAddedEdges } = updateConnectionEdges<
+              TLevelObjectiveID,
+              TFinishEventMap
+            >(updatedContext, sourceNode, targetNode, true));
+          });
 
           enqueue.assign({
             nodes: updatedContext.nodes,
             edges: updatedContext.edges,
             policy_edit_objectives: updatedContext.policy_edit_objectives,
+          });
+
+          enqueue.emit({
+            type: 'EDGES_DELETED',
+            edgeIds: _.differenceBy(deletedEdges, newlyAddedEdges, 'id').map(edge => edge.id),
           });
 
           editPolicyResult.events.forEach(event => {

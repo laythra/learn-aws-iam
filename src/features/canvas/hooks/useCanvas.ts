@@ -85,7 +85,12 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     });
 
     const edgesDeletedSub = levelActor.on('EDGES_DELETED', ({ edgeIds }: { edgeIds: string[] }) => {
-      CanvasStore.send({ type: 'markEdgesForDeletion', edgeIds });
+      // TODO: What we really want here is to have a two-step deletion process for edges:
+      // 1. Mark edges for deletion (this is where we can trigger animations)
+      // 2. Finalize edges deletion (actually remove them from the state, happens after animation completes)
+
+      // CanvasStore.send({ type: 'markEdgesForDeletion', edgeIds });
+      CanvasStore.send({ type: 'finalizeEdgesDeletion', edgeIds });
     });
 
     const edgesAddedSub = levelActor.on(

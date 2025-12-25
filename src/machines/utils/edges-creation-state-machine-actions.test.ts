@@ -109,7 +109,8 @@ describe('updateConnectionEdges', () => {
       ]);
     });
 
-    it('skips extra edges (user → resource) when granted_access specifies a source_node that does not match the user being connected', () => {
+    it('skips extra edges (user → resource) when granted_access specifies\
+      a source_node that does not match the user being connected', () => {
       vi.mocked(GetLevelObjectivesApplicableNodesFns).mockImplementation(() => ({
         NONE_MATCHING_FN: () => [],
       }));
@@ -338,7 +339,8 @@ describe('updateConnectionEdges', () => {
       expectEdges(updatedContext.edges, [{ source: resource.id, target: role.id }]);
     });
 
-    it('creates extra (resource → resource) edge if role has associated policies which grant access', () => {
+    it('creates extra (resource → resource) edge if \
+      role has associated policies which grant access', () => {
       const resource1 = createResourceNode({});
       const resource2 = createResourceNode({});
       const role = createRoleNode({});

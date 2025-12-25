@@ -575,61 +575,25 @@ export function deleteConnectionEdges<
 >(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   edgesToDelete: string[]
-): { updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap> } {
+): {
+  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
+  deletedEdges: IAMEdge[];
+} {
+  const deletedEdgeIds: string[] = [];
   const updatedContext = produce(context, draftContext => {
-    const deletedEdges: string[] = [];
-
     // Using basic recursion to delete edges and their dependents
     function deleteEdge(edgeId: string): void {
       const dependents = draftContext.edges.filter(edge => edge.data!.parent_edge_id === edgeId);
 
       dependents.forEach(edge => deleteEdge(edge.id));
-      deletedEdges.push(edgeId);
+      deletedEdgeIds.push(edgeId);
     }
 
     edgesToDelete.forEach(deleteEdge);
-    draftContext.edges = draftContext.edges.filter(edge => !deletedEdges.includes(edge.id));
+    draftContext.edges = draftContext.edges.filter(edge => !deletedEdgeIds.includes(edge.id));
   });
 
-  return { updatedContext };
-}
+  const deletedEdges = context.edges.filter(edge => deletedEdgeIds.includes(edge.id));
 
-/**
- * Refreshes all connections originating from a policy node, recreating edges based on current granted accesses.
- * Useful when a policy gets updated and its connections need to be recalibrated.
- * @param context
- * @param policyNode
- * @returns Updated context with refreshed connections
- */
-export function refreshPolicyConnections<
-  TLevelObjectiveID,
-  TFinishEventMap extends BaseFinishEventMap,
->(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  policyNode: IAMPolicyNode
-): {
-  updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
-} {
-  const nodeById = _.keyBy(context.nodes, 'id');
-  const edgeById = _.keyBy(context.edges, 'id');
-
-  const edgesToDelete = ConnectionFilter.create()
-    .fromEdges(context.edges)
-    .whereSourceIs(policyNode.id)
-    .mapToEdgeIds();
-
-  let { updatedContext } = deleteConnectionEdges(context, edgesToDelete);
-
-  edgesToDelete.forEach(edgeId => {
-    const edge = edgeById[edgeId];
-
-    ({ updatedContext } = updateConnectionEdges(
-      updatedContext,
-      policyNode,
-      nodeById[edge.target],
-      true
-    ));
-  });
-
-  return { updatedContext };
+  return { updatedContext, deletedEdges };
 }

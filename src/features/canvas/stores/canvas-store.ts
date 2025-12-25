@@ -38,7 +38,7 @@ type CanvasStoreEvents = {
     accountId: string;
   };
   markEdgesForDeletion: { edgeIds: string[] };
-  finalizeEdgeDeletion: { edgeId: string };
+  finalizeEdgesDeletion: { edgeIds: string[] };
   addEdges: { edges: IAMEdge[] };
 };
 
@@ -122,8 +122,8 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
         }
       });
     },
-    finalizeEdgeDeletion(ctx: CanvasStoreState, event: { edgeId: string }) {
-      ctx.edges = ctx.edges.filter(edge => edge.id !== event.edgeId);
+    finalizeEdgesDeletion(ctx: CanvasStoreState, event: { edgeIds: string[] }) {
+      ctx.edges = ctx.edges.filter(edge => !event.edgeIds.includes(edge.id));
     },
     syncEdgesFromMachine: (ctx, { edges: machineEdges }) => {
       const deletingIds = new Set(

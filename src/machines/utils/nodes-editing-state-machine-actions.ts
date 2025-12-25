@@ -1,10 +1,10 @@
 import { produce } from 'immer';
 
-import { refreshPolicyConnections } from './edges-creation-state-machine-actions';
+import { ConnectionFilter } from './connection-filter';
 import { IAMNodeFilter } from './iam-node-filter';
 import { GetLevelValidateFunctions } from '../functions-registry';
 import { BaseFinishEventMap, GenericContext, ObjectiveType } from '../types';
-import { IAMAnyNode, IAMPolicyNode } from '@/types';
+import { IAMAnyNode, IAMEdge } from '@/types';
 import { isJSONValid } from '@/utils/iam-code-linter';
 
 export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
@@ -14,6 +14,7 @@ export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends 
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][];
+  edgesToRefresh: IAMEdge[];
 } {
   const targetEditObjective = context.policy_edit_objectives.find(
     objective => objective.id === nodeId && !objective.finished
@@ -24,10 +25,10 @@ export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends 
   ]?.(context.nodes);
 
   if (!targetEditObjective || !isJSONValid(docString, objectiveValidationFn!)) {
-    return { updatedContext: context, events: [] };
+    return { updatedContext: context, events: [], edgesToRefresh: [] };
   }
 
-  let updatedContext = produce(context, draftContext => {
+  const updatedContext = produce(context, draftContext => {
     const targetNode = IAMNodeFilter.create()
       .fromNodes(draftContext.nodes)
       .whereIdIs(nodeId)
@@ -44,14 +45,15 @@ export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends 
     targetNode.data.granted_accesses = targetEditObjective.resources_to_grant;
   });
 
-  ({ updatedContext } = refreshPolicyConnections(
-    updatedContext,
-    updatedContext.nodes.find(node => node.id === nodeId) as IAMPolicyNode
-  ));
+  const edgesToRefresh = ConnectionFilter.create()
+    .fromEdges(context.edges)
+    .whereSourceIs(nodeId)
+    .build();
 
   return {
     updatedContext,
     events: [targetEditObjective.on_finish_event],
+    edgesToRefresh,
   };
 }
 
