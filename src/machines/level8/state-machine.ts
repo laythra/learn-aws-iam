@@ -162,6 +162,13 @@ export const stateMachine = createStateMachineSetup<
                     id: LevelObjectiveID.EDIT_POLICY_FIRST_TIME,
                   },
                 },
+                {
+                  type: 'edit_policy_node_attributes',
+                  params: {
+                    nodeId: PolicyNodeID.SlackServiceManagePolicy,
+                    attributes: { editable: false },
+                  },
+                },
               ],
             },
           },

@@ -26,7 +26,7 @@ const POPOVER_MSG5 = `
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
-    element_id: PolicyNodeID.S3ReadPolicy,
+    element_id: PolicyNodeID.S3ListBucketsPolicy,
     popover_title: 'AWS Managed policies',
     popover_content: POPOVER_MSG1,
     show_next_button: false,

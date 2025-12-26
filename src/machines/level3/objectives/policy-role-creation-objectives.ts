@@ -60,8 +60,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
           {
             target_node: ResourceNodeID.PublicAssetsS3Bucket,
             access_level: AccessLevel.ReadWrite,
-            target_handle: 'top',
-            source_handle: 'bottom',
+            target_handle: 'bottom',
+            source_handle: 'top',
           },
         ],
       },
@@ -101,7 +101,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
           },
         ],
       },
-      layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
+      layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>>,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

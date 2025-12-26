@@ -65,10 +65,15 @@ export function editNodeAttributes<
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   nodeId: string,
   attributes: Partial<TNode['data']>
-): GenericContext<TLevelObjectiveID, TFinishEventMap> {
-  return produce(context, draftContext => {
+): { updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>; editedNode: TNode } {
+  const updatedContext = produce(context, draftContext => {
     const currentNode = draftContext.nodes.find(node => node.id === nodeId) as TNode;
 
     currentNode.data = { ...currentNode.data, ...attributes };
   });
+
+  return {
+    updatedContext,
+    editedNode: updatedContext.nodes.find(node => node.id === nodeId) as TNode,
+  };
 }

@@ -23,7 +23,7 @@ import { LevelsProgressionContext } from '@/components/providers/level-actor-con
 import SidePanel from '@/components/SidePanels/SidePanel';
 import { ElementID } from '@/config/element-ids';
 import { remarkChakra } from '@/utils/markdown/chakra-markdown';
-import { components } from '@/utils/markdown/components';
+import { components as markdownComponents } from '@/utils/markdown/components';
 
 const RightSidePanel: React.FC = () => {
   const [levelObjectives, isSidePanelOpen, levelDescription] =
@@ -75,7 +75,7 @@ const RightSidePanel: React.FC = () => {
                         color={objective.finished ? 'green.500' : 'black'}
                         verticalAlign='top'
                       />
-                      <Markdown components={components} rehypePlugins={[remarkChakra]}>
+                      <Markdown components={markdownComponents} rehypePlugins={[remarkChakra]}>
                         {objective.label}
                       </Markdown>
                       {objective.hint_text && (

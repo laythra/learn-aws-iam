@@ -85,6 +85,22 @@ export const createStateMachineSetup = <
         | {
             type: 'EDGES_ADDED';
             edges: IAMEdge[];
+          }
+        | {
+            type: 'NODES_DELETED';
+            nodeIds: string[];
+          }
+        | {
+            type: 'NODES_RESET';
+            nodes: IAMAnyNode[];
+          }
+        | {
+            type: 'NODES_ADDED';
+            nodes: IAMAnyNode[];
+          }
+        | {
+            type: 'NODE_UPDATED';
+            node: IAMAnyNode;
           };
     },
     guards: {
@@ -144,7 +160,7 @@ export const createStateMachineSetup = <
             attributes: Partial<IAMPolicyNode['data']>;
           }
         ) => {
-          const updatedContext = editNodeAttributes<
+          const { updatedContext, editedNode } = editNodeAttributes<
             TLevelObjectiveID,
             TFinishEventMap,
             IAMPolicyNode
@@ -153,39 +169,57 @@ export const createStateMachineSetup = <
           enqueue.assign({
             nodes: updatedContext.nodes,
           });
+
+          enqueue.emit(() => ({
+            type: 'NODE_UPDATED',
+            node: editedNode,
+          }));
         }
       ),
       delete_edge: enqueueActions(({ context, enqueue }, { edge }: { edge: IAMEdge }) => {
         const {
           updatedContext: { edges },
+          deletedEdges,
         } = deleteConnectionEdges(context, [edge.id]);
 
         enqueue.assign({ edges });
         enqueue.emit(() => ({
           type: 'EDGES_DELETED',
-          edgeIds: [edge.id],
+          edgeIds: deletedEdges.map(e => e.id),
         }));
       }),
       delete_edges: enqueueActions(({ context, enqueue }, { edgeIds }: { edgeIds: string[] }) => {
         const {
           updatedContext: { edges },
+          deletedEdges,
         } = deleteConnectionEdges(context, edgeIds);
 
         enqueue.assign({ edges });
         enqueue.emit(() => ({
           type: 'EDGES_DELETED',
-          edgeIds,
+          edgeIds: deletedEdges.map(e => e.id),
         }));
       }),
       delete_node: enqueueActions(({ context, enqueue }, { node }: { node: IAMAnyNode }) => {
-        const { updatedContext } = deleteNode<TLevelObjectiveID, TFinishEventMap>(context, node);
+        let { updatedContext } = deleteNode<TLevelObjectiveID, TFinishEventMap>(context, node);
+        let deletedEdges: IAMEdge[] = [];
 
         const edgesToDelete = updatedContext.edges
           .filter(edge => edge.source === node.id || edge.target === node.id)
           .map(edge => edge.id);
 
+        ({ updatedContext, deletedEdges } = deleteConnectionEdges(updatedContext, edgesToDelete));
+
         enqueue.assign({ nodes: updatedContext.nodes, edges: updatedContext.edges });
-        enqueue.raise({ type: StatefulStateMachineEvent.DeleteEdges, edgeIds: edgesToDelete });
+        enqueue.emit(() => ({
+          type: 'NODES_DELETED',
+          nodeIds: [node.id],
+        }));
+
+        enqueue.emit(() => ({
+          type: 'EDGES_DELETED',
+          edgeIds: deletedEdges.map(edge => edge.id),
+        }));
       }),
       delete_nodes: enqueueActions(({ context, enqueue }, { nodeIds }: { nodeIds: string[] }) => {
         nodeIds.forEach(nodeId => {
@@ -209,12 +243,20 @@ export const createStateMachineSetup = <
             params: Partial<IAMUserNode['data']> | Partial<IAMGroupNode['data']>;
           }
         ) => {
-          const { updatedContext, events } = createUserGroupNode(context, nodeType, params);
+          const { updatedContext, events, createdNode } = createUserGroupNode(
+            context,
+            nodeType,
+            params
+          );
 
           enqueue.assign({
             nodes: updatedContext.nodes,
             user_group_creation_objectives: updatedContext.user_group_creation_objectives,
           });
+          enqueue.emit(() => ({
+            type: 'NODES_ADDED',
+            nodes: [createdNode],
+          }));
           events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
@@ -352,7 +394,7 @@ export const createStateMachineSetup = <
             accountId
           );
 
-          const { updatedContext, edgesToCreate } = createPolicyResult;
+          const { updatedContext, edgesToCreate, createdNode } = createPolicyResult;
           const updatedContextNodes = updatedContext.nodes;
           const nodesById = _.keyBy(updatedContextNodes, 'id');
 
@@ -374,6 +416,11 @@ export const createStateMachineSetup = <
               isInternalConnection: true,
             });
           });
+
+          enqueue.emit(() => ({
+            type: 'NODES_ADDED',
+            nodes: [createdNode],
+          }));
         }
       ),
       show_popover: assign({
@@ -487,13 +534,26 @@ export const createStateMachineSetup = <
           }));
         }
       ),
-      assign_nodes: assign({
-        nodes: (__, { nodes }: { nodes: IAMAnyNode[] }) => nodes,
+      assign_nodes: enqueueActions(({ enqueue }, { nodes }: { nodes: IAMAnyNode[] }) => {
+        enqueue.assign({ nodes });
+
+        enqueue.emit(() => ({
+          type: 'NODES_RESET',
+          nodes,
+        }));
       }),
-      append_nodes: assign({
-        nodes: ({ context }, { nodes }: { nodes: IAMAnyNode[] }) => [...context.nodes, ...nodes],
+      append_nodes: enqueueActions(({ context, enqueue }, { nodes }: { nodes: IAMAnyNode[] }) => {
+        const updatedNodes = [...context.nodes, ...nodes];
+
+        enqueue.assign({
+          nodes: updatedNodes,
+        });
+
+        enqueue.emit(() => ({
+          type: 'NODES_ADDED',
+          nodes,
+        }));
       }),
-      // TODO: What's the difference between this and `set_restricted_element_ids`?
       update_restricted_element_ids: assign({
         restricted_element_ids: (
           {},

@@ -31,17 +31,17 @@ const completeStage1IntroTutorial = async (
   nodes: NodeActions,
   page: Page
 ): Promise<void> => {
-  await nodes.expectVisible(PolicyNodeID.S3ReadPolicy);
+  await nodes.expectVisible(PolicyNodeID.S3ListBucketsPolicy);
   await tutorial.expectPopoverWithoutNextButton(
-    PolicyNodeID.S3ReadPolicy,
+    PolicyNodeID.S3ListBucketsPolicy,
     POPOVER_TUTORIAL_MESSAGES[0].popover_title
   );
 
   await expect(page.getByTestId(ElementID.NewEntityBtn)).not.toBeVisible();
 
-  await findNodeContentButton(page, PolicyNodeID.S3ReadPolicy).click();
+  await findNodeContentButton(page, PolicyNodeID.S3ListBucketsPolicy).click();
   await tutorial.expectFixedPopoverWithoutNextButton(FIXED_POPOVER_MESSAGES[0].popover_title);
-  await nodes.closeNodePopover(PolicyNodeID.S3ReadPolicy, 'content');
+  await nodes.closeNodePopover(PolicyNodeID.S3ListBucketsPolicy, 'content');
 
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[1].popover_title);
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);

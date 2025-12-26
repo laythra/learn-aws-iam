@@ -1,4 +1,4 @@
-import { and, assign, not } from 'xstate';
+import { and, not } from 'xstate';
 
 import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
@@ -102,10 +102,8 @@ export const stateMachine = createStateMachineSetup<
       initial: 'tutorial_popup1',
       onDone: 'inside_level',
       entry: [
-        assign({
-          nodes: INITIAL_TUTORIAL_POLICY_NODES,
-          level_objectives: LEVEL_OBJECTIVES[0],
-        }),
+        { type: 'assign_nodes', params: { nodes: INITIAL_TUTORIAL_POLICY_NODES } },
+        { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
         'enable_tutorial_state',
       ],
       states: {
@@ -188,9 +186,7 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
-            assign({
-              nodes: [...INITIAL_TUTORIAL_POLICY_NODES, ...INITIAL_TUTORIAL_RESOURCE_NODES],
-            }),
+            { type: 'append_nodes', params: { nodes: INITIAL_TUTORIAL_RESOURCE_NODES } },
           ],
           on: {
             [StatelessStateMachineEvent.IAMNodeARNOpened]: 'copy_arn',
