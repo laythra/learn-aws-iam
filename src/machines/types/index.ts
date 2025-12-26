@@ -174,6 +174,11 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       type: StatefulStateMachineEvent.DeaggregateUserNodes;
       nodeId: string;
     }
+  | {
+      type: StatefulStateMachineEvent.EditNodeMetadata;
+      nodeId: string;
+      newMetadata: Partial<IAMAnyNode['data']>;
+    }
   | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };
 
 export type FixedPopoverMessage = {
@@ -260,6 +265,10 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
    * Extra data overridable by each objective type
    */
   extra_data: Record<string, unknown>;
+  /**
+   * Optional alert messages to show on the created node.
+   */
+  alert_message?: string;
 }
 
 // TODO: Create a common interface for IAMPolicyCreationObjective and IAMResourcePolicyCreationObjective
@@ -386,6 +395,7 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
   readonly initial_position?: string;
   readonly created_node_parent_id?: string;
   readonly layout_group_id?: string;
+  readonly alert_message?: string;
   finished: boolean;
 };
 

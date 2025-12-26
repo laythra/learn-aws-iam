@@ -192,6 +192,7 @@ interface IAMNodeData extends Record<string, unknown> {
    */
   allowed_sources?: IAMNodeEntity[];
   show_pulse_animation?: boolean;
+  alert_message?: string;
 }
 
 interface IAMGuardRailsNodeData<TIsEdgeBlockedFnName extends string = string> extends IAMNodeData {

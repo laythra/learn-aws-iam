@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import AggregatedUsersListButton from './AggregatedUsersListButton';
 import ARNIconButton from './ARNIconButton';
 import DeaggregateUserNodesButton from './DeaggregateUserNodesButton';
+import IAMNodeHelpTooltip from './IAMNodeHelpTooltip';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
 import TagsIconButton from './TagsIconButton';
 import { CanvasStore } from '../stores/canvas-store';
@@ -27,15 +28,14 @@ export interface IAMCanvasNodeProps {
 const MotionFlex = motion(Flex);
 
 /**
- * `IAMCanvasNode` renders a generic square node with a label and an icon.
- * It uses Chakra UI for styling and Ant Design icons for the icon.
+ * `IAMCanvasNode` renders a generic rectangle node node with a label and an icon.
  *
  * Props:
  * @param `id` The unique identifier of the node.
  * @param `data` The node data passed from React Flow.
  */
 export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
-  const { entity, label, handles, image, content, tags } = data;
+  const { entity, label, handles, image, content, tags, alert_message } = data;
   const resourceType = data.entity === IAMNodeEntity.Resource && data.resource_type;
   const isAggregatedNode = data.entity === IAMNodeEntity.AggregatedUsers;
   const selectedNodeId = useSelector(CanvasStore, state => state.context.selectedNodeId);
@@ -103,7 +103,7 @@ export const WithElementidIAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data,
         {handles.map(handle => (
           <Handle key={handle.id} {...handle} />
         ))}
-
+        {alert_message && <IAMNodeHelpTooltip alertMessage={alert_message} />}
         <Flex width='100%' alignItems='center'>
           <Image src={loadLocalImage(image)} width='30%' objectFit='cover' mr='5%' />
           <Box width='65%' textAlign='left'>

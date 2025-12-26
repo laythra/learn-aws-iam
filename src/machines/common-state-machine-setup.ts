@@ -37,7 +37,6 @@ import {
   IAMCodeDefinedEntity,
   IAMEdge,
   IAMGroupNode,
-  IAMPolicyNode,
   IAMUserNode,
 } from '@/types/iam-node-types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -149,7 +148,7 @@ export const createStateMachineSetup = <
           events.forEach(event => enqueue.raise({ type: event }));
         }
       ),
-      edit_policy_node_attributes: enqueueActions(
+      edit_node_attributes: enqueueActions(
         (
           { context, enqueue },
           {
@@ -157,13 +156,13 @@ export const createStateMachineSetup = <
             attributes,
           }: {
             nodeId: string;
-            attributes: Partial<IAMPolicyNode['data']>;
+            attributes: Partial<IAMAnyNode['data']>;
           }
         ) => {
           const { updatedContext, editedNode } = editNodeAttributes<
             TLevelObjectiveID,
             TFinishEventMap,
-            IAMPolicyNode
+            IAMAnyNode
           >(context, nodeId, attributes);
 
           enqueue.assign({
@@ -342,6 +341,13 @@ export const createStateMachineSetup = <
       hide_fixed_popovers: assign({ show_fixed_popovers: false }),
       hide_popups: assign({ show_popups: false }),
       hide_popovers: assign({ show_popovers: false }),
+      hide_node_help_tooltip: enqueueActions(({ enqueue }, { nodeId }: { nodeId: string }) => {
+        enqueue.raise({
+          type: StatefulStateMachineEvent.EditNodeMetadata,
+          nodeId,
+          newMetadata: { alert_message: undefined },
+        });
+      }),
       append_level_objectives: assign({
         level_objectives: (
           { context },

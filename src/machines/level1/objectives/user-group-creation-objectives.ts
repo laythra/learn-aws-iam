@@ -11,5 +11,6 @@ export const USER_GROUP_CREATION_OBJECTIVES: IAMUserGroupCreationObjective<Finis
     entity_id: UserNodeID.FirstUser,
     on_finish_event: NodeCreationFinishEvent.USER_NODE_CREATED,
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
+    alert_message: 'Ensure your new user has read permissions for the S3 Bucket.',
   },
 ];
