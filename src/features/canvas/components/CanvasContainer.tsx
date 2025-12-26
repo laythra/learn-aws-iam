@@ -14,6 +14,7 @@ import { TutorialPopup } from '@/components/Popup/TutorialPopup';
 import RightSidePanel from '@/components/SidePanels/RightSidePanel';
 import { UnnecessaryEdgesNodesWarning } from '@/components/UnnecessaryEdgesNodesWarning';
 import { CodeEditor } from '@/features/code_editor';
+import { NavbarPopoverProvider } from '@/hooks/useNavbarPopover';
 import { CustomTheme } from '@/types';
 
 interface CanvasContainerProps {}
@@ -27,7 +28,9 @@ const CanvasContainer: React.FC<CanvasContainerProps> = () => {
       <GithubCorner />
       <TutorialPopup />
       <MobileWarningPopup />
-      <Navbar />
+      <NavbarPopoverProvider>
+        <Navbar />
+      </NavbarPopoverProvider>
       <HelpButton />
       <HelpPopover />
       <Box h='100vh' w='100%' pt={theme.sizes.navbarHeightInPixels}>
