@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import Markdown from 'react-markdown';
 
-import { remarkChakra } from '@/utils/markdown/chakra-markdown';
+import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
 
 const mobileWarningMessage = `
@@ -47,7 +47,7 @@ export const MobileWarningPopup: React.FC<MobileWarningProps> = () => {
       <ModalContent>
         <ModalHeader>You lack the mobile-friendly permission ⛔</ModalHeader>
         <ModalBody pb={6}>
-          <Markdown components={markdownComponents} rehypePlugins={[remarkChakra]}>
+          <Markdown components={markdownComponents} rehypePlugins={[rehypeChakraBadge]}>
             {mobileWarningMessage}
           </Markdown>
         </ModalBody>

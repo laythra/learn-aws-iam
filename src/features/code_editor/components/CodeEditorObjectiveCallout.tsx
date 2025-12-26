@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import Markdown from 'react-markdown';
 
-import { remarkChakra } from '@/utils/markdown/chakra-markdown';
+import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';
 
 interface CodeEditorObjectiveCalloutProps {
@@ -50,7 +50,7 @@ export const CodeEditorObjectiveCallout: React.FC<CodeEditorObjectiveCalloutProp
       />
 
       <AlertDescription>
-        <Markdown components={components} rehypePlugins={[remarkChakra]}>
+        <Markdown components={components} rehypePlugins={[rehypeChakraBadge]}>
           {calloutMessage}
         </Markdown>
       </AlertDescription>

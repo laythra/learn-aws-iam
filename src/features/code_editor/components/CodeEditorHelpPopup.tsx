@@ -16,7 +16,7 @@ import Markdown from 'react-markdown';
 
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { CustomTheme, IAMNodeEntity } from '@/types';
-import { remarkChakra } from '@/utils/markdown/chakra-markdown';
+import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';
 
 const IAM_POLICY_HELP_POPUP_CONTENT = `
@@ -113,7 +113,7 @@ export const CodeEditorHelpPopup: React.FC<CodeEditorHelpPopup> = () => {
         </ModalHeader>
 
         <ModalBody maxH='400px' overflowY='auto'>
-          <Markdown components={components} rehypePlugins={[remarkChakra]}>
+          <Markdown components={components} rehypePlugins={[rehypeChakraBadge]}>
             {helpPopupContent}
           </Markdown>
         </ModalBody>
