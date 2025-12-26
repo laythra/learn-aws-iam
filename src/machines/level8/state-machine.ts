@@ -163,7 +163,7 @@ export const stateMachine = createStateMachineSetup<
                   },
                 },
                 {
-                  type: 'edit_policy_node_attributes',
+                  type: 'edit_node_attributes',
                   params: {
                     nodeId: PolicyNodeID.SlackServiceManagePolicy,
                     attributes: { editable: false },
@@ -228,7 +228,7 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'hide_popovers',
             {
-              type: 'edit_policy_node_attributes',
+              type: 'edit_node_attributes',
               params: {
                 nodeId: PolicyNodeID.SlackServiceManagePolicy,
                 attributes: { editable: true },

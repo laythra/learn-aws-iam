@@ -13,6 +13,7 @@ import {
   FinishEventMap,
   NodeCreationFinishEvent,
 } from './types/finish-event-enums';
+import { PolicyNodeID, UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
@@ -85,6 +86,17 @@ export const stateMachine = createStateMachineSetup<
       ],
     },
     [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
+    [StatefulStateMachineEvent.EditNodeMetadata]: {
+      actions: [
+        {
+          type: 'edit_node_attributes',
+          params: ({ event }) => ({
+            nodeId: event.nodeId,
+            attributes: event.newMetadata,
+          }),
+        },
+      ],
+    },
     TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
   },
   states: {
@@ -192,15 +204,21 @@ export const stateMachine = createStateMachineSetup<
                     id: LevelObjectiveID.ConnectionTutorialPolicyToTutorialUser,
                   },
                 },
+                {
+                  type: 'hide_node_help_tooltip',
+                  params: { nodeId: PolicyNodeID.S3ReadPolicy },
+                },
               ],
             },
           },
         },
         policy_attached_to_tutorial_user_popover: {
-          entry: {
-            type: 'show_popover_message',
-            params: { message: POPOVER_TUTORIAL_MESSAGES[6] },
-          },
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[6] },
+            },
+          ],
           on: {
             NEXT_POPOVER: 'create_user_popover',
           },
@@ -270,6 +288,10 @@ export const stateMachine = createStateMachineSetup<
                     isVisible: false,
                     elementIds: [ElementID.NewEntityBtn],
                   },
+                },
+                {
+                  type: 'hide_node_help_tooltip',
+                  params: { nodeId: UserNodeID.FirstUser },
                 },
               ],
               target: 'policy_attached',

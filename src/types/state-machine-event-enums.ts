@@ -43,4 +43,5 @@ export enum StatefulStateMachineEvent {
   DeleteEdges = 'DELETE_EDGES',
   DeleteNode = 'DELETE_NODE',
   DeaggregateUserNodes = 'DEAGGREGATE_USER_NODES',
+  EditNodeMetadata = 'EDIT_NODE_METADATA',
 }

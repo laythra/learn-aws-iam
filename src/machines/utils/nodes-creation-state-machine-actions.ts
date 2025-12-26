@@ -73,6 +73,7 @@ export function createNodeFromObjective<
       editable: false,
       parent_id: targetValidObjective?.created_node_parent_id ?? accountId,
       show_pulse_animation: targetValidObjective !== undefined,
+      alert_message: targetValidObjective?.alert_message,
       ...targetValidObjective?.extra_data,
     } as NodeDataFor<E>,
     rootOverrides: {
@@ -155,6 +156,7 @@ export function createUserGroupNode<TLevelObjectiveID, TFinishEventMap extends B
       layout_group_id: targetObjective?.layout_group_id ?? CommonLayoutGroupID.TopLeftVertical,
       unnecessary_node: targetObjective === undefined,
       show_pulse_animation: targetObjective !== undefined,
+      alert_message: targetObjective?.alert_message,
       ...props,
     },
     rootOverrides: {
