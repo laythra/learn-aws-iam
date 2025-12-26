@@ -11,7 +11,7 @@ import Markdown from 'react-markdown';
 
 import { PopoverNextButton } from './PopoverNextButton';
 import { LevelsProgressionContext } from '../providers/level-actor-contexts';
-import { remarkChakra } from '@/utils/markdown/chakra-markdown';
+import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
 
 interface FixedPopover {}
@@ -65,7 +65,7 @@ export const FixedPopover: React.FC<FixedPopover> = () => {
           {popoverMessage.show_close_button && <PopoverCloseButton onClick={hideFixedPopovers} />}
           {popoverMessage.popover_content && (
             <PopoverBody>
-              <Markdown components={markdownComponents} rehypePlugins={[remarkChakra]}>
+              <Markdown components={markdownComponents} rehypePlugins={[rehypeChakraBadge]}>
                 {popoverMessage.popover_content}
               </Markdown>
             </PopoverBody>
