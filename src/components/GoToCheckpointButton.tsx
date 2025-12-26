@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import {
   IconButton,
@@ -11,11 +11,16 @@ import {
   PopoverTrigger,
   Tooltip,
   Box,
+  PopoverFooter,
+  Button,
+  ButtonGroup,
+  Text,
 } from '@chakra-ui/react';
 import { ArrowUturnLeftIcon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
 import { LevelsProgressionContext } from './providers/level-actor-contexts';
+import { useNavbarPopover } from '@/hooks/useNavbarPopover';
 import currentLevelDetailsStore from '@/stores/current-level-details-store';
 
 interface GoToCheckpointButtonProps {}
@@ -25,10 +30,20 @@ const HELP_POPOVER_TIMEOUT = 1000 * 60; // 1 minute
 export const GoToCheckpointButton: React.FC<GoToCheckpointButtonProps> = () => {
   const levelState = LevelsProgressionContext().useSelector(state => state.value, _.isEqual);
   const levelActor = LevelsProgressionContext().useActorRef();
-  const [isPopoverVisible, setPopoverVisible] = useState<boolean>(false);
+
+  const helpPopover = useNavbarPopover('checkpoint-help');
+  const confirmPopover = useNavbarPopover('checkpoint-confirm');
+
+  const handleButtonClick = (): void => {
+    if (helpPopover.isOpen) {
+      helpPopover.onClose();
+    }
+    confirmPopover.onOpen();
+  };
 
   const returnToCheckpoint = (): void => {
     currentLevelDetailsStore.send({ type: 'returnToLastCheckpoint' });
+    confirmPopover.onClose();
   };
 
   useEffect(() => {
@@ -37,22 +52,43 @@ export const GoToCheckpointButton: React.FC<GoToCheckpointButtonProps> = () => {
         levelActor.getSnapshot().context.show_popovers ||
         levelActor.getSnapshot().context.show_fixed_popovers;
 
-      setPopoverVisible(!isAnyPopoverOpen);
+      if (!confirmPopover.isOpen) {
+        if (!isAnyPopoverOpen) {
+          helpPopover.onOpen();
+        }
+      }
     }, HELP_POPOVER_TIMEOUT);
 
     return () => {
       clearTimeout(timeoutID);
-      setPopoverVisible(false);
+      helpPopover.onClose();
     };
-  }, [levelState]);
+  }, [levelState, confirmPopover.isOpen, helpPopover, levelActor]);
+
+  const isPopoverOpen = helpPopover.isOpen || confirmPopover.isOpen;
 
   return (
-    <Tooltip label='Return to Checkpoint' isDisabled={isPopoverVisible}>
+    <Tooltip label='Return to Checkpoint' isDisabled={isPopoverOpen}>
       <Box>
-        <Popover placement='bottom-end' isOpen={isPopoverVisible}>
+        <Popover
+          placement='bottom-end'
+          isOpen={isPopoverOpen}
+          onClose={() => {
+            // Only close help if help is visible
+            if (helpPopover.isOpen) {
+              helpPopover.onClose();
+              return;
+            }
+
+            // Only close confirm if confirm is open
+            if (confirmPopover.isOpen) {
+              confirmPopover.onClose();
+            }
+          }}
+        >
           <PopoverTrigger>
             <IconButton
-              onClick={returnToCheckpoint}
+              onClick={handleButtonClick}
               icon={<ArrowUturnLeftIcon />}
               aria-label='return-to-checkpoint-button'
               color='gray.600'
@@ -66,7 +102,7 @@ export const GoToCheckpointButton: React.FC<GoToCheckpointButtonProps> = () => {
             border='2px solid'
             borderColor='gray.200'
             borderRadius='md'
-            shadow='md'
+            shadow='xl'
             _focus={{
               boxShadow: 'none',
               outline: 'none',
@@ -78,16 +114,45 @@ export const GoToCheckpointButton: React.FC<GoToCheckpointButtonProps> = () => {
               borderColor: 'gray.200',
             }}
           >
-            <PopoverArrow />
-            <PopoverCloseButton onClick={() => setPopoverVisible(false)} />
-            <PopoverHeader fontWeight='semibold' fontSize='16px'>
-              Feeling stuck?
-            </PopoverHeader>
-            <PopoverBody>
-              Click the <strong>Return to Checkpoint</strong> button to go back to your last
-              checkpoint. This will reset your progress and restore previous helpful hints and
-              guidance.
-            </PopoverBody>
+            {helpPopover.isOpen && (
+              <>
+                <PopoverArrow />
+                <PopoverCloseButton onClick={helpPopover.onClose} />
+                <PopoverHeader fontWeight='semibold' fontSize='16px'>
+                  Feeling stuck?
+                </PopoverHeader>
+                <PopoverBody>
+                  Click the <strong>Return to Checkpoint</strong> button to go back to your last
+                  checkpoint. This will reset your progress and restore previous helpful hints and
+                  guidance.
+                </PopoverBody>
+              </>
+            )}
+            {confirmPopover.isOpen && (
+              <>
+                <PopoverHeader fontWeight='semibold' borderBottom='none' pb={2}>
+                  Return to Checkpoint?
+                </PopoverHeader>
+                <PopoverBody pt={0}>
+                  <Text fontSize='md' color='gray.600' mb={2}>
+                    Are you sure you want to return to your last checkpoint?
+                  </Text>
+                  <Text fontSize='md' color='orange.600' fontWeight='medium'>
+                    Progress since the checkpoint will be lost.
+                  </Text>
+                </PopoverBody>
+                <PopoverFooter display='flex' justifyContent='flex-end' border='none'>
+                  <ButtonGroup size='sm' spacing={3}>
+                    <Button variant='outline' onClick={confirmPopover.onClose}>
+                      Cancel
+                    </Button>
+                    <Button colorScheme='blue' onClick={returnToCheckpoint}>
+                      Confirm
+                    </Button>
+                  </ButtonGroup>
+                </PopoverFooter>
+              </>
+            )}
           </PopoverContent>
         </Popover>
       </Box>
