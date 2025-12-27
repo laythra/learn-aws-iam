@@ -98,7 +98,6 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
           source_node: sourceNode,
           target_node: targetNode,
           attached_as: sourceNode.data.entity,
-          show_success_pulse: true,
         },
       });
 
@@ -154,7 +153,6 @@ function createEdgesFromGrantedAccesses<
           source_node: node,
           target_node: nodesById[access.target_node],
           attached_as: node.data.entity,
-          show_success_pulse: true,
         },
       })
     );

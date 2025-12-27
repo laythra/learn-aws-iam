@@ -337,7 +337,6 @@ interface IAMEdgeData extends Record<string, unknown> {
   is_blocked?: boolean;
   parent_edge_id?: string;
   attached_as: IAMNodeEntity;
-  show_success_pulse?: boolean;
 }
 
 export type PartialEdge = Omit<Partial<IAMEdge>, 'data'> & {
