@@ -1,14 +1,8 @@
 import { BaseFinishEventMap } from './objective-types';
 import { ElementID } from '@/config/element-ids';
-import type {
-  HandleID,
-  IAMAnyNode,
-  IAMCodeDefinedEntity,
-  IAMEdge,
-  IAMGroupNode,
-  IAMUserNode,
-} from '@/types';
-import { IAMNodeEntity } from '@/types';
+import { HandleID, IAMCodeDefinedEntity } from '@/types/iam-enums';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,

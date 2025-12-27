@@ -5,7 +5,7 @@ import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types/objective-types';
-import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const CALLOUT_MESSAGE1 = `
   We can grant read access to objects within an S3 bucket using wildcards.

@@ -2,7 +2,8 @@ import { ObjectivesApplicableNodesFnName, ValidateFunctionsFnName } from '../lev
 import { FinishEventMap, PolicyEditFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/machines/types/objective-types';
-import { AccessLevel, HandleID, IAMNodeEntity, PolicyGrantedAccess } from '@/types';
+import { AccessLevel, HandleID, IAMNodeEntity } from '@/types/iam-enums';
+import { PolicyGrantedAccess } from '@/types/iam-policy-types';
 
 const OBJECTIVE1_CALLOUT_MSG = `
   We need to edit this policy to ensure only

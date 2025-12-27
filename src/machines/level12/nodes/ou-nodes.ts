@@ -1,6 +1,7 @@
 import { OUNodeID } from '../types/node-id-enums';
 import { createOUNode } from '@/factories/nodes/ou-node-factory';
-import { CommonLayoutGroupID, IAMOUNode } from '@/types';
+import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMOUNode } from '@/types/iam-node-types';
 
 const TUTORIAL_OU_NODES: Partial<IAMOUNode['data']>[] = [
   {

@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { HelpImage } from './HelpImage';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { HelpTip } from '@/machines/types/context-types';
-import { CustomTheme } from '@/types';
+import { CustomTheme } from '@/types/custom-theme';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 import { loadLocalImage } from '@/utils/image-loader';
 

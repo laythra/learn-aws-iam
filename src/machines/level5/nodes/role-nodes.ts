@@ -1,8 +1,8 @@
 import { INITIAL_TRUST_POLICIES } from '../policy_role_documents/initial-roles';
 import { RoleNodeID } from '../types/node-id-enums';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
-import type { IAMRoleNode } from '@/types';
-import { CommonLayoutGroupID, IAMNodeImage } from '@/types';
+import { CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';
+import { IAMRoleNode } from '@/types/iam-node-types';
 
 const TUTORIAL_ROLE_NODES: Partial<IAMRoleNode['data']>[] = [
   {

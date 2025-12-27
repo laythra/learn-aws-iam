@@ -1,7 +1,8 @@
 import { Position } from '@xyflow/react';
 
 import { createNodeFactory } from './create-node-factory';
-import { HandleID, IAMNodeEntity, IAMNodeImage, IAMResourcePolicyNode } from '@/types';
+import { HandleID, IAMNodeEntity, IAMNodeImage } from '@/types/iam-enums';
+import { IAMResourcePolicyNode } from '@/types/iam-node-types';
 
 export const createResourcePolicyNode = createNodeFactory<
   IAMResourcePolicyNode['data'],

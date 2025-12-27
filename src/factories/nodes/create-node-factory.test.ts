@@ -2,7 +2,8 @@ import { HandleProps, Position } from '@xyflow/react';
 import { describe, it, expect } from 'vitest';
 
 import { createNodeFactory } from './create-node-factory';
-import { IAMAnyNode, IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAnyNode } from '@/types/iam-node-types';
 
 describe('createNodeFactory', () => {
   const defaultHandles: HandleProps[] = [

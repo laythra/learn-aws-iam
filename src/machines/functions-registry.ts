@@ -42,7 +42,7 @@ import {
   ObjectivesApplicableNodesFns as Level9ObjectivesApplicableNodesFns,
   ValidateFunctions as Level9ValidateFunctions,
 } from './level9/level-runtime-fns';
-import { IAMAnyNode, IAMEdge } from '@/types';
+import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 type RegistryFns = {
   objectives_applicable_nodes_fns: Record<string, (nodes: IAMAnyNode[]) => IAMAnyNode[]>;

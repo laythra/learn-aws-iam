@@ -5,7 +5,7 @@ import { SCPNodeID } from '../types/node-id-enums';
 import { createSCPCreationObjective } from '@/factories/nodes_creation_objectives/scp-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
 import { IAMSCPCreationObjective, ObjectiveType } from '@/machines/types/objective-types';
-import { CommonLayoutGroupID } from '@/types';
+import { CommonLayoutGroupID } from '@/types/iam-enums';
 
 const OBJECTIVE_CALLOUT_MSG = `
   We need to create a Service Control Policy (SCP) which blocks the

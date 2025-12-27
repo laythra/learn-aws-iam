@@ -8,7 +8,7 @@ import {
   IAMResourcePolicyCreationObjective,
   ObjectiveType,
 } from '@/machines/types/objective-types';
-import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE1_CALLOUT_MSG = `
   The \`Principal\` takes the same format just like when creating a **Trust Policy**,

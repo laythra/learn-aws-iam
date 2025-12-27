@@ -1,6 +1,6 @@
 import { theme } from '@/theme';
-import { IAMEdge, PartialEdge } from '@/types';
 import { PartialWithRequired } from '@/types/common';
+import { IAMEdge, PartialEdge } from '@/types/iam-node-types';
 import { getEdgeName } from '@/utils/names';
 
 type RootOverrides = PartialWithRequired<Omit<IAMEdge, 'data'>, 'source' | 'target'>;

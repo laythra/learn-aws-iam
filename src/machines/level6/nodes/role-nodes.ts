@@ -1,5 +1,5 @@
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
-import type { IAMRoleNode } from '@/types';
+import { IAMRoleNode } from '@/types/iam-node-types';
 
 const TUTORIAL_ROLE_NODES: Partial<IAMRoleNode['data']>[] = [];
 

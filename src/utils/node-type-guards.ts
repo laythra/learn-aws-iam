@@ -1,4 +1,4 @@
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode, IAMNodeMap } from '@/types/iam-node-types';
 
 // Generic type guard that checks if a node is of a particular entity type.

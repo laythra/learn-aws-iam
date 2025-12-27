@@ -1,6 +1,6 @@
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import useModal from '@/hooks/useModal';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 interface IAMIdentityCreatorContextState {
   closeIdentityCreator: () => void;

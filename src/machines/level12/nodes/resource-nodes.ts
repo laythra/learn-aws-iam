@@ -1,12 +1,8 @@
 import { LayoutGroupID } from '../layout-groups';
 import { AccountID, ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
-import {
-  CommonLayoutGroupID,
-  IAMNodeImage,
-  IAMNodeResourceEntity,
-  type IAMResourceNode,
-} from '@/types';
+import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types/iam-enums';
+import { IAMResourceNode } from '@/types/iam-node-types';
 
 const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {

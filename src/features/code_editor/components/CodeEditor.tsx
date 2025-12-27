@@ -23,7 +23,8 @@ import { EditSubmitButton } from './Edit/EditSubmitButton';
 import { ElementID } from '@/config/element-ids';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
-import { CustomTheme, IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
+import { CustomTheme } from '@/types/custom-theme';
+import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 
 interface CodeEditorProps {}
 

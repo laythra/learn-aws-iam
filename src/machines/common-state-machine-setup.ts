@@ -19,6 +19,8 @@ import {
   deaggregateUserNodes,
 } from './utils/user-node-aggregation-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
+import type { GenericContext } from '@/machines/types/context-types';
+import type { GenericEventData } from '@/machines/types/event-types';
 import type {
   BaseCreationObjective,
   BaseFinishEventMap,
@@ -32,17 +34,9 @@ import type {
   PopoverTutorialMessage,
   PopupTutorialMessage,
 } from '@/machines/types/tutorial-message-types';
-import type { GenericContext } from '@/machines/types/context-types';
-import type { GenericEventData } from '@/machines/types/event-types';
 import currentLevelDetailsStore from '@/stores/current-level-details-store';
-import { IAMNodeEntity } from '@/types';
-import {
-  IAMAnyNode,
-  IAMCodeDefinedEntity,
-  IAMEdge,
-  IAMGroupNode,
-  IAMUserNode,
-} from '@/types/iam-node-types';
+import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 /**

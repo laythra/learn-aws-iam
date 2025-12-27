@@ -1,5 +1,6 @@
 import { ConnectionFilter } from './connection-filter';
-import { IAMAnyNode, IAMEdge, IAMGuardRailsNode, IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAnyNode, IAMEdge, IAMGuardRailsNode } from '@/types/iam-node-types';
 
 /**
  *  computes the guard rails nodes that have connections to the target node

@@ -7,7 +7,7 @@ import {
   BaseFinishEventMap,
   ObjectiveType,
 } from '@/machines/types/objective-types';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 export function createSCPCreationObjective<T extends BaseCreationObjective<BaseFinishEventMap>>(
   overrides: CreationFactoryOverrides<T>

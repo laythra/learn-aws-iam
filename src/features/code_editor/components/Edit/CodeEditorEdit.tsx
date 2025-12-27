@@ -18,7 +18,7 @@ import {
   IAMTrustPolicyEditObjective,
 } from '@/machines/types/objective-types';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
-import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
+import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types/iam-enums';
 import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/utils/iam-code-linter';
 
 interface CodeEditorEditProps {

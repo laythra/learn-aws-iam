@@ -3,7 +3,7 @@ import { AccountID, RoleNodeID } from '../types/node-id-enums';
 import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
 import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types/objective-types';
-import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[][] = [
   [

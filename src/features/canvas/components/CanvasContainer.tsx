@@ -15,7 +15,7 @@ import RightSidePanel from '@/components/SidePanels/RightSidePanel';
 import { UnnecessaryEdgesNodesWarning } from '@/components/UnnecessaryEdgesNodesWarning';
 import { CodeEditor } from '@/features/code_editor';
 import { NavbarPopoverProvider } from '@/hooks/useNavbarPopover';
-import { CustomTheme } from '@/types';
+import { CustomTheme } from '@/types/custom-theme';
 
 interface CanvasContainerProps {}
 

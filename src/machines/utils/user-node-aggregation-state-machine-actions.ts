@@ -2,10 +2,11 @@ import { Edge } from '@xyflow/react';
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
-import { BaseFinishEventMap } from '../types/objective-types';
 import { GenericContext } from '../types/context-types';
+import { BaseFinishEventMap } from '../types/objective-types';
 import { createAggregatedUsersNode } from '@/factories/nodes/aggregate-user-nodes-factory';
-import { IAMAggregatedUsersNode, IAMAnyNode, IAMNodeEntity, IAMUserNode } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAggregatedUsersNode, IAMAnyNode, IAMUserNode } from '@/types/iam-node-types';
 
 function outboundTargetsForUser(userId: string, edges: Edge[]): string {
   return edges

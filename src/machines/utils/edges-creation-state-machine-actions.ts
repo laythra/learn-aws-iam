@@ -8,15 +8,16 @@ import {
   GetLevelGuardRailsBlockedEdgesFns,
   GetLevelObjectivesApplicableNodesFns,
 } from '../functions-registry';
+import { GenericContext } from '../types/context-types';
 import {
   BaseFinishEventMap,
   EdgeConnectionObjective,
   ObjectiveType,
 } from '../types/objective-types';
-import { GenericContext } from '../types/context-types';
 import { createEdge } from '@/factories/edge-factory';
 import { theme } from '@/theme';
-import { IAMNodeEntity, PartialEdge, PolicyGrantedAccess } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { PartialEdge } from '@/types/iam-node-types';
 import {
   IAMAccountNode,
   IAMAnyNode,
@@ -30,6 +31,7 @@ import {
   IAMSCPNode,
   IAMUserNode,
 } from '@/types/iam-node-types';
+import { PolicyGrantedAccess } from '@/types/iam-policy-types';
 import { getEdgeName, getEdgeLabel } from '@/utils/names';
 import { isNodeOfEntity } from '@/utils/node-type-guards';
 

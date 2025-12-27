@@ -1,7 +1,8 @@
 import { Position } from '@xyflow/react';
 
 import { createNodeFactory } from './create-node-factory';
-import { HandleID, IAMAggregatedUsersNode, IAMNodeEntity, IAMNodeImage } from '@/types';
+import { HandleID, IAMNodeEntity, IAMNodeImage } from '@/types/iam-enums';
+import { IAMAggregatedUsersNode } from '@/types/iam-node-types';
 
 export const createAggregatedUsersNode = createNodeFactory<
   IAMAggregatedUsersNode['data'],

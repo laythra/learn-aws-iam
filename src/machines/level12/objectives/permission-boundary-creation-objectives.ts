@@ -7,7 +7,7 @@ import {
   IAMPermissionBoundaryCreationObjective,
   ObjectiveType,
 } from '@/machines/types/objective-types';
-import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 // eslint-disable-next-line max-len
 export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreationObjective<

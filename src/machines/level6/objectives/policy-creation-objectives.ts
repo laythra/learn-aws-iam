@@ -3,7 +3,7 @@ import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-id-enums'
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types/objective-types';
-import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<FinishEventMap>[][] = [
   [

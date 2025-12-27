@@ -1,12 +1,8 @@
 import type { Edge } from '@xyflow/react';
 
-import type {
-  AccessLevel,
-  CreatableIAMNodeEntity,
-  IAMCodeDefinedEntity,
-  PolicyGrantedAccess,
-} from '@/types';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { AccessLevel, CreatableIAMNodeEntity, IAMCodeDefinedEntity } from '@/types/iam-enums';
+import { PolicyGrantedAccess } from '@/types/iam-policy-types';
 
 export type HelpBadge = {
   path: string;

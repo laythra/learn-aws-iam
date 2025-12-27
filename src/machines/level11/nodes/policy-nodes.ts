@@ -2,7 +2,8 @@ import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
-import { AccessLevel, CommonLayoutGroupID, type IAMPolicyNode } from '@/types';
+import { AccessLevel, CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMPolicyNode } from '@/types/iam-node-types';
 
 const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {

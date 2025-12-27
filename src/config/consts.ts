@@ -1,4 +1,4 @@
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 export const IAMCodeDefinedEntities = [
   IAMNodeEntity.Policy,

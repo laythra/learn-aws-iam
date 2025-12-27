@@ -15,7 +15,7 @@ import _ from 'lodash';
 
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 interface RolePermissionsListProps {}
 

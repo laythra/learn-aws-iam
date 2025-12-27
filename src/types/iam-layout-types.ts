@@ -1,4 +1,16 @@
-import { ValidInitialPosition } from '@/utils/node-postition-geomtery';
+export const VALID_INITIAL_POSITIONS = [
+  'center',
+  'top-center',
+  'bottom-center',
+  'left-center',
+  'right-center',
+  'top-left',
+  'top-right',
+  'bottom-left',
+  'bottom-right',
+] as const;
+
+export type ValidInitialPosition = (typeof VALID_INITIAL_POSITIONS)[number];
 
 /**
  * Defines logical placement of nodes in layout groups inside the canvas.

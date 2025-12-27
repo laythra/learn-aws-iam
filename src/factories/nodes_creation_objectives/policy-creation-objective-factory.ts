@@ -7,7 +7,7 @@ import {
   IAMPolicyCreationObjective,
   ObjectiveType,
 } from '@/machines/types/objective-types';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 export function createPolicyCreationObjective<
   T extends IAMPolicyCreationObjective<BaseFinishEventMap, string>,

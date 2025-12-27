@@ -1,24 +1,17 @@
 import { XYPosition, Viewport } from '@xyflow/react';
 
 import { theme } from '@/theme';
-import { IAMAnyNode, NodeLayoutGroup } from '@/types/iam-node-types';
+import {
+  NodeLayoutGroup,
+  ValidInitialPosition,
+  VALID_INITIAL_POSITIONS,
+} from '@/types/iam-layout-types';
+import { IAMAnyNode } from '@/types/iam-node-types';
 
 export const BETWEEN_NODES_SPACING = 20;
-export const VALID_INITIAL_POSITIONS = [
-  'center',
-  'top-center',
-  'bottom-center',
-  'left-center',
-  'right-center',
-  'top-left',
-  'top-right',
-  'bottom-left',
-  'bottom-right',
-] as const;
 
 export const LAYOUT_DIRECTIONS = ['horizontal', 'vertical'] as const;
 
-export type ValidInitialPosition = (typeof VALID_INITIAL_POSITIONS)[number];
 export type LayoutDirection = (typeof LAYOUT_DIRECTIONS)[number];
 
 // Should we memoize this?

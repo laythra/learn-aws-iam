@@ -4,7 +4,7 @@ import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types/objective-types';
-import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE_CALLOUT_MSG = `
   We ultimately want to create two policies that allow connecting to the RDS instances

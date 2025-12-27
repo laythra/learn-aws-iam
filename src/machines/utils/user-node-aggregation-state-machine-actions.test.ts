@@ -7,7 +7,8 @@ import {
 import { createMockContext } from '@/__test-helpers__/context';
 import { createAggregatedUsersNode } from '@/factories/nodes/aggregate-user-nodes-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
-import { IAMNodeEntity, IAMUserNode, IAMAggregatedUsersNode, IAMEdge, IAMAnyNode } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMUserNode, IAMAggregatedUsersNode, IAMEdge, IAMAnyNode } from '@/types/iam-node-types';
 
 const createTestContext = (
   nodes: IAMAnyNode[],

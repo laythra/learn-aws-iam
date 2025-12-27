@@ -6,7 +6,8 @@ import {
   createMockPolicyCreationObjective,
   createMockUserGroupCreationObjective,
 } from '@/__test-helpers__/objectives';
-import { CreatableIAMNodeEntity, IAMAnyNode, IAMNodeEntity } from '@/types';
+import { CreatableIAMNodeEntity, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAnyNode } from '@/types/iam-node-types';
 import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
 vi.mock('@/utils/iam-code-linter', () => ({

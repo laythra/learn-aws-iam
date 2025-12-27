@@ -1,6 +1,6 @@
 import { GroupNodeID, UserNodeID } from './types/node-id-enums';
 import { InitialNodeConnection } from '@/machines/types/event-types';
-import { HandleID } from '@/types';
+import { HandleID } from '@/types/iam-enums';
 
 export const INITIAL_TUTORIAL_CONNECTIONS: InitialNodeConnection[] = [];
 

@@ -1,5 +1,5 @@
 import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
-import { IAMPermissionBoundaryNode } from '@/types';
+import { IAMPermissionBoundaryNode } from '@/types/iam-node-types';
 
 const TUTORIAL_PERMISSION_BOUNDARY_NODES: Partial<IAMPermissionBoundaryNode['data']>[] = [];
 

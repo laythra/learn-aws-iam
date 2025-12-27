@@ -1,6 +1,7 @@
 import { ResourcePolicyNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
-import { CommonLayoutGroupID, type IAMPolicyNode } from '@/types';
+import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMPolicyNode } from '@/types/iam-node-types';
 
 const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {

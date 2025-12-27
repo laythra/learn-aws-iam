@@ -1,5 +1,5 @@
 import { ConnectionFilter } from './connection-filter';
-import { IAMAnyNode, IAMEdge } from '@/types';
+import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 /**
  * computes outobound nodes connected to the given node

@@ -1,8 +1,8 @@
 import { HandleProps } from '@xyflow/react';
 
 import { IAMNodeEntity, IAMNodeImage, IAMNodeResourceEntity } from './iam-enums';
+import { ValidInitialPosition } from './iam-layout-types';
 import { PolicyGrantedAccess } from './iam-policy-types';
-import { ValidInitialPosition } from '@/utils/node-postition-geomtery';
 
 /**
  * Serves as a base interface for all node data types.

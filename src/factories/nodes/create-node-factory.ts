@@ -1,6 +1,7 @@
 import { HandleProps } from '@xyflow/react';
 
-import { IAMAnyNode, IAMNodeEntity, IAMNodeMap } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAnyNode, IAMNodeMap } from '@/types/iam-node-types';
 
 interface BaseFactoryConfig<T, E extends IAMNodeEntity> {
   type: string;

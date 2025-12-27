@@ -1,5 +1,5 @@
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
-import type { IAMPolicyNode } from '@/types';
+import { IAMPolicyNode } from '@/types/iam-node-types';
 
 const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [];
 

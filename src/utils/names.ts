@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 const EDGE_LABELS: { [key: string]: string } = {
   [`${IAMNodeEntity.Policy}-${IAMNodeEntity.User}`]: 'Attached to',

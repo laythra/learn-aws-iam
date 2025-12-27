@@ -6,7 +6,7 @@ import { ElementID } from '@/config/element-ids';
 import { CanvasStore } from '@/features/canvas/stores/canvas-store';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
-import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
+import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 interface CodeEditorHeaderProps {
   selectedIAMEntity: IAMCodeDefinedEntity;
   codeEditorMode: 'create' | 'edit';

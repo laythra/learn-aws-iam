@@ -7,7 +7,7 @@ import {
   IAMResourcePolicyCreationObjective,
   ObjectiveType,
 } from '@/machines/types/objective-types';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 export function createResourcePolicyCreationObjective<
   T extends IAMResourcePolicyCreationObjective<BaseFinishEventMap>,

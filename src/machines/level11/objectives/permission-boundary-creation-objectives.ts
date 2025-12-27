@@ -7,7 +7,7 @@ import {
   IAMPermissionBoundaryCreationObjective,
   ObjectiveType,
 } from '@/machines/types/objective-types';
-import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE_CALLOUT_MSG = `
   This objective requires creating a permission boundary which caps the permissions to:

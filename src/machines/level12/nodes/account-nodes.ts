@@ -1,6 +1,7 @@
 import { AccountID } from '../types/node-id-enums';
 import { createAccountNode } from '@/factories/nodes/account-node-factory';
-import { CommonLayoutGroupID, type IAMAccountNode } from '@/types';
+import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMAccountNode } from '@/types/iam-node-types';
 
 const TUTORIAL_ACCOUNT_NODES: Partial<IAMAccountNode['data']>[] = [
   {

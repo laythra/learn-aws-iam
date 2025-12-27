@@ -1,12 +1,6 @@
 import { Edge, Node } from '@xyflow/react';
 import { DOMKeyframesDefinition, DynamicAnimationOptions } from 'framer-motion';
 
-// Re-export from split files for backwards compatibility
-export * from './iam-enums';
-export * from './iam-policy-types';
-export * from './iam-layout-types';
-export * from './iam-node-data-types';
-
 import { AccessLevel, IAMCodeDefinedEntity, IAMNodeEntity } from './iam-enums';
 import {
   IAMAccountNodeData,
