@@ -1,6 +1,6 @@
 import { PermissionBoundaryID, UserNodeID } from './types/node-id-enums';
-import { InitialNodeConnection } from '../types/event-types';
 import { HandleID } from '@/types/iam-enums';
+import { InitialNodeConnection } from '@/types/iam-node-types';
 
 export const INITIAL_TUTORIAL_CONNECTIONS: InitialNodeConnection[] = [
   {

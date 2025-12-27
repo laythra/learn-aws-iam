@@ -1,7 +1,7 @@
 import { Edge, Node } from '@xyflow/react';
 import { DOMKeyframesDefinition, DynamicAnimationOptions } from 'framer-motion';
 
-import { AccessLevel, IAMCodeDefinedEntity, IAMNodeEntity } from './iam-enums';
+import { AccessLevel, HandleID, IAMCodeDefinedEntity, IAMNodeEntity } from './iam-enums';
 import {
   IAMAccountNodeData,
   IAMAggregatedUsersNodeData,
@@ -86,4 +86,24 @@ interface IAMEdgeData extends Record<string, unknown> {
 
 export type PartialEdge = Omit<Partial<IAMEdge>, 'data'> & {
   data?: Partial<IAMEdge['data']>;
+};
+
+/**
+ * Represents a connection between two nodes at runtime.
+ */
+export type NodeConnection = {
+  from: IAMAnyNode;
+  to: IAMAnyNode;
+  parent_edge_id?: string;
+};
+
+/**
+ * Represents initial connection configuration between nodes by their IDs.
+ * Used for setting up edges when a level is initialized.
+ */
+export type InitialNodeConnection = {
+  from: string;
+  to: string;
+  source_handle?: HandleID;
+  target_handle?: HandleID;
 };

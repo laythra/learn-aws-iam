@@ -1,7 +1,6 @@
 import { BaseFinishEventMap } from './objective-types';
 import { ElementID } from '@/config/element-ids';
-import { HandleID, IAMCodeDefinedEntity } from '@/types/iam-enums';
-import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 import {
   StatefulStateMachineEvent,
@@ -93,16 +92,3 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
       newMetadata: Partial<IAMAnyNode['data']>;
     }
   | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };
-
-export type NodeConnection = {
-  from: IAMAnyNode;
-  to: IAMAnyNode;
-  parent_edge_id?: string;
-};
-
-export type InitialNodeConnection = {
-  from: string;
-  to: string;
-  source_handle?: HandleID;
-  target_handle?: HandleID;
-};
