@@ -1,4 +1,4 @@
-import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types/objective-types';
 
 export enum EdgeConnectionFinishEvent {
   IDENTITY_POLICY_ATTACHED_TO_IAM_USER = 'IDENTITY_POLICY_ATTACHED_TO_IAM_USER',

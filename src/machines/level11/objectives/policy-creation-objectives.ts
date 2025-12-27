@@ -4,7 +4,7 @@ import { FinishEventMap } from '../types/finish-event-enums';
 import { PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
-import { IAMPolicyCreationObjective } from '@/machines/types';
+import { IAMPolicyCreationObjective } from '@/machines/types/objective-types';
 import { CommonLayoutGroupID } from '@/types';
 
 const CALLOUT_MSG = `

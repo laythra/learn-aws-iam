@@ -3,7 +3,7 @@ import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-e
 import { RoleNodeID } from '../types/node-id-enums';
 import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types';
+import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types/objective-types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 const HINT_MSG1 = `

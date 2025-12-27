@@ -4,7 +4,9 @@
 import _ from 'lodash';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
-import { BaseFinishEventMap, GenericContext, InitialNodeConnection } from '../types';
+import { BaseFinishEventMap } from '../types/objective-types';
+import { GenericContext } from '../types/context-types';
+import { InitialNodeConnection } from '../types/event-types';
 import { HandleID, IAMEdge } from '@/types';
 
 export function applyInitialNodeConnections<

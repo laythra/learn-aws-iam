@@ -1,4 +1,4 @@
-import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types/objective-types';
 
 export enum EdgeConnectionFinishEvent {
   RDS1_MANAGE_POLICY_ATTACHED_GROUP1 = 'RDS1_MANAGE_POLICY_ATTACHED_GROUP1',

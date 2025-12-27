@@ -3,7 +3,10 @@ import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/
 import { PermissionBoundaryID } from '../types/node-id-enums';
 import { createPermissionBoundaryCreationObjective } from '@/factories/nodes_creation_objectives/permission-boundary-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
-import { IAMPermissionBoundaryCreationObjective, ObjectiveType } from '@/machines/types';
+import {
+  IAMPermissionBoundaryCreationObjective,
+  ObjectiveType,
+} from '@/machines/types/objective-types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 // eslint-disable-next-line max-len

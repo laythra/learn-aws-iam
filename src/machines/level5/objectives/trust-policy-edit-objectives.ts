@@ -1,6 +1,6 @@
 import { FinishEventMap, TrustPolicyEditFinishEvent } from '../types/finish-event-enums';
 import { RoleNodeID } from '../types/node-id-enums';
-import { IAMTrustPolicyEditObjective, ObjectiveType } from '@/machines/types';
+import { IAMTrustPolicyEditObjective, ObjectiveType } from '@/machines/types/objective-types';
 import { IAMNodeEntity } from '@/types';
 
 export const TRUST_POLICY_EDIT_OBJECTIVES: IAMTrustPolicyEditObjective<FinishEventMap>[][] = [

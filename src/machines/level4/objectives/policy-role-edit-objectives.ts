@@ -1,7 +1,7 @@
 import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { FinishEventMap, NodeEditFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { IAMPolicyEditObjective, ObjectiveType } from '@/machines/types';
+import { IAMPolicyEditObjective, ObjectiveType } from '@/machines/types/objective-types';
 import { AccessLevel, IAMNodeEntity } from '@/types';
 
 const OBJECTIVE_CALLOUT_MSG = `

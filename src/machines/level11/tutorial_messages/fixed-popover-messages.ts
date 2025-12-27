@@ -1,4 +1,4 @@
-import { FixedPopoverMessage } from '@/machines/types';
+import { FixedPopoverMessage } from '@/machines/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
   The currently attached permission boundary to Sephiroth caps his maximum permissions

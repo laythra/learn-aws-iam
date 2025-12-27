@@ -1,4 +1,4 @@
-import { FixedPopoverMessage } from '@/machines/types';
+import { FixedPopoverMessage } from '@/machines/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
   The current setup involves a single **IAM User (Kyouma)** with a set of 3 permissions.

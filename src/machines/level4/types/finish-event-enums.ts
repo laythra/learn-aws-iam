@@ -1,4 +1,4 @@
-import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types/objective-types';
 
 // TODO: Rename to PolicyEditFinishEvent instead
 export enum NodeEditFinishEvent {

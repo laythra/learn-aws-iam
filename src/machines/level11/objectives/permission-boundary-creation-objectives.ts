@@ -3,7 +3,10 @@ import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/finish-event-enums';
 import { PermissionBoundaryID } from '../types/node-id-enums';
 import { createPermissionBoundaryCreationObjective } from '@/factories/nodes_creation_objectives/permission-boundary-creation-objective-factory';
-import { IAMPermissionBoundaryCreationObjective, ObjectiveType } from '@/machines/types';
+import {
+  IAMPermissionBoundaryCreationObjective,
+  ObjectiveType,
+} from '@/machines/types/objective-types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 const OBJECTIVE_CALLOUT_MSG = `

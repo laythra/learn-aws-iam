@@ -1,6 +1,6 @@
 import { PolicyNodeID, ResourceNodeID, UserNodeID } from '../types/node-id-enums';
 import { ElementID } from '@/config/element-ids';
-import type { PopoverTutorialMessage } from '@/machines/types';
+import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
   Let's create your first **Resource Based Policy**.

@@ -1,5 +1,5 @@
 import { PolicyNodeID, RoleNodeID, UserNodeID } from './types/node-id-enums';
-import { InitialNodeConnection } from '../types';
+import { InitialNodeConnection } from '../types/event-types';
 import { HandleID } from '@/types';
 
 export const INITIAL_TUTORIAL_CONNECTIONS: InitialNodeConnection[] = [];

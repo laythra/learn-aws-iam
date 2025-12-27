@@ -11,9 +11,9 @@ import {
 import {
   BaseFinishEventMap,
   EdgeConnectionObjective,
-  GenericContext,
   ObjectiveType,
-} from '../types';
+} from '../types/objective-types';
+import { GenericContext } from '../types/context-types';
 import { createEdge } from '@/factories/edge-factory';
 import { theme } from '@/theme';
 import { IAMNodeEntity, PartialEdge, PolicyGrantedAccess } from '@/types';

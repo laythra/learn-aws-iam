@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 
-import { BaseFinishEventMap, GenericContext } from '@/machines/types';
+import { BaseFinishEventMap } from '@/machines/types/objective-types';
+import { GenericContext } from '@/machines/types/context-types';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
 /**

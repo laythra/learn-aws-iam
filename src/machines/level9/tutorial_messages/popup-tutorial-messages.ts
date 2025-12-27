@@ -1,4 +1,4 @@
-import { PopupTutorialMessage } from '@/machines/types';
+import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 const POPUP_MSG1 = `
   We got a breif introduction to **Tag Based Access Control (TBAC)** in the last level,
   we'll now dive even deeper into utilizing **Tags** and **Conditions** in IAM Policies.

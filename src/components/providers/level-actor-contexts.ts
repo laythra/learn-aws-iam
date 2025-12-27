@@ -45,7 +45,6 @@ const MACHINES: Record<number, AnyLevelMachine> = {
   12: level12StateMachine,
 };
 
-// const cache: Partial<Record<number, ReturnType<typeof createActorContext<AnyLevelMachine>>>> = {};
 // Creating and using the context must be done separately from the provider.
 // Otherwise, HMR breaks with a null context value, causing consumers to reference
 // a previous context value that is no longer present in the upstream provider.

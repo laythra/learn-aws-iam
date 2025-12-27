@@ -23,13 +23,17 @@ import type {
   BaseCreationObjective,
   BaseFinishEventMap,
   EdgeConnectionObjective,
-  FixedPopoverMessage,
   IAMPolicyEditObjective,
   IAMUserGroupCreationObjective,
+  LevelObjective,
+} from '@/machines/types/objective-types';
+import type {
+  FixedPopoverMessage,
   PopoverTutorialMessage,
   PopupTutorialMessage,
-} from '@/machines/types';
-import type { GenericContext, GenericEventData, LevelObjective } from '@/machines/types';
+} from '@/machines/types/tutorial-message-types';
+import type { GenericContext } from '@/machines/types/context-types';
+import type { GenericEventData } from '@/machines/types/event-types';
 import currentLevelDetailsStore from '@/stores/current-level-details-store';
 import { IAMNodeEntity } from '@/types';
 import {
@@ -221,6 +225,7 @@ export const createStateMachineSetup = <
         }));
       }),
       delete_nodes: enqueueActions(({ context, enqueue }, { nodeIds }: { nodeIds: string[] }) => {
+        // Might be better to batch process deletions here for performance
         nodeIds.forEach(nodeId => {
           const node = context.nodes.find(n => n.id === nodeId);
           if (node) {

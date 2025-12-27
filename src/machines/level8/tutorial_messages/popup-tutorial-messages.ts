@@ -1,4 +1,4 @@
-import { PopupTutorialMessage } from '@/machines/types';
+import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 const POPUP_MSG1 = `
   The policies we create so far have been relatively straightforward,
   but as we progress, we’ll need to create more complex policies which mainly involve conditions.|lg

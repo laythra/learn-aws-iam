@@ -168,23 +168,28 @@ export const stateMachine = createStateMachineSetup<
           on: {
             NEXT_POPOVER: 'tutorial_popover4',
           },
-          exit: { type: 'append_nodes', params: { nodes: INITIAL_TUTORIAL_RESOURCE_NODES } },
         },
         tutorial_popover4: {
-          entry: {
-            type: 'show_popover_message',
-            params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
-          },
+          entry: [
+            { type: 'append_nodes', params: { nodes: INITIAL_TUTORIAL_RESOURCE_NODES } },
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
+            },
+          ],
           on: {
             NEXT_POPOVER: 'tutorial_popover5',
           },
-          exit: { type: 'append_nodes', params: { nodes: INITIAL_TUTORIAL_POLICY_NODES } },
         },
         tutorial_popover5: {
-          entry: {
-            type: 'show_popover_message',
-            params: { message: POPOVER_TUTORIAL_MESSAGES[4] },
-          },
+          entry: [
+            { type: 'append_nodes', params: { nodes: INITIAL_TUTORIAL_POLICY_NODES } },
+
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[4] },
+            },
+          ],
           on: {
             NEXT_POPOVER: 'attach_policy_to_tutorial_user',
           },

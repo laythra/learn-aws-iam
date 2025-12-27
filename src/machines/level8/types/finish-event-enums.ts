@@ -1,4 +1,4 @@
-import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types/objective-types';
 
 export enum PolicyEditFinishEvent {
   SLACK_SERVICE_MANAGE_POLICY_EDITED_FIRST_TIME = 'SLACK_SERVICE_MANAGE_POLICY_EDITED_FIRST_TIME',

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { PopupTutorialMessage } from '@/machines/types';
+import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPUP_MSG1 = `
   This interactive tutorial is a practical journey through

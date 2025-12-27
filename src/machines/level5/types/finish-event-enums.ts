@@ -1,5 +1,5 @@
 import { LevelObjectiveID } from './objective-enums';
-import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types/objective-types';
 
 export enum RoleCreationFinishEvent {
   TUTORIAL_ROLE_CREATED = 'TUTORIAL_ROLE_CREATED',

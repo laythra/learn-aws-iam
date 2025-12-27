@@ -16,7 +16,7 @@ import {
   BaseFinishEventMap,
   IAMPolicyEditObjective,
   IAMTrustPolicyEditObjective,
-} from '@/machines/types';
+} from '@/machines/types/objective-types';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types';
 import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/utils/iam-code-linter';

@@ -10,7 +10,7 @@ import _ from 'lodash';
 
 import { badgeExtension, InitializeBadgeWidgets } from '../utils/badge-widget';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
-import { HelpBadge } from '@/machines/types';
+import { HelpBadge } from '@/machines/types/objective-types';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { getLintingErrors } from '@/utils/iam-code-linter';
 import { validateIAMName } from '@/utils/names';

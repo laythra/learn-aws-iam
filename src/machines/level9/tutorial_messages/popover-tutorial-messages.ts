@@ -1,5 +1,5 @@
 import { ElementID } from '@/config/element-ids';
-import type { PopoverTutorialMessage } from '@/machines/types';
+import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
   Let's create a new policy

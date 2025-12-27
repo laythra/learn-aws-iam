@@ -1,25 +1,12 @@
-import type { PlacementWithLogical } from '@chakra-ui/react';
 import type { Edge } from '@xyflow/react';
-import { DynamicAnimationOptions } from 'framer-motion';
 
-import { ElementID } from '@/config/element-ids';
 import type {
   AccessLevel,
   CreatableIAMNodeEntity,
-  HandleID,
-  IAMAnyNode,
-  IAMEdge,
-  IAMGroupNode,
   IAMCodeDefinedEntity,
-  IAMUserNode,
   PolicyGrantedAccess,
-  NodeLayoutGroup,
 } from '@/types';
 import { IAMNodeEntity } from '@/types';
-import {
-  StatefulStateMachineEvent,
-  StatelessStateMachineEvent,
-} from '@/types/state-machine-event-enums';
 
 export type HelpBadge = {
   path: string;
@@ -43,173 +30,6 @@ export enum ObjectiveType {
 export type BaseFinishEventMap = Record<ObjectiveType, string>;
 export type FinishEventMapWithDefaults<T extends Partial<Record<ObjectiveType, string>>> = {
   [K in ObjectiveType]: K extends keyof T ? T[K] : never;
-};
-
-export type NodeConnection = {
-  from: IAMAnyNode;
-  to: IAMAnyNode;
-  parent_edge_id?: string;
-};
-
-export type InitialNodeConnection = {
-  from: string;
-  to: string;
-  source_handle?: HandleID;
-  target_handle?: HandleID;
-};
-
-export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
-  edges: IAMEdge[];
-  edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
-  level_description: string;
-  level_finished?: boolean;
-  level_number: number;
-  level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
-  level_title: string;
-  nodes: IAMAnyNode[];
-  policy_creation_objectives: BaseCreationObjective<TBaseFinishEventMap>[];
-  policy_edit_objectives: IAMPolicyEditObjective<TBaseFinishEventMap>[];
-  popover_content?: PopoverTutorialMessage;
-  popup_content?: PopupTutorialMessage;
-  show_popovers: boolean;
-  show_popups: boolean;
-  show_fixed_popovers: boolean;
-  fixed_popover_content?: FixedPopoverMessage;
-  side_panel_open?: boolean;
-  user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
-  highlighted_element_id?: string;
-  in_tutorial_state?: boolean;
-  show_help_popover?: boolean;
-  whitelisted_element_ids?: string[];
-  help_tips?: HelpTip[];
-  /*
-    Defines the list of elements that are always hidden or disabled, regardless of the current state.
-  */
-  restricted_element_ids?: string[];
-  edges_management_disabled?: boolean;
-  animations?: Record<string, DynamicAnimationOptions>;
-  identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
-  elements_with_animated_red_dot?: ElementID[];
-  show_unncessary_edges_or_nodes_warning?: boolean;
-  layout_groups: NodeLayoutGroup[];
-  blocked_connections?: { from: string; to: string }[];
-}
-
-// Serves as a list of all events that the UI elements can send to the state machine
-export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
-  | {
-      type:
-        | 'NEXT'
-        | 'NEXT_POPOVER'
-        | 'NEXT_POPUP'
-        | 'NEXT_FIXED_POPOVER'
-        | 'CREATE_USER_POPUP_OPENED'
-        | 'HIDE_POPOVERS'
-        | 'HIDE_FIXED_POPOVERS'
-        | 'CREATE_POLICY_POPUP_OPENED'
-        | 'CREATE_IAM_IDENTITY_POPUP_OPENED'
-        | 'TOGGLE_SIDE_PANEL'
-        | StatelessStateMachineEvent
-        | (TBaseFinishEventMap[keyof TBaseFinishEventMap] & string);
-    }
-  | {
-      type: StatefulStateMachineEvent.AddIAMUserGroupNode;
-      node_entity: IAMNodeEntity.Group | IAMNodeEntity.User;
-      node_data: Partial<IAMUserNode['data']> | Partial<IAMGroupNode['data']>;
-    }
-  | {
-      type: StatefulStateMachineEvent.ADDIAMRoleNode;
-      doc_string: string;
-      account_id?: string;
-      label: string;
-    }
-  | {
-      type: StatefulStateMachineEvent.EditIAMPolicyNode;
-      node_id: string;
-      doc_string: string;
-    }
-  | {
-      type: StatefulStateMachineEvent.AddIAMNode;
-      doc_string: string;
-      label: string;
-      account_id?: string;
-      node_entity: IAMCodeDefinedEntity;
-    }
-  | {
-      type: StatefulStateMachineEvent.AddIAMResourcePolicyNode;
-      doc_string: string;
-      label: string;
-      account_id?: string;
-    }
-  | {
-      type: StatefulStateMachineEvent.AddIAMSCPNode;
-      doc_string: string;
-      label: string;
-    }
-  | {
-      type: StatefulStateMachineEvent.AddIAMPermissionBoundaryNode;
-      doc_string: string;
-      label: string;
-      account_id?: string;
-    }
-  | {
-      type: StatefulStateMachineEvent.ConnectNodes;
-      sourceNode: IAMAnyNode;
-      targetNode: IAMAnyNode;
-      isInternalConnection?: boolean;
-    }
-  | {
-      type: StatefulStateMachineEvent.DeleteEdge;
-      edge: IAMEdge;
-    }
-  | {
-      type: StatefulStateMachineEvent.DeleteNode;
-      node: IAMAnyNode;
-    }
-  | {
-      type: StatefulStateMachineEvent.DeleteEdges;
-      edgeIds: string[];
-    }
-  | {
-      type: StatefulStateMachineEvent.DeaggregateUserNodes;
-      nodeId: string;
-    }
-  | {
-      type: StatefulStateMachineEvent.EditNodeMetadata;
-      nodeId: string;
-      newMetadata: Partial<IAMAnyNode['data']>;
-    }
-  | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };
-
-export type FixedPopoverMessage = {
-  popover_title: string;
-  popover_content: string;
-  show_next_button: boolean;
-  show_close_button: boolean;
-  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-};
-
-export type PopoverTutorialMessage = {
-  element_id: string;
-  popover_title: string;
-  popover_content: string;
-  show_next_button: boolean;
-  show_close_button: boolean;
-  popover_placement?: PlacementWithLogical;
-  image_path?: string;
-};
-
-export type PopupTutorialMessage = {
-  /**
-   * The ID of the popup, used for testing purposes.
-   * TODO: Make it required when the popup is used in the tutorial.
-   */
-  id?: string;
-  title: string;
-  content: string;
-  image?: string;
-  lottie_animation?: string;
-  go_to_next_level_button?: boolean;
 };
 
 export type LevelObjective<TObjectiveID, TFinishEventMap extends BaseFinishEventMap> = {
@@ -398,5 +218,3 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
   readonly alert_message?: string;
   finished: boolean;
 };
-
-export type HelpTip = 'ConnectNodes' | 'CreatePolicies';

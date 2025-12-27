@@ -3,7 +3,7 @@ import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
-import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
+import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types/objective-types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 const OBJECTIVE_CALLOUT_MSG = `

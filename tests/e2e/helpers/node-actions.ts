@@ -32,6 +32,12 @@ export class NodeActions {
     await expect(findNode(this.page, nodeId)).not.toBeVisible();
   }
 
+  async expectMultipleHidden(nodeIds: string[]): Promise<void> {
+    for (const nodeId of nodeIds) {
+      await expect(findNode(this.page, nodeId)).not.toBeVisible();
+    }
+  }
+
   async expectEdgeVisible(sourceId: string, targetId: string): Promise<void> {
     await expect(findEdge(this.page, sourceId, targetId)).toBeVisible();
   }

@@ -2,7 +2,8 @@ import { Edge } from '@xyflow/react';
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
-import { BaseFinishEventMap, GenericContext } from '../types';
+import { BaseFinishEventMap } from '../types/objective-types';
+import { GenericContext } from '../types/context-types';
 import { createAggregatedUsersNode } from '@/factories/nodes/aggregate-user-nodes-factory';
 import { IAMAggregatedUsersNode, IAMAnyNode, IAMNodeEntity, IAMUserNode } from '@/types';
 

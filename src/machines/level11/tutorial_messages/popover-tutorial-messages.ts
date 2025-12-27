@@ -1,6 +1,6 @@
 import { PermissionBoundaryID, PolicyNodeID, RoleNodeID, UserNodeID } from '../types/node-id-enums';
 import { ElementID } from '@/config/element-ids';
-import type { PopoverTutorialMessage } from '@/machines/types';
+import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
   Permission boundaries are merely policy documents that cap the maximum permissions

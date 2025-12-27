@@ -1,4 +1,4 @@
-import { FixedPopoverMessage } from '@/machines/types';
+import { FixedPopoverMessage } from '@/machines/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
   Notice that the SCP allows all actions by default.

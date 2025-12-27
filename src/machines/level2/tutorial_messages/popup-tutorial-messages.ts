@@ -1,4 +1,4 @@
-import { PopupTutorialMessage } from '@/machines/types';
+import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
   In the previous level, we learned about the very basics of **IAM users** and **IAM policies**.|lg

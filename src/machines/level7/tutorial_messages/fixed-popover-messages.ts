@@ -1,4 +1,4 @@
-import { FixedPopoverMessage } from '@/machines/types';
+import { FixedPopoverMessage } from '@/machines/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
   We have an **IAM User** and an **S3 Bucket** laying around,

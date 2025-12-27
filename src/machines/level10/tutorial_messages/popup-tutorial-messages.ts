@@ -1,4 +1,4 @@
-import { PopupTutorialMessage } from '@/machines/types';
+import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 const POPUP_MSG1 = `
   We've been exploring **Tag Based Access Control (TBAC)** so far,
   but there's still much more to discover!

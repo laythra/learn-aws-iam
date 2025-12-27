@@ -6,7 +6,7 @@ import {
   BaseFinishEventMap,
   IAMResourcePolicyCreationObjective,
   ObjectiveType,
-} from '@/machines/types';
+} from '@/machines/types/objective-types';
 import { IAMNodeEntity } from '@/types';
 
 export function createResourcePolicyCreationObjective<

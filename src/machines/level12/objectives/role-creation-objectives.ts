@@ -2,7 +2,7 @@ import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-e
 import { AccountID, RoleNodeID } from '../types/node-id-enums';
 import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
-import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types';
+import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types/objective-types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[][] = [

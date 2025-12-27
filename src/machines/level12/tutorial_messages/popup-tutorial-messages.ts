@@ -1,4 +1,4 @@
-import { PopupTutorialMessage } from '@/machines/types';
+import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 const POPUP_MSG1 = `
   Congratulations on reaching Level 12, the grand finale of your AWS IAM journey! 🎉|lg
 

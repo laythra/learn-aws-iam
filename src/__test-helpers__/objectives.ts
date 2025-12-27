@@ -7,7 +7,7 @@ import {
   IAMPolicyCreationObjective,
   IAMUserGroupCreationObjective,
   ObjectiveType,
-} from '@/machines/types';
+} from '@/machines/types/objective-types';
 import { IAMNodeEntity } from '@/types';
 
 export function createMockPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>(

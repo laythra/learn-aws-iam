@@ -2,7 +2,8 @@ import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
 import { GetLevelValidateFunctions } from '../functions-registry';
-import { BaseCreationObjective, BaseFinishEventMap, GenericContext, ObjectiveType } from '../types';
+import { BaseCreationObjective, BaseFinishEventMap, ObjectiveType } from '../types/objective-types';
+import { GenericContext } from '../types/context-types';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
 import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';

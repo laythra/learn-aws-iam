@@ -4,7 +4,7 @@ import { FinishEventMap, NodeCreationFinishEvent } from '../types/finish-event-e
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
+import { IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types/objective-types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
 
 const CALLOUT_MESSAGE1 = `
