@@ -70,11 +70,8 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
 
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<IAMAnyNode, IAMEdge>>();
 
-  // This useEffect sets up subscriptions to the level actor to listen for node and edge changes.
-  // It acts as the synchronization layer between the state machine and the canvas store.
-  // Each event is handled separately to make integrating animations easier in the future.
-  // For example, when edges are deleted, we might wanna trigger a fade-out animation before actually removing them from the state.
-  // Therefore, we separate the "mark for deletion" and "finalize deletion" steps.
+  // This useEffect initializes the canvas store with nodes and edges from the state machine when the React Flow instance becomes available.
+  // We need this initialization because event-driven updates alone aren't sufficient, as events may fire before this hook is set up, causing us to miss them.
   useEffect(() => {
     if (!rfInstance) return;
 
@@ -92,14 +89,21 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
       type: 'setEdges',
       edges: snapshot.context.edges,
     });
+  }, [levelActor, rfInstance]);
+
+  // This useEffect sets up subscriptions to the level actor to listen for node and edge changes.
+  // It acts as the synchronization layer between the state machine and the canvas store.
+  // Each event is handled separately to make integrating animations easier in the future.
+  // For example, when edges are deleted, we might wanna trigger a fade-out animation before actually removing them from the state.
+  // Therefore, we separate the "mark for deletion" and "finalize deletion" steps.
+  useEffect(() => {
+    if (!rfInstance) return;
 
     const edgesDeletedSub = levelActor.on('EDGES_DELETED', ({ edgeIds }: { edgeIds: string[] }) => {
-      // TODO: What we really want here is to have a two-step deletion process for edges:
+      // The deletion process for edges is split into two steps:
       // 1. Mark edges for deletion (this is where we can trigger animations)
       // 2. Finalize edges deletion (actually remove them from the state, happens after animation completes)
-
-      // CanvasStore.send({ type: 'markEdgesForDeletion', edgeIds });
-      CanvasStore.send({ type: 'finalizeEdgesDeletion', edgeIds });
+      CanvasStore.send({ type: 'markEdgesForDeletion', edgeIds });
     });
 
     const nodesDeletedSub = levelActor.on('NODES_DELETED', ({ nodeIds }: { nodeIds: string[] }) => {
@@ -147,7 +151,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     );
 
     const nodeUpdatedSub = levelActor.on('NODE_UPDATED', ({ node }: { node: IAMAnyNode }) => {
-      CanvasStore.send({ type: 'nodeDataUpdated', node });
+      CanvasStore.send({ type: 'updateNodeData', node });
     });
 
     return () => {

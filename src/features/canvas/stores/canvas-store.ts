@@ -21,7 +21,8 @@ type CanvasStoreState = {
   nodeIdWithOpenedTags?: string;
   nodeIdWithOpenedARN?: string;
   nodeIdWithOpenedUsersList?: string;
-  nodesWithDeletionInProgress: Set<string>;
+  nodeIdsWithDeletionInProgress: Set<string>;
+  edgeIdsWithDeletionInProgress: Set<string>;
 };
 
 type NodesPositioningParams = {
@@ -49,7 +50,7 @@ type CanvasStoreEvents = {
   finalizeNodeDeletion: { nodeId: string };
   addEdges: { edges: IAMEdge[] };
   addNodes: { nodes: IAMAnyNode[] } & NodesPositioningParams;
-  nodeDataUpdated: { node: IAMAnyNode };
+  updateNodeData: { node: IAMAnyNode };
   adjustForSidePanelWidthChange: {
     sidePanelWidth: number;
     viewport: Viewport;
@@ -72,7 +73,8 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
   context: {
     nodes: [],
     edges: [],
-    nodesWithDeletionInProgress: new Set<string>(),
+    nodeIdsWithDeletionInProgress: new Set<string>(),
+    edgeIdsWithDeletionInProgress: new Set<string>(),
   },
   on: {
     changeNodesState: (ctx: CanvasStoreState, event: { changes: NodeChange<IAMAnyNode>[] }) => {
@@ -147,9 +149,13 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
       });
     },
     markEdgesForDeletion(ctx: CanvasStoreState, event: { edgeIds: string[] }) {
+      event.edgeIds.forEach(id => {
+        ctx.edgeIdsWithDeletionInProgress.add(id);
+      });
+
+      // Making edges non-interactive to avoid race conditions during deletion
       ctx.edges.forEach(edge => {
         if (event.edgeIds.includes(edge.id) && edge.data) {
-          edge.data.deletion_in_progress = true;
           edge.animated = false;
           edge.interactionWidth = 0;
           edge.selected = false;
@@ -157,15 +163,17 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
         }
       });
     },
+    // TODO: mark nodes for deletion should merely mark them, not remove them right away
     markNodesForDeletion(ctx: CanvasStoreState, event: { nodeIds: string[] }) {
-      event.nodeIds.forEach(id => ctx.nodesWithDeletionInProgress.add(id));
+      ctx.nodes = ctx.nodes.filter(node => !event.nodeIds.includes(node.id));
     },
     finalizeEdgesDeletion(ctx: CanvasStoreState, event: { edgeIds: string[] }) {
       ctx.edges = ctx.edges.filter(edge => !event.edgeIds.includes(edge.id));
+      event.edgeIds.forEach(id => ctx.edgeIdsWithDeletionInProgress.delete(id));
     },
     finalizeNodeDeletion(ctx: CanvasStoreState, event: { nodeId: string }) {
       ctx.nodes = ctx.nodes.filter(node => node.id !== event.nodeId);
-      ctx.nodesWithDeletionInProgress.delete(event.nodeId);
+      ctx.nodeIdsWithDeletionInProgress.delete(event.nodeId);
     },
     addEdges(ctx: CanvasStoreState, event: { edges: IAMEdge[] }) {
       ctx.edges.push(...event.edges);
@@ -181,7 +189,7 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
 
       ctx.nodes.push(...positionedNodes);
     },
-    nodeDataUpdated(ctx: CanvasStoreState, event: { node: IAMAnyNode }) {
+    updateNodeData(ctx: CanvasStoreState, event: { node: IAMAnyNode }) {
       ctx.nodes.find(n => n.id === event.node.id)!.data = event.node.data;
     },
     adjustForSidePanelWidthChange(
@@ -206,6 +214,7 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
             },
           };
         }
+
         return node;
       });
     },
