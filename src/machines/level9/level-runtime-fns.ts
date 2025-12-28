@@ -3,7 +3,8 @@ import rds1ManagePolicySchema from './schemas/policy/rds1-manage-policy.json';
 import rds2managePolicySchema from './schemas/policy/rds2-manage-policy.json';
 import { PolicyNodeID } from './types/node-id-enums';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
-import { IAMAnyNode, IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAnyNode } from '@/types/iam-node-types';
 import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 export const ObjectivesApplicableNodesFns = {

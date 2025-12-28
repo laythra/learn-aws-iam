@@ -1,6 +1,6 @@
 import { ResourceNodeID, RoleNodeID, UserNodeID } from '../types/node-id-enums';
 import { ElementID } from '@/config/element-ids';
-import type { PopoverTutorialMessage } from '@/machines/types';
+import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
   Click on the top right to see view its **Trust Policy**

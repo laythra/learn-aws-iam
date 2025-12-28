@@ -1,8 +1,8 @@
 import { EdgeConnectionFinishEvent, FinishEventMap } from '../types/finish-event-enums';
 import { PolicyNodeID, UserNodeID } from '../types/node-id-enums';
 import { createEdge } from '@/factories/edge-factory';
-import { EdgeConnectionObjective, ObjectiveType } from '@/machines/types';
-import { AccessLevel } from '@/types';
+import { EdgeConnectionObjective, ObjectiveType } from '@/machines/types/objective-types';
+import { AccessLevel } from '@/types/iam-enums';
 
 export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>[][] = [
   [

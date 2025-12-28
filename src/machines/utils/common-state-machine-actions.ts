@@ -1,7 +1,8 @@
 import { produce } from 'immer';
 import _ from 'lodash';
 
-import { BaseFinishEventMap, GenericContext, LevelObjective } from '../types';
+import { GenericContext } from '../types/context-types';
+import { BaseFinishEventMap, LevelObjective } from '../types/objective-types';
 import { ElementID } from '@/config/element-ids';
 
 /**

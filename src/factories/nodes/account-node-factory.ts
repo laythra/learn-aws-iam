@@ -1,7 +1,8 @@
 import { Position } from '@xyflow/react';
 
 import { createNodeFactory } from './create-node-factory';
-import { HandleID, IAMAccountNode, IAMNodeEntity } from '@/types';
+import { HandleID, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAccountNode } from '@/types/iam-node-types';
 
 export const createAccountNode = createNodeFactory<IAMAccountNode['data'], IAMNodeEntity.Account>({
   type: 'account',

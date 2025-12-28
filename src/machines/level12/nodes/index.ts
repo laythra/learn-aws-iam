@@ -7,7 +7,7 @@ import { INITIAL_IN_LEVEL_RESOURCE_NODES, INITIAL_TUTORIAL_RESOURCE_NODES } from
 import { INITIAL_IN_LEVEL_ROLE_NODES } from './role-nodes';
 import { INITIAL_TUTORIAL_SCP_NODES } from './scp-nodes';
 import { INITIAL_IN_LEVEL_USER_NODES, INITIAL_TUTORIAL_USER_NODES } from './user-nodes';
-import { IAMAnyNode } from '@/types';
+import { IAMAnyNode } from '@/types/iam-node-types';
 
 export const INITIAL_TUTORIAL_NODES: IAMAnyNode[] = [
   ...INITIAL_TUTORIAL_ACCOUNT_NODES,

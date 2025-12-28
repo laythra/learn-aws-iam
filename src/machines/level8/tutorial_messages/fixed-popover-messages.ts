@@ -1,4 +1,4 @@
-import { FixedPopoverMessage } from '@/machines/types';
+import { FixedPopoverMessage } from '@/machines/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
   Currently, the same role is allowing users to deploy the Slack Crashlytics Notifier Service,

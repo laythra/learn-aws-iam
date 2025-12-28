@@ -1,6 +1,4 @@
-import _ from 'lodash';
-
-import { PopupTutorialMessage } from '@/machines/types';
+import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPUP_MSG1 = `
   This interactive tutorial is a practical journey through
@@ -30,12 +28,10 @@ const POPUP_MSG2 = `
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
-    id: _.uniqueId('popup-tutorial-'),
     title: 'Learn AWS IAM in a fun way',
     content: POPUP_MSG1,
   },
   {
-    id: _.uniqueId('popup-tutorial-'),
     title: 'Level 1 completed! 🔥',
     content: POPUP_MSG2,
     go_to_next_level_button: true,

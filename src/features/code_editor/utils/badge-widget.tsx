@@ -3,7 +3,7 @@ import { EditorView, Decoration, DecorationSet, WidgetType } from '@codemirror/v
 import { parse } from 'json-source-map';
 import _ from 'lodash';
 
-import { HelpBadge } from '@/machines/types';
+import { HelpBadge } from '@/machines/types/objective-types';
 
 class BadgeWidget extends WidgetType {
   content: string;

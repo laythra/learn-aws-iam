@@ -4,8 +4,10 @@
 import _ from 'lodash';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
-import { BaseFinishEventMap, GenericContext, InitialNodeConnection } from '../types';
-import { HandleID, IAMEdge } from '@/types';
+import { GenericContext } from '../types/context-types';
+import { BaseFinishEventMap } from '../types/objective-types';
+import { HandleID } from '@/types/iam-enums';
+import { IAMEdge, InitialNodeConnection } from '@/types/iam-node-types';
 
 export function applyInitialNodeConnections<
   TLevelObjectiveID,

@@ -1,4 +1,4 @@
-import { ObjectiveType, FinishEventMapWithDefaults } from '@/machines/types';
+import { ObjectiveType, FinishEventMapWithDefaults } from '@/machines/types/objective-types';
 
 export enum RoleCreationFinishEvent {
   DYNAMODB_READ_ROLE_CREATED = 'DYNAMODB_READ_ROLE_CREATED',

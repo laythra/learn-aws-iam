@@ -2,8 +2,8 @@ import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-e
 import { AccountID, RoleNodeID } from '../types/node-id-enums';
 import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
-import { IAMRoleCreationObjective } from '@/machines/types';
-import { CommonLayoutGroupID } from '@/types';
+import { IAMRoleCreationObjective } from '@/machines/types/objective-types';
+import { CommonLayoutGroupID } from '@/types/iam-enums';
 
 export const CALLOUT_MESSAGE1 = `
   The \`Principal\` part in the trust policy defines the entity that is allowed to assume the role.

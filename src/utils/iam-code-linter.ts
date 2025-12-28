@@ -10,11 +10,12 @@ import {
   IAMResourcePolicyCreationObjective,
   IAMRoleCreationObjective,
   IAMSCPCreationObjective,
-} from '@/machines/types';
+} from '@/machines/types/objective-types';
 import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
 import iamRoleTurstPolicySchema from '@/schemas/aws-iam-role-trust-policy-schema.json';
 import sharedConditionSchema from '@/schemas/shared-condition-schema.json';
-import { IAMNodeEntity, IAMCodeDefinedEntity, IAMAnyNode } from '@/types';
+import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types/iam-enums';
+import { IAMAnyNode } from '@/types/iam-node-types';
 
 interface LintConfig {
   validateFunction: ValidateFunction;

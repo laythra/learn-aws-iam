@@ -1,7 +1,7 @@
 // TODO: Remove this file and rely on consts.ts instead
 
 import { IAMCodeDefinedEntities } from '@/config/consts';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 export const MANAGED_POLICIES = {
   AWSS3ReadOnlyAccess: {

@@ -21,7 +21,8 @@ import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createSCPNode } from '@/factories/nodes/scp-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
-import { AccessLevel, IAMAnyNode, IAMEdge } from '@/types';
+import { AccessLevel } from '@/types/iam-enums';
+import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 type ExpectedEdge = {
   source: string;

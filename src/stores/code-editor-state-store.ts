@@ -4,7 +4,7 @@ import { produce } from 'immer';
 import { reduce } from 'lodash';
 
 import { IAMCodeDefinedEntities } from '@/config/consts';
-import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types';
+import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 
 type CodeEditorEvents = {
   setCodeErrorsAndWarnings: {

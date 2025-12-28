@@ -1,5 +1,5 @@
 import { PolicyNodeID, RoleNodeID, UserNodeID } from '../types/node-id-enums';
-import type { PopoverTutorialMessage } from '@/machines/types';
+import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
   The existing role allows users to deploy the Slack Crashlytics Notifier Service,

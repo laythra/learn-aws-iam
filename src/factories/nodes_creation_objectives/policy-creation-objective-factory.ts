@@ -2,8 +2,12 @@ import {
   buildCreationObjectiveFactory,
   CreationFactoryOverrides,
 } from './build-creation-objectives-factory';
-import { BaseFinishEventMap, IAMPolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { IAMNodeEntity } from '@/types';
+import {
+  BaseFinishEventMap,
+  IAMPolicyCreationObjective,
+  ObjectiveType,
+} from '@/machines/types/objective-types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 export function createPolicyCreationObjective<
   T extends IAMPolicyCreationObjective<BaseFinishEventMap, string>,

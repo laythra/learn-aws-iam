@@ -1,9 +1,14 @@
 import { createContext, useState } from 'react';
 
-import { ModalContextState } from '@/types';
-
 interface ModalProviderProps {
   children: React.ReactNode;
+}
+
+export interface ModalContextState {
+  isModalOpen: { [key: string]: boolean };
+  toggleModal: (id: string) => void;
+  openModal: (id: string) => void;
+  closeModal: (id: string) => void;
 }
 
 export const ModalContext = createContext<ModalContextState | undefined>(undefined);

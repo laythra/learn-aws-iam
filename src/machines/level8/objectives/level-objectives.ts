@@ -1,6 +1,6 @@
 import { FinishEventMap } from '../types/finish-event-enums';
 import { LevelObjectiveID } from '../types/objective-enums';
-import { LevelObjective, ObjectiveType } from '@/machines/types';
+import { LevelObjective, ObjectiveType } from '@/machines/types/objective-types';
 
 const Objective1Description = `
   Allow **Senior** users only to read the secret \`Slack Integration Secret\`, by using

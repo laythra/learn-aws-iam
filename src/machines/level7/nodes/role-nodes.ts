@@ -1,7 +1,7 @@
 import { type Node } from '@xyflow/react';
 
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
-import { IAMRoleNode } from '@/types';
+import { IAMRoleNode } from '@/types/iam-node-types';
 
 const TUTORIAL_ROLE_NODES: Partial<IAMRoleNode['data']>[] = [];
 

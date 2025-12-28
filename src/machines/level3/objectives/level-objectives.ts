@@ -1,6 +1,6 @@
 import { FinishEventMap, LevelObjectiveFinishEvent } from '../types/finish-event-enums';
 import { LevelObjectiveID } from '../types/objective-enums';
-import { ObjectiveType, type LevelObjective } from '@/machines/types';
+import { ObjectiveType, type LevelObjective } from '@/machines/types/objective-types';
 
 const OBJECTIVE_MSG1 = `
   Create your first customer managed policy

@@ -3,7 +3,8 @@ import { DEVELOPERS_POLICY_DOCUMENT } from '../policy_role_documents/developers-
 import { INTERNS_POLICY_DOCUMENT } from '../policy_role_documents/interns-policy';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
-import { AccessLevel, CommonLayoutGroupID, IAMPolicyNode } from '@/types';
+import { AccessLevel, CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMPolicyNode } from '@/types/iam-node-types';
 
 const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   {

@@ -1,7 +1,7 @@
 import { ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
-import type { IAMResourceNode } from '@/types';
-import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types';
+import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types/iam-enums';
+import { IAMResourceNode } from '@/types/iam-node-types';
 
 const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   {

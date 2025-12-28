@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
-import { IAMCodeDefinedEntity } from '@/types';
+import { IAMCodeDefinedEntity } from '@/types/iam-enums';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface EditSubmitButtonProps {

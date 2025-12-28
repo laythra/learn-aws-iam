@@ -1,7 +1,9 @@
 import { Viewport } from '@xyflow/react';
 import _ from 'lodash';
 
-import { IAMAnyNode, IAMNodeEntity, NodeLayoutGroup } from '@/types/iam-node-types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { NodeLayoutGroup } from '@/types/iam-layout-types';
+import { IAMAnyNode } from '@/types/iam-node-types';
 import { getNodeInitialPosition } from '@/utils/node-postition-geomtery';
 
 export function positionNewNodes(

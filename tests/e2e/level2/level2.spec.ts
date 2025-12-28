@@ -22,7 +22,7 @@ import {
   ResourceNodeID,
   UserNodeID,
 } from '@/machines/level2/types/node-id-enums';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 const createCustomGroupNode = async (popups: PopupActions, name: string): Promise<void> => {
   await popups.createUserGroupNode(

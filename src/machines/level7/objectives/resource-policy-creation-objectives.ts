@@ -4,8 +4,11 @@ import { FinishEventMap, ResourcePolicyCreationFinishEvent } from '../types/fini
 import { AccountID, ResourceNodeID, ResourcePolicyNodeID } from '../types/node-id-enums';
 import { createResourcePolicyCreationObjective } from '@/factories/nodes_creation_objectives/resource-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { IAMResourcePolicyCreationObjective, ObjectiveType } from '@/machines/types';
-import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import {
+  IAMResourcePolicyCreationObjective,
+  ObjectiveType,
+} from '@/machines/types/objective-types';
+import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE1_CALLOUT_MSG = `
   The \`Principal\` takes the same format just like when creating a **Trust Policy**,

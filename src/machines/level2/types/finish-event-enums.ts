@@ -1,4 +1,4 @@
-import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/machines/types/objective-types';
 
 export enum EdgeConnectionFinishEvent {
   User1AttachedToGroup = 'User1AttachedToGroup',

@@ -1,7 +1,7 @@
 import { Popover, PopoverContent, Portal, PopoverHeader, useTheme } from '@chakra-ui/react';
 
 import { LevelsProgressionContext } from './providers/level-actor-contexts';
-import { CustomTheme } from '@/types';
+import { CustomTheme } from '@/types/custom-theme';
 
 export const UnnecessaryEdgesNodesWarning: React.FC = () => {
   const [anyInvalidEdgesOrNodes, sidePanelOpen] = LevelsProgressionContext().useSelector(state => [

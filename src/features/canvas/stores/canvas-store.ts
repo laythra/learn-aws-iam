@@ -9,7 +9,9 @@ import {
 import { produce } from 'immer';
 
 import { positionNewNodes } from '../utils/apply-node-positions';
-import { IAMAnyNode, IAMEdge, IAMNodeEntity, NodeLayoutGroup } from '@/types/iam-node-types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { NodeLayoutGroup } from '@/types/iam-layout-types';
+import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 type CanvasStoreState = {
   nodes: IAMAnyNode[];

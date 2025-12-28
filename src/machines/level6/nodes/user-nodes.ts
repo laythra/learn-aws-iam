@@ -1,7 +1,7 @@
 import { AccountID, UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
-import type { IAMUserNode } from '@/types';
-import { CommonLayoutGroupID, IAMNodeImage } from '@/types';
+import { CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';
+import { IAMUserNode } from '@/types/iam-node-types';
 
 const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   {

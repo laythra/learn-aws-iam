@@ -8,8 +8,9 @@ import _ from 'lodash';
 import { CanvasStore } from '../stores/canvas-store';
 import { isValidConnection } from '../utils/edges-creation';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
-import { CustomTheme } from '@/types';
-import { IAMAnyNode, IAMEdge, IAMNodeEntity } from '@/types/iam-node-types';
+import { CustomTheme } from '@/types/custom-theme';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface UseCanvasOptions {}

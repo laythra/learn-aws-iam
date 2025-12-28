@@ -7,8 +7,8 @@ import {
   IAMPolicyCreationObjective,
   IAMUserGroupCreationObjective,
   ObjectiveType,
-} from '@/machines/types';
-import { IAMNodeEntity } from '@/types';
+} from '@/machines/types/objective-types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 export function createMockPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
   overrides: Partial<IAMPolicyCreationObjective<TFinishEventMap>> = {}

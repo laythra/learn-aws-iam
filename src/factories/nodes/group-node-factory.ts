@@ -1,7 +1,8 @@
 import { Position } from '@xyflow/react';
 
 import { createNodeFactory } from './create-node-factory';
-import { HandleID, IAMNodeEntity, IAMNodeImage, IAMGroupNode } from '@/types';
+import { HandleID, IAMNodeEntity, IAMNodeImage } from '@/types/iam-enums';
+import { IAMGroupNode } from '@/types/iam-node-types';
 
 export const createGroupNode = createNodeFactory<IAMGroupNode['data'], IAMNodeEntity.Group>({
   type: 'iam_group',

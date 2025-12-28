@@ -1,7 +1,8 @@
 import { SCPNodeID } from '../types/node-id-enums';
 import { createSCPNode } from '@/factories/nodes/scp-node-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
-import { CommonLayoutGroupID, IAMSCPNode } from '@/types';
+import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMSCPNode } from '@/types/iam-node-types';
 
 const TUTORIAL_SCP_NODES: Partial<IAMSCPNode['data']>[] = [
   {

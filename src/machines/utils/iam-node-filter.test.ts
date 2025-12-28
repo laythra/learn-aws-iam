@@ -6,7 +6,8 @@ import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
-import { IAMAnyNode, IAMNodeEntity, IAMNodeResourceEntity } from '@/types';
+import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
+import { IAMAnyNode } from '@/types/iam-node-types';
 
 describe('IAMIAMNodeFilter', () => {
   let mockNodes: IAMAnyNode[];

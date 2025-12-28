@@ -1,7 +1,8 @@
 import { Position } from '@xyflow/react';
 
 import { createNodeFactory } from './create-node-factory';
-import { HandleID, IAMNodeEntity, IAMNodeImage, IAMPermissionBoundaryNode } from '@/types';
+import { HandleID, IAMNodeEntity, IAMNodeImage } from '@/types/iam-enums';
+import { IAMPermissionBoundaryNode } from '@/types/iam-node-types';
 
 export const createPermissionBoundaryNode = createNodeFactory<
   IAMPermissionBoundaryNode['data'],

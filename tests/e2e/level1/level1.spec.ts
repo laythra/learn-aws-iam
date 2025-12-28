@@ -10,7 +10,7 @@ import { LEVEL_OBJECTIVES } from '@/machines/level1/objectives/level-objectives'
 import { POPOVER_TUTORIAL_MESSAGES } from '@/machines/level1/tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from '@/machines/level1/tutorial_messages/popup-tutorial-messages';
 import { UserNodeID, ResourceNodeID, PolicyNodeID } from '@/machines/level1/types/node-id-enums';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 test.describe('Level 1 Entire Flow', () => {
   const goThroughInitialTutorial = async (

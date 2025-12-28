@@ -7,7 +7,7 @@ import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
-import { IAMCodeDefinedEntity } from '@/types';
+import { IAMCodeDefinedEntity } from '@/types/iam-enums';
 
 interface CodeEditorHelpButtonProps {
   selectedEntity: IAMCodeDefinedEntity;

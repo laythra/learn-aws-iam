@@ -6,7 +6,8 @@ import { Handle, NodeResizeControl, Position, useUpdateNodeInternals } from '@xy
 
 import { CanvasStore } from '../stores/canvas-store';
 import { WithPopoverBox } from '@/components/Decorated';
-import { IAMAccountNode, IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAccountNode } from '@/types/iam-node-types';
 
 export interface IAMCanvasNodeProps {
   data: IAMAccountNode['data'];

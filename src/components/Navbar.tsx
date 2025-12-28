@@ -14,7 +14,7 @@ import { ElementID } from '@/config/element-ids';
 import { NewEntityButtonWithPopover } from '@/features/iam_entities';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import currentLevelDetailsStore from '@/stores/current-level-details-store';
-import { CustomTheme } from '@/types';
+import { CustomTheme } from '@/types/custom-theme';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface NavbarProps {}

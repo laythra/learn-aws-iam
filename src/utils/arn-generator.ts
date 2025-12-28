@@ -1,4 +1,4 @@
-import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types';
+import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
 
 type ArnGenerator = (resourceName: string, accountId: string, region?: string) => string;
 

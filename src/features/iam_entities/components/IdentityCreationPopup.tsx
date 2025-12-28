@@ -23,7 +23,8 @@ import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
-import { IAMIdentityEntity, IAMNodeEntity } from '@/types';
+import { IAMIdentityEntity } from '@/types/iam-entities-types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,

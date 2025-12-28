@@ -1,6 +1,6 @@
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { ElementID } from '@/config/element-ids';
-import type { PopoverTutorialMessage } from '@/machines/types';
+import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
   This is an **AWS Managed policy**, click on the top right icon to see its contents

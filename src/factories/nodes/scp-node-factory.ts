@@ -1,7 +1,8 @@
 import { Position } from '@xyflow/react';
 
 import { createNodeFactory } from './create-node-factory';
-import { HandleID, IAMNodeEntity, IAMNodeImage, IAMSCPNode } from '@/types';
+import { HandleID, IAMNodeEntity, IAMNodeImage } from '@/types/iam-enums';
+import { IAMSCPNode } from '@/types/iam-node-types';
 
 export const createSCPNode = createNodeFactory<IAMSCPNode['data'], IAMNodeEntity.SCP>({
   type: 'scp',

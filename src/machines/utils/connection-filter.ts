@@ -1,4 +1,5 @@
-import { IAMEdge, IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMEdge } from '@/types/iam-node-types';
 
 interface FilterGroup {
   filters: Array<(edge: IAMEdge) => boolean>;

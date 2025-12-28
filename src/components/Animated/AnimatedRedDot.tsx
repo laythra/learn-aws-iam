@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
-import { CustomTheme } from '@/types';
+import { CustomTheme } from '@/types/custom-theme';
 
 const MotionDiv = motion(Box);
 

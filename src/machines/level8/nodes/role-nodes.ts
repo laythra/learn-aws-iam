@@ -1,6 +1,7 @@
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { RoleNodeID } from '@/machines/level8/types/node-id-enums';
-import { CommonLayoutGroupID, IAMRoleNode } from '@/types';
+import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMRoleNode } from '@/types/iam-node-types';
 
 const IN_LEVEL_ROLE_NODES: Partial<IAMRoleNode['data']>[] = [
   {

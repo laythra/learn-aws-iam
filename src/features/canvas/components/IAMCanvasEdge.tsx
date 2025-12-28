@@ -7,7 +7,8 @@ import { motion } from 'framer-motion';
 import _ from 'lodash';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { CustomTheme, IAMEdge } from '@/types';
+import { CustomTheme } from '@/types/custom-theme';
+import { IAMEdge } from '@/types/iam-node-types';
 
 const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
   id,

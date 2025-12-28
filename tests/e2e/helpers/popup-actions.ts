@@ -2,7 +2,7 @@ import { Page, expect } from '@playwright/test';
 
 import { findObjectiveCompleteToast, findOperationalPopup } from './locator-helpers';
 import { CodeEditorTabsElementID, ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 export class PopupActions {
   constructor(private page: Page) {}

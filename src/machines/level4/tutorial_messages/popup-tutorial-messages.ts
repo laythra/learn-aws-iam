@@ -1,4 +1,4 @@
-import type { PopupTutorialMessage } from '@/machines/types';
+import type { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
 You are the IAM Security Specialist at *TimeShift Labs*,

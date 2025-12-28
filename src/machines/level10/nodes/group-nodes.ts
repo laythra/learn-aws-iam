@@ -1,7 +1,7 @@
 import { LayoutGroupID } from '../layout-groups';
 import { GroupNodeID } from '../types/node-id-enums';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
-import { type IAMGroupNode } from '@/types';
+import { IAMGroupNode } from '@/types/iam-node-types';
 
 const IN_LEVEL_GROUP_NODES: Partial<IAMGroupNode['data']>[] = [
   {

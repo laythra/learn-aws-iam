@@ -2,7 +2,8 @@ import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
 import { GetLevelValidateFunctions } from '../functions-registry';
-import { BaseCreationObjective, BaseFinishEventMap, GenericContext, ObjectiveType } from '../types';
+import { GenericContext } from '../types/context-types';
+import { BaseCreationObjective, BaseFinishEventMap, ObjectiveType } from '../types/objective-types';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
 import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
@@ -10,20 +11,18 @@ import { createResourcePolicyNode } from '@/factories/nodes/resource-policy-node
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createSCPNode } from '@/factories/nodes/scp-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
+import { IAMNodeEntity, CommonLayoutGroupID, IAMCodeDefinedEntity } from '@/types/iam-enums';
 import {
   IAMAnyNode,
   IAMGroupNode,
-  IAMNodeEntity,
   IAMUserNode,
-  CommonLayoutGroupID,
   IAMCodeDefinedNode,
   IAMRoleNode,
   IAMPolicyNode,
   IAMResourcePolicyNode,
   IAMPermissionBoundaryNode,
   IAMSCPNode,
-  IAMCodeDefinedEntity,
-} from '@/types';
+} from '@/types/iam-node-types';
 import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
 type EntityToNode = {

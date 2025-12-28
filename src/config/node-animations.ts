@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { theme } from '@/theme';
-import { IAMNodeAnimationConfig } from '@/types';
+import { IAMNodeAnimationConfig } from '@/types/iam-node-types';
 
 export enum NODE_ANIMATION_ID {
   ShimmerBackground = 'shimmer-background',

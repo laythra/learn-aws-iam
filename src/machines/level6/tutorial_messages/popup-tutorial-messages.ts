@@ -1,4 +1,4 @@
-import { PopupTutorialMessage } from '@/machines/types';
+import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 const POPUP_MSG1 = `
   **IAM Roles** are quite powerful in the realm of AWS.
   Aside from providing temporary credentials and access,

@@ -15,7 +15,8 @@ import { useSelector } from '@xstate/store/react';
 import Markdown from 'react-markdown';
 
 import codeEditorStateStore from '@/stores/code-editor-state-store';
-import { CustomTheme, IAMNodeEntity } from '@/types';
+import { CustomTheme } from '@/types/custom-theme';
+import { IAMNodeEntity } from '@/types/iam-enums';
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';
 

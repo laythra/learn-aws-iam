@@ -17,7 +17,7 @@ import {
   UserNodeID,
   ResourceNodeID,
 } from '@/machines/level9/types/node-id-enums';
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 const completeInitialTutorial = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);

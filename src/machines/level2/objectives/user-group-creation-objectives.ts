@@ -1,7 +1,7 @@
 import { FinishEventMap, UserGroupCreationFinishEvent } from '../types/finish-event-enums';
 import { GroupNodeID, UserNodeID } from '../types/node-id-enums';
-import { IAMUserGroupCreationObjective, ObjectiveType } from '@/machines/types';
-import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import { IAMUserGroupCreationObjective, ObjectiveType } from '@/machines/types/objective-types';
+import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 export const USER_GROUP_CREATION_OBJECTIVES: IAMUserGroupCreationObjective<FinishEventMap>[] = [
   {

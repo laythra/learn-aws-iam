@@ -3,8 +3,8 @@ import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-e
 import { RoleNodeID } from '../types/node-id-enums';
 import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/machines/config';
-import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types';
-import { CommonLayoutGroupID, IAMNodeEntity } from '@/types';
+import { IAMRoleCreationObjective, ObjectiveType } from '@/machines/types/objective-types';
+import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const HINT_MSG1 = `
   Grant the **EC2 Instance** write access into the **S3 Bucket** \`users-certificates\`

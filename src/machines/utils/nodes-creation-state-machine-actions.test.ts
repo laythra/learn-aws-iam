@@ -6,7 +6,8 @@ import {
   createMockPolicyCreationObjective,
   createMockUserGroupCreationObjective,
 } from '@/__test-helpers__/objectives';
-import { CreatableIAMNodeEntity, IAMNodeEntity } from '@/types';
+import { CreatableIAMNodeEntity, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAnyNode } from '@/types/iam-node-types';
 import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
 vi.mock('@/utils/iam-code-linter', () => ({
@@ -36,7 +37,7 @@ describe('createPermissionPolicy', () => {
     const result = createIAMNode(mockContext, mockDocString, mockLabel, IAMNodeEntity.Policy);
 
     const createdNode = result.updatedContext.nodes.find(
-      n => n.data.entity === IAMNodeEntity.Policy
+      (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.Policy
     );
 
     expect(createdNode).toMatchObject({
@@ -65,7 +66,7 @@ describe('createPermissionPolicy', () => {
 
     const result = createIAMNode(mockContext, mockDocString, mockLabel, IAMNodeEntity.Policy);
     const createdNode = result.updatedContext.nodes.find(
-      n => n.data.entity === IAMNodeEntity.Policy
+      (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.Policy
     );
 
     expect(createdNode).toMatchObject({
@@ -103,7 +104,9 @@ describe.each([
       { label: mockLabel }
     );
 
-    const createdNode = result.updatedContext.nodes.find(n => entityType === n.data.entity);
+    const createdNode = result.updatedContext.nodes.find(
+      (n: IAMAnyNode) => entityType === n.data.entity
+    );
     expect(createdNode).toBeDefined();
     expect(createdNode).toMatchObject({
       data: {
@@ -128,7 +131,9 @@ describe.each([
       { label: mockLabel }
     );
 
-    const createdNode = result.updatedContext.nodes.find(n => entityType === n.data.entity);
+    const createdNode = result.updatedContext.nodes.find(
+      (n: IAMAnyNode) => entityType === n.data.entity
+    );
     expect(createdNode).toBeDefined();
     expect(createdNode).toMatchObject({
       data: {

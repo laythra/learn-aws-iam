@@ -1,5 +1,9 @@
-import { BaseCreationObjective, BaseFinishEventMap, ObjectiveType } from '@/machines/types';
-import { IAMNodeEntity } from '@/types';
+import {
+  BaseCreationObjective,
+  BaseFinishEventMap,
+  ObjectiveType,
+} from '@/machines/types/objective-types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 export type CreationFactoryOverrides<T> = Omit<T, 'finished' | 'type' | 'entity'>;
 

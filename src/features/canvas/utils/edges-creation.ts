@@ -1,4 +1,4 @@
-import { IAMNodeEntity } from '@/types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
 const VALID_CONNECTIONS = new Set<string>(

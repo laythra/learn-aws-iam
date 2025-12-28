@@ -1,7 +1,8 @@
 import { Position } from '@xyflow/react';
 
 import { createNodeFactory } from './create-node-factory';
-import { HandleID, IAMNodeEntity, IAMNodeImage, IAMOUNode } from '@/types';
+import { HandleID, IAMNodeEntity, IAMNodeImage } from '@/types/iam-enums';
+import { IAMOUNode } from '@/types/iam-node-types';
 
 export const createOUNode = createNodeFactory<IAMOUNode['data'], IAMNodeEntity.OU>({
   type: 'ou',

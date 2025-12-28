@@ -14,7 +14,7 @@ import Markdown from 'react-markdown';
 import { GoToNextLevelButton } from './GoToNextLevelButton';
 import { HelpImage } from '../HelpComponents/HelpImage';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
-import { CustomTheme } from '@/types';
+import { CustomTheme } from '@/types/custom-theme';
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
 import { components } from '@/utils/markdown/components';
 
@@ -37,10 +37,7 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
   return (
     <Modal isOpen={showPopups} onClose={() => {}} isCentered motionPreset='slideInBottom'>
       <ModalOverlay />
-      <ModalContent
-        maxW={theme.sizes.modalsMaxWidthInPixels}
-        data-element-id={popupContent.id || 'default-popup-id'} // TODO: Remove fallback ID when all popups have IDs
-      >
+      <ModalContent maxW={theme.sizes.modalsMaxWidthInPixels}>
         <ModalHeader fontWeight='700' fontSize={24} pt={6} data-element-id='tutorial-popup-title'>
           {popupContent.title}
         </ModalHeader>
