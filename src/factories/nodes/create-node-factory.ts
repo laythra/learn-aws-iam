@@ -107,7 +107,7 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
       // it's introducing unnecessary complexity in order to synchronize both
       // TODO: Investigate if both are necessary
       id: dataOverrides?.id ?? rootOverrides?.id ?? TEMPLATE_NODE.id,
-      deletable: dataOverrides?.unnecessary_node,
+      deletable: dataOverrides?.unnecessary_node == true,
       data: {
         ...TEMPLATE_NODE.data,
         ...dataOverrides,

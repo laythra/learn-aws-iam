@@ -49,7 +49,7 @@ type CanvasStoreEvents = {
   markEdgesForDeletion: { edgeIds: string[] };
   markNodesForDeletion: { nodeIds: string[] };
   finalizeEdgesDeletion: { edgeIds: string[] };
-  finalizeNodeDeletion: { nodeId: string };
+  finalizeNodesDeletion: { nodeIds: string[] };
   addEdges: { edges: IAMEdge[] };
   addNodes: { nodes: IAMAnyNode[] } & NodesPositioningParams;
   updateNodeData: { node: IAMAnyNode };
@@ -151,31 +151,42 @@ export const CanvasStore = createStoreWithProducer<CanvasStoreState, CanvasStore
       });
     },
     markEdgesForDeletion(ctx: CanvasStoreState, event: { edgeIds: string[] }) {
-      event.edgeIds.forEach(id => {
-        ctx.edgeIdsWithDeletionInProgress.add(id);
-      });
-
       // Making edges non-interactive to avoid race conditions during deletion
+      // I understand there might be other race conditions, but I won't delve into them now
       ctx.edges.forEach(edge => {
         if (event.edgeIds.includes(edge.id) && edge.data) {
           edge.animated = false;
           edge.interactionWidth = 0;
           edge.selected = false;
+          edge.selectable = false;
           edge.data.hovering_label = undefined;
         }
       });
+
+      event.edgeIds.forEach(id => {
+        ctx.edgeIdsWithDeletionInProgress.add(id);
+      });
     },
-    // TODO: mark nodes for deletion should merely mark them, not remove them right away
     markNodesForDeletion(ctx: CanvasStoreState, event: { nodeIds: string[] }) {
-      ctx.nodes = ctx.nodes.filter(node => !event.nodeIds.includes(node.id));
+      // Making edges non-interactive to avoid race conditions during deletion
+      ctx.nodes.forEach(node => {
+        if (event.nodeIds.includes(node.id)) {
+          node.selected = false;
+          node.selectable = false;
+        }
+      });
+
+      event.nodeIds.forEach(id => {
+        ctx.nodeIdsWithDeletionInProgress.add(id);
+      });
     },
     finalizeEdgesDeletion(ctx: CanvasStoreState, event: { edgeIds: string[] }) {
       ctx.edges = ctx.edges.filter(edge => !event.edgeIds.includes(edge.id));
       event.edgeIds.forEach(id => ctx.edgeIdsWithDeletionInProgress.delete(id));
     },
-    finalizeNodeDeletion(ctx: CanvasStoreState, event: { nodeId: string }) {
-      ctx.nodes = ctx.nodes.filter(node => node.id !== event.nodeId);
-      ctx.nodeIdsWithDeletionInProgress.delete(event.nodeId);
+    finalizeNodesDeletion(ctx: CanvasStoreState, event: { nodeIds: string[] }) {
+      ctx.nodes = ctx.nodes.filter(node => !event.nodeIds.includes(node.id));
+      event.nodeIds.forEach(id => ctx.nodeIdsWithDeletionInProgress.delete(id));
     },
     addEdges(ctx: CanvasStoreState, event: { edges: IAMEdge[] }) {
       ctx.edges.push(...event.edges);

@@ -118,7 +118,7 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
             strokeLinecap='round'
             style={{ pointerEvents: 'none' }}
             initial={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            animate={{ opacity: 0, scale: 0.95, filter: 'blur(1px)' }}
+            animate={{ opacity: 0, scale: 0.95, filter: 'blur(1px)', y: -20 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
             onAnimationComplete={() => {
               CanvasStore.send({ type: 'finalizeEdgesDeletion', edgeIds: [id] });

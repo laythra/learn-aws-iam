@@ -58,3 +58,10 @@ code {
   color: var(--chakra-colors-yellow-800);
   text-transform: uppercase;
 }
+
+/* Disable node outline, shadow and border during deletion animation */
+.react-flow__node:has(.node-deleting) {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}

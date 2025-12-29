@@ -18,7 +18,6 @@ describe('createNodeFactory', () => {
     defaultHandles,
     width: 300,
     height: 100,
-    deletable: true,
     draggable: false,
     initial_position: 'top-left',
     additionalData: { customField: 'customValue' },
@@ -46,6 +45,7 @@ describe('createNodeFactory', () => {
       width: 300,
       height: 100,
       extent: 'parent',
+      deletable: false,
       data: {
         id: 'default-id',
         label: IAMNodeEntity.User,
@@ -69,6 +69,7 @@ describe('createNodeFactory', () => {
       width: 300,
       height: 100,
       extent: 'parent',
+      deletable: false,
       ...rootOverrides,
       data: {
         id: 'custom-id',
@@ -99,6 +100,7 @@ describe('createNodeFactory', () => {
       width: 300,
       height: 100,
       extent: 'parent',
+      deletable: false,
       data: {
         ...baseExpectedData,
         ...dataOverrides,
@@ -131,6 +133,7 @@ describe('createNodeFactory', () => {
       type: 'custom-node',
       height: 100,
       extent: 'parent',
+      deletable: false,
       ...rootOverrides,
       data: {
         ...baseExpectedData,
