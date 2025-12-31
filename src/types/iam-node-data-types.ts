@@ -34,7 +34,7 @@ export interface IAMNodeData extends Record<string, unknown> {
   /**
    * Defines whether the node is required for the user to complete the level
    */
-  unnecessary_node?: boolean;
+  unnecessary_node: boolean;
 
   /**
    * Defines the amount of space between its adjacent vertical nodes

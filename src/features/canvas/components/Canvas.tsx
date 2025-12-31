@@ -51,8 +51,12 @@ const Canvas: React.FC = () => {
   return (
     <ReactFlow
       onNodesChange={changes => {
+        if (changes.some(change => change.type === 'remove')) {
+          return;
+        }
+
         CanvasStore.send({ type: 'changeNodesState', changes });
-        if (!changes.some(change => change.type === 'remove' || change.type === 'add')) return;
+        if (!changes.some(change => change.type === 'add')) return;
 
         setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 300 });
       }}
