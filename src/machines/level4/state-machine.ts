@@ -11,11 +11,9 @@ import { FinishEventMap, NodeEditFinishEvent } from './types/finish-event-enums'
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
+import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { ElementID } from '@/config/element-ids';
-import {
-  StatefulStateMachineEvent,
-  StatelessStateMachineEvent,
-} from '@/types/state-machine-event-enums';
+import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -48,58 +46,7 @@ export const stateMachine = createStateMachineSetup<
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
-    [StatefulStateMachineEvent.EditIAMPolicyNode]: {
-      actions: [
-        {
-          type: 'edit_policy_node',
-          params: ({ event }) => ({ nodeId: event.node_id, docString: event.doc_string }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.AddIAMNode]: {
-      actions: {
-        type: 'add_iam_node',
-        params: ({ event }) => ({
-          docString: event.doc_string,
-          label: event.label,
-          policyNodeType: event.node_entity,
-        }),
-      },
-    },
-    [StatefulStateMachineEvent.ConnectNodes]: {
-      actions: [
-        {
-          type: 'connect_nodes',
-          params: ({ event }) => ({ sourceNode: event.sourceNode, targetNode: event.targetNode }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
-      actions: [
-        {
-          type: 'add_iam_user_group_node',
-          params: ({ event }) => ({ nodeType: event.node_entity, params: event.node_data }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.DeleteEdge]: {
-      actions: [
-        {
-          type: 'delete_edge',
-          params: ({ event }) => ({ edge: event.edge }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.DeleteNode]: {
-      actions: [
-        {
-          type: 'delete_node',
-          params: ({ event }) => ({ node: event.node }),
-        },
-      ],
-    },
-    [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
-    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
+    ...SHARED_TOP_LEVEL_EVENTS,
   },
   states: {
     inside_tutorial: {
