@@ -3246,18 +3246,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@xstate/store@npm:~2.6.0":
-  version: 2.6.0
-  resolution: "@xstate/store@npm:2.6.0"
+"@xstate/store@npm:~3.14.0":
+  version: 3.14.0
+  resolution: "@xstate/store@npm:3.14.0"
   peerDependencies:
-    react: ^18.2.0
+    react: ^18.2.0 || ^19.0.0
     solid-js: ^1.7.6
   peerDependenciesMeta:
     react:
       optional: true
     solid-js:
       optional: true
-  checksum: 10c0/0dcbed3fb6baf0972cd6dda9c5589f2777b5e43f217d14afcb83ac14df6ea22441923c017babe8c95d88a4af0d3e9c2942a7387fd091edc4948bd93d90aff921
+  checksum: 10c0/403a5fa7c0ee3f81f6601290b588191b81b4aaace45f93911159df2d63337b99971967d3149a9c1527a0242df9da3c7643323aa94451f0582f16d08267763203
   languageName: node
   linkType: hard
 
@@ -6142,7 +6142,7 @@ __metadata:
     "@uiw/react-codemirror": "npm:^4.21.21"
     "@vitejs/plugin-react": "npm:^4.3.4"
     "@xstate/react": "npm:^4.1.0"
-    "@xstate/store": "npm:~2.6.0"
+    "@xstate/store": "npm:~3.14.0"
     "@xyflow/react": "npm:^12.5.2"
     ajv: "npm:^8.12.0"
     eslint: "npm:^8.56.0"
@@ -6167,7 +6167,7 @@ __metadata:
     vite-plugin-node-polyfills: "npm:^0.24.0"
     vitest: "npm:^3.1.1"
     web-vitals: "npm:^2.1.0"
-    xstate: "npm:^5.22.1"
+    xstate: "npm:^5.25.0"
   languageName: unknown
   linkType: soft
 
@@ -10653,10 +10653,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"xstate@npm:^5.22.1":
-  version: 5.22.1
-  resolution: "xstate@npm:5.22.1"
-  checksum: 10c0/d219bcb24c2d3e3310778dd3d14177c67922e0bd070e8d150d4775c56672540ddb3de229c314d48166d8c9b77e01eab3b729461282460a956511344ffd0ce628
+"xstate@npm:^5.25.0":
+  version: 5.25.0
+  resolution: "xstate@npm:5.25.0"
+  checksum: 10c0/187f9a8baf504f43b4f6cf9decf72c68c7625e796df2d5221bf8af829a09f7af084ec46e2b94546d0c0168e7abe433632bd12c581fe4e2c0405473842d7aa360
   languageName: node
   linkType: hard
 
