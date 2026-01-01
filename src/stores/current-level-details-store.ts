@@ -23,13 +23,12 @@ type CurrentLevelDetailsEvents = {
  * Each level's state machine is responsible for updating this store when the level is completed.
  */
 
-export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
-  {
+export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents, never>({
+  context: {
     levelNumber: storage.getKey('currentLevel') ? parseInt(storage.getKey('currentLevel')!) : 1,
     reloadCount: 0,
   },
-  {
-    // TODO: These should be referentially transparent functions...
+  on: {
     setLevelNumber: (context: CurrentLevelDetailsState, event: { levelNumber: number }) => {
       storage.removeKey(`level${context.levelNumber}StateCheckpoint`);
       storage.setKey('currentLevel', event.levelNumber.toString());
@@ -38,7 +37,7 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
     incrementLevelNumber: (context: CurrentLevelDetailsState) => {
       const nextLevel = context.levelNumber + 1;
       storage.setKey('currentLevel', nextLevel.toString());
-      return { levelNumber: nextLevel };
+      return { ...context, levelNumber: nextLevel };
     },
     storeLevelProgress: (context: CurrentLevelDetailsState, event) => {
       storage.setKey(
@@ -75,5 +74,5 @@ export default createStore<CurrentLevelDetailsState, CurrentLevelDetailsEvents>(
 
       return context;
     },
-  }
-);
+  },
+});
