@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { setup, enqueueActions, assign, AnyActorLogic, Actor } from 'xstate';
+import { enqueueActions, assign, AnyActorLogic, Actor, setup } from 'xstate';
 
 import { applyInitialNodeConnections } from './utils/apply-initial-edges-state-machine-actions';
 import { editObjectiveState, getElementsWithRedDot } from './utils/common-state-machine-actions';
@@ -64,7 +64,15 @@ export const createStateMachineSetup = <
   return setup({
     types: {} as {
       context: GenericContext<TLevelObjectiveID, TFinishEventMap>;
-      events: GenericEventData<TFinishEventMap>;
+
+      // Doing `{ type: (TFinishEventMap[keyof TFinishEventMap] & string) }` to "expand" the state machine setup
+      // with the level specific events. Each level has its own custom finish events defined in TFinishEventMap.
+      // Since unfortuantely, XState provides no idiomatic way to extend state machine setups with custom events.
+      // I am not fond of this approach, the generic type causes descriminated unions narrowing to not work properly
+      // since the concrete types are not provided in place, so typescript has no way of removing the generic branch when narrowing on compile time.
+      // This limitation is preventing me from utilizing xstate's `createStateConfig` utlility to establish common
+      // modular typed state nodes. If anyone is reading this and has a better idea, SOS!
+      events: GenericEventData | { type: TFinishEventMap[keyof TFinishEventMap] & string };
       emitted:
         | {
             type: 'OBJECTIVE_COMPLETED';

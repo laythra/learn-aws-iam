@@ -18,11 +18,8 @@ import { RoleNodeID, UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
+import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { ElementID } from '@/config/element-ids';
-import {
-  StatefulStateMachineEvent,
-  StatelessStateMachineEvent,
-} from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -47,7 +44,6 @@ export const stateMachine = createStateMachineSetup<
     edges_connection_objectives: [],
     policy_edit_objectives: [],
     user_group_creation_objectives: [],
-    role_creation_objectives: [],
     side_panel_open: false,
     restricted_element_ids: [
       ElementID.CreateUserGroupMenuItem,
@@ -58,46 +54,7 @@ export const stateMachine = createStateMachineSetup<
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
-    [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
-      actions: [
-        {
-          type: 'add_iam_user_group_node',
-          params: ({ event }) => ({ params: event.node_data, nodeType: event.node_entity }),
-        },
-      ],
-    },
-    [StatefulStateMachineEvent.AddIAMNode]: {
-      actions: {
-        type: 'add_iam_node',
-        params: ({ event }) => ({
-          docString: event.doc_string,
-          label: event.label,
-          policyNodeType: event.node_entity,
-          accountId: event.account_id,
-        }),
-      },
-    },
-    [StatefulStateMachineEvent.ConnectNodes]: {
-      actions: [
-        {
-          type: 'connect_nodes',
-          params: ({ event }) => ({
-            sourceNode: event.sourceNode,
-            targetNode: event.targetNode,
-          }),
-        },
-      ],
-    },
-    [StatelessStateMachineEvent.HidePopovers]: { actions: 'hide_popovers' },
-    [StatefulStateMachineEvent.DeleteNode]: {
-      actions: [
-        {
-          type: 'delete_node',
-          params: ({ event }) => ({ node: event.node }),
-        },
-      ],
-    },
-    TOGGLE_SIDE_PANEL: { actions: 'toggle_side_panel' },
+    ...SHARED_TOP_LEVEL_EVENTS,
   },
   states: {
     inside_tutorial: {

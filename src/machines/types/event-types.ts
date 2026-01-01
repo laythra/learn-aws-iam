@@ -1,4 +1,3 @@
-import { BaseFinishEventMap } from './objective-types';
 import { ElementID } from '@/config/element-ids';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
@@ -8,7 +7,7 @@ import {
 } from '@/types/state-machine-event-enums';
 
 // Serves as a list of all events that the UI elements can send to the state machine
-export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
+export type GenericEventData =
   | {
       type:
         | 'NEXT'
@@ -21,8 +20,7 @@ export type GenericEventData<TBaseFinishEventMap extends BaseFinishEventMap> =
         | 'CREATE_POLICY_POPUP_OPENED'
         | 'CREATE_IAM_IDENTITY_POPUP_OPENED'
         | 'TOGGLE_SIDE_PANEL'
-        | StatelessStateMachineEvent
-        | (TBaseFinishEventMap[keyof TBaseFinishEventMap] & string);
+        | StatelessStateMachineEvent;
     }
   | {
       type: StatefulStateMachineEvent.AddIAMUserGroupNode;
