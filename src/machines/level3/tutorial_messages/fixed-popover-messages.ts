@@ -4,7 +4,7 @@ const POPOVER_MSG1 = `
   What you're seeing is the **Policy's** statement,
   it's the core of the policy and it's represented in JSON format.
 
-  Close the **Policy's** statement by clicking on the top right icon.
+  ***Close the Policy's statement by clicking on the top right close icon.***
 `;
 
 const POPOVER_MSG2 = `
@@ -18,17 +18,20 @@ const POPOVER_MSG3 = `
   distinguish an AWS resource across the entire AWS ecosystem.
 
   e.g. \`arn:aws:iam::123456789012:policy/my-policy\`
-`;
 
-const POPOVER_MSG4 = `
   It's not exclusive to **IAM**; rather,
   it's an AWS-wide concept used to identify and reference resources.
 `;
 
+const POPOVER_MSG4 = `
+  An **S3 Bucket** resource is now presented to you.
+  You can copy the **Bucket's ARN** by clicking on the *id* icon \`:icon[IdentificationIcon]:\`
+  and then clicking on the copy \`:icon[ClipboardDocumentIcon]:\` icon next to the ARN.
+`;
+
 const POPOVER_MSG5 = `
-  You nailed it. Developers from both departments
-  have their correct permissions properly setup,
-  but watch out for unnecessary permissions or users 👀.
+  You nailed it! Developers from both departments
+  now have their permissions properly set up 🫡
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
@@ -58,7 +61,8 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
     popover_content: POPOVER_MSG4,
     position: 'top-left',
     show_close_button: false,
-    show_next_button: true,
+    show_next_button: false,
+    tutorial_gif: 'arn',
   },
   {
     popover_title: 'Access Granted 🔥',

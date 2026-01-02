@@ -44,7 +44,13 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
-    restricted_element_ids: [ElementID.CodeEditorRoleTab],
+    restricted_element_ids: [
+      ElementID.CodeEditorRoleTab,
+      ElementID.CodeEditorSCPTab,
+      ElementID.CodeEditorResourcePolicyTab,
+      ElementID.CodeEditorPermissionBoundaryTab,
+      ElementID.CreateUserGroupMenuItem,
+    ],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
@@ -123,22 +129,14 @@ export const stateMachine = createStateMachineSetup<
             params: { message: FIXED_POPOVER_MESSAGES[2] },
           },
           on: {
-            NEXT_FIXED_POPOVER: 'fixed_popover4',
+            NEXT_FIXED_POPOVER: 's3_bucket_introduction',
           },
         },
-        fixed_popover4: {
-          entry: {
-            type: 'show_fixed_popover_message',
-            params: { message: FIXED_POPOVER_MESSAGES[3] },
-          },
-          on: {
-            NEXT_FIXED_POPOVER: 's3_bucket_popover',
-          },
-        },
-        s3_bucket_popover: {
+        s3_bucket_introduction: {
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[3] } },
             { type: 'append_nodes', params: { nodes: INITIAL_TUTORIAL_RESOURCE_NODES } },
           ],
           on: {

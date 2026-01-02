@@ -17,6 +17,7 @@ import { PolicyNodeID, UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
+import { FIXED_POPOVER_MESSAGES } from '../level1/tutorial_messages/fixed-popover-messages';
 import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { ElementID } from '@/config/element-ids';
 
@@ -146,7 +147,8 @@ export const stateMachine = createStateMachineSetup<
         },
         attach_policy_to_tutorial_user: {
           entry: [
-            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[5] } },
+            'hide_popovers',
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
             'enable_edges_management_ability',
           ],
           on: {
@@ -163,6 +165,7 @@ export const stateMachine = createStateMachineSetup<
                   type: 'hide_node_help_tooltip',
                   params: { nodeId: PolicyNodeID.S3ReadPolicy },
                 },
+                'hide_fixed_popovers',
               ],
             },
           },

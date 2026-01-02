@@ -35,6 +35,11 @@ You are tasked with the following points:
 `;
 
 const FIXED_POPOVER_MSG4 = `
+  You can edit a policy's content by clicking the \`:icon[PencilSquareIcon]:\` icon
+  in the top-right corner of the policy's content view.
+`;
+
+const FIXED_POPOVER_MSG5 = `
   Permissions are now sorted out!
   Developers, Data Scientists, and Interns have the correct permissions,
   you should be a master at defining permissions by now!
@@ -63,8 +68,16 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
     show_next_button: true,
   },
   {
-    popover_title: 'Permissions Sorted Out 🔥',
+    popover_title: 'Editing IAM Policies',
     popover_content: FIXED_POPOVER_MSG4,
+    position: 'top-left',
+    show_close_button: false,
+    show_next_button: true,
+    tutorial_gif: 'node-content-editing',
+  },
+  {
+    popover_title: 'Permissions Sorted Out 🔥',
+    popover_content: FIXED_POPOVER_MSG5,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,

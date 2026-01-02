@@ -147,7 +147,7 @@ export const stateMachine = createStateMachineSetup<
         },
         popover3: {
           entry: [
-            'hide_fixed_popovers',
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
           ],
           on: {
@@ -157,7 +157,7 @@ export const stateMachine = createStateMachineSetup<
         fixed_popover3: {
           entry: [
             'hide_popovers',
-            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[3] } },
           ],
           on: {
             [StatelessStateMachineEvent.IAMNodeTagsPopoverClosed]: 'popover4',

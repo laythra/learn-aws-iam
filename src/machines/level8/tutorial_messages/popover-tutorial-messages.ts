@@ -10,9 +10,7 @@ const POPOVER_MSG2 = `
   View the policy's content and **click on the Edit button on the right side to edit it**.
 `;
 
-const POPOVER_MSG3 = `
-  Click on the tags icon 🏷️ to view the tags of the user
-`;
+const POPOVER_MSG3 = ``;
 
 const POPOVER_MSG4 = `
   Let's edit the policy again to use the \`role\` tag instead of the username.
@@ -42,7 +40,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: UserNodeID.JuniorBruce,
-    popover_title: 'Editing the Policy',
+    popover_title: 'View the Tags 🏷️',
     popover_content: POPOVER_MSG3,
     show_next_button: false,
     show_close_button: false,

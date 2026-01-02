@@ -5,7 +5,6 @@ import { Flex, Box, useTheme } from '@chakra-ui/react';
 import Canvas from './Canvas';
 import { GithubCorner } from '@/components/GithubCorner';
 import { HelpButton } from '@/components/HelpComponents/HelpButton';
-import { HelpPopover } from '@/components/HelpComponents/HelpPopover';
 import { Navbar } from '@/components/Navbar';
 import { FixedPopover } from '@/components/Popover/FixedPopover';
 import { ObjectiveCompleteToast } from '@/components/Popover/ObjectiveCompleteToast';
@@ -32,7 +31,6 @@ const CanvasContainer: React.FC<CanvasContainerProps> = () => {
         <Navbar />
       </NavbarPopoverProvider>
       <HelpButton />
-      <HelpPopover />
       <Box h='100vh' w='100%' pt={theme.sizes.navbarHeightInPixels}>
         <Canvas />
       </Box>

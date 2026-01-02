@@ -21,6 +21,11 @@ const FIXED_POPOVER_MSG2 = `
 `;
 
 const FIXED_POPOVER_MSG3 = `
+  You can view tags associated with an IAM entity by clicking on the tags \`:icon[TagIcon]:\`
+  icon on the top-right of the node.
+`;
+
+const FIXED_POPOVER_MSG4 = `
   a tag in IAM is a key-value pair that can be associated with an IAM entity,
   such as a user, role, or policy. Tags are used to organize and manage IAM entities,
 
@@ -45,8 +50,16 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
     show_next_button: true,
   },
   {
-    popover_title: 'Tags in AWS 🏷️',
+    popover_title: 'Applying Conditional Access',
     popover_content: FIXED_POPOVER_MSG3,
+    position: 'top-left',
+    show_close_button: false,
+    show_next_button: false,
+    tutorial_gif: 'tags',
+  },
+  {
+    popover_title: 'Tags in AWS 🏷️',
+    popover_content: FIXED_POPOVER_MSG4,
     position: 'top-left',
     show_close_button: false,
     show_next_button: false,

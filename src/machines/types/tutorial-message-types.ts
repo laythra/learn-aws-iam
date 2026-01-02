@@ -6,6 +6,7 @@ export type FixedPopoverMessage = {
   show_next_button: boolean;
   show_close_button: boolean;
   position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  tutorial_gif?: string;
 };
 
 export type PopoverTutorialMessage = {
@@ -15,13 +16,12 @@ export type PopoverTutorialMessage = {
   show_next_button: boolean;
   show_close_button: boolean;
   popover_placement?: PlacementWithLogical;
-  image_path?: string;
+  tutorial_gif?: string;
 };
 
 export type PopupTutorialMessage = {
   title: string;
   content: string;
-  image?: string;
-  lottie_animation?: string;
+  tutorial_gif?: string;
   go_to_next_level_button?: boolean;
 };
