@@ -1,6 +1,6 @@
 import { Flex, Box, Image } from '@chakra-ui/react';
 
-import { loadLocalImage } from '@/utils/image-loader';
+import { loadTutorialGif } from '@/utils/image-loader';
 
 interface HelpImageProps {
   imagePath: string;
@@ -17,7 +17,7 @@ export const HelpImage: React.FC<HelpImageProps> = ({ imagePath }) => {
         mx='auto'
       >
         <Image
-          src={loadLocalImage(`help-tips-gifs/${imagePath}`, 'gif')}
+          src={loadTutorialGif(`${imagePath}`, 'gif')}
           borderRadius={8}
           height='auto'
           maxW='100%'
