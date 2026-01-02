@@ -1,31 +1,23 @@
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
-import { Snapshot } from 'xstate';
 
 import { CurrentActorContext, getActorContext } from './level-actor-contexts';
-import CurrentLevelDetailsStore from '@/stores/current-level-details-store';
-import storage from '@/utils/storage';
+import { getLevelSnapshotFromStorage } from '@/features/level_progress/level-operations';
+import { LevelDetailsStore } from '@/features/level_progress/store';
 
 interface LevelsProgressionProviderProps {
   children: React.ReactNode;
 }
 
 const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ children }) => {
-  const [levelNumber] = useSelector(
-    CurrentLevelDetailsStore,
-    s => [s.context.levelNumber, s.context.reloadCount],
+  // Restart key is used to force reloading the level actor when level is restarted or changed
+  const [levelNumber, _restartKey] = useSelector(
+    LevelDetailsStore,
+    s => [s.context.levelNumber, s.context.restartKey],
     _.isEqual
   );
 
-  const snapshotRaw = storage.getKey(`level${levelNumber}StateCheckpoint`);
-  let snapshot: Snapshot<unknown> | undefined = undefined;
-
-  try {
-    snapshot = snapshotRaw ? JSON.parse(snapshotRaw) : undefined;
-  } catch {
-    snapshot = undefined;
-  }
-
+  const snapshot = getLevelSnapshotFromStorage(levelNumber);
   const ActorCtx = getActorContext(levelNumber, snapshot);
 
   return (

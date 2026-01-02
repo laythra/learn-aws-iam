@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { enqueueActions, assign, AnyActorLogic, Actor, setup } from 'xstate';
+import { enqueueActions, assign, setup, AnyActorLogic, Actor } from 'xstate';
 
 import { applyInitialNodeConnections } from './utils/apply-initial-edges-state-machine-actions';
 import { editObjectiveState, getElementsWithRedDot } from './utils/common-state-machine-actions';
@@ -19,6 +19,10 @@ import {
   deaggregateUserNodes,
 } from './utils/user-node-aggregation-state-machine-actions';
 import { ElementID } from '@/config/element-ids';
+import {
+  storeLevelCheckpoint,
+  saveSnapshotToDisk,
+} from '@/features/level_progress/level-operations';
 import type { GenericContext } from '@/machines/types/context-types';
 import type { GenericEventData } from '@/machines/types/event-types';
 import type {
@@ -34,7 +38,6 @@ import type {
   PopoverTutorialMessage,
   PopupTutorialMessage,
 } from '@/machines/types/tutorial-message-types';
-import currentLevelDetailsStore from '@/stores/current-level-details-store';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -593,12 +596,7 @@ export const createStateMachineSetup = <
         show_help_popover: true,
       }),
       store_checkpoint: enqueueActions(({ self }) => {
-        queueMicrotask(() => {
-          currentLevelDetailsStore.send({
-            type: 'storeLevelProgress',
-            actor: self as Actor<AnyActorLogic>,
-          });
-        });
+        queueMicrotask(() => storeLevelCheckpoint(self as Actor<AnyActorLogic>));
       }),
       aggregate_user_nodes: enqueueActions(({ context, enqueue }) => {
         const updatedContext = aggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(context);
@@ -624,11 +622,7 @@ export const createStateMachineSetup = <
       // TODO: Remove this! Only used for testing and debugging purposes.
       store_snapshot_to_disk: enqueueActions(({ self }, { filename }: { filename: string }) => {
         queueMicrotask(() => {
-          currentLevelDetailsStore.send({
-            type: 'storeSnapshotAtDisk',
-            actor: self as Actor<AnyActorLogic>,
-            filename,
-          });
+          saveSnapshotToDisk(self as Actor<AnyActorLogic>, filename);
         });
       }),
     },
