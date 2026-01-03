@@ -5,7 +5,6 @@ import { PopupActions } from '../helpers/popup-actions';
 import { test } from '../helpers/test-fixtures';
 import { getTestSolution } from '../helpers/test-solutions';
 import { TutorialActions } from '../helpers/tutorial-actions';
-import { ElementID } from '@/config/element-ids';
 import { LEVEL_OBJECTIVES } from '@/machines/level4/objectives/level-objectives';
 import { FIXED_POPOVER_MESSAGES } from '@/machines/level4/tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from '@/machines/level4/tutorial_messages/popover-tutorial-messages';
@@ -53,9 +52,8 @@ const completeStage1IntroTutorial = async (
   );
 
   await nodes.openNodePopover(PolicyNodeID.DeveloperPolicy, 'content');
-  await tutorial.expectPopoverWithoutNextButton(
-    ElementID.RightSidePanelToggleButton,
-    POPOVER_TUTORIAL_MESSAGES[1].popover_title
+  await tutorial.expectFixedPopoverWithTutorialGifAndClickNext(
+    FIXED_POPOVER_MESSAGES[3].popover_title
   );
 };
 

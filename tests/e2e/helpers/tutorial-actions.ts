@@ -24,6 +24,18 @@ export class TutorialActions {
     await fixedPopover.getByRole('button', { name: /next/i }).click();
   }
 
+  async expectFixedPopoverWithTutorialGif(title: string): Promise<void> {
+    const fixedPopover = findFixedPopover(this.page, title);
+    await expect(fixedPopover).toBeVisible();
+    await expect(fixedPopover.getByTestId('help-image-gif')).toBeVisible();
+  }
+
+  async expectFixedPopoverWithTutorialGifAndClickNext(title: string): Promise<void> {
+    await this.expectFixedPopoverWithTutorialGif(title);
+    const fixedPopover = findFixedPopover(this.page, title);
+    await fixedPopover.getByRole('button', { name: /next/i }).click();
+  }
+
   async expectPopoverWithoutNextButton(nodeId: string, title: string): Promise<void> {
     const popover = findPopover(this.page, nodeId, title);
     await expect(popover).toBeVisible();
