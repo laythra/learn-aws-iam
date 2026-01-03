@@ -23,7 +23,7 @@ const IAMNodeHelpTooltip: React.FC<IAMNodeHelpTooltipProps> = ({ alertMessage })
   return (
     <Tooltip label={alertMessage} placement='left-start' hasArrow offset={[0, 10]}>
       <Box position='absolute' top={2} left={2} width='15px' height='15px' zIndex={2}>
-        <AnimatedRedDot placement='top-left' offset={0} />
+        <AnimatedRedDot offset={0} />
       </Box>
     </Tooltip>
   );

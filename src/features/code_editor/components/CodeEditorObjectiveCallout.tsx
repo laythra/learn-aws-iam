@@ -11,6 +11,7 @@ import {
 import Markdown from 'react-markdown';
 
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
+import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 import { components } from '@/utils/markdown/components';
 
 interface CodeEditorObjectiveCalloutProps {
@@ -50,7 +51,7 @@ export const CodeEditorObjectiveCallout: React.FC<CodeEditorObjectiveCalloutProp
       />
 
       <AlertDescription>
-        <Markdown components={components} rehypePlugins={[rehypeChakraBadge]}>
+        <Markdown components={components} rehypePlugins={[rehypeChakraBadge, rehypeIcon]}>
           {calloutMessage}
         </Markdown>
       </AlertDescription>

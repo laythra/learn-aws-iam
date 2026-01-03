@@ -1,8 +1,27 @@
 import * as React from 'react';
 
-import { Code, Heading, Text, Tooltip, UnorderedList, Badge, OrderedList } from '@chakra-ui/react';
+import {
+  Code,
+  Heading,
+  Text,
+  Tooltip,
+  UnorderedList,
+  Badge,
+  OrderedList,
+  Icon,
+} from '@chakra-ui/react';
 import { chakra } from '@chakra-ui/system';
+import * as HeroIcons from '@heroicons/react/24/solid';
 import { Components } from 'react-markdown';
+
+interface MarkdownNode {
+  properties?: {
+    [key: string]: unknown;
+    name?: string;
+    content?: string;
+    as?: string;
+  };
+}
 
 export const components: Components = {
   p: ({ children }: JSX.IntrinsicElements['p']) => {
@@ -163,4 +182,29 @@ export const components: Components = {
       return <div {...props} />;
     }
   },
-};
+  icon: ({ node, ...props }: { node?: MarkdownNode; [key: string]: unknown }) => {
+    const iconName = node?.properties?.name as string;
+
+    if (!iconName) {
+      return null;
+    }
+
+    const IconComponent = HeroIcons[iconName as keyof typeof HeroIcons];
+
+    if (!IconComponent) {
+      console.warn(`Icon "${iconName}" not found in Heroicons`);
+      return null;
+    }
+
+    return (
+      <Icon
+        as={IconComponent}
+        display='inline-block'
+        verticalAlign='middle'
+        boxSize='1em'
+        mx={1}
+        {...props}
+      />
+    );
+  },
+} as Components;

@@ -6,6 +6,7 @@ import Markdown from 'react-markdown';
 
 import { LevelsProgressionContext } from '../providers/level-actor-contexts';
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
+import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
 
 interface ObjectiveCompletePopoverProps {}
@@ -53,7 +54,10 @@ export const ObjectiveCompleteToast: React.FC<ObjectiveCompletePopoverProps> = (
                   Objective Complete!
                 </Box>
                 <Box fontSize='13px' color='gray.600'>
-                  <Markdown components={markdownComponents} rehypePlugins={[rehypeChakraBadge]}>
+                  <Markdown
+                    components={markdownComponents}
+                    rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
+                  >
                     {message}
                   </Markdown>
                 </Box>

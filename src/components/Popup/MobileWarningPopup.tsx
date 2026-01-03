@@ -5,6 +5,7 @@ import Markdown from 'react-markdown';
 
 import useModal from '@/hooks/useModal';
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
+import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
 
 const mobileWarningMessage = `
@@ -60,7 +61,7 @@ export const MobileWarningPopup: React.FC = () => {
       <ModalContent>
         <ModalHeader>You lack the mobile-friendly permission ⛔</ModalHeader>
         <ModalBody pb={6}>
-          <Markdown components={markdownComponents} rehypePlugins={[rehypeChakraBadge]}>
+          <Markdown components={markdownComponents} rehypePlugins={[rehypeChakraBadge, rehypeIcon]}>
             {mobileWarningMessage}
           </Markdown>
         </ModalBody>
