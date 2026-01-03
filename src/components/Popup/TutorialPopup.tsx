@@ -45,7 +45,7 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
           <Markdown components={components} rehypePlugins={[rehypeChakraBadge]}>
             {popupContent.content}
           </Markdown>
-          {popupContent.image && <HelpImage imagePath={popupContent.image} />}
+          {popupContent.tutorial_gif && <HelpImage gifName={popupContent.tutorial_gif} />}
         </ModalBody>
 
         <ModalFooter>

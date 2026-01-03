@@ -107,6 +107,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_next_button: false,
     show_close_button: true,
     popover_placement: 'top',
+    tutorial_gif: 'connecting-nodes',
   },
   {
     element_id: UserNodeID.TutorialUser,

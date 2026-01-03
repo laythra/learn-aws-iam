@@ -3,13 +3,11 @@ import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  This is an **AWS Managed policy**, click on the top right icon to see its contents
+  This is an **AWS Managed Policy**. Click the top-right icon \`:icon[CodeBracketIcon]:\`
+   to view its contents.
 `;
 
-const POPOVER_MSG2 = `
-  This is an **S3 Bucket**. View and copy the **ARN** by clicking the top-right icon.
-  Remember, the **ARN** uniquely identifies an AWS resource.
-`;
+const POPOVER_MSG2 = ``;
 
 const POPOVER_MSG3 = `
   Using the \`ARN\` you copied, let's create a new **Customer Managed Policy**.
@@ -35,11 +33,11 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: ResourceNodeID.PublicImagesS3Bucket,
-    popover_title: 'Grab the ARN',
+    popover_title: 'Grab the S3 Bucket ARN',
     popover_content: POPOVER_MSG2,
     show_next_button: false,
     show_close_button: false,
-    popover_placement: 'top',
+    popover_placement: 'right',
   },
   {
     element_id: ElementID.NewEntityBtn,

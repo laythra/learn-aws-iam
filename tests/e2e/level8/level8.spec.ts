@@ -88,13 +88,14 @@ const goThroughPopoversAfterFirstEdit = async (
   nodes: NodeActions
 ): Promise<void> => {
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[1].popover_title);
+  await tutorial.expectFixedPopoverWithTutorialGif(FIXED_POPOVER_MESSAGES[2].popover_title);
   await tutorial.expectPopoverWithoutNextButton(
     UserNodeID.JuniorBruce,
     POPOVER_TUTORIAL_MESSAGES[2].popover_title
   );
 
   await findNodeTagsButton(page, UserNodeID.JuniorBruce).click();
-  await tutorial.expectFixedPopoverWithoutNextButton(FIXED_POPOVER_MESSAGES[2].popover_title);
+  await tutorial.expectFixedPopoverWithoutNextButton(FIXED_POPOVER_MESSAGES[3].popover_title);
   await nodes.closeNodePopover(UserNodeID.JuniorBruce, 'tags');
   await tutorial.expectPopoverWithoutNextButton(
     PolicyNodeID.SlackServiceManagePolicy,

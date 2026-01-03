@@ -72,7 +72,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_title: `Nice! 🔥`,
     popover_content: POPOVER_MSG5,
     show_next_button: true,
-    show_close_button: true,
+    show_close_button: false,
     popover_placement: 'start',
   },
   {
@@ -80,7 +80,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_title: `Let\'s add another user`,
     popover_content: POPOVER_MSG6,
     show_next_button: true,
-    show_close_button: true,
+    show_close_button: false,
     popover_placement: 'start',
   },
   {

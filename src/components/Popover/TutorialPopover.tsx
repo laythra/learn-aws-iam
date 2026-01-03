@@ -56,7 +56,11 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
         <Box>{children}</Box>
       </PopoverTrigger>
 
-      <PopoverContent data-element-id={`popover-${elementId}`} variants={{ exit: {}, enter: {} }}>
+      <PopoverContent
+        data-element-id={`popover-${elementId}`}
+        variants={{ exit: {}, enter: {} }}
+        boxShadow='lg'
+      >
         <PopoverArrow />
         <PopoverHeader
           fontWeight='semibold'
@@ -76,7 +80,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
             <Markdown components={markdownComponents} rehypePlugins={[rehypeChakraBadge]}>
               {description}
             </Markdown>
-            {imagePath && <HelpImage imagePath={imagePath} />}
+            {imagePath && <HelpImage gifName={imagePath} />}
           </PopoverBody>
         )}
         {showNextButton && <PopoverNextButton onNextClick={onNextClick} />}

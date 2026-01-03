@@ -40,7 +40,7 @@ export const withPopover = <T extends { 'data-element-id': string }, R = HTMLEle
         showNextButton={popoverContent?.show_next_button as boolean}
         placement={popoverContent?.popover_placement}
         showCloseButton={popoverContent?.show_close_button}
-        imagePath={popoverContent?.image_path}
+        imagePath={popoverContent?.tutorial_gif}
         onNextClick={goToNextPopOver}
         onCloseClick={closePopover}
         elementId={props['data-element-id']}

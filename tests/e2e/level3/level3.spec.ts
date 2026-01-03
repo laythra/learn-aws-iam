@@ -45,7 +45,7 @@ const completeStage1IntroTutorial = async (
 
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[1].popover_title);
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
-  await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[3].popover_title);
+  await tutorial.expectFixedPopoverWithTutorialGif(FIXED_POPOVER_MESSAGES[3].popover_title);
 
   await nodes.expectVisible(ResourceNodeID.PublicImagesS3Bucket);
   await tutorial.expectPopoverWithoutNextButton(
@@ -130,7 +130,11 @@ const connectAllPoliciesToGroups = async (
   await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 };
 
-const verifyFinalState = async (nodes: NodeActions, edges: EdgeActions): Promise<void> => {
+const verifyFinalState = async (
+  nodes: NodeActions,
+  edges: EdgeActions,
+  tutorial: TutorialActions
+): Promise<void> => {
   await nodes.expectMultipleVisible([
     PolicyNodeID.DynamoDBReadWritePolicy,
     PolicyNodeID.CloudFrontReadPolicy,
@@ -148,6 +152,9 @@ const verifyFinalState = async (nodes: NodeActions, edges: EdgeActions): Promise
     [UserNodeID.Laith, ResourceNodeID.CloudFront],
     [UserNodeID.Ali, ResourceNodeID.CloudFront],
   ]);
+
+  await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[4].popover_title);
+  await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[5].title);
 };
 
 test.describe('Stage 1 - Initial Tutorial Flow', () => {
@@ -215,7 +222,7 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
     await test.step('Create all policies first, then connect them', async () => {
       await createAllPolicies(popups);
       await connectAllPoliciesToGroups(nodes, popups);
-      await verifyFinalState(nodes, edges);
+      await verifyFinalState(nodes, edges, tutorial);
     });
   });
 
@@ -260,7 +267,7 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
       await nodes.connectNodes(PolicyNodeID.DynamoDBReadWritePolicy, GroupNodeID.BackendGroup);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
 
-      await verifyFinalState(nodes, edges);
+      await verifyFinalState(nodes, edges, tutorial);
     });
   });
 
@@ -298,7 +305,7 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
       );
 
       await connectAllPoliciesToGroups(nodes, popups);
-      await verifyFinalState(nodes, edges);
+      await verifyFinalState(nodes, edges, tutorial);
     });
   });
 
@@ -344,7 +351,7 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
       await nodes.connectNodes(PolicyNodeID.S3ReadWritePolicy, GroupNodeID.FrontendGroup);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
 
-      await verifyFinalState(nodes, edges);
+      await verifyFinalState(nodes, edges, tutorial);
     });
   });
 
@@ -390,7 +397,7 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
       await nodes.connectNodes(PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 
-      await verifyFinalState(nodes, edges);
+      await verifyFinalState(nodes, edges, tutorial);
     });
   });
 });
@@ -426,7 +433,7 @@ test.describe('Complete Level - End to End', () => {
       await verifyStage3InitialSetup(nodes, edges);
       await createAllPolicies(popups);
       await connectAllPoliciesToGroups(nodes, popups);
-      await verifyFinalState(nodes, edges);
+      await verifyFinalState(nodes, edges, tutorial);
     });
   });
 });

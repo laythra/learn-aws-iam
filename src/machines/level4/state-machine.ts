@@ -111,12 +111,25 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'tutorial_finished',
+            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'policy_editing_fixed_popover',
+          },
+        },
+        policy_editing_fixed_popover: {
+          entry: [
+            {
+              type: 'show_fixed_popover_message',
+              params: { message: FIXED_POPOVER_MESSAGES[3] },
+            },
+            'hide_popovers',
+          ],
+          on: {
+            NEXT_FIXED_POPOVER: 'tutorial_finished',
           },
         },
         tutorial_finished: {
           entry: [
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
+            'hide_fixed_popovers',
             {
               type: 'update_red_dot_visibility',
               params: {

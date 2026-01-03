@@ -23,7 +23,7 @@ const FIXED_POPOVER_MSG3 = `
   * Creating a permission policy which allows attaching polices to other roles
   but *only* to roles that have the previous permission boundary attached.
 
-  Click \`Next\` to demonstrate what this means in practice.
+  *** Click \`Next\` to demonstrate what this means in practice. ***
 `;
 
 const FIXED_POPOVER_MSG4 = `
