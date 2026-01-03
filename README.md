@@ -1,46 +1,47 @@
-# Getting Started with Create React App
+# Learn AWS IAM Interactively
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Tests](https://github.com/laythra/learnawsiam/actions/workflows/test.yml/badge.svg)
+![Lint](https://github.com/laythra/learnawsiam/actions/workflows/lint.yml/badge.svg)
+![Playwright Tests](https://github.com/laythra/learnawsiam/actions/workflows/playwright.yml/badge.svg)
 
-## Available Scripts
+## 🎯 Purpose
 
-In the project directory, you can run:
+AWS IAM is easily the most fundamental and most used service in the AWS ecosystem. It’s pretty powerful and flexible, but with this great power and flexibility comes inevitable complexity and a steep learning curve.
 
-### `yarn start`
+This Interactive Project, inspired by learn-git-branching, aims to provide a hands-on learning experience that reinforces core principles, helps developers (and anyone working with AWS) develop practical mastery, and build a fundamental understanding of AWS IAM.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 🧠 Core Idea
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The project presents AWS IAM through an interactive, visual canvas. Instead of reading lengthy documentation, learning happens by directly building real IAM policies to solve concrete, real-world scenarios.
 
-### `yarn test`
+The experience is divided into levels, each offering a concrete set of objectives and a clear visual tutorial to help users lay the foundation for the topic it covers.
+Users attempt to finish each objective, where each action performed is validated against actual IAM Rules, the resulting permissions are immediately visible, and the user keeps iterating until the proposed scenario fully resolves
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## High-Level Architecture
 
-### `yarn build`
+The project is built entirely on React with Typescript, composed of the following major subsystems, which enable the learning experience to come to life:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Canvas Layer:** The visual representation of the various IAM components (Policies, Users, Groups, etc.) built with ReactFlow
+- **State & Event System:** The very backbone of each level, where each level is represented as an event-driven state machine, each built with XState.
+- **UI Layer:** Popups, Popovers, tooltips, and more are present at every level to enrich the overall experience built with ChakraUI - **Animations**: Go hand-in-hand with the event-driven state machine layer, where animations are triggered based on each level’s various state changes and event-driven model
+- **Text & Content Layer:** Using Markdown with customized extensions to achieve a comprehensive engine to help power rendered texts across the application in tutorials and other areas
+- **Policies Validations with JSON Schemas:** Using AJV to validate written policies in real-time against a set of JSON Schemas, which define the correct format policies should follow to complete each objective.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Demo
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![Demo of Learn AWS IAM Interactive](./assets/gifs/demo_overview.gif)
 
-### `yarn eject`
+## Getting Started
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Online Version
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+A hosted version of the project is available here:
+https://learnawsiam.com
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Run Locally
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+git clone git@github.com:laythra/learnawsiam.git
+cd learnawsiam
+make run-dev
+```
