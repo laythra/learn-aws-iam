@@ -10,38 +10,65 @@ AWS IAM is easily the most fundamental and most used service in the AWS ecosyste
 
 This Interactive Project, inspired by learn-git-branching, aims to provide a hands-on learning experience that reinforces core principles, helps developers (and anyone working with AWS) develop practical mastery, and build a fundamental understanding of AWS IAM.
 
-## 🧠 Core Idea
+## 📚 What You'll Learn
+
+- IAM Users, Groups, and Roles fundamentals
+- Policy structure and syntax (Identity-based, Resource-based, Trust policies)
+- Permission Boundaries and Service Control Policies (SCPs)
+- AWS Organizations and multi-account architectures
+- Real-world access control scenarios
+
+## 🧠 How it works
 
 The project presents AWS IAM through an interactive, visual canvas. Instead of reading lengthy documentation, learning happens by directly building real IAM policies to solve concrete, real-world scenarios.
 
 The experience is divided into levels, each offering a concrete set of objectives and a clear visual tutorial to help users lay the foundation for the topic it covers.
 Users attempt to finish each objective, where each action performed is validated against actual IAM Rules, the resulting permissions are immediately visible, and the user keeps iterating until the proposed scenario fully resolves
 
-## High-Level Architecture
+The project presents AWS IAM through an interactive, visual canvas where you **solve real scenarios** by:
 
-The project is built entirely on React with Typescript, composed of the following major subsystems, which enable the learning experience to come to life:
+- ✅ **Building policies** - Write JSON policies in an integrated editor with real-time validation
+- ✅ **Connecting entities** - Drag-and-drop to attach policies to users, groups, and roles
+- ✅ **Seeing results** - Immediate visual feedback shows which permissions are granted or denied
+- ✅ **Progressive learning** - 12 levels from basics to advanced multi-account scenarios
 
-- **Canvas Layer:** The visual representation of the various IAM components (Policies, Users, Groups, etc.) built with ReactFlow
-- **State & Event System:** The very backbone of each level, where each level is represented as an event-driven state machine, each built with XState.
-- **UI Layer:** Popups, Popovers, tooltips, and more are present at every level to enrich the overall experience built with ChakraUI - **Animations**: Go hand-in-hand with the event-driven state machine layer, where animations are triggered based on each level’s various state changes and event-driven model
-- **Text & Content Layer:** Using Markdown with customized extensions to achieve a comprehensive engine to help power rendered texts across the application in tutorials and other areas
-- **Policies Validations with JSON Schemas:** Using AJV to validate written policies in real-time against a set of JSON Schemas, which define the correct format policies should follow to complete each objective.
+Each level provides clear objectives, visual tutorials, and validates your solution against actual IAM rules.
+
+## 🏗️ Built With
+
+- **React + TypeScript** - Modern, type-safe UI development
+- **XState** - Deterministic state machines for tutorial orchestration
+- **ReactFlow** - Interactive canvas for IAM entity visualization
+- **CodeMirror** - Professional JSON policy editor
+- **Chakra UI** - Accessible, themeable component library
+
+For detailed architecture, see [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ## Demo
 
 ![Demo of Learn AWS IAM Interactive](./assets/gifs/demo_overview.gif)
 
-## Getting Started
+## 📋 Prerequisites
 
-### Online Version
+**To run locally:**
 
-A hosted version of the project is available here:
-https://learnawsiam.com
+- **Docker** - That's it! Everything else runs in containers.
+
+**No AWS account needed** - This is a learning simulator, not connected to real AWS.
+
+## 🚀 Getting Started
+
+### Try Online (Recommended)
+
+Visit **[learnawsiam.com](https://learnawsiam.com)** - no installation needed!
 
 ### Run Locally
 
 ```bash
+# Clone the repository
 git clone git@github.com:laythra/learnawsiam.git
 cd learnawsiam
+
+# Install dependencies and run (requires Docker)
 make run-dev
 ```
