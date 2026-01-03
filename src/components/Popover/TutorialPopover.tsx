@@ -16,6 +16,7 @@ import { HelpImage } from '../HelpComponents/HelpImage';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
+import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 
 interface TutorialPopoverProps {
   isOpen: boolean;
@@ -77,7 +78,10 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
         )}
         {description && (
           <PopoverBody>
-            <Markdown components={markdownComponents} rehypePlugins={[rehypeChakraBadge]}>
+            <Markdown
+              components={markdownComponents}
+              rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
+            >
               {description}
             </Markdown>
             {imagePath && <HelpImage gifName={imagePath} />}

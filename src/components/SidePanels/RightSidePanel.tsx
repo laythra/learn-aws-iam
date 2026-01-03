@@ -23,6 +23,7 @@ import { LevelsProgressionContext } from '@/components/providers/level-actor-con
 import SidePanel from '@/components/SidePanels/SidePanel';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
+import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
 
 const RightSidePanel: React.FC = () => {
@@ -75,7 +76,10 @@ const RightSidePanel: React.FC = () => {
                         color={objective.finished ? 'green.500' : 'black'}
                         verticalAlign='top'
                       />
-                      <Markdown components={markdownComponents} rehypePlugins={[rehypeChakraBadge]}>
+                      <Markdown
+                        components={markdownComponents}
+                        rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
+                      >
                         {objective.label}
                       </Markdown>
                       {objective.hint_text && (
