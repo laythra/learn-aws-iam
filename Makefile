@@ -4,14 +4,14 @@ TAG ?= latest
 DOCKERFILE ?= Dockerfile
 BUILD_DIR ?= dist
 
-.PHONY: build clean docker-build
+.PHONY: clean docker-build docker-dev
 
-build:
-	yarn install
-	yarn build
+run-dev:
+	docker build -t $(IMAGE):dev -f Dockerfile.dev .
+	docker run --rm -it -p 5173:5173 -v $(PWD):/app -v /app/node_modules $(IMAGE):dev
+
+build-prod:
+	docker build -t $(IMAGE):$(TAG) -f $(DOCKERFILE) .
 
 clean:
 	rm -rf $(BUILD_DIR)
-
-docker-build: build
-	docker build -t $(IMAGE):$(TAG) -f $(DOCKERFILE) .
