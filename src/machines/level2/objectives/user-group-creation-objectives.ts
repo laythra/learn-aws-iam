@@ -11,6 +11,7 @@ export const USER_GROUP_CREATION_OBJECTIVES: IAMUserGroupCreationObjective<Finis
     entity_to_create: IAMNodeEntity.Group,
     on_finish_event: UserGroupCreationFinishEvent.GroupCreated,
     layout_group_id: CommonLayoutGroupID.RightCenterHorizontal,
+    alert_message: 'Attach the policies and add users to this group to grant them permissions.',
   },
   {
     type: ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE,
