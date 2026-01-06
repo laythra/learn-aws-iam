@@ -515,14 +515,11 @@ export const createStateMachineSetup = <
       hide_unncessary_edges_or_nodes_warning: assign({
         show_unncessary_edges_or_nodes_warning: false,
       }),
-      // clear_edges: assign({ edges: [] }),
-      clear_edges: enqueueActions(({ enqueue }) => {
-        enqueue.emit(() => ({
-          type: 'EDGES_RESET',
-          edges: [],
-        }));
-
-        enqueue.assign({ edges: [] });
+      clear_edges: enqueueActions(({ context, enqueue }) => {
+        enqueue.raise({
+          type: StatefulStateMachineEvent.DeleteEdges,
+          edgeIds: context.edges.map(edge => edge.id),
+        });
       }),
       clear_nodes: assign({ nodes: [] }),
       clear_creation_objectives: assign({
