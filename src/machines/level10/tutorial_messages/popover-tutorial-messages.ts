@@ -48,7 +48,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_title: 'You know the drill by now',
     popover_content: POPOVER_MSG4,
     show_next_button: false,
-    show_close_button: true,
+    show_close_button: false,
     popover_placement: 'top',
   },
 ];

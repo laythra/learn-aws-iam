@@ -46,7 +46,13 @@ export const stateMachine = createStateMachineSetup<
     identity_creation_popup_default_value: IAMNodeEntity.Group,
     in_tutorial_state: true,
     edges_management_disabled: true,
-    restricted_element_ids: [ElementID.CreateRolesAndPoliciesMenuItem],
+    restricted_element_ids: [
+      ElementID.CreateRolesAndPoliciesMenuItem,
+      ElementID.CodeEditorPermissionBoundaryTab,
+      ElementID.CodeEditorRoleTab,
+      ElementID.CodeEditorSCPTab,
+      ElementID.CodeEditorResourcePolicyTab,
+    ],
     layout_groups: COMMON_LAYOUT_GROUPS,
   },
   on: {
