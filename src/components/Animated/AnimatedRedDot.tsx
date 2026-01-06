@@ -3,20 +3,22 @@ import { motion } from 'framer-motion';
 
 import { CustomTheme } from '@/types/custom-theme';
 
-const MotionDiv = motion(Box);
+const MotionBox = motion(Box);
 
 interface AnimatedRedDotProps {
   placement?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   offset?: number;
 }
 
-const AnimatedRedDot: React.FC<AnimatedRedDotProps> = ({ placement = 'top-left', offset = 5 }) => {
+const AnimatedRedDot: React.FC<AnimatedRedDotProps> = ({ placement = 'top-left', offset = 6 }) => {
   const theme = useTheme<CustomTheme>();
+
   const offsetPx = `${offset}px`;
-  const top = placement?.includes('top') ? offsetPx : 'auto';
-  const right = placement?.includes('right') ? offsetPx : 'auto';
-  const left = placement?.includes('left') ? offsetPx : 'auto';
-  const bottom = placement?.includes('bottom') ? offsetPx : 'auto';
+
+  const top = placement.includes('top') ? offsetPx : 'auto';
+  const right = placement.includes('right') ? offsetPx : 'auto';
+  const left = placement.includes('left') ? offsetPx : 'auto';
+  const bottom = placement.includes('bottom') ? offsetPx : 'auto';
 
   return (
     <Box
@@ -26,21 +28,29 @@ const AnimatedRedDot: React.FC<AnimatedRedDotProps> = ({ placement = 'top-left',
       left={left}
       bottom={bottom}
       zIndex={theme.zIndices.overlay}
+      pointerEvents='none'
     >
-      <MotionDiv
+      <MotionBox
+        initial={{ scale: 1, opacity: 0.7 }}
         animate={{
-          scale: [1, 2, 1],
+          scale: [1, 1.35, 1],
+          opacity: [0.7, 1, 0.7],
+          boxShadow: [
+            '0 0 0px rgba(255, 60, 60, 0.0)',
+            '0 0 10px rgba(255, 60, 60, 0.55)',
+            '0 0 0px rgba(255, 60, 60, 0.0)',
+          ],
         }}
         transition={{
-          duration: 2,
-          repeat: Infinity,
+          duration: 1.9,
           ease: 'easeInOut',
+          repeat: Infinity,
         }}
         style={{
-          width: '5px',
-          height: '5px',
+          width: '7px',
+          height: '7px',
           borderRadius: '50%',
-          backgroundColor: 'red',
+          backgroundColor: '#ff3c3c',
         }}
       />
     </Box>
