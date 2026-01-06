@@ -11,9 +11,6 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
     image: IAMNodeImage.Policy,
     content: JSON.stringify(INITIAL_POLICIES.S3_READ_POLICY, null, 2),
     layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
-    alert_message:
-      'This policy should be attached to the IAM User to\
-      allow read access to the public images S3 bucket.',
     granted_accesses: [
       {
         target_node: ResourceNodeID.PublicImagesS3Bucket,

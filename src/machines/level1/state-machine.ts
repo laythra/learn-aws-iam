@@ -13,7 +13,7 @@ import {
   FinishEventMap,
   NodeCreationFinishEvent,
 } from './types/finish-event-enums';
-import { PolicyNodeID, UserNodeID } from './types/node-id-enums';
+import { UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
@@ -160,10 +160,6 @@ export const stateMachine = createStateMachineSetup<
                   params: {
                     id: LevelObjectiveID.ConnectionTutorialPolicyToTutorialUser,
                   },
-                },
-                {
-                  type: 'hide_node_help_tooltip',
-                  params: { nodeId: PolicyNodeID.S3ReadPolicy },
                 },
                 'hide_fixed_popovers',
               ],
