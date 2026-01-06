@@ -87,8 +87,8 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_title: 'S3 Bucket Access',
     popover_content: POPOVER_MSG7,
     show_next_button: false,
-    show_close_button: true,
-    popover_placement: 'top',
+    show_close_button: false,
+    popover_placement: 'left',
   },
   {
     element_id: UserNodeID.FinanceUser,
@@ -96,7 +96,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_content: POPOVER_MSG8,
     show_next_button: true,
     show_close_button: false,
-    popover_placement: 'top',
+    popover_placement: 'left',
   },
   {
     element_id: UserNodeID.FinanceUser,

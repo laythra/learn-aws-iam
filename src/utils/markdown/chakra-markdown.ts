@@ -49,7 +49,6 @@ export function rehypeChakraBadge() {
       const matches = [];
       let match;
 
-      // Find all matches for the custom badge syntax
       while ((match = regex.exec(node.value)) !== null) {
         matches.push({
           text: match[1],
