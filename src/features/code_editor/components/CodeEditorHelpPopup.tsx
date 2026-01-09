@@ -18,8 +18,8 @@ import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { CustomTheme } from '@/types/custom-theme';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
-import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 import { components } from '@/utils/markdown/components';
+import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 
 const IAM_POLICY_HELP_POPUP_CONTENT = `
   Policies whether **AWS Managed** or **Customer Managed** have the same structure:

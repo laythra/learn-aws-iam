@@ -14,18 +14,17 @@ import {
   Code,
   Tooltip,
   Box,
+  PopoverCloseButton,
 } from '@chakra-ui/react';
 import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
-import {
-  GuardedIconButtonWithStateMachineEvent,
-  WithStateMachineEventPopoverCloseButton,
-} from '@/components/Decorated';
 import { ElementID } from '@/config/element-ids';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
+import { useStateMachineEvent } from '@/hooks/useStateMachineEvent';
+import { useTutorialGuard } from '@/hooks/useTutorialGuard';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -51,6 +50,8 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
 }) => {
   const popoverContentRef = useRef<HTMLDivElement>(null);
   const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedContent);
+  const iamNodeContentButtonGuard = useTutorialGuard(ElementID.IAMNodeContentButton);
+  const { emitEvent } = useStateMachineEvent();
   const isContentOpen = openedNodeId === nodeId;
 
   const toggleNodeContentPopover = (): void => {
@@ -91,21 +92,25 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
       closeDelay={0}
       isOpen={isContentOpen}
     >
-      <PopoverTrigger>
-        <GuardedIconButtonWithStateMachineEvent
-          data-element-id={ElementID.IAMNodeContentButton}
-          event={StatelessStateMachineEvent.IAMNodeContentOpened}
-          aria-label='info'
-          icon={<CodeBracketIcon />}
-          variant='ghost'
-          opacity={0.5}
-          height='16px'
-          width='16px'
-          minWidth='auto'
-          onClick={toggleNodeContentPopover}
-          _hover={{ bg: 'gray.200', opacity: 1 }}
-        />
-      </PopoverTrigger>
+      {!iamNodeContentButtonGuard.shouldHide && (
+        <PopoverTrigger>
+          <IconButton
+            data-element-id={ElementID.IAMNodeContentButton}
+            aria-label='info'
+            icon={<CodeBracketIcon />}
+            variant='ghost'
+            opacity={0.5}
+            height='16px'
+            width='16px'
+            minWidth='auto'
+            onClick={() => {
+              emitEvent(StatelessStateMachineEvent.IAMNodeContentOpened);
+              toggleNodeContentPopover();
+            }}
+            _hover={{ bg: 'gray.200', opacity: 1 }}
+          />
+        </PopoverTrigger>
+      )}
       <PopoverContent
         w='500px'
         overflow='auto'
@@ -119,9 +124,11 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
             {label}
           </Text>
         </PopoverHeader>
-        <WithStateMachineEventPopoverCloseButton
-          onClick={() => CanvasStore.send({ type: 'closeAllNodePanels' })}
-          event={StatelessStateMachineEvent.IAMNodeContentClosed}
+        <PopoverCloseButton
+          onClick={() => {
+            emitEvent(StatelessStateMachineEvent.IAMNodeContentClosed);
+            CanvasStore.send({ type: 'closeAllNodePanels' });
+          }}
           aria-label='close'
         />
         <PopoverBody textAlign='left'>

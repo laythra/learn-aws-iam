@@ -14,7 +14,7 @@ import IAMNodeHelpTooltip from './IAMNodeHelpTooltip';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
 import TagsIconButton from './TagsIconButton';
 import { CanvasStore } from '../stores/canvas-store';
-import { WithPopoverBox } from '@/components/Decorated';
+import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { CustomTheme } from '@/types/custom-theme';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
@@ -29,7 +29,6 @@ export interface IAMCanvasNodeProps {
 }
 
 const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
-  const ref = useRef<HTMLDivElement>(null);
   const hasPulsedRef = useRef(false);
 
   const [selectedNodeId, isDeleting] = useSelector(
@@ -95,8 +94,8 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
         }
       }}
     >
-      <WithPopoverBox ref={ref} data-element-id={id}>
-        <Box position='relative'>
+      <TutorialPopover elementId={id}>
+        <Box data-element-id={id} position='relative'>
           {showCreationPulse && !isDeleting && (
             <motion.div
               style={{
@@ -213,7 +212,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
             )}
           </HStack>
         </Box>
-      </WithPopoverBox>
+      </TutorialPopover>
     </motion.div>
   );
 };

@@ -7,45 +7,39 @@ import {
   PopoverBody,
   Box,
   PopoverCloseButton,
-  type PlacementWithLogical,
 } from '@chakra-ui/react';
 import Markdown from 'react-markdown';
 
 import { PopoverNextButton } from './PopoverNextButton';
 import { HelpImage } from '../HelpComponents/HelpImage';
 import { ElementID } from '@/config/element-ids';
+import { usePopover } from '@/hooks/usePopover';
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
 import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 
 interface TutorialPopoverProps {
-  isOpen: boolean;
   children: React.ReactNode;
-  label: string;
-  description: string;
-  showNextButton?: boolean;
-  showCloseButton?: boolean;
-  placement?: PlacementWithLogical;
-  imagePath?: string;
-  onNextClick: () => void;
-  onCloseClick: () => void;
   elementId: string;
-  containerRef?: React.RefObject<HTMLElement>;
 }
 
-export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
-  isOpen,
-  children,
-  label,
-  description,
-  showNextButton = false,
-  showCloseButton = false,
-  placement = 'auto',
-  imagePath,
-  onNextClick,
-  onCloseClick,
-  elementId,
-}) => {
+export const TutorialPopover: React.FC<TutorialPopoverProps> = ({ children, elementId }) => {
+  const { isOpen, content, goNext, close } = usePopover(elementId);
+
+  // If not open or no content, just render children without popover wrapper
+  if (!isOpen || !content) {
+    return <>{children}</>;
+  }
+
+  const {
+    popover_title: label,
+    popover_content: description,
+    show_next_button: showNextButton,
+    popover_placement: placement,
+    show_close_button: showCloseButton,
+    tutorial_gif: imagePath,
+  } = content;
+
   return (
     <Popover
       isOpen={isOpen}
@@ -72,7 +66,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
         </PopoverHeader>
         {showCloseButton && (
           <PopoverCloseButton
-            onClick={onCloseClick}
+            onClick={close}
             data-element-id={ElementID.TutorialPopoverCloseButton}
           />
         )}
@@ -87,7 +81,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
             {imagePath && <HelpImage gifName={imagePath} />}
           </PopoverBody>
         )}
-        {showNextButton && <PopoverNextButton onNextClick={onNextClick} />}
+        {showNextButton && <PopoverNextButton onNextClick={goNext} />}
       </PopoverContent>
     </Popover>
   );

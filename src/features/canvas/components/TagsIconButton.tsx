@@ -13,16 +13,15 @@ import {
   VStack,
   Tag,
   Text,
+  PopoverCloseButton,
+  IconButton,
 } from '@chakra-ui/react';
 import { TagIcon } from '@heroicons/react/16/solid';
 import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
-import {
-  WithStateMachineEventIconButton,
-  WithStateMachineEventPopoverCloseButton,
-} from '@/components/Decorated';
 import { ElementID } from '@/config/element-ids';
+import { useStateMachineEvent } from '@/hooks/useStateMachineEvent';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface TagsIconButtonProps extends ChakraProps {
@@ -40,6 +39,7 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
   ...styleProps
 }) => {
   const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedTags);
+  const { emitEvent } = useStateMachineEvent();
   const areTagsOpen = openedNodeId === nodeId;
 
   const toggleNodeTagsPopover = (): void => {
@@ -59,8 +59,7 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
       closeDelay={0}
     >
       <PopoverTrigger>
-        <WithStateMachineEventIconButton
-          event={onOpenEvent}
+        <IconButton
           data-element-id={ElementID.IAMNodeTagsButton}
           aria-label='arn'
           icon={<TagIcon />}
@@ -69,16 +68,21 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
           height='16px'
           width='16px'
           minWidth='auto'
-          onClick={toggleNodeTagsPopover}
+          onClick={() => {
+            emitEvent(onOpenEvent);
+            toggleNodeTagsPopover();
+          }}
           _hover={{ bg: 'gray.200', opacity: 1 }}
           {...styleProps}
         />
       </PopoverTrigger>
       <PopoverContent width='auto' data-element-id={`${nodeId}-tags`}>
         <PopoverHeader fontWeight='bold' fontSize='md'>
-          <WithStateMachineEventPopoverCloseButton
-            onClick={() => CanvasStore.send({ type: 'closeAllNodePanels' })}
-            event={StatelessStateMachineEvent.IAMNodeTagsPopoverClosed}
+          <PopoverCloseButton
+            onClick={() => {
+              emitEvent(StatelessStateMachineEvent.IAMNodeTagsPopoverClosed);
+              CanvasStore.send({ type: 'closeAllNodePanels' });
+            }}
             aria-label='close'
           />
           Tags
