@@ -13,7 +13,7 @@ export function initializeLevelStore(): void {
 
   if (savedLevel) {
     LevelDetailsStore.send({
-      type: 'setLevelNumber',
+      type: 'initialize',
       levelNumber,
     });
   }
@@ -65,7 +65,7 @@ export function setLevel(levelNumber: number): void {
   if (levelNumber === previousLevelNumber) return;
 
   storage.setKey('currentLevel', levelNumber.toString());
-  storage.removeKey(`level${levelNumber}StateCheckpoint`);
+  storage.removeKey(`level${previousLevelNumber}StateCheckpoint`);
   LevelDetailsStore.send({ type: 'setLevelNumber', levelNumber });
 }
 
@@ -89,14 +89,14 @@ export function saveSnapshotToDisk(actor: Actor<AnyActorLogic>, filename: string
       filename,
     }),
   })
-    .then((response) => {
+    .then(response => {
       if (!response.ok) {
         console.error(
           `Failed to save snapshot to disk (status ${response.status} ${response.statusText})`
         );
       }
     })
-    .catch((error) => {
+    .catch(error => {
       console.error('Error while saving snapshot to disk', error);
     });
 }

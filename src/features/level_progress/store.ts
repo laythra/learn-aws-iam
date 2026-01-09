@@ -7,6 +7,7 @@ type LevelDetailsState = {
 
 type LevelDetailsEvent =
   | { type: 'setLevelNumber'; levelNumber: number }
+  | { type: 'initialize'; levelNumber: number }
   | { type: 'incrementLevelNumber' }
   | { type: 'returnToLastCheckpoint' }
   | { type: 'restartLevel' };
@@ -35,6 +36,10 @@ export const LevelDetailsStore = createStore<LevelDetailsState, LevelDetailsEven
     restartLevel: context => ({
       ...context,
       restartKey: context.restartKey + 1,
+    }),
+    initialize: (context, event) => ({
+      ...context,
+      levelNumber: event.levelNumber,
     }),
   },
 });

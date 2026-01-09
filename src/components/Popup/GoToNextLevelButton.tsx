@@ -2,7 +2,7 @@ import { Button } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
 import { setLevel } from '@/features/level_progress/level-operations';
-import LevelDetailsStore from '@/features/level_progress/store';
+import { LevelDetailsStore } from '@/features/level_progress/store';
 
 const MotionButton = motion(Button);
 const LAST_LEVEL_NUMBER = 12;
@@ -11,7 +11,7 @@ interface GoToNextLevelButtonProps {}
 export const GoToNextLevelButton: React.FC<GoToNextLevelButtonProps> = () => {
   const finishedLastLevel = (): boolean => {
     const finishedLevelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
-    return finishedLevelNumber == LAST_LEVEL_NUMBER;
+    return finishedLevelNumber === LAST_LEVEL_NUMBER;
   };
 
   const goToNextLevel = (): void => {
