@@ -88,5 +88,15 @@ export function saveSnapshotToDisk(actor: Actor<AnyActorLogic>, filename: string
       content: snapshotString,
       filename,
     }),
-  });
+  })
+    .then((response) => {
+      if (!response.ok) {
+        console.error(
+          `Failed to save snapshot to disk (status ${response.status} ${response.statusText})`
+        );
+      }
+    })
+    .catch((error) => {
+      console.error('Error while saving snapshot to disk', error);
+    });
 }
