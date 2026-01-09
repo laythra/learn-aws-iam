@@ -12,9 +12,9 @@ import { LevelsProgressionContext } from './providers/level-actor-contexts';
 import { RestartLevelButton } from './RestartLevelButton';
 import { ElementID } from '@/config/element-ids';
 import { NewEntityButton } from '@/features/iam_entities';
+import { setLevel } from '@/features/level_progress/level-operations';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import { useStateMachineEvent } from '@/hooks/useStateMachineEvent';
-import currentLevelDetailsStore from '@/stores/current-level-details-store';
 import { CustomTheme } from '@/types/custom-theme';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -67,16 +67,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
                 type='number'
                 onChange={e => setPseudoLevelNumber(Number(e.target.value))}
               />
-              <Button
-                onClick={() =>
-                  currentLevelDetailsStore.send({
-                    type: 'setLevelNumber',
-                    levelNumber: pseudoLevelNumber,
-                  })
-                }
-              >
-                GO
-              </Button>
+              <Button onClick={() => setLevel(pseudoLevelNumber)}>GO</Button>
             </HStack>
           )}
           <HStack spacing={2}>

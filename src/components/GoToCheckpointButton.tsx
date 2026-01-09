@@ -20,8 +20,8 @@ import { ArrowUturnLeftIcon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
 import { LevelsProgressionContext } from './providers/level-actor-contexts';
+import { restartLevelFromCheckpoint } from '@/features/level_progress/level-operations';
 import { useNavbarPopover } from '@/hooks/useNavbarPopover';
-import currentLevelDetailsStore from '@/stores/current-level-details-store';
 
 interface GoToCheckpointButtonProps {}
 
@@ -42,7 +42,7 @@ export const GoToCheckpointButton: React.FC<GoToCheckpointButtonProps> = () => {
   };
 
   const returnToCheckpoint = (): void => {
-    currentLevelDetailsStore.send({ type: 'returnToLastCheckpoint' });
+    restartLevelFromCheckpoint();
     confirmPopover.onClose();
   };
 

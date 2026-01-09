@@ -14,8 +14,8 @@ import {
 } from '@chakra-ui/react';
 import { ArrowPathIcon } from '@heroicons/react/16/solid';
 
+import { restartLevelFromStart } from '@/features/level_progress/level-operations';
 import { useNavbarPopover } from '@/hooks/useNavbarPopover';
-import currentLevelDetailsStore from '@/stores/current-level-details-store';
 
 interface RestartLevelButtonProps {}
 
@@ -23,7 +23,7 @@ export const RestartLevelButton: React.FC<RestartLevelButtonProps> = () => {
   const { isOpen, onOpen, onClose } = useNavbarPopover('restart-level');
 
   const restartLevel = (): void => {
-    currentLevelDetailsStore.send({ type: 'restartLevel' });
+    restartLevelFromStart();
     onClose();
   };
 
