@@ -1,18 +1,19 @@
 import React from 'react';
 
-import { Box, Button, Flex, HStack, Input, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Input, Text, IconButton } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
 import { Bars3Icon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
 import AnimatedRedDot from './Animated/AnimatedRedDot';
-import { IconButtonWithEventAndPopover } from './Decorated';
 import { GoToCheckpointButton } from './GoToCheckpointButton';
+import { TutorialPopover } from './Popover/TutorialPopover';
 import { LevelsProgressionContext } from './providers/level-actor-contexts';
 import { RestartLevelButton } from './RestartLevelButton';
 import { ElementID } from '@/config/element-ids';
-import { NewEntityButtonWithPopover } from '@/features/iam_entities';
+import { NewEntityButton } from '@/features/iam_entities';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
+import { useStateMachineEvent } from '@/hooks/useStateMachineEvent';
 import currentLevelDetailsStore from '@/stores/current-level-details-store';
 import { CustomTheme } from '@/types/custom-theme';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -27,6 +28,8 @@ export const Navbar: React.FC<NavbarProps> = () => {
     _.isEqual
   );
 
+  const { emitEvent } = useStateMachineEvent();
+
   const { isRedDotEnabledForElement } = useAnimatedRedDot({
     elementIds: [ElementID.RightSidePanelToggleButton],
   });
@@ -34,6 +37,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
   const [pseudoLevelNumber, setPseudoLevelNumber] = React.useState<number>(levelNumber);
 
   const toggleSidePanel = (): void => {
+    emitEvent(StatelessStateMachineEvent.SidePanelOpened);
     levelActor.send({ type: 'TOGGLE_SIDE_PANEL' });
   };
 
@@ -89,20 +93,21 @@ export const Navbar: React.FC<NavbarProps> = () => {
           <Box position='relative'>
             <RestartLevelButton />
           </Box>
-          <NewEntityButtonWithPopover data-element-id={ElementID.NewEntityBtn} />
+          <NewEntityButton />
           <Box position='relative'>
-            <IconButtonWithEventAndPopover
-              data-element-id={ElementID.RightSidePanelToggleButton}
-              event={StatelessStateMachineEvent.SidePanelOpened}
-              onClick={toggleSidePanel}
-              icon={<Bars3Icon />}
-              aria-label='side-panel-button'
-              color='gray.600'
-              _hover={{ color: 'black' }}
-              _active={{ color: 'black' }}
-              bg='transparent'
-              size='xs'
-            />
+            <TutorialPopover elementId={ElementID.RightSidePanelToggleButton}>
+              <IconButton
+                data-element-id={ElementID.RightSidePanelToggleButton}
+                onClick={toggleSidePanel}
+                icon={<Bars3Icon />}
+                aria-label='side-panel-button'
+                color='gray.600'
+                _hover={{ color: 'black' }}
+                _active={{ color: 'black' }}
+                bg='transparent'
+                size='xs'
+              />
+            </TutorialPopover>
             {isRedDotEnabledForElement(ElementID.RightSidePanelToggleButton) && (
               <AnimatedRedDot offset={3} />
             )}

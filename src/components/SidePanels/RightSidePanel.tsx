@@ -12,19 +12,20 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverBody,
+  Box,
 } from '@chakra-ui/react';
 import { CheckBadgeIcon, InformationCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import SidePanelObjectiveHintButton from './SidePanelObjectiveHintButton';
-import { WithPopoverBox } from '../Decorated';
+import { TutorialPopover } from '../Popover/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import SidePanel from '@/components/SidePanels/SidePanel';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
-import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
+import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 
 const RightSidePanel: React.FC = () => {
   const [levelObjectives, isSidePanelOpen, levelDescription] =
@@ -63,34 +64,36 @@ const RightSidePanel: React.FC = () => {
             </Popover>
           </HStack>
           <Divider my={2} />
-          <WithPopoverBox mt={2} overflowY='auto' data-element-id={ElementID.ObjectivesSidePanel}>
-            <List spacing={3}>
-              {Object.values(levelObjectives).map((objective, index) => {
-                return (
-                  <ListItem key={index}>
-                    <HStack alignItems='center'>
-                      <ListIcon
-                        w={5}
-                        h={5}
-                        as={objective.finished ? CheckBadgeIcon : XCircleIcon}
-                        color={objective.finished ? 'green.500' : 'black'}
-                        verticalAlign='top'
-                      />
-                      <Markdown
-                        components={markdownComponents}
-                        rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
-                      >
-                        {objective.label}
-                      </Markdown>
-                      {objective.hint_text && (
-                        <SidePanelObjectiveHintButton hint={objective.hint_text} />
-                      )}
-                    </HStack>
-                  </ListItem>
-                );
-              })}
-            </List>
-          </WithPopoverBox>
+          <TutorialPopover elementId={ElementID.ObjectivesSidePanel}>
+            <Box mt={2} overflowY='auto' data-element-id={ElementID.ObjectivesSidePanel}>
+              <List spacing={3}>
+                {Object.values(levelObjectives).map((objective, index) => {
+                  return (
+                    <ListItem key={index}>
+                      <HStack alignItems='center'>
+                        <ListIcon
+                          w={5}
+                          h={5}
+                          as={objective.finished ? CheckBadgeIcon : XCircleIcon}
+                          color={objective.finished ? 'green.500' : 'black'}
+                          verticalAlign='top'
+                        />
+                        <Markdown
+                          components={markdownComponents}
+                          rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
+                        >
+                          {objective.label}
+                        </Markdown>
+                        {objective.hint_text && (
+                          <SidePanelObjectiveHintButton hint={objective.hint_text} />
+                        )}
+                      </HStack>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Box>
+          </TutorialPopover>
         </Flex>
       </Flex>
     </SidePanel>

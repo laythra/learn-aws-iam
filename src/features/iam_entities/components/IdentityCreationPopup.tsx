@@ -15,11 +15,13 @@ import {
   TabList,
   Tabs,
   Tab,
+  Box,
+  Input,
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
-import { WithPopoverBox, WithPopoverInput } from '@/components/Decorated';
+import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
@@ -128,26 +130,28 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
         <ModalHeader>
           <Flex justifyContent='space-between'>
             <Text>New {_.upperFirst(iamIdentityEntity)}</Text>
-            <WithPopoverBox
-              data-element-id={ElementID.IAMIdentitySelectorTypeForCreation}
-              fontSize='8px'
-            >
-              <Tabs
-                onChange={handleTabChange}
-                variant='soft-rounded'
-                size='sm'
-                index={iamIdentityEntity === IAMNodeEntity.User ? 0 : 1}
-              >
-                <TabList>
-                  <Tab isDisabled={isUserTabRestricted} data-element-id={ElementID.CreateUserTab}>
-                    {IAMNodeEntity.User}
-                  </Tab>
-                  <Tab isDisabled={isGroupTabRestricted} data-element-id={ElementID.CreateGroupTab}>
-                    {IAMNodeEntity.Group}
-                  </Tab>
-                </TabList>
-              </Tabs>
-            </WithPopoverBox>
+            <TutorialPopover elementId={ElementID.IAMIdentitySelectorTypeForCreation}>
+              <Box data-element-id={ElementID.IAMIdentitySelectorTypeForCreation} fontSize='8px'>
+                <Tabs
+                  onChange={handleTabChange}
+                  variant='soft-rounded'
+                  size='sm'
+                  index={iamIdentityEntity === IAMNodeEntity.User ? 0 : 1}
+                >
+                  <TabList>
+                    <Tab isDisabled={isUserTabRestricted} data-element-id={ElementID.CreateUserTab}>
+                      {IAMNodeEntity.User}
+                    </Tab>
+                    <Tab
+                      isDisabled={isGroupTabRestricted}
+                      data-element-id={ElementID.CreateGroupTab}
+                    >
+                      {IAMNodeEntity.Group}
+                    </Tab>
+                  </TabList>
+                </Tabs>
+              </Box>
+            </TutorialPopover>
           </Flex>
         </ModalHeader>
         <ModalBody>
@@ -155,11 +159,13 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
             <FormLabel>
               {iamIdentityEntity === IAMNodeEntity.User ? 'User Name' : 'Group Name'}
             </FormLabel>
-            <WithPopoverInput
-              data-element-id={ElementID.IAMIdentityNameInput}
-              value={getNameFieldVal()}
-              onChange={handleNameChange}
-            />
+            <TutorialPopover elementId={ElementID.IAMIdentityNameInput}>
+              <Input
+                data-element-id={ElementID.IAMIdentityNameInput}
+                value={getNameFieldVal()}
+                onChange={handleNameChange}
+              />
+            </TutorialPopover>
             {!_.isEmpty(formState[iamIdentityEntity]['error']) && (
               <Text color='red.500' fontSize='sm'>
                 {formState[iamIdentityEntity]['error']}

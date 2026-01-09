@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { FormControl, FormLabel, FormHelperText } from '@chakra-ui/react';
+import { FormControl, FormLabel, FormHelperText, Input } from '@chakra-ui/react';
 
-import { WithPopoverInput } from '@/components/Decorated';
+import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 
 interface IAMUserCreationPopupSectionProps {
   userName: string;
@@ -17,11 +17,13 @@ export const IAMUserCreationPopupSection: React.FC<IAMUserCreationPopupSectionPr
     <>
       <FormControl>
         <FormLabel>User Name</FormLabel>
-        <WithPopoverInput
-          data-element-id='username'
-          value={userName}
-          onChange={e => setUserName(e.target.value)}
-        />
+        <TutorialPopover elementId='username'>
+          <Input
+            data-element-id='username'
+            value={userName}
+            onChange={e => setUserName(e.target.value)}
+          />
+        </TutorialPopover>
         <FormHelperText>This could be any username you like</FormHelperText>
       </FormControl>
 

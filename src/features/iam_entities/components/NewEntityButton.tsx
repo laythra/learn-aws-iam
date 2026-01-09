@@ -1,15 +1,15 @@
-import { Box, IconButton, Menu, MenuList } from '@chakra-ui/react';
+import { Box, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
 import _ from 'lodash';
 
 import { IdentityCreationPopup } from './IdentityCreationPopup';
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
-import { GuardedMenuItemWithPopover, TutorialGuardedMenuButton } from '@/components/Decorated';
+import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
-import { withPopover } from '@/decorators/withPopover';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
+import { useTutorialGuard } from '@/hooks/useTutorialGuard';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -21,6 +21,11 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   const { isRedDotEnabledForElement: isRedDotEnabled } = useAnimatedRedDot({
     elementIds: [ElementID.NewEntityBtn],
   });
+
+  const userGroupMenuItemGuard = useTutorialGuard(ElementID.CreateUserGroupMenuItem);
+  const rolesMenuItemGuard = useTutorialGuard(ElementID.CreateRolesAndPoliciesMenuItem);
+  const newEntityButtonGuard = useTutorialGuard(ElementID.NewEntityBtn);
+
   const [showPopovers, showFixedPopovers, popoverContent] = LevelsProgressionContext().useSelector(
     state => [
       state.context.show_popovers,
@@ -35,7 +40,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   const disableEntityButton =
     (showPopovers && popoverContent?.show_next_button) || showFixedPopovers;
 
-  const hidePopovers = (): void => {
+  const handleMenuOpen = (): void => {
     levelActor.send({ type: StatelessStateMachineEvent.HidePopovers });
   };
 
@@ -46,42 +51,52 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   return (
     <>
       <IdentityCreationPopup />
-      <Menu>
-        <Box position='relative'>
-          <TutorialGuardedMenuButton
-            data-element-id={ElementID.NewEntityBtn}
-            isDisabled={disableEntityButton}
-            as={IconButton}
-            size='sm'
-            aria-label='New'
-            icon={<PlusCircleIcon />}
-            onClick={hidePopovers}
-            color={'gray.600'}
-            _hover={{ color: 'black' }}
-            _active={{ color: 'black' }}
-            bg='transparent'
-          />
-
-          {!disableEntityButton && isRedDotEnabled(ElementID.NewEntityBtn) && <AnimatedRedDot />}
-        </Box>
+      <Menu onOpen={handleMenuOpen}>
+        {!newEntityButtonGuard.shouldHide && (
+          <TutorialPopover elementId={ElementID.NewEntityBtn}>
+            <Box position='relative'>
+              <MenuButton
+                data-element-id={ElementID.NewEntityBtn}
+                isDisabled={disableEntityButton}
+                as={IconButton}
+                size='sm'
+                aria-label='New'
+                icon={<PlusCircleIcon />}
+                color={'gray.600'}
+                _hover={{ color: 'black' }}
+                _active={{ color: 'black' }}
+                bg='transparent'
+              />
+              {!disableEntityButton && isRedDotEnabled(ElementID.NewEntityBtn) && (
+                <AnimatedRedDot />
+              )}
+            </Box>
+          </TutorialPopover>
+        )}
         <MenuList>
-          <GuardedMenuItemWithPopover
-            data-element-id={ElementID.CreateUserGroupMenuItem}
-            onClick={openIdentityCreator}
-          >
-            Users & Groups
-          </GuardedMenuItemWithPopover>
+          {!userGroupMenuItemGuard.shouldHide && (
+            <TutorialPopover elementId={ElementID.CreateUserGroupMenuItem}>
+              <MenuItem
+                data-element-id={ElementID.CreateUserGroupMenuItem}
+                onClick={openIdentityCreator}
+              >
+                Users & Groups
+              </MenuItem>
+            </TutorialPopover>
+          )}
 
-          <GuardedMenuItemWithPopover
-            onClick={openCodeEditor}
-            data-element-id={ElementID.CreateRolesAndPoliciesMenuItem}
-          >
-            Roles & Policies
-          </GuardedMenuItemWithPopover>
+          {!rolesMenuItemGuard.shouldHide && (
+            <TutorialPopover elementId={ElementID.CreateRolesAndPoliciesMenuItem}>
+              <MenuItem
+                onClick={openCodeEditor}
+                data-element-id={ElementID.CreateRolesAndPoliciesMenuItem}
+              >
+                Roles & Policies
+              </MenuItem>
+            </TutorialPopover>
+          )}
         </MenuList>
       </Menu>
     </>
   );
 };
-
-export const NewEntityButtonWithPopover = withPopover(NewEntityButton);
