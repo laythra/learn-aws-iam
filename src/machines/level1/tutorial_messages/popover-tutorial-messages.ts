@@ -115,7 +115,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_content: POPOVER_MSG7,
     show_next_button: true,
     show_close_button: false,
-    popover_placement: 'bottom',
+    popover_placement: 'top',
   },
   {
     element_id: ElementID.NewEntityBtn,

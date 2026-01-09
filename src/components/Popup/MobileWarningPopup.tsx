@@ -5,8 +5,8 @@ import Markdown from 'react-markdown';
 
 import useModal from '@/hooks/useModal';
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
-import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 import { components as markdownComponents } from '@/utils/markdown/components';
+import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 
 const mobileWarningMessage = `
   This application isn't optimized for mobile devices.

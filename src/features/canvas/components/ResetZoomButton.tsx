@@ -1,6 +1,6 @@
 import { useReactFlow, Viewport, ControlButton } from '@xyflow/react';
 
-import { WithPopoverBox } from '@/components/Decorated';
+import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 import { ElementID } from '@/config/element-ids';
 
 export const ResetZoomButton: React.FC = () => {
@@ -12,10 +12,10 @@ export const ResetZoomButton: React.FC = () => {
   };
 
   return (
-    <WithPopoverBox data-element-id={ElementID.ResetZoomButton}>
+    <TutorialPopover elementId={ElementID.ResetZoomButton}>
       <ControlButton onClick={resetTo100} title='Reset view (origin, 1x zoom)'>
         1×
       </ControlButton>
-    </WithPopoverBox>
+    </TutorialPopover>
   );
 };

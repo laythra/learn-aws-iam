@@ -11,8 +11,8 @@ import {
 import Markdown from 'react-markdown';
 
 import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
-import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 import { components } from '@/utils/markdown/components';
+import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 
 interface CodeEditorObjectiveCalloutProps {
   calloutMessage: string;

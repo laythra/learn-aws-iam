@@ -9,13 +9,14 @@ import {
   Tooltip,
   useToast,
   ChakraProps,
+  IconButton,
 } from '@chakra-ui/react';
 import { IdentificationIcon, ClipboardDocumentIcon } from '@heroicons/react/20/solid';
 import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { WithStateMachineEventIconButton } from '@/components/Decorated';
 import { ElementID } from '@/config/element-ids';
+import { useStateMachineEvent } from '@/hooks/useStateMachineEvent';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface ARNIconButtonProps extends ChakraProps {
@@ -47,6 +48,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
   };
 
   const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedARN);
+  const { emitEvent } = useStateMachineEvent();
   const isARNOpen = openedNodeId === nodeId;
 
   const toggleNodeARNPopover = (): void => {
@@ -66,8 +68,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
       isOpen={isARNOpen}
     >
       <PopoverTrigger>
-        <WithStateMachineEventIconButton
-          event={onOpenEvent}
+        <IconButton
           data-element-id={ElementID.IAMNodeArnButton}
           aria-label='arn'
           icon={<IdentificationIcon />}
@@ -76,7 +77,10 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
           height='16px'
           width='16px'
           minWidth='auto'
-          onClick={toggleNodeARNPopover}
+          onClick={() => {
+            emitEvent(onOpenEvent);
+            toggleNodeARNPopover();
+          }}
           _hover={{ bg: 'gray.200', opacity: 1 }}
           {...styleProps}
         />
@@ -93,8 +97,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
         >
           {arn}
           <Tooltip label='Copy To Clipboard'>
-            <WithStateMachineEventIconButton
-              event={onCopyEvent}
+            <IconButton
               h='16px'
               w='16px'
               aria-label='copy'
@@ -104,7 +107,10 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
               size='sm'
               ml={2}
               minWidth='auto'
-              onClick={copyToClipboard}
+              onClick={() => {
+                emitEvent(onCopyEvent);
+                copyToClipboard();
+              }}
               _hover={{ bg: 'gray.200', opacity: 1 }}
             />
           </Tooltip>

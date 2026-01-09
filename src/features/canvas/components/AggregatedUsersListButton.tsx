@@ -8,13 +8,14 @@ import {
   type PlacementWithLogical,
   ChakraProps,
   PopoverBody,
+  IconButton,
 } from '@chakra-ui/react';
 import { ListBulletIcon, UserIcon } from '@heroicons/react/20/solid';
 import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { WithStateMachineEventIconButton } from '@/components/Decorated';
 import { ElementID } from '@/config/element-ids';
+import { useStateMachineEvent } from '@/hooks/useStateMachineEvent';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface AggregatedUsersListButtonProps extends ChakraProps {
@@ -33,6 +34,7 @@ const AggregatedUsersListButton: React.FC<AggregatedUsersListButtonProps> = ({
 }) => {
   const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedUsersList);
   const isUsersListOpened = openedNodeId === nodeId;
+  const { emitEvent } = useStateMachineEvent();
 
   const toggleNodeARMUsersButton = (): void => {
     CanvasStore.send({
@@ -51,8 +53,7 @@ const AggregatedUsersListButton: React.FC<AggregatedUsersListButtonProps> = ({
       isOpen={isUsersListOpened}
     >
       <PopoverTrigger>
-        <WithStateMachineEventIconButton
-          event={onOpenEvent}
+        <IconButton
           data-element-id={ElementID.IAMNodeArnButton}
           aria-label='arn'
           icon={<ListBulletIcon />}
@@ -61,7 +62,10 @@ const AggregatedUsersListButton: React.FC<AggregatedUsersListButtonProps> = ({
           height='16px'
           width='16px'
           minWidth='auto'
-          onClick={toggleNodeARMUsersButton}
+          onClick={() => {
+            emitEvent(onOpenEvent);
+            toggleNodeARMUsersButton();
+          }}
           _hover={{ bg: 'gray.200', opacity: 1 }}
           {...styleProps}
         />
