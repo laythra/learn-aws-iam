@@ -36,15 +36,8 @@ const edgeTypes = {
 };
 
 const Canvas: React.FC = () => {
-  const {
-    nodesState,
-    edgesState,
-    onConnect,
-    onEdgeDelete,
-    onNodeDelete,
-    setRfInstance,
-    initialZoom,
-  } = useCanvas({});
+  const { nodesState, edgesState, onConnect, onEdgeDelete, onNodeDelete, setRfInstance } =
+    useCanvas({});
 
   const { setViewport } = useReactFlow();
 
@@ -83,7 +76,7 @@ const Canvas: React.FC = () => {
       snapToGrid
       onEdgeMouseEnter={(_e, edge) => CanvasStore.send({ type: 'hoverOverEdge', edgeId: edge.id })}
       onEdgeMouseLeave={() => CanvasStore.send({ type: 'hoverOverEdge', edgeId: undefined })}
-      defaultViewport={{ x: 0, y: 0, zoom: initialZoom }}
+      defaultViewport={{ x: 0, y: 0, zoom: 1 }}
     >
       <Background color='#ccc' variant={BackgroundVariant.Dots} size={2} gap={14} />
       <Controls position='bottom-right' showZoom={false} showInteractive={false}>
