@@ -25,7 +25,6 @@ interface UseCanvasReturn {
   onNodeDelete: (targetNodes: IAMAnyNode[]) => void;
   sidePanelWidth: number;
   disabledEdgesCreation: boolean;
-  initialZoom: number;
 }
 
 /**
@@ -55,21 +54,47 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     _.isEqual
   );
 
-  const hasAccountNodes = nodes.some(node => node.data.entity === IAMNodeEntity.Account);
-  const accountNodesWidth = _.sumBy(nodes, node =>
-    node.data.entity === IAMNodeEntity.Account ? node.width! + 20 : 0
-  );
-
-  // If there are account nodes, set initial zoom to fit them within the viewport width
-  const initialZoom = Math.min(
-    hasAccountNodes ? (window.innerWidth / accountNodesWidth) * 0.9 : 1,
-    1
-  );
-
   const levelActor = LevelsProgressionContext().useActorRef();
+  const [rfInstance, setRfInstance] = useState<ReactFlowInstance<IAMAnyNode, IAMEdge>>();
+
   const sidePanelWidth = sidePanelOpened ? window.innerWidth * 0.2 : 0;
 
-  const [rfInstance, setRfInstance] = useState<ReactFlowInstance<IAMAnyNode, IAMEdge>>();
+  const containsAccountNodes = useCallback((nodesToCheck: IAMAnyNode[]): boolean => {
+    return nodesToCheck.some(node => node.data.entity === IAMNodeEntity.Account);
+  }, []);
+
+  const calculateCanvasZoom = useCallback(
+    (referenceNodes: IAMAnyNode[]): number => {
+      if (!rfInstance) return 1;
+
+      const accountNodesWidth = _.sumBy(referenceNodes, node =>
+        node.data.entity === IAMNodeEntity.Account ? node.width! + 20 : 0
+      );
+      return Math.min(
+        containsAccountNodes(referenceNodes) ? (window.innerWidth / accountNodesWidth) * 0.9 : 1,
+        1
+      );
+    },
+    [rfInstance, containsAccountNodes]
+  );
+
+  const adjustCanvasZoom = useCallback(
+    (newNodes: IAMAnyNode[]): void => {
+      if (!rfInstance) return;
+
+      const viewport = rfInstance.getViewport();
+
+      rfInstance.setViewport(
+        {
+          x: viewport.x,
+          y: viewport.y,
+          zoom: calculateCanvasZoom(newNodes),
+        },
+        { duration: 0 }
+      );
+    },
+    [rfInstance, calculateCanvasZoom]
+  );
 
   // This useEffect initializes the canvas store with nodes and edges from the state machine when the React Flow instance becomes available.
   // We need this initialization because event-driven updates alone aren't sufficient, as events may fire before this hook is set up, causing us to miss them.
@@ -77,6 +102,8 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     if (!rfInstance) return;
 
     const snapshot = levelActor.getSnapshot();
+
+    adjustCanvasZoom(snapshot.context.nodes);
 
     CanvasStore.send({
       type: 'setNodes',
@@ -90,7 +117,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
       type: 'setEdges',
       edges: snapshot.context.edges,
     });
-  }, [levelActor, rfInstance]);
+  }, [levelActor, rfInstance, adjustCanvasZoom]);
 
   // This useEffect sets up subscriptions to the level actor to listen for node and edge changes.
   // It acts as the synchronization layer between the state machine and the canvas store.
@@ -141,6 +168,8 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     const nodesResetSub = levelActor.on(
       'NODES_RESET',
       ({ nodes: newNodes }: { nodes: IAMAnyNode[] }) => {
+        adjustCanvasZoom(newNodes);
+
         CanvasStore.send({
           type: 'setNodes',
           nodes: newNodes,
@@ -164,11 +193,11 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
       nodesResetSub.unsubscribe();
       nodeUpdatedSub.unsubscribe();
     };
-  }, [levelActor, rfInstance, sidePanelWidth]);
+  }, [levelActor, rfInstance, sidePanelWidth, adjustCanvasZoom, layoutGroups]);
 
   // Used to reposition nodes when the side panel is opened, to ensure no nodes are hidden behind it
   useEffect(() => {
-    if (!rfInstance || hasAccountNodes) return;
+    if (!rfInstance || containsAccountNodes(nodes)) return;
 
     CanvasStore.send({
       type: 'adjustForSidePanelWidthChange',
@@ -176,7 +205,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
       viewport: rfInstance.getViewport(),
       nodeWidth: theme.sizes.iamNodeWidthInPixels,
     });
-  }, [sidePanelWidth]);
+  }, [sidePanelWidth, containsAccountNodes]);
 
   const showInvalidConnectionToast = useCallback(() => {
     toast({
@@ -253,6 +282,5 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     onNodeDelete,
     sidePanelWidth,
     disabledEdgesCreation: edgesManagementDisabled ?? false,
-    initialZoom,
   };
 }
