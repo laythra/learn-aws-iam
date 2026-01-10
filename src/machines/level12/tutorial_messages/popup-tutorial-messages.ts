@@ -71,7 +71,8 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG3,
   },
   {
-    title: 'Officialy an IAM Master 🔥',
+    title: 'Officialy an IAM Master 🎓',
     content: POPUP_MSG4,
+    go_to_next_level_button: true,
   },
 ];

@@ -30,7 +30,7 @@ export const stateMachine = createStateMachineSetup<
   FinishEventMap
 >().createMachine({
   id: 'level12_state_machine',
-  initial: 'inside_level',
+  initial: 'inside_tutorial',
   context: {
     level_title: 'Final Level',
     level_description: 'Final Level',
@@ -63,6 +63,7 @@ export const stateMachine = createStateMachineSetup<
   states: {
     inside_tutorial: {
       entry: [
+        { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
         {
           type: 'assign_nodes',
           params: { nodes: INITIAL_TUTORIAL_NODES },
@@ -73,7 +74,9 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
       initial: 'popup1',
-      onDone: 'inside_level',
+      onDone: {
+        target: 'inside_level',
+      },
       states: {
         popup1: {
           entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } }],
@@ -158,6 +161,10 @@ export const stateMachine = createStateMachineSetup<
         fixed_popover2: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
+            {
+              type: 'finish_level_objective',
+              params: { id: LevelObjectiveID.CREATE_CLOUDTRAIL_DELETION_RESTRICTING_SCP },
+            },
           ],
           on: {
             NEXT_FIXED_POPOVER: 'tutorial_complete',
@@ -171,7 +178,7 @@ export const stateMachine = createStateMachineSetup<
     },
     inside_level: {
       entry: [
-        // 'store_checkpoint',
+        'store_checkpoint',
         {
           type: 'set_restricted_element_ids',
           params: {
@@ -229,6 +236,7 @@ export const stateMachine = createStateMachineSetup<
               initial: 'create_scp',
               onDone: {
                 actions: [
+                  'store_checkpoint',
                   {
                     type: 'finish_level_objective',
                     params: { id: LevelObjectiveID.RESTRICT_EC2_REGION },
@@ -247,10 +255,6 @@ export const stateMachine = createStateMachineSetup<
                   },
                 },
                 finished: {
-                  entry: {
-                    type: 'finish_level_objective',
-                    params: { id: LevelObjectiveID.RESTRICT_EC2_REGION },
-                  },
                   type: 'final',
                 },
               },
@@ -259,6 +263,7 @@ export const stateMachine = createStateMachineSetup<
               initial: 'create_permission_boundary',
               onDone: {
                 actions: [
+                  'store_checkpoint',
                   {
                     type: 'show_popover_message',
                     params: { message: POPOVER_TUTORIAL_MESSAGES[6] },
@@ -344,6 +349,7 @@ export const stateMachine = createStateMachineSetup<
               type: 'parallel',
               onDone: {
                 actions: [
+                  'store_checkpoint',
                   {
                     type: 'finish_level_objective',
                     params: { id: LevelObjectiveID.ENABLE_EC2_TO_S3_COMMUNICATION },
@@ -395,6 +401,7 @@ export const stateMachine = createStateMachineSetup<
               initial: 'create_elasticache_manage_policy',
               onDone: {
                 actions: [
+                  'store_checkpoint',
                   {
                     type: 'finish_level_objective',
                     params: { id: LevelObjectiveID.ELASTICACHE_ACCESS_MANAGEMENT },
