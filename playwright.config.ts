@@ -11,14 +11,17 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
+const isCI = !!process.env.CI;
+
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
+  forbidOnly: isCI,
   timeout: 60 * 1000, // 1 minute per test
   retries: 0,
-  workers: process.env.CI ? 2 : undefined,
-  reporter: process.env.CI ? [['github'], ['html']] : 'html',
+  workers: isCI ? 2 : undefined,
+  reporter: isCI ? [['github'], ['html']] : 'html',
   use: {
     trace: 'on-first-retry',
     testIdAttribute: 'data-element-id',
@@ -32,22 +35,25 @@ export default defineConfig({
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chrome'],
-        launchOptions: {
-          // Chromium introduced a scheduling optimization (DeferRendererTaskAfterInput) that defers
-          // certain rendering tasks after user input to improve responsiveness. This changes execution
-          // order in subtle ways, which makes some of our Playwright tests flaky (e.g. text fields
-          // sometimes don’t clear before being refilled).
-          //
-          // We disable the feature only in the e2e test browser to restore deterministic behavior.
-          // This does not affect production users. Long term we should fix the tests to be resilient
-          // or fix the underlying issues that cause the flakiness, and then remove this flag.
-          args: ['--disable-features=DeferRendererTaskAfterInput'],
-        },
+        ...(isCI
+          ? {
+              // Using a deterministic viewport in CI because headless browsers have no real window,
+              // so relying on “maximize” or defaults leads to inconsistent and often small viewports.
+              viewport: { width: 1920, height: 1080 },
+              launchOptions: {
+                args: ['--window-size=1920,1080', '--force-device-scale-factor=1'],
+              },
+            }
+          : {
+              viewport: null,
+              launchOptions: {
+                args: ['--start-maximized'],
+              },
+            }),
       },
     },
     // Disabling these browsers for now, as they increase CI time significantly.
-    ...(!process.env.CI
+    ...(!isCI
       ? [
           {
             name: 'firefox',
@@ -85,7 +91,7 @@ export default defineConfig({
   webServer: {
     command: 'VITE_APP_ENV=CI yarn dev',
     url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !isCI,
     timeout: 120 * 1000,
   },
 });
