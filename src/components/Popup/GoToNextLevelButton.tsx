@@ -28,6 +28,7 @@ export const GoToNextLevelButton: React.FC<GoToNextLevelButtonProps> = () => {
         boxShadow: '0px 0px 25px rgba(139, 92, 246, 1)', // Stronger glow on hover
       }}
       transition={{ type: 'spring', stiffness: 300 }}
+      data-element-id='go-to-next-level-button'
       bg='purple.500'
       color='white'
       px={6}

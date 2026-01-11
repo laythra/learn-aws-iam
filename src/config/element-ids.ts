@@ -27,6 +27,7 @@ export enum ElementID {
   AccountSelectionDropdown = 'account-select-dropdown',
   CreateGroupTab = 'create-group-tab',
   CreateUserTab = 'create-user-tab',
+  GoToNextLevelButton = 'go-to-next-level-button',
 }
 
 export type CodeEditorTabsElementID =
