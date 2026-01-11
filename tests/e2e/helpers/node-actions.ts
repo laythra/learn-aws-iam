@@ -12,6 +12,7 @@ import {
   findUnnecessaryNode,
 } from './locator-helpers';
 import { ElementID } from '@/config/element-ids';
+import { HandleID } from '@/types/iam-enums';
 
 export class NodeActions {
   constructor(private readonly page: Page) {}
@@ -42,8 +43,13 @@ export class NodeActions {
     await expect(findEdge(this.page, sourceId, targetId)).toBeVisible();
   }
 
-  async connectNodes(sourceId: string, targetId: string): Promise<void> {
-    await connectNodes(this.page, sourceId, targetId);
+  async connectNodes(
+    sourceId: string,
+    targetId: string,
+    sourceHandleID: HandleID = HandleID.Top,
+    targetHandleID: HandleID = HandleID.Bottom
+  ): Promise<void> {
+    await connectNodes(this.page, sourceId, targetId, sourceHandleID, targetHandleID);
   }
 
   async openNodePopover(nodeId: string, popoverType: 'content' | 'tags' | 'arn'): Promise<void> {

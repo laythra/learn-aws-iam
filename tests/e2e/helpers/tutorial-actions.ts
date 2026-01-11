@@ -1,7 +1,7 @@
 import { Page, expect } from '@playwright/test';
 
 import { findPopover, findTutorialPopup, findFixedPopover } from './locator-helpers';
-
+import { ElementID } from '@/config/element-ids';
 export class TutorialActions {
   constructor(private readonly page: Page) {}
 
@@ -16,6 +16,12 @@ export class TutorialActions {
     await expect(popup).toBeVisible();
     await popup.getByRole('button', { name: /next/i }).click();
     await expect(popup).not.toBeVisible();
+  }
+
+  async expectPopupWithGoToNextLevelButton(title: string): Promise<void> {
+    const popup = findTutorialPopup(this.page, title);
+    await expect(popup).toBeVisible();
+    await expect(popup.getByTestId('go-to-next-level-button')).toBeVisible();
   }
 
   async expectFixedPopoverAndClickNext(title: string): Promise<void> {
@@ -61,15 +67,9 @@ export class TutorialActions {
     isVisible ? await expect(warning).toBeVisible() : await expect(warning).not.toBeVisible();
   }
 
-  async goThroughConsecutivePopovers(
-    steps: Array<{ nodeId: string; title: string }>
-  ): Promise<void> {
-    for (const step of steps) {
-      await this.expectPopoverAndClickNext(step.nodeId, step.title);
-    }
-  }
-
-  async clickGlobalNextButton(): Promise<void> {
-    await this.page.getByRole('button', { name: /next/i }).click();
+  async closeSidePanel(): Promise<void> {
+    const toggleButton = this.page.getByTestId(ElementID.RightSidePanelToggleButton);
+    await expect(toggleButton).toBeVisible();
+    await toggleButton.click();
   }
 }

@@ -17,12 +17,12 @@ export const ObjectiveCompleteToast: React.FC<ObjectiveCompletePopoverProps> = (
     position: 'bottom',
     duration: 4000,
     isClosable: true,
-    id: 'objective-complete-toast',
   });
 
   useEffect(() => {
     const sub = machineActor.on('OBJECTIVE_COMPLETED', ({ message, objective_id }) => {
       toast({
+        id: `objective-complete-toast-${objective_id}`,
         render: ({ onClose }) => (
           <Box
             bg='white'
