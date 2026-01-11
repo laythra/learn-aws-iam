@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
 import { Box, HStack, Text } from '@chakra-ui/react';
-import { ArrowDownLeftIcon, ArrowsPointingInIcon } from '@heroicons/react/24/solid';
-import { Handle, NodeResizeControl, Position, useUpdateNodeInternals } from '@xyflow/react';
+import { ArrowDownLeftIcon, ArrowUpRightIcon } from '@heroicons/react/24/solid';
+import { Handle, NodeResizeControl, useUpdateNodeInternals } from '@xyflow/react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
@@ -12,11 +12,15 @@ import { IAMAccountNode } from '@/types/iam-node-types';
 export interface IAMCanvasNodeProps {
   data: IAMAccountNode['data'];
   id: string;
+  height?: number | undefined;
+  width?: number | undefined;
 }
 
 export const AccountCanvasNode: React.FC<IAMCanvasNodeProps> = ({
   data: { collapsed, label, handles },
   id,
+  height: nodeHeight,
+  width: nodeWidth,
 }) => {
   const toggleCollapse = (): void => {
     CanvasStore.send({
@@ -25,34 +29,33 @@ export const AccountCanvasNode: React.FC<IAMCanvasNodeProps> = ({
     });
   };
 
-  const aggregateUserNodes = (): void => {
-    // levelActor.send({
-    //   type: StatelessStateMachineEvent.AggregateUserNodes,
-    // });
-  };
-
   const updateNodeInternals = useUpdateNodeInternals();
 
   useEffect(() => {
     updateNodeInternals(id);
   }, [collapsed, id, updateNodeInternals]);
 
-  return (
-    <TutorialPopover elementId={id}>
-      <Box data-element-id={id} zIndex={20}>
-        {/* stable node wrapper */}
-        <Box
-          position='absolute'
-          width={collapsed ? 120 : '100%'}
-          height={collapsed ? 48 : '100%'}
-          bg={collapsed ? 'gray.50' : 'whiteAlpha.600'}
-          border={collapsed ? '1px dashed' : '2px solid'}
-          borderColor='gray.500'
-          borderRadius='lg'
-          pointerEvents='all'
-        >
-          <Handle position={Position.Top} id='top' type='target' style={{ pointerEvents: 'all' }} />
+  nodeHeight = collapsed ? 80 : nodeHeight;
+  nodeWidth = collapsed ? 200 : nodeWidth;
 
+  return (
+    <Box
+      position='absolute'
+      pointerEvents='all'
+      height={`${nodeHeight}px`}
+      width={`${nodeWidth}px`}
+      data-element-id={id}
+    >
+      <Box
+        bg={collapsed ? 'gray.50' : 'whiteAlpha.600'}
+        border='2px solid'
+        height='100%'
+        width='100%'
+        borderColor='gray.500'
+        borderRadius='lg'
+        pointerEvents='all'
+      >
+        <TutorialPopover elementId={id}>
           {collapsed && (
             <Box
               height='100%'
@@ -65,8 +68,15 @@ export const AccountCanvasNode: React.FC<IAMCanvasNodeProps> = ({
                 {label}
               </Text>
 
-              <Box as='button' type='button' onClick={toggleCollapse}>
-                <ArrowDownLeftIcon width={14} height={14} />
+              <Box
+                as='button'
+                type='button'
+                onClick={toggleCollapse}
+                position='absolute'
+                right={2}
+                top={2}
+              >
+                <ArrowUpRightIcon width={24} height={24} />
               </Box>
             </Box>
           )}
@@ -105,8 +115,8 @@ export const AccountCanvasNode: React.FC<IAMCanvasNodeProps> = ({
                 }}
               >
                 <ArrowDownLeftIcon
-                  width={24}
-                  height={24}
+                  width={16}
+                  height={16}
                   style={{ position: 'absolute', left: 28, bottom: 28 }}
                 />
               </NodeResizeControl>
@@ -116,16 +126,9 @@ export const AccountCanvasNode: React.FC<IAMCanvasNodeProps> = ({
                   {label}
                 </Text>
 
-                <HStack spacing={1} position='absolute' right={2} top={2}>
-                  <Box as='button' onClick={aggregateUserNodes}>
-                    <ArrowsPointingInIcon width={24} height={24} />
-                  </Box>
+                <HStack spacing={3} position='absolute' right={2} top={2}>
                   <Box as='button' onClick={toggleCollapse}>
-                    <ArrowDownLeftIcon
-                      width={24}
-                      height={24}
-                      style={{ transform: 'rotate(180deg)' }}
-                    />
+                    <ArrowDownLeftIcon width={24} height={24} />
                   </Box>
                 </HStack>
 
@@ -135,8 +138,8 @@ export const AccountCanvasNode: React.FC<IAMCanvasNodeProps> = ({
               </Box>
             </>
           )}
-        </Box>
+        </TutorialPopover>
       </Box>
-    </TutorialPopover>
+    </Box>
   );
 };
