@@ -5,9 +5,9 @@ import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 import Markdown from 'react-markdown';
 
 import { LevelsProgressionContext } from '../providers/level-actor-contexts';
-import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/utils/markdown/components';
-import { rehypeIcon } from '@/utils/markdown/icons-markdown';
+import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
+import { components as markdownComponents } from '@/lib/markdown/components';
+import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 interface ObjectiveCompletePopoverProps {}
 

@@ -13,9 +13,9 @@ import {
 import { InformationCircleIcon } from '@heroicons/react/24/solid';
 import Markdown from 'react-markdown';
 
-import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
-import { components } from '@/utils/markdown/components';
-import { rehypeIcon } from '@/utils/markdown/icons-markdown';
+import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
+import { components } from '@/lib/markdown/components';
+import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 interface SidePanelObjectiveHintButtonProps {
   hint: string;

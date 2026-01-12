@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { NodeLayoutGroup } from '@/types/iam-layout-types';
 import { IAMAnyNode } from '@/types/iam-node-types';
-import { getNodeInitialPosition } from '@/utils/node-postition-geomtery';
+import { getNodeInitialPosition } from '@/lib/canvas/node-position-geometry';
 
 export function positionNewNodes(
   existingNodes: IAMAnyNode[],

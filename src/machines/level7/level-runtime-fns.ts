@@ -5,7 +5,7 @@ import { PolicyNodeID, ResourcePolicyNodeID } from './types/node-id-enums';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
+import { AJV_COMPILER } from '@/lib/iam/iam-code-linter';
 
 export const ObjectivesApplicableNodesFns = {
   publicImagesApplicableNodes: (nodes: IAMAnyNode[]) =>

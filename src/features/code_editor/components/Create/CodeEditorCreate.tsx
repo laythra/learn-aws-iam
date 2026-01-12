@@ -16,7 +16,7 @@ import { MANAGED_POLICIES } from '@/machines/config';
 import { GetLevelValidateFunctions } from '@/machines/functions-registry';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
-import { findAnyValidObjective, GENERIC_VALIDATION_FNS } from '@/utils/iam-code-linter';
+import { findAnyValidObjective, GENERIC_VALIDATION_FNS } from '@/lib/iam/iam-code-linter';
 
 interface CodeEditorCreateProps {
   nodeId: string;

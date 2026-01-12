@@ -23,7 +23,7 @@ import {
   IAMPermissionBoundaryNode,
   IAMSCPNode,
 } from '@/types/iam-node-types';
-import { findAnyValidObjective } from '@/utils/iam-code-linter';
+import { findAnyValidObjective } from '@/lib/iam/iam-code-linter';
 
 type EntityToNode = {
   [IAMNodeEntity.Policy]: IAMPolicyNode;

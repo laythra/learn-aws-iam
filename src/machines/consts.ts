@@ -2,7 +2,7 @@ import { IAMCodeDefinedEntities } from '@/config/consts';
 import { createHorizontalGroup, createVerticalGroup } from '@/factories/layout-group-factory';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 import { VALID_INITIAL_POSITIONS } from '@/types/iam-layout-types';
-import { LAYOUT_DIRECTIONS } from '@/utils/node-postition-geomtery';
+import { LAYOUT_DIRECTIONS } from '@/lib/canvas/node-position-geometry';
 
 export const MANAGED_POLICIES = {
   AWSS3ReadOnlyAccess: {

@@ -23,9 +23,9 @@ import { TutorialPopover } from '../Popover/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import SidePanel from '@/components/SidePanels/SidePanel';
 import { ElementID } from '@/config/element-ids';
-import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/utils/markdown/components';
-import { rehypeIcon } from '@/utils/markdown/icons-markdown';
+import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
+import { components as markdownComponents } from '@/lib/markdown/components';
+import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 const RightSidePanel: React.FC = () => {
   const [levelObjectives, isSidePanelOpen, levelDescription] =

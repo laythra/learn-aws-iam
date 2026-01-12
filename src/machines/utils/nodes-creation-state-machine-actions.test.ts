@@ -8,9 +8,9 @@ import {
 } from '@/__test-helpers__/objectives';
 import { CreatableIAMNodeEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
-import { findAnyValidObjective } from '@/utils/iam-code-linter';
+import { findAnyValidObjective } from '@/lib/iam/iam-code-linter';
 
-vi.mock('@/utils/iam-code-linter', () => ({
+vi.mock('@/lib/iam/iam-code-linter', () => ({
   findAnyValidObjective: vi.fn(),
 }));
 

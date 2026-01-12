@@ -15,8 +15,8 @@ import {
 import { IAMNodeFilter } from '../utils/iam-node-filter';
 import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
-import { generateArn } from '@/utils/arn-generator';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
+import { generateArn } from '@/lib/iam/arn-generator';
+import { AJV_COMPILER } from '@/lib/iam/iam-code-linter';
 
 export const ValidateFunctions = {
   [PolicyNodeID.AccessDelegationPolicy]: (nodes: IAMAnyNode[]) => {

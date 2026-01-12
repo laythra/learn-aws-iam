@@ -20,8 +20,8 @@ import { CustomTheme } from '@/types/custom-theme';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
-import { generateArn, SupportedArnNodeTypes } from '@/utils/arn-generator';
-import { loadLocalImage } from '@/utils/image-loader';
+import { generateArn, SupportedArnNodeTypes } from '@/lib/iam/arn-generator';
+import { loadLocalImage } from '@/lib/assets/image-loader';
 
 export interface IAMCanvasNodeProps {
   data: IAMAnyNode['data'];

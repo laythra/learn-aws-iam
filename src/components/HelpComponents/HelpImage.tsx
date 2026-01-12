@@ -1,6 +1,6 @@
 import { Flex, Image } from '@chakra-ui/react';
 
-import { loadTutorialGif } from '@/utils/image-loader';
+import { loadTutorialGif } from '@/lib/assets/image-loader';
 
 interface HelpImageProps {
   gifName: string;

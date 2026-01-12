@@ -9,9 +9,9 @@ import {
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
-import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/utils/markdown/components';
-import { rehypeIcon } from '@/utils/markdown/icons-markdown';
+import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
+import { components as markdownComponents } from '@/lib/markdown/components';
+import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 interface CodeEditorObjectiveHintsProps {
   objectiveHints: { title: string; content: string }[];
