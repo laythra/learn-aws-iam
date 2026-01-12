@@ -13,7 +13,7 @@ import { LevelsProgressionContext } from '@/components/providers/level-actor-con
 import { HelpBadge } from '@/machines/types/objective-types';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { getLintingErrors } from '@/lib/iam/iam-code-linter';
-import { validateIAMName } from '@/utils/names';
+import { validateIAMName } from '@/lib/iam/names';
 
 interface UseCodeEditorOptions {
   nodeId: string;

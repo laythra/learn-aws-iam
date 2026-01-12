@@ -32,8 +32,8 @@ import {
   IAMUserNode,
 } from '@/types/iam-node-types';
 import { PolicyGrantedAccess } from '@/types/iam-policy-types';
-import { getEdgeName, getEdgeLabel } from '@/utils/names';
-import { isNodeOfEntity } from '@/utils/node-type-guards';
+import { getEdgeName, getEdgeLabel } from '@/lib/iam/names';
+import { isNodeOfEntity } from '@/lib/iam/node-type-guards';
 
 function isEdgeConnectionObjectiveFinished<TFinishEventMap extends BaseFinishEventMap>(
   objective: EdgeConnectionObjective<TFinishEventMap>,

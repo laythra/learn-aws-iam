@@ -31,7 +31,7 @@ import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
-import { validateIAMName } from '@/utils/names';
+import { validateIAMName } from '@/lib/iam/names';
 
 interface IdentityCreationPopupProps {}
 
