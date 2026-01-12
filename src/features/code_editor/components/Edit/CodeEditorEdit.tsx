@@ -11,7 +11,7 @@ import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
-import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/lib/iam/iam-code-linter';
+import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/lib/iam/iam-policy-validator';
 import { GetLevelValidateFunctions } from '@/machines/functions-registry';
 import {
   BaseFinishEventMap,

@@ -11,7 +11,7 @@ import { createResourcePolicyNode } from '@/factories/nodes/resource-policy-node
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createSCPNode } from '@/factories/nodes/scp-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
-import { findAnyValidObjective } from '@/lib/iam/iam-code-linter';
+import { findAnyValidObjective } from '@/lib/iam/iam-policy-validator';
 import { IAMNodeEntity, CommonLayoutGroupID, IAMCodeDefinedEntity } from '@/types/iam-enums';
 import {
   IAMAnyNode,

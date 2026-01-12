@@ -1,7 +1,7 @@
 import slackServicePolicyNoTags from './schemas/policy/slack-manage-service-policy-no-tags.json';
 import slackServicePolicyWithTags from './schemas/policy/slack-manage-service-policy-with-tags.json';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
-import { AJV_COMPILER } from '@/lib/iam/iam-code-linter';
+import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
 export const ObjectivesApplicableNodesFns = {

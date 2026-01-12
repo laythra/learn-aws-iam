@@ -3,7 +3,7 @@ import s3ReadWriteIdentityPolicySchema from './schemas/policy/s3-read-write-iden
 import s3ReadWriteResourcePolicySchema from './schemas/policy/s3-read-write-resource-policy-schema.json';
 import { PolicyNodeID, ResourcePolicyNodeID } from './types/node-id-enums';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
-import { AJV_COMPILER } from '@/lib/iam/iam-code-linter';
+import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
 

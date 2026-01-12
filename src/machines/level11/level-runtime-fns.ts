@@ -7,7 +7,7 @@ import {
   UserNodeID,
 } from './types/node-id-enums';
 import { generateArn } from '@/lib/iam/arn-generator';
-import { AJV_COMPILER } from '@/lib/iam/iam-code-linter';
+import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 

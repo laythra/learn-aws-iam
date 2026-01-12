@@ -3,7 +3,7 @@ import dynamodbReadPolicySchema from './schemas/policy/dynamodb-read-policy-sche
 import dynamodbRoleTrustPolicy from './schemas/role/dynamodb-role-trust-policy-schema.json';
 import { PolicyNodeID, RoleNodeID } from './types/node-id-enums';
 import { generateArn } from '@/lib/iam/arn-generator';
-import { AJV_COMPILER } from '@/lib/iam/iam-code-linter';
+import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
