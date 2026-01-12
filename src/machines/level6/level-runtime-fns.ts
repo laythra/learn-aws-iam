@@ -2,10 +2,10 @@ import { generateAssumeRolePolicySchema } from './schemas/policy/assume-role-pol
 import dynamodbReadPolicySchema from './schemas/policy/dynamodb-read-policy-schema.json';
 import dynamodbRoleTrustPolicy from './schemas/role/dynamodb-role-trust-policy-schema.json';
 import { PolicyNodeID, RoleNodeID } from './types/node-id-enums';
-import { IAMNodeEntity } from '@/types/iam-enums';
-import { IAMAnyNode } from '@/types/iam-node-types';
 import { generateArn } from '@/lib/iam/arn-generator';
 import { AJV_COMPILER } from '@/lib/iam/iam-code-linter';
+import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMAnyNode } from '@/types/iam-node-types';
 
 export const ValidateFunctions = {
   [PolicyNodeID.TrustingAccountFinanceReportsReadPolicy]: () =>

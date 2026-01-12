@@ -11,6 +11,7 @@ import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/lib/iam/iam-code-linter';
 import { GetLevelValidateFunctions } from '@/machines/functions-registry';
 import {
   BaseFinishEventMap,
@@ -19,7 +20,6 @@ import {
 } from '@/machines/types/objective-types';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types/iam-enums';
-import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/lib/iam/iam-code-linter';
 
 interface CodeEditorEditProps {
   nodeId: string;

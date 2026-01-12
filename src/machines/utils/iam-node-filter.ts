@@ -1,6 +1,6 @@
+import { isNodeOfEntity } from '@/lib/iam/node-type-guards';
 import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
-import { isNodeOfEntity } from '@/lib/iam/node-type-guards';
 
 interface FilterGroup {
   filters: Array<(node: IAMAnyNode) => boolean>;

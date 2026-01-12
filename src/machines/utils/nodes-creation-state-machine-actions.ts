@@ -11,6 +11,7 @@ import { createResourcePolicyNode } from '@/factories/nodes/resource-policy-node
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createSCPNode } from '@/factories/nodes/scp-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
+import { findAnyValidObjective } from '@/lib/iam/iam-code-linter';
 import { IAMNodeEntity, CommonLayoutGroupID, IAMCodeDefinedEntity } from '@/types/iam-enums';
 import {
   IAMAnyNode,
@@ -23,7 +24,6 @@ import {
   IAMPermissionBoundaryNode,
   IAMSCPNode,
 } from '@/types/iam-node-types';
-import { findAnyValidObjective } from '@/lib/iam/iam-code-linter';
 
 type EntityToNode = {
   [IAMNodeEntity.Policy]: IAMPolicyNode;

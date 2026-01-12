@@ -2,9 +2,9 @@ import createRDSWithTagsPolicy from './schemas/policy/create-rds-with-tags-polic
 import manageTaggedRdsPolicy from './schemas/policy/manage-tagged-rds-policy.json';
 import { PolicyNodeID } from './types/node-id-enums';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
+import { AJV_COMPILER } from '@/lib/iam/iam-code-linter';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
-import { AJV_COMPILER } from '@/lib/iam/iam-code-linter';
 
 export const ObjectivesApplicableNodesFns = {
   paymentsTeamApplicableNodes: (nodes: IAMAnyNode[]) =>

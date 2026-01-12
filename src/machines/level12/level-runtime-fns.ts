@@ -13,10 +13,10 @@ import {
   SCPNodeID,
 } from './types/node-id-enums';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
-import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
-import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 import { generateArn } from '@/lib/iam/arn-generator';
 import { AJV_COMPILER } from '@/lib/iam/iam-code-linter';
+import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
+import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 export const ValidateFunctions = {
   [PolicyNodeID.AccessDelegationPolicy]: (nodes: IAMAnyNode[]) => {

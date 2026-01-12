@@ -15,6 +15,8 @@ import {
   ObjectiveType,
 } from '../types/objective-types';
 import { createEdge } from '@/factories/edge-factory';
+import { getEdgeName, getEdgeLabel } from '@/lib/iam/names';
+import { isNodeOfEntity } from '@/lib/iam/node-type-guards';
 import { theme } from '@/theme';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { PartialEdge } from '@/types/iam-node-types';
@@ -32,8 +34,6 @@ import {
   IAMUserNode,
 } from '@/types/iam-node-types';
 import { PolicyGrantedAccess } from '@/types/iam-policy-types';
-import { getEdgeName, getEdgeLabel } from '@/lib/iam/names';
-import { isNodeOfEntity } from '@/lib/iam/node-type-guards';
 
 function isEdgeConnectionObjectiveFinished<TFinishEventMap extends BaseFinishEventMap>(
   objective: EdgeConnectionObjective<TFinishEventMap>,
