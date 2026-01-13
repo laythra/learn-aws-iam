@@ -1,9 +1,10 @@
 import { GroupNodeID } from '../types/node-id-enums';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMGroupNode } from '@/types/iam-node-types';
 
-const IN_LEVEL_GROUP_NODES: Partial<IAMGroupNode['data']>[] = [
+const IN_LEVEL_GROUP_NODES: IAMNodeDataOverrides<IAMGroupNode['data']>[] = [
   {
     id: GroupNodeID.PeachTeam,
     label: 'peach-team',

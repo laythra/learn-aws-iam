@@ -1,4 +1,5 @@
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 import {
   StatefulStateMachineEvent,
@@ -36,7 +37,9 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event: {
             type: StatefulStateMachineEvent.AddIAMUserGroupNode;
             node_entity: IAMNodeEntity.Group | IAMNodeEntity.User;
-            node_data: Partial<IAMUserNode['data']> | Partial<IAMGroupNode['data']>;
+            node_data:
+              | IAMNodeDataOverrides<IAMUserNode['data']>
+              | IAMNodeDataOverrides<IAMGroupNode['data']>;
           };
         }) => ({
           params: event.node_data,
@@ -194,7 +197,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event: {
             type: StatefulStateMachineEvent.EditNodeMetadata;
             nodeId: string;
-            newMetadata: Partial<IAMAnyNode['data']>;
+            newMetadata: IAMNodeDataOverrides<IAMAnyNode['data']>;
           };
         }) => ({
           nodeId: event.nodeId,

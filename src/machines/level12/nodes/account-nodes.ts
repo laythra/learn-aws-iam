@@ -1,9 +1,10 @@
 import { AccountID } from '../types/node-id-enums';
 import { createAccountNode } from '@/factories/nodes/account-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAccountNode } from '@/types/iam-node-types';
 
-const TUTORIAL_ACCOUNT_NODES: Partial<IAMAccountNode['data']>[] = [
+const TUTORIAL_ACCOUNT_NODES: IAMNodeDataOverrides<IAMAccountNode['data']>[] = [
   {
     id: AccountID.TutorialStagingAccount,
     label: 'Staging Account',
@@ -17,7 +18,7 @@ const TUTORIAL_ACCOUNT_NODES: Partial<IAMAccountNode['data']>[] = [
   },
 ];
 
-const IN_LEVEL_ACCOUNT_NODES: Partial<IAMAccountNode['data']>[] = [
+const IN_LEVEL_ACCOUNT_NODES: IAMNodeDataOverrides<IAMAccountNode['data']>[] = [
   {
     id: AccountID.InLevelStagingAccount,
     label: 'Staging Account',

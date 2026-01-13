@@ -39,6 +39,7 @@ import type {
   PopupTutorialMessage,
 } from '@/machines/types/tutorial-message-types';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -165,7 +166,7 @@ export const createStateMachineSetup = <
             attributes,
           }: {
             nodeId: string;
-            attributes: Partial<IAMAnyNode['data']>;
+            attributes: IAMNodeDataOverrides<IAMAnyNode['data']>;
           }
         ) => {
           const { updatedContext, editedNode } = editNodeAttributes<
@@ -249,7 +250,9 @@ export const createStateMachineSetup = <
             params,
           }: {
             nodeType: IAMNodeEntity.Group | IAMNodeEntity.User;
-            params: Partial<IAMUserNode['data']> | Partial<IAMGroupNode['data']>;
+            params:
+              | IAMNodeDataOverrides<IAMUserNode['data']>
+              | IAMNodeDataOverrides<IAMGroupNode['data']>;
           }
         ) => {
           const { updatedContext, events, createdNode } = createUserGroupNode(

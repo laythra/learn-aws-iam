@@ -2,9 +2,10 @@ import { SCPNodeID } from '../types/node-id-enums';
 import { createSCPNode } from '@/factories/nodes/scp-node-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMSCPNode } from '@/types/iam-node-types';
 
-const TUTORIAL_SCP_NODES: Partial<IAMSCPNode['data']>[] = [
+const TUTORIAL_SCP_NODES: IAMNodeDataOverrides<IAMSCPNode['data']>[] = [
   {
     id: SCPNodeID.DefaultSCP,
     label: 'FullAWSAccess',

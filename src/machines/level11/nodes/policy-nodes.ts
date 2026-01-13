@@ -3,9 +3,10 @@ import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { MANAGED_POLICIES } from '@/machines/consts';
 import { AccessLevel, CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMPolicyNode } from '@/types/iam-node-types';
 
-const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
+const TUTORIAL_POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.Policy1,
     label: 'S3ReadAccess',
@@ -22,7 +23,7 @@ const TUTORIAL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
   },
 ];
 
-const IN_LEVEL_POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
+const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.FullAccessPolicy,
     label: 'AdministratorAccess',

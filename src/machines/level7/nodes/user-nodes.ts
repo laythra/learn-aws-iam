@@ -1,9 +1,10 @@
 import { UserNodeID, AccountID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMUserNode } from '@/types/iam-node-types';
 
-const TUTORIAL_USER_NODES: Partial<IAMUserNode['data']>[] = [
+const TUTORIAL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.TutorialFirstUser,
     label: 'leon-kennedy',
@@ -12,7 +13,7 @@ const TUTORIAL_USER_NODES: Partial<IAMUserNode['data']>[] = [
   },
 ];
 
-const IN_LEVEL_USER_NODES: Partial<IAMUserNode['data']>[] = [
+const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.InsideLevelUser,
     label: 'leon-kennedy',

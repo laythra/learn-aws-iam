@@ -3,10 +3,11 @@ import _ from 'lodash';
 import { ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMResourceNode } from '@/types/iam-node-types';
 
-const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [];
-const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = _.zip(
+const TUTORIAL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [];
+const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = _.zip(
   [ResourceNodeID.RDS1, ResourceNodeID.RDS2, ResourceNodeID.RDS3],
   [
     ['team', 'payments-team'],

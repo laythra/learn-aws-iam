@@ -1,9 +1,10 @@
 import { GroupNodeID } from '../types/node-id-enums';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMGroupNode } from '@/types/iam-node-types';
 
-const GROUP_NODES: Partial<IAMGroupNode['data']>[] = [
+const GROUP_NODES: IAMNodeDataOverrides<IAMGroupNode['data']>[] = [
   {
     id: GroupNodeID.FrontendGroup,
     label: 'frontend-team',

@@ -10,7 +10,6 @@ import { PolicyGrantedAccess } from './iam-policy-types';
  * Should not be used directly
  */
 export interface IAMNodeData extends Record<string, unknown> {
-  id: string;
   label: string;
   entity: IAMNodeEntity;
   description?: string;
@@ -146,3 +145,5 @@ export interface IAMSCPNodeData<TIsEdgeBlockedFnName extends string = string>
   extends IAMGuardRailsNodeData<TIsEdgeBlockedFnName> {
   entity: IAMNodeEntity.SCP;
 }
+
+export type IAMNodeDataOverrides<T extends IAMNodeData> = Partial<T> & { id?: string };

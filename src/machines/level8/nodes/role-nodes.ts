@@ -1,9 +1,10 @@
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { RoleNodeID } from '@/machines/level8/types/node-id-enums';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMRoleNode } from '@/types/iam-node-types';
 
-const IN_LEVEL_ROLE_NODES: Partial<IAMRoleNode['data']>[] = [
+const IN_LEVEL_ROLE_NODES: IAMNodeDataOverrides<IAMRoleNode['data']>[] = [
   {
     id: RoleNodeID.SlackCodeDeployRole,
     label: 'SlackCodeDeployRole',

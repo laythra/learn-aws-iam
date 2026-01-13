@@ -2,9 +2,10 @@ import { INITIAL_TRUST_POLICIES } from '../policy_role_documents/initial-roles';
 import { RoleNodeID } from '../types/node-id-enums';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMRoleNode } from '@/types/iam-node-types';
 
-const TUTORIAL_ROLE_NODES: Partial<IAMRoleNode['data']>[] = [
+const TUTORIAL_ROLE_NODES: IAMNodeDataOverrides<IAMRoleNode['data']>[] = [
   {
     id: RoleNodeID.FinanceAuditorRole,
     label: 'finance-auditor-role',

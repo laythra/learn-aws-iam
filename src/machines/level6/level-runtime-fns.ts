@@ -11,9 +11,7 @@ export const ValidateFunctions = {
   [PolicyNodeID.TrustingAccountFinanceReportsReadPolicy]: () =>
     AJV_COMPILER.compile(dynamodbReadPolicySchema),
   [PolicyNodeID.TrustedAccountAssumeRolePolicy]: (nodes: IAMAnyNode[]) => {
-    const roleNode = nodes.find(
-      node => node.data.id === RoleNodeID.TrustingAccountDynamoDBReadRole
-    )!;
+    const roleNode = nodes.find(node => node.id === RoleNodeID.TrustingAccountDynamoDBReadRole)!;
 
     const roleArn = generateArn(IAMNodeEntity.Role, roleNode.data.label);
     return AJV_COMPILER.compile(generateAssumeRolePolicySchema(roleArn));

@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 
 import { createNodeFactory } from './create-node-factory';
 import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
 describe('createNodeFactory', () => {
@@ -47,7 +48,6 @@ describe('createNodeFactory', () => {
       extent: 'parent',
       deletable: false,
       data: {
-        id: 'default-id',
         label: IAMNodeEntity.User,
         handles: defaultHandles,
         customField: 'customValue',
@@ -72,7 +72,6 @@ describe('createNodeFactory', () => {
       deletable: false,
       ...rootOverrides,
       data: {
-        id: 'custom-id',
         label: IAMNodeEntity.User,
         handles: defaultHandles,
         customField: 'customValue',
@@ -87,10 +86,12 @@ describe('createNodeFactory', () => {
       customField: 'custom-value',
       label: "musashi, you've become kinder",
       handles: [],
-    } satisfies Partial<IAMAnyNode['data']>;
+    } satisfies IAMNodeDataOverrides<IAMAnyNode['data']>;
     const node = factory({
       dataOverrides,
     });
+
+    const { id: __unused, ...dataOverridesWithoutId } = dataOverrides;
 
     expect(node).toEqual({
       id: 'default-id',
@@ -103,7 +104,7 @@ describe('createNodeFactory', () => {
       deletable: false,
       data: {
         ...baseExpectedData,
-        ...dataOverrides,
+        ...dataOverridesWithoutId,
       },
     });
   });
@@ -120,7 +121,9 @@ describe('createNodeFactory', () => {
       label: 'Overridden Label',
       handles: [],
       show_pulse_animation: true,
-    } satisfies Partial<IAMAnyNode['data']>;
+    } satisfies IAMNodeDataOverrides<IAMAnyNode['data']>;
+
+    const { id: __unused, ...dataOverridesWithoutId } = dataOverrides;
 
     const node = factory({
       rootOverrides,
@@ -137,7 +140,7 @@ describe('createNodeFactory', () => {
       ...rootOverrides,
       data: {
         ...baseExpectedData,
-        ...dataOverrides,
+        ...dataOverridesWithoutId,
       },
     });
   });
