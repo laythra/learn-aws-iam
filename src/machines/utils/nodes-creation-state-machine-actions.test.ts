@@ -6,11 +6,11 @@ import {
   createMockPolicyCreationObjective,
   createMockUserGroupCreationObjective,
 } from '@/__test-helpers__/objectives';
+import { findAnyValidObjective } from '@/lib/iam/iam-policy-validator';
 import { CreatableIAMNodeEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
-import { findAnyValidObjective } from '@/utils/iam-code-linter';
 
-vi.mock('@/utils/iam-code-linter', () => ({
+vi.mock('@/lib/iam/iam-policy-validator', () => ({
   findAnyValidObjective: vi.fn(),
 }));
 

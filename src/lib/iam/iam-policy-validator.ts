@@ -17,7 +17,7 @@ import sharedConditionSchema from '@/schemas/shared-condition-schema.json';
 import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
-interface LintConfig {
+interface ValidationConfig {
   validateFunction: ValidateFunction;
   creationObjective?: string;
 }
@@ -44,9 +44,9 @@ export const getObjectiveValidationFunction = <TFinishEventMap extends BaseFinis
     : GENERIC_VALIDATION_FNS[objective.entity as IAMCodeDefinedEntity];
 };
 
-function lint(
+function validatePolicyDocument(
   view: EditorView,
-  { validateFunction }: LintConfig
+  { validateFunction }: ValidationConfig
 ): { [key in 'syntax' | 'logical']: Diagnostic[] } {
   const doc = view.state.doc.toString();
   const diagnostics: { [key in 'syntax' | 'logical']: Diagnostic[] } = { syntax: [], logical: [] };
@@ -123,13 +123,15 @@ export function findAnyValidObjective<E extends IAMNodeEntity>(
   }) as ObjectiveByEntity<E>;
 }
 
-export const getLintingErrors = (
+export const collectValidationDiagnostics = (
   view: EditorView,
   validateFunction: ValidateFunction
 ): Diagnostic[] => {
-  const lintingErrors = lint(view, {
+  const validationErrors = validatePolicyDocument(view, {
     validateFunction: validateFunction,
   });
 
-  return lintingErrors['syntax'].length > 0 ? lintingErrors['syntax'] : lintingErrors['logical'];
+  return validationErrors['syntax'].length > 0
+    ? validationErrors['syntax']
+    : validationErrors['logical'];
 };

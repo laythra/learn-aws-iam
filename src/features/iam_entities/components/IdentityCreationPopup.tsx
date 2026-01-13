@@ -25,13 +25,13 @@ import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
+import { validateIAMName } from '@/lib/iam/names';
 import { IAMIdentityEntity } from '@/types/iam-entities-types';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import {
   StatefulStateMachineEvent,
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
-import { validateIAMName } from '@/utils/names';
 
 interface IdentityCreationPopupProps {}
 

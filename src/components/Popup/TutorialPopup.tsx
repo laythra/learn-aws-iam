@@ -14,10 +14,10 @@ import Markdown from 'react-markdown';
 import { GoToNextLevelButton } from './GoToNextLevelButton';
 import { HelpImage } from '../HelpComponents/HelpImage';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
+import { components as markdownComponents } from '@/lib/markdown/components';
+import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 import { CustomTheme } from '@/types/custom-theme';
-import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/utils/markdown/components';
-import { rehypeIcon } from '@/utils/markdown/icons-markdown';
 
 interface TutorialPopupProps {}
 

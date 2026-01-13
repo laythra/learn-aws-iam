@@ -1,8 +1,8 @@
 import slackServicePolicyNoTags from './schemas/policy/slack-manage-service-policy-no-tags.json';
 import slackServicePolicyWithTags from './schemas/policy/slack-manage-service-policy-with-tags.json';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
+import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';
 import { IAMAnyNode } from '@/types/iam-node-types';
-import { AJV_COMPILER } from '@/utils/iam-code-linter';
 
 export const ObjectivesApplicableNodesFns = {
   seniorUsersApplicableNodes: (nodes: IAMAnyNode[]) =>

@@ -16,12 +16,12 @@ import TagsIconButton from './TagsIconButton';
 import { CanvasStore } from '../stores/canvas-store';
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { loadLocalImage } from '@/lib/assets/image-loader';
+import { generateArn, SupportedArnNodeTypes } from '@/lib/iam/arn-generator';
 import { CustomTheme } from '@/types/custom-theme';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
-import { generateArn, SupportedArnNodeTypes } from '@/utils/arn-generator';
-import { loadLocalImage } from '@/utils/image-loader';
 
 export interface IAMCanvasNodeProps {
   data: IAMAnyNode['data'];

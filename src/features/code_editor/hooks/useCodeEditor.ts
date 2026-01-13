@@ -10,10 +10,10 @@ import _ from 'lodash';
 
 import { badgeExtension, InitializeBadgeWidgets } from '../utils/badge-widget';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { collectValidationDiagnostics } from '@/lib/iam/iam-policy-validator';
+import { validateIAMName } from '@/lib/iam/names';
 import { HelpBadge } from '@/machines/types/objective-types';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
-import { getLintingErrors } from '@/utils/iam-code-linter';
-import { validateIAMName } from '@/utils/names';
 
 interface UseCodeEditorOptions {
   nodeId: string;
@@ -53,12 +53,12 @@ export function useCodeEditor({
     if (!editorView.current) return;
 
     const lintingErrors = validateFns.flatMap(validateFn =>
-      getLintingErrors(editorView.current!, validateFn!)
+      collectValidationDiagnostics(editorView.current!, validateFn!)
     );
 
     const allErrors = _.uniqBy(lintingErrors, 'from');
     const hasErrors = validateFns.every(
-      validateFn => getLintingErrors(editorView.current!, validateFn!).length > 0
+      validateFn => collectValidationDiagnostics(editorView.current!, validateFn!).length > 0
     );
 
     codeEditorStateStore.send({
@@ -110,7 +110,9 @@ export function useCodeEditor({
 
   const extensions = [
     json(),
-    linter(view => validateFns.flatMap(validateFn => getLintingErrors(view, validateFn!))),
+    linter(view =>
+      validateFns.flatMap(validateFn => collectValidationDiagnostics(view, validateFn!))
+    ),
     badgeExtension,
   ];
 

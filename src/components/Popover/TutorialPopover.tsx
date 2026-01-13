@@ -14,9 +14,9 @@ import { PopoverNextButton } from './PopoverNextButton';
 import { HelpImage } from '../HelpComponents/HelpImage';
 import { ElementID } from '@/config/element-ids';
 import { usePopover } from '@/hooks/usePopover';
-import { rehypeChakraBadge } from '@/utils/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/utils/markdown/components';
-import { rehypeIcon } from '@/utils/markdown/icons-markdown';
+import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
+import { components as markdownComponents } from '@/lib/markdown/components';
+import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 interface TutorialPopoverProps {
   children: React.ReactNode;

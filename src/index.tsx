@@ -7,7 +7,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import './utils/array.extensions';
+import './lib/array/array.extensions';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
