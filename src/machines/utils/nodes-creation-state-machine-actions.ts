@@ -13,6 +13,7 @@ import { createSCPNode } from '@/factories/nodes/scp-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { findAnyValidObjective } from '@/lib/iam/iam-policy-validator';
 import { IAMNodeEntity, CommonLayoutGroupID, IAMCodeDefinedEntity } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import {
   IAMAnyNode,
   IAMGroupNode,
@@ -36,7 +37,7 @@ type EntityToNode = {
 type NodeFor<E extends IAMCodeDefinedEntity> = EntityToNode[E];
 type NodeDataFor<E extends IAMCodeDefinedEntity> = NodeFor<E>['data'];
 type CreateNodeFn<E extends IAMCodeDefinedEntity> = (args: {
-  dataOverrides?: Partial<NodeDataFor<E>>;
+  dataOverrides?: IAMNodeDataOverrides<NodeDataFor<E>>;
   rootOverrides?: Partial<Omit<IAMAnyNode, 'data'>>;
 }) => NodeFor<E>;
 
@@ -61,7 +62,6 @@ export function createNodeFromObjective<
   const createNodeFn = nodesCreationMap[entityType];
   return createNodeFn({
     dataOverrides: {
-      id: targetValidObjective?.id ?? _.uniqueId(`${entityType.toLowerCase()}-`),
       content: docString,
       label: label,
       unnecessary_node: targetValidObjective === undefined,
@@ -76,6 +76,7 @@ export function createNodeFromObjective<
       ...targetValidObjective?.extra_data,
     } as NodeDataFor<E>,
     rootOverrides: {
+      id: targetValidObjective?.id ?? _.uniqueId(`${entityType.toLowerCase()}-`),
       parentId: targetValidObjective?.created_node_parent_id ?? accountId,
     },
   });
@@ -137,8 +138,8 @@ export function createUserGroupNode<TLevelObjectiveID, TFinishEventMap extends B
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   nodeType: IAMNodeEntity.Group | IAMNodeEntity.User,
   props:
-    | Omit<Partial<IAMGroupNode['data']>, 'entity'>
-    | Omit<Partial<IAMUserNode['data']>, 'entity'>
+    | Omit<IAMNodeDataOverrides<IAMGroupNode['data']>, 'entity'>
+    | Omit<IAMNodeDataOverrides<IAMUserNode['data']>, 'entity'>
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.IAM_USER_GROUP_CREATION_OBJECTIVE][];

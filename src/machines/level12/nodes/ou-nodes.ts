@@ -1,9 +1,10 @@
 import { OUNodeID } from '../types/node-id-enums';
 import { createOUNode } from '@/factories/nodes/ou-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMOUNode } from '@/types/iam-node-types';
 
-const TUTORIAL_OU_NODES: Partial<IAMOUNode['data']>[] = [
+const TUTORIAL_OU_NODES: IAMNodeDataOverrides<IAMOUNode['data']>[] = [
   {
     id: OUNodeID.TutorialOU,
     label: 'Organizational Unit',
@@ -11,7 +12,7 @@ const TUTORIAL_OU_NODES: Partial<IAMOUNode['data']>[] = [
   },
 ];
 
-const IN_LEVEL_OU_NODES: Partial<IAMOUNode['data']>[] = [
+const IN_LEVEL_OU_NODES: IAMNodeDataOverrides<IAMOUNode['data']>[] = [
   {
     id: OUNodeID.InLevelOU,
     label: 'Organizational Unit',

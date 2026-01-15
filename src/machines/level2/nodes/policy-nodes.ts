@@ -1,9 +1,10 @@
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMPolicyNode } from '@/types/iam-node-types';
 
-const POLICY_NODES: Partial<IAMPolicyNode['data']>[] = [
+const POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.PolicyNode1,
     label: 'S3ReadPolicy',

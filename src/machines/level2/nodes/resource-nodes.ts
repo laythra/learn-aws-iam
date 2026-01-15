@@ -1,9 +1,10 @@
 import { ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMResourceNode } from '@/types/iam-node-types';
 
-const RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
+const RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.S3Bucket,
     label: 'public-images',

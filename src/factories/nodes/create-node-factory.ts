@@ -1,6 +1,7 @@
 import { HandleProps } from '@xyflow/react';
 
 import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAnyNode, IAMNodeMap } from '@/types/iam-node-types';
 
 interface BaseFactoryConfig<T, E extends IAMNodeEntity> {
@@ -56,7 +57,10 @@ type RootOverrides = Partial<Omit<IAMAnyNode, 'data'>>;
  */
 export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAMNodeEntity>(
   config: BaseFactoryConfig<T, E>
-): (overrides: { rootOverrides?: RootOverrides; dataOverrides?: Partial<T> }) => IAMNodeMap[E] {
+): (overrides: {
+  rootOverrides?: RootOverrides;
+  dataOverrides?: IAMNodeDataOverrides<T>;
+}) => IAMNodeMap[E] {
   const {
     type,
     entity,
@@ -80,7 +84,6 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
     width,
     height,
     data: {
-      id: entity.toLowerCase(),
       label: entity,
       handles: defaultHandles,
       entity,
@@ -98,19 +101,19 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
     dataOverrides,
   }: {
     rootOverrides?: RootOverrides;
-    dataOverrides?: Partial<T>;
+    dataOverrides?: IAMNodeDataOverrides<T>;
   }): IAMNodeMap[E] {
+    const { id: overrideId, ...dataOverridesWithoutId } =
+      dataOverrides ?? ({} as IAMNodeDataOverrides<T>);
+
     return {
       ...TEMPLATE_NODE,
       ...rootOverrides,
-      // I don't know if needing two redundant id fields is of any good reason
-      // it's introducing unnecessary complexity in order to synchronize both
-      // TODO: Investigate if both are necessary
-      id: dataOverrides?.id ?? rootOverrides?.id ?? TEMPLATE_NODE.id,
-      deletable: dataOverrides?.unnecessary_node == true,
+      id: overrideId ?? rootOverrides?.id ?? TEMPLATE_NODE.id,
+      deletable: dataOverridesWithoutId?.unnecessary_node === true,
       data: {
         ...TEMPLATE_NODE.data,
-        ...dataOverrides,
+        ...dataOverridesWithoutId,
       },
     } as IAMNodeMap[E];
   };

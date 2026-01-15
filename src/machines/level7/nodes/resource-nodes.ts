@@ -1,9 +1,10 @@
 import { AccountID, ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMResourceNode } from '@/types/iam-node-types';
 
-const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
+const TUTORIAL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.TutorialS3Bucket,
     label: 'umbrella-files',
@@ -13,7 +14,7 @@ const TUTORIAL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
   },
 ];
 
-const IN_LEVEL_RESOURCE_NODES: Partial<IAMResourceNode['data']>[] = [
+const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.InsideLevelS3Bucket,
     label: 'rpd-case-files',

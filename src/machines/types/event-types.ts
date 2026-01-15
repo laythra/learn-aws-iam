@@ -1,5 +1,6 @@
 import { ElementID } from '@/config/element-ids';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 import {
   StatefulStateMachineEvent,
@@ -25,7 +26,9 @@ export type GenericEventData =
   | {
       type: StatefulStateMachineEvent.AddIAMUserGroupNode;
       node_entity: IAMNodeEntity.Group | IAMNodeEntity.User;
-      node_data: Partial<IAMUserNode['data']> | Partial<IAMGroupNode['data']>;
+      node_data:
+        | IAMNodeDataOverrides<IAMUserNode['data']>
+        | IAMNodeDataOverrides<IAMGroupNode['data']>;
     }
   | {
       type: StatefulStateMachineEvent.ADDIAMRoleNode;
@@ -87,6 +90,6 @@ export type GenericEventData =
   | {
       type: StatefulStateMachineEvent.EditNodeMetadata;
       nodeId: string;
-      newMetadata: Partial<IAMAnyNode['data']>;
+      newMetadata: IAMNodeDataOverrides<IAMAnyNode['data']>;
     }
   | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };

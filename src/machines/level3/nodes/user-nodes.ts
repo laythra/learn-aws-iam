@@ -1,9 +1,10 @@
 import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMUserNode } from '@/types/iam-node-types';
 
-const USER_NODES: Partial<IAMUserNode['data']>[] = [
+const USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.Laith,
     label: 'Laith',

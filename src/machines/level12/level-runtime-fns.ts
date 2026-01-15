@@ -21,7 +21,7 @@ import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 export const ValidateFunctions = {
   [PolicyNodeID.AccessDelegationPolicy]: (nodes: IAMAnyNode[]) => {
     const pbNode = nodes.find(
-      node => node.data.id === PermissionBoundaryID.Ec2LaunchPermissionBoundary
+      node => node.id === PermissionBoundaryID.Ec2LaunchPermissionBoundary
     )!;
 
     const pbArn = generateArn(
