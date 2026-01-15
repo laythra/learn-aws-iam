@@ -1,21 +1,17 @@
 import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 const POPUP_MSG1 = `
-  The policies we create so far have been relatively straightforward,
-  but as we progress, we’ll need to create more complex policies which mainly involve conditions.|lg
+  Up to now, policies were pretty straightforward.
+  Next step: **conditions**—the real power move.|lg
 
-
-  Conditions allow us to specify when a policy should apply,
-  and it supports a wide range of operators and ways to evaluate the conditions.
+  Conditions let a policy apply *only when* certain rules are met.
 `;
 
 const POPUP_MSG2 = `
-  Here's a quick dive into the \`Condition\` element in IAM Policies,
-  it consists of three main parts:
+  A quick tour of the \`Condition\` block. It has three parts:
 
-  * **Condition Operator**: The operator used to evaluate
-  the condition (e.g., \`Bool\`, \`StringEquals\`, etc.)
-  * **Condition Key**: The key that the condition evaluates (e.g., \`aws:MultiFactorAuthPresent\`)
-  * **Condition Value**: The value that the condition key must match for the policy to apply
+  * **Operator**: how to evaluate (\`Bool\`, \`StringEquals\`, etc.)
+  * **Key**: what you’re checking (e.g., \`aws:MultiFactorAuthPresent\`)
+  * **Value**: what it must match
 
   &nbsp;
 
@@ -39,30 +35,25 @@ const POPUP_MSG2 = `
 
   &nbsp;
 
-  Notice the \`Condition\` element at the end of the policy.
-  The operator \`Bool\` checks whether a condition is either true or false.
-  In this case, the policy denies access to all actions and resources
-  if **Multi-Factor Authentication (MFA)** is not enabled for the principal.
+  Here, access is denied unless **MFA** is enabled.
 `;
 
 const POPUP_MSG5 = `
-  Congratulations on completing Level 8! 🎉|xl
+  Level 8 complete! 🎉|lg
 
-  You have successfully learned how to create more sohisticated IAM policies
-  using conditions to restrict access based on user roles and attributes,
-  we also got a glimpse of how **Tag Based Access Control (TBAC)** works. |lg
+  You learned how to build policies with **conditions** and got a taste of
+  **Tag-Based Access Control (TBAC)**.|lg
 
-  We're still touching the surface when it comes to writing policies with Conditions and Tags,
-  but don't worry, we'll dive deeper into these concepts in the next levels.|lg
+  We’re just getting started—next levels go deeper into conditions and tags.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
-    title: 'Time to get serious about creating complex policies',
+    title: 'Time to get serious about complex policies',
     content: POPUP_MSG1,
   },
   {
-    title: 'Conditions in IAM Policies',
+    title: 'Conditions in IAM policies',
     content: POPUP_MSG2,
   },
   {

@@ -1,60 +1,50 @@
 import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 const POPUP_MSG1 = `
-   It's been quite the ride so far, hasn't it? 🚀|lg
+   It’s been a ride. 🚀|lg
 
-   We'll be diving into more advanced concepts that allow us to guard and
-   control access to our resources more effectively, starting with **Permission Boundaries**.|lg
-
-  These boundaries act as a safety net, ensuring that even if an IAM entity has permissions,
-  they cannot exceed the limits set by the boundary policy.|lg
+   Now we’re getting into **Permission Boundaries**—a way to cap permissions
+   so entities can’t go beyond a defined limit.|lg
 `;
 
 const POPUP_MSG2 = `
-  Permission boundaries are a powerful tool in IAM that allow you to set the maximum permissions
-  an IAM entity (like a user or role) can have, regardless of the policies attached to it.|lg
+  Permission boundaries set the **maximum** permissions a user/role can have,
+  no matter what other policies grant.|lg
 
-  They act as a filter, ensuring that even if an entity has permissions granted by other policies,
-  they cannot exceed the limits defined by the boundary policy.|lg
-
-  This is particularly useful for controlling access
-  to sensitive resources and ensuring compliance with security policies.|lg
+  Think of them as a filter: even if another policy allows something,
+  the boundary can still block it.|lg
 `;
 
 const POPUP_MSG3 = `
-  Why use permission boundaries if we can just limit permissions directly?|lg
+  Why not just limit permissions directly?|lg
 
-  They're essential when delegating permission management—letting others assign permissions,
-  but always keeping a strict upper limit on what can be granted.|lg
+  Boundaries are perfect when **delegating** permission management—
+  others can grant access, but only within your safe limits.|lg
 `;
 
 const POPUP_MSG4 = `
-For this part of the level, you'll be an admin who wants to delegate permission management
-  to other developers on your team in order to scale and move faster. You objectives are:|lg
+For this part, you’re an admin delegating permission management.
+Your objectives:|lg
 
-  * Create a permission boundary which limits users
-  to reading secrets tagged with their team name, ie: \`team: \${aws:PrincipalTag/team}\`
-  * Allow users tagged with **"role:senior"** to create permission policies as they like
-  * Allow the same users to attach these permission policies to roles that **ONLY**
-    have the created permission boundary attached
+  * Create a permission boundary that limits users to reading secrets tagged
+    with their team name (e.g., \`team: \${aws:PrincipalTag/team}\`).
+  * Allow users tagged **"role:senior"** to create permission policies.
+  * Allow those users to attach policies only to roles that have
+    **the boundary attached**.
 `;
 
 const POPUP_MSG5 = `
-  Congratulations! Reaching this far is a significant achievement. 🎉|lg
+  Nice work getting this far. 🎉|lg
 
-  Permission boundaries are a powerful tool in IAM that allow you to set the maximum permissions.
-  You can tell by now that everything we've learned so far can
-  be used to construct complex scenarios, just like the one you just went through.|lg
+  Permission boundaries are powerful, and you just used them in a real scenario.|lg
 
-  In the upcoming (and final) level, we will
-  introduce **Service Control Policies** (a very simple concept)
-  and do a quick recap of everything we learned so far.|lg
+  Final level next: **Service Control Policies** and a quick recap.|lg
 
-  Give yourself a pat on the back for making it this far! Let's finish this|lg
+  Almost there—let’s wrap it up strong.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
-    title: 'Level 11: Permission Boundaries',
+    title: 'Level 11: Permission boundaries',
     content: POPUP_MSG1,
   },
   {
@@ -62,15 +52,15 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG2,
   },
   {
-    title: 'The Power Of Permission Boundaries',
+    title: 'The power of permission boundaries',
     content: POPUP_MSG3,
   },
   {
-    title: 'Your Objectives',
+    title: 'Your objectives',
     content: POPUP_MSG4,
   },
   {
-    title: 'Level Finished! 🔥',
+    title: 'Level finished! 🔥',
     content: POPUP_MSG5,
     go_to_next_level_button: true,
   },

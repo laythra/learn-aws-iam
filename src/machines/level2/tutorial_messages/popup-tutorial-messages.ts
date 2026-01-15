@@ -1,20 +1,18 @@
 import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
-  In the previous level, we learned about the very basics of **IAM users** and **IAM policies**.|lg
+  Last level was **IAM Users** + **Policies** basics.|lg
 
-  For this level, we'll talk about **IAM Groups** and how
-  they can help us scale our permissions management with ease|lg
+  This time it’s **IAM Groups**—the easy way to scale access without
+  attaching policies user-by-user.|lg
 `;
 
 const POPUP_MSG_2 = `
-  Congrats on finishing the second level of our long journey!|lg
+  Level 2 done!|lg
 
-  The level mainly covered the usage of **IAM Groups** and
-  how they can help us manage permissions at scale.|lg
+  You saw how **IAM Groups** keep permissions tidy when teams grow.|lg
 
-  We'll learn about **Customer Managed IAM Policies** in the next level
-  and how they can help us manage permissions more effectively!|lg
+  Next up: **Customer Managed Policies** and why they’re worth the effort.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

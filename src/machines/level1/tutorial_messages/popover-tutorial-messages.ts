@@ -3,60 +3,61 @@ import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  Throughout this interactive tutorial, every entity in **AWS**
-  will be represented as a "Node" in our canvas.
+  In this interactive journey, every AWS entity you work with is a **node** on the canvas.
 `;
 
 const POPOVER_MSG2 = `
-  The Node we're currently standing on is an **IAM User**.
-  **IAM Users** Play a crucial role in managing access to **AWS resources**.
+  You’re standing on an **IAM User** node.
+  Users are how real people (or apps) get access to AWS resources.
 `;
 
 const POPOVER_MSG3 = `
-  An **IAM User** is an entity that you create in AWS to represent a person or service.
-  Try moving this node around by dragging it.
+  An **IAM User** represents a person or service.
+  Try dragging this node around the canvas.
 `;
 
 const POPOVER_MSG4 = `
-  Aside from **IAM Users**, we also have **AWS Resources**.
-  The **AWS Resource** we're currently standing on is an **S3 bucket**.
+  Besides users, we also model **AWS Resources**.
+  This one is an **S3 bucket**.
 `;
 
 const POPOVER_MSG5 = `
-  Last but not least, we have **IAM Policies**.
-  **IAM Policies** are JSON documents that define the permissions we want to grant to **IAM Users**.
+  And here’s an **IAM Policy** - The crux of AWS access management.
+
+
+  Policies are JSON rules that say *who* can do *what* on *which* resources.
 `;
 
 const POPOVER_MSG6 = `
-  Try attaching this **IAM Policy** - which grants read access to the **S3 bucket** -
-  to the **IAM User (Laith)** and see what happens next.
+  Hook this policy up to **Laith** to grant read access to the bucket.
+  ::badge[Action]:: Connect policy → user.
 `;
 
 const POPOVER_MSG7 = `
-  The **IAM User** (Laith) has been granted read permissions to the
-  object inside the S3 Bucket \`public-images\`! 🎉
+  Nice! **Laith** can now read objects in the
 
-  You can hover over the edge connecting the **IAM Policy** and the **S3 Bucket**
-  to see the access level
+  **public-images** bucket. 🎉
+
+  ::badge[Tip]:: Hover the edge between the policy and bucket to see the access level.
 `;
 
 const POPOVER_MSG8 = `
-  How about we create your own **IAM User** and grant it the same access to the **S3 bucket**?
+  Let’s make *your* own **IAM User** and give them the same access.
 `;
 
 // This step intentionally has no message.
 const POPOVER_MSG9 = ``;
 
 const POPOVER_MSG10 = `
-  You should know the drill by now - attach the **IAM Policy** to the **IAM User**
+  Almost there, attach the policy to your new user.
 `;
 
 const POPOVER_MSG11 = `
-  There you have it! Both **IAM Users** have been granted read access to the **S3 bucket**.
+  Done! Both users now have read access to the bucket.
 `;
 
 const POPOVER_MSG12 = `
-  By the way, you can always check your objectives on the right side of the screen.
+  Need a reminder? Your objectives are always on the right.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
@@ -119,7 +120,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: ElementID.NewEntityBtn,
-    popover_title: 'Creating your own IAM User',
+    popover_title: 'Create your own IAM User',
     popover_content: POPOVER_MSG8,
     show_next_button: false,
     show_close_button: true,
@@ -127,7 +128,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: ElementID.IAMIdentityNameInput,
-    popover_title: "Enter your IAM User's name",
+    popover_title: 'Name your IAM User',
     popover_content: POPOVER_MSG9,
     show_next_button: false,
     show_close_button: false,
@@ -135,7 +136,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: UserNodeID.FirstUser,
-    popover_title: 'Final Step',
+    popover_title: 'Final step',
     popover_content: POPOVER_MSG10,
     show_next_button: false,
     show_close_button: true,
@@ -143,7 +144,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: UserNodeID.FirstUser,
-    popover_title: 'Level 1 Completed! 🎉',
+    popover_title: 'Level 1 completed! 🎉',
     popover_content: POPOVER_MSG11,
     show_next_button: true,
     show_close_button: false,
@@ -151,7 +152,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: ElementID.ObjectivesSidePanel,
-    popover_title: 'Your level objectives',
+    popover_title: 'Your objectives',
     popover_content: POPOVER_MSG12,
     show_next_button: true,
     show_close_button: false,

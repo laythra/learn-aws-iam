@@ -1,50 +1,40 @@
 import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 const POPUP_MSG1 = `
-  **IAM Roles** are quite powerful in the realm of AWS.
-  Aside from providing temporary credentials and access,
-  and allowing service to service communication,
-  **IAM Roles** are useful for **Cross-Account Access**.|lg
+  **IAM Roles** are great for temporary access and service-to-service workflows.
+  They’re also the go-to for **cross-account access**.|lg
 
-  Suppose you want to grant third-party access to some of your AWS resources,
-  roles help with facilitating this.|lg
+  Need a third party to access your AWS resources? Roles make that safe and clean.|lg
 
-  The following challenge will test your understanding of roles
-  and how they can be used for cross-account access.|lg
+  This challenge is all about using roles for cross-account access.|lg
 `;
 
 const POPUP_MSG2 = `
-  Suppose you have a **DynamoDB table** in your AWS account called \`FinanceReports\`
-  in which your company stores financial data.|lg
+  You’ve got a **DynamoDB table** called \`FinanceReports\` in your account.|lg
 
-  Your company decides to hire a third-party auditor to audit this financial data,
-  noting that this third-party auditor is an **IAM User** inside another AWS account.|lg
+  A third-party auditor (an **IAM User** in *another* account) needs read access.|lg
 
-  We need to allow the third-party **IAM User** to read data from your account's **DynamoDB table**
-  without creating a new **IAM user** inside our account.|lg
+  Goal: grant access **without** creating a new user in your account.|lg
 `;
 
 const POPUP_MSG3 = `
-  Cross Account Access is a powerful feature in AWS that allows
-  you to grant access to resources in one account to users in another account.|lg
+  Cross-account access lets you share resources between accounts safely.|lg
 
-  This way, we don't need to create and manage new **IAM Users** in the *Trusting Account*
-  and have to deal with the pain of maintaing and sharing credentials.|lg
+  You avoid creating users in your account and handing out credentials.|lg
 
-  The next will dive into a new type of policy called **Resource-Based Policies**,
-  which can also be used to grant cross-account access, in a slightly different/simpler way.|lg
+  Next level: **Resource-based policies**, another way to do cross-account access.
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
-    title: 'IAM Roles and Cross-Account Access',
+    title: 'IAM roles and cross-account access',
     content: POPUP_MSG1,
   },
   {
-    title: 'Cross-Account Access Challenge',
+    title: 'Cross-account access challenge',
     content: POPUP_MSG2,
   },
   {
-    title: 'Cross-Account Access Wrap-up',
+    title: 'Cross-account access wrap-up',
     content: POPUP_MSG3,
     go_to_next_level_button: true,
   },

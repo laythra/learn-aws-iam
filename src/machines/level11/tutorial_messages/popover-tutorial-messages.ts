@@ -3,68 +3,67 @@ import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  Permission boundaries are merely policy documents that cap the maximum permissions
-  that can be granted to a user or role.
+  Permission boundaries are policies that **cap** the max permissions
+  a user or role can ever get.
 
-  **View the attached permission boundary to Sephiroth**
+  **Open Sephiroth’s boundary to see it.**
 `;
 
 const POPOVER_MSG2 = `
-  The following policy grants full access to all S3 buckets,
-  **try attaching it to Sephiroth.**
+  This policy grants full S3 access.
+  Try attaching it to Sephiroth.
 `;
 
 const POPOVER_MSG3 = `
-  Despite granting a full S3 read policy to Sephiroth,
-  he is still unable to access the S3 bucket.
-  Because a permission boundary is attached to him,
-  which caps the maximum permissions he can have to listing SNS topics only.
+  Even with full S3 access attached, Sephiroth still can’t read the bucket.
+  The permission boundary caps him to listing SNS topics only.
 `;
 
 const POPOVER_MSG4 = `
   **Cloud** is the senior developer (see the \`level\` tag).
-  He'll delegate read secrets permissions to his team, enforced by a permission boundary.
+  He’ll delegate secret-read access to the team via a boundary.
 `;
 
 const POPOVER_MSG5 = `
-  We will need to create a permission boundary to limit cloud's delegation abilities
-  and also allow him to attach policies to roles
-  which have the created permission boundary attached.
+  We need a permission boundary that limits Cloud’s delegation abilities,
+  and lets him attach policies only to roles that use that boundary.
 `;
 
 const POPOVER_MSG6 = `
-  This is the role which Cloud will use to delegate permissions to his team.
-  Feel free to inspect its trust policy.
+  This is the delegation role Cloud will use.
+  Feel free to inspect its trust policy with :icon[CodeBracketIcon]:.
 `;
 
 const POPOVER_MSG7 = ``;
+
 const POPOVER_MSG8 = `
-  Nailed it. Let's create a permission policy which will allow us to delegate permissions.
+  Nailed it. Now create a permission policy for delegation.
 `;
 
 const POPOVER_MSG9 = ``;
-const POPOVER_MSG10 = `
-  Almost done! Now, let's see what happens when Cloud tries
-  to attach the admin policy to the role and a user assumes it.
 
-  Next, we'll what happens from Cloud's POV.
+const POPOVER_MSG10 = `
+  Almost done! Now watch what happens when Cloud attaches the admin policy
+  and a user assumes the role.
+
+  Next, we’ll view it from Cloud’s POV.
 
 `;
 
 const POPOVER_MSG11 = `
-  Cloud has attached the admin policy to the role.
+  Cloud attached the admin policy to the role.
 
-  Next, we'll see what happens from Tifa's POV.
+  Next, we’ll see it from Tifa’s POV.
 `;
 
 const POPOVER_MSG12 = `
-  Tifa is a junior developer (see the \`level\` tag), and she will now attempt to assume the role
+  Tifa is a junior dev (see the \`level\` tag). She’s about to assume the role.
 
-  ***The principal in the role allows anyone with a \`level: junior\` tag to assume it.*** 😉
+  **The role allows anyone with \`level: junior\` to assume it.** 😉
 `;
 
 const POPOVER_MSG13 = `
-  Tifa is allowed to assume the role.
+  Tifa can assume the role.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
@@ -86,7 +85,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: UserNodeID.Sephiroth,
-    popover_title: 'Sephiroth is unable to read the planet healing archives',
+    popover_title: 'Sephiroth cannot read the archives',
     popover_content: POPOVER_MSG3,
     show_next_button: true,
     show_close_button: false,
@@ -110,7 +109,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: RoleNodeID.Role1,
-    popover_title: 'Delegation Role',
+    popover_title: 'Delegation role',
     popover_content: POPOVER_MSG6,
     show_next_button: true,
     show_close_button: false,
@@ -118,7 +117,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: ElementID.NewEntityBtn,
-    popover_title: 'Create Your First Permission Boundary',
+    popover_title: 'Create your first permission boundary',
     popover_content: POPOVER_MSG7,
     show_next_button: false,
     show_close_button: false,
@@ -126,7 +125,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: PermissionBoundaryID.SecretsReadingPermissionBoundary,
-    popover_title: 'Nailed it ',
+    popover_title: 'Nailed it',
     popover_content: POPOVER_MSG8,
     show_next_button: true,
     show_close_button: false,
@@ -134,7 +133,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: ElementID.NewEntityBtn,
-    popover_title: 'We need to create the permission for delegating access now',
+    popover_title: 'Create the delegation policy',
     popover_content: POPOVER_MSG9,
     show_next_button: false,
     show_close_button: false,

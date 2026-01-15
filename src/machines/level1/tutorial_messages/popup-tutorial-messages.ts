@@ -9,26 +9,29 @@ const POPUP_MSG1 = `
   but it covers the core ideas you’ll need to tackle real-world scenarios with confidence.|lg
 
   You’ll create **users**, manage **permissions**, and craft **policies**,
-  all while working through interactive challenges and clear explanations.
+  all while working through interactive challenges and clear explanations.|lg
 
-  Each level builds on key IAM concepts, helping you sharpen your skills step by step.
+  Each level builds on key IAM concepts, helping you sharpen your skills step by step.|lg
 
-  Jump in and explore AWS IAM the interactive way.
+  &nbsp;
+
+  Jump in and explore AWS IAM the interactive way.|lg
 `;
 
 const POPUP_MSG2 = `
-  Congrats on finishing the first level of our long journey!
-  We have covered the following basics of IAM:|lg
-  * Learning about **IAM Users**, **IAM Policies**, and **AWS Resources**
-  * Understanding the basic role of **IAM Policies** in managing permissions
-  * Attaching **IAM Policies** to **IAM Users** in order to grant the disignated permissions
+  Nice! Level 1 is done. Here's what you just nailed:|lg
+  * **IAM Users**, **IAM Policies**, and **AWS Resources** basics
+  * How policies control access
+  * Attaching a policy to a user to grant permissions
 
-  We'll learn about **IAM Groups** in the next level and how they can help us scale things up!|lg
+  &nbsp;
+
+  Next up: **IAM Groups** and how they make scaling access way easier.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
-    title: 'Learn AWS IAM in a fun way',
+    title: 'Learn AWS IAM the fun way',
     content: POPUP_MSG1,
   },
   {

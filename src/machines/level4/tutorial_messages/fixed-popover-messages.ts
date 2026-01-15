@@ -1,74 +1,68 @@
 import { FixedPopoverMessage } from '@/machines/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
-***TimeShift Labs*** has recently discovered that some users have access to data and services
-beyond what is necessary for their roles. This over-permission is not immediately obvious and stems
-from subtle misconfigurations in their **IAM policies**
+**TimeShift Labs** noticed some users have *more* access than they need.
+It’s not obvious at first—it comes from subtle policy misconfigurations.
 `;
 
 const FIXED_POPOVER_MSG2 = `
-  Luckily, *TimeShift Labs* has a very simple technical hierarchy:|lg
+  *TimeShift Labs* keeps it simple:
 
-  * **Developers** - Who should only have read access (GetItem)
-      to the \`AnalyticsData\` table inside **DynamoDB** and no access to \`CustomerData\` table.
+  * **Developers** should only **read** (GetItem) from the \`AnalyticsData\` table,
+    and have **no access** to \`CustomerData\`.
 
-  * **Data Scientists** - Who should be able to ***read/write*** objects
-      from/to the \`timeshift-assets\` **S3 Bucket** and **read/write**
-      objects from/to the \`AnalyticsData\` table inside **DynamoDB**.
+  * **Data Scientists** need **read/write** on the \`timeshift-assets\` **S3 bucket**
+    and **read/write** on the \`AnalyticsData\` **DynamoDB** table.
 
-  * **Interns** - Who should be able to read objects from the \`timeshift-assets\` **S3 Bucket**.
+  * **Interns** should only **read** from the \`timeshift-assets\` bucket.
 
-  Your role comes here to **Edit** the **IAM policies**
-   to ensure that the above hierarchy is enforced.
+  Your job: **edit** the policies to enforce this setup.
 `;
 
 const FIXED_POPOVER_MSG3 = `
-You will presented with *TimeShift Labs*' current IAM setup, which includes their current:
-**IAM Users**, **IAM Resources**, and **IAM Policies**
+You’ll see their current **IAM Users**, **Resources**, and **Policies**.
 
-You are tasked with the following points:
-* Ensure no user has more permissions to their designated resources than necessary.
-* Ensure no user has missing permissions to their designated resources.
+Your checklist:
+* No user has extra permissions.
+* No user is missing required permissions.
 
-
-**Edit** the **IAM policies** to ensure that the above hierarchy is enforced.
+Then edit the policies until the hierarchy is correct.
 `;
 
 const FIXED_POPOVER_MSG4 = `
-  You can edit a policy's content by clicking the \`:icon[PencilSquareIcon]:\` icon
-  in the top-right corner of the policy's content view.
+  To edit a policy, click the :icon[PencilSquareIcon]: in the
+  top-right of the policy content view.
 `;
 
 const FIXED_POPOVER_MSG5 = `
-  Permissions are now sorted out!
-  Developers, Data Scientists, and Interns have the correct permissions,
-  you should be a master at defining permissions by now!
+  Permissions are sorted! Everyone now has the right access.
+  You’re basically a policy wizard at this point. 🔥
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
   {
-    popover_title: "TimeShift Labs' Current Situation",
+    popover_title: "TimeShift Labs' current situation",
     popover_content: FIXED_POPOVER_MSG1,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
   },
   {
-    popover_title: "TimeShift Labs' Technical Hierarchy",
+    popover_title: "TimeShift Labs' technical hierarchy",
     popover_content: FIXED_POPOVER_MSG2,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
   },
   {
-    popover_title: 'Your Task as an IAM specialist',
+    popover_title: 'Your task as an IAM specialist',
     popover_content: FIXED_POPOVER_MSG3,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
   },
   {
-    popover_title: 'Editing IAM Policies',
+    popover_title: 'Editing IAM policies',
     popover_content: FIXED_POPOVER_MSG4,
     position: 'top-left',
     show_close_button: false,
@@ -76,7 +70,7 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
     tutorial_gif: 'node-content-editing',
   },
   {
-    popover_title: 'Permissions Sorted Out 🔥',
+    popover_title: 'Permissions sorted 🔥',
     popover_content: FIXED_POPOVER_MSG5,
     position: 'top-left',
     show_close_button: false,

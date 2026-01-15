@@ -1,62 +1,45 @@
 import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPUP_MSG1 = `
-  We've covered great ground so far! We got learn about:|lg
-  * **IAM Users** - Entities that can interact with AWS services, like humans or applications
-  * **IAM Groups** - Entities that encapsulate multiple users that share the same permissions
-  * **IAM Policies** - JSON documents that define permissions, attached to users or groups
+  Quick recap:|lg
+  * **IAM Users** — people/apps that call AWS services
+  * **IAM Groups** — collections of users with shared access
+  * **IAM Policies** — JSON rules that grant permissions
 
   &nbsp;
 
-  We'll now explore **IAM Roles**—temporary identities that define
-  a set of permissions for making AWS service requests.|lg
+  Now we’re getting into **IAM Roles**—temporary identities for making AWS requests.|lg
 `;
 
 const POPUP_MSG2 = `
-Unlike **IAM Users** or **Groups**, roles aren’t permanently assigned to a specific entity.
-Instead, they are **temporarily assumed** by trusted principals
-like **IAM Users**, **applications**, or **AWS services**.
+Roles aren’t tied to a single user or group.
+They’re **assumed temporarily** by trusted principals like **users**, **apps**, or **AWS services**.
 
-An IAM Role operates using two key policies:
+Every role has two key policies:
 
-* **Trust Policy** – Specifies **who is allowed to assume** the role.
-* **Permissions Policy** – Specifies **what actions the role can perform** once assumed.
+* **Trust Policy** — who *can* assume the role.
+* **Permissions Policy** — what the role *can do* once assumed.
 
-This separation of responsibilities makes roles both flexible and secure,
-enabling *controlled, time-limited access* to AWS resources.
+That split keeps access flexible *and* secure.
 `;
 
 const POPUP_MSG3 = `
-Every **IAM Role** has a **Trust Policy** that defines **who can assume it**.
+Every role includes a **Trust Policy** that says **who can assume it**.
 
-A **Trust Policy** uses the **same IAM policy language** you're already familiar with —
-statements, actions, effects — but with one key difference:
-it introduces the **\`Principal\`** element.
+It uses the same policy language you’ve seen before—
+**Effect**, **Action**, **Statement**—but adds a new field: **\`Principal\`**.
 
-Why is this new field needed?
+Why? Because permission policies already imply the principal
+(the entity they’re attached to). Trust policies have to *declare* it.
 
-Regular **permission policies** (like those attached to users or groups) don't need a \`Principal\`,
-because it's **implicitly understood** — the principal is the entity the policy is attached to.
+Quick breakdown:
 
-But a **Trust Policy** is evaluated from the *role's* perspective.
-It must explicitly state **which entities (principals)** are trusted to assume it.
+- **Principal** — who can assume the role (service, user, role, or account)
+- **Effect** — usually \`Allow\`
+- **Action** — typically \`sts:AssumeRole\`
 
-Here’s a quick breakdown of a Trust Policy statement:
-
-- **Principal** – The entity allowed to assume the role. This could be an:
-  - AWS Service
-  - IAM User
-  - IAM Role (a role can assume another role, it's called role-chaining but we won't cover it here)
-  - AWS Account
-
-- **Effect** – Typically \`Allow\`, stating that the principal **can assume** the role.
-
-- **Action** – Usually \`sts:AssumeRole\`, indicating the action
-the principal is allowed to perform.
-
-So while the structure mirrors what you've seen before,
-the **intent is reversed**: instead of saying "what can I do?",
-a Trust Policy says "**who do I trust to become me?**"
+So instead of “what can I do?”, a trust policy answers:
+**“who do I trust to become me?”**
 
   ~~~js
   {
@@ -76,35 +59,32 @@ a Trust Policy says "**who do I trust to become me?**"
 `;
 
 const POPUP_MSG4 = `
-  We're back at ***Timeshift Labs***, where we're integrating a new image processing system
-  to generate important metadata for every image users upload.
+  Back at *TimeShift Labs*, we’re adding an image processing system.
 
   &nbsp;
 
-  ##### Here's how the flow works:
-  1. The end-user uploads an image to the **S3 Bucket**: \`chat-images\`
-      through our web interface, hosted on an Amazon **EC2 instance**.
+  ##### Here’s the flow:
+  1. A user uploads an image to the **S3 bucket** \`chat-images\`
+     through a web app on an **EC2 instance**.
 
-  2. A **Lambda function** is automatically triggered by the upload event.
-    It processes the image and generates metadata, which it then stores elsewhere.
+  2. A **Lambda function** triggers on upload, processes the image,
+     and stores metadata elsewhere.
 `;
 
 const POPUP_MSG5 = `
-  Using *IAM roles* is paramount when it comes to
-  establishing Service-To-Service communication inside your AWS account.|lg
+  **IAM Roles** are the key to safe service-to-service access.|lg
 
-  Roles serve more complex use cases. In the upcoming level, we will learn how to use roles for
-  establishing cross account access, where resources from your main AWS account
-  can be accessed from users (or even resources) in other accounts or vice-versa!|lg
+  Next level, we’ll use roles for **cross-account access**, so resources
+  in one account can be accessed from another.|lg
 
   &nbsp;
 
-  ***Oh, and great job completing Level 5! You're doing amazing so far*** 🚀
+  **Nice work finishing Level 5—keep it up!** 🚀
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
-    title: 'What We Learned So Far',
+    title: 'What we learned so far',
     content: POPUP_MSG1,
   },
   {
@@ -112,11 +92,11 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG2,
   },
   {
-    title: "Trust Policies and the 'Principal' Element",
+    title: "Trust policies and the 'Principal' element",
     content: POPUP_MSG3,
   },
   {
-    title: 'Service-to-Service access with IAM Roles',
+    title: 'Service-to-service access with IAM roles',
     content: POPUP_MSG4,
   },
   {

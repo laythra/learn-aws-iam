@@ -1,78 +1,68 @@
 import { PopupTutorialMessage } from '@/machines/types/tutorial-message-types';
 const POPUP_MSG1 = `
-  We've been exploring **Tag Based Access Control (TBAC)** so far,
-  but there's still much more to discover!
-  The only type of tags we've worked with until now are **Resource Tags**,
-  which are tags that are already attached to the resources we want to control access to.|lg
+  We’ve been working with **Tag-Based Access Control (TBAC)**,
+  mostly using **resource tags** so far.|lg
 
-  This level will introduce **Request Tags**, which is a fundamental concept in
-  TBAC that provides even greater flexibility in controlling access to resources.|lg
+  This level introduces **request tags**—tags that come in *with the request*
+  and can be required to perform actions.|lg
 
-  * **Resources Tags** are tags that are already attached to the resources we wish to control
-  access to.|lg
-
-  * **Request Tags** are tags that we can mandate requests with,
-  and use to control access to resources based on the tags that are attached to the request.|lg
+  * **Resource tags** already exist on the resources.
+  * **Request tags** are supplied in the request and can be enforced by policy.
 `;
 
 const POPUP_MSG2 = `
- For this level, you'll be the DevOps engineer at a fintech company with three teams
- (***payments***, ***analytics***, ***compliance***) that each manage their own databases
- across dev/staging/prod environments. Your goal is to ensure:|lg
+ For this level, you’re the DevOps engineer at a fintech company with three teams
+ (**payments**, **analytics**, **compliance**). Each team manages databases across
+ dev/staging/prod. Your goals:|lg
 
-* Teams can only access and manage their own databases,
- for example: The compliance team cannot modify the payments team's database|lg
-
-* Consistent tagging is enforced for cost tracking and compliance purposes|lg
+* Teams can only access and manage their own databases.
+* Consistent tagging is enforced for cost tracking and compliance.|lg
 `;
 
 const POPUP_MSG3 = `
-To achieve this level of control, we need to define a single policy with two distinct statements:|lg
+We’ll solve this with a single policy containing two statements:|lg
 
-  **1. Tag Creation Statement**|lg
+  **1. Tag creation statement**|lg
 
-  Allows teams to create tags **only** when creating a new RDS instance|lg
+  Lets teams create tags **only** when creating a new RDS instance.|lg
 
-  **2. RDS Instance Creation Statement**|lg
+  **2. RDS instance creation statement**|lg
 
-  Allows teams to create RDS instances, while **enforcing** the presence of the following tags:
+  Allows RDS creation but **requires** these tags:
 
-  * \`team\` - Must match the principal's team name
-  * \`environment\` - Must be one of: \`dev\`, \`staging\`, or \`prod\`
-  * \`name\` - Can be any descriptive name for the RDS instance
+  * \`team\` — must match the principal’s team name
+  * \`environment\` — must be \`dev\`, \`staging\`, or \`prod\`
+  * \`name\` — any descriptive name
 `;
 
 const POPUP_MSG4 = `
-  That was a tough level, give yourself a well-earned pat on the back! 🎉|lg
+  That was a tough one—nice job. 🎉|lg
 
-  You’ve now mastered ***Tag-Based Access Control (TBAC)***,
-  and not only that, you’ve shown real skill in crafting complex IAM policies.|lg
+  You’ve got solid **TBAC** skills now and can write some seriously complex policies.|lg
 
-  In this level, we explored *Request Tags* and how they can
-  be used to manage access based on the tags attached to the request itself.|lg
+  This level focused on **request tags** and enforcing them in policies.|lg
 
-  We're nearing the end of our journey.
-  Next up, we’ll dive into a powerful concept called **Permission Boundaries**,
-  which help define the maximum permissions an IAM entity can receive.|lg
+  We’re close to the finish line. Next up: **Permission Boundaries**—
+  how to cap the maximum permissions an IAM entity can get.|lg
 
-  You're doing great. Let’s finish strong! 💪|lg
+  Let’s finish strong. 💪|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
-    title: 'Level 10: Request Tags',
+    title: 'Level 10: Request tags',
     content: POPUP_MSG1,
   },
   {
-    title: 'Your role as a DevOps Engineer',
+    title: 'Your role as a DevOps engineer',
     content: POPUP_MSG2,
   },
   {
-    title: 'Level 10 Objectives',
+    title: 'Level 10 objectives',
     content: POPUP_MSG3,
   },
   {
-    title: 'Level 10 Completed! ✅',
+    title: 'Level 10 completed! ✅',
     content: POPUP_MSG4,
     go_to_next_level_button: true,
   },

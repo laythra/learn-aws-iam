@@ -1,45 +1,39 @@
 import { FixedPopoverMessage } from '@/machines/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
-  Notice the \`Principal\` in the **Trust Policy**.
-  It specifies the entity that can assume the role and it's an **IAM User**.
+  Check the **Trust Policy**: the \`Principal\` is an **IAM User**.
 
-  Close the **Trust Policy** and notice the **Identity-based Policy**
-  that's attached to the **Role**.
-  It specifies the permissions that the **Role** has.
+  Close the Trust Policy and you’ll see the **identity-based policy**
+  attached to the role—that’s what defines the role’s permissions.
+
+  ***Close the code view to continue.***
 `;
 
 const FIXED_POPOVER_MSG2 = `
-  Try attaching the role to the **IAM User** so that the user assumes the role.
+  Attach the role to the **IAM User** so they can assume it.
 `;
 
 const FIXED_POPOVER_MSG4 = `
-  You might be curious about the distinction between granting access to a user
-  via an **IAM role** versus using a traditional **IAM policy**.
+  Roles vs policies, in short:
+  * **Roles** give temporary credentials to trusted entities.
+  * **Policies** are directly attached and act as permanent permissions.
+  * Roles unlock scenarios like **cross-account** and **service-to-service** access.
 
-  There are a few key differences that are too boring to list here, but here's a summary:
-  * **IAM Roles** provide temporary credentials to trusted entities,
-  unlike policies which are permanently attached
-  * **IAM Roles** solve use cases not possible with policies,
-  like cross-account access, or service-to-service access
-
-  For this part of the level, we'll using **IAM roles** to establish service-to-service access.
+  For this part, we’re using roles for service-to-service access.
 `;
 
 const FIXED_POPOVER_MSG6 = `
-  As the IAM Security Specialist at ***Timeshift Labs***,
-  you have some exciting challenges ahead:
+  As *TimeShift Labs’* IAM specialist, here’s the mission:
 
-  * Grant the **EC2 instance** the necessary means to *write* into the **S3 bucket**
-  * Grant the **Lambda Function** the necessary means to *read* from the **S3 bucket**
+  * Let the **EC2 instance** *write* to the **S3 bucket**.
+  * Let the **Lambda function** *read* from the **S3 bucket**.
 
-  Remember, regular **IAM Policies** won't work here, so let's get creative with **IAM Roles**!
+  ::badge[Reminder]:: Use **IAM Roles** for this—policies alone won’t cut it.
 `;
 
 const FIXED_POPOVER_MSG7 = `
-  The S3 bucket is now accessible to the EC2 instance and Lambda function.
-  The EC2 instance can write to the S3 bucket,
-  and the Lambda function can read from it to generate the required metadata
+  All set. The EC2 instance can write to the bucket,
+  and the Lambda function can read from it to generate metadata.
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
@@ -58,21 +52,21 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
     show_next_button: false,
   },
   {
-    popover_title: 'IAM Roles vs Policies',
+    popover_title: 'IAM roles vs policies',
     popover_content: FIXED_POPOVER_MSG4,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
   },
   {
-    popover_title: 'Your Mission!',
+    popover_title: 'Your mission!',
     popover_content: FIXED_POPOVER_MSG6,
     position: 'top-left',
     show_close_button: false,
     show_next_button: true,
   },
   {
-    popover_title: 'Service-to-Service Access has been established 🫡',
+    popover_title: 'Service-to-service access established 🫡',
     popover_content: FIXED_POPOVER_MSG7,
     position: 'top-left',
     show_close_button: false,

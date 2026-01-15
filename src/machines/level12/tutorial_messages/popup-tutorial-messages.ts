@@ -11,50 +11,40 @@ const POPUP_MSG1 = `
 `;
 
 const POPUP_MSG2 = `
-  **Service Control Policies (SCPs)** are essential tools in AWS Organizations for centrally
-  controlling permissions across multiple AWS accounts.|lg
+  **Service Control Policies (SCPs)** let AWS Organizations cap permissions
+  across multiple accounts.|lg
 
-  SCPs set the upper limit on permissions that accounts in your
-  organization can receive, regardless of what individual IAM policies allow.|lg
+  SCPs set the *maximum* permissions accounts can ever get,
+  even if IAM policies try to grant more.|lg
 
-  By applying SCPs to **organizational units (OUs)** or specific accounts,
-  you ensure that no user or role can exceed the boundaries you define,
-  supporting security and compliance at scale.|lg
+  Apply SCPs to **OUs** or specific accounts to enforce security at scale.|lg
 
-  Keep in mind: SCPs do not grant permissions themselves—they only
-  restrict what can be allowed by other policies.|lg
+  Reminder: SCPs **don’t grant** permissions—they only restrict what’s allowed.|lg
 `;
 
 const POPUP_MSG3 = `
-  Everything we've learned so far will be put to the test in this ultimate challenge.
-  You'll need to design and implement a comprehensive IAM strategy that incorporates
-  users, groups, roles, policies, permission boundaries, and SCPs to meet complex requirements.|lg
+  This is the ultimate challenge. You’ll combine users, groups, roles,
+  policies, permission boundaries, and SCPs to hit complex requirements.|lg
 
-  The right side panel contains all the information you'll need to succeed,
-  including objectives, hints, and resources.|lg
+  The right panel has objectives, hints, and references.|lg
 
-  Good luck, and may your IAM mastery shine through! 🌟|xl
+  Good luck! 🌟|lg
 `;
 
 const POPUP_MSG4 = `
-  Congratulations! You've now mastered AWS IAM, conquering users, groups, roles, policies,
-  permission boundaries, and many more!|lg
+  You did it. 🎉|lg
 
-  **You've successfully completed Level 12 and the full AWS IAM learning journey!** 🎉|lg
+  You’ve conquered users, groups, roles, policies, permission boundaries, and SCPs.|lg
 
-  You now have a strong foundation in AWS IAM fundamentals and security best practices.
-  IAM is one of the most critical services for AWS security,
-  so continue building on this knowledge through hands-on practice and real-world application.|lg
+  **Level 12 complete—and the full IAM journey is done.**|lg
 
-  Your learning doesn't have to stop here - there's a whole world of advanced IAM topics
-  waiting to be explored, including ***identity federation***, ***attribute-based access control***,
-  and ***sophisticated access management strategies***.|lg
+  Keep practicing: IAM is central to AWS security, and real-world work will make
+  these skills stick.|lg
 
-  You should feel proud of this accomplishment and confident in your ability to
-  design and implement secure AWS access controls. Keep experimenting,
-  building and sharing your knowledge with others.|lg
+  When you’re ready, explore topics like **identity federation** and
+  **attribute-based access control (ABAC)**.|lg
 
-  ***Ready to put your IAM expertise to work? The cloud awaits! 🚀***|lg
+  **Now go build something awesome. The cloud awaits! 🚀**|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
@@ -67,11 +57,11 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG2,
   },
   {
-    title: 'The Ultimate Challenge Awaits',
+    title: 'The ultimate challenge awaits',
     content: POPUP_MSG3,
   },
   {
-    title: 'Officialy an IAM Master 🎓',
+    title: 'Officially an IAM master 🎓',
     content: POPUP_MSG4,
     go_to_next_level_button: true,
   },

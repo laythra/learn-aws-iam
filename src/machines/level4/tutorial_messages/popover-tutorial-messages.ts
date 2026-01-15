@@ -3,20 +3,20 @@ import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  This Level requires Editing existing **Customer Managed Policies**
-  to ensure that the permissions are correct.
+  This level is about editing existing **Customer Managed Policies**
+  to make sure permissions are correct.
 
-  You should be able to see an Edit button on the right side of the policy's content.
+  Look for the edit :icon[PencilSquareIcon]: button on the right of the policy content.
 `;
 
 const POPOVER_MSG2 = `
-  As usual, you'll find the list of objectives in the right side panel. Good Luck! 💪 |lg
+  Your objectives live in the right panel. You’ve got this. 💪
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   {
     element_id: PolicyNodeID.DeveloperPolicy,
-    popover_title: 'Editing Policies',
+    popover_title: 'Editing policies',
     popover_content: POPOVER_MSG1,
     show_next_button: false,
     show_close_button: false,
@@ -24,7 +24,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: ElementID.RightSidePanelToggleButton,
-    popover_title: "You're on your own",
+    popover_title: 'You’re on your own',
     popover_content: POPOVER_MSG2,
     show_next_button: false,
     show_close_button: true,
