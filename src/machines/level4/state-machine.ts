@@ -13,7 +13,6 @@ import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { ElementID } from '@/config/element-ids';
-import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -100,36 +99,18 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
-            {
-              type: 'update_whitelisted_element_ids',
-              params: {
-                whitelisted_element_ids: [
-                  ElementID.IAMNodeContentButton,
-                  ElementID.CodeEditorPolicyTab,
-                ],
-              },
-            },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'policy_editing_fixed_popover',
+            NEXT_POPOVER: 'tutorial_finished',
           },
         },
-        policy_editing_fixed_popover: {
+        tutorial_finished: {
           entry: [
             {
               type: 'show_fixed_popover_message',
               params: { message: FIXED_POPOVER_MESSAGES[3] },
             },
             'hide_popovers',
-          ],
-          on: {
-            NEXT_FIXED_POPOVER: 'tutorial_finished',
-          },
-        },
-        tutorial_finished: {
-          entry: [
-            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
-            'hide_fixed_popovers',
             {
               type: 'update_red_dot_visibility',
               params: {
@@ -229,7 +210,7 @@ export const stateMachine = createStateMachineSetup<
         editing_finished_fixed_popover: {
           entry: {
             type: 'show_fixed_popover_message',
-            params: { message: FIXED_POPOVER_MESSAGES[3] },
+            params: { message: FIXED_POPOVER_MESSAGES[4] },
           },
           on: {
             NEXT_FIXED_POPOVER: [
@@ -252,7 +233,11 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         level_finished: {
-          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
+          entry: [
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
+            'hide_fixed_popovers',
+            'hide_unncessary_edges_or_nodes_warning',
+          ],
           type: 'final',
         },
       },

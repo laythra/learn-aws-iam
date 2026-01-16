@@ -35,6 +35,9 @@ You are tasked with the following points:
 `;
 
 const FIXED_POPOVER_MSG4 = `
+  ::badge[Info]:: This level requires you to **edit** existing IAM policies
+  to fix permission issues.
+
   You can edit a policy's content by clicking the \`:icon[PencilSquareIcon]:\` icon
   in the top-right corner of the policy's content view.
 `;
@@ -71,8 +74,8 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
     popover_title: 'Editing IAM Policies',
     popover_content: FIXED_POPOVER_MSG4,
     position: 'top-left',
-    show_close_button: false,
-    show_next_button: true,
+    show_close_button: true,
+    show_next_button: false,
     tutorial_gif: 'node-content-editing',
   },
   {

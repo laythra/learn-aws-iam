@@ -10,86 +10,89 @@
       "type": "array",
       "minItems": 2,
       "maxItems": 2,
-      "items": [
-        {
-          "type": "object",
-          "properties": {
-            "Effect": {
-              "type": "string",
-              "const": "Allow"
-            },
-            "Action": {
-              "type": "array",
-              "items": {
-                "enum": [
-                  "dynamodb:GetItem",
-                  "dynamodb:PutItem"
-                ]
-              },
-              "minItems": 2,
-              "maxItems": 2,
-              "uniqueItems": true
-            },
-            "Resource": {
-              "type": "string",
-              "const": "arn:aws:dynamodb:us-east-1:123456789012:table/analytics-data"
-            }
-          },
-          "required": [
-            "Effect",
-            "Action",
-            "Resource"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "Effect": {
-              "type": "string",
-              "const": "Allow"
-            },
-            "Action": {
-              "type": "array",
-              "items": {
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "Effect": {
                 "type": "string",
-                "enum": [
-                  "s3:GetObject",
-                  "s3:PutObject"
-                ]
+                "const": "Allow"
               },
-              "minItems": 2,
-              "maxItems": 2,
-              "uniqueItems": true
-            },
-            "Resource": {
-              "oneOf": [
-                {
-                  "type": "array",
-                  "items": {
-                    "enum": [
-                      "arn:aws:s3:::timeshift-assets/*"
-                    ]
-                  },
-                  "minItems": 1,
-                  "maxItems": 1,
-                  "uniqueItems": true
+              "Action": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "dynamodb:GetItem",
+                    "dynamodb:PutItem"
+                  ]
                 },
-                {
-                  "type": "string",
-                  "const": "arn:aws:s3:::timeshift-assets/*"
-                }
-              ]
-            }
+                "minItems": 2,
+                "maxItems": 2,
+                "uniqueItems": true
+              },
+              "Resource": {
+                "type": "string",
+                "const": "arn:aws:dynamodb:us-east-1:123456789012:table/analytics-data"
+              }
+            },
+            "required": [
+              "Effect",
+              "Action",
+              "Resource"
+            ],
+            "additionalProperties": false
           },
-          "required": [
-            "Effect",
-            "Action",
-            "Resource"
-          ],
-          "additionalProperties": false
-        }
-      ]
+          {
+            "type": "object",
+            "properties": {
+              "Effect": {
+                "type": "string",
+                "const": "Allow"
+              },
+              "Action": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "s3:GetObject",
+                    "s3:PutObject"
+                  ]
+                },
+                "minItems": 2,
+                "maxItems": 2,
+                "uniqueItems": true
+              },
+              "Resource": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "enum": [
+                        "arn:aws:s3:::timeshift-assets/*"
+                      ]
+                    },
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "uniqueItems": true
+                  },
+                  {
+                    "type": "string",
+                    "const": "arn:aws:s3:::timeshift-assets/*"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "Effect",
+              "Action",
+              "Resource"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
     }
   },
   "required": [
