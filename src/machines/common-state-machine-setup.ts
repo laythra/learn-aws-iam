@@ -110,6 +110,10 @@ export const createStateMachineSetup = <
         | {
             type: 'NODE_UPDATED';
             node: IAMAnyNode;
+          }
+        | {
+            type: 'EDGES_UPDATED';
+            edges: IAMEdge[];
           };
     },
     guards: {
@@ -287,28 +291,29 @@ export const createStateMachineSetup = <
           );
 
           let { updatedContext } = editPolicyResult;
-          let newlyAddedEdges: IAMEdge[] = [];
-          let deletedEdges: IAMEdge[] = [];
+          const edgesToRecreate: IAMEdge[] = [];
 
-          // Deleting existing connection edges to recreating them
-          ({ updatedContext, deletedEdges } = deleteConnectionEdges<
-            TLevelObjectiveID,
-            TFinishEventMap
-          >(
+          // Remove edges affected by the policy change
+          const edgeIdsToDelete = editPolicyResult.edgesToRefresh.map(edge => edge.id);
+          ({ updatedContext } = deleteConnectionEdges<TLevelObjectiveID, TFinishEventMap>(
             updatedContext,
-            editPolicyResult.edgesToRefresh.map(edge => edge.id)
+            edgeIdsToDelete
           ));
 
           const nodeById = _.keyBy(updatedContext.nodes, 'id');
 
+          // Recreate edges based on updated policy
           editPolicyResult.edgesToRefresh.forEach(edge => {
             const sourceNode = nodeById[edge.source];
             const targetNode = nodeById[edge.target];
+            let recreatedEdges: IAMEdge[];
 
-            ({ updatedContext, newlyAddedEdges } = updateConnectionEdges<
+            ({ updatedContext, newlyAddedEdges: recreatedEdges } = updateConnectionEdges<
               TLevelObjectiveID,
               TFinishEventMap
             >(updatedContext, sourceNode, targetNode, true));
+
+            edgesToRecreate.push(...recreatedEdges);
           });
 
           enqueue.assign({
@@ -317,10 +322,38 @@ export const createStateMachineSetup = <
             policy_edit_objectives: updatedContext.policy_edit_objectives,
           });
 
-          enqueue.emit({
-            type: 'EDGES_DELETED',
-            edgeIds: _.differenceBy(deletedEdges, newlyAddedEdges, 'id').map(edge => edge.id),
-          });
+          // Only emit edges that didn't exist before
+          const newEdges = _.differenceBy(updatedContext.edges, context.edges, 'id');
+          const removedEdges = _.differenceBy(context.edges, updatedContext.edges, 'id');
+          const updatedEdges = _.intersectionBy(updatedContext.edges, context.edges, 'id');
+
+          if (newEdges.length > 0) {
+            enqueue.emit({
+              type: 'EDGES_ADDED',
+              edges: newEdges,
+            });
+          }
+
+          if (removedEdges.length > 0) {
+            enqueue.emit({
+              type: 'EDGES_DELETED',
+              edgeIds: removedEdges.map(edge => edge.id),
+            });
+          }
+
+          if (editPolicyResult.updatedNode) {
+            enqueue.emit({
+              type: 'NODE_UPDATED',
+              node: editPolicyResult.updatedNode,
+            });
+          }
+
+          if (updatedEdges.length > 0) {
+            enqueue.emit({
+              type: 'EDGES_UPDATED',
+              edges: updatedEdges,
+            });
+          }
 
           editPolicyResult.events.forEach(event => {
             enqueue.raise({ type: event });
