@@ -19,6 +19,7 @@ export enum StatelessStateMachineEvent {
   ShowHelpPopover = 'SHOW_HELP_POPOVER',
   SidePanelOpened = 'SIDE_PANEL_OPENED',
   AggregateUserNodes = 'AGGREGATE_USER_NODES',
+  HideFixedPopover = 'HIDE_FIXED_POPOVERS',
 }
 
 // /**

@@ -28,6 +28,7 @@ export enum ElementID {
   CreateGroupTab = 'create-group-tab',
   CreateUserTab = 'create-user-tab',
   GoToNextLevelButton = 'go-to-next-level-button',
+  FixedPopover = 'fixed-popover',
 }
 
 export type CodeEditorTabsElementID =

@@ -242,12 +242,8 @@ export const SHARED_TOP_LEVEL_EVENTS = {
     actions: 'hide_popovers' as const,
   },
 
-  [StatelessStateMachineEvent.HideHelpPopover]: {
-    actions: 'hide_help_popover' as const,
-  },
-
-  [StatelessStateMachineEvent.ShowHelpPopover]: {
-    actions: 'show_help_popover' as const,
+  [StatelessStateMachineEvent.HideFixedPopover]: {
+    actions: 'hide_fixed_popovers' as const,
   },
 
   // =========================================================================

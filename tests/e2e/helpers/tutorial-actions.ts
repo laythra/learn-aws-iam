@@ -62,6 +62,14 @@ export class TutorialActions {
     await expect(popover).not.toBeVisible();
   }
 
+  async closeFixedPopovers(): Promise<void> {
+    const fixedPopover = this.page.getByTestId(ElementID.FixedPopover);
+    await expect(fixedPopover).toBeVisible();
+
+    await fixedPopover.getByRole('button', { name: /close/i }).click();
+    await expect(fixedPopover).not.toBeVisible();
+  }
+
   async expectUnnecessaryEdgesNodesWarning(isVisible: boolean): Promise<void> {
     const warning = this.page.getByTestId('unnecessary-edges-nodes-warning');
     isVisible ? await expect(warning).toBeVisible() : await expect(warning).not.toBeVisible();

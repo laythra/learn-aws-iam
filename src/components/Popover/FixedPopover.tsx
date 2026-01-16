@@ -12,6 +12,7 @@ import Markdown from 'react-markdown';
 import { PopoverNextButton } from './PopoverNextButton';
 import { HelpImage } from '../HelpComponents/HelpImage';
 import { LevelsProgressionContext } from '../providers/level-actor-contexts';
+import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
@@ -56,6 +57,7 @@ export const FixedPopover: React.FC<FixedPopover> = () => {
       <Popover isOpen={true}>
         <PopoverContent
           position='fixed'
+          data-element-id={ElementID.FixedPopover}
           top={topPos}
           bottom={bottomPos}
           left={leftPos}
