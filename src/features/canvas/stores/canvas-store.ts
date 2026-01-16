@@ -58,6 +58,7 @@ type CanvasStoreEvents = {
     viewport: Viewport;
     nodeWidth: number;
   };
+  updateEdges: { edges: IAMEdge[] };
 };
 
 /**
@@ -242,5 +243,11 @@ export const CanvasStore = createStore<CanvasStoreState, CanvasStoreEvents, neve
         });
       }
     ),
+    updateEdges: produce((ctx: CanvasStoreState, event: { edges: IAMEdge[] }) => {
+      ctx.edges = ctx.edges.map(edge => {
+        const updatedEdge = event.edges.find(e => e.id === edge.id);
+        return updatedEdge ? updatedEdge : edge;
+      });
+    }),
   },
 });

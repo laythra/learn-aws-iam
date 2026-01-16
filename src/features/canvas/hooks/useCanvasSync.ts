@@ -112,6 +112,10 @@ export function useCanvasStoreSync({
       CanvasStore.send({ type: 'updateNodeData', node });
     });
 
+    const edgesUpdatedSub = levelActor.on('EDGES_UPDATED', ({ edges }: { edges: IAMEdge[] }) => {
+      CanvasStore.send({ type: 'updateEdges', edges });
+    });
+
     return () => {
       edgesDeletedSub.unsubscribe();
       edgesAddedSub.unsubscribe();
@@ -120,6 +124,7 @@ export function useCanvasStoreSync({
       nodesAddedSub.unsubscribe();
       nodesResetSub.unsubscribe();
       nodeUpdatedSub.unsubscribe();
+      edgesUpdatedSub.unsubscribe();
     };
   }, [levelActor, rfInstance, sidePanelWidth]);
 }

@@ -1,7 +1,6 @@
 import { produce } from 'immer';
 
 import { ConnectionFilter } from './connection-filter';
-import { IAMNodeFilter } from './iam-node-filter';
 import { GetLevelValidateFunctions } from '../functions-registry';
 import { GenericContext } from '../types/context-types';
 import { BaseFinishEventMap, ObjectiveType } from '../types/objective-types';
@@ -16,6 +15,7 @@ export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends 
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   events: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE][];
   edgesToRefresh: IAMEdge[];
+  updatedNode?: IAMAnyNode;
 } {
   const targetEditObjective = context.policy_edit_objectives.find(
     objective => objective.id === nodeId && !objective.finished
@@ -30,11 +30,7 @@ export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends 
   }
 
   const updatedContext = produce(context, draftContext => {
-    const targetNode = IAMNodeFilter.create()
-      .fromNodes(draftContext.nodes)
-      .whereIdIs(nodeId)
-      .build()[0];
-
+    const targetNode = draftContext.nodes.find(node => node.id === nodeId);
     if (!targetNode) return;
 
     draftContext.policy_edit_objectives.find(
@@ -55,6 +51,7 @@ export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends 
     updatedContext,
     events: [targetEditObjective.on_finish_event],
     edgesToRefresh,
+    updatedNode: updatedContext.nodes.find(node => node.id === nodeId)!,
   };
 }
 
