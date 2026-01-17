@@ -78,21 +78,14 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     return validateFunctions?.[obj.id](nodes);
   });
 
-  const { onCreateEditor, validateChange, extensions, validateNodeLabel, getContent } =
-    useCodeEditor({
-      nodeId,
-      editorView,
-      getWarnings,
-      initialContent,
-      validateFns: _.isEmpty(validateFns)
-        ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]]
-        : validateFns,
-      helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
-    });
-
-  useEffect(() => {
-    validateChange();
-  }, [selectedAccountId]);
+  const { onCreateEditor, extensions, validateNodeLabel, getContent } = useCodeEditor({
+    nodeId,
+    editorView,
+    getWarnings,
+    initialContent,
+    validateFns: _.isEmpty(validateFns) ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]] : validateFns,
+    helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
+  });
 
   useEffect(() => {
     const accountNodes = nodes.filter(node => node.data.entity === IAMNodeEntity.Account);
@@ -144,7 +137,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
             codeEditorStateStore.send({
               type: 'setNodeLabel',
               label: newName.target.value,
-              entity: selectedIAMEntity,
+              nodeId,
             });
 
             validateNodeLabel(newName.target.value);
@@ -169,7 +162,6 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
               content: newContent,
               nodeId,
             });
-            validateChange();
           }}
           height='250px'
           extensions={extensions}

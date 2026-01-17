@@ -26,7 +26,6 @@ interface UseCodeEditorOptions {
 
 interface UseCodeEditorReturn {
   onCreateEditor: (view: EditorView) => void;
-  validateChange: () => void;
   extensions: Extension[];
   validateNodeLabel: (label: string) => void;
   getContent: () => string;
@@ -41,9 +40,14 @@ export function useCodeEditor({
   getWarnings,
 }: UseCodeEditorOptions): UseCodeEditorReturn {
   const levelActor = LevelsProgressionContext().useActorRef();
-  const { selectedIAMEntity, selectedAccountId, content } = useSelector(
+  const [selectedIAMEntity, selectedAccountId, content, isValidating] = useSelector(
     codeEditorStateStore,
-    state => _.pick(state.context, ['selectedIAMEntity', 'selectedAccountId', 'content']),
+    state => [
+      state.context.selectedIAMEntity,
+      state.context.selectedAccountId,
+      state.context.content,
+      state.context.isValidating,
+    ],
     _.isEqual
   );
 
@@ -89,6 +93,12 @@ export function useCodeEditor({
     InitializeBadgeWidgets(editorViewState, helpBadges, initialContent);
   }, [editorViewState, selectedIAMEntity]);
 
+  useEffect(() => {
+    if (!isValidating) return;
+
+    validateChange();
+  }, [isValidating]);
+
   const onCreateEditor = (view: EditorView): void => {
     setEditorViewState(view);
     editorView.current = view;
@@ -117,7 +127,6 @@ export function useCodeEditor({
 
   return {
     onCreateEditor,
-    validateChange,
     extensions,
     validateNodeLabel,
     getContent,

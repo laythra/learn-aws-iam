@@ -88,7 +88,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
     }
   };
 
-  const { onCreateEditor, validateChange, extensions, getContent } = useCodeEditor({
+  const { onCreateEditor, extensions, getContent } = useCodeEditor({
     nodeId,
     editorView,
     getWarnings,
@@ -108,7 +108,6 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
             content: newContent,
             nodeId,
           });
-          validateChange();
         }}
         height='250px'
         extensions={extensions}
