@@ -22,7 +22,7 @@ type CodeEditorEvents = {
   setSelectedAccount: { selectedAccountId: string };
   showHelpPopup: { type: string; entity: IAMCodeDefinedEntity };
   hideHelpPopup: { type: string };
-  setNodeLabel: { label: string };
+  setNodeLabel: { label: string; entity: IAMCodeDefinedEntity };
   setNodeLabelError: { error: string | undefined; isValidating: boolean };
   open: {
     type: string;
@@ -37,6 +37,7 @@ export type CodeEditorState = {
   errors: Record<IAMCodeDefinedEntity, Record<string, Diagnostic[]>>;
   warnings: Record<IAMCodeDefinedEntity, Record<string, string[]>>;
   content: Record<IAMCodeDefinedEntity, Record<string, string>>;
+  label: Record<IAMCodeDefinedEntity, string>;
   selectedIAMEntity: IAMCodeDefinedEntity;
   isValidating?: boolean;
   isCodeEditorInitialized: boolean;
@@ -46,41 +47,30 @@ export type CodeEditorState = {
     isOpen: boolean;
     entity: IAMCodeDefinedEntity;
   };
-  label?: string;
   labelError: string | undefined;
   isOpen: boolean;
   mode: 'create' | 'edit';
   selectedNodeId?: string;
 };
 
+const createEntityRecord = <T>(defaultValue: T): Record<IAMCodeDefinedEntity, T> =>
+  reduce(
+    IAMCodeDefinedEntities,
+    (acc, entity) => {
+      acc[entity] = defaultValue;
+      return acc;
+    },
+    {} as Record<IAMCodeDefinedEntity, T>
+  );
+
 export default createStoreWithProducer<CodeEditorState, CodeEditorEvents, Record<string, unknown>>(
   produce,
   {
     context: {
-      errors: reduce(
-        IAMCodeDefinedEntities,
-        (acc, entity) => {
-          acc[entity] = {};
-          return acc;
-        },
-        {} as Record<IAMCodeDefinedEntity, Record<string, Diagnostic[]>>
-      ),
-      warnings: reduce(
-        IAMCodeDefinedEntities,
-        (acc, entity) => {
-          acc[entity] = {};
-          return acc;
-        },
-        {} as Record<IAMCodeDefinedEntity, Record<string, string[]>>
-      ),
-      content: reduce(
-        IAMCodeDefinedEntities,
-        (acc, entity) => {
-          acc[entity] = {};
-          return acc;
-        },
-        {} as Record<IAMCodeDefinedEntity, Record<string, string>>
-      ),
+      errors: createEntityRecord<Record<string, Diagnostic[]>>({}),
+      warnings: createEntityRecord<Record<string, string[]>>({}),
+      content: createEntityRecord<Record<string, string>>({}),
+      label: createEntityRecord<string>(''),
       selectedIAMEntity: IAMNodeEntity.Policy,
       isCodeEditorInitialized: false,
       selectedPolicies: [],
@@ -171,9 +161,12 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents, Record
           entity: IAMNodeEntity.Policy,
         };
       },
-      setNodeLabel: (context: CodeEditorState, event: { label: string }) => {
+      setNodeLabel: (
+        context: CodeEditorState,
+        event: { label: string; entity: IAMCodeDefinedEntity }
+      ) => {
         context.isValidating = true;
-        context.label = event.label;
+        context.label[event.entity] = event.label;
       },
       setNodeLabelError: (
         context: CodeEditorState,

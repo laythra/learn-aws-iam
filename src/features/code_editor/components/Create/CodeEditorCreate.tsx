@@ -42,9 +42,9 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     _.isEqual
   );
 
-  const [selectedAccountId, labelError] = useSelector(
+  const [selectedAccountId, labelError, label] = useSelector(
     codeEditorStateStore,
-    state => [state.context.selectedAccountId, state.context.labelError],
+    state => [state.context.selectedAccountId, state.context.labelError, state.context.label],
     _.isEqual
   );
 
@@ -102,7 +102,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
         selectedAccountId: accountNodes[0].id,
       });
     }
-    validateNodeLabel('');
+    validateNodeLabel(label[selectedIAMEntity] || '');
   }, []);
 
   return (
@@ -144,10 +144,12 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
             codeEditorStateStore.send({
               type: 'setNodeLabel',
               label: newName.target.value,
+              entity: selectedIAMEntity,
             });
 
             validateNodeLabel(newName.target.value);
           }}
+          value={label[selectedIAMEntity]}
         />
         <FormErrorMessage>{labelError}</FormErrorMessage>
       </FormControl>

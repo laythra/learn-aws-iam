@@ -37,12 +37,12 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
     );
 
     const accountId = codeEditorStateContext.selectedAccountId;
-    const label = codeEditorStateContext.label!;
+    const label = codeEditorStateContext.label;
     levelActor.send({
       type: StatefulStateMachineEvent.AddIAMNode,
       doc_string: content,
       account_id: selectedIAMEntity === IAMNodeEntity.SCP ? undefined : accountId,
-      label,
+      label: label[selectedIAMEntity],
       node_entity: selectedIAMEntity,
     });
 
