@@ -2,6 +2,7 @@ import { Flex, HStack, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import _ from 'lodash';
 
 import CodeEditorHelpButton from './CodeEditorHelpButton';
+import CodeEditorResetButton from './CodeEditorResetButton';
 import { ElementID } from '@/config/element-ids';
 import { CanvasStore } from '@/features/canvas/stores/canvas-store';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
@@ -26,7 +27,10 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
         <Text>
           Edit {_.upperFirst(selectedIAMEntity)}: {selectedNode.data.label}
         </Text>
-        <CodeEditorHelpButton selectedEntity={selectedNode.data.entity as IAMCodeDefinedEntity} />
+        <HStack alignItems='center' justifyContent='center'>
+          <CodeEditorResetButton nodeId={nodeId} />
+          <CodeEditorHelpButton selectedEntity={selectedNode.data.entity as IAMCodeDefinedEntity} />
+        </HStack>
       </HStack>
     );
   }
