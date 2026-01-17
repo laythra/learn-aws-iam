@@ -42,9 +42,9 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     _.isEqual
   );
 
-  const [selectedAccountId, labelError] = useSelector(
+  const [selectedAccountId, labelError, label] = useSelector(
     codeEditorStateStore,
-    state => [state.context.selectedAccountId, state.context.labelError],
+    state => [state.context.selectedAccountId, state.context.labelError, state.context.label],
     _.isEqual
   );
 
@@ -78,21 +78,14 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     return validateFunctions?.[obj.id](nodes);
   });
 
-  const { onCreateEditor, validateChange, extensions, validateNodeLabel, getContent } =
-    useCodeEditor({
-      nodeId,
-      editorView,
-      getWarnings,
-      initialContent,
-      validateFns: _.isEmpty(validateFns)
-        ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]]
-        : validateFns,
-      helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
-    });
-
-  useEffect(() => {
-    validateChange();
-  }, [selectedAccountId]);
+  const { onCreateEditor, extensions, validateNodeLabel, getContent } = useCodeEditor({
+    nodeId,
+    editorView,
+    getWarnings,
+    initialContent,
+    validateFns: _.isEmpty(validateFns) ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]] : validateFns,
+    helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
+  });
 
   useEffect(() => {
     const accountNodes = nodes.filter(node => node.data.entity === IAMNodeEntity.Account);
@@ -102,7 +95,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
         selectedAccountId: accountNodes[0].id,
       });
     }
-    validateNodeLabel('');
+    validateNodeLabel(label[selectedIAMEntity] || '');
   }, []);
 
   return (
@@ -144,10 +137,12 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
             codeEditorStateStore.send({
               type: 'setNodeLabel',
               label: newName.target.value,
+              nodeId,
             });
 
             validateNodeLabel(newName.target.value);
           }}
+          value={label[selectedIAMEntity]}
         />
         <FormErrorMessage>{labelError}</FormErrorMessage>
       </FormControl>
@@ -166,9 +161,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
               type: 'setContent',
               content: newContent,
               nodeId,
-              entity: selectedIAMEntity as IAMCodeDefinedEntity,
             });
-            validateChange();
           }}
           height='250px'
           extensions={extensions}
