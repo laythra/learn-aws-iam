@@ -23,18 +23,13 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
     _.isEqual
   );
 
-  const isButtonDisabled =
-    !_.isEmpty(codeErrors[selectedIAMEntity][nodeId]) || labelError !== undefined;
+  const isButtonDisabled = !_.isEmpty(codeErrors[nodeId]) || labelError !== undefined;
 
   const submit = (): void => {
     const codeEditorStateContext = codeEditorStateStore.getSnapshot().context;
 
     // Stringify and parse to ensure we get a clean, indented JSON object
-    const content = JSON.stringify(
-      JSON.parse(codeEditorStateContext.content[selectedIAMEntity][nodeId]),
-      null,
-      2
-    );
+    const content = JSON.stringify(JSON.parse(codeEditorStateContext.content[nodeId]), null, 2);
 
     const accountId = codeEditorStateContext.selectedAccountId;
     const label = codeEditorStateContext.label;
@@ -42,7 +37,7 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
       type: StatefulStateMachineEvent.AddIAMNode,
       doc_string: content,
       account_id: selectedIAMEntity === IAMNodeEntity.SCP ? undefined : accountId,
-      label: label[selectedIAMEntity],
+      label: label[nodeId],
       node_entity: selectedIAMEntity,
     });
 

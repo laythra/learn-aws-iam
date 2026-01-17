@@ -64,10 +64,11 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
     _.isEqual
   );
 
+  // Nodes have a pseudo ID before being created. refs are used to persist them across re-renders.
   const newNodeId = useRef(new Date().getTime().toString());
   const nodeId = selectedNodeId ?? newNodeId.current;
-  const errors = errorsMap[selectedIAMEntity][nodeId];
-  const warnings = warningsMap[selectedIAMEntity][nodeId];
+  const errors = errorsMap[nodeId];
+  const warnings = warningsMap[nodeId];
 
   const closeCodeEditor = (): void => {
     codeEditorStateStore.send({ type: 'close' });

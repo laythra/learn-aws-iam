@@ -12,10 +12,7 @@ interface EditSubmitButtonProps {
   selectedIAMEntity: IAMCodeDefinedEntity;
 }
 
-export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({
-  nodeId,
-  selectedIAMEntity,
-}) => {
+export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({ nodeId }) => {
   const levelActor = LevelsProgressionContext().useActorRef();
   const { errors, warnings, isValidating } = useSelector(
     codeEditorStateStore,
@@ -23,14 +20,12 @@ export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({
     _.isEqual
   );
 
-  const isButtonDisabled =
-    !_.isEmpty(errors[selectedIAMEntity][nodeId]) ||
-    !_.isEmpty(warnings[selectedIAMEntity][nodeId]);
+  const isButtonDisabled = !_.isEmpty(errors[nodeId]) || !_.isEmpty(warnings[nodeId]);
 
   const submit = (): void => {
     // Stringify and parse to ensure we get a clean, indented JSON object
     const content = JSON.stringify(
-      JSON.parse(codeEditorStateStore.getSnapshot().context.content[selectedIAMEntity][nodeId]),
+      JSON.parse(codeEditorStateStore.getSnapshot().context.content[nodeId]),
       null,
       2
     );

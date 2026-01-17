@@ -107,7 +107,6 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
             type: 'setContent',
             content: newContent,
             nodeId,
-            entity: selectedIAMEntity,
           });
           validateChange();
         }}

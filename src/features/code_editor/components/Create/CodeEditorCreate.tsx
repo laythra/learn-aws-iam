@@ -168,7 +168,6 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
               type: 'setContent',
               content: newContent,
               nodeId,
-              entity: selectedIAMEntity as IAMCodeDefinedEntity,
             });
             validateChange();
           }}

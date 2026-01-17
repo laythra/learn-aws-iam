@@ -66,7 +66,6 @@ export function useCodeEditor({
       warnings: getWarnings(),
       errors: hasErrors ? allErrors : [],
       nodeId,
-      entity: selectedIAMEntity,
     });
   };
 
@@ -80,7 +79,7 @@ export function useCodeEditor({
   );
 
   const getContent = (): string => {
-    return content[selectedIAMEntity][nodeId];
+    return content[nodeId];
   };
 
   useEffect(() => {
