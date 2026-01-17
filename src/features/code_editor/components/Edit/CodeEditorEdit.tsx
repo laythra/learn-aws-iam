@@ -88,7 +88,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
     }
   };
 
-  const { onCreateEditor, validateChange, extensions } = useCodeEditor({
+  const { onCreateEditor, validateChange, extensions, getContent } = useCodeEditor({
     nodeId,
     editorView,
     getWarnings,
@@ -101,7 +101,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
     <>
       <CodeMirror
         // The content won't be loaded into the store until the editor is initialized
-        value={selectedNode.data.content}
+        value={getContent() ?? selectedNode.data.content}
         onChange={newContent => {
           codeEditorStateStore.send({
             type: 'setContent',
