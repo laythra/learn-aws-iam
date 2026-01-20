@@ -19,9 +19,9 @@ import {
 import { ArrowUturnLeftIcon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from './providers/level-actor-contexts';
+import { useNavbarPopover } from '@/app/Navbar/useNavbarPopover';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { restartLevelFromCheckpoint } from '@/features/level_progress/level-operations';
-import { useNavbarPopover } from '@/hooks/useNavbarPopover';
 
 interface GoToCheckpointButtonProps {}
 

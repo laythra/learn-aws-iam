@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { ReactFlowProvider } from '@xyflow/react';
 
+import { AppNavbar } from './app/AppNavbar';
 import CanvasContainer from './features/canvas/components/CanvasContainer';
 import IAMNodeProvider from './features/canvas/components/IAMNodeProvider';
 import { initializeLevelStore } from './features/level_progress/level-operations';
@@ -22,6 +23,7 @@ const App: React.FC = () => {
           <LevelsProgressionProvider>
             <ReactFlowProvider>
               <CanvasContainer />
+              <AppNavbar />
             </ReactFlowProvider>
           </LevelsProgressionProvider>
         </ModalProvider>

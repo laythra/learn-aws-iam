@@ -2,12 +2,12 @@ import { Box, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-u
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
 import _ from 'lodash';
 
-import { IdentityCreationPopup } from './IdentityCreationPopup';
-import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
 import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
+import { IdentityCreationPopup } from '@/features/iam_entities/components/IdentityCreationPopup';
+import { useIdentityCreator } from '@/features/iam_entities/hooks/useIdentityCreator';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import { useTutorialGuard } from '@/hooks/useTutorialGuard';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
