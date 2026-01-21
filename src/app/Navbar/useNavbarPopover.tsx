@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-type NavbarPopoverKey = 'restart-level' | 'checkpoint-help' | 'checkpoint-confirm';
+type NavbarPopoverKey = 'restart-level' | 'checkpoint-help' | 'checkpoint-confirm' | 'level-picker';
 
 type NavbarPopoverContextType = {
   activePopover: NavbarPopoverKey | null;
