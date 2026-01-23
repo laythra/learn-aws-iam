@@ -2,8 +2,8 @@ import { Box, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-u
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
 import _ from 'lodash';
 
+import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
-import { TutorialPopover } from '@/components/Popover/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { IdentityCreationPopup } from '@/features/iam_entities/components/IdentityCreationPopup';

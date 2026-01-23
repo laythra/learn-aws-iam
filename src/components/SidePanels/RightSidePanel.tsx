@@ -19,7 +19,7 @@ import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import SidePanelObjectiveHintButton from './SidePanelObjectiveHintButton';
-import { TutorialPopover } from '../Popover/TutorialPopover';
+import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import SidePanel from '@/components/SidePanels/SidePanel';
 import { ElementID } from '@/config/element-ids';
