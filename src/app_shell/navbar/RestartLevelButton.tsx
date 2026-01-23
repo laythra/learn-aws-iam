@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { ArrowPathIcon } from '@heroicons/react/16/solid';
 
-import { useNavbarPopover } from '@/app/Navbar/useNavbarPopover';
+import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
 import { restartLevelFromStart } from '@/features/level_progress/level-operations';
 
 interface RestartLevelButtonProps {}

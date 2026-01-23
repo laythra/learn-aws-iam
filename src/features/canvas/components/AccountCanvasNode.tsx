@@ -5,7 +5,7 @@ import { ArrowDownLeftIcon, ArrowUpRightIcon } from '@heroicons/react/24/solid';
 import { Handle, NodeResizeControl, useUpdateNodeInternals } from '@xyflow/react';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { TutorialPopover } from '@/components/Popover/TutorialPopover';
+import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAccountNode } from '@/types/iam-node-types';
 

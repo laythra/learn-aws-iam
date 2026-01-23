@@ -9,9 +9,8 @@ import {
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
-import { PopoverNextButton } from './PopoverNextButton';
-import { HelpImage } from '../HelpComponents/HelpImage';
-import { LevelsProgressionContext } from '../providers/level-actor-contexts';
+import { PopoverNextButton, HelpImage } from '@/app_shell/tutorial';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';

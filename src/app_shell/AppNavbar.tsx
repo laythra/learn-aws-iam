@@ -1,10 +1,10 @@
 import { HStack } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import { NavbarControls } from './Navbar/NavbarControls';
-import { NavbarLevelInfo } from './Navbar/NavbarLevelInfo';
-import { NavbarSidePanelToggle } from './Navbar/NavbarSidePanelToggle';
-import { NavbarPopoverProvider } from './Navbar/useNavbarPopover';
+import { NavbarControls } from './navbar/NavbarControls';
+import { NavbarLevelInfo } from './navbar/NavbarLevelInfo';
+import { NavbarSidePanelToggle } from './navbar/NavbarSidePanelToggle';
+import { NavbarPopoverProvider } from './navbar/useNavbarPopover';
 import { Navbar } from '@/components/Navbar';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';

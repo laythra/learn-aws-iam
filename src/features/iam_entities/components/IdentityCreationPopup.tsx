@@ -21,7 +21,7 @@ import {
 import _ from 'lodash';
 
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
-import { TutorialPopover } from '@/components/Popover/TutorialPopover';
+import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';

@@ -4,7 +4,7 @@ import { Box, useToast, HStack, Icon, CloseButton } from '@chakra-ui/react';
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 import Markdown from 'react-markdown';
 
-import { LevelsProgressionContext } from '../providers/level-actor-contexts';
+import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';

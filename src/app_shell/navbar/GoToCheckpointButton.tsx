@@ -19,7 +19,7 @@ import {
 import { ArrowUturnLeftIcon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
-import { useNavbarPopover } from '@/app/Navbar/useNavbarPopover';
+import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { restartLevelFromCheckpoint } from '@/features/level_progress/level-operations';
 

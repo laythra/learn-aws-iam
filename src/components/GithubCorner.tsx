@@ -1,10 +1,14 @@
 import { Box } from '@chakra-ui/react';
 
-export const GithubCorner: React.FC = () => {
+interface GithubCornerProps {
+  url: string;
+}
+
+export const GithubCorner: React.FC<GithubCornerProps> = ({ url }) => {
   return (
     <Box
       as='a'
-      href='https://github.com/laythra/learnawsiam'
+      href={url}
       target='_blank'
       className='github-corner'
       aria-label='View source on GitHub'

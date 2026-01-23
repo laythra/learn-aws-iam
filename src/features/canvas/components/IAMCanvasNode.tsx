@@ -14,7 +14,7 @@ import IAMNodeHelpTooltip from './IAMNodeHelpTooltip';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
 import TagsIconButton from './TagsIconButton';
 import { CanvasStore } from '../stores/canvas-store';
-import { TutorialPopover } from '@/components/Popover/TutorialPopover';
+import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
 import { loadLocalImage } from '@/lib/assets/image-loader';
 import { generateArn, SupportedArnNodeTypes } from '@/lib/iam/arn-generator';
