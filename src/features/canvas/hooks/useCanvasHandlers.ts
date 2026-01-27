@@ -5,7 +5,7 @@ import { Connection } from '@xyflow/react';
 import _ from 'lodash';
 
 import { LevelActorRef } from './useCanvasSync';
-import { isValidConnection } from '../utils/edges-creation';
+import { getValidConnectionDirection } from '../utils/edges-creation';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -68,13 +68,18 @@ export function useCanvasHandlers({
         return;
       }
 
-      if (!isValidConnection(sourceNode, targetNode)) {
+      const connectionDirection = getValidConnectionDirection(sourceNode, targetNode);
+
+      if (!connectionDirection) {
         showInvalidConnectionToast();
         return;
       }
 
       const isBlockedConnection = blockedConnections?.some(blockedConn => {
-        return blockedConn.from === sourceNode.id && blockedConn.to === targetNode.id;
+        return (
+          blockedConn.from === connectionDirection.source.id &&
+          blockedConn.to === connectionDirection.target.id
+        );
       });
 
       if (isBlockedConnection) {
@@ -84,8 +89,8 @@ export function useCanvasHandlers({
 
       levelActor.send({
         type: StatefulStateMachineEvent.ConnectNodes,
-        sourceNode,
-        targetNode,
+        sourceNode: connectionDirection.source,
+        targetNode: connectionDirection.target,
       });
     },
     [

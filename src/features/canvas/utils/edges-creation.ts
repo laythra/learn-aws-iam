@@ -18,8 +18,28 @@ const VALID_CONNECTIONS = new Set<string>(
   ].map(([source, target]) => `${source}-${target}`)
 );
 
-export const isValidConnection = (sourceNode: IAMAnyNode, targetNode: IAMAnyNode): boolean => {
-  const connectionKey = `${sourceNode.data.entity}-${targetNode.data.entity}`;
+/**
+ * To allow bidirectional connections, we check both directions.
+ * If the connection is valid in either direction, we return the nodes ordered
+ * in the canonical direction as defined by VALID_CONNECTIONS
+ * @param sourceNode source node of the connection
+ * @param targetNode target node of the connection
+ * @returns an object with { source, target } in the canonical direction if valid (possibly swapped), otherwise undefined
+ */
+export const getValidConnectionDirection = (
+  sourceNode: IAMAnyNode,
+  targetNode: IAMAnyNode
+): { source: IAMAnyNode; target: IAMAnyNode } | undefined => {
+  const path1 = `${sourceNode.data.entity}-${targetNode.data.entity}`;
+  const path2 = `${targetNode.data.entity}-${sourceNode.data.entity}`;
 
-  return VALID_CONNECTIONS.has(connectionKey);
+  if (VALID_CONNECTIONS.has(path1)) {
+    return { source: sourceNode, target: targetNode };
+  }
+
+  if (VALID_CONNECTIONS.has(path2)) {
+    return { source: targetNode, target: sourceNode };
+  }
+
+  return undefined;
 };
