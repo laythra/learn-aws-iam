@@ -9,7 +9,7 @@ import { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 
 import { badgeExtension, InitializeBadgeWidgets } from '../utils/badge-widget';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor } from '@/components/providers/level-actor-contexts';
 import { collectValidationDiagnostics } from '@/lib/iam/iam-policy-validator';
 import { validateIAMName } from '@/lib/iam/names';
 import { HelpBadge } from '@/machines/types/objective-types';
@@ -39,7 +39,7 @@ export function useCodeEditor({
   helpBadges,
   getWarnings,
 }: UseCodeEditorOptions): UseCodeEditorReturn {
-  const levelActor = LevelsProgressionContext().useActorRef();
+  const levelActor = useLevelActor();
   const [selectedIAMEntity, selectedAccountId, content, isValidating] = useSelector(
     codeEditorStateStore,
     state => [

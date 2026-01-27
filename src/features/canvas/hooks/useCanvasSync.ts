@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 
 import { ReactFlowInstance } from '@xyflow/react';
+import { Actor } from 'xstate';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { AnyLevelMachine } from '@/components/providers/level-actor-contexts';
 import { NodeLayoutGroup } from '@/types/iam-layout-types';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
-export type LevelActorRef = ReturnType<ReturnType<typeof LevelsProgressionContext>['useActorRef']>;
+export type LevelActorRef = Actor<AnyLevelMachine>;
 
 interface UseCanvasStoreSyncOptions {
   rfInstance: ReactFlowInstance<IAMAnyNode, IAMEdge> | undefined;

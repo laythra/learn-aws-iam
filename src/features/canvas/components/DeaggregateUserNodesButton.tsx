@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { type PlacementWithLogical, ChakraProps, IconButton } from '@chakra-ui/react';
 import { ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
 
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -16,7 +16,7 @@ const DeaggregateUserNodesButton: React.FC<DeaggregateUserNodesButtonProps> = ({
   nodeId,
   ...styleProps
 }) => {
-  const levelActor = LevelsProgressionContext().useActorRef();
+  const levelActor = useLevelActor();
 
   const deaggregateUserNodes = (): void => {
     levelActor.send({

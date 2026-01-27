@@ -13,7 +13,7 @@ import Markdown from 'react-markdown';
 
 import { GoToNextLevelButton } from './GoToNextLevelButton';
 import { HelpImage } from '@/app_shell/tutorial';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor, useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
@@ -23,8 +23,8 @@ interface TutorialPopupProps {}
 
 export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
   const theme = useTheme<CustomTheme>();
-  const levelActor = LevelsProgressionContext().useActorRef();
-  const [showPopups, popupContent] = LevelsProgressionContext().useSelector(
+  const levelActor = useLevelActor();
+  const [showPopups, popupContent] = useLevelSelector(
     state => [state.context.show_popups, state.context.popup_content],
     _.isEqual
   );

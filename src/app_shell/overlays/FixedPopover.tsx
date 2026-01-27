@@ -10,7 +10,7 @@ import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import { PopoverNextButton, HelpImage } from '@/app_shell/tutorial';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor, useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';
@@ -24,8 +24,8 @@ interface FixedPopover {}
  * Controlled by current fixed popover state in the level state machine.
  */
 export const FixedPopover: React.FC<FixedPopover> = () => {
-  const machineActor = LevelsProgressionContext().useActorRef();
-  const [showFixedPopovers, fixedPopoverContent] = LevelsProgressionContext().useSelector(
+  const machineActor = useLevelActor();
+  const [showFixedPopovers, fixedPopoverContent] = useLevelSelector(
     state => [state.context.show_fixed_popovers, state.context.fixed_popover_content],
     _.isEqual
   );

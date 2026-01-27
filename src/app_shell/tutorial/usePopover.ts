@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor, useLevelSelector } from '@/components/providers/level-actor-contexts';
 import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -18,8 +18,8 @@ export interface UsePopoverResult {
  * @param elementId The unique element ID for the popover target
  */
 export const usePopover = (elementId: string): UsePopoverResult => {
-  const machineActor = LevelsProgressionContext().useActorRef();
-  const [showPopovers, popoverContent] = LevelsProgressionContext().useSelector(
+  const machineActor = useLevelActor();
+  const [showPopovers, popoverContent] = useLevelSelector(
     state => [state.context.show_popovers, state.context.popover_content],
     _.isEqual
   );

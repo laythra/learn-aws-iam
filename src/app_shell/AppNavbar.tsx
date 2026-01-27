@@ -6,14 +6,14 @@ import { NavbarLevelInfo } from './navbar/NavbarLevelInfo';
 import { NavbarSidePanelToggle } from './navbar/NavbarSidePanelToggle';
 import { NavbarPopoverProvider } from './navbar/useNavbarPopover';
 import { Navbar } from '@/components/Navbar';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 
 interface AppNavbarProps {}
 
 export const AppNavbar: React.FC<AppNavbarProps> = () => {
-  const [levelNumber, levelTitle] = LevelsProgressionContext().useSelector(
+  const [levelNumber, levelTitle] = useLevelSelector(
     state => [state.context.level_number, state.context.level_title],
     _.isEqual
   );

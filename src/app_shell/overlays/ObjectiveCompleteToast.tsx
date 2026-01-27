@@ -4,7 +4,7 @@ import { Box, useToast, HStack, Icon, CloseButton } from '@chakra-ui/react';
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 import Markdown from 'react-markdown';
 
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor } from '@/components/providers/level-actor-contexts';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
@@ -12,7 +12,7 @@ import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 interface ObjectiveCompletePopoverProps {}
 
 export const ObjectiveCompleteToast: React.FC<ObjectiveCompletePopoverProps> = () => {
-  const machineActor = LevelsProgressionContext().useActorRef();
+  const machineActor = useLevelActor();
   const toast = useToast({
     position: 'bottom',
     duration: 4000,

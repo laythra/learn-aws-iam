@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/components/providers/level-actor-contexts';
 
 export interface UseTutorialGuardResult {
   shouldHide: boolean;
@@ -13,15 +13,14 @@ export interface UseTutorialGuardResult {
  * @param elementId The unique element ID for the guarded element
  */
 export const useTutorialGuard = (elementId: string): UseTutorialGuardResult => {
-  const [inTutorialState, whitelistedElementIds, blackListedElementIds] =
-    LevelsProgressionContext().useSelector(
-      state => [
-        state.context.in_tutorial_state,
-        state.context.whitelisted_element_ids,
-        state.context.restricted_element_ids,
-      ],
-      _.isEqual
-    );
+  const [inTutorialState, whitelistedElementIds, blackListedElementIds] = useLevelSelector(
+    state => [
+      state.context.in_tutorial_state,
+      state.context.whitelisted_element_ids,
+      state.context.restricted_element_ids,
+    ],
+    _.isEqual
+  );
 
   const isWhitelisted = whitelistedElementIds?.includes(elementId) ?? false;
   const isRestricted = blackListedElementIds?.includes(elementId) ?? false;

@@ -2,7 +2,7 @@ import { Button } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor } from '@/components/providers/level-actor-contexts';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -16,7 +16,7 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
   nodeId,
   selectedIAMEntity,
 }) => {
-  const levelActor = LevelsProgressionContext().useActorRef();
+  const levelActor = useLevelActor();
   const [codeErrors, labelError, isValidating] = useSelector(
     codeEditorStateStore,
     state => [state.context.errors, state.context.labelError, state.context.isValidating],

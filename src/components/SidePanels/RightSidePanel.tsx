@@ -20,7 +20,7 @@ import Markdown from 'react-markdown';
 
 import SidePanelObjectiveHintButton from './SidePanelObjectiveHintButton';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/components/providers/level-actor-contexts';
 import SidePanel from '@/components/SidePanels/SidePanel';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
@@ -28,15 +28,14 @@ import { components as markdownComponents } from '@/lib/markdown/components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 const RightSidePanel: React.FC = () => {
-  const [levelObjectives, isSidePanelOpen, levelDescription] =
-    LevelsProgressionContext().useSelector(
-      state => [
-        state.context.level_objectives,
-        state.context.side_panel_open,
-        state.context.level_description,
-      ],
-      _.isEqual
-    );
+  const [levelObjectives, isSidePanelOpen, levelDescription] = useLevelSelector(
+    state => [
+      state.context.level_objectives,
+      state.context.side_panel_open,
+      state.context.level_description,
+    ],
+    _.isEqual
+  );
 
   return (
     <SidePanel isOpen={isSidePanelOpen ?? false}>
