@@ -20,7 +20,7 @@ import { ArrowUturnLeftIcon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor, useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { restartLevelFromCheckpoint } from '@/features/level_progress/level-operations';
 
 interface GoToCheckpointButtonProps {}
@@ -28,8 +28,8 @@ interface GoToCheckpointButtonProps {}
 const HELP_POPOVER_TIMEOUT = 1000 * 60; // 1 minute
 
 export const GoToCheckpointButton: React.FC<GoToCheckpointButtonProps> = () => {
-  const levelState = LevelsProgressionContext().useSelector(state => state.value, _.isEqual);
-  const levelActor = LevelsProgressionContext().useActorRef();
+  const levelState = useLevelSelector(state => state.value, _.isEqual);
+  const levelActor = useLevelActor();
 
   const helpPopover = useNavbarPopover('checkpoint-help');
   const confirmPopover = useNavbarPopover('checkpoint-confirm');

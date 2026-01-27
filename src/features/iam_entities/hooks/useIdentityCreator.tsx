@@ -1,4 +1,4 @@
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/components/providers/level-actor-contexts';
 import useModal from '@/hooks/useModal';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
@@ -12,7 +12,7 @@ interface IAMIdentityCreatorContextState {
 const MODAL_ID = 'iam-identity-manager';
 
 export const useIdentityCreator = (): IAMIdentityCreatorContextState => {
-  const defaultSelectedIdentity = LevelsProgressionContext().useSelector(
+  const defaultSelectedIdentity = useLevelSelector(
     state => state.context.identity_creation_popup_default_value || IAMNodeEntity.User
   );
 

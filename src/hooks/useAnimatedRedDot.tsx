@@ -1,4 +1,4 @@
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 
 interface AnimateRedDotContext {
@@ -12,7 +12,7 @@ interface UseAnimatedRedDotOptions {
 export const useAnimatedRedDot = ({
   elementIds,
 }: UseAnimatedRedDotOptions): AnimateRedDotContext => {
-  const redDotComponents = LevelsProgressionContext().useSelector(
+  const redDotComponents = useLevelSelector(
     state => state.context.elements_with_animated_red_dot ?? []
   );
 

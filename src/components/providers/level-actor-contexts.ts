@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 
 import { createActorContext } from '@xstate/react';
-import { Snapshot } from 'xstate';
+import { Actor, Snapshot, SnapshotFrom } from 'xstate';
 
 import { stateMachine as level1StateMachine } from '@/machines/level1/state-machine';
 import { stateMachine as level10StateMachine } from '@/machines/level10/state-machine';
@@ -68,4 +68,16 @@ export function LevelsProgressionContext(): ReturnType<typeof getActorContext> {
     throw new Error('useLevelsProgressionContext must be used within a LevelsProgressionProvider');
   }
   return ctx;
+}
+
+export function useLevelSelector<T>(
+  selector: (state: SnapshotFrom<AnyLevelMachine>) => T,
+  compare?: (a: T, b: T) => boolean
+): T {
+  const LevelsProgressionCtx = LevelsProgressionContext();
+  return LevelsProgressionCtx.useSelector(selector, compare);
+}
+
+export function useLevelActor(): Actor<AnyLevelMachine> {
+  return LevelsProgressionContext().useActorRef();
 }

@@ -15,7 +15,7 @@ import IAMNodeInfoButton from './IAMNodeInfoButton';
 import TagsIconButton from './TagsIconButton';
 import { CanvasStore } from '../stores/canvas-store';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { loadLocalImage } from '@/lib/assets/image-loader';
 import { generateArn, SupportedArnNodeTypes } from '@/lib/iam/arn-generator';
 import { CustomTheme } from '@/types/custom-theme';
@@ -37,9 +37,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
     _.isEqual
   );
 
-  const withPopoverElementId = LevelsProgressionContext().useSelector(
-    state => state.context.popover_content?.element_id
-  );
+  const withPopoverElementId = useLevelSelector(state => state.context.popover_content?.element_id);
 
   const theme = useTheme<CustomTheme>();
 

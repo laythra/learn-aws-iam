@@ -13,14 +13,14 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/components/providers/level-actor-contexts';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
 interface RolePermissionsListProps {}
 
 export const RolePermissionsList: React.FC<RolePermissionsListProps> = () => {
-  const nodes = LevelsProgressionContext().useSelector(state => state.context.nodes, _.isEqual);
+  const nodes = useLevelSelector(state => state.context.nodes, _.isEqual);
   const policyNodes = nodes.filter(node => node.data.entity === IAMNodeEntity.Policy);
 
   const updateSelectedPolicies = (policyId: string, isChecked: boolean): void => {

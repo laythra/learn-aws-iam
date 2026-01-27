@@ -10,7 +10,7 @@ import { useCodeEditor } from '../../hooks/useCodeEditor';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/lib/iam/iam-policy-validator';
 import { GetLevelValidateFunctions } from '@/machines/functions-registry';
 import {
@@ -39,7 +39,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
   errors,
   warnings,
 }) => {
-  const [policyEditObjectives, nodes, levelNumber] = LevelsProgressionContext().useSelector(
+  const [policyEditObjectives, nodes, levelNumber] = useLevelSelector(
     state => [
       state.context.policy_edit_objectives,
       state.context.nodes,

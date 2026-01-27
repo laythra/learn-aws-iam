@@ -8,7 +8,7 @@ import { useCanvasHandlers } from './useCanvasHandlers';
 import { useCanvasStoreSync } from './useCanvasSync';
 import { useCanvasViewport } from './useCanvasViewport';
 import { CanvasStore } from '../stores/canvas-store';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor, useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 interface UseCanvasOptions {}
@@ -35,9 +35,8 @@ interface UseCanvasReturn {
  * @returns {UseCanvasReturn} Object containing canvas state and handlers.
  */
 export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
-  const levelContext = LevelsProgressionContext();
   const [nodes, sidePanelOpened, edgesManagementDisabled, layoutGroups, blockedConnections] =
-    levelContext.useSelector(
+    useLevelSelector(
       state => [
         state.context.nodes,
         state.context.side_panel_open,
@@ -54,7 +53,7 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
     _.isEqual
   );
 
-  const levelActor = levelContext.useActorRef();
+  const levelActor = useLevelActor();
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<IAMAnyNode, IAMEdge>>();
   const { sidePanelWidth, adjustCanvasZoom } = useCanvasViewport({
     rfInstance,

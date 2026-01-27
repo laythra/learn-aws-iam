@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor, useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { IdentityCreationPopup } from '@/features/iam_entities/components/IdentityCreationPopup';
 import { useIdentityCreator } from '@/features/iam_entities/hooks/useIdentityCreator';
@@ -17,7 +17,7 @@ interface NewEntityButtonProps {}
 
 export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   const { openIdentityCreator } = useIdentityCreator();
-  const levelActor = LevelsProgressionContext().useActorRef();
+  const levelActor = useLevelActor();
   const { isRedDotEnabledForElement: isRedDotEnabled } = useAnimatedRedDot({
     elementIds: [ElementID.NewEntityBtn],
   });
@@ -26,7 +26,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
   const rolesMenuItemGuard = useTutorialGuard(ElementID.CreateRolesAndPoliciesMenuItem);
   const newEntityButtonGuard = useTutorialGuard(ElementID.NewEntityBtn);
 
-  const [showPopovers, showFixedPopovers, popoverContent] = LevelsProgressionContext().useSelector(
+  const [showPopovers, showFixedPopovers, popoverContent] = useLevelSelector(
     state => [
       state.context.show_popovers,
       state.context.show_fixed_popovers,

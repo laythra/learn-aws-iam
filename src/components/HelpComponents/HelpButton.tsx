@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, useTheme } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor } from '@/components/providers/level-actor-contexts';
 import { CustomTheme } from '@/types/custom-theme';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -11,7 +11,7 @@ const MotionButton = motion(Button);
 
 export const HelpButton: React.FC = () => {
   const theme = useTheme<CustomTheme>();
-  const machineActor = LevelsProgressionContext().useActorRef();
+  const machineActor = useLevelActor();
 
   const showHelpPopover = (): void => {
     machineActor.send({ type: StatelessStateMachineEvent.ShowHelpPopover });

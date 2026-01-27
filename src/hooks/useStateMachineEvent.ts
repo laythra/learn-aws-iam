@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor } from '@/components/providers/level-actor-contexts';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export interface UseStateMachineEventResult {
@@ -8,7 +8,7 @@ export interface UseStateMachineEventResult {
 }
 
 export const useStateMachineEvent = (): UseStateMachineEventResult => {
-  const machineActor = LevelsProgressionContext().useActorRef();
+  const machineActor = useLevelActor();
 
   const emitEvent = useCallback(
     (event: StatelessStateMachineEvent) => {

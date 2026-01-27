@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import _ from 'lodash';
 
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/components/providers/level-actor-contexts';
 
 /*
  * Determines the restriction status of a list of element IDs based on the current tutorial state.
@@ -11,7 +11,7 @@ import { LevelsProgressionContext } from '@/components/providers/level-actor-con
  * - The tutorial is active and it is not included in `whitelistedElementIds`.
  */
 export function useIsElementRestricted(elementIds: string[]): boolean[] {
-  const [inTutorialState, whitelistedIds, restrictedIds] = LevelsProgressionContext().useSelector(
+  const [inTutorialState, whitelistedIds, restrictedIds] = useLevelSelector(
     state => [
       state.context.in_tutorial_state,
       state.context.whitelisted_element_ids,

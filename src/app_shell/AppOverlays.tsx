@@ -1,4 +1,3 @@
-// app/AppOverlays.tsx
 import { FixedPopover } from './overlays/FixedPopover';
 import { MobileWarningPopup } from './overlays/MobileWarningPopup';
 import { ObjectiveCompleteToast } from './overlays/ObjectiveCompleteToast';

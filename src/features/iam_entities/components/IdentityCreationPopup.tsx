@@ -22,7 +22,7 @@ import _ from 'lodash';
 
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
-import { LevelsProgressionContext } from '@/components/providers/level-actor-contexts';
+import { useLevelActor } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
 import { validateIAMName } from '@/lib/iam/names';
@@ -36,7 +36,7 @@ import {
 interface IdentityCreationPopupProps {}
 
 export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () => {
-  const levelActor = LevelsProgressionContext().useActorRef();
+  const levelActor = useLevelActor();
 
   const { closeIdentityCreator, isIdentityCreatorOpen, defaultSelectedIdentity } =
     useIdentityCreator();
