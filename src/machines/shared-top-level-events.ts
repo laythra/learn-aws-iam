@@ -246,6 +246,25 @@ export const SHARED_TOP_LEVEL_EVENTS = {
     actions: 'hide_fixed_popovers' as const,
   },
 
+  [StatefulStateMachineEvent.LogAnalyticsEvent]: {
+    actions: [
+      {
+        type: 'log_analytics_event' as const,
+        params: ({
+          event,
+        }: {
+          event: {
+            type: StatefulStateMachineEvent.LogAnalyticsEvent;
+            name: string;
+            payload: Record<string, unknown>;
+          };
+        }) => ({
+          name: event.name,
+          payload: event.payload,
+        }),
+      },
+    ],
+  },
   // =========================================================================
   // Side Panel
   // =========================================================================

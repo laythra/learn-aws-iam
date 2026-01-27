@@ -356,7 +356,9 @@ export const stateMachine = createStateMachineSetup<
         },
         level_finished: {
           type: 'final',
-          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[5] } },
+          entry: [
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[5] } },
+          ],
         },
       },
     },

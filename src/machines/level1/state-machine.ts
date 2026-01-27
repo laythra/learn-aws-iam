@@ -27,6 +27,7 @@ export const stateMachine = createStateMachineSetup<
 >().createMachine({
   id: 'level1_state_machine',
   initial: 'inside_tutorial',
+
   context: {
     level_title: 'Introduction to Users and Policies',
     level_description: `
@@ -168,6 +169,7 @@ export const stateMachine = createStateMachineSetup<
         },
         policy_attached_to_tutorial_user_popover: {
           entry: [
+            'store_checkpoint',
             {
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[6] },

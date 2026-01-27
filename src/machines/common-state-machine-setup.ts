@@ -23,6 +23,7 @@ import {
   storeLevelCheckpoint,
   saveSnapshotToDisk,
 } from '@/features/level_progress/level-operations';
+import { analyticsActor } from '@/lib/analytics-actor';
 import type { GenericContext } from '@/machines/types/context-types';
 import type { GenericEventData } from '@/machines/types/event-types';
 import type {
@@ -125,6 +126,17 @@ export const createStateMachineSetup = <
       },
     },
     actions: {
+      start_level: enqueueActions(({ enqueue }) => {
+        enqueue.assign({
+          start_time: Date.now(),
+        });
+
+        enqueue.raise({
+          type: StatefulStateMachineEvent.LogAnalyticsEvent,
+          name: 'LEVEL_STARTED',
+          payload: {},
+        });
+      }),
       connect_nodes: enqueueActions(
         (
           { context, enqueue },
@@ -422,6 +434,16 @@ export const createStateMachineSetup = <
           message: emissionCtx.level_objectives.find(obj => obj.id === id)!.label,
           objective_id: id,
         }));
+
+        // Log objective completion analytics event
+        enqueue.raise({
+          type: StatefulStateMachineEvent.LogAnalyticsEvent,
+          name: 'OBJECTIVE_COMPLETED',
+          payload: {
+            objective_id: id,
+            objective_label: context.level_objectives.find(obj => obj.id === id)?.label,
+          },
+        });
       }),
       add_iam_node: enqueueActions(
         (
@@ -631,8 +653,29 @@ export const createStateMachineSetup = <
       show_help_popover: assign({
         show_help_popover: true,
       }),
-      store_checkpoint: enqueueActions(({ self }) => {
+      store_checkpoint: enqueueActions(({ self, enqueue }) => {
+        enqueue.raise({
+          type: StatefulStateMachineEvent.LogAnalyticsEvent,
+          name: 'CHECKPOINT_REACHED',
+          payload: {},
+        });
+
         queueMicrotask(() => storeLevelCheckpoint(self as Actor<AnyActorLogic>));
+      }),
+      complete_level: enqueueActions(({ context, enqueue }) => {
+        const duration = context.start_time ? Date.now() - context.start_time : null;
+
+        enqueue.raise({
+          type: StatefulStateMachineEvent.LogAnalyticsEvent,
+          name: 'LEVEL_COMPLETED',
+          payload: {
+            duration_ms: duration,
+          },
+        });
+
+        enqueue.assign({
+          level_finished: true,
+        });
       }),
       aggregate_user_nodes: enqueueActions(({ context, enqueue }) => {
         const updatedContext = aggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(context);
@@ -661,6 +704,27 @@ export const createStateMachineSetup = <
           saveSnapshotToDisk(self as Actor<AnyActorLogic>, filename);
         });
       }),
+      log_analytics_event: enqueueActions(
+        (
+          { enqueue, context },
+          {
+            name,
+            payload,
+          }: {
+            name: string;
+            payload: Record<string, unknown>;
+          }
+        ) => {
+          enqueue.sendTo(() => analyticsActor, {
+            type: 'LOG_EVENT',
+            name,
+            payload: {
+              ...payload,
+              level: context.level_number,
+            },
+          });
+        }
+      ),
     },
   });
 };

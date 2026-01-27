@@ -57,7 +57,6 @@ export const stateMachine = createStateMachineSetup<
   states: {
     inside_level: {
       entry: [
-        'clear_creation_objectives',
         {
           type: 'assign_nodes',
           params: { nodes: [...INITIAL_IN_LEVEL_USER_NODES, ...INITIAL_IN_LEVEL_GROUP_NODES] },

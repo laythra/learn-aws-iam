@@ -92,4 +92,9 @@ export type GenericEventData =
       nodeId: string;
       newMetadata: IAMNodeDataOverrides<IAMAnyNode['data']>;
     }
-  | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };
+  | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean }
+  | {
+      type: StatefulStateMachineEvent.LogAnalyticsEvent;
+      name: string;
+      payload: Record<string, unknown>;
+    };

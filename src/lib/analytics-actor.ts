@@ -3,20 +3,26 @@ import { createActor, fromCallback } from 'xstate';
 import storage from './storage';
 
 function getAnonymousId(): string {
-  const STORAGE_KEY = 'anonymous_user_id';
+  if (typeof crypto === 'undefined' || !crypto.randomUUID) {
+    return 'unknown';
+  }
 
-  let anonymousId = storage.getKey(STORAGE_KEY);
+  const storageKey = 'anonymous_user_id';
+
+  let anonymousId = storage.getKey(storageKey);
 
   if (!anonymousId) {
     // Generate UUID v4
     anonymousId = crypto.randomUUID();
-    storage.setKey(STORAGE_KEY, anonymousId);
+    storage.setKey(storageKey, anonymousId);
   }
 
   return anonymousId;
 }
 
-const anonymousId = getAnonymousId();
+const ANALYTICS_URL = import.meta.env.VITE_ANALYTICS_URL || 'http://localhost:3000/analytics';
+
+let anonymousId: string | null = null;
 
 /**
  * Shared analytics actor for tracking user progress across all level state machines.
@@ -28,18 +34,28 @@ export const analyticsActor = createActor(
     ({ receive }) => {
       receive(event => {
         if (event.type !== 'LOG_EVENT') return;
+        if (typeof navigator === 'undefined' || !navigator.sendBeacon) return;
 
-        const data = JSON.stringify({
-          type: event.name,
-          payload: event.payload,
-          anonId: anonymousId,
-          timestamp: Date.now(),
-        });
+        if (!anonymousId) {
+          anonymousId = getAnonymousId();
+        }
 
-        navigator.sendBeacon('http://localhost:3000/analytics', data);
+        navigator.sendBeacon(
+          ANALYTICS_URL,
+          JSON.stringify({
+            type: event.name,
+            payload: event.payload,
+            anonId: anonymousId,
+          })
+        );
       });
     }
   )
 );
 
-analyticsActor.start();
+export function initAnalytics(): void {
+  if (typeof window === 'undefined') return;
+  if (analyticsActor.getSnapshot().status === 'active') return;
+
+  analyticsActor.start();
+}
