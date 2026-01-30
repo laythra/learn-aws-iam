@@ -42,4 +42,5 @@ export enum StatefulStateMachineEvent {
   DeleteNode = 'DELETE_NODE',
   DeaggregateUserNodes = 'DEAGGREGATE_USER_NODES',
   EditNodeMetadata = 'EDIT_NODE_METADATA',
+  LogAnalyticsEvent = 'LOG_ANALYTICS_EVENT',
 }

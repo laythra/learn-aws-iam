@@ -7,7 +7,6 @@ import {
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
 
-// Serves as a list of all events that the UI elements can send to the state machine
 export type GenericEventData =
   | {
       type:
@@ -92,4 +91,9 @@ export type GenericEventData =
       nodeId: string;
       newMetadata: IAMNodeDataOverrides<IAMAnyNode['data']>;
     }
-  | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean };
+  | { type: 'UPDATE_RED_DOT_VISIBILITY'; element_ids: ElementID[]; is_visible: boolean }
+  | {
+      type: StatefulStateMachineEvent.LogAnalyticsEvent;
+      name: string;
+      payload: Record<string, unknown>;
+    };

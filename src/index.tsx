@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom/client';
 
 import './index.css';
 import App from './app/App';
+import { initAnalytics } from './lib/analytics-actor';
 import reportWebVitals from './reportWebVitals';
 
 import './lib/array/array.extensions';
@@ -16,25 +17,6 @@ root.render(
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-
 enableMapSet();
 reportWebVitals();
-// REGISTER ERROR OVERLAY
-
-// const showErrorOverlay = (err: string) => {
-//   // must be within function call because that's when the element is defined for sure.
-//   const ErrorOverlay = customElements.get('vite-error-overlay');
-//   // don't open outside vite environment
-//   if (!ErrorOverlay) {
-//     return;
-//   }
-//   console.log(err);
-//   const overlay = new ErrorOverlay(err);
-//   document.body.appendChild(overlay);
-// };
-
-// // window.addEventListener('error', showErrorOverlay);
-// window.addEventListener('unhandledrejection', ({ reason }) => showErrorOverlay(reason));
+initAnalytics();

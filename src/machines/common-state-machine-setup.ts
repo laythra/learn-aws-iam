@@ -23,6 +23,7 @@ import {
   storeLevelCheckpoint,
   saveSnapshotToDisk,
 } from '@/features/level_progress/level-operations';
+import { analyticsActor } from '@/lib/analytics-actor';
 import type { GenericContext } from '@/machines/types/context-types';
 import type { GenericEventData } from '@/machines/types/event-types';
 import type {
@@ -422,6 +423,16 @@ export const createStateMachineSetup = <
           message: emissionCtx.level_objectives.find(obj => obj.id === id)!.label,
           objective_id: id,
         }));
+
+        // Log objective completion analytics event
+        enqueue.raise({
+          type: StatefulStateMachineEvent.LogAnalyticsEvent,
+          name: 'OBJECTIVE_COMPLETED',
+          payload: {
+            objective_id: id,
+            objective_label: context.level_objectives.find(obj => obj.id === id)?.label,
+          },
+        });
       }),
       add_iam_node: enqueueActions(
         (
@@ -661,6 +672,27 @@ export const createStateMachineSetup = <
           saveSnapshotToDisk(self as Actor<AnyActorLogic>, filename);
         });
       }),
+      log_analytics_event: enqueueActions(
+        (
+          { enqueue, context },
+          {
+            name,
+            payload,
+          }: {
+            name: string;
+            payload: Record<string, unknown>;
+          }
+        ) => {
+          enqueue.sendTo(() => analyticsActor, {
+            type: 'LOG_EVENT',
+            name,
+            payload: {
+              ...payload,
+              levelNumber: context.level_number,
+            },
+          });
+        }
+      ),
     },
   });
 };
