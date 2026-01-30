@@ -126,17 +126,6 @@ export const createStateMachineSetup = <
       },
     },
     actions: {
-      start_level: enqueueActions(({ enqueue }) => {
-        enqueue.assign({
-          start_time: Date.now(),
-        });
-
-        enqueue.raise({
-          type: StatefulStateMachineEvent.LogAnalyticsEvent,
-          name: 'LEVEL_STARTED',
-          payload: {},
-        });
-      }),
       connect_nodes: enqueueActions(
         (
           { context, enqueue },
@@ -653,29 +642,8 @@ export const createStateMachineSetup = <
       show_help_popover: assign({
         show_help_popover: true,
       }),
-      store_checkpoint: enqueueActions(({ self, enqueue }) => {
-        enqueue.raise({
-          type: StatefulStateMachineEvent.LogAnalyticsEvent,
-          name: 'CHECKPOINT_REACHED',
-          payload: {},
-        });
-
+      store_checkpoint: enqueueActions(({ self }) => {
         queueMicrotask(() => storeLevelCheckpoint(self as Actor<AnyActorLogic>));
-      }),
-      complete_level: enqueueActions(({ context, enqueue }) => {
-        const duration = context.start_time ? Date.now() - context.start_time : null;
-
-        enqueue.raise({
-          type: StatefulStateMachineEvent.LogAnalyticsEvent,
-          name: 'LEVEL_COMPLETED',
-          payload: {
-            duration_ms: duration,
-          },
-        });
-
-        enqueue.assign({
-          level_finished: true,
-        });
       }),
       aggregate_user_nodes: enqueueActions(({ context, enqueue }) => {
         const updatedContext = aggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(context);
@@ -720,7 +688,7 @@ export const createStateMachineSetup = <
             name,
             payload: {
               ...payload,
-              level: context.level_number,
+              levelNumber: context.level_number,
             },
           });
         }

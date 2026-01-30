@@ -44,7 +44,6 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   show_help_popover?: boolean;
   whitelisted_element_ids?: string[];
   help_tips?: HelpTip[];
-  start_time: number | null;
   /*
     Defines the list of elements that are always hidden or disabled, regardless of the current state.
   */

@@ -1,83 +1,93 @@
-import { Actor, AnyActorLogic, Snapshot } from 'xstate';
+import { Actor, AnyActorLogic } from 'xstate';
 
+import * as analytics from './level-analytics';
+import * as persistence from './level-persistence';
 import { LevelDetailsStore } from './store';
-import storage from '@/lib/storage';
 
-/**
- * Initialize store from localStorage
- */
-export function initializeLevelStore(): void {
-  const savedLevel = storage.getKey('currentLevel');
-  const parsedLevel = parseInt(savedLevel, 10);
-  const levelNumber = Number.isNaN(parsedLevel) ? 1 : parsedLevel;
+const MAX_LEVEL_NUMBER = 12;
 
-  if (savedLevel) {
-    LevelDetailsStore.send({
-      type: 'initialize',
-      levelNumber,
-    });
+function startLevel(levelNumber: number): void {
+  persistence.setCurrentLevel(levelNumber);
+  LevelDetailsStore.send({ type: 'setLevelNumber', levelNumber });
+  analytics.logLevelStarted(levelNumber);
+}
+
+function finishLevel(): void {
+  const levelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
+  persistence.clearCheckpoint(levelNumber);
+  analytics.logLevelFinished(levelNumber);
+}
+
+function setMaxLevelReached(maxReachedLevel: number): void {
+  LevelDetailsStore.send({ type: 'setMaxLevelReached', maxLevelReached: maxReachedLevel });
+  persistence.setMaxLevelReached(maxReachedLevel);
+}
+
+export function advanceToNextLevel(): void {
+  const currentLevelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
+  const maxReachedLevel = LevelDetailsStore.getSnapshot().context.maxLevelReached;
+  const nextLevelNumber = currentLevelNumber == 12 ? 1 : currentLevelNumber + 1;
+
+  finishLevel();
+  startLevel(nextLevelNumber);
+
+  if (nextLevelNumber > maxReachedLevel) {
+    setMaxLevelReached(nextLevelNumber);
   }
 }
 
-/**
- * Store level checkpoint
- */
+export function pickLevel(levelNumber: number): void {
+  const maxReachedLevel = LevelDetailsStore.getSnapshot().context.maxLevelReached;
+
+  if (levelNumber < 1 || levelNumber > MAX_LEVEL_NUMBER) return;
+  if (levelNumber > maxReachedLevel) return;
+
+  persistence.setCurrentLevel(levelNumber);
+  LevelDetailsStore.send({ type: 'setLevelNumber', levelNumber });
+  analytics.logLevelSelected(levelNumber);
+}
+
+export function initializeLevelStore(): void {
+  const savedLevel = persistence.getCurrentLevel();
+  const maxLevelReached = persistence.getMaxLevelReached();
+  const levelNumber = savedLevel ?? 1;
+
+  if (!savedLevel) {
+    // First time playing: initialize persistence, store, and analytics without triggering a restart
+    persistence.setCurrentLevel(levelNumber);
+    LevelDetailsStore.send({ type: 'initialize', levelNumber, maxLevelReached });
+    analytics.logLevelStarted(levelNumber);
+  } else {
+    LevelDetailsStore.send({ type: 'initialize', levelNumber, maxLevelReached });
+  }
+}
+
 export function storeLevelCheckpoint(actor: Actor<AnyActorLogic>): void {
   const levelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
-  storage.setKey(
-    `level${levelNumber}StateCheckpoint`,
-    JSON.stringify(actor.getPersistedSnapshot())
-  );
+  persistence.saveCheckpoint(levelNumber, actor);
+  analytics.logCheckpointSaved(levelNumber);
 }
 
-/**
- * Get level snapshot from storage
- */
-export function getLevelSnapshotFromStorage(levelNumber: number): Snapshot<unknown> | undefined {
-  const snapshotRaw = storage.getKey(`level${levelNumber}StateCheckpoint`);
-
-  let snapshot: Snapshot<unknown> | undefined;
-
-  try {
-    snapshot = snapshotRaw ? JSON.parse(snapshotRaw) : undefined;
-  } catch {
-    snapshot = undefined;
-  }
-
-  return snapshot;
-}
-
-/**
- * Clear level checkpoint
- */
 export function restartLevelFromStart(): void {
   const levelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
-  storage.removeKey(`level${levelNumber}StateCheckpoint`);
+  persistence.clearCheckpoint(levelNumber);
   LevelDetailsStore.send({ type: 'restartLevel' });
+  analytics.logRestartFromStart(levelNumber);
 }
 
 export function restartLevelFromCheckpoint(): void {
+  const levelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
   LevelDetailsStore.send({ type: 'returnToLastCheckpoint' });
+  analytics.logRestartFromCheckpoint(levelNumber);
 }
 
-export function setLevel(levelNumber: number): void {
-  const previousLevelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
-  if (levelNumber === previousLevelNumber) return;
-
-  storage.setKey('currentLevel', levelNumber.toString());
-  storage.removeKey(`level${previousLevelNumber}StateCheckpoint`);
-  LevelDetailsStore.send({ type: 'setLevelNumber', levelNumber });
-}
-
-/**
- * Save snapshot to disk (debug only)
+/** DEBUG ONLY
+ * Saves the current snapshot of the given actor to disk via a local server.
+ * This is only for debugging and development purposes.
  */
 export function saveSnapshotToDisk(actor: Actor<AnyActorLogic>, filename: string): void {
-  const levelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
   const snapshot = actor.getPersistedSnapshot();
   const snapshotString = JSON.stringify(snapshot);
-
-  storage.setKey(`level${levelNumber}StateCheckpoint`, snapshotString);
 
   fetch('http://localhost:3001/save', {
     method: 'POST',

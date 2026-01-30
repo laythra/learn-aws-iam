@@ -2,18 +2,25 @@ import { createActor, fromCallback } from 'xstate';
 
 import storage from './storage';
 
-function getAnonymousId(): string {
-  if (typeof crypto === 'undefined' || !crypto.randomUUID) {
-    return 'unknown';
+function generateAnonymousId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+    return crypto.getRandomValues(new Uint32Array(4)).join('-');
   }
 
+  // if crypto is not available, fallback to a simple random string
+  return `${Math.random().toString(36).slice(2)}-${Date.now().toString(36)}`;
+}
+
+function getAnonymousId(): string {
   const storageKey = 'anonymous_user_id';
 
   let anonymousId = storage.getKey(storageKey);
 
   if (!anonymousId) {
-    // Generate UUID v4
-    anonymousId = crypto.randomUUID();
+    anonymousId = generateAnonymousId();
     storage.setKey(storageKey, anonymousId);
   }
 
@@ -55,7 +62,6 @@ export const analyticsActor = createActor(
 
 export function initAnalytics(): void {
   if (typeof window === 'undefined') return;
-  if (analyticsActor.getSnapshot().status === 'active') return;
 
   analyticsActor.start();
 }

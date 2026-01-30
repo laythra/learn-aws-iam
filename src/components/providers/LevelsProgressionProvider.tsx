@@ -2,7 +2,7 @@ import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
 import { CurrentActorContext, getActorContext } from './level-actor-contexts';
-import { getLevelSnapshotFromStorage } from '@/features/level_progress/level-operations';
+import { loadCheckpoint } from '@/features/level_progress/level-persistence';
 import { LevelDetailsStore } from '@/features/level_progress/store';
 
 interface LevelsProgressionProviderProps {
@@ -17,7 +17,7 @@ const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ c
     _.isEqual
   );
 
-  const snapshot = getLevelSnapshotFromStorage(levelNumber);
+  const snapshot = loadCheckpoint(levelNumber);
   const ActorCtx = getActorContext(levelNumber, snapshot);
 
   return (
