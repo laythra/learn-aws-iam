@@ -23,13 +23,26 @@ interface TutorialPopoverProps {
   elementId: string;
 }
 
+/**
+ * A popover component that displays tutorial content for a specific UI element.
+ *
+ * This component wraps its children with a Chakra UI Popover that shows instructional
+ * content including a title, description (with markdown support), optional image/GIF,
+ * and navigation buttons. The popover's visibility and content are managed by the
+ * `usePopover` hook based on the provided `elementId`.
+ * @component
+ * @param {TutorialPopoverProps} props - The component props
+ * @param {React.ReactNode} props.children - The element that triggers the popover when rendered
+ * @param {string} props.elementId - Unique identifier for the tutorial element, used to fetch and manage popover state
+ * @example
+ * ```tsx
+ * <TutorialPopover elementId="welcome-button">
+ *   <Button>Get Started</Button>
+ * </TutorialPopover>
+ * ```
+ */
 export const TutorialPopover: React.FC<TutorialPopoverProps> = ({ children, elementId }) => {
   const { isOpen, content, goNext, close } = usePopover(elementId);
-
-  // If not open or no content, just render children without popover wrapper
-  if (!isOpen || !content) {
-    return <>{children}</>;
-  }
 
   const {
     popover_title: label,
@@ -38,7 +51,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({ children, elem
     popover_placement: placement,
     show_close_button: showCloseButton,
     tutorial_gif: imagePath,
-  } = content;
+  } = content || {};
 
   return (
     <Popover
