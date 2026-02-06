@@ -4,13 +4,14 @@ import { Flex, Box, useTheme } from '@chakra-ui/react';
 
 import Canvas from './Canvas';
 import { GithubCorner } from '@/components/GithubCorner';
-import RightSidePanel from '@/components/SidePanels/RightSidePanel';
-import { UnnecessaryEdgesNodesWarning } from '@/components/UnnecessaryEdgesNodesWarning';
 import { CodeEditor } from '@/features/code_editor';
+import RightSidePanel from '@/features/level_progress/components/RightSidePanel';
+import { UnnecessaryEdgesNodesWarning } from '@/features/level_progress/components/UnnecessaryEdgesNodesWarning';
 import { CustomTheme } from '@/types/custom-theme';
 
 interface CanvasContainerProps {}
 
+// TODO: This should an app level component
 const CanvasContainer: React.FC<CanvasContainerProps> = () => {
   const theme = useTheme<CustomTheme>();
 
