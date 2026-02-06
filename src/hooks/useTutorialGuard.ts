@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import _ from 'lodash';
 
-import { useLevelSelector } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 
 export interface UseTutorialGuardResult {
   shouldHide: boolean;

@@ -1,7 +1,7 @@
 import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
-import { CurrentActorContext, getActorContext } from './level-actor-contexts';
+import { CurrentActorContext, getActorContext } from './levelRuntime';
 import { loadCheckpoint } from '@/features/level_progress/level-persistence';
 import { LevelDetailsStore } from '@/features/level_progress/store';
 

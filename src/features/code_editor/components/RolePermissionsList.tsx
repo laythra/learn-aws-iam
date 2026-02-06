@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import { useLevelSelector } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity } from '@/types/iam-enums';
 

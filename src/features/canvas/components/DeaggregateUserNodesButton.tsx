@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { type PlacementWithLogical, ChakraProps, IconButton } from '@chakra-ui/react';
 import { ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
 
-import { useLevelActor } from '@/components/providers/level-actor-contexts';
+import { useLevelActor } from '@/app_shell/runtime/levelRuntime';
 import { ElementID } from '@/config/element-ids';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 

@@ -21,8 +21,8 @@ import {
 import _ from 'lodash';
 
 import { useIdentityCreator } from '../hooks/useIdentityCreator';
+import { useLevelActor } from '@/app_shell/runtime/levelRuntime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
-import { useLevelActor } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
 import { validateIAMName } from '@/lib/iam/names';

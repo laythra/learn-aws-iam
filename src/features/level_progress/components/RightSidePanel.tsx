@@ -19,8 +19,8 @@ import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import SidePanelObjectiveHintButton from './SidePanelObjectiveHintButton';
+import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
-import { useLevelSelector } from '@/components/providers/level-actor-contexts';
 import SidePanel from '@/components/SidePanels/SidePanel';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';

@@ -5,8 +5,8 @@ import { ReactFlowProvider } from '@xyflow/react';
 
 import { AppNavbar } from '@/app_shell/AppNavbar';
 import { AppOverlays } from '@/app_shell/AppOverlays';
+import LevelsProgressionProvider from '@/app_shell/runtime/LevelsProgressionProvider';
 import ModalProvider from '@/components/ModalProvider';
-import LevelsProgressionProvider from '@/components/providers/LevelsProgressionProvider';
 import CanvasContainer from '@/features/canvas/components/CanvasContainer';
 import { initializeLevelStore } from '@/features/level_progress/level-operations';
 import { theme } from '@/theme';

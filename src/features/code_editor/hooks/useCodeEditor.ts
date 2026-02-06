@@ -9,7 +9,7 @@ import { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 
 import { badgeExtension, InitializeBadgeWidgets } from '../utils/badge-widget';
-import { useLevelActor } from '@/components/providers/level-actor-contexts';
+import { useLevelActor } from '@/app_shell/runtime/levelRuntime';
 import { collectValidationDiagnostics } from '@/lib/iam/iam-policy-validator';
 import { validateIAMName } from '@/lib/iam/names';
 import { HelpBadge } from '@/machines/types/objective-types';

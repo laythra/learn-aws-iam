@@ -9,8 +9,8 @@ import {
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
+import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import { PopoverNextButton, HelpImage } from '@/app_shell/tutorial';
-import { useLevelActor, useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';

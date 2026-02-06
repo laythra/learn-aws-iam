@@ -5,8 +5,8 @@ import { NavbarControls } from './navbar/NavbarControls';
 import { NavbarLevelInfo } from './navbar/NavbarLevelInfo';
 import { NavbarSidePanelToggle } from './navbar/NavbarSidePanelToggle';
 import { NavbarPopoverProvider } from './navbar/useNavbarPopover';
+import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import { Navbar } from '@/components/Navbar';
-import { useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { ElementID } from '@/config/element-ids';
 import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 
