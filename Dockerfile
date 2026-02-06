@@ -9,10 +9,13 @@ COPY .yarnrc.yml ./
 RUN corepack enable && corepack prepare yarn@4.7.0 --activate
 
 COPY yarn.lock ./
-RUN yarn install
+RUN yarn install --immutable
 
 COPY . .
-COPY .env.production.local .env.production
+
+ARG VITE_APP_ENV=production
+ENV VITE_APP_ENV=$VITE_APP_ENV
+
 RUN yarn build
 
 FROM nginx:alpine
