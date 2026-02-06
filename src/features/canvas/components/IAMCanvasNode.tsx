@@ -1,4 +1,4 @@
-import { useEffect, useRef, memo, useState } from 'react';
+import { useEffect, memo } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
@@ -7,9 +7,7 @@ import { Handle } from '@xyflow/react';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
 
-import AggregatedUsersListButton from './AggregatedUsersListButton';
 import ARNIconButton from './ARNIconButton';
-import DeaggregateUserNodesButton from './DeaggregateUserNodesButton';
 import IAMNodeHelpTooltip from './IAMNodeHelpTooltip';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
 import TagsIconButton from './TagsIconButton';
@@ -28,9 +26,15 @@ export interface IAMCanvasNodeProps {
   id: string;
 }
 
-const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
-  const hasPulsedRef = useRef(false);
+const pulseVariants = {
+  idle: { opacity: 0, scale: 1 },
+  pulse: { opacity: 0, scale: 1.25 },
+} as const;
 
+const pulseInitial = { opacity: 0.85, scale: 0.85 } as const;
+const pulseTransition = { duration: 2, ease: [0.2, 0.8, 0.3, 1] } as const;
+
+const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const [selectedNodeId, isDeleting] = useSelector(
     CanvasStore,
     state => [state.context.selectedNodeId, state.context.nodeIdsWithDeletionInProgress.has(id)],
@@ -44,25 +48,13 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const { entity, label, handles, image, content, tags, alert_message } = data;
 
   const resourceType = entity === IAMNodeEntity.Resource && data.resource_type;
-  const isAggregatedNode = entity === IAMNodeEntity.AggregatedUsers;
 
   const arn = SupportedArnNodeTypes.includes(resourceType || entity)
     ? generateArn(resourceType || entity, label, data.account_id)
     : undefined;
 
   const isSelected = selectedNodeId === id;
-
-  const [showCreationPulse, setShowCreationPulse] = useState(true);
-
-  useEffect(() => {
-    // a safety net in case the node unmounts and remounts, we don't want to pulse again
-    if (hasPulsedRef.current) return;
-
-    hasPulsedRef.current = true;
-
-    const t = setTimeout(() => setShowCreationPulse(false), 8000);
-    return () => clearTimeout(t);
-  }, []);
+  const showCreationPulse = !isDeleting;
 
   useEffect(() => {
     if (withPopoverElementId === id) {
@@ -94,24 +86,23 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
     >
       <TutorialPopover elementId={id}>
         <Box data-element-id={id} position='relative'>
-          {showCreationPulse && !isDeleting && (
-            <motion.div
-              style={{
-                position: 'absolute',
-                inset: '-10px',
-                borderRadius: '18px',
-                background:
-                  'linear-gradient(135deg, rgba(147, 197, 253, 0.45), rgba(191, 219, 254, 0.12))',
-                boxShadow: '0 8px 25px rgba(96, 165, 250, 0.25), 0 0 18px rgba(59, 130, 246, 0.2)',
-                filter: 'blur(2.5px)',
-                pointerEvents: 'none',
-              }}
-              initial={{ scale: 0.85, opacity: 0.85 }}
-              animate={{ scale: 1.25, opacity: 0 }}
-              transition={{ duration: 3, ease: [0.2, 0.8, 0.3, 1] }}
-            />
-          )}
-
+          <motion.div
+            style={{
+              position: 'absolute',
+              inset: '-10px',
+              borderRadius: '18px',
+              background:
+                'linear-gradient(135deg, rgba(147, 197, 253, 0.45), rgba(191, 219, 254, 0.12))',
+              boxShadow: '0 8px 25px rgba(96, 165, 250, 0.25), 0 0 18px rgba(59, 130, 246, 0.2)',
+              filter: 'blur(2.5px)',
+              pointerEvents: 'none',
+            }}
+            initial={pulseInitial}
+            variants={pulseVariants}
+            animate={showCreationPulse ? 'pulse' : 'idle'}
+            transition={pulseTransition}
+            key={id}
+          />
           <Flex
             id={id}
             direction='column'
@@ -166,7 +157,6 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
               </Box>
             </Flex>
           </Flex>
-
           <HStack position='absolute' top={1} right={2}>
             {tags && (
               <TagsIconButton
@@ -196,17 +186,6 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
                 onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
                 placement='top-end'
               />
-            )}
-
-            {isAggregatedNode && (
-              <>
-                <AggregatedUsersListButton
-                  nodeId={id}
-                  users={data.aggregated_user_ids}
-                  onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
-                />
-                <DeaggregateUserNodesButton nodeId={id} />
-              </>
             )}
           </HStack>
         </Box>
