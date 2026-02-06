@@ -126,10 +126,29 @@ function adjustPositionForMargin(position: XYPosition, layoutGroup: NodeLayoutGr
 }
 
 /**
- * Calculates the initial position for a node.
+ * Calculates the initial position of a node within a canvas or parent node.
  *
- * If a parent node is provided, the position is computed relative to the parent.
- * Otherwise, it is computed relative to the canvas.
+ * This function determines where a node should be placed based on its configuration,
+ * viewport settings, and optionally its parent node. The position can be relative to
+ * either the canvas center or the parent node's center.
+ *
+ * @param node - The IAM node for which to calculate the initial position
+ * @param viewport - The current viewport state containing zoom and pan information
+ * @param numNodes - The total number of nodes in the layout group
+ * @param nodeIndex - The zero-based index of this node within its layout group
+ * @param sidePanelWidth - The width of the side panel in pixels, used to adjust canvas calculations
+ * @param layoutGroup - The layout configuration group containing position, spacing, and direction settings
+ * @param parentNode - Optional parent node. If provided, positions are calculated relative to the parent's center
+ *
+ * @returns An XYPosition object containing the calculated x and y coordinates for the node.
+ *          Returns {x: 0, y: 0} if the initial_position is invalid or not specified.
+ *
+ * @remarks
+ * - If a parentNode is provided, positions are calculated relative to the parent's dimensions and center
+ * - If no parentNode is provided, positions are calculated relative to the canvas center
+ * - The function accounts for viewport zoom when calculating positions
+ * - Vertical and horizontal spacing can be customized via layoutGroup or defaults to theme values
+ * - Final position is adjusted for margins based on layout group settings
  */
 export function getNodeInitialPosition(
   node: IAMAnyNode,

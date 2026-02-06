@@ -6,6 +6,16 @@ import { IAMNodeEntity } from '@/types/iam-enums';
 import { NodeLayoutGroup } from '@/types/iam-layout-types';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
+/**
+ * A helper function that takes in new nodes and applies initial positions to them based on the current layout groups,
+ * side panel width, and react flow viewport.
+ * @param existingNodes the nodes already present on the canvas before adding any new nodes
+ * @param newNodes the nodes being added that need initial positions assigned
+ * @param layoutGroups the layout group configurations used to determine how and where nodes are placed
+ * @param sidePanelWidth the current width of the side panel, used to offset non-account nodes horizontally
+ * @param viewport the current React Flow viewport that defines the visible area and zoom for positioning
+ * @returns the new nodes with positions applied
+ */
 export function positionNewNodes(
   existingNodes: IAMAnyNode[],
   newNodes: IAMAnyNode[],
@@ -51,7 +61,9 @@ export function positionNewNodes(
       viewport,
       visibleGroup.length,
       indexInGroup,
-      sidePanelWidth,
+      // If the node is an account, disregard the side panel width when calculating initial position
+      // since account nodes are unaffected by the side panel
+      node.data.entity === IAMNodeEntity.Account ? 0 : sidePanelWidth,
       layoutGroup,
       parentNode
     );
