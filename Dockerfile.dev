@@ -9,9 +9,7 @@ COPY .yarnrc.yml ./
 RUN corepack enable && corepack prepare yarn@4.7.0 --activate
 
 COPY yarn.lock ./
-RUN yarn install
-
-COPY . .
+RUN yarn install --immutable
 
 EXPOSE 5173
 
