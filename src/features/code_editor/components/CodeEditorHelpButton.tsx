@@ -1,11 +1,9 @@
 import React from 'react';
 
-import { Box, IconButton } from '@chakra-ui/react';
+import { Box, IconButton, Tooltip } from '@chakra-ui/react';
 import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid';
 
 import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
-import { ElementID } from '@/config/element-ids';
-import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
 
@@ -17,22 +15,18 @@ const CodeEditorHelpButton: React.FC<CodeEditorHelpButtonProps> = ({ selectedEnt
     codeEditorStateStore.send({ type: 'showHelpPopup', entity: selectedEntity });
   };
 
-  const { isRedDotEnabledForElement } = useAnimatedRedDot({
-    elementIds: [ElementID.CodeEditorHelpButton],
-  });
-
   return (
-    <Box position='relative'>
-      <IconButton
-        icon={<QuestionMarkCircleIcon />}
-        aria-label='Help'
-        size='xs'
-        variant='ghost'
-        onClick={showPolicyHelpPopup}
-      />
-      {isRedDotEnabledForElement(ElementID.CodeEditorHelpButton) && (
-        <AnimatedRedDot placement='bottom-left' offset={3} />
-      )}
+    <Box position='relative' display='flex' alignItems='center'>
+      <Tooltip hasArrow label='Show Policy Syntax Help' openDelay={200} shouldWrapChildren>
+        <IconButton
+          icon={<QuestionMarkCircleIcon />}
+          aria-label='Help'
+          size='sm'
+          variant='ghost'
+          onClick={showPolicyHelpPopup}
+        />
+      </Tooltip>
+      <AnimatedRedDot placement='top-left' offset={2} />
     </Box>
   );
 };
