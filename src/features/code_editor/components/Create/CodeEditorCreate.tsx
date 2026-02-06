@@ -10,7 +10,7 @@ import { useCodeEditor } from '../../hooks/useCodeEditor';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
-import { useLevelSelector } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import { ElementID } from '@/config/element-ids';
 import { findAnyValidObjective, GENERIC_VALIDATION_FNS } from '@/lib/iam/iam-policy-validator';
 import { MANAGED_POLICIES } from '@/machines/config';

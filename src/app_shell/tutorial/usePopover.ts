@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import _ from 'lodash';
 
-import { useLevelActor, useLevelSelector } from '@/components/providers/level-actor-contexts';
+import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import type { PopoverTutorialMessage } from '@/machines/types/tutorial-message-types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 

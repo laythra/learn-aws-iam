@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import _ from 'lodash';
 
-import { useLevelSelector } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 
 /*
  * Determines the restriction status of a list of element IDs based on the current tutorial state.

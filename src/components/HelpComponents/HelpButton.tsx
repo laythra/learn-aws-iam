@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, useTheme } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
-import { useLevelActor } from '@/components/providers/level-actor-contexts';
+import { useLevelActor } from '@/app_shell/runtime/levelRuntime';
 import { CustomTheme } from '@/types/custom-theme';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 

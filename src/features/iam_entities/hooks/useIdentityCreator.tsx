@@ -1,4 +1,4 @@
-import { useLevelSelector } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import useModal from '@/hooks/useModal';
 import { IAMNodeEntity } from '@/types/iam-enums';
 

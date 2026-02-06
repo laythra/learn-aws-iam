@@ -12,8 +12,8 @@ import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import { GoToNextLevelButton } from './GoToNextLevelButton';
+import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import { HelpImage } from '@/app_shell/tutorial';
-import { useLevelActor, useLevelSelector } from '@/components/providers/level-actor-contexts';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';

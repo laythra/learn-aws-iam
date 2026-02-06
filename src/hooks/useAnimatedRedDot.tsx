@@ -1,4 +1,4 @@
-import { useLevelSelector } from '@/components/providers/level-actor-contexts';
+import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import { ElementID } from '@/config/element-ids';
 
 interface AnimateRedDotContext {
