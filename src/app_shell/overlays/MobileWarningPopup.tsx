@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody } from '@chakra-ui/react';
 import Markdown from 'react-markdown';
 
-import useModal from '@/hooks/useModal';
+import { useModal } from '@/hooks/useModal';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';

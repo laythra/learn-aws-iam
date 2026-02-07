@@ -5,10 +5,10 @@ import { ReactFlowProvider } from '@xyflow/react';
 
 import { AppNavbar } from '@/app_shell/AppNavbar';
 import { AppOverlays } from '@/app_shell/AppOverlays';
+import { initializeLevelStore } from '@/app_shell/runtime/level-operations';
 import LevelsProgressionProvider from '@/app_shell/runtime/LevelsProgressionProvider';
-import ModalProvider from '@/components/ModalProvider';
 import CanvasContainer from '@/features/canvas/components/CanvasContainer';
-import { initializeLevelStore } from '@/features/level_progress/level-operations';
+import { ModalProvider } from '@/hooks/useModal';
 import { theme } from '@/theme';
 
 const App: React.FC = () => {

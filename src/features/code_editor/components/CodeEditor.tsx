@@ -21,7 +21,7 @@ import { CreateSubmitButton } from './Create/CreateSubmitButton';
 import { CodeEditorEdit } from './Edit/CodeEditorEdit';
 import { EditSubmitButton } from './Edit/EditSubmitButton';
 import { ElementID } from '@/config/element-ids';
-import { useIsElementRestricted } from '@/hooks/useIsElementRestricted';
+import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { CustomTheme } from '@/types/custom-theme';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';

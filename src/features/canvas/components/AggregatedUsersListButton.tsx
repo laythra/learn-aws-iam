@@ -15,7 +15,7 @@ import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { ElementID } from '@/config/element-ids';
-import { useStateMachineEvent } from '@/hooks/useStateMachineEvent';
+import { useStateMachineEvent } from '@/app_shell/runtime/useStateMachineEvent';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface AggregatedUsersListButtonProps extends ChakraProps {

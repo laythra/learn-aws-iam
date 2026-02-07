@@ -20,8 +20,8 @@ import { ArrowUturnLeftIcon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
+import { restartLevelFromCheckpoint } from '@/app_shell/runtime/level-operations';
 import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/levelRuntime';
-import { restartLevelFromCheckpoint } from '@/features/level_progress/level-operations';
 
 interface GoToCheckpointButtonProps {}
 

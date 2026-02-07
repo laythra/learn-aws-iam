@@ -5,7 +5,7 @@ import { useLevelActor } from '@/app_shell/runtime/levelRuntime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
-import { useStateMachineEvent } from '@/hooks/useStateMachineEvent';
+import { useStateMachineEvent } from '@/app_shell/runtime/useStateMachineEvent';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface NavbarSidePanelToggleProps {

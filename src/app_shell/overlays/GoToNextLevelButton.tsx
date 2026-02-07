@@ -1,8 +1,8 @@
 import { Button } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
-import { advanceToNextLevel } from '@/features/level_progress/level-operations';
-import { LevelDetailsStore } from '@/features/level_progress/store';
+import { advanceToNextLevel } from '@/app_shell/runtime/level-operations';
+import { LevelDetailsStore } from '@/app_shell/runtime/level-store';
 
 const MotionButton = motion(Button);
 const LAST_LEVEL_NUMBER = 12;

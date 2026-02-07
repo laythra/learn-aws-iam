@@ -18,11 +18,8 @@ import {
   aggregateUserNodes,
   deaggregateUserNodes,
 } from './utils/user-node-aggregation-state-machine-actions';
+import { storeLevelCheckpoint, saveSnapshotToDisk } from '@/app_shell/runtime/level-operations';
 import { ElementID } from '@/config/element-ids';
-import {
-  storeLevelCheckpoint,
-  saveSnapshotToDisk,
-} from '@/features/level_progress/level-operations';
 import type { GenericContext } from '@/levels/types/context-types';
 import type { GenericEventData } from '@/levels/types/event-types';
 import type {
