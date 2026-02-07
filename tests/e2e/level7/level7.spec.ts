@@ -6,17 +6,17 @@ import { test } from '../helpers/test-fixtures';
 import { getTestSolution } from '../helpers/test-solutions';
 import { TutorialActions } from '../helpers/tutorial-actions';
 import { ElementID } from '@/config/element-ids';
-import { LEVEL_OBJECTIVES } from '@/machines/level7/objectives/level-objectives';
-import { FIXED_POPOVER_MESSAGES } from '@/machines/level7/tutorial_messages/fixed-popover-messages';
-import { POPOVER_TUTORIAL_MESSAGES } from '@/machines/level7/tutorial_messages/popover-tutorial-messages';
-import { POPUP_TUTORIAL_MESSAGES } from '@/machines/level7/tutorial_messages/popup-tutorial-messages';
+import { LEVEL_OBJECTIVES } from '@/levels/level7/objectives/level-objectives';
+import { FIXED_POPOVER_MESSAGES } from '@/levels/level7/tutorial_messages/fixed-popover-messages';
+import { POPOVER_TUTORIAL_MESSAGES } from '@/levels/level7/tutorial_messages/popover-tutorial-messages';
+import { POPUP_TUTORIAL_MESSAGES } from '@/levels/level7/tutorial_messages/popup-tutorial-messages';
 import {
   UserNodeID,
   ResourceNodeID,
   ResourcePolicyNodeID,
   PolicyNodeID,
   AccountID,
-} from '@/machines/level7/types/node-id-enums';
+} from '@/levels/level7/types/node-id-enums';
 
 const completeTutorialPopups = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);

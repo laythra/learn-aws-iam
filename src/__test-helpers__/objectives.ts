@@ -1,13 +1,13 @@
 import _ from 'lodash';
 
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
-import { MANAGED_POLICIES } from '@/machines/consts';
+import { MANAGED_POLICIES } from '@/levels/consts';
 import {
   BaseFinishEventMap,
   IAMPolicyCreationObjective,
   IAMUserGroupCreationObjective,
   ObjectiveType,
-} from '@/machines/types/objective-types';
+} from '@/levels/types/objective-types';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
 export function createMockPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>(

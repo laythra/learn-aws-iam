@@ -2,16 +2,16 @@ import { ENCODED_TEST_SOLUTIONS, ENCODED_LEVEL_STAGES } from './data';
 import { test } from '../helpers/test-fixtures';
 import { getTestSolution } from '../helpers/test-solutions';
 import { ElementID } from '@/config/element-ids';
-import { FIXED_POPOVER_MESSAGES } from '@/machines/level11/tutorial_messages/fixed-popover-messages';
-import { POPOVER_TUTORIAL_MESSAGES } from '@/machines/level11/tutorial_messages/popover-tutorial-messages';
-import { POPUP_TUTORIAL_MESSAGES } from '@/machines/level11/tutorial_messages/popup-tutorial-messages';
+import { FIXED_POPOVER_MESSAGES } from '@/levels/level11/tutorial_messages/fixed-popover-messages';
+import { POPOVER_TUTORIAL_MESSAGES } from '@/levels/level11/tutorial_messages/popover-tutorial-messages';
+import { POPUP_TUTORIAL_MESSAGES } from '@/levels/level11/tutorial_messages/popup-tutorial-messages';
 import {
   UserNodeID,
   PolicyNodeID,
   RoleNodeID,
   PermissionBoundaryID,
   ResourceNodeID,
-} from '@/machines/level11/types/node-id-enums';
+} from '@/levels/level11/types/node-id-enums';
 
 test.describe('Stage 1 - Permission Boundaries Introduction', () => {
   test('Initial Tutorial and Setup Flow', async ({ tutorial, nodes, edges, goToLevelAtStage }) => {

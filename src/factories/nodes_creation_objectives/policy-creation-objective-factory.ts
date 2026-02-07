@@ -6,7 +6,7 @@ import {
   BaseFinishEventMap,
   IAMPolicyCreationObjective,
   ObjectiveType,
-} from '@/machines/types/objective-types';
+} from '@/levels/types/objective-types';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
 export function createPolicyCreationObjective<

@@ -10,9 +10,9 @@ import _ from 'lodash';
 
 import { badgeExtension, InitializeBadgeWidgets } from '../utils/badge-widget';
 import { useLevelActor } from '@/app_shell/runtime/levelRuntime';
+import { HelpBadge } from '@/levels/types/objective-types';
 import { collectValidationDiagnostics } from '@/lib/iam/iam-policy-validator';
 import { validateIAMName } from '@/lib/iam/names';
-import { HelpBadge } from '@/machines/types/objective-types';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 
 interface UseCodeEditorOptions {
