@@ -42,6 +42,9 @@ export function pickLevel(levelNumber: number): void {
   if (levelNumber < 1 || levelNumber > MAX_LEVEL_NUMBER) return;
   if (levelNumber > maxReachedLevel) return;
 
+  const currentLevel = LevelDetailsStore.getSnapshot().context.levelNumber;
+
+  persistence.clearCheckpoint(currentLevel);
   persistence.setCurrentLevel(levelNumber);
   LevelDetailsStore.send({ type: 'setLevelNumber', levelNumber });
   analytics.logLevelSelected(levelNumber);
