@@ -3,18 +3,18 @@ import { createContext, useContext } from 'react';
 import { createActorContext } from '@xstate/react';
 import { Actor, Snapshot, SnapshotFrom } from 'xstate';
 
-import { stateMachine as level1StateMachine } from '@/machines/level1/state-machine';
-import { stateMachine as level10StateMachine } from '@/machines/level10/state-machine';
-import { stateMachine as level11StateMachine } from '@/machines/level11/state-machine';
-import { stateMachine as level12StateMachine } from '@/machines/level12/state-machine';
-import { stateMachine as level2StateMachine } from '@/machines/level2/state-machine';
-import { stateMachine as level3StateMachine } from '@/machines/level3/state-machine';
-import { stateMachine as level4StateMachine } from '@/machines/level4/state-machine';
-import { stateMachine as level5StateMachine } from '@/machines/level5/state-machine';
-import { stateMachine as leve6StateMachine } from '@/machines/level6/state-machine';
-import { stateMachine as level7StateMachine } from '@/machines/level7/state-machine';
-import { stateMachine as level8StateMachine } from '@/machines/level8/state-machine';
-import { stateMachine as level9StateMachine } from '@/machines/level9/state-machine';
+import { stateMachine as level1StateMachine } from '@/levels/level1/state-machine';
+import { stateMachine as level10StateMachine } from '@/levels/level10/state-machine';
+import { stateMachine as level11StateMachine } from '@/levels/level11/state-machine';
+import { stateMachine as level12StateMachine } from '@/levels/level12/state-machine';
+import { stateMachine as level2StateMachine } from '@/levels/level2/state-machine';
+import { stateMachine as level3StateMachine } from '@/levels/level3/state-machine';
+import { stateMachine as level4StateMachine } from '@/levels/level4/state-machine';
+import { stateMachine as level5StateMachine } from '@/levels/level5/state-machine';
+import { stateMachine as level6StateMachine } from '@/levels/level6/state-machine';
+import { stateMachine as level7StateMachine } from '@/levels/level7/state-machine';
+import { stateMachine as level8StateMachine } from '@/levels/level8/state-machine';
+import { stateMachine as level9StateMachine } from '@/levels/level9/state-machine';
 
 export type AnyLevelMachine =
   | typeof level1StateMachine
@@ -22,7 +22,7 @@ export type AnyLevelMachine =
   | typeof level3StateMachine
   | typeof level4StateMachine
   | typeof level5StateMachine
-  | typeof leve6StateMachine
+  | typeof level6StateMachine
   | typeof level7StateMachine
   | typeof level8StateMachine
   | typeof level9StateMachine
@@ -36,7 +36,7 @@ const MACHINES: Record<number, AnyLevelMachine> = {
   3: level3StateMachine,
   4: level4StateMachine,
   5: level5StateMachine,
-  6: leve6StateMachine,
+  6: level6StateMachine,
   7: level7StateMachine,
   8: level8StateMachine,
   9: level9StateMachine,

@@ -1,5 +1,5 @@
-import { GenericContext } from '@/machines/types/context-types';
-import { BaseFinishEventMap } from '@/machines/types/objective-types';
+import { GenericContext } from '@/levels/types/context-types';
+import { BaseFinishEventMap } from '@/levels/types/objective-types';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 export function createMockContext<

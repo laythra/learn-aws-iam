@@ -12,7 +12,7 @@ function startLevel(levelNumber: number): void {
   analytics.logLevelStarted(levelNumber);
 }
 
-function finishLevel(): void {
+function finishCurrentLevel(): void {
   const levelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
   persistence.clearCheckpoint(levelNumber);
   analytics.logLevelFinished(levelNumber);
@@ -28,7 +28,7 @@ export function advanceToNextLevel(): void {
   const maxReachedLevel = LevelDetailsStore.getSnapshot().context.maxLevelReached;
   const nextLevelNumber = currentLevelNumber == 12 ? 1 : currentLevelNumber + 1;
 
-  finishLevel();
+  finishCurrentLevel();
   startLevel(nextLevelNumber);
 
   if (nextLevelNumber > maxReachedLevel) {
