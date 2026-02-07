@@ -2,6 +2,7 @@ IMAGE ?= learn-aws-iam
 TAG ?= latest
 REGISTRY ?=
 PLATFORM ?= linux/amd64
+VITE_ANALYTICS_URL ?= http://localhost:3000/analytics
 
 DOCKERFILE ?= Dockerfile
 BUILD_DIR ?= dist
@@ -19,6 +20,7 @@ build-prod:
 			--platform=$(PLATFORM) \
 			-t $(IMAGE_FULL):$(TAG) \
 			--build-arg VITE_APP_ENV=production \
+			--build-arg VITE_ANALYTICS_URL="$(VITE_ANALYTICS_URL)" \
 			-f $(DOCKERFILE) .
 
 run-prod:
