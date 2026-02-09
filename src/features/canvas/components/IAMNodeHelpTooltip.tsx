@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import { Tooltip, Box } from '@chakra-ui/react';
 
-import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
+import AnimatedRedDot from '@/components/AnimatedRedDot';
 
 interface IAMNodeHelpTooltipProps {
   alertMessage: string;

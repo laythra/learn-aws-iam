@@ -10,9 +10,9 @@ import {
 } from '@chakra-ui/react';
 import Markdown from 'react-markdown';
 
-import { HelpImage } from './HelpImage';
 import { PopoverNextButton } from './PopoverNextButton';
 import { usePopover } from './usePopover';
+import { HelpImage } from '@/components/HelpImage';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';

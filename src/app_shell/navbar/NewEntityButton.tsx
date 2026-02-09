@@ -5,11 +5,10 @@ import _ from 'lodash';
 import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
-import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
-import { ElementID } from '@/config/element-ids';
-import { IdentityCreationPopup } from '@/features/iam_entities/components/IdentityCreationPopup';
-import { useIdentityCreator } from '@/features/iam_entities/hooks/useIdentityCreator';
+import { useIdentityCreator } from '@/app_shell/ui/useIdentityCreator';
 import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
+import AnimatedRedDot from '@/components/AnimatedRedDot';
+import { ElementID } from '@/config/element-ids';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -53,7 +52,6 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
 
   return (
     <>
-      <IdentityCreationPopup />
       <Menu onOpen={handleMenuOpen}>
         {!isNewEntityBtnRestricted && (
           <TutorialPopover elementId={ElementID.NewEntityBtn}>

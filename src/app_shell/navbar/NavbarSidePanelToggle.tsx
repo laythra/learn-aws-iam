@@ -2,10 +2,10 @@ import { Box, IconButton } from '@chakra-ui/react';
 import { Bars3Icon } from '@heroicons/react/16/solid';
 
 import { useLevelActor } from '@/app_shell/runtime/levelRuntime';
-import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
-import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
-import { ElementID } from '@/config/element-ids';
 import { useStateMachineEvent } from '@/app_shell/runtime/useStateMachineEvent';
+import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
+import AnimatedRedDot from '@/components/AnimatedRedDot';
+import { ElementID } from '@/config/element-ids';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface NavbarSidePanelToggleProps {

@@ -14,7 +14,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ children, isOpen }) => {
     <Flex
       h={`calc(100vh - ${theme.sizes.navbarHeightInPixels})`}
       mt={theme.sizes.navbarHeightInPixels}
-      direction='row-reverse'
+      direction='row'
       flexGrow={0}
       flexShrink={0}
       width={width}

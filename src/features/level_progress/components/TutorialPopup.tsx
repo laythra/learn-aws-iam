@@ -13,7 +13,7 @@ import Markdown from 'react-markdown';
 
 import { GoToNextLevelButton } from './GoToNextLevelButton';
 import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/levelRuntime';
-import { HelpImage } from '@/app_shell/tutorial';
+import { HelpImage } from '@/components/HelpImage';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
