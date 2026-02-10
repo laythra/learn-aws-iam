@@ -14,13 +14,31 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "react", "import", "unused-imports"],
+  "plugins": ["@typescript-eslint", "react", "import", "unused-imports", "check-file"],
   "rules": {
+    "check-file/filename-naming-convention": [
+      "error",
+      {
+        "**/*.tsx": "PASCAL_CASE",
+        "**/*.ts": "KEBAB_CASE",
+        "**/*.js": "KEBAB_CASE",
+        "**/*.jsx": "KEBAB_CASE"
+      },
+      {
+        "ignoreMiddleExtensions": true
+      }
+    ],
+    "check-file/folder-naming-convention": [
+      "warn",
+      {
+        "src/**/!(__tests__|__test-helpers__)/": "SNAKE_CASE"
+      }
+    ],
     "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-use-before-define": "error",
     "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
     "no-shadow": "off",
-    "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/no-shadow": "error",
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {
@@ -62,12 +80,7 @@
     "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }],
     "unused-imports/no-unused-vars": [
       "warn",
-      {
-        "vars": "all",
-        "varsIgnorePattern": "^_",
-        "args": "after-used",
-        "argsIgnorePattern": "^_"
-      }
+      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
     ],
     "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "warn"
@@ -82,5 +95,35 @@
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "overrides": [
+    {
+      "files": ["use[A-Z]*.tsx", "**/use[A-Z]*.tsx", "use[A-Z]*.ts", "**/use[A-Z]*.ts"],
+      "rules": {
+        "check-file/filename-naming-convention": [
+          "error",
+          {
+            "**/*.tsx": "CAMEL_CASE",
+            "**/*.ts": "CAMEL_CASE"
+          },
+          {
+            "ignoreMiddleExtensions": true
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "*IAM*.tsx",
+        "**/*IAM*.tsx",
+        "*ARN*.tsx",
+        "**/*ARN*.tsx",
+        "**/index.tsx",
+        "index.tsx"
+      ],
+      "rules": {
+        "check-file/filename-naming-convention": "off"
+      }
+    }
+  ]
 }
