@@ -14,13 +14,13 @@ export const ModalContext = createContext<ModalContextState | undefined>(undefin
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState<{ [key: string]: boolean }>({});
   const toggleModal = (id: string): void => {
-    setIsModalOpen(prevState => ({ ...prevState, [id]: true }));
+    setIsModalOpen(prevState => ({ ...prevState, [id]: !prevState[id] }));
   };
   const openModal = (id: string): void => {
-    setIsModalOpen(prevStat => ({ ...prevStat, [id]: true }));
+    setIsModalOpen(prevState => ({ ...prevState, [id]: true }));
   };
   const closeModal = (id: string): void => {
-    setIsModalOpen(prevStat => ({ ...prevStat, [id]: false }));
+    setIsModalOpen(prevState => ({ ...prevState, [id]: false }));
   };
   return (
     <ModalContext.Provider value={{ isModalOpen, toggleModal, openModal, closeModal }}>
