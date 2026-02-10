@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, IconButton, Tooltip } from '@chakra-ui/react';
 import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid';
 
-import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
+import AnimatedRedDot from '@/components/AnimatedRedDot';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
 
@@ -17,7 +17,13 @@ const CodeEditorHelpButton: React.FC<CodeEditorHelpButtonProps> = ({ selectedEnt
 
   return (
     <Box position='relative' display='flex' alignItems='center'>
-      <Tooltip hasArrow label='Show Policy Syntax Help' openDelay={200} shouldWrapChildren>
+      <Tooltip
+        hasArrow
+        label='Show Policy Syntax Help'
+        openDelay={200}
+        shouldWrapChildren
+        defaultIsOpen
+      >
         <IconButton
           icon={<QuestionMarkCircleIcon />}
           aria-label='Help'

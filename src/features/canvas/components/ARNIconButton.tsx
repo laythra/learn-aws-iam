@@ -15,8 +15,8 @@ import { IdentificationIcon, ClipboardDocumentIcon } from '@heroicons/react/20/s
 import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
+import { useStateMachineEvent } from '@/app_shell/runtime/useStateMachineEvent';
 import { ElementID } from '@/config/element-ids';
-import { useStateMachineEvent } from '@/hooks/useStateMachineEvent';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface ARNIconButtonProps extends ChakraProps {

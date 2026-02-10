@@ -2,7 +2,7 @@ import { Actor, AnyActorLogic } from 'xstate';
 
 import * as analytics from './level-analytics';
 import * as persistence from './level-persistence';
-import { LevelDetailsStore } from './store';
+import { LevelDetailsStore } from './level-store';
 
 const MAX_LEVEL_NUMBER = 12;
 

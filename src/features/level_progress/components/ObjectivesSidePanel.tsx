@@ -21,13 +21,13 @@ import Markdown from 'react-markdown';
 import SidePanelObjectiveHintButton from './SidePanelObjectiveHintButton';
 import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
-import SidePanel from '@/components/SidePanels/SidePanel';
+import SidePanel from '@/components/SidePanel';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
-const RightSidePanel: React.FC = () => {
+const ObjectivesSidePanel: React.FC = () => {
   const [levelObjectives, isSidePanelOpen, levelDescription] = useLevelSelector(
     state => [
       state.context.level_objectives,
@@ -99,4 +99,4 @@ const RightSidePanel: React.FC = () => {
   );
 };
 
-export default RightSidePanel;
+export default ObjectivesSidePanel;

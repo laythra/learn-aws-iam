@@ -4,12 +4,11 @@ import _ from 'lodash';
 
 import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/levelRuntime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
-import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
+import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
+import { useIdentityCreator } from '@/app_shell/ui/useIdentityCreator';
+import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
+import AnimatedRedDot from '@/components/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
-import { IdentityCreationPopup } from '@/features/iam_entities/components/IdentityCreationPopup';
-import { useIdentityCreator } from '@/features/iam_entities/hooks/useIdentityCreator';
-import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
-import { useTutorialGuard } from '@/hooks/useTutorialGuard';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
@@ -22,9 +21,12 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
     elementIds: [ElementID.NewEntityBtn],
   });
 
-  const userGroupMenuItemGuard = useTutorialGuard(ElementID.CreateUserGroupMenuItem);
-  const rolesMenuItemGuard = useTutorialGuard(ElementID.CreateRolesAndPoliciesMenuItem);
-  const newEntityButtonGuard = useTutorialGuard(ElementID.NewEntityBtn);
+  const [isUserGroupMenuItemRestricted, isRolesMenuItemRestricted, isNewEntityBtnRestricted] =
+    useIsElementRestricted([
+      ElementID.CreateUserGroupMenuItem,
+      ElementID.CreateRolesAndPoliciesMenuItem,
+      ElementID.NewEntityBtn,
+    ]);
 
   const [showPopovers, showFixedPopovers, popoverContent] = useLevelSelector(
     state => [
@@ -50,9 +52,8 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
 
   return (
     <>
-      <IdentityCreationPopup />
       <Menu onOpen={handleMenuOpen}>
-        {!newEntityButtonGuard.shouldHide && (
+        {!isNewEntityBtnRestricted && (
           <TutorialPopover elementId={ElementID.NewEntityBtn}>
             <Box position='relative'>
               <MenuButton
@@ -74,7 +75,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
           </TutorialPopover>
         )}
         <MenuList>
-          {!userGroupMenuItemGuard.shouldHide && (
+          {!isUserGroupMenuItemRestricted && (
             <TutorialPopover elementId={ElementID.CreateUserGroupMenuItem}>
               <MenuItem
                 data-element-id={ElementID.CreateUserGroupMenuItem}
@@ -85,7 +86,7 @@ export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
             </TutorialPopover>
           )}
 
-          {!rolesMenuItemGuard.shouldHide && (
+          {!isRolesMenuItemRestricted && (
             <TutorialPopover elementId={ElementID.CreateRolesAndPoliciesMenuItem}>
               <MenuItem
                 onClick={openCodeEditor}

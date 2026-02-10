@@ -15,7 +15,7 @@ import {
 import { ArrowPathIcon } from '@heroicons/react/16/solid';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
-import { restartLevelFromStart } from '@/features/level_progress/level-operations';
+import { restartLevelFromStart } from '@/app_shell/runtime/level-operations';
 
 interface RestartLevelButtonProps {}
 

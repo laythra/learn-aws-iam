@@ -20,11 +20,11 @@ import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
-import AnimatedRedDot from '@/components/Animated/AnimatedRedDot';
+import { useStateMachineEvent } from '@/app_shell/runtime/useStateMachineEvent';
+import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
+import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
+import AnimatedRedDot from '@/components/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
-import { useAnimatedRedDot } from '@/hooks/useAnimatedRedDot';
-import { useStateMachineEvent } from '@/hooks/useStateMachineEvent';
-import { useTutorialGuard } from '@/hooks/useTutorialGuard';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -50,7 +50,9 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
 }) => {
   const popoverContentRef = useRef<HTMLDivElement>(null);
   const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedContent);
-  const iamNodeContentButtonGuard = useTutorialGuard(ElementID.IAMNodeContentButton);
+  const [isIAMNodeContentButtonRestricted] = useIsElementRestricted([
+    ElementID.IAMNodeContentButton,
+  ]);
   const { emitEvent } = useStateMachineEvent();
   const isContentOpen = openedNodeId === nodeId;
 
@@ -92,7 +94,7 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
       closeDelay={0}
       isOpen={isContentOpen}
     >
-      {!iamNodeContentButtonGuard.shouldHide && (
+      {!isIAMNodeContentButtonRestricted && (
         <PopoverTrigger>
           <IconButton
             data-element-id={ElementID.IAMNodeContentButton}

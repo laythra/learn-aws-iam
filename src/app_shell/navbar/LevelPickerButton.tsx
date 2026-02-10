@@ -19,8 +19,8 @@ import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
-import { pickLevel } from '@/features/level_progress/level-operations';
-import { LevelDetailsStore } from '@/features/level_progress/store';
+import { pickLevel } from '@/app_shell/runtime/level-operations';
+import { LevelDetailsStore } from '@/app_shell/runtime/level-store';
 
 interface LevelPickerButtonProps {}
 
