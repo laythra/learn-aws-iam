@@ -16,10 +16,10 @@ import _ from 'lodash';
 
 import { CodeEditorHeader } from './CodeEditorHeader';
 import { CodeEditorHelpPopup } from './CodeEditorHelpPopup';
-import { CodeEditorCreate } from './Create/CodeEditorCreate';
-import { CreateSubmitButton } from './Create/CreateSubmitButton';
-import { CodeEditorEdit } from './Edit/CodeEditorEdit';
-import { EditSubmitButton } from './Edit/EditSubmitButton';
+import { CodeEditorCreate } from './create/CodeEditorCreate';
+import { CreateSubmitButton } from './create/CreateSubmitButton';
+import { CodeEditorEdit } from './edit/CodeEditorEdit';
+import { EditSubmitButton } from './edit/EditSubmitButton';
 import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
 import { ElementID } from '@/config/element-ids';
 import codeEditorStateStore from '@/stores/code-editor-state-store';

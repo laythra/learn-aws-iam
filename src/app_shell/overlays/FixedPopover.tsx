@@ -14,7 +14,7 @@ import { PopoverNextButton } from '@/app_shell/tutorial';
 import { HelpImage } from '@/components/HelpImage';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/lib/markdown/components';
+import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 interface FixedPopover {}
@@ -76,7 +76,7 @@ export const FixedPopover: React.FC<FixedPopover> = () => {
           {popoverMessage.popover_content && (
             <PopoverBody>
               <Markdown
-                components={markdownComponents}
+                components={customMarkdownComponents}
                 rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
               >
                 {popoverMessage.popover_content}

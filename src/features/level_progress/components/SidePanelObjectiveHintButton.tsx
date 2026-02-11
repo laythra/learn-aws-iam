@@ -14,7 +14,7 @@ import { InformationCircleIcon } from '@heroicons/react/24/solid';
 import Markdown from 'react-markdown';
 
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/lib/markdown/components';
+import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 interface SidePanelObjectiveHintButtonProps {
@@ -39,7 +39,10 @@ const SidePanelObjectiveHintButton: React.FC<SidePanelObjectiveHintButtonProps> 
           </HStack>
         </PopoverHeader>
         <PopoverBody maxH='200px' overflowY='auto'>
-          <Markdown components={markdownComponents} rehypePlugins={[rehypeChakraBadge, rehypeIcon]}>
+          <Markdown
+            components={customMarkdownComponents}
+            rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
+          >
             {hint}
           </Markdown>
         </PopoverBody>

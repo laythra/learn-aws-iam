@@ -16,7 +16,7 @@ import Markdown from 'react-markdown';
 
 import { HELP_CONTENT } from '../config/help-content';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
-import { components } from '@/lib/markdown/components';
+import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { CustomTheme } from '@/types/custom-theme';
@@ -49,7 +49,10 @@ export const CodeEditorHelpPopup: React.FC<CodeEditorHelpPopup> = () => {
         </ModalHeader>
 
         <ModalBody maxH='600px' overflowY='auto'>
-          <Markdown components={components} rehypePlugins={[rehypeChakraBadge, rehypeIcon]}>
+          <Markdown
+            components={customMarkdownComponents}
+            rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
+          >
             {helpPopupContent}
           </Markdown>
         </ModalBody>

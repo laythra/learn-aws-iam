@@ -15,7 +15,7 @@ import { GoToNextLevelButton } from './GoToNextLevelButton';
 import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { HelpImage } from '@/components/HelpImage';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/lib/markdown/components';
+import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 import { CustomTheme } from '@/types/custom-theme';
 
@@ -43,7 +43,10 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
           {popupContent.title}
         </ModalHeader>
         <ModalBody overflow='auto'>
-          <Markdown components={markdownComponents} rehypePlugins={[rehypeChakraBadge, rehypeIcon]}>
+          <Markdown
+            components={customMarkdownComponents}
+            rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
+          >
             {popupContent.content}
           </Markdown>
           {popupContent.tutorial_gif && <HelpImage gifName={popupContent.tutorial_gif} />}

@@ -10,7 +10,7 @@ import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/lib/markdown/components';
+import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 interface CodeEditorObjectiveHintsProps {
@@ -32,7 +32,7 @@ export const CodeEditorObjectiveHints: React.FC<CodeEditorObjectiveHintsProps> =
           </AccordionButton>
           <AccordionPanel pb={4}>
             <Markdown
-              components={markdownComponents}
+              components={customMarkdownComponents}
               rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
             >
               {hint.content}
