@@ -9,7 +9,7 @@ import {
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
-import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/levelRuntime';
+import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { PopoverNextButton } from '@/app_shell/tutorial';
 import { HelpImage } from '@/components/HelpImage';
 import { ElementID } from '@/config/element-ids';

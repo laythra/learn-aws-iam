@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import { useLevelActor } from '@/app_shell/runtime/levelRuntime';
+import { useLevelActor } from '@/app_shell/runtime/level-runtime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { useIdentityCreator } from '@/app_shell/ui/useIdentityCreator';
 import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';

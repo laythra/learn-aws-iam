@@ -1,4 +1,4 @@
-import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
+import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { useModal } from '@/hooks/useModal';
 import { IAMNodeEntity } from '@/types/iam-enums';
 

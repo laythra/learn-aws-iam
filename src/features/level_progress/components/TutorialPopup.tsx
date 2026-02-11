@@ -12,7 +12,7 @@ import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import { GoToNextLevelButton } from './GoToNextLevelButton';
-import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/levelRuntime';
+import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { HelpImage } from '@/components/HelpImage';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { components as markdownComponents } from '@/lib/markdown/components';

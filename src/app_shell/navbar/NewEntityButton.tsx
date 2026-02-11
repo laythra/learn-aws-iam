@@ -2,7 +2,7 @@ import { Box, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-u
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
 import _ from 'lodash';
 
-import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/levelRuntime';
+import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
 import { useIdentityCreator } from '@/app_shell/ui/useIdentityCreator';

@@ -10,7 +10,7 @@ import { useCodeEditor } from '../../hooks/useCodeEditor';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
-import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
+import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { ElementID } from '@/config/element-ids';
 import { MANAGED_POLICIES } from '@/levels/config';
 import { GetLevelValidateFunctions } from '@/levels/functions-registry';
