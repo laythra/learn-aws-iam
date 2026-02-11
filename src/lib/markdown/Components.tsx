@@ -23,7 +23,7 @@ interface MarkdownNode {
   };
 }
 
-export const components: Components = {
+export const customMarkdownComponents: Components = {
   p: ({ children }: JSX.IntrinsicElements['p']) => {
     let fontColor = 'black';
     let fontWeight = 'normal';

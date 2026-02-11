@@ -4,9 +4,9 @@ import { Box, useToast, HStack, Icon, CloseButton } from '@chakra-ui/react';
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 import Markdown from 'react-markdown';
 
-import { useLevelActor } from '@/app_shell/runtime/levelRuntime';
+import { useLevelActor } from '@/app_shell/runtime/level-runtime';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/lib/markdown/components';
+import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 interface ObjectiveCompletePopoverProps {}
@@ -55,7 +55,7 @@ export const ObjectiveCompleteToast: React.FC<ObjectiveCompletePopoverProps> = (
                 </Box>
                 <Box fontSize='13px' color='gray.600'>
                   <Markdown
-                    components={markdownComponents}
+                    components={customMarkdownComponents}
                     rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
                   >
                     {message}

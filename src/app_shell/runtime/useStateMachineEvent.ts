@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
-import { useLevelActor } from '@/app_shell/runtime/levelRuntime';
+import { useLevelActor } from '@/app_shell/runtime/level-runtime';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export interface UseStateMachineEventResult {

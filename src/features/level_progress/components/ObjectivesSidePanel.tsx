@@ -19,12 +19,12 @@ import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import SidePanelObjectiveHintButton from './SidePanelObjectiveHintButton';
-import { useLevelSelector } from '@/app_shell/runtime/levelRuntime';
+import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import SidePanel from '@/components/SidePanel';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/lib/markdown/components';
+import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 const ObjectivesSidePanel: React.FC = () => {
@@ -78,7 +78,7 @@ const ObjectivesSidePanel: React.FC = () => {
                           verticalAlign='top'
                         />
                         <Markdown
-                          components={markdownComponents}
+                          components={customMarkdownComponents}
                           rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
                         >
                           {objective.label}

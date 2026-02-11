@@ -8,8 +8,8 @@ import { useSelector } from '@xstate/store/react';
 import { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 
-import { badgeExtension, InitializeBadgeWidgets } from '../utils/badge-widget';
-import { useLevelActor } from '@/app_shell/runtime/levelRuntime';
+import { badgeExtension, InitializeBadgeWidgets } from '../utils/BaseWidget';
+import { useLevelActor } from '@/app_shell/runtime/level-runtime';
 import { HelpBadge } from '@/levels/types/objective-types';
 import { collectValidationDiagnostics } from '@/lib/iam/iam-policy-validator';
 import { validateIAMName } from '@/lib/iam/names';

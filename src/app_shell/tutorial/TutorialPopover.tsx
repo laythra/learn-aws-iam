@@ -15,7 +15,7 @@ import { usePopover } from './usePopover';
 import { HelpImage } from '@/components/HelpImage';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
-import { components as markdownComponents } from '@/lib/markdown/components';
+import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
 interface TutorialPopoverProps {
@@ -86,7 +86,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({ children, elem
         {description && (
           <PopoverBody>
             <Markdown
-              components={markdownComponents}
+              components={customMarkdownComponents}
               rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
             >
               {description}
