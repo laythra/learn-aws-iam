@@ -6,7 +6,6 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './app/App';
 import { initAnalytics } from './lib/analytics-actor';
-import reportWebVitals from './reportWebVitals';
 
 import './lib/array/array.extensions';
 
@@ -18,5 +17,4 @@ root.render(
 );
 
 enableMapSet();
-reportWebVitals();
 initAnalytics();
