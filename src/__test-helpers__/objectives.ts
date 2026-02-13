@@ -1,4 +1,4 @@
-import uniqueId from 'lodash/uniqueId';
+import _ from 'lodash';
 
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
@@ -14,7 +14,7 @@ export function createMockPolicyCreationObjective<TFinishEventMap extends BaseFi
   overrides: Partial<IAMPolicyCreationObjective<TFinishEventMap>> = {}
 ): IAMPolicyCreationObjective<BaseFinishEventMap> {
   return createPolicyCreationObjective({
-    id: uniqueId('mock-policy-creation-objective-'),
+    id: _.uniqueId('mock-policy-creation-objective-'),
     entity: IAMNodeEntity.Policy,
     type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
     initial_code: MANAGED_POLICIES.EmptyPolicy,

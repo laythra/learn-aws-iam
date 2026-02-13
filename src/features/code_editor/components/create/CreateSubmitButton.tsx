@@ -1,7 +1,6 @@
 import { Button } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
-import isEmpty from 'lodash/isEmpty';
-import isEqual from 'lodash/isEqual';
+import _ from 'lodash';
 
 import { useLevelActor } from '@/app_shell/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
@@ -21,10 +20,10 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
   const [codeErrors, labelError, isValidating] = useSelector(
     codeEditorStateStore,
     state => [state.context.errors, state.context.labelError, state.context.isValidating],
-    isEqual
+    _.isEqual
   );
 
-  const isButtonDisabled = !isEmpty(codeErrors[nodeId]) || labelError !== undefined;
+  const isButtonDisabled = !_.isEmpty(codeErrors[nodeId]) || labelError !== undefined;
 
   const submit = (): void => {
     const codeEditorStateContext = codeEditorStateStore.getSnapshot().context;

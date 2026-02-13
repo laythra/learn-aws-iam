@@ -1,4 +1,4 @@
-import snakeCase from 'lodash/snakeCase';
+import _ from 'lodash';
 
 import { IAMNodeEntity } from '@/types/iam-enums';
 
@@ -11,7 +11,7 @@ const EDGE_LABELS: { [key: string]: string } = {
 };
 
 export function formatNodeName(name: string): string {
-  return snakeCase(name);
+  return _.snakeCase(name);
 }
 
 export function getEdgeName(source: string, target: string, attachedAs?: IAMNodeEntity): string {

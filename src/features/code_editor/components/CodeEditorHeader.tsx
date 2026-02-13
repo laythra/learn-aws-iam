@@ -1,5 +1,5 @@
 import { Flex, HStack, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
-import upperFirst from 'lodash/upperFirst';
+import _ from 'lodash';
 
 import CodeEditorHelpButton from './CodeEditorHelpButton';
 import CodeEditorResetButton from './CodeEditorResetButton';
@@ -25,7 +25,7 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
     return (
       <HStack justifyContent='space-between'>
         <Text>
-          Edit {upperFirst(selectedIAMEntity)}: {selectedNode.data.label}
+          Edit {_.upperFirst(selectedIAMEntity)}: {selectedNode.data.label}
         </Text>
         <HStack alignItems='center' justifyContent='center'>
           <CodeEditorResetButton nodeId={nodeId} />
@@ -61,7 +61,7 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
 
   return (
     <Flex justifyContent='space-between'>
-      <Text>New {upperFirst(selectedIAMEntity)}</Text>
+      <Text>New {_.upperFirst(selectedIAMEntity)}</Text>
 
       <HStack>
         <CodeEditorHelpButton selectedEntity={selectedIAMEntity} />

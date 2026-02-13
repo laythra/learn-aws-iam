@@ -1,7 +1,7 @@
 import { StateEffect, StateField } from '@codemirror/state';
 import { EditorView, Decoration, DecorationSet, WidgetType } from '@codemirror/view';
 import { parse } from 'json-source-map';
-import flatMap from 'lodash/flatMap';
+import _ from 'lodash';
 
 import { HelpBadge } from '@/levels/types/objective-types';
 
@@ -80,7 +80,7 @@ export const InitializeBadgeWidgets = (
 ): void => {
   if (!badges.length) return;
 
-  const effects = flatMap(badges, badge => {
+  const effects = _.flatMap(badges, badge => {
     const lineNumber = getLineNumberForPath(code, badge.path);
     if (lineNumber === null) return [];
 

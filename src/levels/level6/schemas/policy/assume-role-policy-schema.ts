@@ -1,4 +1,4 @@
-import template from 'lodash/template';
+import { template } from 'lodash';
 
 const assumeRolePolicySchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',

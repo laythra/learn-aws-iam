@@ -6,9 +6,7 @@ import { EditorView } from '@codemirror/view';
 import { Extension } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store/react';
 import { ValidateFunction } from 'ajv';
-import debounce from 'lodash/debounce';
-import isEqual from 'lodash/isEqual';
-import uniqBy from 'lodash/uniqBy';
+import _ from 'lodash';
 
 import { badgeExtension, InitializeBadgeWidgets } from '../utils/BaseWidget';
 import { useLevelActor } from '@/app_shell/runtime/level-runtime';
@@ -50,7 +48,7 @@ export function useCodeEditor({
       state.context.content,
       state.context.isValidating,
     ],
-    isEqual
+    _.isEqual
   );
 
   const [editorViewState, setEditorViewState] = useState<EditorView | null>(null);
@@ -62,7 +60,7 @@ export function useCodeEditor({
       collectValidationDiagnostics(editorView.current!, validateFn!)
     );
 
-    const allErrors = uniqBy(lintingErrors, 'from');
+    const allErrors = _.uniqBy(lintingErrors, 'from');
     const hasErrors = validateFns.every(
       validateFn => collectValidationDiagnostics(editorView.current!, validateFn!).length > 0
     );
@@ -77,7 +75,7 @@ export function useCodeEditor({
 
   const validateChange = useMemo(
     () =>
-      debounce(() => {
+      _.debounce(() => {
         setCodeErrorsAndWarnings();
         codeEditorStateStore.send({ type: 'setIsValidating', payload: false });
       }, 500),
@@ -108,7 +106,7 @@ export function useCodeEditor({
     validateChange();
   };
 
-  const validateNodeLabel = debounce((label: string): void => {
+  const validateNodeLabel = _.debounce((label: string): void => {
     const existinglabels = levelActor.getSnapshot().context.nodes.map(node => node.data.label);
     const error = validateIAMName(label, existinglabels, 64);
 

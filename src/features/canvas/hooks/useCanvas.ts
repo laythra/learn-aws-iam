@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { useSelector } from '@xstate/store/react';
 import { Connection, ReactFlowInstance } from '@xyflow/react';
-import isEqual from 'lodash/isEqual';
+import _ from 'lodash';
 
 import { useCanvasHandlers } from './useCanvasHandlers';
 import { useCanvasStoreSync } from './useCanvasSync';
@@ -44,13 +44,13 @@ export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
         state.context.layout_groups,
         state.context.blocked_connections,
       ],
-      isEqual
+      _.isEqual
     );
 
   const [nodesState, edgesState] = useSelector(
     CanvasStore,
     state => [state.context.nodes, state.context.edges],
-    isEqual
+    _.isEqual
   );
 
   const levelActor = useLevelActor();

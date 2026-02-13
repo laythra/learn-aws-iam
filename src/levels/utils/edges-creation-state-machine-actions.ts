@@ -1,8 +1,5 @@
 import { produce, WritableDraft } from 'immer';
-import chain from 'lodash/chain';
-import differenceBy from 'lodash/differenceBy';
-import intersectionBy from 'lodash/intersectionBy';
-import keyBy from 'lodash/keyBy';
+import _ from 'lodash';
 
 import { ConnectionFilter } from './connection-filter';
 import { IAMNodeFilter } from './iam-node-filter';
@@ -42,7 +39,7 @@ function isEdgeConnectionObjectiveFinished<TFinishEventMap extends BaseFinishEve
   objective: EdgeConnectionObjective<TFinishEventMap>,
   establishedEdges: IAMEdge[]
 ): boolean {
-  return differenceBy(objective.required_edges, establishedEdges, 'id').length === 0;
+  return _.differenceBy(objective.required_edges, establishedEdges, 'id').length === 0;
 }
 
 function isEdgeConnectionValid<TFinishEventMap extends BaseFinishEventMap>(
@@ -136,7 +133,7 @@ function createEdgesFromGrantedAccesses<
 ): IAMEdge[] {
   const allNodes = context.nodes;
   const applicableNodesFns = GetLevelObjectivesApplicableNodesFns(context.level_number);
-  const nodesById = keyBy(allNodes, 'id');
+  const nodesById = _.keyBy(allNodes, 'id');
   return grantedAccesses.flatMap(access => {
     const applicableNodes =
       access.applicable_nodes_fn_name && applicableNodesFns[access.applicable_nodes_fn_name]
@@ -206,7 +203,7 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
 
   const extraEdges = computeExtraEdges(baseEdge.id) as WritableDraft<IAMEdge>[];
   const updatedContext = produce(context, draft => {
-    draft.edges = chain([...extraEdges, ...draft.edges, baseEdge])
+    draft.edges = _.chain([...extraEdges, ...draft.edges, baseEdge])
       .sortBy(e => e.data?.unnecessary_edge)
       .uniqBy('id')
       .value() as WritableDraft<IAMEdge>[];
@@ -215,7 +212,7 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
   return {
     updatedContext,
     events,
-    newlyAddedEdges: differenceBy([baseEdge, ...extraEdges], context.edges, 'id'),
+    newlyAddedEdges: _.differenceBy([baseEdge, ...extraEdges], context.edges, 'id'),
   };
 }
 
@@ -560,7 +557,7 @@ export function applyGuardRailBlockingToEdges(
   });
   return {
     edgesAfterBlocking: updatedEdges,
-    newlyAddedEdgesAfterBlocking: intersectionBy(updatedEdges, newlyAddedEdges, 'id'),
+    newlyAddedEdgesAfterBlocking: _.intersectionBy(updatedEdges, newlyAddedEdges, 'id'),
   };
 }
 

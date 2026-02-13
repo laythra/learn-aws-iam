@@ -1,7 +1,7 @@
 // TODO: Git rid of this file or trim it. we don't need an extra `initial_connections` property on the context
 // it only adds complexity. We should pass in the initial connections directly rather than make it a separate property
 // The file feels like it shoudl called directly from common-state-machine-setup or at least included directly inside edges-creation-state-machine-actions
-import keyBy from 'lodash/keyBy';
+import _ from 'lodash';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
 import { GenericContext } from '../types/context-types';
@@ -16,7 +16,7 @@ export function applyInitialNodeConnections<
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
   initialConnections: InitialNodeConnection[]
 ): { edges: IAMEdge[] } {
-  const nodeById = keyBy(context.nodes, 'id');
+  const nodeById = _.keyBy(context.nodes, 'id');
   let updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap> = context;
 
   initialConnections.forEach(connection => {

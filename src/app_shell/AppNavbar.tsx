@@ -1,5 +1,5 @@
 import { HStack } from '@chakra-ui/react';
-import isEqual from 'lodash/isEqual';
+import _ from 'lodash';
 
 import { NavbarControls } from './navbar/NavbarControls';
 import { NavbarLevelInfo } from './navbar/NavbarLevelInfo';
@@ -15,7 +15,7 @@ interface AppNavbarProps {}
 export const AppNavbar: React.FC<AppNavbarProps> = () => {
   const [levelNumber, levelTitle] = useLevelSelector(
     state => [state.context.level_number, state.context.level_title],
-    isEqual
+    _.isEqual
   );
 
   const { isRedDotEnabledForElement } = useAnimatedRedDot({

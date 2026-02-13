@@ -12,7 +12,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
-import isEqual from 'lodash/isEqual';
+import _ from 'lodash';
 
 import { CodeEditorHeader } from './CodeEditorHeader';
 import { CodeEditorHelpPopup } from './CodeEditorHelpPopup';
@@ -61,7 +61,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = () => {
       state.context.mode,
       state.context.selectedNodeId,
     ],
-    isEqual
+    _.isEqual
   );
 
   // Nodes have a pseudo ID before being created. refs are used to persist them across re-renders.

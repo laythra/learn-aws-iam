@@ -4,7 +4,7 @@ import { Box, useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import { getBezierPath, EdgeLabelRenderer, EdgeProps, BaseEdge } from '@xyflow/react';
 import { motion } from 'framer-motion';
-import isEqual from 'lodash/isEqual';
+import _ from 'lodash';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { CustomTheme } from '@/types/custom-theme';
@@ -37,7 +37,7 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
       state.context.hoveredOverEdgeId,
       state.context.edgeIdsWithDeletionInProgress.has(id),
     ],
-    isEqual
+    _.isEqual
   );
 
   const {

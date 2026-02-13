@@ -4,8 +4,7 @@ import { Select, Input, FormControl, FormLabel, FormErrorMessage } from '@chakra
 import { Diagnostic } from '@codemirror/lint';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store/react';
-import isEmpty from 'lodash/isEmpty';
-import isEqual from 'lodash/isEqual';
+import _ from 'lodash';
 
 import { useCodeEditor } from '../../hooks/useCodeEditor';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
@@ -40,13 +39,13 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       state.context.nodes,
       state.context.level_number,
     ],
-    isEqual
+    _.isEqual
   );
 
   const [selectedAccountId, labelError, label] = useSelector(
     codeEditorStateStore,
     state => [state.context.selectedAccountId, state.context.labelError, state.context.label],
-    isEqual
+    _.isEqual
   );
 
   const multiAccount = nodes.some(node => node.data.entity === IAMNodeEntity.Account);
@@ -84,7 +83,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     editorView,
     getWarnings,
     initialContent,
-    validateFns: isEmpty(validateFns) ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]] : validateFns,
+    validateFns: _.isEmpty(validateFns) ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]] : validateFns,
     helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
   });
 
@@ -169,11 +168,11 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
           onCreateEditor={onCreateEditor}
         />
       </FormControl>
-      {!isEmpty(errors) && <CodeEditorProgressStatus message={errors[0].message} level='error' />}
-      {!isEmpty(warnings) && isEmpty(errors) && (
+      {!_.isEmpty(errors) && <CodeEditorProgressStatus message={errors[0].message} level='error' />}
+      {!_.isEmpty(warnings) && _.isEmpty(errors) && (
         <CodeEditorProgressStatus message={warnings[0]} level='warning' />
       )}
-      {isEmpty(errors) && isEmpty(warnings) && (
+      {_.isEmpty(errors) && _.isEmpty(warnings) && (
         <CodeEditorProgressStatus message='You got it right!' level='success' />
       )}
       {objectiveToTargetInEditor?.callout_message && (

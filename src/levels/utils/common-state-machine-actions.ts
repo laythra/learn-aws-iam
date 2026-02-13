@@ -1,6 +1,5 @@
 import { produce } from 'immer';
-import difference from 'lodash/difference';
-import uniq from 'lodash/uniq';
+import _ from 'lodash';
 
 import { GenericContext } from '../types/context-types';
 import { BaseFinishEventMap, LevelObjective } from '../types/objective-types';
@@ -35,8 +34,8 @@ export function getElementsWithRedDot<
   isRedDotVisible: boolean
 ): ElementID[] {
   if (isRedDotVisible) {
-    return uniq([...(context.elements_with_animated_red_dot ?? []), ...elementIds]);
+    return _.uniq([...(context.elements_with_animated_red_dot ?? []), ...elementIds]);
   } else {
-    return difference(context.elements_with_animated_red_dot ?? [], elementIds);
+    return _.difference(context.elements_with_animated_red_dot ?? [], elementIds);
   }
 }

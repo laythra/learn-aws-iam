@@ -8,7 +8,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
-import isEqual from 'lodash/isEqual';
+import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import { GoToNextLevelButton } from './GoToNextLevelButton';
@@ -26,7 +26,7 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
   const levelActor = useLevelActor();
   const [showPopups, popupContent] = useLevelSelector(
     state => [state.context.show_popups, state.context.popup_content],
-    isEqual
+    _.isEqual
   );
 
   const handleNextPopup = (): void => {

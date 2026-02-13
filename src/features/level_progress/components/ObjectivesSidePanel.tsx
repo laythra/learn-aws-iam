@@ -15,7 +15,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { CheckBadgeIcon, InformationCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
-import isEqual from 'lodash/isEqual';
+import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import SidePanelObjectiveHintButton from './SidePanelObjectiveHintButton';
@@ -34,7 +34,7 @@ const ObjectivesSidePanel: React.FC = () => {
       state.context.side_panel_open,
       state.context.level_description,
     ],
-    isEqual
+    _.isEqual
   );
 
   return (

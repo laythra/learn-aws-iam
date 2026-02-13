@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { ForwardIcon } from '@heroicons/react/16/solid';
 import { useSelector } from '@xstate/store/react';
-import isEqual from 'lodash/isEqual';
+import _ from 'lodash';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
 import { pickLevel } from '@/app_shell/runtime/level-operations';
@@ -29,7 +29,7 @@ export const LevelPickerButton: React.FC<LevelPickerButtonProps> = () => {
   const [maxLevelReached, currentLevel] = useSelector(
     LevelDetailsStore,
     state => [state.context.maxLevelReached, state.context.levelNumber],
-    isEqual
+    _.isEqual
   );
 
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);

@@ -6,7 +6,7 @@ import {
   AccordionPanel,
   Box,
 } from '@chakra-ui/react';
-import upperFirst from 'lodash/upperFirst';
+import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
@@ -26,7 +26,7 @@ export const CodeEditorObjectiveHints: React.FC<CodeEditorObjectiveHintsProps> =
         <AccordionItem key={hint.title}>
           <AccordionButton>
             <Box as='span' flex='1' textAlign='left' fontWeight='semibold'>
-              {upperFirst(hint.title)}
+              {_.upperFirst(hint.title)}
             </Box>
             <AccordionIcon />
           </AccordionButton>
