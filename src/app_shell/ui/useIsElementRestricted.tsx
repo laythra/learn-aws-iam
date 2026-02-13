@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 
@@ -17,7 +17,7 @@ export function useIsElementRestricted(elementIds: string[]): boolean[] {
       state.context.whitelisted_element_ids,
       state.context.restricted_element_ids,
     ],
-    _.isEqual
+    isEqual
   );
 
   return useMemo(() => {

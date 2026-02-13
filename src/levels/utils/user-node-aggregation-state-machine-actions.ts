@@ -1,6 +1,6 @@
 import { Edge } from '@xyflow/react';
 import { produce, WritableDraft } from 'immer';
-import _ from 'lodash';
+import groupBy from 'lodash/groupBy';
 
 import { GenericContext } from '../types/context-types';
 import { BaseFinishEventMap } from '../types/objective-types';
@@ -80,7 +80,7 @@ export function aggregateUserNodes<TLevelObjectiveID, TFinishEventMap extends Ba
       node => node.data.entity === IAMNodeEntity.User
     ) as WritableDraft<IAMUserNode>[];
 
-    const groupedUsers = _.groupBy(userNodes, user => aggregationKeyForUser(user, context.edges));
+    const groupedUsers = groupBy(userNodes, user => aggregationKeyForUser(user, context.edges));
 
     Object.values(groupedUsers).forEach(group => {
       if (group.length < 2) return;

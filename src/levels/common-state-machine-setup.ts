@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import differenceBy from 'lodash/differenceBy';
+import intersectionBy from 'lodash/intersectionBy';
+import keyBy from 'lodash/keyBy';
 import { enqueueActions, assign, setup, AnyActorLogic, Actor } from 'xstate';
 
 import { applyInitialNodeConnections } from './utils/apply-initial-edges-state-machine-actions';
@@ -298,7 +300,7 @@ export const createStateMachineSetup = <
             edgeIdsToDelete
           ));
 
-          const nodeById = _.keyBy(updatedContext.nodes, 'id');
+          const nodeById = keyBy(updatedContext.nodes, 'id');
 
           // Recreate edges based on updated policy
           editPolicyResult.edgesToRefresh.forEach(edge => {
@@ -321,9 +323,9 @@ export const createStateMachineSetup = <
           });
 
           // Only emit edges that didn't exist before
-          const newEdges = _.differenceBy(updatedContext.edges, context.edges, 'id');
-          const removedEdges = _.differenceBy(context.edges, updatedContext.edges, 'id');
-          const updatedEdges = _.intersectionBy(updatedContext.edges, context.edges, 'id');
+          const newEdges = differenceBy(updatedContext.edges, context.edges, 'id');
+          const removedEdges = differenceBy(context.edges, updatedContext.edges, 'id');
+          const updatedEdges = intersectionBy(updatedContext.edges, context.edges, 'id');
 
           if (newEdges.length > 0) {
             enqueue.emit({
@@ -456,7 +458,7 @@ export const createStateMachineSetup = <
 
           const { updatedContext, edgesToCreate, createdNode } = createPolicyResult;
           const updatedContextNodes = updatedContext.nodes;
-          const nodesById = _.keyBy(updatedContextNodes, 'id');
+          const nodesById = keyBy(updatedContextNodes, 'id');
 
           enqueue.assign({
             nodes: updatedContextNodes,

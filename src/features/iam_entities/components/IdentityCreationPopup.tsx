@@ -18,7 +18,9 @@ import {
   Box,
   Input,
 } from '@chakra-ui/react';
-import _ from 'lodash';
+import debounce from 'lodash/debounce';
+import isEmpty from 'lodash/isEmpty';
+import upperFirst from 'lodash/upperFirst';
 
 import { useLevelActor } from '@/app_shell/runtime/level-runtime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
@@ -58,7 +60,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
 
   const debouncedValidate = useMemo(
     () =>
-      _.debounce((name: string, entity: IAMIdentityEntity) => {
+      debounce((name: string, entity: IAMIdentityEntity) => {
         const existingNames = levelActor.getSnapshot().context.nodes.map(n => n.data.label);
         const error = validateIAMName(name, existingNames, 64);
 
@@ -129,7 +131,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
       <ModalContent data-element-id={ElementID.IAMIdentityCreatorPopup}>
         <ModalHeader>
           <Flex justifyContent='space-between'>
-            <Text>New {_.upperFirst(iamIdentityEntity)}</Text>
+            <Text>New {upperFirst(iamIdentityEntity)}</Text>
             <TutorialPopover elementId={ElementID.IAMIdentitySelectorTypeForCreation}>
               <Box data-element-id={ElementID.IAMIdentitySelectorTypeForCreation} fontSize='8px'>
                 <Tabs
@@ -166,7 +168,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
                 onChange={handleNameChange}
               />
             </TutorialPopover>
-            {!_.isEmpty(formState[iamIdentityEntity]['error']) && (
+            {!isEmpty(formState[iamIdentityEntity]['error']) && (
               <Text color='red.500' fontSize='sm'>
                 {formState[iamIdentityEntity]['error']}
               </Text>
@@ -180,7 +182,7 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
             onClick={submit}
             isDisabled={
               formState[iamIdentityEntity]['isValidating'] ||
-              !_.isEmpty(formState[iamIdentityEntity]['error'])
+              !isEmpty(formState[iamIdentityEntity]['error'])
             }
           >
             submit

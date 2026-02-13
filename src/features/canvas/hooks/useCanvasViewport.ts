@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 
 import { useTheme } from '@chakra-ui/react';
 import { ReactFlowInstance } from '@xyflow/react';
-import _ from 'lodash';
+import sumBy from 'lodash/sumBy';
 
 import { useWindowWidth } from './useWindowWidth';
 import { CanvasStore } from '../stores/canvas-store';
@@ -38,7 +38,7 @@ export function useCanvasViewport({
     (referenceNodes: IAMAnyNode[]): number => {
       if (!rfInstance) return 1;
 
-      const accountNodesWidth = _.sumBy(referenceNodes, node =>
+      const accountNodesWidth = sumBy(referenceNodes, node =>
         node.data.entity === IAMNodeEntity.Account ? node.width! + 20 : 0
       );
       return Math.min(

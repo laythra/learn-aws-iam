@@ -17,7 +17,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { ArrowUturnLeftIcon } from '@heroicons/react/16/solid';
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
 import { restartLevelFromCheckpoint } from '@/app_shell/runtime/level-operations';
@@ -28,7 +28,7 @@ interface GoToCheckpointButtonProps {}
 const HELP_POPOVER_TIMEOUT = 1000 * 60; // 1 minute
 
 export const GoToCheckpointButton: React.FC<GoToCheckpointButtonProps> = () => {
-  const levelState = useLevelSelector(state => state.value, _.isEqual);
+  const levelState = useLevelSelector(state => state.value, isEqual);
   const levelActor = useLevelActor();
 
   const helpPopover = useNavbarPopover('checkpoint-help');

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import zip from 'lodash/zip';
 
 import { EdgeConnectionFinishEvent, FinishEventMap } from '../types/finish-event-enums';
 import { GroupNodeID, PolicyNodeID } from '../types/node-id-enums';
@@ -6,7 +6,7 @@ import { createEdge } from '@/factories/edge-factory';
 import { EdgeConnectionObjective, ObjectiveType } from '@/levels/types/objective-types';
 
 export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>[][] = [
-  _.zip(
+  zip(
     [GroupNodeID.PaymentsTeam, GroupNodeID.AnalyticsTeam, GroupNodeID.ComplianceTeam],
     [
       EdgeConnectionFinishEvent.TBAC_POLICY_ATTACHED_GROUP1,
@@ -32,7 +32,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         established_edge_source_handle: 'top',
       }) as EdgeConnectionObjective<FinishEventMap>
   ),
-  _.zip(
+  zip(
     [GroupNodeID.PaymentsTeam, GroupNodeID.AnalyticsTeam, GroupNodeID.ComplianceTeam],
     [
       EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP1,

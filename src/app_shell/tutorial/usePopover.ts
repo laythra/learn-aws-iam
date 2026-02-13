@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
@@ -21,7 +21,7 @@ export const usePopover = (elementId: string): UsePopoverResult => {
   const machineActor = useLevelActor();
   const [showPopovers, popoverContent] = useLevelSelector(
     state => [state.context.show_popovers, state.context.popover_content],
-    _.isEqual
+    isEqual
   );
 
   const isOpen = showPopovers && popoverContent?.element_id === elementId;

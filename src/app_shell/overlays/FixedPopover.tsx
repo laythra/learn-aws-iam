@@ -6,7 +6,7 @@ import {
   PopoverHeader,
   PopoverCloseButton,
 } from '@chakra-ui/react';
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 import Markdown from 'react-markdown';
 
 import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
@@ -28,7 +28,7 @@ export const FixedPopover: React.FC<FixedPopover> = () => {
   const machineActor = useLevelActor();
   const [showFixedPopovers, fixedPopoverContent] = useLevelSelector(
     state => [state.context.show_fixed_popovers, state.context.fixed_popover_content],
-    _.isEqual
+    isEqual
   );
 
   const showPopover = fixedPopoverContent && showFixedPopovers;

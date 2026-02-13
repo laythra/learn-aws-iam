@@ -5,7 +5,7 @@ import { useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import { Handle } from '@xyflow/react';
 import { motion } from 'framer-motion';
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import ARNIconButton from './ARNIconButton';
 import IAMNodeHelpTooltip from './IAMNodeHelpTooltip';
@@ -38,7 +38,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   const [selectedNodeId, isDeleting] = useSelector(
     CanvasStore,
     state => [state.context.selectedNodeId, state.context.nodeIdsWithDeletionInProgress.has(id)],
-    _.isEqual
+    isEqual
   );
 
   const withPopoverElementId = useLevelSelector(state => state.context.popover_content?.element_id);

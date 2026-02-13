@@ -4,7 +4,8 @@ import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import CodeMirror from '@uiw/react-codemirror';
 import { ValidateFunction } from 'ajv';
-import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 
 import { useCodeEditor } from '../../hooks/useCodeEditor';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
@@ -45,7 +46,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
       state.context.nodes,
       state.context.level_number,
     ],
-    _.isEqual
+    isEqual
   );
 
   const editorView = useRef<EditorView | null>(null);
@@ -113,11 +114,11 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
         extensions={extensions}
         onCreateEditor={onCreateEditor}
       />
-      {!_.isEmpty(errors) && <CodeEditorProgressStatus message={errors[0].message} level='error' />}
-      {!_.isEmpty(warnings) && _.isEmpty(errors) && (
+      {!isEmpty(errors) && <CodeEditorProgressStatus message={errors[0].message} level='error' />}
+      {!isEmpty(warnings) && isEmpty(errors) && (
         <CodeEditorProgressStatus message={warnings[0]} level='warning' />
       )}
-      {_.isEmpty(errors) && _.isEmpty(warnings) && (
+      {isEmpty(errors) && isEmpty(warnings) && (
         <CodeEditorProgressStatus message='You got it right!' level='success' />
       )}
 

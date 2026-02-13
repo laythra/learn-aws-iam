@@ -1,4 +1,3 @@
-// Move fixed popover to level_progress feature
 import { FixedPopover } from './overlays/FixedPopover';
 import { MobileWarningPopup } from './overlays/MobileWarningPopup';
 

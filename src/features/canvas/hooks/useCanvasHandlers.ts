@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { useToast } from '@chakra-ui/react';
 import { Connection } from '@xyflow/react';
-import _ from 'lodash';
+import find from 'lodash/find';
 
 import { LevelActorRef } from './useCanvasSync';
 import { getValidConnectionDirection } from '../utils/edges-creation';
@@ -61,8 +61,8 @@ export function useCanvasHandlers({
 
       // TODO: Consider sending only node IDs instead of full node objects, and let the state machine look them up.
       // This would simplify internal state machine events where full node data may not be readily available.
-      const sourceNode = _.find<IAMAnyNode>(nodes, { id: params.source });
-      const targetNode = _.find<IAMAnyNode>(nodes, { id: params.target });
+      const sourceNode = find<IAMAnyNode>(nodes, { id: params.source });
+      const targetNode = find<IAMAnyNode>(nodes, { id: params.target });
 
       if (!sourceNode || !targetNode) {
         return;

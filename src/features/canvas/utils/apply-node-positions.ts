@@ -1,5 +1,6 @@
 import { Viewport } from '@xyflow/react';
-import _ from 'lodash';
+import groupBy from 'lodash/groupBy';
+import keyBy from 'lodash/keyBy';
 
 import { getNodeInitialPosition } from '@/features/canvas/utils/node-position-geometry';
 import { IAMNodeEntity } from '@/types/iam-enums';
@@ -23,12 +24,12 @@ export function positionNewNodes(
   sidePanelWidth: number,
   viewport: Viewport
 ): IAMAnyNode[] {
-  const layoutGroupsById = _.keyBy(layoutGroups, 'id');
+  const layoutGroupsById = keyBy(layoutGroups, 'id');
 
   const allNodes = [...existingNodes, ...newNodes];
-  const allNodesById = _.keyBy(allNodes, 'id');
+  const allNodesById = keyBy(allNodes, 'id');
 
-  const nodeGroups = _.groupBy(allNodes, node => {
+  const nodeGroups = groupBy(allNodes, node => {
     const isAccountNode = node.data.entity === IAMNodeEntity.Account;
     const hasParent = !!node.parentId;
 

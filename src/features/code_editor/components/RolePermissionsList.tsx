@@ -11,7 +11,7 @@ import {
   AccordionPanel,
   AccordionItem,
 } from '@chakra-ui/react';
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
@@ -20,7 +20,7 @@ import { IAMNodeEntity } from '@/types/iam-enums';
 interface RolePermissionsListProps {}
 
 export const RolePermissionsList: React.FC<RolePermissionsListProps> = () => {
-  const nodes = useLevelSelector(state => state.context.nodes, _.isEqual);
+  const nodes = useLevelSelector(state => state.context.nodes, isEqual);
   const policyNodes = nodes.filter(node => node.data.entity === IAMNodeEntity.Policy);
 
   const updateSelectedPolicies = (policyId: string, isChecked: boolean): void => {

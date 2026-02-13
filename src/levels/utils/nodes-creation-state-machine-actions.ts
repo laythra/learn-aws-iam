@@ -1,5 +1,5 @@
 import { produce, WritableDraft } from 'immer';
-import _ from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 
 import { GetLevelValidateFunctions } from '../functions-registry';
 import { GenericContext } from '../types/context-types';
@@ -76,7 +76,7 @@ export function createNodeFromObjective<
       ...targetValidObjective?.extra_data,
     } as NodeDataFor<E>,
     rootOverrides: {
-      id: targetValidObjective?.id ?? _.uniqueId(`${entityType.toLowerCase()}-`),
+      id: targetValidObjective?.id ?? uniqueId(`${entityType.toLowerCase()}-`),
       parentId: targetValidObjective?.created_node_parent_id ?? accountId,
     },
   });
@@ -152,7 +152,7 @@ export function createUserGroupNode<TLevelObjectiveID, TFinishEventMap extends B
   const creationFunc = nodeType === IAMNodeEntity.Group ? createGroupNode : createUserNode;
   const createdNode = creationFunc({
     dataOverrides: {
-      id: targetObjective?.entity_id ?? _.uniqueId('node_'),
+      id: targetObjective?.entity_id ?? uniqueId('node_'),
       layout_group_id: targetObjective?.layout_group_id ?? CommonLayoutGroupID.TopLeftVertical,
       unnecessary_node: targetObjective === undefined,
       show_pulse_animation: targetObjective !== undefined,
