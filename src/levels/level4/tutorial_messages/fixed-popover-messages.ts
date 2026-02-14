@@ -76,7 +76,7 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
     position: 'top-left',
     show_close_button: true,
     show_next_button: false,
-    tutorial_gif: 'node-content-editing',
+    tutorial_video: 'node-content-editing',
   },
   {
     popover_title: 'Permissions Sorted Out 🔥',

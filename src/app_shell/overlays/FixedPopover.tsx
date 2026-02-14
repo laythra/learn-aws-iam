@@ -11,7 +11,7 @@ import Markdown from 'react-markdown';
 
 import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { PopoverNextButton } from '@/app_shell/tutorial';
-import { HelpImage } from '@/components/HelpImage';
+import { HelpVideo } from '@/components/HelpVideo';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { customMarkdownComponents } from '@/lib/markdown/Components';
@@ -81,7 +81,9 @@ export const FixedPopover: React.FC<FixedPopover> = () => {
               >
                 {popoverMessage.popover_content}
               </Markdown>
-              {popoverMessage.tutorial_gif && <HelpImage gifName={popoverMessage.tutorial_gif} />}
+              {popoverMessage.tutorial_video && (
+                <HelpVideo videoName={popoverMessage.tutorial_video} />
+              )}
             </PopoverBody>
           )}
           {popoverMessage.show_next_button && (

@@ -1,4 +1,4 @@
-import { useEffect, memo } from 'react';
+import { useEffect, memo, useState } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
@@ -35,6 +35,7 @@ const pulseInitial = { opacity: 0.85, scale: 0.85 } as const;
 const pulseTransition = { duration: 2, ease: [0.2, 0.8, 0.3, 1] } as const;
 
 const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
+  const [imageSrc, setImageSrc] = useState<string>();
   const [selectedNodeId, isDeleting] = useSelector(
     CanvasStore,
     state => [state.context.selectedNodeId, state.context.nodeIdsWithDeletionInProgress.has(id)],
@@ -55,6 +56,10 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
 
   const isSelected = selectedNodeId === id;
   const showCreationPulse = !isDeleting;
+
+  useEffect(() => {
+    loadLocalImage(image).then(setImageSrc);
+  }, [image]);
 
   useEffect(() => {
     if (withPopoverElementId === id) {
@@ -126,7 +131,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
             {alert_message && <IAMNodeHelpTooltip alertMessage={alert_message} />}
 
             <Flex width='100%' alignItems='center'>
-              <Image src={loadLocalImage(image)} width='30%' mr='5%' />
+              <Image src={imageSrc} width='30%' mr='5%' />
               <Box width='65%' textAlign='left'>
                 <HStack spacing={0}>
                   <Tooltip label={label}>

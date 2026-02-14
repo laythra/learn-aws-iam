@@ -1,4 +1,3 @@
-// Lazy load images on-demand to reduce initial bundle size
 const images = import.meta.glob('@/assets/images/**/*.{png,jpg,jpeg,webp}');
 
 export async function loadLocalImage(

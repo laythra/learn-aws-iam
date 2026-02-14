@@ -13,7 +13,7 @@ import Markdown from 'react-markdown';
 
 import { GoToNextLevelButton } from './GoToNextLevelButton';
 import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
-import { HelpImage } from '@/components/HelpImage';
+import { HelpVideo } from '@/components/HelpVideo';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
@@ -49,7 +49,7 @@ export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
           >
             {popupContent.content}
           </Markdown>
-          {popupContent.tutorial_gif && <HelpImage gifName={popupContent.tutorial_gif} />}
+          {popupContent.tutorial_video && <HelpVideo videoName={popupContent.tutorial_video} />}
         </ModalBody>
 
         <ModalFooter>
