@@ -49,7 +49,7 @@ const nodesCreationMap: { [E in IAMCodeDefinedEntity]: CreateNodeFn<E> } = {
   [IAMNodeEntity.Role]: createRoleNode,
 };
 
-export function createNodeFromObjective<
+function createNodeFromObjective<
   TFinishEventMap extends BaseFinishEventMap,
   E extends IAMCodeDefinedEntity,
 >(
@@ -130,7 +130,7 @@ export function createIAMNode<
     updatedContext,
     events: targetValidObjective ? [targetValidObjective.on_finish_event] : [],
     edgesToCreate: targetValidObjective?.initial_edges ?? [],
-    createdNode: newNode as TNode,
+    createdNode: newNode as unknown as TNode,
   };
 }
 
