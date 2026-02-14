@@ -1,5 +1,7 @@
 import { and, not } from 'xstate';
 
+import { createStateMachineSetup } from '../common-state-machine-setup';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/policy-nodes';
 import { INITIAL_TUTORIAL_RESOURCE_NODES } from './nodes/resource-nodes';
 import { INITIAL_TUTORIAL_USER_NODES } from './nodes/user-nodes';
@@ -15,8 +17,6 @@ import {
 } from './types/finish-event-enums';
 import { UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
-import { createStateMachineSetup } from '../common-state-machine-setup';
-import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { FIXED_POPOVER_MESSAGES } from '../level1/tutorial_messages/fixed-popover-messages';
 import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { ElementID } from '@/config/element-ids';
