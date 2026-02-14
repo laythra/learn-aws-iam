@@ -37,7 +37,7 @@ interface TutorialPopoverProps {
  * @param {TutorialPopoverProps} props - The component props
  * @param {React.ReactNode} props.children - The element that triggers the popover when rendered
  * @param {string} props.elementId - Unique identifier for the tutorial element, used to fetch and manage popover state
- * @param {number} [props.delay] - Optional delay in milliseconds before showing the popover after the component mountsa
+ * @param {number} [props.delay] - Optional delay in milliseconds before showing the popover after the component mounts
  * @example
  * ```tsx
  * <TutorialPopover elementId="welcome-button">
