@@ -10,7 +10,7 @@ import {
   OrderedList,
   Icon,
 } from '@chakra-ui/react';
-import { chakra } from '@chakra-ui/system';
+import { chakra } from '@chakra-ui/react';
 import * as HeroIcons from '@heroicons/react/24/solid';
 import { Components } from 'react-markdown';
 
