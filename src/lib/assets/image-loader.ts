@@ -1,14 +1,14 @@
-const images = import.meta.glob('../../assets/images/**/*.{png,jpg,gif}', { eager: true });
-const tutorialGifs = import.meta.glob('../../assets/tutorial_gifs/**/*.{png,jpg,gif}', {
-  eager: true,
-});
+// Lazy load images on-demand to reduce initial bundle size
+const images = import.meta.glob('@/assets/images/**/*.{png,jpg,jpeg,webp}');
 
-export function loadLocalImage(imagePath: string, extension: string = 'png'): string | undefined {
-  const key = `../../assets/images/${imagePath}.${extension}`;
-  return (images as Record<string, { default: string }>)[key]?.default;
-}
+export async function loadLocalImage(
+  imagePath: string,
+  extension: string = 'webp'
+): Promise<string | undefined> {
+  const key = `/src/assets/images/${imagePath}.${extension}`;
+  const imageModule = images[key];
+  if (!imageModule) return undefined;
 
-export function loadTutorialGif(imagePath: string): string | undefined {
-  const key = `../../assets/tutorial_gifs/${imagePath}.gif`;
-  return (tutorialGifs as Record<string, { default: string }>)[key]?.default;
+  const module = (await imageModule()) as { default: string };
+  return module.default;
 }
