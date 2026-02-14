@@ -66,6 +66,11 @@ export const test = base.extend<TestFixtures>({
       );
 
       await page.goto('http://localhost:5173');
+      await page.evaluate(() => {
+        return Promise.all([
+          import('@/features/code_editor/components/CodeEditor').catch(() => {}),
+        ]);
+      });
     };
 
     await use(goToLevelStage);
