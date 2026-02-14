@@ -2,9 +2,6 @@ import { and, not } from 'xstate';
 
 import { INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
-import { createStateMachineSetup } from '../common-state-machine-setup';
-import { COMMON_LAYOUT_GROUPS } from '../consts';
-import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { ROLE_CREATION_OBJECTIVES } from './objectives/role-creation-objectives';
@@ -17,6 +14,9 @@ import {
   RoleCreationFinishEvent,
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
+import { createStateMachineSetup } from '../common-state-machine-setup';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
+import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { ElementID } from '@/config/element-ids';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 

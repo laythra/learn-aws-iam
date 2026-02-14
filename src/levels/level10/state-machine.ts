@@ -2,9 +2,6 @@ import { and, not } from 'xstate';
 
 import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
 import { LAYOUT_GROUPS } from './layout-groups';
-import { createStateMachineSetup } from '../common-state-machine-setup';
-import { COMMON_LAYOUT_GROUPS } from '../consts';
-import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { INITIAL_IN_LEVEL_GROUP_NODES } from './nodes/group-nodes';
 import { INITIAL_IN_LEVEL_RESOURCE_NODES } from './nodes/resource-nodes';
 import { INITIAL_IN_LEVEL_USER_NODES } from './nodes/user-nodes';
@@ -20,6 +17,9 @@ import {
   PolicyCreationFinishEvent,
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
+import { createStateMachineSetup } from '../common-state-machine-setup';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
+import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { ElementID } from '@/config/element-ids';
 
 export const stateMachine = createStateMachineSetup<

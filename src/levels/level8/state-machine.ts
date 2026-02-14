@@ -2,9 +2,6 @@ import { assign } from 'xstate';
 
 import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
-import { createStateMachineSetup } from '../common-state-machine-setup';
-import { COMMON_LAYOUT_GROUPS } from '../consts';
-import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_EDIT_OBJECTIVES } from './objectives/policy-edit-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
@@ -13,6 +10,9 @@ import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-mess
 import { FinishEventMap, PolicyEditFinishEvent } from './types/finish-event-enums';
 import { PolicyNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
+import { createStateMachineSetup } from '../common-state-machine-setup';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
+import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { ElementID } from '@/config/element-ids';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
