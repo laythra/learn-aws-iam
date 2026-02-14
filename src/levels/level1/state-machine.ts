@@ -299,6 +299,7 @@ export const stateMachine = createStateMachineSetup<
         },
         level_complete: {
           entry: [
+            'hide_popovers',
             'hide_unncessary_edges_or_nodes_warning',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           ],

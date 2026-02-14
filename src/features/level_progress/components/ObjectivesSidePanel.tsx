@@ -27,6 +27,8 @@ import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
+const SIDEPANEL_TRANSITION_DURATION_MS = 300;
+
 const ObjectivesSidePanel: React.FC = () => {
   const [levelObjectives, isSidePanelOpen, levelDescription] = useLevelSelector(
     state => [
@@ -38,7 +40,10 @@ const ObjectivesSidePanel: React.FC = () => {
   );
 
   return (
-    <SidePanel isOpen={isSidePanelOpen ?? false}>
+    <SidePanel
+      isOpen={isSidePanelOpen ?? false}
+      transitionDuration={SIDEPANEL_TRANSITION_DURATION_MS}
+    >
       <Flex direction='column' alignItems='center' height='100%' width='100%'>
         <HStack alignItems='center'>
           <Text fontSize='lg' fontWeight='bold' p={1}>
@@ -62,7 +67,10 @@ const ObjectivesSidePanel: React.FC = () => {
           </Popover>
         </HStack>
         <Divider my={2} />
-        <TutorialPopover elementId={ElementID.ObjectivesSidePanel}>
+        <TutorialPopover
+          elementId={ElementID.ObjectivesSidePanel}
+          delay={SIDEPANEL_TRANSITION_DURATION_MS}
+        >
           <Box mt={2} overflowY='auto' data-element-id={ElementID.ObjectivesSidePanel}>
             <List spacing={3}>
               {Object.values(levelObjectives).map((objective, index) => {
