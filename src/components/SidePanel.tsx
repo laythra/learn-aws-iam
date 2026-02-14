@@ -17,18 +17,20 @@ const SidePanel: React.FC<SidePanelProps> = ({ children, isOpen }) => {
       direction='row'
       flexGrow={0}
       flexShrink={0}
-      width={width}
+      w={width}
       transition='width 0.3s ease-in-out'
       overflow='hidden'
     >
       <Box
-        h='100%'
+        flex='1'
         overflowY='auto'
+        px={4}
+        py={4}
         opacity={isOpen ? 1 : 0}
         transition='opacity 0.1s ease-in-out'
         pointerEvents={isOpen ? 'auto' : 'none'}
       >
-        <Box m={4}>{children}</Box>
+        {children}
       </Box>
     </Flex>
   );
