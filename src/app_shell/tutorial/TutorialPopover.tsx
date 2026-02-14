@@ -12,7 +12,7 @@ import Markdown from 'react-markdown';
 
 import { PopoverNextButton } from './PopoverNextButton';
 import { usePopover } from './usePopover';
-import { HelpImage } from '@/components/HelpImage';
+import { HelpVideo } from '@/components/HelpVideo';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { customMarkdownComponents } from '@/lib/markdown/Components';
@@ -50,7 +50,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({ children, elem
     show_next_button: showNextButton,
     popover_placement: placement,
     show_close_button: showCloseButton,
-    tutorial_gif: imagePath,
+    tutorial_video: videoName,
   } = content || {};
 
   return (
@@ -91,7 +91,7 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({ children, elem
             >
               {description}
             </Markdown>
-            {imagePath && <HelpImage gifName={imagePath} />}
+            {videoName && <HelpVideo videoName={videoName} />}
           </PopoverBody>
         )}
         {showNextButton && <PopoverNextButton onNextClick={goNext} />}

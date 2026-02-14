@@ -33,7 +33,7 @@ export class TutorialActions {
   async expectFixedPopoverWithTutorialGif(title: string): Promise<void> {
     const fixedPopover = findFixedPopover(this.page, title);
     await expect(fixedPopover).toBeVisible();
-    await expect(fixedPopover.getByTestId('help-image-gif')).toBeVisible();
+    await expect(fixedPopover.getByTestId('help-video')).toBeVisible();
   }
 
   async expectFixedPopoverWithTutorialGifAndClickNext(title: string): Promise<void> {

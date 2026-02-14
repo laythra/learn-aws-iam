@@ -11,6 +11,6 @@ export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
     position: 'top-left',
     show_close_button: false,
     show_next_button: false,
-    tutorial_gif: 'connecting-nodes',
+    tutorial_video: 'connecting-nodes',
   },
 ];
