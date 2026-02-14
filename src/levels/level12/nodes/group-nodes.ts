@@ -48,13 +48,13 @@ const IN_LEVEL_GROUP_NODES: IAMNodeDataOverrides<IAMGroupNode['data']>[] = [
 export const INITIAL_TUTORIAL_GROUP_NODES: IAMGroupNode[] = TUTORIAL_GROUP_NODES.map(nodeData =>
   createGroupNode({
     dataOverrides: nodeData,
-    rootOverrides: { draggable: false, parentId: nodeData.parent_id, extent: 'parent' },
+    rootOverrides: { draggable: true, parentId: nodeData.parent_id },
   })
 );
 
 export const INITIAL_IN_LEVEL_GROUP_NODES: IAMGroupNode[] = IN_LEVEL_GROUP_NODES.map(nodeData =>
   createGroupNode({
     dataOverrides: nodeData,
-    rootOverrides: { draggable: true, parentId: nodeData.parent_id, extent: 'parent' },
+    rootOverrides: { draggable: true, parentId: nodeData.parent_id },
   })
 );

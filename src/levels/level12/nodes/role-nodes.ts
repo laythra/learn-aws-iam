@@ -21,6 +21,6 @@ const IN_LEVEL_ROLE_NODES: IAMNodeDataOverrides<IAMRoleNode['data']>[] = [
 export const INITIAL_IN_LEVEL_ROLE_NODES: IAMRoleNode[] = IN_LEVEL_ROLE_NODES.map(nodeData =>
   createRoleNode({
     dataOverrides: nodeData,
-    rootOverrides: { extent: 'parent', parentId: nodeData.parent_id },
+    rootOverrides: { parentId: nodeData.parent_id },
   })
 );

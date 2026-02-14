@@ -80,7 +80,6 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
     type: type as IAMNodeMap[E]['type'],
     draggable,
     deletable,
-    extent: 'parent',
     width,
     height,
     data: {
@@ -111,6 +110,7 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
       ...rootOverrides,
       id: overrideId ?? rootOverrides?.id ?? TEMPLATE_NODE.id,
       deletable: dataOverridesWithoutId?.unnecessary_node === true,
+      extent: rootOverrides?.parentId ? 'parent' : undefined,
       data: {
         ...TEMPLATE_NODE.data,
         ...dataOverridesWithoutId,

@@ -45,7 +45,6 @@ describe('createNodeFactory', () => {
       draggable: false,
       width: 300,
       height: 100,
-      extent: 'parent',
       deletable: false,
       data: {
         label: IAMNodeEntity.User,
@@ -68,7 +67,6 @@ describe('createNodeFactory', () => {
       position: { x: 0, y: 0 },
       width: 300,
       height: 100,
-      extent: 'parent',
       deletable: false,
       ...rootOverrides,
       data: {
@@ -100,7 +98,6 @@ describe('createNodeFactory', () => {
       draggable: false,
       width: 300,
       height: 100,
-      extent: 'parent',
       deletable: false,
       data: {
         ...baseExpectedData,
@@ -135,7 +132,6 @@ describe('createNodeFactory', () => {
       position: { x: 0, y: 0 },
       type: 'custom-node',
       height: 100,
-      extent: 'parent',
       deletable: false,
       ...rootOverrides,
       data: {

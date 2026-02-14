@@ -14,7 +14,6 @@ const TUTORIAL_ACCOUNT_NODES: IAMNodeDataOverrides<IAMAccountNode['data']>[] = [
     id: AccountID.TutorialProdAccount,
     label: 'Production Account',
     layout_group_id: CommonLayoutGroupID.RightCenterHorizontal,
-    collapsed: true,
   },
 ];
 

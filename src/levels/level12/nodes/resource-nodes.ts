@@ -81,7 +81,7 @@ export const INITIAL_TUTORIAL_RESOURCE_NODES: IAMResourceNode[] = TUTORIAL_RESOU
   nodeData =>
     createResourceNode({
       dataOverrides: nodeData,
-      rootOverrides: { draggable: true, extent: 'parent', parentId: nodeData.parent_id },
+      rootOverrides: { draggable: true, parentId: nodeData.parent_id },
     })
 );
 
@@ -89,6 +89,6 @@ export const INITIAL_IN_LEVEL_RESOURCE_NODES: IAMResourceNode[] = IN_LEVEL_RESOU
   nodeData =>
     createResourceNode({
       dataOverrides: nodeData,
-      rootOverrides: { draggable: true, extent: 'parent', parentId: nodeData.parent_id },
+      rootOverrides: { draggable: true, parentId: nodeData.parent_id },
     })
 );
