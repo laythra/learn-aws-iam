@@ -7,6 +7,21 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 export default defineConfig({
   plugins: [react(), checker({ typescript: true }), nodePolyfills()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          editor: [
+            '@uiw/react-codemirror',
+            '@codemirror/lang-json',
+            '@codemirror/lint',
+            '@codemirror/view',
+            'ajv',
+          ],
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

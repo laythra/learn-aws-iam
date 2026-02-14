@@ -1,7 +1,9 @@
-import { useSelector } from '@xstate/store/react';
-import _ from 'lodash';
+import { useEffect, useState } from 'react';
 
-import { CurrentActorContext, getActorContext } from './level-runtime';
+import { useSelector } from '@xstate/store/react';
+import isEqual from 'lodash/isEqual';
+
+import { CurrentActorContext, getActorContextAsync, LevelActorContext } from './level-runtime';
 import { loadCheckpoint } from '@/app_shell/runtime/level-persistence';
 import { LevelDetailsStore } from '@/app_shell/runtime/level-store';
 
@@ -11,14 +13,33 @@ interface LevelsProgressionProviderProps {
 
 const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ children }) => {
   // Restart key is used to force reloading the level actor when level is restarted or changed
-  const [levelNumber, _restartKey] = useSelector(
+  const [levelNumber, restartKey] = useSelector(
     LevelDetailsStore,
     s => [s.context.levelNumber, s.context.restartKey],
-    _.isEqual
+    isEqual
   );
 
-  const snapshot = loadCheckpoint(levelNumber);
-  const ActorCtx = getActorContext(levelNumber, snapshot);
+  const [ActorCtx, setActorCtx] = useState<LevelActorContext | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    setActorCtx(null); // Clear previous actor context while loading new one
+    const snapshot = loadCheckpoint(levelNumber);
+
+    getActorContextAsync(levelNumber, snapshot).then(ctx => {
+      if (mounted) {
+        setActorCtx(ctx);
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [levelNumber, restartKey]);
+
+  if (!ActorCtx) {
+    return null;
+  }
 
   return (
     <CurrentActorContext.Provider value={ActorCtx}>
