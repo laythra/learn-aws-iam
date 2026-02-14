@@ -1,6 +1,9 @@
 import { and, not } from 'xstate';
 
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
+import { createStateMachineSetup } from '../common-state-machine-setup';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
+import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
@@ -16,9 +19,6 @@ import {
 } from './types/finish-event-enums';
 import { RoleNodeID, UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
-import { createStateMachineSetup } from '../common-state-machine-setup';
-import { COMMON_LAYOUT_GROUPS } from '../consts';
-import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { ElementID } from '@/config/element-ids';
 
 export const stateMachine = createStateMachineSetup<

@@ -2,6 +2,9 @@ import { and, assign, not } from 'xstate';
 
 import { INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
 import { INITIAL_TUTORIAL_NODES } from './nodes';
+import { createStateMachineSetup } from '../common-state-machine-setup';
+import { COMMON_LAYOUT_GROUPS } from '../consts';
+import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { POLICY_EDIT_OBJECTIVES } from './objectives/policy-role-edit-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
@@ -9,9 +12,6 @@ import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import { FinishEventMap, NodeEditFinishEvent } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
-import { createStateMachineSetup } from '../common-state-machine-setup';
-import { COMMON_LAYOUT_GROUPS } from '../consts';
-import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { ElementID } from '@/config/element-ids';
 
 export const stateMachine = createStateMachineSetup<

@@ -21,7 +21,6 @@ const ACTIONS_HINT_MSG = `
   \`cloudtrail:Delete???\`
 `;
 
-// eslint-disable-next-line max-len
 export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<
   FinishEventMap,
   GuardRailsBlockedEdgesFnName

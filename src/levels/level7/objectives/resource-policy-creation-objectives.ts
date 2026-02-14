@@ -24,7 +24,6 @@ const OBJECTIVE1_HINT_MSG2 = `
   to give access to all objects inside the bucket
 `;
 
-// eslint-disable-next-line max-len
 export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjective<
   FinishEventMap,
   ValidateFunctionsFnName
