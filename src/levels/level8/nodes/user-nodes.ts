@@ -41,13 +41,13 @@ const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
 export const INITIAL_TUTORIAL_USER_NODES: IAMUserNode[] = TUTORIAL_USER_NODES.map(node =>
   createUserNode({
     dataOverrides: node,
-    rootOverrides: { extent: 'parent', parentId: node.parent_id, draggable: false },
+    rootOverrides: { parentId: node.parent_id, draggable: false },
   })
 );
 
 export const INITIAL_IN_LEVEL_USER_NODES: IAMUserNode[] = IN_LEVEL_USER_NODES.map(node =>
   createUserNode({
     dataOverrides: node,
-    rootOverrides: { extent: 'parent', parentId: node.parent_id },
+    rootOverrides: { parentId: node.parent_id },
   })
 );

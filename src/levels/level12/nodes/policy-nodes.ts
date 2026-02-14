@@ -47,13 +47,13 @@ const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [];
 export const INITIAL_TUTORIAL_POLICY_NODES: IAMPolicyNode[] = TUTORIAL_POLICY_NODES.map(nodeData =>
   createPolicyNode({
     dataOverrides: nodeData,
-    rootOverrides: { extent: 'parent', parentId: nodeData.parent_id },
+    rootOverrides: { parentId: nodeData.parent_id },
   })
 );
 
 export const INITIAL_IN_LEVEL_POLICY_NODES: IAMPolicyNode[] = IN_LEVEL_POLICY_NODES.map(nodeData =>
   createPolicyNode({
     dataOverrides: nodeData,
-    rootOverrides: { extent: 'parent', parentId: nodeData.parent_id },
+    rootOverrides: { parentId: nodeData.parent_id },
   })
 );
