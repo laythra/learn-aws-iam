@@ -13,7 +13,7 @@ interface LevelsProgressionProviderProps {
 
 const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ children }) => {
   // Restart key is used to force reloading the level actor when level is restarted or changed
-  const [levelNumber, _restartKey] = useSelector(
+  const [levelNumber, restartKey] = useSelector(
     LevelDetailsStore,
     s => [s.context.levelNumber, s.context.restartKey],
     isEqual
@@ -23,6 +23,7 @@ const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ c
 
   useEffect(() => {
     let mounted = true;
+    setActorCtx(null); // Clear previous actor context while loading new one
     const snapshot = loadCheckpoint(levelNumber);
 
     getActorContextAsync(levelNumber, snapshot).then(ctx => {
@@ -34,7 +35,7 @@ const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ c
     return () => {
       mounted = false;
     };
-  }, [levelNumber, _restartKey]);
+  }, [levelNumber, restartKey]);
 
   if (!ActorCtx) {
     return null;

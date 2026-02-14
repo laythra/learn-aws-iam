@@ -98,9 +98,13 @@ export async function getActorContextAsync(
   level: number,
   snapshot?: Snapshot<unknown>
 ): Promise<LevelActorContext> {
-  const mod = await MACHINES[level]();
+  const loader = MACHINES[level]();
 
-  const actorCtx = createActorContext(mod.stateMachine, {
+  if (!loader) {
+    throw new Error(`No state machine found for level ${level}`);
+  }
+
+  const actorCtx = createActorContext((await loader).stateMachine, {
     snapshot: snapshot,
   });
 
