@@ -9,7 +9,7 @@ import { initializeLevelStore } from '@/app_shell/runtime/level-operations';
 import LevelsProgressionProvider from '@/app_shell/runtime/LevelsProgressionProvider';
 import { GithubCorner } from '@/components/GithubCorner';
 import Canvas from '@/features/canvas/components/Canvas';
-import { CodeEditorSystem } from '@/features/code_editor/CodeEditorSystem';
+import { CodeEditor } from '@/features/code_editor';
 import { IdentityCreationPopup } from '@/features/iam_entities/components/IdentityCreationPopup';
 import { ObjectiveCompleteToast } from '@/features/level_progress/components/ObjectiveCompleteToast';
 import ObjectivesSidePanel from '@/features/level_progress/components/ObjectivesSidePanel';
@@ -34,7 +34,7 @@ const App: React.FC = () => {
             <ObjectiveCompleteToast />
             <TutorialPopup />
             <GithubCorner url='https://github.com/laythra/learnawsiam' />
-            <CodeEditorSystem />
+            <CodeEditor />
             <UnnecessaryEdgesNodesWarning />
             <Flex direction='row' h='100vh' w='100vw'>
               <Canvas />
