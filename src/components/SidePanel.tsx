@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@chakra-ui/react';
+import { Flex, Box, useTheme } from '@chakra-ui/react';
 
 interface SidePanelProps {
   children: React.ReactNode;
@@ -12,22 +12,28 @@ const SidePanel: React.FC<SidePanelProps> = ({ children, isOpen, transitionDurat
   const width = isOpen ? openWidth : '0%';
 
   return (
-    <Box
+    <Flex
       h={`calc(100vh - ${theme.sizes.navbarHeightInPixels})`}
       mt={theme.sizes.navbarHeightInPixels}
+      direction='row'
+      flexGrow={0}
+      flexShrink={0}
       w={width}
-      transition={`
-        width ${transitionDuration}ms ease-in-out,
-        opacity ${transitionDuration}ms ease-in-out`}
+      transition={`width ${transitionDuration}ms ease-in-out`}
       overflow='hidden'
-      overflowY='auto'
-      px={4}
-      py={4}
-      opacity={isOpen ? 1 : 0}
-      pointerEvents={isOpen ? 'auto' : 'none'}
     >
-      {children}
-    </Box>
+      <Box
+        flex='1'
+        overflowY='auto'
+        px={4}
+        py={4}
+        opacity={isOpen ? 1 : 0}
+        transition={`opacity ${transitionDuration}ms ease-in-out`}
+        pointerEvents={isOpen ? 'auto' : 'none'}
+      >
+        {children}
+      </Box>
+    </Flex>
   );
 };
 
