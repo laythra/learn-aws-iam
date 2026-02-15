@@ -12,9 +12,7 @@ import { ElementID } from '@/config/element-ids';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
-interface NewEntityButtonProps {}
-
-export const NewEntityButton: React.FC<NewEntityButtonProps> = () => {
+export const NewEntityButton: React.FC = () => {
   const { openIdentityCreator } = useIdentityCreator();
   const levelActor = useLevelActor();
   const { isRedDotEnabledForElement: isRedDotEnabled } = useAnimatedRedDot({

@@ -26,9 +26,7 @@ import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { CustomTheme } from '@/types/custom-theme';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 
-interface CodeEditorProps {}
-
-export const CodeEditor: React.FC<CodeEditorProps> = () => {
+export const CodeEditor: React.FC = () => {
   const theme = useTheme<CustomTheme>();
   const [
     isPolicyTabRestricted,

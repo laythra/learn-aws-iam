@@ -23,11 +23,9 @@ import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
 import { restartLevelFromCheckpoint } from '@/app_shell/runtime/level-operations';
 import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 
-interface GoToCheckpointButtonProps {}
-
 const HELP_POPOVER_TIMEOUT = 1000 * 60; // 1 minute
 
-export const GoToCheckpointButton: React.FC<GoToCheckpointButtonProps> = () => {
+export const GoToCheckpointButton: React.FC = () => {
   const levelState = useLevelSelector(state => state.value, _.isEqual);
   const levelActor = useLevelActor();
 

@@ -6,9 +6,8 @@ import { LevelDetailsStore } from '@/app_shell/runtime/level-store';
 
 const MotionButton = motion(Button);
 const LAST_LEVEL_NUMBER = 12;
-interface GoToNextLevelButtonProps {}
 
-export const GoToNextLevelButton: React.FC<GoToNextLevelButtonProps> = () => {
+export const GoToNextLevelButton: React.FC = () => {
   const finishedLastLevel = (): boolean => {
     const finishedLevelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
     return finishedLevelNumber === LAST_LEVEL_NUMBER;

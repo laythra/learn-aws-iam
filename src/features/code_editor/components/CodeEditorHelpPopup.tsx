@@ -21,9 +21,7 @@ import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { CustomTheme } from '@/types/custom-theme';
 
-interface CodeEditorHelpPopup {}
-
-export const CodeEditorHelpPopup: React.FC<CodeEditorHelpPopup> = () => {
+export const CodeEditorHelpPopup: React.FC = () => {
   const helpPopupInfo = useSelector(codeEditorStateStore, state => state.context.helpPopupInfo);
   const theme = useTheme<CustomTheme>();
 

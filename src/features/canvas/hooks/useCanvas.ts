@@ -11,8 +11,6 @@ import { CanvasStore } from '../stores/canvas-store';
 import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
-interface UseCanvasOptions {}
-
 interface UseCanvasReturn {
   rfInstance: ReactFlowInstance<IAMAnyNode, IAMEdge> | undefined;
   setRfInstance: (instance: ReactFlowInstance<IAMAnyNode, IAMEdge>) => void;
@@ -31,10 +29,9 @@ interface UseCanvasReturn {
  * that previously shared this logic. Right now, only one canvas exists, but this hook
  * keeps the logic modular and reusable for future canvases.
  *
- * @param {UseCanvasOptions} options - Options for configuring the canvas hook.
  * @returns {UseCanvasReturn} Object containing canvas state and handlers.
  */
-export function useCanvas({}: UseCanvasOptions): UseCanvasReturn {
+export function useCanvas(): UseCanvasReturn {
   const [nodes, sidePanelOpened, edgesManagementDisabled, layoutGroups, blockedConnections] =
     useLevelSelector(
       state => [

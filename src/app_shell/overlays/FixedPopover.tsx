@@ -17,14 +17,12 @@ import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
-interface FixedPopover {}
-
 /***
  * A popover that is fixed to a position on the screen, used for tutorial messages that
  * are not attached to a specific element.
  * Controlled by current fixed popover state in the level state machine.
  */
-export const FixedPopover: React.FC<FixedPopover> = () => {
+export const FixedPopover: React.FC = () => {
   const machineActor = useLevelActor();
   const [showFixedPopovers, fixedPopoverContent] = useLevelSelector(
     state => [state.context.show_fixed_popovers, state.context.fixed_popover_content],
