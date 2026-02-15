@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { JSX, Children } from 'react';
 
 import {
   Code,
@@ -33,7 +33,7 @@ export const customMarkdownComponents: Components = {
     const weightRegex = /\|weight\((\d+)\)/;
     const colorRegex = /\|color\((\w+)\)/;
 
-    const processedChildren = React.Children.map(children, child => {
+    const processedChildren = Children.map(children, child => {
       if (typeof child !== 'string') return child;
 
       let str = child;
@@ -69,7 +69,7 @@ export const customMarkdownComponents: Components = {
   code: ({ children, ...props }: JSX.IntrinsicElements['code']) => {
     let isFullWidth = false;
 
-    const processedChildren = React.Children.map(children, child => {
+    const processedChildren = Children.map(children, child => {
       if (typeof child === 'string' && child.includes('|fullwidth')) {
         isFullWidth = true;
         return child.replace('|fullwidth', '');
