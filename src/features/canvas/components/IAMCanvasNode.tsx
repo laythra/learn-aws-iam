@@ -74,7 +74,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
   return (
     <motion.div
       // Used to disable node outline, shadow and border during deletion animation, check `src/index.css`
-      className={isDeleting ? 'node-deleting' : undefined}
+      {...(isDeleting && { className: 'node-deleting' })}
       initial={{ scale: 0.85, opacity: 0 }}
       animate={
         isDeleting
