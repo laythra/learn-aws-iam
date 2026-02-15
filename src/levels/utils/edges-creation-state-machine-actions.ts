@@ -541,8 +541,8 @@ export function applyGuardRailBlockingToEdges(
   const updatedEdges = produce(edges, draftEdges => {
     draftEdges.forEach(edge => {
       if (!edge.data) return;
-      const blockingGuardRail = guardRailsNodes.find(
-        guardRailsNode => blockedEdgesFns[guardRailsNode.data.is_edge_blocked_fn_name]?.(edge)
+      const blockingGuardRail = guardRailsNodes.find(guardRailsNode =>
+        blockedEdgesFns[guardRailsNode.data.is_edge_blocked_fn_name]?.(edge)
       );
       if (!blockingGuardRail) {
         edge.data.is_blocked = false;

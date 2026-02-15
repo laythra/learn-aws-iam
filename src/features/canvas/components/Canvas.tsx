@@ -40,7 +40,7 @@ const EDGE_TYPES = {
 const Canvas: React.FC = () => {
   const theme = useTheme<CustomTheme>();
   const { nodesState, edgesState, onConnect, onEdgeDelete, onNodeDelete, setRfInstance } =
-    useCanvas({});
+    useCanvas();
 
   const { setViewport } = useReactFlow();
 

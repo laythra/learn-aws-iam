@@ -19,9 +19,7 @@ import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 import { CustomTheme } from '@/types/custom-theme';
 
-interface TutorialPopupProps {}
-
-export const TutorialPopup: React.FC<TutorialPopupProps> = () => {
+export const TutorialPopup: React.FC = () => {
   const theme = useTheme<CustomTheme>();
   const levelActor = useLevelActor();
   const [showPopups, popupContent] = useLevelSelector(

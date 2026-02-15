@@ -9,9 +9,7 @@ import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 
-interface ObjectiveCompletePopoverProps {}
-
-export const ObjectiveCompleteToast: React.FC<ObjectiveCompletePopoverProps> = () => {
+export const ObjectiveCompleteToast: React.FC = () => {
   const machineActor = useLevelActor();
   const toast = useToast({
     position: 'bottom',

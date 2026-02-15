@@ -141,8 +141,9 @@ export interface IAMPermissionBoundaryCreationObjective<
   };
 }
 
-export interface IAMRoleCreationObjective<TFinishEventMap extends BaseFinishEventMap>
-  extends BaseCreationObjective<TFinishEventMap> {
+export interface IAMRoleCreationObjective<
+  TFinishEventMap extends BaseFinishEventMap,
+> extends BaseCreationObjective<TFinishEventMap> {
   readonly type: ObjectiveType.ROLE_CREATION_OBJECTIVE;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.ROLE_CREATION_OBJECTIVE];
   readonly entity: IAMNodeEntity.Role;

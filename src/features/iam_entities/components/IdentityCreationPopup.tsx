@@ -33,9 +33,7 @@ import {
   StatelessStateMachineEvent,
 } from '@/types/state-machine-event-enums';
 
-interface IdentityCreationPopupProps {}
-
-export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () => {
+export const IdentityCreationPopup: React.FC = () => {
   const levelActor = useLevelActor();
 
   const { closeIdentityCreator, isIdentityCreatorOpen, defaultSelectedIdentity } =
@@ -82,7 +80,6 @@ export const IdentityCreationPopup: React.FC<IdentityCreationPopupProps> = () =>
   };
 
   const handleTabChange = (index: number): void => {
-    iamIdentityEntity;
     const newEntity = index === 0 ? IAMNodeEntity.User : IAMNodeEntity.Group;
     levelActor.send({ type: StatelessStateMachineEvent.CreateIAMIdentityTabChanged });
 

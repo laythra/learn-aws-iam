@@ -22,9 +22,7 @@ import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
 import { pickLevel } from '@/app_shell/runtime/level-operations';
 import { LevelDetailsStore } from '@/app_shell/runtime/level-store';
 
-interface LevelPickerButtonProps {}
-
-export const LevelPickerButton: React.FC<LevelPickerButtonProps> = () => {
+export const LevelPickerButton: React.FC = () => {
   const { isOpen, onOpen, onClose } = useNavbarPopover('level-picker');
   const [maxLevelReached, currentLevel] = useSelector(
     LevelDetailsStore,

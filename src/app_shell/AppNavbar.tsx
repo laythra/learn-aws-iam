@@ -10,9 +10,7 @@ import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
 import { Navbar } from '@/components/Navbar';
 import { ElementID } from '@/config/element-ids';
 
-interface AppNavbarProps {}
-
-export const AppNavbar: React.FC<AppNavbarProps> = () => {
+export const AppNavbar: React.FC = () => {
   const [levelNumber, levelTitle] = useLevelSelector(
     state => [state.context.level_number, state.context.level_title],
     _.isEqual

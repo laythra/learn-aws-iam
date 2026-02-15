@@ -5,9 +5,7 @@ import { LevelPickerButton } from './LevelPickerButton';
 import { NewEntityButton } from './NewEntityButton';
 import { RestartLevelButton } from './RestartLevelButton';
 
-interface NavbarControlsProps {}
-
-export const NavbarControls: React.FC<NavbarControlsProps> = () => {
+export const NavbarControls: React.FC = () => {
   return (
     <HStack spacing={4}>
       <GoToCheckpointButton />

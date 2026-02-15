@@ -67,8 +67,9 @@ export interface IAMNodeData extends Record<string, unknown> {
   alert_message?: string;
 }
 
-export interface IAMGuardRailsNodeData<TIsEdgeBlockedFnName extends string = string>
-  extends IAMNodeData {
+export interface IAMGuardRailsNodeData<
+  TIsEdgeBlockedFnName extends string = string,
+> extends IAMNodeData {
   entity: IAMNodeEntity.SCP | IAMNodeEntity.PermissionBoundary;
   editable: boolean;
 
@@ -136,13 +137,15 @@ export interface IAMOUNodeData extends IAMNodeData {
   entity: IAMNodeEntity.OU;
 }
 
-export interface IAMPermissionBoundaryNodeData<TIsEdgeBlockedFnName extends string = string>
-  extends IAMGuardRailsNodeData<TIsEdgeBlockedFnName> {
+export interface IAMPermissionBoundaryNodeData<
+  TIsEdgeBlockedFnName extends string = string,
+> extends IAMGuardRailsNodeData<TIsEdgeBlockedFnName> {
   entity: IAMNodeEntity.PermissionBoundary;
 }
 
-export interface IAMSCPNodeData<TIsEdgeBlockedFnName extends string = string>
-  extends IAMGuardRailsNodeData<TIsEdgeBlockedFnName> {
+export interface IAMSCPNodeData<
+  TIsEdgeBlockedFnName extends string = string,
+> extends IAMGuardRailsNodeData<TIsEdgeBlockedFnName> {
   entity: IAMNodeEntity.SCP;
 }
 
