@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from '@xstate/store/react';
 import isEqual from 'lodash/isEqual';
 
-import { CurrentActorContext, getActorContextAsync, LevelActorContext } from './level-runtime';
+import { CurrentActorContext, getActorContext, LevelActorContext } from './level-runtime';
 import { loadCheckpoint } from '@/app_shell/runtime/level-persistence';
 import { LevelDetailsStore } from '@/app_shell/runtime/level-store';
 
@@ -22,19 +22,9 @@ const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ c
   const [ActorCtx, setActorCtx] = useState<LevelActorContext | null>(null);
 
   useEffect(() => {
-    let mounted = true;
     setActorCtx(null); // Clear previous actor context while loading new one
     const snapshot = loadCheckpoint(levelNumber);
-
-    getActorContextAsync(levelNumber, snapshot).then(ctx => {
-      if (mounted) {
-        setActorCtx(ctx);
-      }
-    });
-
-    return () => {
-      mounted = false;
-    };
+    setActorCtx(getActorContext(levelNumber, snapshot));
   }, [levelNumber, restartKey]);
 
   if (!ActorCtx) {
