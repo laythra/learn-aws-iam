@@ -1,6 +1,6 @@
 import { useEffect, memo, useState } from 'react';
 
-import { Flex, Text, Box, Image, Badge, Tooltip, HStack } from '@chakra-ui/react';
+import { Flex, Text, Box, Image, Badge, Tooltip, HStack, Skeleton } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import { Handle } from '@xyflow/react';
@@ -131,7 +131,13 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
             {alert_message && <IAMNodeHelpTooltip alertMessage={alert_message} />}
 
             <Flex width='100%' alignItems='center'>
-              <Image src={imageSrc} width='30%' mr='5%' />
+              <Image
+                src={imageSrc}
+                width='30%'
+                mr='5%'
+                fallback={<Skeleton w='full' h='full' fadeDuration={3} />}
+                loading='lazy'
+              />
               <Box width='65%' textAlign='left'>
                 <HStack spacing={0}>
                   <Tooltip label={label}>
