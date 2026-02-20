@@ -1,11 +1,8 @@
 import { useState } from 'react';
 
 import {
-  IconButton,
   Tooltip,
   Box,
-  Popover,
-  PopoverTrigger,
   PopoverContent,
   PopoverHeader,
   PopoverBody,
@@ -21,6 +18,7 @@ import _ from 'lodash';
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
 import { pickLevel } from '@/app_shell/runtime/level-operations';
 import { LevelDetailsStore } from '@/app_shell/runtime/level-store';
+import { NavbarPopoverButton } from '@/components/NavbarPopoverButton';
 
 export const LevelPickerButton: React.FC = () => {
   const { isOpen, onOpen, onClose } = useNavbarPopover('level-picker');
@@ -44,23 +42,14 @@ export const LevelPickerButton: React.FC = () => {
   };
 
   return (
-    <Popover isOpen={isOpen} onClose={closePopover} placement='bottom-start'>
-      <PopoverTrigger>
-        <Box>
-          <Tooltip label='Pick Level' isDisabled={isOpen}>
-            <IconButton
-              onClick={onOpen}
-              icon={<ForwardIcon />}
-              aria-label='level-picker-button'
-              color='gray.600'
-              _hover={{ color: 'black' }}
-              _active={{ color: 'black' }}
-              bg='transparent'
-              size='xs'
-            />
-          </Tooltip>
-        </Box>
-      </PopoverTrigger>
+    <NavbarPopoverButton
+      isOpen={isOpen}
+      onClose={closePopover}
+      onClick={onOpen}
+      tooltipLabel='Pick Level'
+      icon={<ForwardIcon />}
+      ariaLabel='level-picker-button'
+    >
       <PopoverContent shadow='xl'>
         <PopoverHeader fontWeight='semibold' borderBottom='none' pb={2}>
           Select Level
@@ -117,6 +106,6 @@ export const LevelPickerButton: React.FC = () => {
           </Box>
         </PopoverFooter>
       </PopoverContent>
-    </Popover>
+    </NavbarPopoverButton>
   );
 };
