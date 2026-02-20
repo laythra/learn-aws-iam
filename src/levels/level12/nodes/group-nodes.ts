@@ -1,3 +1,4 @@
+import { LayoutGroupID } from '../layout-groups';
 import { AccountID, GroupNodeID } from '../types/node-id-enums';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
@@ -25,21 +26,21 @@ const IN_LEVEL_GROUP_NODES: IAMNodeDataOverrides<IAMGroupNode['data']>[] = [
   {
     id: GroupNodeID.InLevelNotificationsTeamGroup,
     label: 'Notifications Team',
-    layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
+    layout_group_id: LayoutGroupID.InLevelGroupNodesLayoutGroup,
     parent_id: AccountID.InLevelProdAccount,
     account_id: AccountID.InLevelProdAccount,
   },
   {
     id: GroupNodeID.InLevelSearchTeamGroup,
     label: 'Search Team',
-    layout_group_id: CommonLayoutGroupID.CenterHorizontal,
+    layout_group_id: LayoutGroupID.InLevelGroupNodesLayoutGroup,
     parent_id: AccountID.InLevelProdAccount,
     account_id: AccountID.InLevelProdAccount,
   },
   {
     id: GroupNodeID.InLevelPaymentsTeamGroup,
     label: 'Payments Team',
-    layout_group_id: CommonLayoutGroupID.RightCenterHorizontal,
+    layout_group_id: LayoutGroupID.InLevelGroupNodesLayoutGroup,
     parent_id: AccountID.InLevelProdAccount,
     account_id: AccountID.InLevelProdAccount,
   },

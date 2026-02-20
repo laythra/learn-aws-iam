@@ -548,6 +548,12 @@ export const createStateMachineSetup = <
         ) => whitelisted_element_ids,
         in_tutorial_state: true,
       }),
+      append_whitelisted_element_ids: assign({
+        whitelisted_element_ids: (
+          { context },
+          { whitelisted_element_ids }: { whitelisted_element_ids: string[] }
+        ) => [...(context.whitelisted_element_ids || []), ...whitelisted_element_ids],
+      }),
       update_red_dot_visibility: assign({
         elements_with_animated_red_dot: (
           { context },

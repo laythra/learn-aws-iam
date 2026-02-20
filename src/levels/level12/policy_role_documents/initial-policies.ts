@@ -32,7 +32,7 @@ export const INITIAL_POLICIES = {
       {
         Effect: 'Allow',
         Principal: {
-          Service: 'ec2.amazonaws.com',
+          AWS: '*',
         },
         Action: 'sts:AssumeRole',
         Condition: {

@@ -1,4 +1,3 @@
-import { LayoutGroupID } from '../layout-groups';
 import { AccountID, ResourceNodeID } from '../types/node-id-enums';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types/iam-enums';
@@ -48,7 +47,7 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
   {
     id: ResourceNodeID.InLevelProductionElastiCacheCluster1,
     label: 'notifications-ec-cluster',
-    layout_group_id: LayoutGroupID.InLevelElasticCacheLayoutGroup,
+    layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
     image: IAMNodeImage.Billing,
     resource_type: IAMNodeResourceEntity.ElastiCache,
     parent_id: AccountID.InLevelProdAccount,
@@ -58,7 +57,7 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
   {
     id: ResourceNodeID.InLevelProductionElastiCacheCluster2,
     label: 'search-ec-cluster',
-    layout_group_id: LayoutGroupID.InLevelElasticCacheLayoutGroup,
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.Billing,
     resource_type: IAMNodeResourceEntity.ElastiCache,
     parent_id: AccountID.InLevelProdAccount,
@@ -68,7 +67,8 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
   {
     id: ResourceNodeID.InLevelProductionElastiCacheCluster3,
     label: 'payments-ec-cluster',
-    layout_group_id: LayoutGroupID.InLevelElasticCacheLayoutGroup,
+    // layout_group_id: LayoutGroupID.InLevelElasticCacheLayoutGroup,
+    layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
     image: IAMNodeImage.Billing,
     resource_type: IAMNodeResourceEntity.ElastiCache,
     parent_id: AccountID.InLevelProdAccount,

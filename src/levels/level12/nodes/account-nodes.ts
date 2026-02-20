@@ -34,7 +34,11 @@ export const INITIAL_TUTORIAL_ACCOUNT_NODES: IAMAccountNode[] = TUTORIAL_ACCOUNT
   nodeData =>
     createAccountNode({
       dataOverrides: nodeData,
-      rootOverrides: { draggable: false, height: 400 },
+      rootOverrides: {
+        draggable: false,
+        height: window.innerHeight * 0.5,
+        width: window.innerWidth * 0.5,
+      },
     })
 );
 
@@ -43,9 +47,9 @@ export const INITIAL_IN_LEVEL_ACCOUNT_NODES: IAMAccountNode[] = IN_LEVEL_ACCOUNT
     createAccountNode({
       dataOverrides: nodeData,
       rootOverrides: {
-        draggable: true,
-        height: window.innerHeight * 0.7,
-        width: window.innerWidth * 0.5,
+        draggable: false,
+        height: window.innerHeight * 0.8,
+        width: window.innerWidth * 0.6,
       },
     })
 );
