@@ -15,6 +15,7 @@ import {
   Tooltip,
   Box,
   PopoverCloseButton,
+  Portal,
 } from '@chakra-ui/react';
 import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 import { useSelector } from '@xstate/store/react';
@@ -113,64 +114,66 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
           />
         </PopoverTrigger>
       )}
-      <PopoverContent
-        w='500px'
-        overflow='auto'
-        maxH='400px'
-        ref={popoverContentRef}
-        data-element-id={`${nodeId}-content`}
-      >
-        <PopoverArrow />
-        <PopoverHeader textAlign='left' display='flex' alignItems='center'>
-          <Text fontSize='16px' fontWeight='700'>
-            {label}
-          </Text>
-        </PopoverHeader>
-        <PopoverCloseButton
-          onClick={() => {
-            emitEvent(StatelessStateMachineEvent.IAMNodeContentClosed);
-            CanvasStore.send({ type: 'closeAllNodePanels' });
-          }}
-          aria-label='close'
-        />
-        <PopoverBody textAlign='left'>
-          <Code width='100%' whiteSpace='pre-wrap' position='relative'>
-            {editable && (
-              <Box position='absolute' top={2} right={2}>
-                <Tooltip label='Edit' aria-label='Edit' placement='top'>
-                  <IconButton
-                    data-element-id={ElementID.IAMNodeContentEditButton}
-                    onClick={() => {
-                      codeEditorStateStore.send({
-                        type: 'open',
-                        mode: 'edit',
-                        selectedNodeId: nodeId,
-                        selectedIAMEntity,
-                      });
+      <Portal>
+        <PopoverContent
+          w='500px'
+          overflow='auto'
+          maxH='400px'
+          ref={popoverContentRef}
+          data-element-id={`${nodeId}-content`}
+        >
+          <PopoverArrow />
+          <PopoverHeader textAlign='left' display='flex' alignItems='center'>
+            <Text fontSize='16px' fontWeight='700'>
+              {label}
+            </Text>
+          </PopoverHeader>
+          <PopoverCloseButton
+            onClick={() => {
+              emitEvent(StatelessStateMachineEvent.IAMNodeContentClosed);
+              CanvasStore.send({ type: 'closeAllNodePanels' });
+            }}
+            aria-label='close'
+          />
+          <PopoverBody textAlign='left'>
+            <Code width='100%' whiteSpace='pre-wrap' position='relative'>
+              {editable && (
+                <Box position='absolute' top={2} right={2}>
+                  <Tooltip label='Edit' aria-label='Edit' placement='top'>
+                    <IconButton
+                      data-element-id={ElementID.IAMNodeContentEditButton}
+                      onClick={() => {
+                        codeEditorStateStore.send({
+                          type: 'open',
+                          mode: 'edit',
+                          selectedNodeId: nodeId,
+                          selectedIAMEntity,
+                        });
 
-                      toggleNodeContentPopover();
-                    }}
-                    ml={1}
-                    aria-label='edit'
-                    icon={<PencilSquareIcon />}
-                    variant='ghost'
-                    minWidth='auto'
-                    height='20px'
-                    width='20px'
-                    opacity={0.5}
-                    _hover={{ bg: 'gray.200', opacity: 1 }}
-                  />
-                </Tooltip>
-                {isRedDotEnabledForElement(ElementID.IAMNodeContentEditButton) && (
-                  <AnimatedRedDot />
-                )}
-              </Box>
-            )}
-            {codeDescription}
-          </Code>
-          {verboseDescription && <Text>{verboseDescription}</Text>}
-        </PopoverBody>
-      </PopoverContent>
+                        toggleNodeContentPopover();
+                      }}
+                      ml={1}
+                      aria-label='edit'
+                      icon={<PencilSquareIcon />}
+                      variant='ghost'
+                      minWidth='auto'
+                      height='20px'
+                      width='20px'
+                      opacity={0.5}
+                      _hover={{ bg: 'gray.200', opacity: 1 }}
+                    />
+                  </Tooltip>
+                  {isRedDotEnabledForElement(ElementID.IAMNodeContentEditButton) && (
+                    <AnimatedRedDot />
+                  )}
+                </Box>
+              )}
+              {codeDescription}
+            </Code>
+            {verboseDescription && <Text>{verboseDescription}</Text>}
+          </PopoverBody>
+        </PopoverContent>
+      </Portal>
     </Popover>
   );
 };
