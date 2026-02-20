@@ -1,9 +1,4 @@
 import {
-  IconButton,
-  Tooltip,
-  Box,
-  Popover,
-  PopoverTrigger,
   PopoverContent,
   PopoverHeader,
   PopoverBody,
@@ -16,6 +11,7 @@ import { ArrowPathIcon } from '@heroicons/react/16/solid';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
 import { restartLevelFromStart } from '@/app_shell/runtime/level-operations';
+import { NavbarPopoverButton } from '@/components/NavbarPopoverButton';
 
 export const RestartLevelButton: React.FC = () => {
   const { isOpen, onOpen, onClose } = useNavbarPopover('restart-level');
@@ -26,23 +22,14 @@ export const RestartLevelButton: React.FC = () => {
   };
 
   return (
-    <Popover isOpen={isOpen} onClose={onClose} placement='bottom-start'>
-      <PopoverTrigger>
-        <Box>
-          <Tooltip label='Restart Level' isDisabled={isOpen}>
-            <IconButton
-              onClick={onOpen}
-              icon={<ArrowPathIcon />}
-              aria-label='restart-level-button'
-              color='gray.600'
-              _hover={{ color: 'black' }}
-              _active={{ color: 'black' }}
-              bg='transparent'
-              size='xs'
-            />
-          </Tooltip>
-        </Box>
-      </PopoverTrigger>
+    <NavbarPopoverButton
+      isOpen={isOpen}
+      onClose={onClose}
+      onClick={onOpen}
+      tooltipLabel='Restart Level'
+      icon={<ArrowPathIcon />}
+      ariaLabel='restart-level-button'
+    >
       <PopoverContent shadow='xl'>
         <PopoverHeader fontWeight='semibold' borderBottom='none' pb={2}>
           Restart Level?
@@ -66,6 +53,6 @@ export const RestartLevelButton: React.FC = () => {
           </ButtonGroup>
         </PopoverFooter>
       </PopoverContent>
-    </Popover>
+    </NavbarPopoverButton>
   );
 };
