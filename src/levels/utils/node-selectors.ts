@@ -28,7 +28,7 @@ export function selectAffectingSCPNodes(edges: IAMEdge[], target: IAMAnyNode): I
 
   return ConnectionFilter.create()
     .fromEdges(edges)
-    .whereSourceEntityIn([IAMNodeEntity.SCP])
+    .whereSourceEntityIs(IAMNodeEntity.SCP)
     .whereTargetIn(targets)
     .build()
     .map(edge => edge.data?.source_node as IAMGuardRailsNode);

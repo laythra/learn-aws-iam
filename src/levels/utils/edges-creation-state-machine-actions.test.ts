@@ -431,7 +431,7 @@ describe('applyGuardRailBlockingToEdges', () => {
 
     const ctx = createEdgeTestContext([{ from: policy.id, to: user.id }], [policy, user, resource]);
 
-    const { edgesAfterBlocking } = applyGuardRailBlockingToEdges(ctx.edges, ctx.edges, 1);
+    const { edgesAfterBlocking } = applyGuardRailBlockingToEdges(ctx.edges, ctx.nodes, 1);
 
     expectEdges(edgesAfterBlocking, [
       { source: policy.id, target: user.id, data: { is_blocked: false } },
@@ -472,7 +472,7 @@ describe('applyGuardRailBlockingToEdges', () => {
       [policy, user, resource, permissionBoundary]
     );
 
-    const { edgesAfterBlocking } = applyGuardRailBlockingToEdges(ctx.edges, ctx.edges, 1);
+    const { edgesAfterBlocking } = applyGuardRailBlockingToEdges(ctx.edges, ctx.nodes, 1);
 
     expectEdges(edgesAfterBlocking, [
       { source: permissionBoundary.id, target: user.id, data: { is_blocked: false } },
@@ -526,7 +526,7 @@ describe('applyGuardRailBlockingToEdges', () => {
       [accountNode, ouNode, userNode, resourceNode, policyNode, scpNode]
     );
 
-    const { edgesAfterBlocking } = applyGuardRailBlockingToEdges(ctx.edges, ctx.edges, 1);
+    const { edgesAfterBlocking } = applyGuardRailBlockingToEdges(ctx.edges, ctx.nodes, 1);
 
     expectEdges(edgesAfterBlocking, [
       { source: policyNode.id, target: userNode.id, data: { is_blocked: false } },
@@ -580,61 +580,13 @@ describe('applyGuardRailBlockingToEdges', () => {
       [accountNode, userNode, resourceNode, policyNode, scpNode, ouNode]
     );
 
-    const { edgesAfterBlocking } = applyGuardRailBlockingToEdges(ctx.edges, ctx.edges, 1);
+    const { edgesAfterBlocking } = applyGuardRailBlockingToEdges(ctx.edges, ctx.nodes, 1);
 
     expectEdges(edgesAfterBlocking, [
       { source: policyNode.id, target: userNode.id, data: { is_blocked: false } },
       { source: scpNode.id, target: accountNode.id, data: { is_blocked: false } },
       { source: userNode.id, target: resourceNode.id, data: { is_blocked: true } },
       { source: scpNode.id, target: ouNode.id, data: { is_blocked: false } },
-    ]);
-  });
-
-  it('returns only newly added edges that were updated in newlyAddedEdgesAfterBlocking', () => {
-    const user = createUserNode({});
-    const resource = createResourceNode({});
-    vi.mocked(GetLevelGuardRailsBlockedEdgesFns).mockImplementation(() => ({
-      MOCK_BLOCKING_FN: (edge: IAMEdge) => edge.source === user.id && edge.target === resource.id,
-    }));
-
-    const permissionBoundary = createPermissionBoundaryNode({
-      dataOverrides: {
-        is_edge_blocked_fn_name: 'MOCK_BLOCKING_FN',
-      },
-    });
-
-    const policy = createPolicyNode({
-      dataOverrides: {
-        granted_accesses: [
-          {
-            access_level: AccessLevel.Read,
-            target_node: resource.id,
-            target_handle: 'mock-target-handle',
-          },
-        ],
-      },
-    });
-
-    const ctx = createEdgeTestContext(
-      [
-        { from: permissionBoundary.id, to: user.id },
-        { from: policy.id, to: user.id },
-      ],
-      [policy, user, resource, permissionBoundary]
-    );
-
-    // Only the user → resource edge is "newly added"
-    const newlyAddedEdges = ctx.edges.filter(e => e.source === user.id && e.target === resource.id);
-
-    const { newlyAddedEdgesAfterBlocking } = applyGuardRailBlockingToEdges(
-      ctx.edges,
-      newlyAddedEdges,
-      1
-    );
-
-    expect(newlyAddedEdgesAfterBlocking).toHaveLength(1);
-    expectEdges(newlyAddedEdgesAfterBlocking, [
-      { source: user.id, target: resource.id, data: { is_blocked: true } },
     ]);
   });
 });

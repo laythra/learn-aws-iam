@@ -18,8 +18,8 @@ import { createEdge } from '@/factories/edge-factory';
 import { getEdgeName, getEdgeLabel } from '@/lib/iam/names';
 import { isNodeOfEntity } from '@/lib/iam/node-type-guards';
 import { theme } from '@/theme';
-import { IAMNodeEntity } from '@/types/iam-enums';
-import { PartialEdge } from '@/types/iam-node-types';
+import { HandleID, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMGuardRailsNode, PartialEdge } from '@/types/iam-node-types';
 import {
   IAMAccountNode,
   IAMAnyNode,
@@ -34,6 +34,16 @@ import {
   IAMUserNode,
 } from '@/types/iam-node-types';
 import { PolicyGrantedAccess } from '@/types/iam-policy-types';
+
+function getAffectingGuardRailsNodes(edges: IAMEdge[], target: IAMAnyNode): IAMGuardRailsNode[] {
+  const affectingPBNodes = selectAffectingPermissionBoundaryNodes(edges, target);
+  const affectingSCPNodes = selectAffectingSCPNodes(edges, target);
+  return affectingPBNodes.concat(affectingSCPNodes);
+}
+
+function isPrincipalEntity(e: IAMNodeEntity): boolean {
+  return e == IAMNodeEntity.User || e == IAMNodeEntity.Role;
+}
 
 function isEdgeConnectionObjectiveFinished<TFinishEventMap extends BaseFinishEventMap>(
   objective: EdgeConnectionObjective<TFinishEventMap>,
@@ -67,6 +77,7 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
       target: targetNode.id,
       animated: true,
       deletable: true,
+      targetHandle: HandleID.Top,
       ...options,
     },
     dataOverrides: {
@@ -91,7 +102,7 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
         rootOverrides: {
           source: sourceNode.id,
           target: targetNode.id,
-          targetHandle: objective.established_edge_target_handle,
+          targetHandle: objective.established_edge_target_handle ?? HandleID.Top,
           sourceHandle: objective.established_edge_source_handle,
           deletable: false,
         },
@@ -517,26 +528,26 @@ export function updateConnectionEdges<
   return connectionStrategies.anyToAny(context, sourceNode, targetNode, isInitialEdge, options);
 }
 
+/**
+ * Applies guard rail blocking to edges that should be blocked based on the currently established guard rails.
+ * @param edges The edges to apply blocking to.
+ * @param nodes The nodes used to determine affected guard rails.
+ * @param level_number The current level number, used to get the appropriate guard rail blocking functions.
+ * @returns An object containing the edges after applying guard rail blocking.
+ */
 export function applyGuardRailBlockingToEdges(
   edges: IAMEdge[],
-  newlyAddedEdges: IAMEdge[],
+  nodes: IAMAnyNode[],
   level_number: number
-): { edgesAfterBlocking: IAMEdge[]; newlyAddedEdgesAfterBlocking: IAMEdge[] } {
+): { edgesAfterBlocking: IAMEdge[] } {
   const blockedEdgesFns = GetLevelGuardRailsBlockedEdgesFns(level_number);
-  const isPrincipalEntity = (e: IAMNodeEntity): boolean =>
-    e == IAMNodeEntity.User || e == IAMNodeEntity.Role;
-  const principals = edges
-    .map(e => e.data?.target_node)
-    .filter(node => node && isPrincipalEntity(node.data.entity)) as IAMAnyNode[];
+  const principals = nodes.filter(node => isPrincipalEntity(node.data.entity)) as IAMAnyNode[];
 
-  const guardRailsNodes = principals.flatMap(principal => {
-    const affectingPBNodes = selectAffectingPermissionBoundaryNodes(edges, principal);
-    const affectingSCPNodes = selectAffectingSCPNodes(edges, principal);
-    return affectingPBNodes.concat(affectingSCPNodes);
-  });
+  const guardRailsNodes = principals.flatMap(principal =>
+    getAffectingGuardRailsNodes(edges, principal)
+  );
 
-  if (guardRailsNodes.length === 0)
-    return { edgesAfterBlocking: edges, newlyAddedEdgesAfterBlocking: newlyAddedEdges };
+  if (guardRailsNodes.length === 0) return { edgesAfterBlocking: edges };
 
   const updatedEdges = produce(edges, draftEdges => {
     draftEdges.forEach(edge => {
@@ -555,9 +566,9 @@ export function applyGuardRailBlockingToEdges(
       }
     });
   });
+
   return {
     edgesAfterBlocking: updatedEdges,
-    newlyAddedEdgesAfterBlocking: _.intersectionBy(updatedEdges, newlyAddedEdges, 'id'),
   };
 }
 
