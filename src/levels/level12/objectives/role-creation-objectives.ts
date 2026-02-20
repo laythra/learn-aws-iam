@@ -15,6 +15,8 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: RoleCreationFinishEvent.EC2_ROLE_CREATED,
       layout_group_id: CommonLayoutGroupID.BottomCenterVertical,
+      alert_message:
+        "This role requirs S3 write access. Don't forget to attach the policy to the role! ",
       extra_data: {
         required_policies: [],
         required_principles: [],

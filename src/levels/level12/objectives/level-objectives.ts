@@ -23,8 +23,8 @@ const Objective4Description = `
 `;
 
 const Objective5Description = `
-  Users in the **Production Account** should be able to manage their own ElastiCache clusters.
-  The tags will help in determining which
+  Users in the **Production Account** should manage ElastiCache clusters
+  tagged with their team name.
 `;
 
 const Objective2Hint = `
@@ -37,7 +37,14 @@ const Objective3Hint = `
 
 const Objective4Hint = `
   This scenario involves enabling communication between AWS resources.
-  Consider using IAM roles to facilitate secure access between the EC2 instances and the S3 bucket.
+
+  Achieving this objective is a two-step process:
+  1. Create an IAM Role that can be assumed by EC2 instances
+  2. Create a policy that allows the necessary S3 actions with the appropriate
+     condition, and attach it to the role.
+
+  For the required S3 permissions, you need a simple \`PutObject\` action. Remember to include
+  the condition for the **storage class**.
 `;
 
 const Objective5Hint = `

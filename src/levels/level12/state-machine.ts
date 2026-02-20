@@ -19,6 +19,7 @@ import {
   RoleCreationFinishEvent,
   SCPCreationFinishEvent,
 } from './types/finish-event-enums';
+import { PermissionBoundaryID, PolicyNodeID, RoleNodeID, SCPNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ROLE_CREATION_OBJECTIVES } from '../level12/objectives/role-creation-objectives';
 import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
@@ -47,15 +48,6 @@ export const stateMachine = createStateMachineSetup<
     edges_connection_objectives: [],
     side_panel_open: false,
     layout_groups: [...COMMON_LAYOUT_GROUPS, ...LAYOUT_GROUPS],
-    restricted_element_ids: [
-      ElementID.CodeEditorRoleTab,
-      ElementID.CodeEditorResourcePolicyTab,
-      ElementID.CreateUserGroupMenuItem,
-      ElementID.CodeEditorPolicyTab,
-      ElementID.CodeEditorRoleTab,
-      ElementID.CodeEditorResourcePolicyTab,
-      ElementID.CodeEditorPermissionBoundaryTab,
-    ],
   },
   on: {
     ...SHARED_TOP_LEVEL_EVENTS,
@@ -64,6 +56,10 @@ export const stateMachine = createStateMachineSetup<
     inside_tutorial: {
       entry: [
         { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
+        {
+          type: 'update_whitelisted_element_ids',
+          params: { whitelisted_element_ids: [ElementID.IAMNodeContentButton] },
+        },
         {
           type: 'assign_nodes',
           params: { nodes: INITIAL_TUTORIAL_NODES },
@@ -132,6 +128,16 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'hide_fixed_popovers',
             {
+              type: 'append_whitelisted_element_ids',
+              params: {
+                whitelisted_element_ids: [
+                  ElementID.NewEntityBtn,
+                  ElementID.CreateRolesAndPoliciesMenuItem,
+                  ElementID.CodeEditorSCPTab,
+                ],
+              },
+            },
+            {
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
             },
@@ -179,10 +185,11 @@ export const stateMachine = createStateMachineSetup<
     inside_level: {
       entry: [
         'store_checkpoint',
+        'disable_tutorial_state',
         {
           type: 'set_restricted_element_ids',
           params: {
-            element_ids: [ElementID.CodeEditorResourcePolicyTab],
+            element_ids: [ElementID.CreateUserGroupMenuItem],
           },
         },
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
@@ -240,6 +247,10 @@ export const stateMachine = createStateMachineSetup<
                   {
                     type: 'finish_level_objective',
                     params: { id: LevelObjectiveID.RESTRICT_EC2_REGION },
+                  },
+                  {
+                    type: 'hide_node_help_tooltip',
+                    params: { nodeId: SCPNodeID.RestrictEC2RegionSCP },
                   },
                 ],
               },
@@ -320,6 +331,10 @@ export const stateMachine = createStateMachineSetup<
                           },
                         },
                         finished: {
+                          entry: {
+                            type: 'hide_node_help_tooltip',
+                            params: { nodeId: PermissionBoundaryID.Ec2LaunchPermissionBoundary },
+                          },
                           type: 'final',
                         },
                       },
@@ -372,6 +387,10 @@ export const stateMachine = createStateMachineSetup<
                       },
                     },
                     finished: {
+                      entry: {
+                        type: 'hide_node_help_tooltip',
+                        params: { nodeId: RoleNodeID.S3WriteAccessRole },
+                      },
                       type: 'final',
                     },
                   },
@@ -391,6 +410,10 @@ export const stateMachine = createStateMachineSetup<
                       },
                     },
                     finished: {
+                      entry: {
+                        type: 'hide_node_help_tooltip',
+                        params: { nodeId: PolicyNodeID.S3WriteAccessPolicy },
+                      },
                       type: 'final',
                     },
                   },
@@ -405,6 +428,10 @@ export const stateMachine = createStateMachineSetup<
                   {
                     type: 'finish_level_objective',
                     params: { id: LevelObjectiveID.ELASTICACHE_ACCESS_MANAGEMENT },
+                  },
+                  {
+                    type: 'hide_node_help_tooltip',
+                    params: { nodeId: PolicyNodeID.ElasticCacheManagementPolicy },
                   },
                 ],
               },

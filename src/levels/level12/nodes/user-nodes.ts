@@ -1,5 +1,5 @@
 import { LayoutGroupID } from '../layout-groups';
-import { AccountID, UserNodeID } from '../types/node-id-enums';
+import { AccountID, OUNodeID, UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
@@ -12,6 +12,7 @@ const TUTORIAL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
     layout_group_id: CommonLayoutGroupID.CenterVertical,
     parent_id: AccountID.TutorialProdAccount,
     account_id: AccountID.TutorialProdAccount,
+    ou_id: OUNodeID.TutorialOU,
   },
   {
     id: UserNodeID.Mikasa,
@@ -19,6 +20,7 @@ const TUTORIAL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
     layout_group_id: CommonLayoutGroupID.CenterVertical,
     parent_id: AccountID.TutorialProdAccount,
     account_id: AccountID.TutorialProdAccount,
+    ou_id: OUNodeID.TutorialOU,
   },
   {
     id: UserNodeID.Armin,
@@ -26,6 +28,7 @@ const TUTORIAL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
     layout_group_id: CommonLayoutGroupID.CenterVertical,
     parent_id: AccountID.TutorialProdAccount,
     account_id: AccountID.TutorialProdAccount,
+    ou_id: OUNodeID.TutorialOU,
   },
   {
     id: UserNodeID.Reiner,
@@ -33,6 +36,7 @@ const TUTORIAL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
     layout_group_id: CommonLayoutGroupID.CenterVertical,
     parent_id: AccountID.TutorialStagingAccount,
     account_id: AccountID.TutorialStagingAccount,
+    ou_id: OUNodeID.TutorialOU,
   },
   {
     id: UserNodeID.Bertolt,
@@ -40,6 +44,7 @@ const TUTORIAL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
     layout_group_id: CommonLayoutGroupID.CenterVertical,
     parent_id: AccountID.TutorialStagingAccount,
     account_id: AccountID.TutorialStagingAccount,
+    ou_id: OUNodeID.TutorialOU,
   },
   {
     id: UserNodeID.Annie,
@@ -47,6 +52,7 @@ const TUTORIAL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
     layout_group_id: CommonLayoutGroupID.CenterVertical,
     parent_id: AccountID.TutorialStagingAccount,
     account_id: AccountID.TutorialStagingAccount,
+    ou_id: OUNodeID.TutorialOU,
   },
 ];
 
