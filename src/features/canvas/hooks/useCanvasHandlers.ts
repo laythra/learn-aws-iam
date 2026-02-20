@@ -66,7 +66,6 @@ export function useCanvasHandlers({
       const targetNode = _.find<IAMAnyNode>(nodes, { id: params.target });
 
       if (!sourceNode || !targetNode) {
-        alert('Error finding source or target node for new connection. Please try again.');
         return;
       }
 

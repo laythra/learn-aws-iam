@@ -141,12 +141,11 @@ export const createStateMachineSetup = <
             TFinishEventMap
           >(context, sourceNode, targetNode, isInternalConnection ?? false);
 
-          const { edgesAfterBlocking, newlyAddedEdgesAfterBlocking } =
-            applyGuardRailBlockingToEdges(
-              updatedContext.edges,
-              newlyAddedEdges,
-              context.level_number
-            );
+          const { edgesAfterBlocking } = applyGuardRailBlockingToEdges(
+            updatedContext.edges,
+            updatedContext.nodes,
+            context.level_number
+          );
 
           enqueue.assign({
             edges: edgesAfterBlocking,
@@ -154,7 +153,12 @@ export const createStateMachineSetup = <
 
           enqueue.emit(() => ({
             type: 'EDGES_ADDED',
-            edges: newlyAddedEdgesAfterBlocking,
+            edges: _.intersectionBy(edgesAfterBlocking, newlyAddedEdges, 'id'),
+          }));
+
+          enqueue.emit(() => ({
+            type: 'EDGES_UPDATED',
+            edges: _.differenceBy(edgesAfterBlocking, newlyAddedEdges, 'id'),
           }));
 
           events.forEach(event => enqueue.raise({ type: event }));
