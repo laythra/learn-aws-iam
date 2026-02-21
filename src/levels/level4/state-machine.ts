@@ -10,7 +10,7 @@ import { POLICY_EDIT_OBJECTIVES } from './objectives/policy-role-edit-objectives
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
-import { FinishEventMap, NodeEditFinishEvent } from './types/finish-event-enums';
+import { FinishEventMap, PolicyEditFinishEvent } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 
@@ -144,7 +144,7 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 editing_in_progress: {
                   on: {
-                    [NodeEditFinishEvent.DEVELOPER_POLICY_EDITED]: {
+                    [PolicyEditFinishEvent.DEVELOPER_POLICY_EDITED]: {
                       target: 'completed',
                       actions: [
                         {
@@ -166,7 +166,7 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 editing_in_progress: {
                   on: {
-                    [NodeEditFinishEvent.DATA_SCIENTIST_POLICY_EDITED]: {
+                    [PolicyEditFinishEvent.DATA_SCIENTIST_POLICY_EDITED]: {
                       target: 'completed',
                       actions: [
                         {
@@ -188,7 +188,7 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 editing_in_progress: {
                   on: {
-                    [NodeEditFinishEvent.INTERN_POLICY_EDITED]: {
+                    [PolicyEditFinishEvent.INTERN_POLICY_EDITED]: {
                       target: 'completed',
                       actions: [
                         {

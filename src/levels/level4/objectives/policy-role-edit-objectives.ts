@@ -1,5 +1,5 @@
 import { ValidateFunctionsFnName } from '../level-runtime-fns';
-import { FinishEventMap, NodeEditFinishEvent } from '../types/finish-event-enums';
+import { FinishEventMap, PolicyEditFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { AccessLevel, IAMNodeEntity } from '@/types/iam-enums';
@@ -76,7 +76,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       entity: IAMNodeEntity.Policy,
       callout_message: OBJECTIVE_CALLOUT_MSG,
-      on_finish_event: NodeEditFinishEvent.DEVELOPER_POLICY_EDITED,
+      on_finish_event: PolicyEditFinishEvent.DEVELOPER_POLICY_EDITED,
       resources_to_grant: [
         {
           access_level: AccessLevel.Read,
@@ -116,7 +116,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       validate_fn_name: PolicyNodeID.DataScientistPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       entity: IAMNodeEntity.Policy,
-      on_finish_event: NodeEditFinishEvent.DATA_SCIENTIST_POLICY_EDITED,
+      on_finish_event: PolicyEditFinishEvent.DATA_SCIENTIST_POLICY_EDITED,
       callout_message: OBJECTIVE_CALLOUT_MSG,
       resources_to_grant: [
         {
@@ -153,7 +153,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       validate_fn_name: PolicyNodeID.InternPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       entity: IAMNodeEntity.Policy,
-      on_finish_event: NodeEditFinishEvent.INTERN_POLICY_EDITED,
+      on_finish_event: PolicyEditFinishEvent.INTERN_POLICY_EDITED,
       callout_message: OBJECTIVE_CALLOUT_MSG2,
       resources_to_grant: [
         {

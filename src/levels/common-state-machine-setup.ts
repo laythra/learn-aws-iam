@@ -600,7 +600,7 @@ export const createStateMachineSetup = <
         }
       ),
       // TODO: Should we create an initial nodes resolver action just like we have for edges? check `apply_initial_node_connections` action
-      // Benificial for performing side effects, if any, when nodes are added.
+      // Beneficial for performing side effects, if any, when nodes are added.
       assign_nodes: enqueueActions(({ enqueue }, { nodes }: { nodes: IAMAnyNode[] }) => {
         enqueue.assign({ nodes });
 
