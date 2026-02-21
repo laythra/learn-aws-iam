@@ -39,18 +39,13 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   fixed_popover_content?: FixedPopoverMessage;
   side_panel_open?: boolean;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
-  highlighted_element_id?: string;
   in_tutorial_state?: boolean;
-  show_help_popover?: boolean;
   whitelisted_element_ids?: string[];
-  help_tips?: HelpTip[];
   /*
     Defines the list of elements that are always hidden or disabled, regardless of the current state.
   */
   restricted_element_ids?: string[];
   edges_management_disabled?: boolean;
-  animations?: Record<string, DynamicAnimationOptions>;
-  identity_creation_popup_default_value?: IAMNodeEntity.User | IAMNodeEntity.Group;
   elements_with_animated_red_dot?: ElementID[];
   show_unncessary_edges_or_nodes_warning?: boolean;
   layout_groups: NodeLayoutGroup[];
