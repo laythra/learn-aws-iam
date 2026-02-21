@@ -1,7 +1,7 @@
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, PolicyNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
-import { MANAGED_POLICIES } from '@/levels/config';
+import { MANAGED_POLICIES } from '@/levels/consts';
 import { IAMPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
