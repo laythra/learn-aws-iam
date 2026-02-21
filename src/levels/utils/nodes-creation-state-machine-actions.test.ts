@@ -30,8 +30,7 @@ describe('createPermissionPolicy', () => {
     mockContext = createMockContext({});
   });
 
-  it('creates unnecessary policy node without pulse animation \
-     when no matching objective exists', () => {
+  it('creates unnecessary policy node when no matching objective exists', () => {
     vi.mocked(findAnyValidObjective).mockReturnValue(undefined);
 
     const result = createIAMNode(mockContext, mockDocString, mockLabel, IAMNodeEntity.Policy);
@@ -46,15 +45,13 @@ describe('createPermissionPolicy', () => {
         unnecessary_node: true,
         entity: IAMNodeEntity.Policy,
         granted_accesses: [],
-        show_pulse_animation: false,
       },
     });
 
     expect(result.events).toEqual([]);
   });
 
-  it('creates a new policy node with a matching objective and marks it as necessary \
-    with pulse animation', () => {
+  it('creates a new policy node with a matching objective and marks it as necessary', () => {
     const mockObjective = createMockPolicyCreationObjective({
       on_finish_event: 'MOCK_EVENT',
     });
@@ -75,7 +72,6 @@ describe('createPermissionPolicy', () => {
         unnecessary_node: false,
         entity: IAMNodeEntity.Policy,
         granted_accesses: [],
-        show_pulse_animation: true,
       },
     });
 
@@ -113,7 +109,6 @@ describe.each([
         label: mockLabel,
         unnecessary_node: false,
         entity: entityType,
-        show_pulse_animation: true,
       },
     });
   });
@@ -140,7 +135,6 @@ describe.each([
         label: mockLabel,
         unnecessary_node: true,
         entity: entityType,
-        show_pulse_animation: false,
       },
     });
   });

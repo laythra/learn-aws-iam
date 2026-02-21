@@ -117,7 +117,6 @@ describe('createNodeFactory', () => {
       customField: 'combinedValue',
       label: 'Overridden Label',
       handles: [],
-      show_pulse_animation: true,
     } satisfies IAMNodeDataOverrides<IAMAnyNode['data']>;
 
     const { id: __unused, ...dataOverridesWithoutId } = dataOverrides;
