@@ -18,7 +18,6 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types/iam-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -43,7 +42,6 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
-    identity_creation_popup_default_value: IAMNodeEntity.Group,
     in_tutorial_state: true,
     edges_management_disabled: true,
     restricted_element_ids: [

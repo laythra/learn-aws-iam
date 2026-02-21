@@ -1,4 +1,5 @@
-import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
+import { useIsElementRestricted } from './useIsElementRestricted';
+import { ElementID } from '@/config/element-ids';
 import { useModal } from '@/hooks/useModal';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
@@ -12,11 +13,12 @@ interface IAMIdentityCreatorContextState {
 const MODAL_ID = 'iam-identity-manager';
 
 export const useIdentityCreator = (): IAMIdentityCreatorContextState => {
-  const defaultSelectedIdentity = useLevelSelector(
-    state => state.context.identity_creation_popup_default_value || IAMNodeEntity.User
-  );
+  const [isUserCreationRestricted] = useIsElementRestricted([ElementID.CreateUserTab]);
 
   const context = useModal();
+  const defaultSelectedIdentity = isUserCreationRestricted
+    ? IAMNodeEntity.Group
+    : IAMNodeEntity.User;
 
   const closeIdentityCreator = (): void => context.closeModal(MODAL_ID);
   const openIdentityCreator = (): void => context.openModal(MODAL_ID);

@@ -643,12 +643,6 @@ export const createStateMachineSetup = <
           { blocked_connections }: { blocked_connections: { from: string; to: string }[] }
         ) => blocked_connections,
       }),
-      hide_help_popover: assign({
-        show_help_popover: false,
-      }),
-      show_help_popover: assign({
-        show_help_popover: true,
-      }),
       store_checkpoint: enqueueActions(({ self }) => {
         queueMicrotask(() => storeLevelCheckpoint(self as Actor<AnyActorLogic>));
       }),

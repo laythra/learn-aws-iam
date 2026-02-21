@@ -51,9 +51,7 @@ export const stateMachine = createStateMachineSetup<
       ElementID.CodeEditorPermissionBoundaryTab,
     ],
   },
-  on: {
-    ...SHARED_TOP_LEVEL_EVENTS,
-  },
+  on: { ...SHARED_TOP_LEVEL_EVENTS },
   states: {
     inside_level: {
       entry: [
@@ -72,21 +70,15 @@ export const stateMachine = createStateMachineSetup<
       states: {
         popup1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
-          on: {
-            NEXT_POPUP: 'popup2',
-          },
+          on: { NEXT_POPUP: 'popup2' },
         },
         popup2: {
           entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } }],
-          on: {
-            NEXT_POPUP: 'popup3',
-          },
+          on: { NEXT_POPUP: 'popup3' },
         },
         popup3: {
           entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } }],
-          on: {
-            NEXT_POPUP: 'create_policy1',
-          },
+          on: { NEXT_POPUP: 'create_policy1' },
         },
         create_policy1: {
           entry: [
@@ -95,9 +87,7 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
             {
               type: 'append_creation_objectives',
-              params: {
-                objectives: POLICY_CREATION_OBJECTIVES[0],
-              },
+              params: { objectives: POLICY_CREATION_OBJECTIVES[0] },
             },
           ],
           on: {
@@ -107,9 +97,7 @@ export const stateMachine = createStateMachineSetup<
                 'close_side_panel',
                 {
                   type: 'finish_level_objective',
-                  params: {
-                    id: LevelObjectiveID.ALLOW_CREATE_RDS_WITH_TAGS_POLICY,
-                  },
+                  params: { id: LevelObjectiveID.ALLOW_CREATE_RDS_WITH_TAGS_POLICY },
                 },
               ],
             },
@@ -122,23 +110,16 @@ export const stateMachine = createStateMachineSetup<
             actions: [
               {
                 type: 'finish_level_objective',
-                params: {
-                  id: LevelObjectiveID.ATTACH_POLICY1_TO_GROUPS,
-                },
+                params: { id: LevelObjectiveID.ATTACH_POLICY1_TO_GROUPS },
               },
             ],
           },
           entry: [
             'close_side_panel',
-            {
-              type: 'show_popover_message',
-              params: { message: POPOVER_TUTORIAL_MESSAGES[1] },
-            },
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
             {
               type: 'set_edge_connection_objectives',
-              params: {
-                objectives: EDGE_CONNECTION_OBJECTIVES[0],
-              },
+              params: { objectives: EDGE_CONNECTION_OBJECTIVES[0] },
             },
             'enable_edges_management_ability',
           ],
@@ -147,74 +128,46 @@ export const stateMachine = createStateMachineSetup<
               initial: 'in_progress',
               states: {
                 in_progress: {
-                  on: {
-                    [EdgeConnectionFinishEvent.TBAC_POLICY_ATTACHED_GROUP1]: 'completed',
-                  },
+                  on: { [EdgeConnectionFinishEvent.TBAC_POLICY_ATTACHED_GROUP1]: 'completed' },
                 },
-                completed: {
-                  type: 'final',
-                },
+                completed: { type: 'final' },
               },
             },
             attach_policy1_to_group2: {
               initial: 'in_progress',
               states: {
                 in_progress: {
-                  on: {
-                    [EdgeConnectionFinishEvent.TBAC_POLICY_ATTACHED_GROUP2]: 'completed',
-                  },
+                  on: { [EdgeConnectionFinishEvent.TBAC_POLICY_ATTACHED_GROUP2]: 'completed' },
                 },
-                completed: {
-                  type: 'final',
-                },
+                completed: { type: 'final' },
               },
             },
             attach_policy1_to_group3: {
               initial: 'in_progress',
               states: {
                 in_progress: {
-                  on: {
-                    [EdgeConnectionFinishEvent.TBAC_POLICY_ATTACHED_GROUP3]: 'completed',
-                  },
+                  on: { [EdgeConnectionFinishEvent.TBAC_POLICY_ATTACHED_GROUP3]: 'completed' },
                 },
-                completed: {
-                  type: 'final',
-                },
+                completed: { type: 'final' },
               },
             },
           },
         },
         level_objective1_finished: {
           entry: [
-            {
-              type: 'show_fixed_popover_message',
-              params: { message: FIXED_POPOVER_MESSAGES[0] },
-            },
-            {
-              type: 'append_nodes',
-              params: { nodes: INITIAL_IN_LEVEL_RESOURCE_NODES },
-            },
+            { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
+            { type: 'append_nodes', params: { nodes: INITIAL_IN_LEVEL_RESOURCE_NODES } },
           ],
-          on: {
-            NEXT_FIXED_POPOVER: 'create_policy2',
-          },
+          on: { NEXT_FIXED_POPOVER: 'create_policy2' },
         },
         create_policy2: {
           entry: [
             'hide_fixed_popovers',
-            {
-              type: 'show_popover_message',
-              params: { message: POPOVER_TUTORIAL_MESSAGES[2] },
-            },
-            {
-              type: 'append_level_objectives',
-              params: { objectives: LEVEL_OBJECTIVES[1] },
-            },
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
+            { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
             {
               type: 'append_creation_objectives',
-              params: {
-                objectives: POLICY_CREATION_OBJECTIVES[1],
-              },
+              params: { objectives: POLICY_CREATION_OBJECTIVES[1] },
             },
           ],
           on: {
@@ -223,9 +176,7 @@ export const stateMachine = createStateMachineSetup<
               actions: [
                 {
                   type: 'finish_level_objective',
-                  params: {
-                    id: LevelObjectiveID.CREATE_MANAGE_RDS_POLICY,
-                  },
+                  params: { id: LevelObjectiveID.CREATE_MANAGE_RDS_POLICY },
                 },
               ],
             },
@@ -239,23 +190,16 @@ export const stateMachine = createStateMachineSetup<
               actions: [
                 {
                   type: 'finish_level_objective',
-                  params: {
-                    id: LevelObjectiveID.ATTACH_POLICY2_TO_GROUPS,
-                  },
+                  params: { id: LevelObjectiveID.ATTACH_POLICY2_TO_GROUPS },
                 },
               ],
             },
           ],
           entry: [
-            {
-              type: 'show_popover_message',
-              params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
-            },
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
             {
               type: 'set_edge_connection_objectives',
-              params: {
-                objectives: EDGE_CONNECTION_OBJECTIVES[1],
-              },
+              params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
             },
           ],
           states: {
@@ -267,9 +211,7 @@ export const stateMachine = createStateMachineSetup<
                     [EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP1]: 'completed',
                   },
                 },
-                completed: {
-                  type: 'final',
-                },
+                completed: { type: 'final' },
               },
             },
             attach_policy2_to_group2: {
@@ -280,9 +222,7 @@ export const stateMachine = createStateMachineSetup<
                     [EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP2]: 'completed',
                   },
                 },
-                completed: {
-                  type: 'final',
-                },
+                completed: { type: 'final' },
               },
             },
             attach_policy2_to_group3: {
@@ -293,9 +233,7 @@ export const stateMachine = createStateMachineSetup<
                     [EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP3]: 'completed',
                   },
                 },
-                completed: {
-                  type: 'final',
-                },
+                completed: { type: 'final' },
               },
             },
           },
@@ -328,13 +266,8 @@ export const stateMachine = createStateMachineSetup<
         level_completed: {
           type: 'final',
           entry: [
-            'hide_help_popover',
-            {
-              type: 'show_popup_message',
-              params: {
-                message: POPUP_TUTORIAL_MESSAGES[3],
-              },
-            },
+            'hide_unncessary_edges_or_nodes_warning',
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[3] } },
           ],
         },
       },
