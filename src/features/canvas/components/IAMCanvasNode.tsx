@@ -128,7 +128,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
               <Handle key={handle.id} {...handle} />
             ))}
 
-            {alert_message && <IAMNodeHelpTooltip alertMessage={alert_message} />}
+            {alert_message && <IAMNodeHelpTooltip alertMessage={alert_message} nodeId={id} />}
 
             <Flex width='100%' alignItems='center'>
               <Image
