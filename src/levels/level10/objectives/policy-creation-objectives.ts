@@ -4,7 +4,10 @@ import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
-import { IAMPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
+import {
+  IAMPermissionPolicyCreationObjective,
+  ObjectiveType,
+} from '@/levels/types/objective-types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE1_CALLOUT_MSG = `
@@ -106,7 +109,7 @@ const OBJECTIVE2_HELP_BADGES = [
   },
 ];
 
-export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
+export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
   FinishEventMap,
   ObjectivesApplicableNodesFnName
 >[][] = [
@@ -139,7 +142,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
         granted_accesses: [],
       },
     } satisfies Partial<
-      IAMPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+      IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
   ].map(objective => createPolicyCreationObjective(objective)),
   [
@@ -193,7 +196,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
         },
       ],
     } satisfies Partial<
-      IAMPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+      IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

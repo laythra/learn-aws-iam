@@ -3,7 +3,10 @@ import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
-import { IAMPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
+import {
+  IAMPermissionPolicyCreationObjective,
+  ObjectiveType,
+} from '@/levels/types/objective-types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE_CALLOUT_MSG = `
@@ -83,7 +86,7 @@ const SECOND_OBJECTIVE_HINT_MESSAGES = [
   },
 ];
 
-export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
+export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
   FinishEventMap,
   ObjectivesApplicableNodesFnName
 >[][] = [
@@ -111,7 +114,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
       hint_messages: SHARED_HINT_MESSAGES,
       help_badges: SHARED_HELP_BADGES,
     } satisfies Partial<
-      IAMPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+      IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
     {
       id: PolicyNodeID.RDSManagePolicy2,
@@ -135,7 +138,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
       hint_messages: SHARED_HINT_MESSAGES,
       help_badges: SHARED_HELP_BADGES,
     } satisfies Partial<
-      IAMPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+      IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
   ].map(objective => createPolicyCreationObjective(objective)),
   [
@@ -167,7 +170,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
       },
       hint_messages: SECOND_OBJECTIVE_HINT_MESSAGES,
     } satisfies Partial<
-      IAMPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+      IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

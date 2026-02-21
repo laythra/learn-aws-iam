@@ -87,10 +87,7 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
   alert_message?: string;
 }
 
-// TODO: Create a common interface for IAMPolicyCreationObjective and IAMResourcePolicyCreationObjective
-// to avoid code duplication
-// TODO: Rename IAMPolicyCreationObjective to IAMPermissionPolicyCreationObjective
-export interface IAMPolicyCreationObjective<
+export interface IAMPermissionPolicyCreationObjective<
   TFinishEventMap extends BaseFinishEventMap,
   TApplicableNodesFnName extends string = string,
 > extends BaseCreationObjective<TFinishEventMap> {

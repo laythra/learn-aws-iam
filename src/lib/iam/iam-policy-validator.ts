@@ -6,7 +6,7 @@ import {
   BaseCreationObjective,
   BaseFinishEventMap,
   IAMPermissionBoundaryCreationObjective,
-  IAMPolicyCreationObjective,
+  IAMPermissionPolicyCreationObjective,
   IAMResourcePolicyCreationObjective,
   IAMRoleCreationObjective,
   IAMSCPCreationObjective,
@@ -92,7 +92,7 @@ export const isJSONValid = (docString: string, validateFunction: ValidateFunctio
 };
 
 type ObjectiveEntityMap = {
-  [IAMNodeEntity.Policy]: IAMPolicyCreationObjective<BaseFinishEventMap>;
+  [IAMNodeEntity.Policy]: IAMPermissionPolicyCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.SCP]: IAMSCPCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.Role]: IAMRoleCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.ResourcePolicy]: IAMResourcePolicyCreationObjective<BaseFinishEventMap>;

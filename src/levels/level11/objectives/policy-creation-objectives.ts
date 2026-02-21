@@ -4,7 +4,7 @@ import { FinishEventMap } from '../types/finish-event-enums';
 import { PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
-import { IAMPolicyCreationObjective } from '@/levels/types/objective-types';
+import { IAMPermissionPolicyCreationObjective } from '@/levels/types/objective-types';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 
 const CALLOUT_MSG = `
@@ -55,7 +55,7 @@ const CONDITIONS2_HINT_MSG = `
   What's the missing condition key here?
 `;
 
-export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
+export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
   FinishEventMap,
   ValidateFunctionsFnName
 >[][] = [
@@ -84,6 +84,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMPolicyCreationObjective<
           content: CONDITIONS2_HINT_MSG,
         },
       ],
-    } satisfies Partial<IAMPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>>,
+    } satisfies Partial<
+      IAMPermissionPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
+    >,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];
