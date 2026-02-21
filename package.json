@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": "24.13.1"
+  },
   "dependencies": {
     "@chakra-ui/react": "^2.10.9",
     "@codemirror/lang-json": "^6.0.2",
