@@ -77,7 +77,8 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
       target: targetNode.id,
       animated: true,
       deletable: true,
-      targetHandle: HandleID.Top,
+      targetHandle: HandleID.Bottom,
+      sourceHandle: HandleID.Top,
       ...options,
     },
     dataOverrides: {
