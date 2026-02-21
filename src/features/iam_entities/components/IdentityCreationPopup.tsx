@@ -26,7 +26,6 @@ import { useIdentityCreator } from '@/app_shell/ui/useIdentityCreator';
 import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
 import { ElementID } from '@/config/element-ids';
 import { validateIAMName } from '@/lib/iam/names';
-import { IAMIdentityEntity } from '@/types/iam-entities-types';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import {
   StatefulStateMachineEvent,
@@ -44,11 +43,15 @@ export const IdentityCreationPopup: React.FC = () => {
     ElementID.IdentityCreationPopupGroupTab,
   ]);
 
-  const [iamIdentityEntity, setIamIdentityEntity] =
-    useState<IAMIdentityEntity>(defaultSelectedIdentity);
+  const [iamIdentityEntity, setIamIdentityEntity] = useState<
+    IAMNodeEntity.User | IAMNodeEntity.Group
+  >(defaultSelectedIdentity);
 
   const [formState, setFormState] = useState<
-    Record<IAMIdentityEntity, { name: string; isValidating: boolean; error?: string }>
+    Record<
+      IAMNodeEntity.User | IAMNodeEntity.Group,
+      { name: string; isValidating: boolean; error?: string }
+    >
   >({
     [IAMNodeEntity.User]: { name: '', isValidating: false },
     [IAMNodeEntity.Group]: { name: '', isValidating: false },
@@ -56,7 +59,7 @@ export const IdentityCreationPopup: React.FC = () => {
 
   const debouncedValidate = useMemo(
     () =>
-      _.debounce((name: string, entity: IAMIdentityEntity) => {
+      _.debounce((name: string, entity: IAMNodeEntity.User | IAMNodeEntity.Group) => {
         const existingNames = levelActor.getSnapshot().context.nodes.map(n => n.data.label);
         const error = validateIAMName(name, existingNames, 64);
 
