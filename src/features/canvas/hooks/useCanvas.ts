@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useSelector } from '@xstate/store/react';
 import { Connection, ReactFlowInstance } from '@xyflow/react';
@@ -52,11 +52,12 @@ export function useCanvas(): UseCanvasReturn {
 
   const levelActor = useLevelActor();
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<IAMAnyNode, IAMEdge>>();
-  const { sidePanelWidth, adjustCanvasZoom } = useCanvasViewport({
+  const { sidePanelWidth, regularNodeBreakpointId, adjustCanvasZoom } = useCanvasViewport({
     rfInstance,
     nodes,
     sidePanelOpened: sidePanelOpened ?? false,
   });
+  const previousBreakpointId = useRef<string>();
 
   useCanvasStoreSync({
     rfInstance,
@@ -72,6 +73,27 @@ export function useCanvas(): UseCanvasReturn {
     edgesManagementDisabled,
     levelActor,
   });
+
+  useEffect(() => {
+    if (!rfInstance) return;
+
+    if (!previousBreakpointId.current) {
+      previousBreakpointId.current = regularNodeBreakpointId;
+      return;
+    }
+
+    if (previousBreakpointId.current === regularNodeBreakpointId) return;
+
+    previousBreakpointId.current = regularNodeBreakpointId;
+
+    CanvasStore.send({
+      type: 'setNodes',
+      nodes: nodesState,
+      layoutGroups,
+      sidePanelWidth,
+      reactFlowViewport: rfInstance.getViewport(),
+    });
+  }, [regularNodeBreakpointId, rfInstance, nodesState, layoutGroups, sidePanelWidth]);
 
   return {
     rfInstance,

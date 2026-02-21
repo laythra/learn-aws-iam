@@ -1,5 +1,5 @@
 import { createHorizontalGroup, createVerticalGroup } from '@/factories/layout-group-factory';
-import { theme } from '@/theme';
+import { BASE_REGULAR_NODE_METRICS } from '@/features/canvas/utils/node-metrics';
 
 export enum LayoutGroupID {
   GroupNodesLayoutGroup = 'group-nodes-layout-group',
@@ -9,8 +9,8 @@ export enum LayoutGroupID {
 const GROUP_NODES_LAYOUT_GROUP = createVerticalGroup(
   LayoutGroupID.GroupNodesLayoutGroup,
   'top-center',
-  theme.sizes.iamNodeHeightInPixels + 40,
-  { left: -theme.sizes.iamNodeWidthInPixels - 100, top: 0 }
+  BASE_REGULAR_NODE_METRICS.nodeHeight + 40,
+  { left: -BASE_REGULAR_NODE_METRICS.nodeWidth - 100, top: 0 }
 );
 
 const RDS_INSTANCES_LAYOUT_GROUP = createHorizontalGroup(

@@ -1,7 +1,6 @@
 import { useEffect, memo, useState } from 'react';
 
 import { Flex, Text, Box, Image, Badge, Tooltip, HStack, Skeleton } from '@chakra-ui/react';
-import { useTheme } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store/react';
 import { Handle } from '@xyflow/react';
 import { motion } from 'framer-motion';
@@ -12,11 +11,11 @@ import IAMNodeHelpTooltip from './IAMNodeHelpTooltip';
 import IAMNodeInfoButton from './IAMNodeInfoButton';
 import TagsIconButton from './TagsIconButton';
 import { CanvasStore } from '../stores/canvas-store';
+import { getCurrentRegularNodeMetrics } from '../utils/node-metrics';
 import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { generateArn, SupportedArnNodeTypes } from '@/domain/arn-generator';
 import { loadLocalImage } from '@/lib/assets/image-loader';
-import { CustomTheme } from '@/types/custom-theme';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -24,6 +23,8 @@ import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 export interface IAMCanvasNodeProps {
   data: IAMAnyNode['data'];
   id: string;
+  height?: number;
+  width?: number;
 }
 
 const pulseVariants = {
@@ -34,7 +35,7 @@ const pulseVariants = {
 const pulseInitial = { opacity: 0.85, scale: 0.85 } as const;
 const pulseTransition = { duration: 2, ease: [0.2, 0.8, 0.3, 1] } as const;
 
-const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
+const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id, width, height }) => {
   const [imageSrc, setImageSrc] = useState<string>();
   const [selectedNodeId, isDeleting] = useSelector(
     CanvasStore,
@@ -44,7 +45,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
 
   const withPopoverElementId = useLevelSelector(state => state.context.popover_content?.element_id);
 
-  const theme = useTheme<CustomTheme>();
+  const regularNodeMetrics = getCurrentRegularNodeMetrics();
 
   const { entity, label, handles, image, content, tags, alert_message } = data;
 
@@ -117,8 +118,8 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id }) => {
             bg='white'
             boxShadow='sm'
             borderRadius='md'
-            width={theme.sizes.iamNodeWidthInPixels}
-            height={theme.sizes.iamNodeHeightInPixels}
+            width={width ?? regularNodeMetrics.nodeWidth}
+            height={height ?? regularNodeMetrics.nodeHeight}
             textAlign='center'
             borderWidth='2px'
             borderColor={isSelected ? 'blue.500' : 'gray.200'}

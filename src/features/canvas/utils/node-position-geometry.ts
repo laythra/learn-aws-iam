@@ -1,5 +1,6 @@
 import { XYPosition, Viewport } from '@xyflow/react';
 
+import { getCurrentRegularNodeMetrics } from './node-metrics';
 import { theme } from '@/theme';
 import {
   NodeLayoutGroup,
@@ -116,12 +117,16 @@ function getParentCenterPosition(parentNode: IAMAnyNode): XYPosition {
  * This is used to ensure that nodes are positioned correctly within their layout group.
  * Currently, only supports top and left margins.
  */
-function adjustPositionForMargin(position: XYPosition, layoutGroup: NodeLayoutGroup): XYPosition {
+function adjustPositionForMargin(
+  position: XYPosition,
+  layoutGroup: NodeLayoutGroup,
+  offsetScale: number
+): XYPosition {
   if (!layoutGroup.margin) return position;
 
   return {
-    x: position.x + (layoutGroup.margin.left || 0),
-    y: position.y + (layoutGroup.margin.top || 0),
+    x: position.x + (layoutGroup.margin.left || 0) * offsetScale,
+    y: position.y + (layoutGroup.margin.top || 0) * offsetScale,
   };
 }
 
@@ -159,11 +164,14 @@ export function getNodeInitialPosition(
   layoutGroup: NodeLayoutGroup,
   parentNode?: IAMAnyNode // Pass the parent node if it exists
 ): XYPosition {
+  const regularNodeMetrics = getCurrentRegularNodeMetrics();
   const initial_position = layoutGroup?.position || node.data.initial_position;
-  const verticalSpacing =
-    layoutGroup?.vertical_spacing ?? theme.sizes.iamNodeHeightInPixels + BETWEEN_NODES_SPACING;
-  const horizontalSpacing =
-    layoutGroup?.horizontal_spacing ?? theme.sizes.iamNodeWidthInPixels + BETWEEN_NODES_SPACING;
+  const verticalSpacing = layoutGroup?.vertical_spacing
+    ? layoutGroup.vertical_spacing * regularNodeMetrics.offsetScale
+    : regularNodeMetrics.verticalSpacing;
+  const horizontalSpacing = layoutGroup?.horizontal_spacing
+    ? layoutGroup.horizontal_spacing * regularNodeMetrics.offsetScale
+    : regularNodeMetrics.horizontalSpacing;
 
   if (!initial_position || !VALID_INITIAL_POSITIONS.includes(initial_position)) {
     return { x: 0, y: 0 };
@@ -199,5 +207,5 @@ export function getNodeInitialPosition(
     layoutGroup.layout_direction
   )[initial_position];
 
-  return adjustPositionForMargin(nodePosition, layoutGroup);
+  return adjustPositionForMargin(nodePosition, layoutGroup, regularNodeMetrics.offsetScale);
 }
