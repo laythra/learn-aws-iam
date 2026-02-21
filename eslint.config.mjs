@@ -1,3 +1,4 @@
+import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -15,6 +16,60 @@ import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const featureDirs = readdirSync(path.join(__dirname, 'src/features'), {
+  withFileTypes: true,
+})
+  .filter(entry => entry.isDirectory())
+  .map(entry => entry.name.toLowerCase());
+
+const levelDirs = readdirSync(path.join(__dirname, 'src/levels'), {
+  withFileTypes: true,
+})
+  .filter(entry => entry.isDirectory() && /^level\d+$/.test(entry.name))
+  .map(entry => entry.name.toLowerCase());
+
+const restrictedImportZones = [
+  ...featureDirs.map(feature => ({
+    target: `./src/features/${feature}`,
+    from: './src/features',
+    except: [`./${feature}`],
+  })),
+  ...levelDirs.map(level => ({
+    target: `./src/levels/${level}`,
+    from: './src/levels',
+    except: [`./${level}`, './types', './utils'],
+  })),
+];
+
+const featureRestrictedImportConfigs = featureDirs.map(feature => ({
+  files: [`src/features/${feature}/**/*.{js,jsx,ts,tsx}`],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: featureDirs
+          .filter(otherFeature => otherFeature !== feature)
+          .flatMap(otherFeature => [`@/features/${otherFeature}`, `@/features/${otherFeature}/*`]),
+      },
+    ],
+  },
+}));
+
+const levelRestrictedImportConfigs = levelDirs.map(level => ({
+  files: [`src/levels/${level}/**/*.{js,jsx,ts,tsx}`],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: levelDirs
+          .filter(otherLevel => otherLevel !== level)
+          .flatMap(otherLevel => [`@/levels/${otherLevel}`, `@/levels/${otherLevel}/*`]),
+      },
+    ],
+  },
+}));
+
 const compat = new FlatCompat({
   baseDirectory: __dirname,
   recommendedConfig: js.configs.recommended,
@@ -111,7 +166,7 @@ export default defineConfig([
       'prettier/prettier': [
         'error',
         {
-          endOfLine: 'auto',
+          endOfLine: 'lf',
         },
       ],
 
@@ -159,6 +214,12 @@ export default defineConfig([
 
       '@typescript-eslint/no-unused-vars': 'off',
       'unused-imports/no-unused-imports': 'warn',
+      'import/no-restricted-paths': [
+        'error',
+        {
+          zones: restrictedImportZones,
+        },
+      ],
     },
   },
   {
@@ -191,4 +252,6 @@ export default defineConfig([
       'check-file/filename-naming-convention': 'off',
     },
   },
+  ...featureRestrictedImportConfigs,
+  ...levelRestrictedImportConfigs,
 ]);
