@@ -12,7 +12,7 @@ import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { ElementID } from '@/config/element-ids';
-import { MANAGED_POLICIES } from '@/levels/config';
+import { MANAGED_POLICIES } from '@/levels/consts';
 import { GetLevelValidateFunctions } from '@/levels/functions-registry';
 import { findAnyValidObjective, GENERIC_VALIDATION_FNS } from '@/lib/iam/iam-policy-validator';
 import codeEditorStateStore from '@/stores/code-editor-state-store';

@@ -468,7 +468,7 @@ export const createStateMachineSetup = <
           });
 
           createPolicyResult.events.forEach(event => {
-            // TODO:  Remove the `as` cast
+            // TS can't narrow a generic index access type, even when the constraint guarantees it
             enqueue.raise({ type: event as TFinishEventMap[keyof TFinishEventMap] & string });
           });
 
@@ -582,8 +582,6 @@ export const createStateMachineSetup = <
       clear_creation_objectives: assign({
         policy_creation_objectives: [],
       }),
-      // TODO: Create an initial nodes resolver just like we have for edges
-      // Benificial for performing side effects when nodes are added, such as creating their associated edges and whatnot
       apply_initial_node_connections: enqueueActions(
         (
           { context, enqueue },
@@ -601,6 +599,8 @@ export const createStateMachineSetup = <
           }));
         }
       ),
+      // TODO: Should we create an initial nodes resolver action just like we have for edges? check `apply_initial_node_connections` action
+      // Beneficial for performing side effects, if any, when nodes are added.
       assign_nodes: enqueueActions(({ enqueue }, { nodes }: { nodes: IAMAnyNode[] }) => {
         enqueue.assign({ nodes });
 

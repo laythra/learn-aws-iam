@@ -4,15 +4,15 @@ import { createPolicyCreationObjective } from '@/factories/nodes_creation_object
 import { MANAGED_POLICIES } from '@/levels/consts';
 import {
   BaseFinishEventMap,
-  IAMPolicyCreationObjective,
+  IAMPermissionPolicyCreationObjective,
   IAMUserGroupCreationObjective,
   ObjectiveType,
 } from '@/levels/types/objective-types';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
 export function createMockPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
-  overrides: Partial<IAMPolicyCreationObjective<TFinishEventMap>> = {}
-): IAMPolicyCreationObjective<BaseFinishEventMap> {
+  overrides: Partial<IAMPermissionPolicyCreationObjective<TFinishEventMap>> = {}
+): IAMPermissionPolicyCreationObjective<BaseFinishEventMap> {
   return createPolicyCreationObjective({
     id: _.uniqueId('mock-policy-creation-objective-'),
     entity: IAMNodeEntity.Policy,
@@ -24,7 +24,7 @@ export function createMockPolicyCreationObjective<TFinishEventMap extends BaseFi
       granted_accesses: [],
     },
     ...overrides,
-  } satisfies IAMPolicyCreationObjective<TFinishEventMap>);
+  } satisfies IAMPermissionPolicyCreationObjective<TFinishEventMap>);
 }
 
 export function createMockUserGroupCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
