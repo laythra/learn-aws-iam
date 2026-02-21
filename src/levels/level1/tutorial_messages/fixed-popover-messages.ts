@@ -1,7 +1,8 @@
 import { FixedPopoverMessage } from '@/levels/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
-  Grant permissions to users by attaching policy nodes directly to user nodes in the canvas
+  ::badge[core]::
+  Grant permissions to a user by connecting a policy node to their user node on the canvas
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [

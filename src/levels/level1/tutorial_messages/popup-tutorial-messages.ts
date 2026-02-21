@@ -1,29 +1,29 @@
 import { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPUP_MSG1 = `
-  This interactive tutorial is a practical journey through
-  ***AWS Identity and Access Management (IAM)***—starting with
-  the basics and progressing to more advanced concepts.|lg
+  This interactive tutorial guides you through
+  **AWS Identity and Access Management (IAM)**, from the basics to more advanced concepts.|lg
 
-  It’s not a complete reference to everything ***IAM*** can do,
-  but it covers the core ideas you’ll need to tackle real-world scenarios with confidence.|lg
+  It doesn't aim to cover every IAM feature —
+  instead, it focuses on the core ideas you'll need to confidently tackle real-world scenarios.|lg
 
-  You’ll create **users**, manage **permissions**, and craft **policies**,
-  all while working through interactive challenges and clear explanations.
+  You'll create users, manage permissions, and write policies
+  through hands-on challenges along the way.|lg
 
-  Each level builds on key IAM concepts, helping you sharpen your skills step by step.
+  Each level introduces key IAM concepts and builds on the ones before it.|lg
 
-  Jump in and explore AWS IAM the interactive way.
+  Let's dive in.|lg
 `;
 
 const POPUP_MSG2 = `
-  Congrats on finishing the first level of our long journey!
-  We have covered the following basics of IAM:|lg
-  * Learning about **IAM Users**, **IAM Policies**, and **AWS Resources**
-  * Understanding the basic role of **IAM Policies** in managing permissions
-  * Attaching **IAM Policies** to **IAM Users** in order to grant the disignated permissions
+  Nice work completing the first level!
+  Here's what we covered:|lg
+  * The fundamentals of **IAM Users**, **IAM Policies**, and **AWS Resources**
+  * How **IAM Policies** control access to resources
+  * Attaching **IAM Policies** to **IAM Users** to grant permissions
 
-  We'll learn about **IAM Groups** in the next level and how they can help us scale things up!|lg
+  In the next level,
+  we'll explore **IAM Groups** and how they help you manage permissions at scale.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
