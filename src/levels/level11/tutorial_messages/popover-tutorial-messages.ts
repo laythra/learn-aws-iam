@@ -6,7 +6,8 @@ const POPOVER_MSG1 = `
   Permission boundaries are merely policy documents that cap the maximum permissions
   that can be granted to a user or role.
 
-  **View the attached permission boundary to Sephiroth**
+  **Click the \`:icon[CodeBracketIcon]:\` icon
+  to view the attached permission boundary to Sephiroth**
 `;
 
 const POPOVER_MSG2 = `
