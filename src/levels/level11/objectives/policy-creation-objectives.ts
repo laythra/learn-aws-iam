@@ -11,10 +11,8 @@ const CALLOUT_MSG = `
   This objective requires creating a policy which allows a user
   to delegate permissions to other users.
 
-  Specifically, the policy should allow the user to attach and detach policies to any role resource.
-  But **ONLY** if that resource has the permission boundary with
-  the **ARN** of the permission boundary you created in the previous step
-  attached
+  Specifically, the policy should allow the user to attach and detach policies to any role,
+  but **ONLY** if that role has the permission boundary created in the previous step attached.
 `;
 
 const ACTIONS_HINT_MSG = `
@@ -25,9 +23,9 @@ const ACTIONS_HINT_MSG = `
 `;
 
 const CONDITIONS1_HINT_MSG = `
-  The condition should only attach attaching and detaching policies to roles which
+  The condition should only allow attaching and detaching policies to roles which
   have the permission boundary with the ARN \`arn:aws:iam::123456789012:policy/ReadOnlyAccess\`
-  attached
+  attached.
 
   Here's a quick refresher on the syntax:
 
@@ -47,8 +45,7 @@ const CONDITIONS2_HINT_MSG = `
 
   ~~~js
   "Condition": {
-    "StringEquals": { "???": "arn:aws:iam::123456789012:role/secrets-reader-role"
-    }
+    "StringEquals": { "???": "arn:aws:iam::123456789012:role/secrets-reader-role" }
   }|fullwidth
   ~~~
 

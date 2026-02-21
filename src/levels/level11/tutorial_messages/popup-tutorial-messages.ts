@@ -28,20 +28,20 @@ const POPUP_MSG3 = `
 `;
 
 const POPUP_MSG4 = `
-For this part of the level, you'll be an admin who wants to delegate permission management
-  to other developers on your team in order to scale and move faster. You objectives are:|lg
+  For this part of the level, you'll be an admin who wants to delegate permission management
+  to other developers on your team in order to scale and move faster. Your objectives are:|lg
 
-  * Create a permission boundary which limits users
-  to reading secrets tagged with their team name, ie: \`team: \${aws:PrincipalTag/team}\`
-  * Allow users tagged with **"role:senior"** to create permission policies as they like
-  * Allow the same users to attach these permission policies to roles that **ONLY**
-    have the created permission boundary attached
+  * Create a permission boundary that limits secret access to secrets tagged with
+    the requester's own \`team\` tag, ie: \`team: \${aws:PrincipalTag/team}\`
+  * Create a delegation policy that allows attaching policies **only** to roles
+    that already have that permission boundary attached
 `;
 
 const POPUP_MSG5 = `
   Congratulations! Reaching this far is a significant achievement. 🎉|lg
 
-  Permission boundaries are a powerful tool in IAM that allow you to set the maximum permissions.
+  Permission boundaries are a powerful tool in IAM that allow you to set
+  the maximum permissions an entity can have.
   You can tell by now that everything we've learned so far can
   be used to construct complex scenarios, just like the one you just went through.|lg
 
@@ -49,7 +49,7 @@ const POPUP_MSG5 = `
   introduce **Service Control Policies** (a very simple concept)
   and do a quick recap of everything we learned so far.|lg
 
-  Give yourself a pat on the back for making it this far! Let's finish this|lg
+  Give yourself a pat on the back for making it this far! Let's finish this.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

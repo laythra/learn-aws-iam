@@ -58,6 +58,11 @@ export const stateMachine = createStateMachineSetup<
   states: {
     inside_tutorial: {
       entry: [
+        'enable_tutorial_state',
+        {
+          type: 'append_whitelisted_element_ids',
+          params: { whitelisted_element_ids: [ElementID.IAMNodeContentButton] },
+        },
         {
           type: 'assign_nodes',
           params: { nodes: INITIAL_TUTORIAL_NODES },
@@ -129,6 +134,10 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'disable_edges_management_ability',
             {
+              type: 'finish_level_objective',
+              params: { id: LevelObjectiveID.ATTACH_TUTORIAL_S3_POLICY },
+            },
+            {
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[2] },
             },
@@ -144,6 +153,7 @@ export const stateMachine = createStateMachineSetup<
     },
     inside_level: {
       entry: [
+        'disable_tutorial_state',
         'clear_creation_objectives',
         'store_checkpoint',
         'hide_popovers',

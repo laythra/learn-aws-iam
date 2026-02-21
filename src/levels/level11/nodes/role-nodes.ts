@@ -13,6 +13,7 @@ const IN_LEVEL_ROLE_NODES: IAMNodeDataOverrides<IAMRoleNode['data']>[] = [
     image: IAMNodeImage.Role,
     editable: true,
     content: JSON.stringify(INITIAL_POLICIES.DELEGATE_PERMISSIONS_ROLE, null, 2),
+    alert_message: 'This role needs to have a permission boundary attached to it.',
   },
 ];
 

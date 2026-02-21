@@ -6,30 +6,31 @@ const POPOVER_MSG1 = `
   Permission boundaries are merely policy documents that cap the maximum permissions
   that can be granted to a user or role.
 
-  **View the attached permission boundary to Sephiroth**
+  **Click the \`:icon[CodeBracketIcon]:\` icon
+  to view the permission boundary attached to Sephiroth**
 `;
 
 const POPOVER_MSG2 = `
-  The following policy grants full access to all S3 buckets,
-  **try attaching it to Sephiroth.**
+  The following policy grants full access to all S3 buckets.
+  **Try attaching it to Sephiroth.**
 `;
 
 const POPOVER_MSG3 = `
   Despite granting a full S3 read policy to Sephiroth,
   he is still unable to access the S3 bucket.
-  Because a permission boundary is attached to him,
-  which caps the maximum permissions he can have to listing SNS topics only.
+  This is because a permission boundary is attached to him,
+  which caps his maximum permissions to listing SNS topics only.
 `;
 
 const POPOVER_MSG4 = `
   **Cloud** is the senior developer (see the \`level\` tag).
-  He'll delegate read secrets permissions to his team, enforced by a permission boundary.
+  He'll delegate secret-reading permissions to his team, enforced by a permission boundary.
 `;
 
 const POPOVER_MSG5 = `
-  We will need to create a permission boundary to limit cloud's delegation abilities
-  and also allow him to attach policies to roles
-  which have the created permission boundary attached.
+  We will need to create a permission boundary that caps what permissions can be delegated,
+  and a policy that allows Cloud to attach policies only to roles
+  which already have that permission boundary attached.
 `;
 
 const POPOVER_MSG6 = `
@@ -47,8 +48,7 @@ const POPOVER_MSG10 = `
   Almost done! Now, let's see what happens when Cloud tries
   to attach the admin policy to the role and a user assumes it.
 
-  Next, we'll what happens from Cloud's POV.
-
+  Next, we'll see what happens from Cloud's POV.
 `;
 
 const POPOVER_MSG11 = `
@@ -58,7 +58,7 @@ const POPOVER_MSG11 = `
 `;
 
 const POPOVER_MSG12 = `
-  Tifa is a junior developer (see the \`level\` tag), and she will now attempt to assume the role
+  Tifa is a junior developer (see the \`level\` tag), and she will now attempt to assume the role.
 
   ***The principal in the role allows anyone with a \`level: junior\` tag to assume it.*** 😉
 `;
@@ -126,7 +126,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: PermissionBoundaryID.SecretsReadingPermissionBoundary,
-    popover_title: 'Nailed it ',
+    popover_title: 'Nailed it',
     popover_content: POPOVER_MSG8,
     show_next_button: true,
     show_close_button: false,
