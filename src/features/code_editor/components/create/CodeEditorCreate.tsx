@@ -95,8 +95,9 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
         selectedAccountId: accountNodes[0].id,
       });
     }
-    validateNodeLabel(label[selectedIAMEntity] || '');
-  }, []);
+
+    validateNodeLabel(label[nodeId] ?? '');
+  }, [nodeId]);
 
   return (
     <>
@@ -142,7 +143,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
 
             validateNodeLabel(newName.target.value);
           }}
-          value={label[selectedIAMEntity]}
+          value={label[nodeId] ?? ''}
         />
         <FormErrorMessage>{labelError}</FormErrorMessage>
       </FormControl>
@@ -152,9 +153,6 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
           Code
         </FormLabel>
         <CodeMirror
-          // Stable initial value only — do not control CodeMirror via React.
-          // Re-applying `value` after mount causes cursor jumps and input rollbacks
-          // (also breaks Playwright due to render/typing race conditions).
           value={getContent() ?? JSON.stringify(initialContent, null, 2)}
           onChange={newContent => {
             codeEditorStateStore.send({
