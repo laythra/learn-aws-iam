@@ -63,7 +63,6 @@ export interface IAMNodeData extends Record<string, unknown> {
    * Defines which node entities can connect to this node
    */
   allowed_sources?: IAMNodeEntity[];
-  show_pulse_animation?: boolean;
   alert_message?: string;
 }
 
