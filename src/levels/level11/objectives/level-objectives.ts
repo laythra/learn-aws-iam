@@ -7,11 +7,11 @@ const Objective1Description = `
 `;
 
 const Objective2Description = `
-  Create a Permission Boundary that limits access to reading secrets.
+  Create a permission boundary that limits access to reading secrets.
 `;
 
 const Objective3Description = `
-  Create a Permission Policy that allows attaching/detaching policies to specific roles
+  Create a permission policy that allows attaching and detaching policies to specific roles.
 `;
 
 const Objective2Hint = `
@@ -20,7 +20,7 @@ const Objective2Hint = `
 `;
 
 const Objective3Hint = `
-  The specific role here is a role which has the created permission boundary attached to it.
+  The target role must have the permission boundary from the previous step attached to it.
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [

@@ -12,7 +12,7 @@ import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 const OBJECTIVE_CALLOUT_MSG = `
   This objective requires creating a permission boundary which caps the permissions to:
   * Reading Secrets' Values
-  * Retreiving Secrets Metadata
+  * Retrieving Secrets Metadata
 
   **ONLY** if the secrets are tagged with the same \`team\` tag the user making the request has
 `;

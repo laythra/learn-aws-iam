@@ -22,7 +22,7 @@ const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
       ['team', 'avalanche'],
     ],
     alert_message: `
-      Cloud needs to grant permissions to other users to complete the level,
+      Cloud needs to grant permissions to other users,
       which means he needs to have a policy attached that allows him to do so.
     `,
   },
