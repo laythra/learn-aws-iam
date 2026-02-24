@@ -5,36 +5,37 @@ import { IAMPolicyEditObjective, ObjectiveType } from '@/levels/types/objective-
 import { AccessLevel, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE_CALLOUT_MSG = `
-  IAM offers hundreds of actions across AWS services.
-  Covering all of them isn’t practical, so we’ll focus on the most important ones.
-  If you want to explore the full list, check [here](https://github.com/TryTryAgain/aws-iam-actions-list/blob/master/all-actions.txt)
+  IAM covers hundreds of actions across AWS services.
+  We'll focus on the most commonly used ones here.
+  To explore the full list, check [here](https://github.com/TryTryAgain/aws-iam-actions-list/blob/master/all-actions.txt).
 `;
 
 const OBJECTIVE_CALLOUT_MSG2 = `
-  This policy is using the \`Condition\` directive which we haven't covered yet.
-  It's used to specify when a policy is in effect.
-  In this case, it's denying all types of actions if the user is not using MFA
+  ::badge[ADVANCED]::
+  This policy uses the \`Condition\` key, which we haven't covered yet.
+  It restricts when a policy takes effect — in this case,
+  it denies all actions if the user isn't authenticated with MFA.
 `;
 
 const OBJECTIVE1_HINT_MSG1 = `
-  Developers Should:
-  - Have read/write access to the \`customer-data\` **DynamoDB Table**.
-  - Have read/write access to the \`timeshift-assets\` **S3 Bucket** Objects.
+  Developers should:
+  - Have *read/write* access to the \`customer-data\` **DynamoDB Table**.
+  - Have *read/write* access to the \`timeshift-assets\` **S3 Bucket** objects.
 `;
 
 const OBJECTIVE1_HINT_MSG2 = `
-  The first action concerning the **DynamoDB Table** here is way too permissive.
-  We just want to grant read/write access to the \`customer-data\` **DynamoDB Table**.
+  The first statement targeting the **DynamoDB Table** is too permissive.
+  It should only grant read/write access to the \`customer-data\` table.
 `;
 
 const OBJECTIVE1_HINT_MSG3 = `
-  While the second action concerning the *timeshift-assets* **S3 Bucket** may look correct,
-  There's a subtle issue with the resource being targeted. it's operating on the bucket itself,
-  not the objects within the bucket.
+  The second statement targeting the \`timeshift-assets\` **S3 Bucket** looks correct
+  at first glance, but there's a subtle issue
+  — it's targeting the bucket itself, not the objects inside it.
 `;
 
 const OBJECTIVE1_HINT_MSG4 = `
-  The actions needed for grant *read/write* access to the dynamodb table are:
+  The actions needed for *read/write* access to a DynamoDB table are:
   - \`dynamodb:GetItem\`
   - \`dynamodb:PutItem\`
   - \`dynamodb:Scan\`
@@ -42,27 +43,29 @@ const OBJECTIVE1_HINT_MSG4 = `
 `;
 
 const OBJECTIVE2_HINT_MSG1 = `
-  Data Scientists Should:
-  - Have read/write access to the \`AnalyticsData\` **DynamoDB Table**.
-  - Have read/write access to the \`timeshift-assets\` **S3 Bucket** Objects.
+  Data Scientists should:
+  - Have *read/write* access to the \`AnalyticsData\` **DynamoDB Table**.
+  - Have *read/write* access to the \`timeshift-assets\` **S3 Bucket** objects.
 `;
 
 const OBJECTIVE2_HINT_MSG2 = `
-  The resource is using the wildcard (\`*\`), causing the action to be way too permissive.
+  ::badge[WARNING]::
+  The resource is using a wildcard (\`*\`), making the policy far too permissive.
 `;
 
 const OBJECTIVE2_HINT_MSG3 = `
-  There's a statement item missing in the policy.
-  It should be granting read/write access to the \`timeshift-assets\` **S3 Bucket** Objects.
+  A statement is missing from this policy.
+  It should grant read/write access to the \`timeshift-assets\` **S3 Bucket** objects.
 `;
 
 const OBJECTIVE3_HINT_MSG1 = `
-  Interns Should:
-  - Have *read* access to the \`customer-data\` **DynamoDB Table**.
+  Interns should:
+  - Have *read-only* access to the \`timeshift-assets\` **S3 Bucket** objects.
 `;
 
 const OBJECTIVE3_HINT_MSG2 = `
-  Clearly, there's something preventing the statement specifying the read access to take effect.
+  ::badge[WARNING]::
+  Something in the policy is preventing the read access statement from taking effect.
 `;
 
 export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
