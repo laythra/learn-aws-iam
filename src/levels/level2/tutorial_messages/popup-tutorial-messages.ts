@@ -1,20 +1,20 @@
 import { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
-  In the previous level, we learned about the very basics of **IAM users** and **IAM policies**.|lg
+  In the previous level, we covered the basics of **IAM Users** and **IAM Policies**.|lg
 
-  For this level, we'll talk about **IAM Groups** and how
-  they can help us scale our permissions management with ease|lg
+  In this level, we'll explore **IAM Groups** and how
+  they make managing permissions at scale much more straightforward.|lg
 `;
 
 const POPUP_MSG_2 = `
-  Congrats on finishing the second level of our long journey!|lg
+  Nice work completing level 2!|lg
 
-  The level mainly covered the usage of **IAM Groups** and
-  how they can help us manage permissions at scale.|lg
+  This level focused on **IAM Groups** and how they simplify
+  permission management across multiple users.|lg
 
-  We'll learn about **Customer Managed IAM Policies** in the next level
-  and how they can help us manage permissions more effectively!|lg
+  Next up: **Customer Managed IAM Policies** — a more flexible way
+  to define and reuse permissions across your AWS account.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
