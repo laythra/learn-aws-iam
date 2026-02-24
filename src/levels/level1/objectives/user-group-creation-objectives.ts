@@ -11,5 +11,6 @@ export const USER_GROUP_CREATION_OBJECTIVES: IAMUserGroupCreationObjective<Finis
     entity_id: UserNodeID.FirstUser,
     on_finish_event: NodeCreationFinishEvent.USER_NODE_CREATED,
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
+    alert_message: 'Connect the IAM Policy to this IAM User',
   },
 ];

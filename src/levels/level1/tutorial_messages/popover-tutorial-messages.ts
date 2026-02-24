@@ -3,60 +3,59 @@ import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  Throughout this interactive tutorial, every entity in **AWS**
-  will be represented as a "Node" in our canvas.
+  Throughout this tutorial, every **AWS** entity
+  is represented as a node on the canvas.
 `;
 
 const POPOVER_MSG2 = `
-  The Node we're currently standing on is an **IAM User**.
-  **IAM Users** Play a crucial role in managing access to **AWS resources**.
+  The node you're looking at right now is an **IAM User**.
+  **IAM Users** play a central role in controlling access to **AWS resources**.
 `;
 
 const POPOVER_MSG3 = `
-  An **IAM User** is an entity that you create in AWS to represent a person or service.
-  Try moving this node around by dragging it.
+  An **IAM User** represents a person or service in your AWS account.
+  Try dragging this node to move it around the canvas.
 `;
 
 const POPOVER_MSG4 = `
-  Aside from **IAM Users**, we also have **AWS Resources**.
-  The **AWS Resource** we're currently standing on is an **S3 bucket**.
+  In addition to **IAM Users**, we also have **AWS Resources**.
+  The node you're looking at right now is an **S3 Bucket**.
 `;
 
 const POPOVER_MSG5 = `
-  Last but not least, we have **IAM Policies**.
-  **IAM Policies** are JSON documents that define the permissions we want to grant to **IAM Users**.
+  Finally, we have **IAM Policies**.
+  **IAM Policies** are JSON documents that define what permissions are granted to **IAM Users**.
 `;
 
 const POPOVER_MSG6 = `
-  Try attaching this **IAM Policy** - which grants read access to the **S3 bucket** -
-  to the **IAM User (Laith)** and see what happens next.
+  Try connecting this **IAM Policy** — which grants read access to the **S3 Bucket** —
+  to the **IAM User (Laith)** and see what happens.
 `;
 
 const POPOVER_MSG7 = `
-  The **IAM User** (Laith) has been granted read permissions to the
-  object inside the S3 Bucket \`public-images\`! 🎉
+  **IAM User** (Laith) now has read access to the objects inside the S3 Bucket \`public-images\`! 🎉
 
-  You can hover over the edge connecting the **IAM Policy** and the **S3 Bucket**
-  to see the access level
+  Hover over the edge connecting the **IAM Policy** to the **S3 Bucket**
+  to inspect the access level.
 `;
 
 const POPOVER_MSG8 = `
-  How about we create your own **IAM User** and grant it the same access to the **S3 bucket**?
+  Now let's create your own **IAM User** and grant it the same access to the **S3 Bucket**.
 `;
 
 // This step intentionally has no message.
 const POPOVER_MSG9 = ``;
 
 const POPOVER_MSG10 = `
-  You should know the drill by now - attach the **IAM Policy** to the **IAM User**
+  You know the drill — connect the **IAM Policy** to your **IAM User**.
 `;
 
 const POPOVER_MSG11 = `
-  There you have it! Both **IAM Users** have been granted read access to the **S3 bucket**.
+  That's it! Both **IAM Users** now have read access to the **S3 Bucket**.
 `;
 
 const POPOVER_MSG12 = `
-  By the way, you can always check your objectives on the right side of the screen.
+  You can always track your progress by checking the objectives panel on the right.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
