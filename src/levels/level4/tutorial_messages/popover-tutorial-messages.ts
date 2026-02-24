@@ -2,9 +2,9 @@ import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  As usual, you'll find the list of objectives in the right side panel. Good Luck! 💪 |lg
+  Your objectives are listed in the right panel. Good luck! 💪|lg
 
-  ***Click 'Next' to begin your mission!***
+  ***Click 'Next' to start your mission.***
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [

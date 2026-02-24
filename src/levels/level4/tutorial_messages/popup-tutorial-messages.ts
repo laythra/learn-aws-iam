@@ -1,24 +1,22 @@
 import type { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
-You are the IAM Security Specialist at *TimeShift Labs*,
-a company that handles sensitive customer data and has strict compliance requirements.|lg
+You are the IAM Security Specialist at *TimeShift Labs* —
+a company that handles sensitive customer data with strict compliance requirements.|lg
 
-&nbsp;
-
-*TimeShift Labs* uses the following services from AWS:|lg
-* **DynamoDB** - To store customer and analytics data
-* **S3** - To store public assets and DB backups
+***TimeShift Labs*** uses the following AWS services:|lg
+* **DynamoDB** — Stores customer and analytics data
+* **S3** — Stores public assets and private database backups
 `;
 
 const POPUP_MSG_2 = `
-  In this level, you edited a bunch of policies in an existing setup
-  to ensure that the **IAM policies** are set up correctly|lg
+  In this level, you audited and fixed policies in an existing setup
+  to ensure the **IAM policies** were correctly configured.|lg
 
-  Hopefully by now, you should have a good understanding of how to create and edit
-  **IAM policies** to meet the requirements of your organization.|lg
+  By now, you should have a solid understanding of how to create and edit
+  **IAM policies** to meet your organization's access requirements.|lg
 
-  In the upcoming level, we will explore a n
+  In the next level, we'll explore **IAM Roles** and how they differ from users and groups.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
