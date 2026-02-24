@@ -159,7 +159,7 @@ export const stateMachine = createStateMachineSetup<
               params: { objectives: POLICY_CREATION_OBJECTIVES[0] },
             },
             {
-              type: 'update_whitelisted_element_ids',
+              type: 'append_whitelisted_element_ids',
               params: {
                 whitelisted_element_ids: [
                   ElementID.NewEntityBtn,
@@ -356,7 +356,11 @@ export const stateMachine = createStateMachineSetup<
         },
         level_finished: {
           type: 'final',
-          entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[5] } }],
+          entry: [
+            'store_checkpoint',
+            'hide_unncessary_edges_or_nodes_warning',
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[5] } },
+          ],
         },
       },
     },

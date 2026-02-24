@@ -1,37 +1,38 @@
 import { FixedPopoverMessage } from '@/levels/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  What you're seeing is the **Policy's** statement,
-  it's the core of the policy and it's represented in JSON format.
+  What you're seeing is the **Policy's** statement —
+  the core of the policy, represented in JSON format.
 
-  ***Close the Policy's statement by clicking on the top right close icon.***
+  ***Close the policy statement by clicking the top-right close icon.***
 `;
 
 const POPOVER_MSG2 = `
-  Aside from the **Policy's** content, you can also view the **Policy's** **ARN** by clicking
-  on the icon to the left of the content icon.
+  In addition to the **Policy's** content, you can also view its **ARN** by clicking
+  the \`:icon[IdentificationIcon]:\` icon next to the content button
 `;
 
 const POPOVER_MSG3 = `
-  You might be wondering, what is an **ARN**?
-  Simply put, an **ARN** is a unique identifier used to
+  ::badge[CONCEPT]::
+  What's an **ARN**?
+  An **ARN** (Amazon Resource Name) is a unique identifier used to
   distinguish an AWS resource across the entire AWS ecosystem.
 
-  e.g. \`arn:aws:iam::123456789012:policy/my-policy\`
+  e.g. \`arn:aws:iam::123456456789012:policy/my-policy\`
 
-  It's not exclusive to **IAM**; rather,
-  it's an AWS-wide concept used to identify and reference resources.
+  ARNs aren't exclusive to **IAM** —
+  they're an AWS-wide concept used to identify and reference any resource.
 `;
 
 const POPOVER_MSG4 = `
-  An **S3 Bucket** resource is now presented to you.
-  You can copy the **Bucket's ARN** by clicking on the *id* icon \`:icon[IdentificationIcon]:\`
-  and then clicking on the copy \`:icon[ClipboardDocumentIcon]:\` icon next to the ARN.
+  An **S3 Bucket** resource is now visible.
+  Copy the **Bucket's ARN** by clicking the *id* icon \`:icon[IdentificationIcon]:\`
+  and then the copy \`:icon[ClipboardDocumentIcon]:\` icon next to the ARN.
 `;
 
 const POPOVER_MSG5 = `
   You nailed it! Developers from both departments
-  now have their permissions properly set up 🫡
+  now have their permissions properly configured 🫡
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
