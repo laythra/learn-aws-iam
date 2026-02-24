@@ -1,4 +1,5 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "required": [
     "Version",
@@ -7,9 +8,7 @@
   "properties": {
     "Version": {
       "type": "string",
-      "enum": [
-        "2012-10-17"
-      ]
+      "const": "2012-10-17"
     },
     "Statement": {
       "type": "array",
@@ -23,12 +22,13 @@
           "Resource"
         ],
         "properties": {
+          "Sid": {
+            "type": "string",
+            "minLength": 1
+          },
           "Effect": {
             "type": "string",
-            "enum": [
-              "Allow",
-              "Deny"
-            ]
+            "const": "Allow"
           },
           "Action": {
             "type": "array",
@@ -40,30 +40,29 @@
               ]
             },
             "minItems": 2,
-            "maxItems": 2
+            "maxItems": 2,
+            "uniqueItems": true
           },
           "Resource": {
             "oneOf": [
               {
                 "type": "string",
-                "enum": [
-                  "arn:aws:cloudfront::123456789012:distribution/E1A2B3C4D5E6F7"
-                ]
+                "const": "arn:aws:cloudfront::123456789012:distribution/E1A2B3C4D5E6F7"
               },
               {
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "enum": [
-                    "arn:aws:cloudfront::123456789012:distribution/E1A2B3C4D5E6F7"
-                  ]
+                  "const": "arn:aws:cloudfront::123456789012:distribution/E1A2B3C4D5E6F7"
                 },
                 "minItems": 1,
-                "maxItems": 1
+                "maxItems": 1,
+                "uniqueItems": true
               }
             ]
           }
-        }
+        },
+        "additionalProperties": false
       }
     }
   },
