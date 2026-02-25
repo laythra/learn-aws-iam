@@ -1,4 +1,5 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "required": [
     "Version",
@@ -7,9 +8,7 @@
   "properties": {
     "Version": {
       "type": "string",
-      "enum": [
-        "2012-10-17"
-      ]
+      "const": "2012-10-17"
     },
     "Statement": {
       "type": "array",
@@ -25,18 +24,17 @@
         "properties": {
           "Effect": {
             "type": "string",
-            "enum": [
-              "Allow"
-            ]
+            "const": "Allow"
           },
           "Action": {
             "type": "array",
             "items": {
               "type": "string",
-              "enum": [
-                "s3:GetObject"
-              ]
-            }
+              "const": "s3:GetObject"
+            },
+            "minItems": 1,
+            "maxItems": 1,
+            "uniqueItems": true
           },
           "Resource": {
             "oneOf": [
@@ -46,20 +44,17 @@
                 "maxItems": 1,
                 "uniqueItems": true,
                 "items": {
-                  "enum": [
-                    "arn:aws:s3:::public-images/*"
-                  ]
+                  "const": "arn:aws:s3:::public-images/*"
                 }
               },
               {
                 "type": "string",
-                "enum": [
-                  "arn:aws:s3:::public-images/*"
-                ]
+                "const": "arn:aws:s3:::public-images/*"
               }
             ]
           }
-        }
+        },
+        "additionalProperties": false
       }
     }
   },

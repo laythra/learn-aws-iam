@@ -2,30 +2,31 @@ import { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
 In the previous level, we covered **IAM Groups** and
-how they are quite simple yet quite powerful in terms of enhancing permissions management scale|lg
+how they simplify permission management at scale.|lg
 
-This level will tackle **Customer Managed IAM Policies** and **AWS Managed Policies**.|lg
+This level introduces **Customer Managed IAM Policies** and **AWS Managed Policies**.|lg
 `;
 
 const POPUP_MSG_2 = `
-Every policy we have used so far was **AWS Managed**|lg
+Every policy we've used so far was **AWS Managed**.|lg
 
-* **AWS Managed Policies** are pre-built policies that you can attach
+* **AWS Managed Policies** are pre-built policies you can attach
  to your IAM \`users\`, \`groups\`, and \`roles\`.
-* They are designed to cover common use cases and are maintained by AWS.
-* They cannot be edited, only attached or detached.
+* They're designed to cover common use cases and are maintained by AWS.
+* They can't be edited — only attached or detached.
 
-**Customer Managed Policies** are policies that you create and manage yourself.|lg
+**Customer Managed Policies** are policies you create and manage yourself.|lg
 
 * You create them as \`JSON\` documents and attach them
 to your **IAM users**, **groups**, or **roles**.
-* They give you more control over the permissions you grant as they are customized by you.
+* They give you more control over permissions since they're fully customized by you.
 `;
 
 const POPUP_MSG_3 = `
-Policies whether **AWS Managed** or **Customer Managed** have the same structure:
+::badge[CONCEPT]::
+Policies — whether **AWS Managed** or **Customer Managed** — have the same structure:
 
-* **Effect**: Whether the policy allows or denies the access
+* **Effect**: Whether the policy allows or denies access
 * **Action**: The specific actions that the policy allows or denies
 * **Resource**: The resources to which the policy applies
 
@@ -44,41 +45,46 @@ Policies whether **AWS Managed** or **Customer Managed** have the same structure
 `;
 
 const POPUP_MSG_4 = `
-You are a DevOps engineer responsible for managing the **IAM policies**
- for the tiny startup you work at.|lg
+You're a DevOps engineer responsible for managing **IAM policies**
+ for a small startup.|lg
 
 \\
-The company you work for has only two teams, the **Frontend** and **Backend** teams.
+The company has two teams: **Frontend** and **Backend**.
 * **Frontend Team**:
   - Requires ***read/write*** access to specific **S3 buckets**
-   for storing static assets, ie., images.
-  - They also require a read access to specific **CloudFront Distributions** for monitoring the
-assets content delivery.
+   for storing static assets (e.g., images).
+  - Needs read access to specific **CloudFront Distributions**
+   to monitor content delivery.
 * **Backend Team**:
-  * Requires full access access to specific **DynamoDB** tables
+  - Requires full access to specific **DynamoDB** tables.
 `;
 
 const POPUP_MSG_5 = `
-**Important thing to note:** We sometimes need to give backend developers access
-to the same \`S3\` Buckets that frontend developers have access to.|lg
+**Important note:** Backend developers sometimes need access
+to the same \`S3\` buckets that frontend developers use.|lg
 
-Ensure that you create policies that are reusable
+::badge[RULE]::
+Ensure you create reusable policies
 while maintaining the **principle of least privilege**.|lg
 
-The **principle of least privilege** means giving users or systems
-the minimum access they need to perform their tasks,
-such as allowing a database administrator to view
-but not modify financial records unless their job specifically requires it.
-It's not an IAM exclusive concept, but rather a security best practice.
+&nbsp;
+
+> **::badge[CONCEPT]:: What is the Principle of Least Privilege?**|lg
+>
+> The **principle of least privilege** means giving users or systems
+> only the minimum access they need to perform their tasks.
+> For example, allowing a database administrator to view
+> but not modify financial records unless their role specifically requires it.
+> It's not IAM-specific — it's a foundational security best practice.|lg
 `;
 
 const POPUP_MSG_6 = `
-Your team now has the proper permissions to access the resources they need
+Your teams now have the proper permissions to access the resources they need,
 and the principle of least privilege is being followed.|lg
 
-This level was a refreshing overview of everything we've covered so far.
-In the upcoming level, we will start editing customer managed policies
-to achieve the desired permissions setup we want|lg
+This level reinforced everything we've covered so far.
+In the next level, we'll start editing customer managed policies
+to fine-tune the permissions you need.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

@@ -4,22 +4,22 @@ import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-typ
 
 const POPOVER_MSG1 = `
   This is an **AWS Managed Policy**. Click the top-right icon \`:icon[CodeBracketIcon]:\`
-   to view its contents.
+  to view its contents.
 `;
 
 const POPOVER_MSG2 = ``;
 
 const POPOVER_MSG3 = `
-  Using the \`ARN\` you copied, let's create a new **Customer Managed Policy**.
+  Using the \`ARN\` you copied, create a new **Customer Managed Policy**.
 `;
 
 const POPOVER_MSG4 = `
-  You have created your first Customer Managed Policy!
-  Warm up phase is over, click "NEXT" to proceed to the level's next part.
+  You've created your first Customer Managed Policy!
+  The warm-up phase is over — click ***NEXT*** to proceed to the next part of the level.
 `;
 
 const POPOVER_MSG5 = `
-  You can view some hints and tips on the right side panel.
+  Check the right panel for hints and tips.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [

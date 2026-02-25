@@ -33,13 +33,16 @@ const OBJECTIVE3_HINT = `
 `;
 
 const OBJECTIVE4_HINT = `
-  Reading from a **DynamoDB table** requires the following permissions:
-  - \`dynamodb:GetItem\` ::badge[SINGLE ITEM LOOKUP]::
-  - \`dynamodb:Query\` ::badge[FILTERED MULTI-ITEM FETCH]::
+  To read from a **DynamoDB table**, you need:
+  - \`dynamodb:GetItem\` ::badge[RETRIEVE SINGLE ITEM]::
+  - \`dynamodb:Query\` ::badge[QUERY MULTIPLE ITEMS]::
 
-  Writing to a **DynamoDB table** requires the following permissions:
-  - \`dynamodb:PutItem\` ::badge[FOR INSERT]::
-  - \`dynamodb:UpdateItem\` ::badge[FOR UPDATE]::
+  To write to a **DynamoDB table**, you need:
+  - \`dynamodb:PutItem\` ::badge[CREATE NEW ITEM]::
+  - \`dynamodb:UpdateItem\` ::badge[MODIFY EXISTING ITEM]::
+
+  ::badge[NOTE]:: Additional permissions like \`dynamodb:DeleteItem\` and \`dynamodb:Scan\`
+  also exist for DynamoDB operations, but aren't required for this objective
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [
