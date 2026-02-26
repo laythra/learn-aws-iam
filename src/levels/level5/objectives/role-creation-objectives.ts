@@ -7,7 +7,7 @@ import { IAMRoleCreationObjective, ObjectiveType } from '@/levels/types/objectiv
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const HINT_MSG1 = `
-  Grant the **EC2 Instance** write access into the **S3 Bucket** \`users-certificates\`
+  Grant the **EC2 Instance** write access into the **S3 Bucket** \`chat-images\`
 `;
 
 const HINT_MSG2 = `
@@ -19,7 +19,7 @@ const CALLOUT_MSG1 = `
   What you're creating now is called a **Trust Policy**.
   It's another type of policy that defines which IAM entities can assume the role.
 
-  a trust policy can be attached to one role at time,
+  a trust policy can be attached to one role at a time,
   so it's embedded in the role itself
 `;
 
@@ -69,7 +69,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
         },
         {
           path: '/Statement/0/Action',
-          content: 'Allow the Principle to assume the role',
+          content: 'Allows the Principal to assume the role',
           color: 'green',
         },
         {
@@ -99,6 +99,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
         required_policies: [],
         required_principles: [],
       },
+      alert_message: 'Use this role to grant the EC2 instance the required access',
     } satisfies Partial<IAMRoleCreationObjective<FinishEventMap>>,
     {
       id: RoleNodeID.LambdaRole,
@@ -114,6 +115,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
         required_policies: [],
         required_principles: [],
       },
-    } satisfies Partial<IAMRoleCreationObjective<FinishEventMap>>,
+      alert_message: 'Use this role to grant the Lambda function the required access',
+    },
   ].map(objective => createRoleCreationObjective(objective)),
 ];

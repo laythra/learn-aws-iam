@@ -3,7 +3,7 @@ import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  Click on the top right to see view its **Trust Policy**
+  Click on the top right to view its **Trust Policy**
 `;
 
 const POPOVER_MSG3 = `
@@ -14,12 +14,12 @@ const POPOVER_MSG4 = `
   \`financial-reports-bucket\`
 `;
 const POPOVER_MSG5 = `
-  The **IAM Role** you just created merely has a "Trust Policy" attached to it
+  The **IAM Role** you just created merely has a **Trust Policy** attached to it
 `;
 
 const POPOVER_MSG6 = `
   The **Trust Policy** specifies who can assume the role,
-  while the permissions granted to the principal are determined by the attached policies
+  while the permissions granted to the principal are determined by the attached policies.
 `;
 
 const POPOVER_MSG7 = `
@@ -33,12 +33,12 @@ const POPOVER_MSG8 = `
 `;
 
 const POPOVER_MSG9 = `
-  We're going to introduce a more intricate scenario involving **IAM Role**,
-  involving service-to-service communication
+  We're going to introduce a more intricate scenario involving **IAM Roles**
+  and service-to-service communication.
 `;
 
 const POPOVER_MSG10 = `
-  Your **Lambda Function** now has the necessary permissions to read objects from the S3 bucket
+  Your **Lambda Function** now has the necessary permissions to read objects from the **S3 Bucket**.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
@@ -87,7 +87,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_title: 'S3 Bucket Access',
     popover_content: POPOVER_MSG7,
     show_next_button: false,
-    show_close_button: false,
+    show_close_button: true,
     popover_placement: 'left',
   },
   {

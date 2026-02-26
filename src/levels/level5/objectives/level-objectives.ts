@@ -13,7 +13,7 @@ const TutorialObjective2Description = `
 
 const TutorialObjective3Description = `
   Grant the IAM User \`finance-user\` read access
-  to the S3 Bucket \`financial-reports\` through the IAM Role you just created
+  to the S3 Bucket \`financial-reports-bucket\` through the IAM Role you just created
 `;
 
 const InLevelObjective1Description = `
