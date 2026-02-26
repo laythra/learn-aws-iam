@@ -4,17 +4,17 @@ import { ObjectiveType, type LevelObjective } from '@/levels/types/objective-typ
 
 const LEVEL_OBJECTIVE1 = `
 **Developers** should have *read/write* access to the \`CustomerData\` **DynamoDB Table**
-and *read/write* access to the \`timeshift-assets\` **S3 Bucket** Objects
+and *read* access to the \`timeshift-assets\` **S3 Bucket** objects
 `;
 
 const LEVEL_OBJECTIVE2 = `
-**Data Scientists** should be able to read/write objects
-from/to the \`timeshift-assets\` **S3 Bucket**
-and read/write to the \`analytics-data\` **DynamoDB Table**
+**Data Scientists** should have
+*read/write* access to the \`timeshift-assets\` **S3 Bucket** objects
+and *read/write* access to the \`AnalyticsData\` **DynamoDB Table**
 `;
 
 const LEVEL_OBJECTIVE3 = `
-**Interns** should only have read access to the \`timeshift-assets\` **S3 Bucket**
+**Interns** should have *read-only* access to the \`timeshift-assets\` **S3 Bucket** objects
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[] = [

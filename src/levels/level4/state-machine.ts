@@ -234,6 +234,7 @@ export const stateMachine = createStateMachineSetup<
         },
         level_finished: {
           entry: [
+            'store_checkpoint',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
             'hide_fixed_popovers',
             'hide_unncessary_edges_or_nodes_warning',

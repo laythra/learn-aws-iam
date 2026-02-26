@@ -1,51 +1,47 @@
 import { FixedPopoverMessage } from '@/levels/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
-***TimeShift Labs*** has recently discovered that some users have access to data and services
-beyond what is necessary for their roles. This over-permission is not immediately obvious and stems
-from subtle misconfigurations in their **IAM policies**
+***TimeShift Labs*** has discovered that some users have access to data and services
+beyond what their roles require. The over-permissioning isn't obvious —
+it stems from subtle misconfigurations in their **IAM policies**.
 `;
 
 const FIXED_POPOVER_MSG2 = `
-  Luckily, *TimeShift Labs* has a very simple technical hierarchy:|lg
+  *TimeShift Labs* has a straightforward technical hierarchy:|lg
 
-  * **Developers** - Who should only have read access (GetItem)
-      to the \`AnalyticsData\` table inside **DynamoDB** and no access to \`CustomerData\` table.
+  * **Developers** — Should only have read access
+      to the \`AnalyticsData\` table in **DynamoDB**, with no access to \`CustomerData\`.
 
-  * **Data Scientists** - Who should be able to ***read/write*** objects
-      from/to the \`timeshift-assets\` **S3 Bucket** and **read/write**
-      objects from/to the \`AnalyticsData\` table inside **DynamoDB**.
+  * **Data Scientists** — Should be able to ***read/write*** objects
+    from/to the \`timeshift-assets\` **S3 Bucket** and ***read/write*** from/to
+    the \`AnalyticsData\` table in **DynamoDB**.
 
-  * **Interns** - Who should be able to read objects from the \`timeshift-assets\` **S3 Bucket**.
+  * **Interns** — Should only be able to read objects from the \`timeshift-assets\` **S3 Bucket**.
 
-  Your role comes here to **Edit** the **IAM policies**
-   to ensure that the above hierarchy is enforced.
+  Your job is to **edit** the **IAM policies** to enforce this hierarchy.
 `;
 
 const FIXED_POPOVER_MSG3 = `
-You will presented with *TimeShift Labs*' current IAM setup, which includes their current:
-**IAM Users**, **IAM Resources**, and **IAM Policies**
+You will be presented with *TimeShift Labs*' current IAM setup, including their
+**IAM Users**, **IAM Resources**, and **IAM Policies**.
 
-You are tasked with the following points:
-* Ensure no user has more permissions to their designated resources than necessary.
-* Ensure no user has missing permissions to their designated resources.
+Your task:
+* Ensure no user has more permissions than their role requires.
+* Ensure no user is missing permissions they need.
 
-
-**Edit** the **IAM policies** to ensure that the above hierarchy is enforced.
+**Edit** the **IAM policies** to enforce the hierarchy from the previous step.
 `;
 
 const FIXED_POPOVER_MSG4 = `
-  ::badge[Info]:: This level requires you to **edit** existing IAM policies
-  to fix permission issues.
-
+  ::badge[CORE]::
   You can edit a policy's content by clicking the \`:icon[PencilSquareIcon]:\` icon
   in the top-right corner of the policy's content view.
 `;
 
 const FIXED_POPOVER_MSG5 = `
-  Permissions are now sorted out!
-  Developers, Data Scientists, and Interns have the correct permissions,
-  you should be a master at defining permissions by now!
+  Permissions are all sorted out!
+  Developers, Data Scientists, and Interns each have exactly the access they need.
+  You're well on your way to becoming an IAM expert! 🔥
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [
