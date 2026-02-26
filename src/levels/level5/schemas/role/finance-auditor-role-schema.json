@@ -10,13 +10,12 @@
   "properties": {
     "Version": {
       "type": "string",
-      "enum": [
-        "2012-10-17"
-      ],
-      "description": "The version of the IAM policy language."
+      "const": "2012-10-17"
     },
     "Statement": {
       "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
       "items": {
         "type": "object",
         "required": [
@@ -28,9 +27,7 @@
         "properties": {
           "Effect": {
             "type": "string",
-            "enum": [
-              "Allow"
-            ]
+            "const": "Allow"
           },
           "Principal": {
             "type": "object",
@@ -41,20 +38,17 @@
             "properties": {
               "AWS": {
                 "type": "string",
-                "enum": [
-                  "arn:aws:iam::123456789012:user/finance-user"
-                ]
+                "const": "arn:aws:iam::123456789012:user/finance-user"
               }
             }
           },
           "Action": {
             "type": "string",
-            "enum": [
-              "sts:AssumeRole"
-            ]
+            "const": "sts:AssumeRole"
           }
         }
       }
     }
-  }
+  },
+  "additionalProperties": false
 }
