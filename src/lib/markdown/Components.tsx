@@ -9,6 +9,8 @@ import {
   Badge,
   OrderedList,
   Icon,
+  Alert,
+  AlertDescription,
 } from '@chakra-ui/react';
 import { chakra } from '@chakra-ui/react';
 import * as HeroIcons from '@heroicons/react/24/solid';
@@ -181,6 +183,23 @@ export const customMarkdownComponents: Components = {
     } else {
       return <div {...props} />;
     }
+  },
+  blockquote: ({ children }: JSX.IntrinsicElements['blockquote']) => {
+    // TODO: Allow customizing the color scheme of the alert through markdown syntax
+    const colorScheme = 'orange';
+
+    return (
+      <Alert
+        status='info'
+        variant='left-accent'
+        colorScheme={colorScheme}
+        borderRadius='sm'
+        fontSize='sm'
+        my={2}
+      >
+        <AlertDescription>{children}</AlertDescription>
+      </Alert>
+    );
   },
   icon: ({ node, ...props }: { node?: MarkdownNode; [key: string]: unknown }) => {
     const iconName = node?.properties?.name as string;
