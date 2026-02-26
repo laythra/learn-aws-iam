@@ -34,7 +34,8 @@ const FIXED_POPOVER_MSG6 = `
   * Grant the **EC2 instance** the necessary permissions to *write* into the **S3 bucket**
   * Grant the **Lambda Function** the necessary permissions to *read* from the **S3 bucket**
 
-  For this scenario, attach **IAM Policies** to **IAM Roles** and let the services assume those roles.
+  For this scenario, attach **IAM Policies** to **IAM Roles**
+  and let the services assume those roles.
 `;
 
 const FIXED_POPOVER_MSG7 = `
