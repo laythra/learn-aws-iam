@@ -396,6 +396,15 @@ export const createStateMachineSetup = <
           newMetadata: { alert_message: undefined },
         });
       }),
+      show_node_help_tooltip: enqueueActions(
+        ({ enqueue }, { nodeId, content }: { nodeId: string; content: string }) => {
+          enqueue.raise({
+            type: StatefulStateMachineEvent.EditNodeMetadata,
+            nodeId,
+            newMetadata: { alert_message: content },
+          });
+        }
+      ),
       append_level_objectives: assign({
         level_objectives: (
           { context },
