@@ -17,7 +17,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       ],
       on_finish_event: EdgeConnectionFinishEvent.IDENTITY_POLICY_ATTACHED_TO_IAM_USER,
       is_finished: false,
-      established_edge_hovering_label: 'Attached To',
+      established_edge_hovering_label: 'Attached to',
       established_edge_target_handle: 'bottom',
     },
   ],

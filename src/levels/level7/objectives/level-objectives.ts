@@ -3,29 +3,29 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/levels/types/objective-types';
 
 const Objective1Description = `
-  Create a **Resource Based Policy** which allows *read*
-  access to the **S3 Bucket** \`public-images\`
+  Create a **resource-based policy** that allows *read*
+  access to the **S3 bucket** \`umbrella-files\`.
 `;
 
 const Objective2Description = `
-
-  Create an **Identity Based Policy** in the *Originating Account* which should allow
-  the **IAM User** \`leon-kennedy\` to read/write to the **S3 Bucket** \`public-images\`
+  Create an **identity-based policy** in the *Trusted Account*
+  that allows the **IAM user** \`leon-kennedy\` to read/write
+  to the **S3 bucket** \`rpd-case-files\`.
 `;
 
 const Objective3Description = `
-  Grant the **IAM User** \`leon-kennedy\` in the *Trusted Account* the ability to
-  read/write to the **S3 Bucket** \`rpd-case-files\` by attaching the previously created
-  **Identity Based Policy**
+  Attach that identity-based policy to the **IAM user** \`leon-kennedy\`
+  in the *Trusted Account*.
 `;
 
 const Objective4Description = `
-  Create a **Resource Based Policy** which
-  allows *read/write* access to the **S3 Bucket** \`public-images\`
+  Create a **resource-based policy** in the *Trusting Account*
+  that allows \`leon-kennedy\` to read/write
+  to the **S3 bucket** \`rpd-case-files\`.
 `;
 
 const OBJECTIVE2_HINT = `
-  \`s3:GetObject\` allows reading. what about writing?
+  \`s3:GetObject\` allows reading. Which action enables writing?
 
   - \`s3:DeleteObject\`
   - \`s3:ListBucket\`
@@ -34,12 +34,13 @@ const OBJECTIVE2_HINT = `
 `;
 
 const OBJECTIVE3_HINT = `
-  The created **Policy** should be identical
-  to the resource based policy we created in the previous step, with the exception of one field.
+  After creating the policy, connect it to the user node.
+  This grants the user identity-side permission.
 `;
 
 const OBJECTIVE4_HINT = `
-  A pretty straightforward task, do we need to to establish a cross-account connection here?
+  This policy must include a \`Principal\` for \`leon-kennedy\`.
+  Cross-account access requires both identity-side and resource-side permission.
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [
@@ -63,8 +64,8 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
       id: LevelObjectiveID.ATTACH_IDENTITY_BASED_POLICY_TO_USER,
-      label: Objective4Description,
-      hint_text: OBJECTIVE4_HINT,
+      label: Objective3Description,
+      hint_text: OBJECTIVE3_HINT,
     },
   ],
   [
@@ -72,8 +73,8 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
       id: LevelObjectiveID.CREATE_IN_LEVEL_RESOURCE_BASED_POLICY,
-      label: Objective3Description,
-      hint_text: OBJECTIVE3_HINT,
+      label: Objective4Description,
+      hint_text: OBJECTIVE4_HINT,
     },
   ],
 ];

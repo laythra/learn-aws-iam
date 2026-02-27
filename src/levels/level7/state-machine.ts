@@ -19,6 +19,7 @@ import {
   FinishEventMap,
   ResourcePolicyCreationFinishEvent,
 } from './types/finish-event-enums';
+import { UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 
@@ -29,8 +30,11 @@ export const stateMachine = createStateMachineSetup<
   id: 'level7_state_machine',
   initial: 'inside_tutorial',
   context: {
-    level_title: 'Resource Based Policies',
-    level_description: 'Resource Based Policies',
+    level_title: 'Resource-Based Policies',
+    level_description: `
+      Learn how resource-based policies grant cross-account access
+      without requiring IAM role assumption.
+    `,
     level_number: 7,
     show_popovers: false,
     show_popups: false,
@@ -105,6 +109,13 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: UserNodeID.TutorialFirstUser,
+                content: 'Grant this user access to the S3 bucket via a resource-based policy',
+              },
+            },
             {
               type: 'update_red_dot_visibility',
               params: {
@@ -212,6 +223,14 @@ export const stateMachine = createStateMachineSetup<
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[4] },
             },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: UserNodeID.InsideLevelUser,
+                content:
+                  'Grant this user read access to the S3 bucket via an identity-based policy',
+              },
+            },
           ],
           on: {
             [ResourcePolicyCreationFinishEvent.IN_LEVEL_IDENTITY_POLICY_CREATED]: {
@@ -247,6 +266,10 @@ export const stateMachine = createStateMachineSetup<
                 {
                   type: 'finish_level_objective',
                   params: { id: LevelObjectiveID.ATTACH_IDENTITY_BASED_POLICY_TO_USER },
+                },
+                {
+                  type: 'hide_node_help_tooltip',
+                  params: { nodeId: UserNodeID.InsideLevelUser },
                 },
               ],
             },
@@ -287,6 +310,13 @@ export const stateMachine = createStateMachineSetup<
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[7] },
             },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: UserNodeID.InsideLevelUser,
+                content: 'Grant the user access to the S3 bucket via a resource-based policy',
+              },
+            },
           ],
           on: {
             [ResourcePolicyCreationFinishEvent.IN_LEVEL_RESOURCE_BASED_POLICY_CREATED]: {
@@ -295,6 +325,10 @@ export const stateMachine = createStateMachineSetup<
                 {
                   type: 'finish_level_objective',
                   params: { id: LevelObjectiveID.CREATE_IN_LEVEL_RESOURCE_BASED_POLICY },
+                },
+                {
+                  type: 'hide_node_help_tooltip',
+                  params: { nodeId: UserNodeID.InsideLevelUser },
                 },
               ],
             },

@@ -8,20 +8,30 @@ import { IAMResourcePolicyCreationObjective, ObjectiveType } from '@/levels/type
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE1_CALLOUT_MSG = `
-  The \`Principal\` takes the same format just like when creating a **Trust Policy**,
+  The \`Principal\` uses the same formats as in role trust policies:
 
-  ie: \`{ "AWS": "<user_arn>" }\` for an **IAM User** Principal
+  \`{ "AWS": "<user_arn>" }\` for an IAM user principal
 
-  \`{ "Service": "<service-name>.amazonaws.com" }\` for an **AWS Service** Principal.
+  \`{ "Service": "<service-name>.amazonaws.com" }\` for an AWS service principal.
+`;
+
+const OBJECTIVE2_CALLOUT_MSG = `
+  Create an resource-based policy that grants the user \`leon-kennedy\`
+  read/write access to the S3 bucket \`rpd-case-files\`
 `;
 
 const OBJECTIVE1_HINT_MSG1 = `
-  Recall that we need to give the objects inside the resource access to the Principal
+  Remember: permissions are granted to objects inside the bucket.
 `;
 
 const OBJECTIVE1_HINT_MSG2 = `
-  We will to use the format: \`arn:aws:s3:::your_bucket_name/*\`
-  to give access to all objects inside the bucket
+  Use \`arn:aws:s3:::your_bucket_name/*\`
+  to target all objects inside the bucket.
+`;
+
+const OBJECTIVE2_HINT_MSG3 = `
+  This resource-policy is quite similar to the identity-based policy you created earlier,
+  but it needs a \`Principal\` field to specify who is granted access to the resource.
 `;
 
 export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjective<
@@ -96,6 +106,13 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
         {
           from: ResourcePolicyNodeID.InsideLevelResourceBasedPolicy,
           to: ResourceNodeID.InsideLevelS3Bucket,
+        },
+      ],
+      callout_message: OBJECTIVE2_CALLOUT_MSG,
+      hint_messages: [
+        {
+          title: 'Hint',
+          content: OBJECTIVE2_HINT_MSG3,
         },
       ],
       extra_data: {
