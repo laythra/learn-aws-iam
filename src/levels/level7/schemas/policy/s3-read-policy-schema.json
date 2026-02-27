@@ -15,6 +15,7 @@
     "Statement": {
       "type": "array",
       "minItems": 1,
+      "maxItems": 1,
       "items": {
         "type": "object",
         "required": [
@@ -31,21 +32,18 @@
           "Action": {
             "oneOf": [
               {
-                "type": "array",
-                "uniqueItems": true,
-                "contains": {
-                  "enum": [
-                    "s3:GetObject"
-                  ]
-                },
-                "minItems": 1,
-                "maxItems": 1
+                "type": "string",
+                "const": "s3:GetObject"
               },
               {
-                "type": "string",
-                "enum": [
-                  "s3:GetObject"
-                ]
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "const": "s3:GetObject"
+                },
+                "minItems": 1,
+                "maxItems": 1,
+                "uniqueItems": true
               }
             ]
           },
