@@ -25,7 +25,19 @@
             "$ref": "#/definitions/codeDeployStatement"
           }
         ]
-      }
+      },
+      "allOf": [
+        {
+          "contains": {
+            "$ref": "#/definitions/secretsManagerStatement"
+          }
+        },
+        {
+          "contains": {
+            "$ref": "#/definitions/codeDeployStatement"
+          }
+        }
+      ]
     }
   },
   "definitions": {
