@@ -1,5 +1,5 @@
-import { generateAssumeRolePermissionPolicySchema } from './schemas/assume-role-policy-schema';
-import dynamodbReadPolicySchema from './schemas/dynamodb-read-policy-schema.json';
+import { generateAssumeRolePermissionPolicySchema } from './schemas/assume-role-permission-policy-schema';
+import dynamodbReadPolicySchema from './schemas/dynamodb-read-permission-policy-schema.json';
 import dynamodbRoleTrustPolicy from './schemas/dynamodb-role-trust-policy-schema.json';
 import { AccountID, PolicyNodeID, RoleNodeID } from './types/node-id-enums';
 import { generateArn } from '@/lib/iam/arn-generator';

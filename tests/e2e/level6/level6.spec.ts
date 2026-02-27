@@ -20,6 +20,8 @@ import {
 const completeTutorialPopups = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
+  await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[2].title);
+
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[0].popover_title);
 };
 
@@ -90,7 +92,7 @@ const completeLevelFinishPopups = async (tutorial: TutorialActions): Promise<voi
     UserNodeID.TrustedAccountIAMUser,
     POPOVER_TUTORIAL_MESSAGES[0].popover_title
   );
-  await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[2].title);
+  await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[3].title);
 };
 
 const createUnnecessaryNode = async (popups: PopupActions): Promise<void> => {
