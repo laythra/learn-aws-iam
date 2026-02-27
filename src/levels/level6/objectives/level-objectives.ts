@@ -3,48 +3,49 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/levels/types/objective-types';
 
 const Objective1Description = `
-  Create an **IAM Role** to be assumed by the **IAM User** \`omar\`.
+  Create an **IAM Role** in the *Trusting Account* to be assumed by the **IAM User** \`omar\`.
 `;
 
 const Objective2Description = `
-  Create a **Permission Policy** which should allow anyone assuming the **IAM Role**
-  from the previous step to read from the **DynamoDB table** \`finance-reports\`
+  Create a **permissions policy** that allows anyone assuming that role
+  to read from the **DynamoDB table** \`finance-reports\`.
 `;
 
 const Objective3Description = `
-  Create an **IAM Policy** in the *Trusted Account* which should allow
-  the **IAM User** \`omar\` to assume the **IAM Role** in the *Trusting Account*
+  Create an **IAM policy** in the *Trusted Account* that allows
+  the **IAM User** \`omar\` to assume the role in the *Trusting Account*.
 `;
 
 const Objective4Description = `
-  Grant the \`omar\` *Read* access to the **DynamoDB Table** \`finance-reports\`
+  Grant \`omar\` *read* access to the **DynamoDB table** \`finance-reports\`.
 `;
 
 const OBJECTIVE1_HINT = `
-  The **IAM Role** Should have the **IAM User** \`omar\` as the **Trusted Entity**.
+  The role's **trust policy** must include the **IAM User** \`omar\` as a trusted principal.
 
-  This **Role** will ultimately allow its principles to access the **DynamoDB Table**.
+  This role will eventually let its principals access the **DynamoDB table**.
 
-  Where should the **Role** be created? In the *Trusted Account* or the *Trusting Account*?
+  Which account should contain the role: *Trusted* or *Trusting*?
 `;
 
 const OBJECTIVE2_HINT = `
-  Which of these actions do you believe is necessary to achieve full *read access*?
+  To model full *read* access for this level, include all of these actions:
   - \`dynamodb:GetItem\`
   - \`dynamodb:Query\`
   - \`dynamodb:Scan\`
   - \`dynamodb:DescribeTable\`
-  - \`dynamodb:ConditionCheckItem\`
 `;
 
 const OBJECTIVE3_HINT = `
-  Use the action: \`sts:AssumeRole\` to achieve this.
+  Use \`sts:AssumeRole\` for this policy action.
+
+
 `;
 
 const OBJECTIVE4_HINT = `
-  There's one connection that's going to originate from
-  the *Trusted Account* to the *Trusting Account*.
-  Which one is it?
+  One connection must originate in the *Trusted Account*
+  and point to an identity in the *Trusting Account*.
+  Which connection is that?
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [
