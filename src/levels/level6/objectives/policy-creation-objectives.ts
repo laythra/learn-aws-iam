@@ -23,6 +23,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<Fi
               access_level: AccessLevel.Read,
               target_node: ResourceNodeID.TrustingAccountDynamoDBTable,
               target_handle: 'right',
+              source_handle: 'left',
             },
           ],
         },
