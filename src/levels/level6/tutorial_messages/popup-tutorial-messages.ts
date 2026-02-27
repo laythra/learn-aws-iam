@@ -1,37 +1,46 @@
 import { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
 const POPUP_MSG1 = `
-  **IAM Roles** are quite powerful in the realm of AWS.
-  Aside from providing temporary credentials and access,
-  and allowing service to service communication,
-  **IAM Roles** are useful for **Cross-Account Access**.|lg
+  **IAM Roles** are powerful in AWS.
+  Beyond temporary credentials and service-to-service access,
+  they are also a core mechanism for **cross-account access**.|lg
 
-  Suppose you want to grant third-party access to some of your AWS resources,
-  roles help with facilitating this.|lg
+  If you need to grant a third party access to resources in your account,
+  roles let you do that without creating long-term users in your account.|lg
 
-  The following challenge will test your understanding of roles
-  and how they can be used for cross-account access.|lg
+  This challenge will test your understanding of how roles enable
+  secure cross-account access.|lg
 `;
 
 const POPUP_MSG2 = `
-  Suppose you have a **DynamoDB table** in your AWS account called \`FinanceReports\`
-  in which your company stores financial data.|lg
+  Suppose your company stores financial data in a **DynamoDB table**
+  named \`finance-reports\` in the *Trusting Account*.|lg
 
-  Your company decides to hire a third-party auditor to audit this financial data,
-  noting that this third-party auditor is an **IAM User** inside another AWS account.|lg
+  You hire a third-party auditor. Their identity is an **IAM User**
+  named \`omar\` in a different AWS account (the *Trusted Account*).|lg
 
-  We need to allow the third-party **IAM User** to read data from your account's **DynamoDB table**
-  without creating a new **IAM user** inside our account.|lg
+  Your goal is to let \`omar\` read from \`finance-reports\`
+  without creating a new IAM user in the trusting account.|lg
 `;
 
 const POPUP_MSG3 = `
-  Cross Account Access is a powerful feature in AWS that allows
-  you to grant access to resources in one account to users in another account.|lg
+  ::badge[RULE]:: Cross-account role access is a **two-way agreement**:
 
-  This way, we don't need to create and manage new **IAM Users** in the *Trusting Account*
-  and have to deal with the pain of maintaing and sharing credentials.|lg
+  * In the **Trusting Account**, the role's **trust policy** must allow the external principal.
+  * In the **Trusted Account**, the user's **identity policy** must allow \`sts:AssumeRole\`
+    on that specific role ARN.
 
-  The next will dive into a new type of policy called **Resource-Based Policies**,
-  which can also be used to grant cross-account access, in a slightly different/simpler way.|lg
+  >**If either side is missing, role assumption fails**
+`;
+
+const POPUP_MSG4 = `
+  Cross-account access lets you grant permissions in one account
+  to principals from another account.|lg
+
+  This avoids creating and managing duplicate IAM users
+  and sharing long-lived credentials across organizations.|lg
+
+  Next, you'll learn **resource-based policies**,
+  another way to grant cross-account access.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
@@ -44,8 +53,12 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG2,
   },
   {
-    title: 'Cross-Account Access Wrap-up',
+    title: 'Two-Way Agreement',
     content: POPUP_MSG3,
+  },
+  {
+    title: 'Cross-Account Access Wrap-up',
+    content: POPUP_MSG4,
     go_to_next_level_button: true,
   },
 ];

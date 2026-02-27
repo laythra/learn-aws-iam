@@ -6,10 +6,11 @@ import { IAMRoleCreationObjective } from '@/levels/types/objective-types';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 
 export const CALLOUT_MESSAGE1 = `
-  The \`Principal\` part in the trust policy defines the entity that is allowed to assume the role.
+  The \`Principal\` element in a trust policy defines
+  which entity is allowed to assume the role.
 
-  * \`{ "AWS": "<user_arn>" }\` defines an **IAM User** Principal.
-  * \`{ "Service": "<service-name>.amazonaws.com" }\` defines an **AWS Service** Principal.
+  * \`{ "AWS": "<user_arn>" }\` defines an **IAM user principal**.
+  * \`{ "Service": "<service>.amazonaws.com" }\` defines an **AWS service principal**.
 `;
 
 export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[][] = [

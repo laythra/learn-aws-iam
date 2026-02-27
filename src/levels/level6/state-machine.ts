@@ -28,7 +28,7 @@ export const stateMachine = createStateMachineSetup<
   id: 'level6_state_machine',
   initial: 'inside_tutorial',
   context: {
-    level_title: 'Cross Account Access',
+    level_title: 'Cross-Account Access',
     level_description: `
       Learn how to grant access across AWS accounts by
       creating trust relationships and assigning cross-account roles.
@@ -73,6 +73,12 @@ export const stateMachine = createStateMachineSetup<
         },
         tutorial_popup2: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
+          on: {
+            NEXT_POPUP: 'tutorial_popup3',
+          },
+        },
+        tutorial_popup3: {
+          entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },
           on: {
             NEXT_POPUP: {
               target: 'fixed_popover1',
@@ -280,9 +286,10 @@ export const stateMachine = createStateMachineSetup<
         },
         level_finished_popup: {
           entry: [
+            'store_checkpoint',
             'hide_popovers',
             'hide_unncessary_edges_or_nodes_warning',
-            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },
+            { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[3] } },
           ],
         },
       },

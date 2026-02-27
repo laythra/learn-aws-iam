@@ -30,7 +30,8 @@
           "Action": {
             "type": "array",
             "uniqueItems": true,
-            "contains": {
+            "items": {
+              "type": "string",
               "enum": [
                 "dynamodb:GetItem",
                 "dynamodb:Query",
@@ -38,7 +39,8 @@
                 "dynamodb:DescribeTable"
               ]
             },
-            "minItems": 4
+            "minItems": 4,
+            "maxItems": 4
           },
           "Resource": {
             "oneOf": [
