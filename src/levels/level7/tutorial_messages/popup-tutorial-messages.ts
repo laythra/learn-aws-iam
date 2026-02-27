@@ -3,20 +3,20 @@ import { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPUP_MSG1 = `
   All the policies we've dealt with so far granted permissions
-  to users & roles. these policies are known as **Identity-Based Policies**.
+  to users and roles. These are called **identity-based policies**.
 
-  And now that we've touched upon **Cross-Account Access**,
-  it's time to dive into **Resource Based Policies**. they will help us achieve
-  cross account access without having to create and assume **IAM Roles**.
+  Now that you've seen **cross-account access** with roles,
+  let's move to **resource-based policies**.
+  They can grant cross-account access without creating and assuming IAM roles.
 `;
 
 const POPUP_MSG2 = `
-  What's the difference between a **Resource Based Policy** and  an **Identity Based Policy**?
-  Well, it's merely the fact that **Resource Based Policies** can be attached to AWS resrouces,
+  What's the difference between a **resource-based policy** and an **identity-based policy**?
+  Resource-based policies are attached to AWS resources,
   not just IAM entities.
 
-  They have the same JSON structure as **Identity Based Policies**,
-  with the addition of the **Principal** field, which defines the entity that is allowed access.
+  They use a similar JSON structure to identity-based policies,
+  but include a **Principal** field that defines who is allowed access.
 
   ~~~js
   {
@@ -33,40 +33,43 @@ const POPUP_MSG2 = `
     ]
   }|fullwidth
   ~~~
+
+  >::badge[WARNING]::
+  Resource-based policies are embedded in a single resource and cannot be reused.
 `;
 
 const POPUP_MSG3 = `
-  As you have noticed, a **Resource Based Policy** is merely a normal permission policy
-  with the addition of the **Principal** field.
+  A **resource-based policy** is essentially a permissions policy
+  with an added **Principal** field.|lg
 
-  The **Principal** field defines the entity that is allowed access to the resource,
-  and has the same format as the **Principal** field in a **Trust Policy**.
+  The **Principal** field defines who is allowed access to the resource
+  and follows the same principal formats used in trust policies.|lg
 `;
 
 const POPUP_MSG4 = `
-  This level covered the basics of **Resource Based Policies** and how they can be used
+  This level covered the basics of **resource-based policies** and how they can be used
   to grant access to resources across different AWS accounts.
 
-  Here are the list of policy types we've covered so far:
-  - **Identity Based Permission Policies**: attached to IAM entities (users, roles)
-  - **Resource Based Trust Policies**: attached to AWS resources (S3 buckets, SNS topics)
+  Here are the policy types you've covered so far:
+  - **Identity-based policies**: attached to IAM identities (users, roles)
+  - **Resource-based policies**: attached to AWS resources (for example S3 buckets, SNS topics)
   - **Trust Policies**: attached to IAM roles, specifying which entities can assume the role
 
-  The next level will introduce you to a new, powerful
-  type of policies called *Permission Boundaries* 🔥.
+  The next level introduces another powerful policy type:
+  *permission boundaries* 🔥.
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
-    title: 'Resource Based Policies',
+    title: 'Resource-Based Policies',
     content: POPUP_MSG1,
   },
   {
-    title: 'haha',
+    title: 'Resource vs Identity Policies',
     content: POPUP_MSG2,
   },
   {
-    title: 'Resource Based Policies Recap',
+    title: 'Resource-Based Policy Recap',
     content: POPUP_MSG3,
   },
   {
