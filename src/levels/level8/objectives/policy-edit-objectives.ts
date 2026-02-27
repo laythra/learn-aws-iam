@@ -6,10 +6,10 @@ import { AccessLevel, HandleID, IAMNodeEntity } from '@/types/iam-enums';
 import { PolicyGrantedAccess } from '@/types/iam-policy-types';
 
 const OBJECTIVE1_CALLOUT_MSG = `
-  We need to edit this policy to ensure only
-  Senior users have access to the \`slack-alert-token\` secret.
+  Edit this policy so only senior users can access
+  the \`slack-alert-token\` secret.
 
-  This can be achieved using **Conditions**:
+  Use a **Condition**:
 
   ~~~js
   "Condition": {
@@ -19,7 +19,7 @@ const OBJECTIVE1_CALLOUT_MSG = `
   }|fullwidth
   ~~~
 
-  Consult the hints below if you need further help
+  Use the hints below if needed.
 `;
 
 const OBJECTIVE1_HINT_MSG1 = `
@@ -29,45 +29,45 @@ const OBJECTIVE1_HINT_MSG1 = `
   - **\`Bool\`**: evaluates to true or false.
   - **\`NumericEquals\`**: checks if a numeric value matches a specific number.
 
-  For our case, we want to check if username contains \`senior\`,
-  what operator is best suited for this?
+  For this objective, we need to match usernames that start with \`senior-\`.
+  Which operator is best for wildcard matching?
 `;
 
 const OBJECTIVE1_HINT_MSG2 = `
-  As for the condition keys, there are thousands of them available.
-  Each objective key can represent a different use case.
+  There are many condition keys, and each serves a different purpose.
   The most commonly used ones are:
   - **\`aws:username\`**: checks that the username of the principal
   making the request matches a specific value.
   - **\`aws:userid\`**: checks that the unique identifier of
   the principal making the request matches a specific value.
 
-  which one do you think is best suited for this case?
+  Which key is best for this case?
 `;
 
 const OBJECTIVE1_HINT_MSG3 = `
   Condition values can be fixed values, such as "true" or "false".
   We'll cover variables in a later stage, so for now, focus on using fixed values only.
 
-  *Extra Hint: You should use a wildcard (\*) in the value*
+  **Extra Hint: You should use a wildcard (\`*\`) in the value**
 `;
 
 const OBJECTIVE2_HINT_MSG1 = `
-  Recall the conditition operators we discussed earlier?
-  For this objective, using **\`StringLike\`** is spurious,
-  as we want to check if the \`role\` tag has a value of \`senior\` strictly.
+  Recall condition operators from earlier.
+  For this objective, **\`StringLike\`** is unnecessary
+  because we need an exact match for \`role = senior\`.
 
-  What operator do you think is best suited for this case?
+  Which operator is best here?
 `;
 
 const OBJECTIVE2_HINT_MSG2 = `
-  What we mainly want to achieve is check if the \`role\` tag has a value of \`senior\`.
+  We need to verify that the calling principal has \`role = senior\`.
 
-  There are multiple Condititon keys  which allow us to operate on tags:
-  - **\`aws:RequestTag/<tag-name>\`**: checks the tags associated with the request.
-  - **\`aws:ResourceTag/tag-name>\`**: checks the tags associated with the resource.
+  Common tag-related condition keys include:
+  - **\`aws:PrincipalTag/<tag-name>\`**: checks tags on the calling principal.
+  - **\`aws:RequestTag/<tag-name>\`**: checks tags passed in the API request.
+  - **\`aws:ResourceTag/<tag-name>\`**: checks tags on the target resource.
 
-  Which one do you think is best suited for this case?
+  Since users are tagged in this level, which key should you use?
 `;
 const GRANTED_RESOURCES: PolicyGrantedAccess<ObjectivesApplicableNodesFnName>[] = [
   {
@@ -114,8 +114,8 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       ],
       help_badges: [
         {
-          path: '/Statement/1/Condition',
-          content: 'Condition element to restrict access to seniors',
+          path: '/Statement/1',
+          content: 'Add a condition to this statement to restrict access to senior users only',
           color: 'yellow',
         },
       ],

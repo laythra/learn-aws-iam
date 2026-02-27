@@ -1,5 +1,3 @@
-import { assign } from 'xstate';
-
 import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { createStateMachineSetup } from '../common-state-machine-setup';
@@ -23,8 +21,9 @@ export const stateMachine = createStateMachineSetup<
   id: 'level8_state_machine',
   initial: 'inside_level',
   context: {
-    level_title: 'Service Control Policies',
-    level_description: 'Service Control Policies',
+    level_title: 'IAM Conditions and Principal Tags',
+    level_description:
+      'Use policy conditions to restrict secret access by username and principal tags.',
     level_number: 8,
     show_popovers: false,
     show_popups: false,
@@ -90,6 +89,13 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: PolicyNodeID.SlackServiceManagePolicy,
+                content: 'Edit the policy by clicking the edit button in the node content',
+              },
+            },
           ],
           on: {
             [StatelessStateMachineEvent.IAMNodeContentOpened]: 'edit_policy',
@@ -122,6 +128,12 @@ export const stateMachine = createStateMachineSetup<
                   params: {
                     nodeId: PolicyNodeID.SlackServiceManagePolicy,
                     attributes: { editable: false },
+                  },
+                },
+                {
+                  type: 'hide_node_help_tooltip',
+                  params: {
+                    nodeId: PolicyNodeID.SlackServiceManagePolicy,
                   },
                 },
               ],
@@ -189,15 +201,29 @@ export const stateMachine = createStateMachineSetup<
                 attributes: { editable: true },
               },
             },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: PolicyNodeID.SlackServiceManagePolicy,
+                content: 'Edit the policy again to use tags in the policy conditions',
+              },
+            },
             { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
-            assign({
-              policy_edit_objectives: POLICY_EDIT_OBJECTIVES[1], // TODO: Move into `objectives_map`
-            }),
+            {
+              type: 'set_permission_policy_edit_objectives',
+              params: { objectives: POLICY_EDIT_OBJECTIVES[1] },
+            },
           ],
           on: {
             [PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_SECOND_TIME]: {
               target: 'popover5',
               actions: [
+                {
+                  type: 'hide_node_help_tooltip',
+                  params: {
+                    nodeId: PolicyNodeID.SlackServiceManagePolicy,
+                  },
+                },
                 {
                   type: 'finish_level_objective',
                   params: {

@@ -2,22 +2,26 @@ import { PolicyNodeID, RoleNodeID, UserNodeID } from '../types/node-id-enums';
 import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  The existing role allows users to deploy the Slack Crashlytics Notifier Service,
-  as well as read the Slack Integration Secret.
+  This role currently lets all assigned users deploy the Slack alerting service
+  and read the Slack integration secret.
 `;
 
 const POPOVER_MSG2 = `
-  View the policy's content and **click on the Edit button on the right side to edit it**.
+  Open the policy content with the \`:icon[CodeBracketIcon]:\` button,
+  and click \`:icon[PencilSquareIcon]:\` to edit the policy.
 `;
 
-const POPOVER_MSG3 = ``;
+const POPOVER_MSG3 = `
+  Open this user's tags \`:icon[TagIcon]:\` so we can use tag values in the next policy update.
+`;
 
 const POPOVER_MSG4 = `
-  Let's edit the policy again to use the \`role\` tag instead of the username.
+  Let's edit the policy again and switch from username matching
+  to checking the principal tag \`role\`.
 `;
 
 const POPOVER_MSG5 = `
-  Great Job. You've utilized the \`role\` tag to restrict access to the Slack Integration Secret.
+  Great job. You used the \`role\` tag to restrict access to the Slack integration secret.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [

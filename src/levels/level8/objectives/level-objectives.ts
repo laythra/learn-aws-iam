@@ -3,13 +3,13 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/levels/types/objective-types';
 
 const Objective1Description = `
-  Allow **Senior** users only to read the secret \`Slack Integration Secret\`, by using
-  the prefix \`senior-\` in their username.
+  Allow only **Senior** users to read \`Slack Integration Secret\`
+  by checking for the username prefix \`senior-\`.
 `;
 
 const Objective2Description = `
-  Allow **Senior** users only to read the secret \`Slack Integration Secret\`, by using
-  the tag \`role: senior\` in their user tags.
+  Allow only **Senior** users to read \`Slack Integration Secret\`
+  by checking the principal tag \`role: senior\`.
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [
