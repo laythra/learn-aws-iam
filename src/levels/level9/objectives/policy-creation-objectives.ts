@@ -10,8 +10,8 @@ import {
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE_CALLOUT_MSG = `
-  We ultimately want to create two policies that allow connecting to the RDS instances
-  and managing them, but only if the user the same tag as the RDS instance.
+  First, create two policies that allow access to RDS instances,
+  but only when the user's application tag matches the resource's application tag.
 
   ~~~js
   "Condition": {
@@ -21,20 +21,19 @@ const OBJECTIVE_CALLOUT_MSG = `
   }|fullwidth
   ~~~
 
-  Consult the hints below if you need further help
+  Use the hints below if needed.
 `;
 
 const SHARED_HINT_MSG1 = `
   Remember the condition operators we discussed earlier?
 
-  For this objective, we want to perform a strict string match,
-  what do you think is the best suited operator?
+  For this objective, we need a strict string match.
+  Which operator is best suited for that?
 `;
 
 const SHARED_HINT_MSG2 = `
-  The condition key we need to define should represent the
-  resource tag that is associated with the RDS instance, and the value should be
-  the tag value that matches the user tag.
+  The condition key should represent the RDS resource tag,
+  and the value should match the user's application tag.
 
   The most commonly used condition keys for this purpose are:
 
@@ -43,13 +42,14 @@ const SHARED_HINT_MSG2 = `
 `;
 
 const SHARED_HINT_MSG3 = `
-  The missing action in the policy would allow listing all RDS instances.
+  The missing action in the first statement should allow listing RDS instances.
   You can use the \`rds:DescribeDBInstances\` action for this purpose.
 `;
 
 const SECOND_OBJECTIVE_HINT_MSG1 = `
-  We need to inject ***Policy Variables*** into the policy to make it work for both groups.
-  what policy variable do you think we should use to represent the tag value?
+  To make one policy work for both groups, use a **policy variable**
+  for the condition value.
+  Which variable should represent the calling user's application tag?
 
   - \`"\${aws:PrincipalTag/application}"\`: Represents the tag value of the user making the request.
   - \`"\${aws:ResourceTag/application}"\`: Represents the tag value of the resource being accessed.

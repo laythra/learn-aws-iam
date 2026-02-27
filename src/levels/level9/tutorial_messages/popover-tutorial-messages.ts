@@ -2,11 +2,11 @@ import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  Let's create a new policy
+  Let's create the first policy.
 `;
 
 const POPOVER_MSG2 = `
-  Let's create another shared policy for both groups
+  Now create a single shared policy for both groups.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [

@@ -3,31 +3,30 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/levels/types/objective-types';
 
 const Objective1Description = `
-  Create a policy which allows \`team-peach\` tagged users
-   to describe and connect to their own RDS instances
+  Create a policy that allows users tagged \`peach-team\`
+  to describe and connect only to matching RDS instances.
 `;
 
 const Objective2Description = `
-  Similiary, Create a policy which allows
-  \`bowser-force\` tagged users to describe and connect to their own RDS instances
+  Similarly, create a policy that allows users tagged \`bowser-force\`
+  to describe and connect only to matching RDS instances.
 `;
 
 const Objective3Description = `
-  We want to conflate the two previous objectives into a single shared policy.
-  This policy should allow both \`team-peach\` and \`bowser-force \` tagged users
-  to describe and connect to their own RDS instances.
+  Replace the two previous policies with one shared policy.
+  It should allow both \`peach-team\` and \`bowser-force\` tagged users
+  to describe and connect only to matching RDS instances.
 `;
 
 const Objective1Hint = `
   How do we know which RDS instance belongs to which user?
-  The answer lies in the tags! Users tagged with \`team-peach\` should
-  only be able to describe and connect to RDS instances that are also tagged with \`team-peach\`.
+  The answer is in the tags. Users tagged \`peach-team\` should
+  only be able to describe and connect to RDS instances tagged \`peach-team\`.
 `;
 
 const Objective2Hint = `
-  Similiar to the previous objective, users tagged with \`bowser-force\`
-  should only be able to describe and connect to RDS instances that are also tagged with \
-  \`bowser-force\`.
+  Similar to the previous objective, users tagged \`bowser-force\`
+  should only be able to describe and connect to RDS instances tagged \`bowser-force\`.
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [
