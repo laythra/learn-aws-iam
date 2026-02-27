@@ -5,7 +5,7 @@ export const INITIAL_POLICIES = {
       {
         Effect: 'Allow',
         Action: ['s3:PutObject'],
-        Resource: 'arn:aws:s3:::users-certificates/*',
+        Resource: 'arn:aws:s3:::chat-images/*',
       },
     ],
   },
@@ -15,7 +15,12 @@ export const INITIAL_POLICIES = {
       {
         Effect: 'Allow',
         Action: ['s3:GetObject'],
-        Resource: 'arn:aws:s3:::users-certificates/*',
+        Resource: 'arn:aws:s3:::chat-images/*',
+      },
+      {
+        Effect: 'Allow',
+        Action: ['s3:ListBucket'],
+        Resource: 'arn:aws:s3:::chat-images',
       },
     ],
   },

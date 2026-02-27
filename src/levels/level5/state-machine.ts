@@ -16,6 +16,7 @@ import {
   FinishEventMap,
   RoleCreationFinishEvent,
 } from './types/finish-event-enums';
+import { RoleNodeID, UserNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
@@ -139,6 +140,7 @@ export const stateMachine = createStateMachineSetup<
         user_attached_to_tutorial_role_popover: {
           entry: [
             'hide_fixed_popovers',
+            'disable_edges_management_ability',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
           ],
           on: {
@@ -198,9 +200,18 @@ export const stateMachine = createStateMachineSetup<
         give_finance_user_s3_access: {
           type: 'parallel',
           entry: [
+            'enable_edges_management_ability',
             {
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[5] },
+            },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: UserNodeID.FinanceUser,
+                content:
+                  'Give this user read access to the S3 Bucket through the role you just created',
+              },
             },
           ],
           onDone: {
@@ -210,11 +221,16 @@ export const stateMachine = createStateMachineSetup<
                 type: 'finish_level_objective',
                 params: { id: LevelObjectiveID.GRANT_TUTORIAL_S3_READ_ACCESS },
               },
+              {
+                type: 'hide_node_help_tooltip',
+                params: { nodeId: UserNodeID.FinanceUser },
+              },
             ],
           },
           states: {
             attach_s3_policy_to_role2: {
               initial: 'attach_s3_policy_to_role2_in_progress',
+              entry: 'enable_edges_management_ability',
               states: {
                 attach_s3_policy_to_role2_in_progress: {
                   on: {
@@ -373,13 +389,22 @@ export const stateMachine = createStateMachineSetup<
                         },
                         completed: {
                           type: 'final',
-                          entry: ['store_checkpoint'],
                         },
                       },
                     },
                   },
                 },
                 completed: {
+                  entry: [
+                    'store_checkpoint',
+                    {
+                      type: 'hide_node_help_tooltip',
+                      params: {
+                        nodeId: RoleNodeID.LambdaRole,
+                      },
+                    },
+                  ],
+
                   type: 'final',
                 },
               },
@@ -428,13 +453,21 @@ export const stateMachine = createStateMachineSetup<
                         },
                         completed: {
                           type: 'final',
-                          entry: ['store_checkpoint'],
                         },
                       },
                     },
                   },
                 },
                 completed: {
+                  entry: [
+                    'store_checkpoint',
+                    {
+                      type: 'hide_node_help_tooltip',
+                      params: {
+                        nodeId: RoleNodeID.EC2Role,
+                      },
+                    },
+                  ],
                   type: 'final',
                 },
               },
@@ -468,7 +501,9 @@ export const stateMachine = createStateMachineSetup<
         },
         level_finished_popup: {
           entry: [
+            'store_checkpoint',
             'hide_popovers',
+            'hide_fixed_popovers',
             'hide_unncessary_edges_or_nodes_warning',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[4] } },
           ],

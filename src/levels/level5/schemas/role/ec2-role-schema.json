@@ -29,9 +29,7 @@
         "properties": {
           "Effect": {
             "type": "string",
-            "enum": [
-              "Allow"
-            ]
+            "const": "Allow"
           },
           "Principal": {
             "type": "object",
