@@ -1,23 +1,23 @@
 import { FixedPopoverMessage } from '@/levels/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
-  Currently, the same role is allowing users to deploy the Slack Crashlytics Notifier Service,
-  as well as read the Slack Integration Secret. This is not ideal,
-  as we'd like to only allow ***Senior*** developers
-  to have visibility into the actual token for debugging purposes.”
+  Right now, one role allows users to deploy the Slack alerting service
+  and read the Slack integration secret. That is not ideal.
+  We only want ***Senior*** developers
+  to view the token for debugging.
 
-  How can we know if a user is a senior developer?
-  ***By checking if their username starts with \`senior-\`***
+  How can we identify senior developers?
+  ***By checking whether their username starts with \`senior-\`.***
 `;
 
 const FIXED_POPOVER_MSG2 = `
-  Good job, now only senior developers can read the Slack Integration Secret.
+  Nice work. Now only senior developers can read the Slack integration secret.
 
-  However, using wildcards and matching usernames directly is not ideal.
-  Suppose we want to change a user's role from junior to senior,
-  this will be quite cumbersome to implement with the current setup. (IAM usernames are immutable)
+  However, matching usernames with wildcards is not ideal.
+  If a user's role changes from junior to senior,
+  this approach is cumbersome because IAM usernames are immutable.
 
-  For this reason, we will be moving forward with **Tag Based Access Control (TBAC)**.
+  Next, we'll switch to **Tag-Based Access Control (TBAC)**.
 `;
 
 const FIXED_POPOVER_MSG3 = `
@@ -26,10 +26,11 @@ const FIXED_POPOVER_MSG3 = `
 `;
 
 const FIXED_POPOVER_MSG4 = `
-  a tag in IAM is a key-value pair that can be associated with an IAM entity,
-  such as a user, role, or policy. Tags are used to organize and manage IAM entities,
+  A tag in IAM is a key-value pair on an IAM entity
+  (for example, a user or a role).
 
-  The tag you're currently viewing has a key of \`role\` and a value of \`senior\` or \`junior\`.
+  This user has a \`role\` tag with a value of \`senior\` or \`junior\`.
+  We'll use that with the condition key \`aws:PrincipalTag/role\`.
 
   **Close the popover to continue editing the policy.**
 `;

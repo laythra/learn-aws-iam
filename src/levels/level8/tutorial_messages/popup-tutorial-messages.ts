@@ -1,16 +1,15 @@
 import { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
 const POPUP_MSG1 = `
-  The policies we create so far have been relatively straightforward,
-  but as we progress, we’ll need to create more complex policies which mainly involve conditions.|lg
+  The policies you've created so far were relatively straightforward.
+  In this level, you'll write more advanced IAM policies using \`Condition\`.|lg
 
-
-  Conditions allow us to specify when a policy should apply,
-  and it supports a wide range of operators and ways to evaluate the conditions.
+  ::badge[RULE]:: Conditions define **when** a statement applies using request context values,
+  operators, and condition keys.|lg
 `;
 
 const POPUP_MSG2 = `
-  Here's a quick dive into the \`Condition\` element in IAM Policies,
-  it consists of three main parts:
+  Here's a quick breakdown of the \`Condition\` element in IAM policies.
+  It has three main parts:
 
   * **Condition Operator**: The operator used to evaluate
   the condition (e.g., \`Bool\`, \`StringEquals\`, etc.)
@@ -39,21 +38,21 @@ const POPUP_MSG2 = `
 
   &nbsp;
 
-  Notice the \`Condition\` element at the end of the policy.
+  Notice the \`Condition\` element in the statement.
   The operator \`Bool\` checks whether a condition is either true or false.
-  In this case, the policy denies access to all actions and resources
+  In this example, the policy denies all actions on all resources
   if **Multi-Factor Authentication (MFA)** is not enabled for the principal.
 `;
 
 const POPUP_MSG5 = `
   Congratulations on completing Level 8! 🎉|xl
 
-  You have successfully learned how to create more sohisticated IAM policies
-  using conditions to restrict access based on user roles and attributes,
-  we also got a glimpse of how **Tag Based Access Control (TBAC)** works. |lg
+  You learned how to create more sophisticated IAM policies
+  using conditions to restrict access based on user attributes.
+  You also got a glimpse of **Tag-Based Access Control (TBAC)**.|lg
 
-  We're still touching the surface when it comes to writing policies with Conditions and Tags,
-  but don't worry, we'll dive deeper into these concepts in the next levels.|lg
+  This is just the start of conditions and tags.
+  You'll go deeper into these concepts in the next levels.|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

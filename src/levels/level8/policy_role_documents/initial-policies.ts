@@ -16,7 +16,6 @@ export const INITIAL_POLICIES = {
         Effect: 'Allow',
         Action: ['secretsmanager:GetSecretValue'],
         Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:slack-integration-secret',
-        Condition: {},
       },
     ],
   },

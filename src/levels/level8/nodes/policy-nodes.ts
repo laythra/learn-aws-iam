@@ -10,7 +10,7 @@ const TUTORIAL_POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [];
 const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.SlackServiceManagePolicy,
-    label: 'cross-account-secrets-read-access',
+    label: 'slack-service-manage-policy',
     layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
     content: JSON.stringify(INITIAL_POLICIES.INITIAL_ROLE, null, 2),
     editable: true,
