@@ -1,6 +1,8 @@
 import { Root, Parent, Text, Literal } from 'mdast';
 import { visit } from 'unist-util-visit';
 
+import { extractColorDirective, resolveMarkdownColor } from './color-directives';
+
 interface ChakraBadgeNode extends Parent {
   type: 'element';
   tagName: string;
@@ -18,16 +20,21 @@ interface TextNode extends Literal {
 }
 
 /**
- * A rehype plugin that transforms custom badge syntax (::badge[text]::) into Chakra UI badge elements.
+ * A rehype plugin that transforms custom badge syntax into Chakra UI badge elements.
  *
  * This plugin processes text nodes in the markdown AST and replaces instances of the custom badge
  * syntax with element nodes that can be rendered as Chakra UI badges.
+ *
+ * Supported syntax:
+ * - `::badge[content]::`
+ * - `::badge[content|color(red)]::`
  *
  * @returns A transformer function that operates on the markdown AST (Abstract Syntax Tree)
  *
  * @example
  * ```markdown
  * This is some text with a ::badge[New]:: indicator.
+ * This is some text with a ::badge[Warning|color(orange)]:: indicator.
  * ```
  *
  * The above will be transformed into a structure where "New" becomes a badge element.
@@ -39,6 +46,7 @@ interface TextNode extends Literal {
  * - `tagName`: 'div'
  * - `properties.as`: 'badge'
  * - `properties.content`: The text content from within the brackets
+ * - `properties.colorScheme`: Chakra color scheme extracted from `|color(...)`, or `green` by default
  *
  * Multiple badges in a single text node are supported, and surrounding text is preserved.
  */
@@ -50,8 +58,14 @@ export function rehypeChakraBadge() {
       let match;
 
       while ((match = regex.exec(node.value)) !== null) {
+        const rawContent = match[1] ?? '';
+        const { color, cleanedContent } = extractColorDirective(rawContent);
+        const text = cleanedContent.trim();
+        const colorScheme = resolveMarkdownColor(color, 'green');
+
         matches.push({
-          text: match[1],
+          text,
+          colorScheme,
           start: match.index,
           end: match.index + match[0].length,
         });
@@ -61,7 +75,7 @@ export function rehypeChakraBadge() {
         const children = [];
         let lastIndex = 0;
 
-        matches.forEach(({ text, start, end }) => {
+        matches.forEach(({ text, colorScheme, start, end }) => {
           if (start > lastIndex) {
             children.push({
               type: 'text',
@@ -72,7 +86,7 @@ export function rehypeChakraBadge() {
           children.push({
             type: 'element',
             tagName: 'div',
-            properties: { as: 'badge', content: text },
+            properties: { as: 'badge', content: text, colorScheme },
             children: [],
           } as ChakraBadgeNode);
 
