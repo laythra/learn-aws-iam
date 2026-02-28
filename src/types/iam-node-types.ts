@@ -56,7 +56,10 @@ export type IAMGuardRailsNode =
   | IAMNodeMap[IAMNodeEntity.SCP]
   | IAMNodeMap[IAMNodeEntity.PermissionBoundary];
 
-export type IAMEdge = Edge<IAMEdgeData, 'default'>;
+type IAMEdgeBase = Edge<IAMEdgeData, 'default'>;
+export type IAMEdge = Omit<IAMEdgeBase, 'data'> & {
+  data: IAMEdgeData;
+};
 
 export type IAMNodeWithPolicies = IAMUserNode | IAMGroupNode | IAMRoleNode;
 export type IAMNodeWithUsers = IAMGroupNode | IAMRoleNode;
