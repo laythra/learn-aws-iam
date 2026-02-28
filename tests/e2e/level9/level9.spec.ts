@@ -17,7 +17,6 @@ import {
   UserNodeID,
   ResourceNodeID,
 } from '@/levels/level9/types/node-id-enums';
-import { IAMNodeEntity } from '@/types/iam-enums';
 
 const completeInitialTutorial = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);
@@ -90,7 +89,7 @@ const completeStage3IntroPopups = async (tutorial: TutorialActions): Promise<voi
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[3].popover_title);
   await tutorial.expectPopoverWithoutNextButton(
     ElementID.NewEntityBtn,
-    POPOVER_TUTORIAL_MESSAGES[1].popover_title
+    POPOVER_TUTORIAL_MESSAGES[2].popover_title
   );
 };
 
@@ -102,6 +101,15 @@ const createSharedPolicy = async (popups: PopupActions, nodes: NodeActions): Pro
     await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy3')
   );
   await nodes.expectVisible(PolicyNodeID.RDSSharedPolicy);
+};
+
+const createUnnecessaryPolicy = async (popups: PopupActions): Promise<void> => {
+  await popups.submitCreatePolicyPopup(
+    [ElementID.CodeEditorPolicyTab],
+    ElementID.CodeEditorPolicyTab,
+    'UnnecessaryPolicy',
+    await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy1')
+  );
 };
 
 const connectSharedPolicyToGroups = async (nodes: NodeActions): Promise<void> => {
@@ -123,6 +131,10 @@ const verifyStage3FinalState = async (edges: EdgeActions): Promise<void> => {
 
 const completeLevelFinishPopups = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[4].popover_title);
+  await tutorial.expectPopoverAndClickNext(
+    PolicyNodeID.RDSSharedPolicy,
+    POPOVER_TUTORIAL_MESSAGES[3].popover_title
+  );
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
 };
 
@@ -146,6 +158,7 @@ test.describe('Stage 2 - Create Initial Policies and Attach to Groups', () => {
     edges,
     goToLevelAtStage,
     popups,
+    tutorial,
   }) => {
     await goToLevelAtStage(9, ENCODED_LEVEL_STAGES, 'stage2');
 
@@ -157,6 +170,7 @@ test.describe('Stage 2 - Create Initial Policies and Attach to Groups', () => {
     await test.step('Connect policies to groups', async () => {
       await nodes.connectNodes(PolicyNodeID.RDSManagePolicy1, GroupNodeID.PeachTeam);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await tutorial.closePopover(UserNodeID.Peach, POPOVER_TUTORIAL_MESSAGES[1].popover_title);
 
       await nodes.connectNodes(PolicyNodeID.RDSManagePolicy2, GroupNodeID.BowserForce);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
@@ -172,6 +186,7 @@ test.describe('Stage 2 - Create Initial Policies and Attach to Groups', () => {
     edges,
     goToLevelAtStage,
     popups,
+    tutorial,
   }) => {
     await goToLevelAtStage(9, ENCODED_LEVEL_STAGES, 'stage2');
 
@@ -179,6 +194,7 @@ test.describe('Stage 2 - Create Initial Policies and Attach to Groups', () => {
       await createFirstPolicy(popups, nodes);
       await nodes.connectNodes(PolicyNodeID.RDSManagePolicy1, GroupNodeID.PeachTeam);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await tutorial.closePopover(UserNodeID.Peach, POPOVER_TUTORIAL_MESSAGES[1].popover_title);
 
       await createSecondPolicy(popups, nodes);
       await nodes.connectNodes(PolicyNodeID.RDSManagePolicy2, GroupNodeID.BowserForce);
@@ -195,6 +211,7 @@ test.describe('Stage 2 - Create Initial Policies and Attach to Groups', () => {
     edges,
     goToLevelAtStage,
     popups,
+    tutorial,
   }) => {
     await goToLevelAtStage(9, ENCODED_LEVEL_STAGES, 'stage2');
 
@@ -206,6 +223,7 @@ test.describe('Stage 2 - Create Initial Policies and Attach to Groups', () => {
     await test.step('Connect policies to groups', async () => {
       await nodes.connectNodes(PolicyNodeID.RDSManagePolicy1, GroupNodeID.PeachTeam);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await tutorial.closePopover(UserNodeID.Peach, POPOVER_TUTORIAL_MESSAGES[1].popover_title);
 
       await nodes.connectNodes(PolicyNodeID.RDSManagePolicy2, GroupNodeID.BowserForce);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
@@ -221,6 +239,7 @@ test.describe('Stage 2 - Create Initial Policies and Attach to Groups', () => {
     edges,
     goToLevelAtStage,
     popups,
+    tutorial,
   }) => {
     await goToLevelAtStage(9, ENCODED_LEVEL_STAGES, 'stage2');
 
@@ -235,6 +254,7 @@ test.describe('Stage 2 - Create Initial Policies and Attach to Groups', () => {
 
       await nodes.connectNodes(PolicyNodeID.RDSManagePolicy1, GroupNodeID.PeachTeam);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await tutorial.closePopover(UserNodeID.Peach, POPOVER_TUTORIAL_MESSAGES[1].popover_title);
     });
 
     await test.step('Verify final state', async () => {
@@ -247,6 +267,7 @@ test.describe('Stage 2 - Create Initial Policies and Attach to Groups', () => {
     edges,
     goToLevelAtStage,
     popups,
+    tutorial,
   }) => {
     await goToLevelAtStage(9, ENCODED_LEVEL_STAGES, 'stage2');
 
@@ -254,6 +275,7 @@ test.describe('Stage 2 - Create Initial Policies and Attach to Groups', () => {
       await createFirstPolicy(popups, nodes);
       await nodes.connectNodes(PolicyNodeID.RDSManagePolicy1, GroupNodeID.PeachTeam);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await tutorial.closePopover(UserNodeID.Peach, POPOVER_TUTORIAL_MESSAGES[1].popover_title);
 
       await nodes.expectVisible(PolicyNodeID.RDSManagePolicy1);
       await edges.expectVisible(PolicyNodeID.RDSManagePolicy1, GroupNodeID.PeachTeam);
@@ -314,16 +336,15 @@ test.describe('Stage 3 - Create Shared Policy for Both Groups', () => {
 
     await test.step('Complete Stage 3 with unnecessary user node', async () => {
       await completeStage3IntroPopups(tutorial);
-      await popups.createUserGroupNode(
-        'TestUser',
-        ElementID.CreateUserGroupMenuItem,
-        ElementID.IAMIdentityCreatorPopup,
-        IAMNodeEntity.User
-      );
+      await createUnnecessaryPolicy(popups);
       await createSharedPolicy(popups, nodes);
       await connectSharedPolicyToGroups(nodes);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
       await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[4].popover_title);
+      await tutorial.expectPopoverAndClickNext(
+        PolicyNodeID.RDSSharedPolicy,
+        POPOVER_TUTORIAL_MESSAGES[3].popover_title
+      );
     });
 
     await test.step('Verify unnecessary nodes warning appears', async () => {
@@ -364,6 +385,7 @@ test.describe('Complete Level - End to End', () => {
       await createSecondPolicy(popups, nodes);
       await nodes.connectNodes(PolicyNodeID.RDSManagePolicy1, GroupNodeID.PeachTeam);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await tutorial.closePopover(UserNodeID.Peach, POPOVER_TUTORIAL_MESSAGES[1].popover_title);
       await nodes.connectNodes(PolicyNodeID.RDSManagePolicy2, GroupNodeID.BowserForce);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
       await verifyStage2FinalState(nodes, edges);
