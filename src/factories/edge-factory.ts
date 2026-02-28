@@ -22,6 +22,7 @@ const EDGE_TEMPLATE: PartialEdge = {
     hovering_color: theme.colors.blue[500],
     hovering_label: 'Attached to',
     is_blocked: false,
+    parent_edge_ids: [],
   },
 };
 
@@ -40,6 +41,6 @@ export const createEdge = ({
     data: {
       ...EDGE_TEMPLATE.data,
       ...dataOverrides,
-    },
-  } as IAMEdge;
+    } as IAMEdge['data'],
+  };
 };

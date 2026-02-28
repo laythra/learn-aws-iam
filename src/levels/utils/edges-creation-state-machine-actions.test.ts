@@ -110,6 +110,54 @@ describe('updateConnectionEdges', () => {
       ]);
     });
 
+    it('appends parent_edge_ids when the same dependent edge is created by another parent', () => {
+      const user = createUserNode({});
+      const resource = createResourceNode({});
+      const policy1 = createPolicyNode({
+        dataOverrides: {
+          id: 'policy-a',
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
+      });
+      const policy2 = createPolicyNode({
+        dataOverrides: {
+          id: 'policy-b',
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
+      });
+
+      const ctx = createEdgeTestContext([], [policy1, policy2, user, resource]);
+      const { updatedContext: ctx1 } = updateConnectionEdges(ctx, policy1, user);
+      const { updatedContext: ctx2 } = updateConnectionEdges(ctx1, policy2, user);
+
+      const dependentEdge = ctx2.edges.find(
+        edge => edge.source === user.id && edge.target === resource.id
+      );
+      const parentEdge1 = ctx2.edges.find(
+        edge => edge.source === policy1.id && edge.target === user.id
+      );
+      const parentEdge2 = ctx2.edges.find(
+        edge => edge.source === policy2.id && edge.target === user.id
+      );
+
+      expect(dependentEdge?.data.parent_edge_ids).toEqual(
+        expect.arrayContaining([parentEdge1!.id, parentEdge2!.id])
+      );
+      expect(dependentEdge?.data.parent_edge_ids).toHaveLength(2);
+    });
+
     it('skips extra edges (user → resource) when granted_access specifies\
       a source_node that does not match the user being connected', () => {
       vi.mocked(GetLevelObjectivesApplicableNodesFns).mockImplementation(() => ({
@@ -600,7 +648,7 @@ describe('deleteConnectionEdges', () => {
     const edge1 = createEdge({ rootOverrides: { source: policyNode.id, target: userNode.id } });
     const edge2 = createEdge({
       rootOverrides: { source: userNode.id, target: resourceNode.id },
-      dataOverrides: { parent_edge_id: edge1.id },
+      dataOverrides: { parent_edge_ids: [edge1.id] },
     });
 
     const context = createMockContext({
@@ -609,6 +657,46 @@ describe('deleteConnectionEdges', () => {
     });
 
     const { updatedContext } = deleteConnectionEdges(context, [edge1.id]);
+
+    expect(updatedContext.edges).toEqual([]);
+  });
+
+  it('should keep a dependent edge if it still has another parent', () => {
+    const parent1 = createEdge({ rootOverrides: { source: 'policy-a', target: 'group-a' } });
+    const parent2 = createEdge({ rootOverrides: { source: 'policy-b', target: 'group-b' } });
+    const sharedChild = createEdge({
+      rootOverrides: { source: 'user-a', target: 'resource-a' },
+      dataOverrides: { parent_edge_ids: [parent1.id, parent2.id] },
+    });
+
+    const context = createMockContext({
+      nodes: [],
+      edges: [parent1, parent2, sharedChild],
+    });
+
+    const { updatedContext } = deleteConnectionEdges(context, [parent1.id]);
+    const child = updatedContext.edges.find(edge => edge.id === sharedChild.id);
+
+    expect(updatedContext.edges.map(edge => edge.id)).toEqual(
+      expect.arrayContaining([parent2.id, sharedChild.id])
+    );
+    expect(child?.data.parent_edge_ids).toEqual([parent2.id]);
+  });
+
+  it('should delete a dependent edge after its last parent is deleted', () => {
+    const parent1 = createEdge({ rootOverrides: { source: 'policy-a', target: 'group-a' } });
+    const parent2 = createEdge({ rootOverrides: { source: 'policy-b', target: 'group-b' } });
+    const sharedChild = createEdge({
+      rootOverrides: { source: 'user-a', target: 'resource-a' },
+      dataOverrides: { parent_edge_ids: [parent1.id, parent2.id] },
+    });
+
+    const context = createMockContext({
+      nodes: [],
+      edges: [parent1, parent2, sharedChild],
+    });
+
+    const { updatedContext } = deleteConnectionEdges(context, [parent1.id, parent2.id]);
 
     expect(updatedContext.edges).toEqual([]);
   });
