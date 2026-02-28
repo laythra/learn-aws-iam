@@ -16,7 +16,7 @@ import {
   FinishEventMap,
   PolicyCreationFinishEvent,
 } from './types/finish-event-enums';
-import { PolicyNodeID } from './types/node-id-enums';
+import { GroupNodeID, PolicyNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 
@@ -27,8 +27,9 @@ export const stateMachine = createStateMachineSetup<
   id: 'level9_state_machine',
   initial: 'inside_level',
   context: {
-    level_title: 'TBAC: Resource Tags',
-    level_description: 'TBAC: Resource Tags',
+    level_title: 'TBAC: Resource Tags and Policy Variables',
+    level_description:
+      'Use resource tags and principal-tag variables to share one policy across teams.',
     level_number: 9,
     show_popovers: false,
     show_popups: false,
@@ -43,9 +44,11 @@ export const stateMachine = createStateMachineSetup<
     side_panel_open: false,
     layout_groups: COMMON_LAYOUT_GROUPS,
     restricted_element_ids: [
+      ElementID.CreateUserGroupMenuItem,
       ElementID.CodeEditorRoleTab,
       ElementID.CodeEditorSCPTab,
       ElementID.CodeEditorResourcePolicyTab,
+      ElementID.CodeEditorPermissionBoundaryTab,
     ],
   },
   on: {
@@ -93,7 +96,6 @@ export const stateMachine = createStateMachineSetup<
           onDone: 'fixed_popover3',
           entry: [
             'hide_fixed_popovers',
-            { type: 'store_snapshot_to_disk', params: { filename: 'stage2' } },
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
             {
               type: 'set_edge_connection_objectives',
@@ -104,6 +106,20 @@ export const stateMachine = createStateMachineSetup<
               type: 'append_creation_objectives',
               params: {
                 objectives: POLICY_CREATION_OBJECTIVES[0],
+              },
+            },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: GroupNodeID.BowserForce,
+                content: "Grant this group's users access to their RDS instance",
+              },
+            },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: GroupNodeID.PeachTeam,
+                content: "Grant this group's users access to their RDS instance",
               },
             },
           ],
@@ -151,6 +167,19 @@ export const stateMachine = createStateMachineSetup<
                   },
                 },
                 completed: {
+                  entry: [
+                    {
+                      type: 'hide_node_help_tooltip',
+                      params: { nodeId: GroupNodeID.PeachTeam },
+                    },
+                    {
+                      type: 'show_popover_message',
+                      params: {
+                        message: POPOVER_TUTORIAL_MESSAGES[1],
+                      },
+                    },
+                    'store_checkpoint',
+                  ],
                   type: 'final',
                 },
               },
@@ -172,6 +201,13 @@ export const stateMachine = createStateMachineSetup<
                   },
                 },
                 completed: {
+                  entry: [
+                    'store_checkpoint',
+                    {
+                      type: 'hide_node_help_tooltip',
+                      params: { nodeId: GroupNodeID.BowserForce },
+                    },
+                  ],
                   type: 'final',
                 },
               },
@@ -180,9 +216,7 @@ export const stateMachine = createStateMachineSetup<
         },
         fixed_popover3: {
           entry: [
-            { type: 'store_snapshot_to_disk', params: { filename: 'stage3' } },
             'store_checkpoint',
-            'hide_popovers',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
           ],
           on: {
@@ -202,7 +236,7 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'hide_fixed_popovers',
             { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
-            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
             {
               type: 'delete_nodes',
               params: { nodeIds: [PolicyNodeID.RDSManagePolicy1, PolicyNodeID.RDSManagePolicy2] },
@@ -211,6 +245,22 @@ export const stateMachine = createStateMachineSetup<
               type: 'append_creation_objectives',
               params: {
                 objectives: POLICY_CREATION_OBJECTIVES[1],
+              },
+            },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: GroupNodeID.BowserForce,
+                content:
+                  "Grant this group's users access to their RDS instance through one shared policy",
+              },
+            },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: GroupNodeID.PeachTeam,
+                content:
+                  "Grant this group's users access to their RDS instance through one shared policy",
               },
             },
           ],
@@ -242,6 +292,10 @@ export const stateMachine = createStateMachineSetup<
                   },
                 },
                 completed: {
+                  entry: {
+                    type: 'hide_node_help_tooltip',
+                    params: { nodeId: GroupNodeID.PeachTeam },
+                  },
                   type: 'final',
                 },
               },
@@ -256,6 +310,10 @@ export const stateMachine = createStateMachineSetup<
                   },
                 },
                 completed: {
+                  entry: {
+                    type: 'hide_node_help_tooltip',
+                    params: { nodeId: GroupNodeID.BowserForce },
+                  },
                   type: 'final',
                 },
               },
@@ -267,7 +325,19 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[4] } },
           ],
           on: {
-            NEXT_FIXED_POPOVER: [
+            NEXT_FIXED_POPOVER: 'popover4',
+          },
+        },
+        popover4: {
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
+            },
+            'hide_fixed_popovers',
+          ],
+          on: {
+            NEXT_POPOVER: [
               {
                 guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
                 target: 'level_completed',

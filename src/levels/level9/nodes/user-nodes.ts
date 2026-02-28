@@ -24,7 +24,7 @@ const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
     label: 'peach',
     layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
     layout_direction: 'vertical',
-    tags: [['application', 'mashroom-team']],
+    tags: [['application', 'mushroom-team']],
   },
   {
     id: UserNodeID.Bowser,

@@ -1,17 +1,34 @@
 export const INITIAL_POLICIES = {
-  SEPARATE_RDS_POLICY: {
+  PEACH_TEAM_RDS_POLICY: {
     Version: '2012-10-17',
     Statement: [
       {
         Effect: 'Allow',
-        Action: ['INSERT_ACTION_HERE'],
-        Resource: '*',
+        Action: 'INSERT_ACTION_HERE',
+        Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:db/peach-team',
         Condition: {},
       },
       {
         Effect: 'Allow',
-        Action: ['rds-db:connect'],
-        Resource: ['arn:aws:rds-db:*:*:dbuser:*/*'],
+        Action: 'rds-db:connect',
+        Resource: 'arn:aws:rds-db:us-east-1:123456789012:dbuser:db-PEACHDB123/app_user',
+        Condition: {},
+      },
+    ],
+  },
+  BOWSER_FORCE_RDS_POLICY: {
+    Version: '2012-10-17',
+    Statement: [
+      {
+        Effect: 'Allow',
+        Action: 'INSERT_ACTION_HERE',
+        Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:db/bowser-force',
+        Condition: {},
+      },
+      {
+        Effect: 'Allow',
+        Action: 'rds-db:connect',
+        Resource: 'arn:aws:rds-db:us-east-1:123456789012:dbuser:db-BOWSERDB123/app_user',
         Condition: {},
       },
     ],
@@ -21,23 +38,15 @@ export const INITIAL_POLICIES = {
     Statement: [
       {
         Effect: 'Allow',
-        Action: ['rds:DescribeDBInstances'],
-        Resource: '*',
-        Condition: {
-          StringEquals: {
-            'aws:ResourceTag/application': '',
-          },
-        },
+        Action: 'secretsmanager:GetSecretValue',
+        Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:db/*',
+        Condition: {},
       },
       {
         Effect: 'Allow',
-        Action: ['rds-db:connect'],
-        Resource: ['arn:aws:rds-db:*:*:dbuser:*/*'],
-        Condition: {
-          StringEquals: {
-            'aws:ResourceTag/application': '',
-          },
-        },
+        Action: 'rds-db:connect',
+        Resource: 'arn:aws:rds-db:us-east-1:123456789012:dbuser:*/*',
+        Condition: {},
       },
     ],
   },

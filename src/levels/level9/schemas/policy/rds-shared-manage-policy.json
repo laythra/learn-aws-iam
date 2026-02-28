@@ -7,10 +7,7 @@
   ],
   "properties": {
     "Version": {
-      "type": "string",
-      "enum": [
-        "2012-10-17"
-      ]
+      "const": "2012-10-17"
     },
     "Statement": {
       "type": "array",
@@ -19,61 +16,42 @@
       "items": {
         "oneOf": [
           {
-            "$ref": "#/definitions/describeDbInstancesStatement"
+            "$ref": "#/definitions/secretsStatement"
           },
           {
-            "$ref": "#/definitions/allowDBConnectionsStatement"
+            "$ref": "#/definitions/connectStatement"
           }
         ]
-      }
+      },
+      "allOf": [
+        {
+          "contains": {
+            "$ref": "#/definitions/secretsStatement"
+          }
+        },
+        {
+          "contains": {
+            "$ref": "#/definitions/connectStatement"
+          }
+        }
+      ]
     }
   },
   "definitions": {
-    "describeDbInstancesStatement": {
+    "abacCondition": {
       "type": "object",
       "required": [
-        "Effect",
-        "Action",
-        "Resource",
-        "Condition"
+        "StringEquals"
       ],
       "properties": {
-        "Effect": {
-          "const": "Allow"
-        },
-        "Action": {
-          "oneOf": [
-            {
-              "const": "rds:DescribeDBInstances"
-            },
-            {
-              "type": "array",
-              "contains": {
-                "const": "rds:DescribeDBInstances"
-              }
-            }
-          ]
-        },
-        "Resource": {
-          "const": "*"
-        },
-        "Condition": {
+        "StringEquals": {
           "type": "object",
           "required": [
-            "StringEquals"
+            "aws:ResourceTag/application"
           ],
           "properties": {
-            "StringEquals": {
-              "type": "object",
-              "required": [
-                "aws:ResourceTag/application"
-              ],
-              "properties": {
-                "aws:ResourceTag/application": {
-                  "const": "${aws:PrincipalTag/application}"
-                }
-              },
-              "additionalProperties": false
+            "aws:ResourceTag/application": {
+              "const": "${aws:PrincipalTag/application}"
             }
           },
           "additionalProperties": false
@@ -81,7 +59,7 @@
       },
       "additionalProperties": false
     },
-    "allowDBConnectionsStatement": {
+    "secretsStatement": {
       "type": "object",
       "required": [
         "Effect",
@@ -96,49 +74,65 @@
         "Action": {
           "oneOf": [
             {
-              "const": "rds-db:connect"
+              "type": "string",
+              "const": "secretsmanager:GetSecretValue"
             },
             {
               "type": "array",
-              "contains": {
-                "const": "rds-db:connect"
-              }
+              "items": {
+                "type": "string",
+                "const": "secretsmanager:GetSecretValue"
+              },
+              "minItems": 1,
+              "maxItems": 1,
+              "uniqueItems": true
             }
           ]
         },
         "Resource": {
+          "const": "arn:aws:secretsmanager:us-east-1:123456789012:secret:db/*"
+        },
+        "Condition": {
+          "$ref": "#/definitions/abacCondition"
+        }
+      },
+      "additionalProperties": false
+    },
+    "connectStatement": {
+      "type": "object",
+      "required": [
+        "Effect",
+        "Action",
+        "Resource",
+        "Condition"
+      ],
+      "properties": {
+        "Effect": {
+          "const": "Allow"
+        },
+        "Action": {
           "oneOf": [
             {
-              "const": "arn:aws:rds-db:*:*:dbuser:*/*"
+              "type": "string",
+              "const": "rds-db:connect"
             },
             {
               "type": "array",
-              "contains": {
-                "const": "arn:aws:rds-db:*:*:dbuser:*/*"
-              }
+              "items": {
+                "type": "string",
+                "const": "rds-db:connect"
+              },
+              "minItems": 1,
+              "maxItems": 1,
+              "uniqueItems": true
             }
           ]
         },
+        "Resource": {
+          "const": "arn:aws:rds-db:us-east-1:123456789012:dbuser:*/*"
+        },
         "Condition": {
-          "type": "object",
-          "required": [
-            "StringEquals"
-          ],
-          "properties": {
-            "StringEquals": {
-              "type": "object",
-              "required": [
-                "aws:ResourceTag/application"
-              ],
-              "properties": {
-                "aws:ResourceTag/application": {
-                  "const": "${aws:PrincipalTag/application}"
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "additionalProperties": false
+          "$ref": "#/definitions/abacCondition"
         }
       },
       "additionalProperties": false

@@ -7,6 +7,15 @@ import { IAMResourceNode } from '@/types/iam-node-types';
 const TUTORIAL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [];
 const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [
   {
+    id: ResourceNodeID.TeamPeachSecret,
+    label: 'db/peach-team',
+    layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
+    image: IAMNodeImage.Secret,
+    resource_type: IAMNodeResourceEntity.Secret,
+    layout_direction: 'horizontal',
+    tags: [['application', 'peach-team']],
+  },
+  {
     id: ResourceNodeID.RDS1,
     label: 'peach-team-rds',
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
@@ -14,6 +23,16 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
     resource_type: IAMNodeResourceEntity.RDS,
     layout_direction: 'horizontal',
     tags: [['application', 'peach-team']],
+  },
+
+  {
+    id: ResourceNodeID.TeamBowserSecret,
+    label: 'db/bowser-force',
+    layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
+    image: IAMNodeImage.Secret,
+    resource_type: IAMNodeResourceEntity.Secret,
+    layout_direction: 'horizontal',
+    tags: [['application', 'bowser-force']],
   },
   {
     id: ResourceNodeID.RDS2,
