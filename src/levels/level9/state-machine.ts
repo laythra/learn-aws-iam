@@ -168,10 +168,19 @@ export const stateMachine = createStateMachineSetup<
                   },
                 },
                 completed: {
-                  entry: {
-                    type: 'hide_node_help_tooltip',
-                    params: { nodeId: GroupNodeID.PeachTeam },
-                  },
+                  entry: [
+                    {
+                      type: 'hide_node_help_tooltip',
+                      params: { nodeId: GroupNodeID.PeachTeam },
+                    },
+                    {
+                      type: 'show_popover_message',
+                      params: {
+                        message: POPOVER_TUTORIAL_MESSAGES[1],
+                      },
+                    },
+                    'store_checkpoint',
+                  ],
                   type: 'final',
                 },
               },
@@ -193,10 +202,13 @@ export const stateMachine = createStateMachineSetup<
                   },
                 },
                 completed: {
-                  entry: {
-                    type: 'hide_node_help_tooltip',
-                    params: { nodeId: GroupNodeID.BowserForce },
-                  },
+                  entry: [
+                    'store_checkpoint',
+                    {
+                      type: 'hide_node_help_tooltip',
+                      params: { nodeId: GroupNodeID.BowserForce },
+                    },
+                  ],
                   type: 'final',
                 },
               },
@@ -227,7 +239,7 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'hide_fixed_popovers',
             { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
-            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
             {
               type: 'delete_nodes',
               params: { nodeIds: [PolicyNodeID.RDSManagePolicy1, PolicyNodeID.RDSManagePolicy2] },
@@ -316,7 +328,19 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[4] } },
           ],
           on: {
-            NEXT_FIXED_POPOVER: [
+            NEXT_FIXED_POPOVER: 'popover4',
+          },
+        },
+        popover4: {
+          entry: [
+            {
+              type: 'show_popover_message',
+              params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
+            },
+            'hide_fixed_popovers',
+          ],
+          on: {
+            NEXT_POPOVER: [
               {
                 guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
                 target: 'level_completed',

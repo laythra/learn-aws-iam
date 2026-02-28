@@ -1,8 +1,7 @@
-import rdsSharedManagePolicySchema from './schemas/policy/rds-shared-manage-policy.json';
-import rds1ManagePolicySchema from './schemas/policy/rds1-manage-policy.json';
-import rds2managePolicySchema from './schemas/policy/rds2-manage-policy.json';
-import { PolicyNodeID } from './types/node-id-enums';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
+import { generateRdsManagePolicySchema } from './schemas/policy/per-team-rds-manage-policy';
+import rdsSharedManagePolicySchema from './schemas/policy/rds-shared-manage-policy.json';
+import { PolicyNodeID } from './types/node-id-enums';
 import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
@@ -23,8 +22,14 @@ export const ObjectivesApplicableNodesFns = {
 } as const;
 
 export const ValidateFunctions = {
-  [PolicyNodeID.RDSManagePolicy1]: () => AJV_COMPILER.compile(rds1ManagePolicySchema),
-  [PolicyNodeID.RDSManagePolicy2]: () => AJV_COMPILER.compile(rds2managePolicySchema),
+  [PolicyNodeID.RDSManagePolicy1]: () => {
+    const schema = generateRdsManagePolicySchema('peach-team', 'PEACHDB123');
+    return AJV_COMPILER.compile(schema);
+  },
+  [PolicyNodeID.RDSManagePolicy2]: () => {
+    const schema = generateRdsManagePolicySchema('bowser-force', 'BOWSERDB123');
+    return AJV_COMPILER.compile(schema);
+  },
   [PolicyNodeID.RDSSharedPolicy]: () => AJV_COMPILER.compile(rdsSharedManagePolicySchema),
 } as const;
 

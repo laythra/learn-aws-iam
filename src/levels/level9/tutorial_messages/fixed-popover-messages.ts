@@ -23,7 +23,8 @@ const FIXED_POPOVER_MSG3 = `
   Nice work! You're getting the hang of it!
 
   One thing remains: you might have noticed how similar the two policies are.
-  They use almost the same actions and conditions, with only the tag value changing.
+  They use nearly the same actions and conditions.
+  The main differences are the team-specific tag value and resource ARN.
 
   For this reason, we can use **policy variables**,
   which are placeholders that get replaced with actual values when the policy is evaluated.
