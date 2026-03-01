@@ -135,7 +135,7 @@ test.describe('Stage 1 - Initial tutorial and first edit', () => {
         PolicyNodeID.SlackServiceManagePolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy1')
       );
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][0].id);
     });
 
     await test.step('Verify edges visibility after policy edit', async () => {
@@ -164,7 +164,7 @@ test.describe('Stage 2 - Post-first-edit tutorial popovers', () => {
         PolicyNodeID.SlackServiceManagePolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
     });
 
     await test.step('Verify edges visibility after second policy edit', async () => {
@@ -195,7 +195,7 @@ test.describe('Complete Level - End to End', () => {
         PolicyNodeID.SlackServiceManagePolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy1')
       );
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][0].id);
       await verifyLevelSetupAfterPolicyEdit(edges);
     });
 
@@ -205,7 +205,7 @@ test.describe('Complete Level - End to End', () => {
         PolicyNodeID.SlackServiceManagePolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
       await verifyLevelSetupAfterPolicyEdit(edges);
       await goThroughPopoversAfterSecondEdit(tutorial);
     });

@@ -95,12 +95,12 @@ test.describe('Level 1 Entire Flow', () => {
 
     await test.step('Connect Policy to Tutorial User', async () => {
       await connectPolicyToTutorialUser(nodes, edges, tutorial);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0].id);
     });
 
     await test.step('Create Custom User Node', async () => {
       await createCustomUserNode(popups, 'FirstUser');
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1].id);
       await tutorial.expectPopoverWithoutNextButton(
         UserNodeID.FirstUser,
         POPOVER_TUTORIAL_MESSAGES[9].popover_title
@@ -109,7 +109,7 @@ test.describe('Level 1 Entire Flow', () => {
 
     await test.step('Connect Policy to Custom User', async () => {
       await connectPolicyToCustomUser(nodes, edges);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[2].id);
     });
 
     await test.step('Complete Level', async () => {
@@ -143,12 +143,12 @@ test.describe('Level 1 Entire Flow', () => {
 
     await test.step('Connect Policy to Tutorial User', async () => {
       await connectPolicyToTutorialUser(nodes, edges, tutorial);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0].id);
     });
 
     await test.step('Create Custom User Node with an Unnecessary Node', async () => {
       await createCustomUserNode(popups, 'FirstUser');
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1].id);
       await tutorial.expectPopoverWithoutNextButton(
         UserNodeID.FirstUser,
         POPOVER_TUTORIAL_MESSAGES[9].popover_title
@@ -159,7 +159,7 @@ test.describe('Level 1 Entire Flow', () => {
 
     await test.step('Connect Policy to Custom User', async () => {
       await connectPolicyToCustomUser(nodes, edges);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[2].id);
     });
 
     await test.step('Complete Level', async () => {

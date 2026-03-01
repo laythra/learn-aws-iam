@@ -58,7 +58,7 @@ const attachFinanceUserToAuditorRole = async (
 ): Promise<void> => {
   await tutorial.expectFixedPopoverWithoutNextButton(FIXED_POPOVER_MESSAGES[1].popover_title);
   await nodes.connectNodes(UserNodeID.FinanceUser, RoleNodeID.FinanceAuditorRole);
-  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][0].id);
 
   await edges.expectVisible(UserNodeID.FinanceUser, ResourceNodeID.BillingAndCostManagement);
 
@@ -86,7 +86,7 @@ const createS3ReadAccessRole = async (
   );
 
   await nodes.expectVisible(RoleNodeID.S3ReadAccessRole);
-  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][1].id);
 
   await tutorial.expectPopoverAndClickNext(
     RoleNodeID.S3ReadAccessRole,
@@ -109,7 +109,7 @@ const attachS3RoleToPolicyAndUser = async (
 ): Promise<void> => {
   await nodes.connectNodes(PolicyNodeID.S3ReadPolicy, RoleNodeID.S3ReadAccessRole);
   await nodes.connectNodes(UserNodeID.FinanceUser, RoleNodeID.S3ReadAccessRole);
-  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][2].id);
+  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][2].id);
 
   await tutorial.expectPopoverAndClickNext(
     UserNodeID.FinanceUser,
@@ -141,7 +141,7 @@ const createServiceRole = async (
 
   await nodes.connectNodes(policyId, roleId);
   await nodes.connectNodes(resourceId, roleId);
-  await popups.expectLevelObjectiveCompleteToastAndClose(objectiveId);
+  await popups.expectLevelObjectiveCompleteToast(objectiveId);
 };
 
 const expectLevelFinalMessages = async (tutorial: TutorialActions): Promise<void> => {

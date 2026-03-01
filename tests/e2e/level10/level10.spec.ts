@@ -59,7 +59,7 @@ const createTBACPolicy = async (
   );
 
   await nodes.expectVisible(PolicyNodeID.TBACPolicy);
-  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][0].id);
   await tutorial.expectPopoverWithoutNextButton(
     PolicyNodeID.TBACPolicy,
     POPOVER_TUTORIAL_MESSAGES[1].popover_title
@@ -93,7 +93,7 @@ const verifyRDSResourcesAndCreatePolicy = async (
   );
 
   await nodes.expectVisible(PolicyNodeID.RDSManagePolicy);
-  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
   await tutorial.expectPopoverWithoutNextButton(
     PolicyNodeID.RDSManagePolicy,
     POPOVER_TUTORIAL_MESSAGES[3].popover_title
@@ -175,7 +175,7 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 
@@ -193,7 +193,7 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
         GroupNodeID.PaymentsTeam,
         GroupNodeID.AnalyticsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 
@@ -211,7 +211,7 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
         GroupNodeID.ComplianceTeam,
         GroupNodeID.PaymentsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 
@@ -229,7 +229,7 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
         GroupNodeID.AnalyticsTeam,
         GroupNodeID.PaymentsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 
@@ -247,7 +247,7 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
         GroupNodeID.ComplianceTeam,
         GroupNodeID.AnalyticsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 });
@@ -285,7 +285,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Complete level tutorial', async () => {
@@ -315,7 +315,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
         GroupNodeID.PaymentsTeam,
         GroupNodeID.AnalyticsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Complete level tutorial', async () => {
@@ -345,7 +345,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
         GroupNodeID.ComplianceTeam,
         GroupNodeID.PaymentsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Complete level tutorial', async () => {
@@ -375,7 +375,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
         GroupNodeID.ComplianceTeam,
         GroupNodeID.AnalyticsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Complete level tutorial', async () => {
@@ -415,7 +415,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Trigger warning check', async () => {
@@ -458,7 +458,7 @@ test.describe('Complete Level - End to End', () => {
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][1].id);
     });
 
     await test.step('Complete Stage 3 - Create RDS management policy', async () => {
@@ -471,7 +471,7 @@ test.describe('Complete Level - End to End', () => {
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
       await completeLevelFinishPopups(tutorial);
     });
   });
