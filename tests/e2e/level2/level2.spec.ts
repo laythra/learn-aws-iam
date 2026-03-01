@@ -138,7 +138,7 @@ test.describe('Stage 1 - Introduction to IAM Groups', () => {
 
     await test.step('Create first IAM Group', async () => {
       await createCustomGroupNode(popups, 'DevTeam');
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
     });
   });
 });
@@ -163,7 +163,7 @@ test.describe('Stage 2 - Attach Users and Policies to Group', () => {
 
     await test.step('Connect all policies to group', async () => {
       await connectAllPoliciesToGroup(nodes, edges);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][1].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 
@@ -354,7 +354,7 @@ test.describe('Complete Level - End to End', () => {
       await completeStage1IntroTutorial(tutorial);
 
       await createCustomGroupNode(popups, 'DevTeam');
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
       await nodes.expectVisible(GroupNodeID.FirstGroup);
     });
 
@@ -369,7 +369,7 @@ test.describe('Complete Level - End to End', () => {
         POPOVER_TUTORIAL_MESSAGES[4].popover_title
       );
 
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][1].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
 
     await test.step('Complete Stage 3 - Create second user and finish level', async () => {
@@ -380,7 +380,7 @@ test.describe('Complete Level - End to End', () => {
 
       await nodes.connectNodes(UserNodeID.SecondUser, GroupNodeID.FirstGroup);
       await edges.expectVisible(UserNodeID.SecondUser, GroupNodeID.FirstGroup);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
 
       await completeLevelFinishPopups(tutorial);
     });

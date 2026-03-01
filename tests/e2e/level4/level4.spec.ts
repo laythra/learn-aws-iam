@@ -77,7 +77,7 @@ const editDeveloperPolicyNode = async (
 ): Promise<void> => {
   const content = await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy1');
   await editPolicyNode(nodes, PolicyNodeID.DeveloperPolicy, content);
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0].id);
   await edges.expectMutlipleVisible([
     [PolicyNodeID.DeveloperPolicy, UserNodeID.Developer1],
     [PolicyNodeID.DeveloperPolicy, UserNodeID.Developer2],
@@ -95,7 +95,7 @@ const editDataScientistPolicyNode = async (
 ): Promise<void> => {
   const content = await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2');
   await editPolicyNode(nodes, PolicyNodeID.DataScientistPolicy, content);
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
   await edges.expectMutlipleVisible([
     [PolicyNodeID.DataScientistPolicy, UserNodeID.DataScientist1],
     [UserNodeID.DataScientist1, ResourceNodeID.AnalyticsDataDynamoTable],
@@ -112,7 +112,7 @@ const editInternPolicyNode = async (
 ): Promise<void> => {
   const content = await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy3');
   await editPolicyNode(nodes, PolicyNodeID.InternPolicy, content);
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[2].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].id);
   await edges.expectMutlipleVisible([
     [PolicyNodeID.InternPolicy, UserNodeID.Intern1],
     [PolicyNodeID.InternPolicy, UserNodeID.Intern2],

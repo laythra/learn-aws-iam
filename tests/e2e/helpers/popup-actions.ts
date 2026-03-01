@@ -71,17 +71,9 @@ export class PopupActions {
     await expect(popup).not.toBeVisible();
   }
 
-  async expectLevelObjectiveCompleteToast(objectiveDescription: string): Promise<void> {
+  async expectLevelObjectiveCompleteToastAndClose(objectiveDescription: string): Promise<void> {
     const toast = findObjectiveCompleteToast(this.page, objectiveDescription);
     await expect(toast).toBeVisible();
-
-    const tutorialPopupModal = this.page.getByRole('dialog').filter({
-      has: this.page.getByTestId('tutorial-popup-title'),
-    });
-    if ((await tutorialPopupModal.count()) > 0 && (await tutorialPopupModal.first().isVisible())) {
-      return;
-    }
-
     await toast.getByRole('button', { name: 'close' }).click();
     await expect(toast).not.toBeVisible();
   }

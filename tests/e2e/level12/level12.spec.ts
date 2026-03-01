@@ -114,7 +114,7 @@ const connectEC2SCPToStagingAccount = async (
     HandleID.Left,
     HandleID.Top
   );
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
 };
 
 const createPermissionBoundary = async (
@@ -155,7 +155,7 @@ const connectPBAndPolicyForObjective2 = async (
     RoleNodeID.EC2LaunchRole
   );
   await nodes.connectNodes(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Laith);
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 };
 
 const createS3WriteRole = async (nodes: NodeActions, popups: PopupActions): Promise<void> => {
@@ -187,7 +187,7 @@ const connectRoleAndPolicyForObjective3 = async (
 ): Promise<void> => {
   await nodes.connectNodes(ResourceNodeID.InLevelStagingEC2Instance, RoleNodeID.S3WriteAccessRole);
   await nodes.connectNodes(PolicyNodeID.S3WriteAccessPolicy, RoleNodeID.S3WriteAccessRole);
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][2].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
 };
 
 const createElastiCachePolicy = async (nodes: NodeActions, popups: PopupActions): Promise<void> => {
@@ -218,7 +218,7 @@ const connectElastiCachePolicyToGroups = async (
     PolicyNodeID.ElasticCacheManagementPolicy,
     GroupNodeID.InLevelPaymentsTeamGroup
   );
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][3].id);
 };
 
 const completeLevelFinishPopup = async (tutorial: TutorialActions): Promise<void> => {
@@ -475,7 +475,7 @@ test.describe('Stage 2 - Main Challenge: All Objectives Completion Orders', () =
         PolicyNodeID.ElasticCacheManagementPolicy,
         GroupNodeID.InLevelSearchTeamGroup
       );
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][3].id);
     });
 
     await test.step('Complete level', async () => {

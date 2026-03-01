@@ -37,7 +37,7 @@ const createDynamoDBReadPolicy = async (
     AccountID.TrustingAccount
   );
   await nodes.expectVisible(PolicyNodeID.TrustingAccountFinanceReportsReadPolicy);
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][1].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
 };
 
 const createDynamoDBReadRole = async (nodes: NodeActions, popups: PopupActions): Promise<void> => {
@@ -51,7 +51,7 @@ const createDynamoDBReadRole = async (nodes: NodeActions, popups: PopupActions):
   );
 
   await nodes.expectVisible(RoleNodeID.TrustingAccountDynamoDBReadRole);
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][0].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
 };
 
 const createAssumeRolePolicy = async (nodes: NodeActions, popups: PopupActions): Promise<void> => {
@@ -63,7 +63,7 @@ const createAssumeRolePolicy = async (nodes: NodeActions, popups: PopupActions):
     AccountID.TrustedAccount
   );
   await nodes.expectVisible(PolicyNodeID.TrustedAccountAssumeRolePolicy);
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][2].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][2].id);
 };
 
 const connectDynamoDBPolicyToRole = async (nodes: NodeActions): Promise<void> => {
@@ -136,7 +136,7 @@ test.describe('Stage 2 - Creating Cross Account Access in all orders', () => {
       await connectAssumeRolePolicyToUser(nodes);
       await connectUserToRole(nodes);
 
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][3].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][3].id);
     });
 
     await test.step('Complete level', async () => {
@@ -164,7 +164,7 @@ test.describe('Stage 2 - Creating Cross Account Access in all orders', () => {
       await connectAssumeRolePolicyToUser(nodes);
       await connectUserToRole(nodes);
 
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][3].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][3].id);
     });
 
     await test.step('Complete level', async () => {
@@ -192,7 +192,7 @@ test.describe('Stage 2 - Creating Cross Account Access in all orders', () => {
       await connectAssumeRolePolicyToUser(nodes);
       await connectUserToRole(nodes);
 
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][3].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][3].id);
     });
 
     await test.step('Complete level', async () => {
@@ -220,7 +220,7 @@ test.describe('Stage 2 - Creating Cross Account Access in all orders', () => {
       await connectAssumeRolePolicyToUser(nodes);
       await connectUserToRole(nodes);
 
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][3].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][3].id);
     });
 
     await test.step('Complete level', async () => {
@@ -248,7 +248,7 @@ test.describe('Stage 2 - Creating Cross Account Access in all orders', () => {
       await connectAssumeRolePolicyToUser(nodes);
       await connectUserToRole(nodes);
 
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][3].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][3].id);
     });
 
     await test.step('Complete level', async () => {
@@ -276,7 +276,7 @@ test.describe('Stage 2 - Creating Cross Account Access in all orders', () => {
       await createDynamoDBReadPolicy(nodes, popups);
       await connectDynamoDBPolicyToRole(nodes);
 
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][3].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][3].id);
     });
 
     await test.step('Verify level completion', async () => {
@@ -306,7 +306,7 @@ test.describe('Stage 2 - Creating Cross Account Access in all orders', () => {
       await connectAssumeRolePolicyToUser(nodes);
       await connectUserToRole(nodes);
 
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][3].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][3].id);
     });
 
     await test.step('Click next on completion popover to trigger warning check', async () => {
@@ -369,7 +369,7 @@ test.describe('Stage 2 - Creating Cross Account Access in all orders', () => {
 
     await test.step('Now connection should succeed', async () => {
       await connectUserToRole(nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][3].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][3].id);
 
       await edges.expectVisible(
         UserNodeID.TrustedAccountIAMUser,
@@ -404,7 +404,7 @@ test.describe('Complete Level - End to End', () => {
       await connectAssumeRolePolicyToUser(nodes);
       await connectUserToRole(nodes);
 
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][3].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][3].id);
     });
 
     await test.step('Complete level', async () => {

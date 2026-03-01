@@ -150,7 +150,7 @@ test.describe('Stage 1 - Resource Policies Introduction', () => {
 
     await test.step('Create first resource policy', async () => {
       await createFirstResourcePolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.TutorialFirstUser,
         POPOVER_TUTORIAL_MESSAGES[1].popover_title
@@ -178,7 +178,7 @@ test.describe('Stage 2 - Identity Based Policy Creation', () => {
 
     await test.step('Create identity based policy', async () => {
       await createIdentityBasedPolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
       await tutorial.expectPopoverWithoutNextButton(
         PolicyNodeID.InsideLevelIdentityBasedPolicy,
         POPOVER_TUTORIAL_MESSAGES[5].popover_title
@@ -190,7 +190,7 @@ test.describe('Stage 2 - Identity Based Policy Creation', () => {
         PolicyNodeID.InsideLevelIdentityBasedPolicy,
         UserNodeID.InsideLevelUser
       );
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.InsideLevelUser,
         POPOVER_TUTORIAL_MESSAGES[6].popover_title
@@ -219,7 +219,7 @@ test.describe('Stage 3 - Creating Cross Account Access through Resource Based Po
 
     await test.step('Create second resource policy', async () => {
       await createSecondResourcePolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[2][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2][0].id);
     });
 
     await test.step('Complete level finish popups', async () => {
@@ -242,7 +242,7 @@ test.describe('Complete Level - End to End', () => {
       await completeTutorialPopups(tutorial);
       await verifyLevelInitialSetup(nodes);
       await createFirstResourcePolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.TutorialFirstUser,
         POPOVER_TUTORIAL_MESSAGES[1].popover_title
@@ -253,7 +253,7 @@ test.describe('Complete Level - End to End', () => {
       await completeStage2IntroPopups(tutorial);
       await verifyStage2InitialSetup(nodes);
       await createIdentityBasedPolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
       await tutorial.expectPopoverWithoutNextButton(
         PolicyNodeID.InsideLevelIdentityBasedPolicy,
         POPOVER_TUTORIAL_MESSAGES[5].popover_title
@@ -262,7 +262,7 @@ test.describe('Complete Level - End to End', () => {
         PolicyNodeID.InsideLevelIdentityBasedPolicy,
         UserNodeID.InsideLevelUser
       );
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.InsideLevelUser,
         POPOVER_TUTORIAL_MESSAGES[6].popover_title
@@ -273,7 +273,7 @@ test.describe('Complete Level - End to End', () => {
       await completeStage3IntroPopups(tutorial);
       await verifyStage3InitialSetup(nodes, edges);
       await createSecondResourcePolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[2][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2][0].id);
       await completeLevelFinishPopups(tutorial);
     });
   });

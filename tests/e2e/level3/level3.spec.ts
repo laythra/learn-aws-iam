@@ -121,13 +121,13 @@ const connectAllPoliciesToGroups = async (
   popups: PopupActions
 ): Promise<void> => {
   await nodes.connectNodes(PolicyNodeID.S3ReadWritePolicy, GroupNodeID.FrontendGroup);
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
 
   await nodes.connectNodes(PolicyNodeID.DynamoDBReadWritePolicy, GroupNodeID.BackendGroup);
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][2].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
 
   await nodes.connectNodes(PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup);
-  await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
+  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 };
 
 const verifyFinalState = async (
@@ -192,7 +192,7 @@ test.describe('Stage 2 - ARNs and Policy Creation Workflow', () => {
 
     await test.step('Create new permission policy', async () => {
       await createFirstPolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
       await tutorial.expectPopoverAndClickNext(
         PolicyNodeID.S3ReadPolicy,
         POPOVER_TUTORIAL_MESSAGES[3].popover_title
@@ -247,7 +247,7 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
       await nodes.connectNodes(PolicyNodeID.S3ReadWritePolicy, GroupNodeID.FrontendGroup);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
 
       await popups.submitCreatePolicyPopup(
         [ElementID.CodeEditorPolicyTab],
@@ -256,7 +256,7 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy3')
       );
       await nodes.connectNodes(PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 
       await popups.submitCreatePolicyPopup(
         [ElementID.CodeEditorPolicyTab],
@@ -265,7 +265,7 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy4')
       );
       await nodes.connectNodes(PolicyNodeID.DynamoDBReadWritePolicy, GroupNodeID.BackendGroup);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][2].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
 
       await verifyFinalState(nodes, edges, tutorial);
     });
@@ -343,13 +343,13 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
       );
 
       await nodes.connectNodes(PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 
       await nodes.connectNodes(PolicyNodeID.DynamoDBReadWritePolicy, GroupNodeID.BackendGroup);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][2].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
 
       await nodes.connectNodes(PolicyNodeID.S3ReadWritePolicy, GroupNodeID.FrontendGroup);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
 
       await verifyFinalState(nodes, edges, tutorial);
     });
@@ -376,7 +376,7 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy4')
       );
       await nodes.connectNodes(PolicyNodeID.DynamoDBReadWritePolicy, GroupNodeID.BackendGroup);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][2].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
 
       await popups.submitCreatePolicyPopup(
         [ElementID.CodeEditorPolicyTab],
@@ -392,10 +392,10 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
       );
 
       await nodes.connectNodes(PolicyNodeID.S3ReadWritePolicy, GroupNodeID.FrontendGroup);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
 
       await nodes.connectNodes(PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][1].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 
       await verifyFinalState(nodes, edges, tutorial);
     });
@@ -421,7 +421,7 @@ test.describe('Complete Level - End to End', () => {
     await test.step('Complete Stage 2 - ARN copy and first policy creation', async () => {
       await copyResourceARN(nodes, tutorial, page);
       await createFirstPolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[0][0].id);
+      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
       await tutorial.expectPopoverAndClickNext(
         PolicyNodeID.S3ReadPolicy,
         POPOVER_TUTORIAL_MESSAGES[3].popover_title
