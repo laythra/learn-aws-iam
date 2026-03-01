@@ -13,4 +13,7 @@ export interface CustomTheme extends Theme {
     heading: string;
     body: string;
   };
+  zIndices: Theme['zIndices'] & {
+    modal: number;
+  };
 }
