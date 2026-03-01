@@ -203,7 +203,6 @@ test.describe('Stage 2 - Editing Policies in all orders', () => {
     tutorial,
     goToLevelAtStage,
   }) => {
-    await goToLevelAtStage(4, ENCODED_LEVEL_STAGES, 'stage2');
     await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
 
     await editDataScientistPolicyNode(nodes, edges, popups);

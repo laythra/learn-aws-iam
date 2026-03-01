@@ -57,7 +57,10 @@ function getParentEdgeIds(edge: IAMEdge): string[] {
 function mergeEdgesById(edges: WritableDraft<IAMEdge>[]): WritableDraft<IAMEdge>[] {
   const mergedById = new Map<string, WritableDraft<IAMEdge>>();
 
-  edges.forEach(edge => {
+  // Sorting by unnecessary_edge ensures that if there are duplicate edges with the same id,
+  // the one that is not marked as unnecessary_edge will be processed first and its properties (other than parent_edge_ids)
+  // will be preserved in the merged result.
+  _.sortBy(edges, e => e.data.unnecessary_edge).forEach(edge => {
     const existing = mergedById.get(edge.id);
     if (!existing) {
       mergedById.set(edge.id, edge);
