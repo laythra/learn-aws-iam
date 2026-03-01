@@ -4,15 +4,6 @@ import { extendTheme } from '@chakra-ui/react';
 import { CustomTheme } from './types/custom-theme';
 
 export const theme: CustomTheme = extendTheme({
-  styles: {
-    global: {
-      ':root': {
-        // Used to override the default z-index of chakra's toast component
-        // It should be less than the z-index of modals to show underneath them
-        '--toast-z-index': '900',
-      },
-    },
-  },
   fonts: {
     heading: `Lato, sans-serif`,
     body: `Lato, sans-serif`,
@@ -24,6 +15,10 @@ export const theme: CustomTheme = extendTheme({
     navbarHeightInPixels: 65,
     codeEditorHeightInPixels: 500,
     sidePanelWidthInPixels: window.innerWidth * 0.2,
+  },
+  zIndices: {
+    // Modals should be above everything else
+    modal: 9999,
   },
   components: {
     Popover: {
