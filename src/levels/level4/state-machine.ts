@@ -1,4 +1,4 @@
-import { and, assign, not } from 'xstate';
+import { and, not } from 'xstate';
 
 import { INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
 import { INITIAL_TUTORIAL_NODES } from './nodes';
@@ -130,9 +130,10 @@ export const stateMachine = createStateMachineSetup<
       initial: 'fix_permission_policies',
       entry: [
         'disable_tutorial_state',
-        assign({
-          policy_edit_objectives: POLICY_EDIT_OBJECTIVES[0],
-        }),
+        {
+          type: 'set_permission_policy_edit_objectives',
+          params: { objectives: POLICY_EDIT_OBJECTIVES[0] },
+        },
       ],
       states: {
         fix_permission_policies: {

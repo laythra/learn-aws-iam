@@ -56,7 +56,10 @@ export type IAMGuardRailsNode =
   | IAMNodeMap[IAMNodeEntity.SCP]
   | IAMNodeMap[IAMNodeEntity.PermissionBoundary];
 
-export type IAMEdge = Edge<IAMEdgeData, 'default'>;
+type IAMEdgeBase = Edge<IAMEdgeData, 'default'>;
+export type IAMEdge = Omit<IAMEdgeBase, 'data'> & {
+  data: IAMEdgeData;
+};
 
 export type IAMNodeWithPolicies = IAMUserNode | IAMGroupNode | IAMRoleNode;
 export type IAMNodeWithUsers = IAMGroupNode | IAMRoleNode;
@@ -80,7 +83,7 @@ interface IAMEdgeData extends Record<string, unknown> {
   stroke_width: number;
   unnecessary_edge?: boolean;
   is_blocked?: boolean;
-  parent_edge_id?: string;
+  parent_edge_ids: string[];
   attached_as: IAMNodeEntity;
 }
 
@@ -94,7 +97,7 @@ export type PartialEdge = Omit<Partial<IAMEdge>, 'data'> & {
 export type NodeConnection = {
   from: IAMAnyNode;
   to: IAMAnyNode;
-  parent_edge_id?: string;
+  parent_edge_ids: string[];
 };
 
 /**

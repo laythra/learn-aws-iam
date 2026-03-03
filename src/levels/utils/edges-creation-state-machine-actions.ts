@@ -45,6 +45,38 @@ function isPrincipalEntity(e: IAMNodeEntity): boolean {
   return e == IAMNodeEntity.User || e == IAMNodeEntity.Role;
 }
 
+function getParentEdgeIds(edge: IAMEdge): string[] {
+  return edge.data.parent_edge_ids;
+}
+
+/**
+ * Merges edges by their id, combining their parent_edge_ids and keeping other properties from the first occurrence.
+ * @param edges The edges to merge, which may contain duplicates by id with different parent_edge_ids.
+ * @returns An array of edges with unique ids, where edges with the same id have their parent_edge_ids merged and deduplicated.
+ */
+function mergeEdgesById(edges: WritableDraft<IAMEdge>[]): WritableDraft<IAMEdge>[] {
+  const mergedById = new Map<string, WritableDraft<IAMEdge>>();
+
+  // Sorting by unnecessary_edge ensures that if there are duplicate edges with the same id,
+  // the one that is not marked as unnecessary_edge will be processed first and its properties (other than parent_edge_ids)
+  // will be preserved in the merged result.
+  _.sortBy(edges, e => e.data.unnecessary_edge).forEach(edge => {
+    const existing = mergedById.get(edge.id);
+    if (!existing) {
+      mergedById.set(edge.id, edge);
+      return;
+    }
+
+    const mergedParentIds = _.uniq([...getParentEdgeIds(existing), ...getParentEdgeIds(edge)]);
+
+    if (mergedParentIds.length) {
+      existing.data.parent_edge_ids = mergedParentIds;
+    }
+  });
+
+  return [...mergedById.values()];
+}
+
 function isEdgeConnectionObjectiveFinished<TFinishEventMap extends BaseFinishEventMap>(
   objective: EdgeConnectionObjective<TFinishEventMap>,
   establishedEdges: IAMEdge[]
@@ -163,7 +195,7 @@ function createEdgesFromGrantedAccesses<
         },
         dataOverrides: {
           hovering_label: access.access_level,
-          parent_edge_id: parentEdgeId,
+          parent_edge_ids: [parentEdgeId],
           source_node: node,
           target_node: nodesById[access.target_node],
           attached_as: node.data.entity,
@@ -215,10 +247,11 @@ function applyStrategy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEven
 
   const extraEdges = computeExtraEdges(baseEdge.id) as WritableDraft<IAMEdge>[];
   const updatedContext = produce(context, draft => {
-    draft.edges = _.chain([...extraEdges, ...draft.edges, baseEdge])
-      .sortBy(e => e.data?.unnecessary_edge)
-      .uniqBy('id')
-      .value() as WritableDraft<IAMEdge>[];
+    draft.edges = mergeEdgesById([
+      ...extraEdges,
+      ...draft.edges,
+      baseEdge as WritableDraft<IAMEdge>,
+    ]);
   });
 
   return {
@@ -575,7 +608,7 @@ export function applyGuardRailBlockingToEdges(
 
 /**
  * Deletes an edge from the context and all its children
- *  and updates connection objectives and node associations.
+ * and updates connection objectives and node associations.
  *
  * @param context - The current generic context containing nodes, edges, and objectives.
  * @param edgeToDelete - The edge that should be deleted.
@@ -591,21 +624,33 @@ export function deleteConnectionEdges<
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   deletedEdges: IAMEdge[];
 } {
-  const deletedEdgeIds: string[] = [];
+  const deletedEdgeIds = new Set<string>();
   const updatedContext = produce(context, draftContext => {
-    // Using basic recursion to delete edges and their dependents
+    // Recursively delete edges and prune parent references from dependents.
     function deleteEdge(edgeId: string): void {
-      const dependents = draftContext.edges.filter(edge => edge.data!.parent_edge_id === edgeId);
+      if (deletedEdgeIds.has(edgeId)) {
+        return;
+      }
 
-      dependents.forEach(edge => deleteEdge(edge.id));
-      deletedEdgeIds.push(edgeId);
+      deletedEdgeIds.add(edgeId);
+      const dependents = draftContext.edges.filter(edge => getParentEdgeIds(edge).includes(edgeId));
+
+      dependents.forEach(edge => {
+        const remainingParents = getParentEdgeIds(edge).filter(id => id !== edgeId);
+        if (remainingParents.length === 0) {
+          deleteEdge(edge.id);
+          return;
+        }
+
+        edge.data.parent_edge_ids = remainingParents;
+      });
     }
 
     edgesToDelete.forEach(deleteEdge);
-    draftContext.edges = draftContext.edges.filter(edge => !deletedEdgeIds.includes(edge.id));
+    draftContext.edges = draftContext.edges.filter(edge => !deletedEdgeIds.has(edge.id));
   });
 
-  const deletedEdges = context.edges.filter(edge => deletedEdgeIds.includes(edge.id));
+  const deletedEdges = context.edges.filter(edge => deletedEdgeIds.has(edge.id));
 
   return { updatedContext, deletedEdges };
 }

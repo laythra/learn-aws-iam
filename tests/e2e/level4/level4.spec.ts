@@ -121,6 +121,19 @@ const editInternPolicyNode = async (
   ]);
 };
 
+const goToStage2AndDismissTutorial = async (
+  tutorial: TutorialActions,
+  goToLevelAtStage: <K extends string>(
+    level: number,
+    stages: Record<K, () => Promise<string | undefined>>,
+    stage: K
+  ) => Promise<void>
+): Promise<void> => {
+  await goToLevelAtStage(4, ENCODED_LEVEL_STAGES, 'stage2');
+  await tutorial.expectFixedPopoverWithTutorialGif(FIXED_POPOVER_MESSAGES[3].popover_title);
+  await tutorial.closeFixedPopovers();
+};
+
 const completeLevelFinishPopups = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[4].popover_title);
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
@@ -145,9 +158,11 @@ test.describe('Stage 2 - Editing Policies in all orders', () => {
     nodes,
     edges,
     popups,
+    tutorial,
     goToLevelAtStage,
   }) => {
-    await goToLevelAtStage(4, ENCODED_LEVEL_STAGES, 'stage2');
+    await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
+
     await editDeveloperPolicyNode(nodes, edges, popups);
     await editDataScientistPolicyNode(nodes, edges, popups);
     await editInternPolicyNode(nodes, edges, popups);
@@ -157,9 +172,11 @@ test.describe('Stage 2 - Editing Policies in all orders', () => {
     nodes,
     edges,
     popups,
+    tutorial,
     goToLevelAtStage,
   }) => {
-    await goToLevelAtStage(4, ENCODED_LEVEL_STAGES, 'stage2');
+    await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
+
     await editDeveloperPolicyNode(nodes, edges, popups);
     await editInternPolicyNode(nodes, edges, popups);
     await editDataScientistPolicyNode(nodes, edges, popups);
@@ -169,9 +186,11 @@ test.describe('Stage 2 - Editing Policies in all orders', () => {
     nodes,
     edges,
     popups,
+    tutorial,
     goToLevelAtStage,
   }) => {
-    await goToLevelAtStage(4, ENCODED_LEVEL_STAGES, 'stage2');
+    await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
+
     await editDataScientistPolicyNode(nodes, edges, popups);
     await editDeveloperPolicyNode(nodes, edges, popups);
     await editInternPolicyNode(nodes, edges, popups);
@@ -181,9 +200,11 @@ test.describe('Stage 2 - Editing Policies in all orders', () => {
     nodes,
     edges,
     popups,
+    tutorial,
     goToLevelAtStage,
   }) => {
-    await goToLevelAtStage(4, ENCODED_LEVEL_STAGES, 'stage2');
+    await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
+
     await editDataScientistPolicyNode(nodes, edges, popups);
     await editInternPolicyNode(nodes, edges, popups);
     await editDeveloperPolicyNode(nodes, edges, popups);
@@ -193,9 +214,11 @@ test.describe('Stage 2 - Editing Policies in all orders', () => {
     nodes,
     edges,
     popups,
+    tutorial,
     goToLevelAtStage,
   }) => {
-    await goToLevelAtStage(4, ENCODED_LEVEL_STAGES, 'stage2');
+    await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
+
     await editInternPolicyNode(nodes, edges, popups);
     await editDeveloperPolicyNode(nodes, edges, popups);
     await editDataScientistPolicyNode(nodes, edges, popups);
@@ -205,9 +228,11 @@ test.describe('Stage 2 - Editing Policies in all orders', () => {
     nodes,
     edges,
     popups,
+    tutorial,
     goToLevelAtStage,
   }) => {
-    await goToLevelAtStage(4, ENCODED_LEVEL_STAGES, 'stage2');
+    await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
+
     await editInternPolicyNode(nodes, edges, popups);
     await editDataScientistPolicyNode(nodes, edges, popups);
     await editDeveloperPolicyNode(nodes, edges, popups);
