@@ -16,12 +16,75 @@ import { chakra } from '@chakra-ui/react';
 import * as HeroIcons from '@heroicons/react/24/solid';
 import { Components } from 'react-markdown';
 
+import { extractColorDirective, resolveMarkdownColor } from './color-directives';
+
 interface MarkdownNode {
   properties?: {
     [key: string]: unknown;
     name?: string;
     content?: string;
     as?: string;
+    colorScheme?: string;
+  };
+}
+
+const DEFAULT_BLOCKQUOTE_COLOR = 'orange';
+
+function resolveBadgeColor(colorScheme?: string): string {
+  return resolveMarkdownColor(colorScheme, 'green');
+}
+
+function resolveBlockquoteColor(color?: string): string {
+  return resolveMarkdownColor(color, DEFAULT_BLOCKQUOTE_COLOR);
+}
+
+/**
+ * Extracts color directives from the children of a markdown element. It traverses the children recursively,
+ * detecting any color directives and cleaning them from the content. The first detected color directive is returned,
+ * along with the cleaned children content.
+ * @param children
+ * @returns An object containing the detected color (if any) and the cleaned children content without color directives.
+ * @example
+ *  Given the following markdown content:
+ *  > |color(red)
+ *  > This is a red blockquote.
+ *
+ *  The function will return:
+ * {
+ *   detectedColor: 'red',
+ *   cleanedChildren: 'This is a red blockquote.'
+ * }
+ */
+function extractColorFromChildren(children: React.ReactNode): {
+  detectedColor: string | undefined;
+  cleanedChildren: React.ReactNode;
+} {
+  let detectedColor: string | undefined;
+
+  const cleanNode = (node: React.ReactNode): React.ReactNode => {
+    if (typeof node === 'string') {
+      const { color, cleanedContent } = extractColorDirective(node);
+      if (!detectedColor && color) {
+        detectedColor = color;
+        return cleanedContent.trimStart();
+      }
+
+      return cleanedContent;
+    }
+
+    if (!React.isValidElement(node)) return node;
+
+    const element = node as React.ReactElement<{ children?: React.ReactNode }>;
+    if (element.props.children === undefined) return node;
+
+    const cleaned = React.Children.map(element.props.children, cleanNode);
+    return React.cloneElement(element, element.props, cleaned);
+  };
+
+  const cleanedChildren = React.Children.map(children, cleanNode);
+  return {
+    detectedColor,
+    cleanedChildren,
   };
 }
 
@@ -33,21 +96,19 @@ export const customMarkdownComponents: Components = {
 
     const sizeRegex = /\|(xs|sm|md|lg|xl)$/;
     const weightRegex = /\|weight\((\d+)\)/;
-    const colorRegex = /\|color\((\w+)\)/;
 
-    const processedChildren = React.Children.map(children, child => {
+    const { detectedColor, cleanedChildren } = extractColorFromChildren(children);
+    if (detectedColor) {
+      fontColor = resolveMarkdownColor(detectedColor, 'gray');
+    }
+
+    const processedChildren = React.Children.map(cleanedChildren, child => {
       if (typeof child !== 'string') return child;
 
       let str = child;
 
-      const colorMatch = str.match(colorRegex);
       const weightMatch = str.match(weightRegex);
       const sizeMatch = str.match(sizeRegex);
-
-      if (colorMatch) {
-        fontColor = colorMatch[1] || 'gray';
-        str = str.replace(colorRegex, '');
-      }
 
       if (weightMatch) {
         fontWeight = weightMatch[1] || 'normal';
@@ -168,15 +229,17 @@ export const customMarkdownComponents: Components = {
   },
   span: ({ node, ...props }) => {
     if (node?.properties['as'] === 'badge') {
-      return <Badge colorScheme='green'>{node?.properties.content}</Badge>;
+      const colorScheme = resolveBadgeColor(node?.properties?.colorScheme as string | undefined);
+      return <Badge colorScheme={colorScheme}>{node?.properties.content}</Badge>;
     } else {
       return <span {...props} />;
     }
   },
   div: ({ node, ...props }) => {
     if (node?.properties['as'] === 'badge') {
+      const colorScheme = resolveBadgeColor(node?.properties?.colorScheme as string | undefined);
       return (
-        <Badge colorScheme='green' isTruncated maxW='100%'>
+        <Badge colorScheme={colorScheme} isTruncated maxW='100%'>
           {node?.properties.content}
         </Badge>
       );
@@ -185,19 +248,22 @@ export const customMarkdownComponents: Components = {
     }
   },
   blockquote: ({ children }: JSX.IntrinsicElements['blockquote']) => {
-    // TODO: Allow customizing the color scheme of the alert through markdown syntax
-    const colorScheme = 'orange';
+    const { detectedColor, cleanedChildren } = extractColorFromChildren(children);
+    const color = resolveBlockquoteColor(detectedColor);
 
     return (
       <Alert
         status='info'
-        variant='left-accent'
-        colorScheme={colorScheme}
+        variant='subtle'
+        borderLeftWidth='4px'
+        borderLeftColor={`${color}.500`}
+        bg={`${color}.50`}
+        color={`${color}.900`}
         borderRadius='sm'
         fontSize='sm'
         my={2}
       >
-        <AlertDescription>{children}</AlertDescription>
+        <AlertDescription>{cleanedChildren}</AlertDescription>
       </Alert>
     );
   },
