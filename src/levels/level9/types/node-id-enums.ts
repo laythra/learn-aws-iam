@@ -21,6 +21,8 @@ export const PolicyNodeID = {
 export const ResourceNodeID = {
   RDS1: 'resource-1',
   RDS2: 'resource-2',
+  TeamPeachSecret: 'team-peach-secret',
+  TeamBowserSecret: 'team-bowser-secret',
 } as const;
 
 export const RoleNodeID = {

@@ -1,44 +1,46 @@
 import { FixedPopoverMessage } from '@/levels/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
-  You will see a bunch of users attached to 2 groups, each group represents a team in your company.
+  You will see several users attached to two groups.
+  Each group represents a team in your company.
 
-  Also notice that each user and resource has an **application** tag associated with them,
-  which represents the application they are associated with.
+  Notice that each user and resource has an **application** tag
+  that represents the app they work on.
+  One user is intentionally tagged differently, even though they are in the same group.
 
   Take a minute to explore these tags.
 `;
 
 const FIXED_POPOVER_MSG2 = `
-  The objective of this level is to enable users to connect to RDS instances
-  which belong to the application they are working on.
+  The objective of this level is to let users connect only to RDS instances
+  for the same application they work on.
 
-  To achieve this we will need to match the **application** tag of the user
+  To achieve this, we need to match the user's **application** tag
   with the **application** tag of the RDS instance.
 `;
 
 const FIXED_POPOVER_MSG3 = `
   Nice work! You're getting the hang of it!
 
-  One last thing remains here, you might've noticed how similiar the policies we created are,
-  mainly the same actions and conditions, the only difference is the resource tag.
+  One thing remains: you might have noticed how similar the two policies are.
+  They use nearly the same actions and conditions.
+  The main differences are the team-specific tag value and resource ARN.
 
-  For this reason, we can utilize something called **Policy Variables**,
+  For this reason, we can use **policy variables**,
   which are placeholders that get replaced with actual values when the policy is evaluated.
 `;
 
 const FIXED_POPOVER_MSG4 = `
-  We will erase the two policies we created earlier,
-  and create a single policy that uses a policy variable to match the resource tag.
+  We will remove the two policies we created earlier
+  and replace them with a single shared policy.
 
-  The variable we will use is: *\`aws:ResourceTag/application\`*,
-  which tells the policy to match the **application** tag of the resource
-  with the **application** tag of the user.
+  Think about how you can use a policy variable to dynamically match
+  the resource's **application** tag against the user's own **application** tag.
 `;
 
 const FIXED_POPOVER_MSG5 = `
-  Notice how the same policy granted the appropriate permissions to both groups?
-  This is possible because we can inject condition values as variables into the policy,
+  Notice how one policy granted the correct permissions to both groups.
+  This works because we can inject dynamic values with policy variables,
   enabling us to create a single policy that works across multiple groups.
 `;
 

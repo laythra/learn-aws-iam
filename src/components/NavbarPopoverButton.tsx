@@ -29,7 +29,7 @@ export const NavbarPopoverButton: React.FC<NavbarPopoverButtonProps> = ({
   children,
 }) => {
   return (
-    <Popover isOpen={isOpen} onClose={onClose} placement={placement}>
+    <Popover isOpen={isOpen} onClose={onClose} placement={placement} variant='elevated'>
       <PopoverTrigger>
         <Box>
           <Tooltip label={tooltipLabel} isDisabled={isOpen}>

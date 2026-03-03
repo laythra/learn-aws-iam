@@ -66,6 +66,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
       isLazy={true}
       closeDelay={0}
       isOpen={isARNOpen}
+      variant='elevated'
     >
       <PopoverTrigger>
         <IconButton

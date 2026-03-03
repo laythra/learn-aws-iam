@@ -138,7 +138,7 @@ const IAMCanvasEdge: React.FC<EdgeProps<IAMEdge>> = ({
               pointerEvents='all'
               fontSize='11px'
               fontWeight='bold'
-              zIndex={10}
+              zIndex={theme.zIndices.sticky}
             >
               {isEdgeHighlighted ? data?.hovering_label : data?.persistent_label}
             </Box>

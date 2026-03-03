@@ -15,7 +15,6 @@ import {
   Text,
   PopoverCloseButton,
   IconButton,
-  Portal,
 } from '@chakra-ui/react';
 import { TagIcon } from '@heroicons/react/16/solid';
 import { useSelector } from '@xstate/store/react';
@@ -58,6 +57,7 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
       isLazy={true}
       isOpen={areTagsOpen}
       closeDelay={0}
+      variant='elevated'
     >
       <PopoverTrigger>
         <IconButton
@@ -77,35 +77,33 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
           {...styleProps}
         />
       </PopoverTrigger>
-      <Portal>
-        <PopoverContent width='auto' data-element-id={`${nodeId}-tags`}>
-          <PopoverHeader fontWeight='bold' fontSize='md'>
-            <PopoverCloseButton
-              onClick={() => {
-                emitEvent(StatelessStateMachineEvent.IAMNodeTagsPopoverClosed);
-                CanvasStore.send({ type: 'closeAllNodePanels' });
-              }}
-              aria-label='close'
-            />
-            Tags
-          </PopoverHeader>
-          <PopoverBody py={2}>
-            <VStack spacing={2}>
-              {tags.map(([key, val]) => (
-                <HStack key={key} spacing={1} alignItems='center'>
-                  <Tag>
-                    <TagLabel fontWeight='700'>{key}</TagLabel>
-                  </Tag>
-                  <Text> : </Text>
-                  <Tag>
-                    <TagLabel>{val}</TagLabel>
-                  </Tag>
-                </HStack>
-              ))}
-            </VStack>
-          </PopoverBody>
-        </PopoverContent>
-      </Portal>
+      <PopoverContent width='auto' data-element-id={`${nodeId}-tags`}>
+        <PopoverHeader fontWeight='bold' fontSize='md'>
+          <PopoverCloseButton
+            onClick={() => {
+              emitEvent(StatelessStateMachineEvent.IAMNodeTagsPopoverClosed);
+              CanvasStore.send({ type: 'closeAllNodePanels' });
+            }}
+            aria-label='close'
+          />
+          Tags
+        </PopoverHeader>
+        <PopoverBody py={2}>
+          <VStack spacing={2}>
+            {tags.map(([key, val]) => (
+              <HStack key={key} spacing={1} alignItems='center'>
+                <Tag>
+                  <TagLabel fontWeight='700'>{key}</TagLabel>
+                </Tag>
+                <Text> : </Text>
+                <Tag>
+                  <TagLabel>{val}</TagLabel>
+                </Tag>
+              </HStack>
+            ))}
+          </VStack>
+        </PopoverBody>
+      </PopoverContent>
     </Popover>
   );
 };

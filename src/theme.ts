@@ -16,4 +16,20 @@ export const theme: CustomTheme = extendTheme({
     codeEditorHeightInPixels: 500,
     sidePanelWidthInPixels: window.innerWidth * 0.2,
   },
+  zIndices: {
+    // Modals should be above everything else
+    modal: 9999,
+  },
+  components: {
+    Popover: {
+      baseStyle: {
+        popper: { zIndex: 1000 },
+      },
+      variants: {
+        elevated: {
+          popper: { zIndex: 1100 },
+        },
+      },
+    },
+  },
 }) as CustomTheme;

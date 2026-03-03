@@ -9,9 +9,29 @@ import {
 } from '@/levels/types/objective-types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
-const OBJECTIVE_CALLOUT_MSG = `
-  We ultimately want to create two policies that allow connecting to the RDS instances
-  and managing them, but only if the user the same tag as the RDS instance.
+const OBJECTIVE1_CALLOUT_MSG = `
+  Create a policy for **Peach Team** that lets its users:
+  - retrieve their team database secret
+  - connect to their team RDS database
+`;
+
+const OBJECTIVE2_CALLOUT_MSG = `
+  Now do the same for **Bowser Force**:
+  allow secret retrieval and RDS connection for their team only.
+`;
+
+const OBJECTIVE3_CALLOUT_MSG = `
+  Notice the wildcards in the resource ARNs.
+
+  They make the shared policy flexible enough
+  to cover multiple teams' secrets and databases.
+
+  Instead of creating one policy per team,
+  use policy variables with conditions so one policy can scale safely.
+`;
+
+const SHARED_HINT_MSG1 = `
+  Here's a little refresher of the condition syntax we've covered in previous levels:
 
   ~~~js
   "Condition": {
@@ -20,66 +40,109 @@ const OBJECTIVE_CALLOUT_MSG = `
     }
   }|fullwidth
   ~~~
-
-  Consult the hints below if you need further help
-`;
-
-const SHARED_HINT_MSG1 = `
-  Remember the condition operators we discussed earlier?
-
-  For this objective, we want to perform a strict string match,
-  what do you think is the best suited operator?
 `;
 
 const SHARED_HINT_MSG2 = `
-  The condition key we need to define should represent the
-  resource tag that is associated with the RDS instance, and the value should be
-  the tag value that matches the user tag.
+  Remember the condition operators we discussed earlier?
 
-  The most commonly used condition keys for this purpose are:
-
-  - **\`aws:ResourceTag/<tag-key>\`**: checks if the resource has a specific tag key and value.
-  - **\`aws:RequestTag/<tag-key>\`**: checks if the request has a specific tag key and value.
+  For this objective, we need a strict string match.
+  Which operator is best suited for this?
 `;
 
 const SHARED_HINT_MSG3 = `
-  The missing action in the policy would allow listing all RDS instances.
-  You can use the \`rds:DescribeDBInstances\` action for this purpose.
+  The most commonly used condition keys for this purpose are:
+
+  - **\`"\aws:PrincipalTag/application"\`**:
+    Represents the tag value of the user making the request.
+  - **\`"\aws:ResourceTag/application"\`**:
+    Represents the tag value of the resource being accessed.
+  - **\`"\aws:RequestTag/application"\`**:
+    Represents the tag value of the request being made.
+
+  In this scenario, since we want to restrict access based on the resource's team tag,
+  which condition key should we use?
+`;
+
+const SHARED_HINT_MSG4 = `
+  The missing action in the first statement should allow
+  users to retrieve
+  the database credentials from Secrets Manager.
+
+  You can use the \`secretsmanager:GetSecretValue\` action for this purpose.
 `;
 
 const SECOND_OBJECTIVE_HINT_MSG1 = `
-  We need to inject ***Policy Variables*** into the policy to make it work for both groups.
-  what policy variable do you think we should use to represent the tag value?
+  To make one policy work for both groups, use a **policy variable**
+  for the condition value.
+  Which variable represents the calling user's application tag?
 
-  - \`"\${aws:PrincipalTag/application}"\`: Represents the tag value of the user making the request.
-  - \`"\${aws:ResourceTag/application}"\`: Represents the tag value of the resource being accessed.
-  - \`"\${aws:RequestTag/application}"\`: Represents the tag value of the request being made.
+  - **\`"\${aws:PrincipalTag/application}"\`**:
+  Represents the tag value of the user making the request.
+  - **\`"\${aws:ResourceTag/application}"\`**:
+    Represents the tag value of the resource being accessed.
+  - **\`"\${aws:RequestTag/application}"\`**:
+    Represents the tag value of the request being made.
+
+
+   > ::badge[TIP]:: Policy variables are condition key values embedded directly
+    into a policy using "**$\{\}**" syntax, rather than being evaluated in a condition block.
 `;
 
-const SHARED_HINT_MESSAGES = [
-  {
-    title: 'Condition Operator',
-    content: SHARED_HINT_MSG1,
-  },
-  {
-    title: 'Condition Key',
-    content: SHARED_HINT_MSG2,
-  },
-  {
-    title: 'Action to List RDS Instances',
-    content: SHARED_HINT_MSG3,
-  },
-];
-
-const SHARED_HELP_BADGES = [
+const HELP_BADGES1 = [
   {
     path: '/Statement/0/Action',
-    content: 'Place an action here that helps listing all RDS instances',
+    content: 'Add the action used to retrieve the database secret',
+    color: 'yellow',
+  },
+  {
+    path: '/Statement/0/Condition',
+    content: 'Fill in correct condition',
+    color: 'yellow',
+  },
+  {
+    path: '/Statement/1/Condition',
+    content: 'Fill in correct condition',
     color: 'yellow',
   },
 ];
 
+const HELP_BADGES2 = [
+  {
+    path: '/Statement/0/Condition',
+    content: 'Fill the condition to restrict access based on the application tag',
+    color: 'yellow',
+  },
+  {
+    path: '/Statement/1/Condition',
+    content: 'Fill the condition to restrict access based on the application tag',
+    color: 'yellow',
+  },
+];
+
+const SHARED_HINT_MESSAGES = [
+  {
+    title: 'Condition Syntax Refresher',
+    content: SHARED_HINT_MSG1,
+  },
+  {
+    title: 'Condition Operator',
+    content: SHARED_HINT_MSG2,
+  },
+  {
+    title: 'Condition Key',
+    content: SHARED_HINT_MSG3,
+  },
+  {
+    title: 'Action for Secret Retrieval',
+    content: SHARED_HINT_MSG4,
+  },
+];
+
 const SECOND_OBJECTIVE_HINT_MESSAGES = [
+  {
+    title: 'Condition Key',
+    content: SHARED_HINT_MSG3,
+  },
   {
     title: 'Policy Variable for Tag Value',
     content: SECOND_OBJECTIVE_HINT_MSG1,
@@ -96,7 +159,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity: IAMNodeEntity.Policy,
       on_finish_event: PolicyCreationFinishEvent.RDS1_MANAGE_POLICY_CREATED,
-      initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
+      initial_code: INITIAL_POLICIES.PEACH_TEAM_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
       extra_data: {
@@ -108,11 +171,18 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
             target_handle: 'bottom',
             applicable_nodes_fn_name: 'peachTeamApplicableNodes',
           },
+          {
+            target_node: ResourceNodeID.TeamPeachSecret,
+            access_level: AccessLevel.Read,
+            source_handle: 'right',
+            target_handle: 'bottom',
+            applicable_nodes_fn_name: 'peachTeamApplicableNodes',
+          },
         ],
       },
-      callout_message: OBJECTIVE_CALLOUT_MSG,
+      callout_message: OBJECTIVE1_CALLOUT_MSG,
       hint_messages: SHARED_HINT_MESSAGES,
-      help_badges: SHARED_HELP_BADGES,
+      help_badges: HELP_BADGES1,
     } satisfies Partial<
       IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
@@ -121,9 +191,10 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity: IAMNodeEntity.Policy,
       on_finish_event: PolicyCreationFinishEvent.RDS2_MANAGE_POLICY_CREATED,
-      initial_code: INITIAL_POLICIES.SEPARATE_RDS_POLICY,
+      initial_code: INITIAL_POLICIES.BOWSER_FORCE_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
+      callout_message: OBJECTIVE2_CALLOUT_MSG,
       extra_data: {
         granted_accesses: [
           {
@@ -133,10 +204,17 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
             target_handle: 'bottom',
             applicable_nodes_fn_name: 'bowserForceApplicableNodes',
           },
+          {
+            target_node: ResourceNodeID.TeamBowserSecret,
+            access_level: AccessLevel.Read,
+            source_handle: 'left',
+            target_handle: 'bottom',
+            applicable_nodes_fn_name: 'bowserForceApplicableNodes',
+          },
         ],
       },
       hint_messages: SHARED_HINT_MESSAGES,
-      help_badges: SHARED_HELP_BADGES,
+      help_badges: HELP_BADGES1,
     } satisfies Partial<
       IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
@@ -150,10 +228,18 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
       initial_code: INITIAL_POLICIES.SHARED_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
+      callout_message: OBJECTIVE3_CALLOUT_MSG,
       extra_data: {
         granted_accesses: [
           {
             target_node: ResourceNodeID.RDS1,
+            access_level: AccessLevel.Read,
+            source_handle: 'right',
+            target_handle: 'bottom',
+            applicable_nodes_fn_name: 'peachTeamApplicableNodes',
+          },
+          {
+            target_node: ResourceNodeID.TeamPeachSecret,
             access_level: AccessLevel.Read,
             source_handle: 'right',
             target_handle: 'bottom',
@@ -166,9 +252,17 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
             target_handle: 'bottom',
             applicable_nodes_fn_name: 'bowserForceApplicableNodes',
           },
+          {
+            target_node: ResourceNodeID.TeamBowserSecret,
+            access_level: AccessLevel.Read,
+            source_handle: 'left',
+            target_handle: 'bottom',
+            applicable_nodes_fn_name: 'bowserForceApplicableNodes',
+          },
         ],
       },
       hint_messages: SECOND_OBJECTIVE_HINT_MESSAGES,
+      help_badges: HELP_BADGES2,
     } satisfies Partial<
       IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
