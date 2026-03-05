@@ -55,9 +55,11 @@ export const MobileWarningPopup: React.FC = () => {
       isOpen={isModalOpen[POPUP_MOBILE_WARNING_KEY]}
       isCentered
       onClose={() => closeModal(POPUP_MOBILE_WARNING_KEY)}
+      closeOnOverlayClick={false}
+      closeOnEsc={false}
       size='lg'
     >
-      <ModalOverlay />
+      <ModalOverlay backdropFilter='blur(12px)' />
       <ModalContent>
         <ModalHeader>You lack the mobile-friendly permission ⛔</ModalHeader>
         <ModalBody pb={6}>
