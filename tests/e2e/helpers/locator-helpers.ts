@@ -1,7 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 
 import { ElementID } from '@/config/element-ids';
-import { getEdgeName } from '@/lib/iam/names';
+import { getEdgeName } from '@/domain/iam-graph-utils';
 
 export const findNode = (page: Page, nodeId: string): Locator => {
   return page.getByTestId(nodeId);

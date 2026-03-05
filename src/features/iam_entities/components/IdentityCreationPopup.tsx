@@ -25,7 +25,7 @@ import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { useIdentityCreator } from '@/app_shell/ui/useIdentityCreator';
 import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
 import { ElementID } from '@/config/element-ids';
-import { validateIAMName } from '@/lib/iam/names';
+import { validateIAMName } from '@/domain/iam-graph-utils';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import {
   StatefulStateMachineEvent,

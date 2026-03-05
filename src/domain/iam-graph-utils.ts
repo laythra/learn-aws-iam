@@ -6,8 +6,8 @@ const EDGE_LABELS: { [key: string]: string } = {
   [`${IAMNodeEntity.Policy}-${IAMNodeEntity.User}`]: 'Attached to',
   [`${IAMNodeEntity.Policy}-${IAMNodeEntity.Group}`]: 'Belongs to',
   [`${IAMNodeEntity.User}-${IAMNodeEntity.Group}`]: 'Attached to',
-  [`${IAMNodeEntity.Role}-${IAMNodeEntity.User}`]: 'Assumed By',
-  [`${IAMNodeEntity.Role}-${IAMNodeEntity.Resource}`]: 'Assumed By',
+  [`${IAMNodeEntity.Role}-${IAMNodeEntity.User}`]: 'Assumes',
+  [`${IAMNodeEntity.Role}-${IAMNodeEntity.Resource}`]: 'Assumes',
 };
 
 export function formatNodeName(name: string): string {
@@ -23,7 +23,11 @@ export function getEdgeName(source: string, target: string, attachedAs?: IAMNode
 }
 
 export function getEdgeLabel(sourceEntity: IAMNodeEntity, targetEntity: IAMNodeEntity): string {
-  return EDGE_LABELS[`${sourceEntity}-${targetEntity}`] || 'Attached To';
+  return (
+    EDGE_LABELS[`${sourceEntity}-${targetEntity}`] ||
+    EDGE_LABELS[`${targetEntity}-${sourceEntity}`] ||
+    'Attached To'
+  );
 }
 
 export const validateIAMName = (
