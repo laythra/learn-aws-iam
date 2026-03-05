@@ -1,5 +1,3 @@
-import { DynamicAnimationOptions } from 'framer-motion';
-
 import {
   BaseCreationObjective,
   BaseFinishEventMap,
@@ -14,7 +12,6 @@ import {
   PopupTutorialMessage,
 } from './tutorial-message-types';
 import { ElementID } from '@/config/element-ids';
-import { IAMNodeEntity } from '@/types/iam-enums';
 import { NodeLayoutGroup } from '@/types/iam-layout-types';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 

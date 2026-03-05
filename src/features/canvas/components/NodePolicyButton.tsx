@@ -22,14 +22,13 @@ import { useSelector } from '@xstate/store/react';
 import { CanvasStore } from '../stores/canvas-store';
 import { useStateMachineEvent } from '@/app_shell/runtime/useStateMachineEvent';
 import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
-import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
 import AnimatedRedDot from '@/components/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
-interface IAMNodeInfoButtonProps {
+interface NodePolicyButtonProps {
   nodeId: string;
   label: string;
   editable?: boolean;
@@ -39,7 +38,7 @@ interface IAMNodeInfoButtonProps {
   selectedIAMEntity: IAMCodeDefinedEntity;
 }
 
-const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
+const NodePolicyButton: React.FC<NodePolicyButtonProps> = ({
   nodeId,
   label,
   verboseDescription,
@@ -50,9 +49,6 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
 }) => {
   const popoverContentRef = useRef<HTMLDivElement>(null);
   const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedContent);
-  const [isIAMNodeContentButtonRestricted] = useIsElementRestricted([
-    ElementID.IAMNodeContentButton,
-  ]);
   const { emitEvent } = useStateMachineEvent();
   const isContentOpen = openedNodeId === nodeId;
 
@@ -95,25 +91,23 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
       isOpen={isContentOpen}
       variant='elevated'
     >
-      {!isIAMNodeContentButtonRestricted && (
-        <PopoverTrigger>
-          <IconButton
-            data-element-id={ElementID.IAMNodeContentButton}
-            aria-label='info'
-            icon={<CodeBracketIcon />}
-            variant='ghost'
-            opacity={0.5}
-            height='16px'
-            width='16px'
-            minWidth='auto'
-            onClick={() => {
-              emitEvent(StatelessStateMachineEvent.IAMNodeContentOpened);
-              toggleNodeContentPopover();
-            }}
-            _hover={{ bg: 'gray.200', opacity: 1 }}
-          />
-        </PopoverTrigger>
-      )}
+      <PopoverTrigger>
+        <IconButton
+          data-element-id={ElementID.IAMNodeContentButton}
+          aria-label='info'
+          icon={<CodeBracketIcon />}
+          variant='ghost'
+          opacity={0.5}
+          height='16px'
+          width='16px'
+          minWidth='auto'
+          onClick={() => {
+            emitEvent(StatelessStateMachineEvent.IAMNodeContentOpened);
+            toggleNodeContentPopover();
+          }}
+          _hover={{ bg: 'gray.200', opacity: 1 }}
+        />
+      </PopoverTrigger>
       <PopoverContent
         w='500px'
         overflow='auto'
@@ -176,4 +170,4 @@ const IAMNodeInfoButton: React.FC<IAMNodeInfoButtonProps> = ({
   );
 };
 
-export default memo(IAMNodeInfoButton);
+export default memo(NodePolicyButton);

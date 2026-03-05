@@ -1,8 +1,8 @@
-import { theme } from '@/theme';
+import { BASE_REGULAR_NODE_METRICS } from '@/domain/node-metrics';
 import { NodeLayoutGroup, ValidInitialPosition } from '@/types/iam-layout-types';
 
-const DEFAULT_HORIZONTAL_SPACING = theme.sizes.iamNodeWidthInPixels + 20;
-const DEFAULT_VERTICAL_SPACING = theme.sizes.iamNodeHeightInPixels + 20;
+const DEFAULT_HORIZONTAL_SPACING = BASE_REGULAR_NODE_METRICS.nodeWidth + 20;
+const DEFAULT_VERTICAL_SPACING = BASE_REGULAR_NODE_METRICS.nodeHeight + 20;
 
 export function createHorizontalGroup(
   id: string,

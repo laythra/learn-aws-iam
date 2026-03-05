@@ -1,12 +1,11 @@
 import { useCallback, useEffect } from 'react';
 
-import { useTheme } from '@chakra-ui/react';
 import { ReactFlowInstance } from '@xyflow/react';
 import _ from 'lodash';
 
-import { useWindowWidth } from './useWindowWidth';
+import { useWindowSize } from './useWindowSize';
 import { CanvasStore } from '../stores/canvas-store';
-import { CustomTheme } from '@/types/custom-theme';
+import { getRegularNodeMetrics, NodeSizingBreakpointID } from '@/domain/node-metrics';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
@@ -18,6 +17,7 @@ interface UseCanvasViewportOptions {
 
 interface UseCanvasViewportReturn {
   sidePanelWidth: number;
+  regularNodeBreakpointId: NodeSizingBreakpointID;
   adjustCanvasZoom: (newNodes: IAMAnyNode[]) => void;
 }
 
@@ -26,8 +26,8 @@ export function useCanvasViewport({
   nodes,
   sidePanelOpened,
 }: UseCanvasViewportOptions): UseCanvasViewportReturn {
-  const theme = useTheme<CustomTheme>();
-  const windowWidth = useWindowWidth();
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
+  const regularNodeMetrics = getRegularNodeMetrics(windowWidth, windowHeight);
   const sidePanelWidth = sidePanelOpened ? windowWidth * 0.2 : 0;
 
   const containsAccountNodes = useCallback((nodesToCheck: IAMAnyNode[]): boolean => {
@@ -46,7 +46,7 @@ export function useCanvasViewport({
         1
       );
     },
-    [rfInstance, containsAccountNodes]
+    [rfInstance, containsAccountNodes, windowWidth]
   );
 
   const adjustCanvasZoom = useCallback(
@@ -75,9 +75,13 @@ export function useCanvasViewport({
       type: 'adjustForSidePanelWidthChange',
       sidePanelWidth,
       viewport: rfInstance.getViewport(),
-      nodeWidth: theme.sizes.iamNodeWidthInPixels,
+      nodeWidth: regularNodeMetrics.nodeWidth,
     });
-  }, [rfInstance, sidePanelWidth, containsAccountNodes]);
+  }, [rfInstance, sidePanelWidth, containsAccountNodes, regularNodeMetrics.nodeWidth]);
 
-  return { sidePanelWidth, adjustCanvasZoom };
+  return {
+    sidePanelWidth,
+    regularNodeBreakpointId: regularNodeMetrics.breakpointId,
+    adjustCanvasZoom,
+  };
 }

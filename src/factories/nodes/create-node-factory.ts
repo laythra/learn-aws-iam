@@ -1,5 +1,6 @@
 import { HandleProps } from '@xyflow/react';
 
+import { getCurrentRegularNodeMetrics } from '@/domain/node-metrics';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAnyNode, IAMNodeMap } from '@/types/iam-node-types';
@@ -30,8 +31,8 @@ type RootOverrides = Partial<Omit<IAMAnyNode, 'data'>>;
  * @param config.entity - The entity type of the node
  * @param config.image - Image associated with the node
  * @param config.defaultHandles - Default handles for the node
- * @param config.width - Width of the node (default: 225)
- * @param config.height - Height of the node (default: 82)
+ * @param config.width - Width of the node (default: responsive regular node width)
+ * @param config.height - Height of the node (default: responsive regular node height)
  * @param config.deletable - Whether the node can be deleted (default: false)
  * @param config.draggable - Whether the node can be dragged (default: true)
  * @param config.initial_position - Initial position of the node (default: 'center')
@@ -66,34 +67,13 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
     entity,
     image,
     defaultHandles,
-    width = 225,
-    height = 82,
+    width,
+    height,
     deletable = false,
     draggable = true,
     initial_position = 'center',
     additionalData = {},
   } = config;
-
-  const TEMPLATE_NODE = {
-    id: entity.toLowerCase(),
-    position: { x: 0, y: 0 },
-    type: type as IAMNodeMap[E]['type'],
-    draggable,
-    deletable,
-    width,
-    height,
-    data: {
-      label: entity,
-      handles: defaultHandles,
-      entity,
-      image,
-      initial_position,
-      layout_direction: 'horizontal',
-      vertical_spacing: height + 20, // 20 so nodes don't completely overlap on each other
-      horizontal_spacing: width + 20, // 20 so nodes don't completely overlap on each other
-      ...additionalData,
-    } as T,
-  };
 
   return function createNode({
     rootOverrides,
@@ -102,17 +82,42 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
     rootOverrides?: RootOverrides;
     dataOverrides?: IAMNodeDataOverrides<T>;
   }): IAMNodeMap[E] {
+    const metrics = getCurrentRegularNodeMetrics();
+    const resolvedWidth = width ?? metrics.nodeWidth;
+    const resolvedHeight = height ?? metrics.nodeHeight;
+
+    const templateNode = {
+      id: entity.toLowerCase(),
+      position: { x: 0, y: 0 },
+      type: type as IAMNodeMap[E]['type'],
+      draggable,
+      deletable,
+      width: resolvedWidth,
+      height: resolvedHeight,
+      data: {
+        label: entity,
+        handles: defaultHandles,
+        entity,
+        image,
+        initial_position,
+        layout_direction: 'horizontal',
+        vertical_spacing: resolvedHeight + 20, // 20 so nodes don't completely overlap on each other
+        horizontal_spacing: resolvedWidth + 20, // 20 so nodes don't completely overlap on each other
+        ...additionalData,
+      } as T,
+    };
+
     const { id: overrideId, ...dataOverridesWithoutId } =
       dataOverrides ?? ({} as IAMNodeDataOverrides<T>);
 
     return {
-      ...TEMPLATE_NODE,
+      ...templateNode,
       ...rootOverrides,
-      id: overrideId ?? rootOverrides?.id ?? TEMPLATE_NODE.id,
+      id: overrideId ?? rootOverrides?.id ?? templateNode.id,
       deletable: dataOverridesWithoutId?.unnecessary_node === true,
       extent: rootOverrides?.parentId ? 'parent' : undefined,
       data: {
-        ...TEMPLATE_NODE.data,
+        ...templateNode.data,
         ...dataOverridesWithoutId,
       },
     } as IAMNodeMap[E];

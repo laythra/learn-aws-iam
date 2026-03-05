@@ -1,6 +1,7 @@
 import { Viewport } from '@xyflow/react';
 import _ from 'lodash';
 
+import { getCurrentRegularNodeMetrics } from '@/domain/node-metrics';
 import { getNodeInitialPosition } from '@/features/canvas/utils/node-position-geometry';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { NodeLayoutGroup } from '@/types/iam-layout-types';
@@ -23,9 +24,30 @@ export function positionNewNodes(
   sidePanelWidth: number,
   viewport: Viewport
 ): IAMAnyNode[] {
+  const regularNodeMetrics = getCurrentRegularNodeMetrics();
+  const applyResponsiveNodeDimensions = (node: IAMAnyNode): IAMAnyNode => {
+    if (node.data.entity === IAMNodeEntity.Account) return node;
+
+    const data = {
+      ...node.data,
+      horizontal_spacing: regularNodeMetrics.horizontalSpacing,
+      vertical_spacing: regularNodeMetrics.verticalSpacing,
+    } as typeof node.data;
+
+    return {
+      ...node,
+      width: regularNodeMetrics.nodeWidth,
+      height: regularNodeMetrics.nodeHeight,
+      data,
+    } as IAMAnyNode;
+  };
+
+  const resizedExistingNodes = existingNodes.map(applyResponsiveNodeDimensions);
+  const resizedNewNodes = newNodes.map(applyResponsiveNodeDimensions);
+
   const layoutGroupsById = _.keyBy(layoutGroups, 'id');
 
-  const allNodes = [...existingNodes, ...newNodes];
+  const allNodes = [...resizedExistingNodes, ...resizedNewNodes];
   const allNodesById = _.keyBy(allNodes, 'id');
 
   const nodeGroups = _.groupBy(allNodes, node => {
@@ -38,7 +60,7 @@ export function positionNewNodes(
     return node.data.layout_group_id;
   });
 
-  return newNodes.map(node => {
+  return resizedNewNodes.map(node => {
     let groupKey = node.data.layout_group_id;
     const isAccountNode = node.data.entity === IAMNodeEntity.Account;
     const hasParent = !!node.parentId;

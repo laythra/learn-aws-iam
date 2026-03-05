@@ -1,5 +1,5 @@
+import { BASE_REGULAR_NODE_METRICS } from '@/domain/node-metrics';
 import { createHorizontalGroup, createVerticalGroup } from '@/factories/layout-group-factory';
-import { theme } from '@/theme';
 
 export enum LayoutGroupID {
   InLevelUsersLayoutGroup = 'in-level-users-layout-group',
@@ -15,57 +15,57 @@ export enum LayoutGroupID {
 const IN_LEVEL_USERS_LAYOUT_GROUP = createVerticalGroup(
   LayoutGroupID.InLevelUsersLayoutGroup,
   'left-center',
-  theme.sizes.iamNodeHeightInPixels - 15,
+  BASE_REGULAR_NODE_METRICS.nodeHeight - 15,
   { left: 0, top: 0 }
 );
 
 const IN_LEVEL_ELASTICACHE_LAYOUT_GROUP = createHorizontalGroup(
   LayoutGroupID.InLevelElasticCacheLayoutGroup,
   'bottom-center',
-  theme.sizes.iamNodeWidthInPixels + 20,
+  BASE_REGULAR_NODE_METRICS.nodeWidth + 20,
   { left: 0, top: 40 }
 );
 
 const IN_LEVEL_PAYMENTS_TEAM_USERS_LAYOUT_GROUP = createHorizontalGroup(
   LayoutGroupID.InLevelPaymentsSquadLayoutGroup,
   'right-center',
-  theme.sizes.iamNodeHeightInPixels - 20,
-  { left: 0, top: theme.sizes.iamNodeHeightInPixels + 20 }
+  BASE_REGULAR_NODE_METRICS.nodeHeight - 20,
+  { left: 0, top: BASE_REGULAR_NODE_METRICS.nodeHeight + 20 }
 );
 
 const IN_LEVEL_NOTIFICATIONS_TEAM_USERS_LAYOUT_GROUP = createHorizontalGroup(
   LayoutGroupID.InLevelNotificationsSquadLayoutGroup,
   'left-center',
-  theme.sizes.iamNodeHeightInPixels - 20,
-  { left: 0, top: theme.sizes.iamNodeHeightInPixels + 20 }
+  BASE_REGULAR_NODE_METRICS.nodeHeight - 20,
+  { left: 0, top: BASE_REGULAR_NODE_METRICS.nodeHeight + 20 }
 );
 
 const IN_LEVEL_SEARCH_TEAM_USERS_LAYOUT_GROUP = createHorizontalGroup(
   LayoutGroupID.InLevelSearchSquadLayoutGroup,
   'center',
-  theme.sizes.iamNodeHeightInPixels - 20,
-  { left: 0, top: theme.sizes.iamNodeHeightInPixels + 20 }
+  BASE_REGULAR_NODE_METRICS.nodeHeight - 20,
+  { left: 0, top: BASE_REGULAR_NODE_METRICS.nodeHeight + 20 }
 );
 
 const IN_LEVEL_GROUP_NODES_LAYOUT_GROUP = createHorizontalGroup(
   LayoutGroupID.InLevelGroupNodesLayoutGroup,
   'top-center',
-  theme.sizes.iamNodeWidthInPixels,
-  { left: 0, top: theme.sizes.iamNodeHeightInPixels + 50 }
+  BASE_REGULAR_NODE_METRICS.nodeWidth,
+  { left: 0, top: BASE_REGULAR_NODE_METRICS.nodeHeight + 50 }
 );
 
 const IN_LEVEL_PERMISSION_BOUNDARY_LAYOUT_GROUP = createHorizontalGroup(
   LayoutGroupID.InLevelPermissionBoundaryLayoutGroup,
   'right-center',
-  theme.sizes.iamNodeWidthInPixels,
-  { left: -theme.sizes.iamNodeWidthInPixels - 20, top: 0 }
+  BASE_REGULAR_NODE_METRICS.nodeWidth,
+  { left: -BASE_REGULAR_NODE_METRICS.nodeWidth - 20, top: 0 }
 );
 
 const IN_LEVEL_ACCESS_DELEGATION_POLICY_LAYOUT_GROUP = createHorizontalGroup(
   LayoutGroupID.InLevelAccessDelegationPolicyLayoutGroup,
   'bottom-center',
-  theme.sizes.iamNodeWidthInPixels,
-  { left: 0, top: -theme.sizes.iamNodeHeightInPixels + 20 }
+  BASE_REGULAR_NODE_METRICS.nodeWidth,
+  { left: 0, top: -BASE_REGULAR_NODE_METRICS.nodeHeight + 20 }
 );
 
 export const LAYOUT_GROUPS = [
