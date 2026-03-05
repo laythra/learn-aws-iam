@@ -194,7 +194,7 @@ function createEdgesFromGrantedAccesses<
           deletable: false,
         },
         dataOverrides: {
-          hovering_label: access.access_level,
+          hovering_label: access.edge_label ?? access.access_level,
           parent_edge_ids: [parentEdgeId],
           source_node: node,
           target_node: nodesById[access.target_node],

@@ -6,6 +6,7 @@ export interface PolicyGrantedAccess<TApplicableNodesFnName extends string = str
   readonly source_handle?: string;
   readonly target_handle: string;
   readonly applicable_nodes_fn_name?: TApplicableNodesFnName;
+  readonly edge_label?: string;
 }
 
 export interface PolicyBlockedAccess {
