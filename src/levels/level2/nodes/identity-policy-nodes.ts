@@ -1,10 +1,10 @@
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
+import { createIdentityPolicyNode } from '@/factories/nodes/identity-policy-node-factory';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
-import { IAMPolicyNode } from '@/types/iam-node-types';
+import { IAMIdentityPolicyNode } from '@/types/iam-node-types';
 
-const POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [
+const POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.PolicyNode1,
     label: 'S3ReadPolicy',
@@ -46,6 +46,6 @@ const POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [
   },
 ];
 
-export const INITIAL_POLICY_NODES: IAMPolicyNode[] = POLICY_NODES.map(nodeData =>
-  createPolicyNode({ dataOverrides: nodeData })
+export const INITIAL_POLICY_NODES: IAMIdentityPolicyNode[] = POLICY_NODES.map(nodeData =>
+  createIdentityPolicyNode({ dataOverrides: nodeData })
 );

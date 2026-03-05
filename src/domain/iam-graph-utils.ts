@@ -3,8 +3,8 @@ import _ from 'lodash';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
 const EDGE_LABELS: { [key: string]: string } = {
-  [`${IAMNodeEntity.Policy}-${IAMNodeEntity.User}`]: 'Attached to',
-  [`${IAMNodeEntity.Policy}-${IAMNodeEntity.Group}`]: 'Belongs to',
+  [`${IAMNodeEntity.IdentityPolicy}-${IAMNodeEntity.User}`]: 'Attached to',
+  [`${IAMNodeEntity.IdentityPolicy}-${IAMNodeEntity.Group}`]: 'Belongs to',
   [`${IAMNodeEntity.User}-${IAMNodeEntity.Group}`]: 'Attached to',
   [`${IAMNodeEntity.Role}-${IAMNodeEntity.User}`]: 'Assumes',
   [`${IAMNodeEntity.Role}-${IAMNodeEntity.Resource}`]: 'Assumes',

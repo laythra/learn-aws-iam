@@ -94,7 +94,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       id: PolicyNodeID.SlackServiceManagePolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       validate_fn_name: 'slackManagePolicyValidateFn1',
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       callout_message: OBJECTIVE1_CALLOUT_MSG,
       on_finish_event: PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_FIRST_TIME,
       resources_to_grant: GRANTED_RESOURCES,
@@ -127,7 +127,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       id: PolicyNodeID.SlackServiceManagePolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       validate_fn_name: 'slackManagePolicyValidateFn2',
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_SECOND_TIME,
       resources_to_grant: GRANTED_RESOURCES,
       hint_messages: [

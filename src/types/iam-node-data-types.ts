@@ -82,13 +82,13 @@ export interface IAMGuardRailsNodeData<
 
 export interface IAMUserNodeData extends IAMNodeData {
   entity: IAMNodeEntity.User;
-  allowed_sources: [IAMNodeEntity.Policy, IAMNodeEntity.PermissionBoundary];
+  allowed_sources: [IAMNodeEntity.IdentityPolicy, IAMNodeEntity.PermissionBoundary];
   aggregated?: boolean;
 }
 
 export interface IAMAggregatedUsersNodeData extends IAMNodeData {
   entity: IAMNodeEntity.AggregatedUsers;
-  allowed_sources: [IAMNodeEntity.Policy, IAMNodeEntity.PermissionBoundary];
+  allowed_sources: [IAMNodeEntity.IdentityPolicy, IAMNodeEntity.PermissionBoundary];
   aggregated?: boolean;
   aggregated_user_ids: string[];
   original_edge_mappings: Record<string, string>; // Maps original user IDs to edge IDs
@@ -98,8 +98,8 @@ export interface IAMGroupNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Group;
 }
 
-export interface IAMPolicyNodeData extends IAMNodeData {
-  entity: IAMNodeEntity.Policy;
+export interface IAMIdentityPolicyNodeData extends IAMNodeData {
+  entity: IAMNodeEntity.IdentityPolicy;
   editable: boolean;
   granted_accesses: PolicyGrantedAccess[];
   content: string;

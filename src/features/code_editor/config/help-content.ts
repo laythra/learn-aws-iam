@@ -11,7 +11,7 @@ export type HelpContent = {
 };
 
 export const HELP_CONTENT: Record<IAMCodeDefinedEntity, HelpContent> = {
-  [IAMNodeEntity.Policy]: {
+  [IAMNodeEntity.IdentityPolicy]: {
     title: 'Identity Policy',
     markdown: IDENTITY_POLICY_HELP,
   },

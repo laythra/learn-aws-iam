@@ -2,11 +2,8 @@ import { ObjectivesApplicableNodesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
-import {
-  IAMPermissionPolicyCreationObjective,
-  ObjectiveType,
-} from '@/levels/types/objective-types';
+import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/identity-policy-creation-objective-factory';
+import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE1_CALLOUT_MSG = `
@@ -149,7 +146,7 @@ const SECOND_OBJECTIVE_HINT_MESSAGES = [
   },
 ];
 
-export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
+export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
   FinishEventMap,
   ObjectivesApplicableNodesFnName
 >[][] = [
@@ -157,7 +154,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
     {
       id: PolicyNodeID.RDSManagePolicy1,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyCreationFinishEvent.RDS1_MANAGE_POLICY_CREATED,
       initial_code: INITIAL_POLICIES.PEACH_TEAM_RDS_POLICY,
       limit_new_lines: false,
@@ -184,12 +181,12 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
       hint_messages: SHARED_HINT_MESSAGES,
       help_badges: HELP_BADGES1,
     } satisfies Partial<
-      IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+      IAMIdentityPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
     {
       id: PolicyNodeID.RDSManagePolicy2,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyCreationFinishEvent.RDS2_MANAGE_POLICY_CREATED,
       initial_code: INITIAL_POLICIES.BOWSER_FORCE_RDS_POLICY,
       limit_new_lines: false,
@@ -216,14 +213,14 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
       hint_messages: SHARED_HINT_MESSAGES,
       help_badges: HELP_BADGES1,
     } satisfies Partial<
-      IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+      IAMIdentityPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
   ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
       id: PolicyNodeID.RDSSharedPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyCreationFinishEvent.RDS_SHARED_POLICY_CREATED,
       initial_code: INITIAL_POLICIES.SHARED_RDS_POLICY,
       limit_new_lines: false,
@@ -264,7 +261,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
       hint_messages: SECOND_OBJECTIVE_HINT_MESSAGES,
       help_badges: HELP_BADGES2,
     } satisfies Partial<
-      IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+      IAMIdentityPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

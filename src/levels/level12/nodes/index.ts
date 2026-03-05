@@ -1,8 +1,8 @@
 import { INITIAL_IN_LEVEL_ACCOUNT_NODES, INITIAL_TUTORIAL_ACCOUNT_NODES } from './account-nodes';
 import { INITIAL_TUTORIAL_GROUP_NODES } from './group-nodes';
 import { INITIAL_IN_LEVEL_GROUP_NODES } from './group-nodes';
+import { INITIAL_TUTORIAL_POLICY_NODES } from './identity-policy-nodes';
 import { INITIAL_IN_LEVEL_OU_NODES, INITIAL_TUTORIAL_OU_NODES } from './ou-nodes';
-import { INITIAL_TUTORIAL_POLICY_NODES } from './policy-nodes';
 import { INITIAL_IN_LEVEL_RESOURCE_NODES, INITIAL_TUTORIAL_RESOURCE_NODES } from './resource-nodes';
 import { INITIAL_IN_LEVEL_ROLE_NODES } from './role-nodes';
 import { INITIAL_TUTORIAL_SCP_NODES } from './scp-nodes';

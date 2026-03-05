@@ -8,7 +8,7 @@ import {
   IAMGroupNodeData,
   IAMOUNodeData,
   IAMPermissionBoundaryNodeData,
-  IAMPolicyNodeData,
+  IAMIdentityPolicyNodeData,
   IAMResourceNodeData,
   IAMResourcePolicyNodeData,
   IAMRoleNodeData,
@@ -20,7 +20,7 @@ export type IAMUserNode = Node<IAMUserNodeData, 'user'>;
 export type IAMAggregatedUsersNode = Node<IAMAggregatedUsersNodeData, 'user_aggregated'>;
 // 'group' is reserved in @xyflow/react, we're using 'iam_group' instead
 export type IAMGroupNode = Node<IAMGroupNodeData, 'iam_group'>;
-export type IAMPolicyNode = Node<IAMPolicyNodeData, 'policy'>;
+export type IAMIdentityPolicyNode = Node<IAMIdentityPolicyNodeData, 'policy'>;
 export type IAMResourceNode = Node<IAMResourceNodeData, 'resource'>;
 export type IAMRoleNode = Node<IAMRoleNodeData, 'role'>;
 export type IAMAccountNode = Node<IAMAccountNodeData, 'account'>;
@@ -37,7 +37,7 @@ export type IAMPermissionBoundaryNode<TIsEdgeBlockedFnName extends string = stri
 >;
 
 export type IAMNodeMap = {
-  [IAMNodeEntity.Policy]: IAMPolicyNode;
+  [IAMNodeEntity.IdentityPolicy]: IAMIdentityPolicyNode;
   [IAMNodeEntity.User]: IAMUserNode;
   [IAMNodeEntity.Group]: IAMGroupNode;
   [IAMNodeEntity.Role]: IAMRoleNode;

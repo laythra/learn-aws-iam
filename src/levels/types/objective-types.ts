@@ -87,11 +87,11 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
   alert_message?: string;
 }
 
-export interface IAMPermissionPolicyCreationObjective<
+export interface IAMIdentityPolicyCreationObjective<
   TFinishEventMap extends BaseFinishEventMap,
   TApplicableNodesFnName extends string = string,
 > extends BaseCreationObjective<TFinishEventMap> {
-  readonly entity: IAMNodeEntity.Policy;
+  readonly entity: IAMNodeEntity.IdentityPolicy;
   readonly type: ObjectiveType.POLICY_CREATION_OBJECTIVE;
   readonly on_finish_event: TFinishEventMap[ObjectiveType.POLICY_CREATION_OBJECTIVE];
   readonly extra_data: {

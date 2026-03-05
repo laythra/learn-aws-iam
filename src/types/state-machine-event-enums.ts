@@ -33,7 +33,7 @@ export enum StatefulStateMachineEvent {
   ADDIAMRoleNode = 'ADD_IAM_ROLE_NODE',
   AddIAMSCPNode = 'ADD_IAM_SCP_NODE',
   AddIAMPermissionBoundaryNode = 'ADD_IAM_PERMISSION_BOUNDARY_NODE',
-  EditIAMPolicyNode = 'EDIT_IAM_POLICY_NODE',
+  EditIAMIdentityPolicyNode = 'EDIT_IAM_IDENTITY_POLICY_NODE',
   AttachRoleToEntity = 'ATTACH_ROLE_TO_ENTITY',
   AttachPolicyToEntity = 'ATTACH_POLICY_TO_ENTITY',
   ConnectNodes = 'CONNECT_NODES',

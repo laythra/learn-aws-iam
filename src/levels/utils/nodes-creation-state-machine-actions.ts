@@ -5,8 +5,8 @@ import { GetLevelValidateFunctions } from '../functions-registry';
 import { GenericContext } from '../types/context-types';
 import { BaseCreationObjective, BaseFinishEventMap, ObjectiveType } from '../types/objective-types';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
+import { createIdentityPolicyNode } from '@/factories/nodes/identity-policy-node-factory';
 import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
-import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { createResourcePolicyNode } from '@/factories/nodes/resource-policy-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createSCPNode } from '@/factories/nodes/scp-node-factory';
@@ -20,14 +20,14 @@ import {
   IAMUserNode,
   IAMCodeDefinedNode,
   IAMRoleNode,
-  IAMPolicyNode,
+  IAMIdentityPolicyNode,
   IAMResourcePolicyNode,
   IAMPermissionBoundaryNode,
   IAMSCPNode,
 } from '@/types/iam-node-types';
 
 type EntityToNode = {
-  [IAMNodeEntity.Policy]: IAMPolicyNode;
+  [IAMNodeEntity.IdentityPolicy]: IAMIdentityPolicyNode;
   [IAMNodeEntity.ResourcePolicy]: IAMResourcePolicyNode;
   [IAMNodeEntity.PermissionBoundary]: IAMPermissionBoundaryNode;
   [IAMNodeEntity.SCP]: IAMSCPNode;
@@ -42,7 +42,7 @@ type CreateNodeFn<E extends IAMCodeDefinedEntity> = (args: {
 }) => NodeFor<E>;
 
 const nodesCreationMap: { [E in IAMCodeDefinedEntity]: CreateNodeFn<E> } = {
-  [IAMNodeEntity.Policy]: createPolicyNode,
+  [IAMNodeEntity.IdentityPolicy]: createIdentityPolicyNode,
   [IAMNodeEntity.ResourcePolicy]: createResourcePolicyNode,
   [IAMNodeEntity.PermissionBoundary]: createPermissionBoundaryNode,
   [IAMNodeEntity.SCP]: createSCPNode,

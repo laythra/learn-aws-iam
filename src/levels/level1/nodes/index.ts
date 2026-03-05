@@ -1,4 +1,4 @@
-import { INITIAL_TUTORIAL_POLICY_NODES } from './policy-nodes';
+import { INITIAL_TUTORIAL_POLICY_NODES } from './identity-policy-nodes';
 import { INITIAL_TUTORIAL_RESOURCE_NODES } from './resource-nodes';
 import { INITIAL_TUTORIAL_USER_NODES } from './user-nodes';
 import { IAMAnyNode } from '@/types/iam-node-types';

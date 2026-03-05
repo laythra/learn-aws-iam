@@ -19,7 +19,7 @@ export enum IAMNodeEntity {
   AggregatedUsers = 'Aggregated IAM Users',
   Group = 'IAM Group',
   Role = 'IAM Role',
-  Policy = 'IAM Policy',
+  IdentityPolicy = 'Identity Policy',
   Resource = 'AWS Resource',
   Account = 'Account',
   OU = 'Organizational Unit',
@@ -29,7 +29,7 @@ export enum IAMNodeEntity {
 }
 
 export type IAMCodeDefinedEntity =
-  | IAMNodeEntity.Policy
+  | IAMNodeEntity.IdentityPolicy
   | IAMNodeEntity.Role
   | IAMNodeEntity.SCP
   | IAMNodeEntity.ResourcePolicy
@@ -70,7 +70,7 @@ export enum IAMNodeImage {
 export type CreatableIAMNodeEntity =
   | IAMNodeEntity.User
   | IAMNodeEntity.Group
-  | IAMNodeEntity.Policy
+  | IAMNodeEntity.IdentityPolicy
   | IAMNodeEntity.Role
   | IAMNodeEntity.PermissionBoundary;
 

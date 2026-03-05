@@ -60,7 +60,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
 
   let objectiveValidationFn: ValidateFunction | undefined;
 
-  if (selectedIAMEntity === IAMNodeEntity.Policy) {
+  if (selectedIAMEntity === IAMNodeEntity.IdentityPolicy) {
     objectiveToValidate = policyEditObjectives.find(objective => objective.id === selectedNode?.id);
     objectiveValidationFn =
       objectiveToValidate &&

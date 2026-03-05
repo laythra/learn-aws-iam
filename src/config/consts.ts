@@ -1,7 +1,7 @@
 import { IAMNodeEntity } from '@/types/iam-enums';
 
 export const IAMCodeDefinedEntities = [
-  IAMNodeEntity.Policy,
+  IAMNodeEntity.IdentityPolicy,
   IAMNodeEntity.Role,
   IAMNodeEntity.SCP,
   IAMNodeEntity.ResourcePolicy,

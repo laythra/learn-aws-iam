@@ -2,7 +2,7 @@ import { and, not } from 'xstate';
 
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
-import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/policy-nodes';
+import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/identity-policy-nodes';
 import { INITIAL_TUTORIAL_RESOURCE_NODES } from './nodes/resource-nodes';
 import { INITIAL_TUTORIAL_USER_NODES } from './nodes/user-nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';

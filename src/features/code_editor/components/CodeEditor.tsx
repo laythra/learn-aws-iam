@@ -75,7 +75,7 @@ export const CodeEditor: React.FC = () => {
 
   useEffect(() => {
     const entityOrder = [
-      { restricted: isPolicyTabRestricted, entity: IAMNodeEntity.Policy },
+      { restricted: isPolicyTabRestricted, entity: IAMNodeEntity.IdentityPolicy },
       { restricted: isRoleTabRestricted, entity: IAMNodeEntity.Role },
       { restricted: isSCPTabRestricted, entity: IAMNodeEntity.SCP },
       { restricted: isResourcePolicyTabRestricted, entity: IAMNodeEntity.ResourcePolicy },

@@ -13,7 +13,7 @@ interface FilterGroup {
 // const filteredConnections = ConnectionFilter.create()
 //   .fromConnections(allConnections)
 //   .whereSourceIs('sourceNodeId')
-//   .whereTargetEntityIs(IAMNodeEntity.Policy)
+//   .whereTargetEntityIs(IAMNodeEntity.IdentityPolicy)
 //   .or()
 //   .whereTargetHasTag('Environment', 'Production')
 //   .and()

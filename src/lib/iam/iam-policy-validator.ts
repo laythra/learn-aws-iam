@@ -6,7 +6,7 @@ import {
   BaseCreationObjective,
   BaseFinishEventMap,
   IAMPermissionBoundaryCreationObjective,
-  IAMPermissionPolicyCreationObjective,
+  IAMIdentityPolicyCreationObjective,
   IAMResourcePolicyCreationObjective,
   IAMRoleCreationObjective,
   IAMSCPCreationObjective,
@@ -27,7 +27,7 @@ export const AJV_COMPILER = new Ajv({
 });
 
 export const GENERIC_VALIDATION_FNS = {
-  [IAMNodeEntity.Policy]: AJV_COMPILER.compile(iamPolicySchema),
+  [IAMNodeEntity.IdentityPolicy]: AJV_COMPILER.compile(iamPolicySchema),
   [IAMNodeEntity.Role]: AJV_COMPILER.compile(iamRoleTurstPolicySchema),
   [IAMNodeEntity.SCP]: AJV_COMPILER.compile(iamPolicySchema),
   [IAMNodeEntity.ResourcePolicy]: AJV_COMPILER.compile(iamPolicySchema),
@@ -92,7 +92,7 @@ export const isJSONValid = (docString: string, validateFunction: ValidateFunctio
 };
 
 type ObjectiveEntityMap = {
-  [IAMNodeEntity.Policy]: IAMPermissionPolicyCreationObjective<BaseFinishEventMap>;
+  [IAMNodeEntity.IdentityPolicy]: IAMIdentityPolicyCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.SCP]: IAMSCPCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.Role]: IAMRoleCreationObjective<BaseFinishEventMap>;
   [IAMNodeEntity.ResourcePolicy]: IAMResourcePolicyCreationObjective<BaseFinishEventMap>;

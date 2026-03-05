@@ -1,5 +1,5 @@
-import { INITIAL_TUTORIAL_POLICY_NODES } from './policy-nodes';
-import { INITIAL_IN_LEVEL_POLICY_NODES } from './policy-nodes';
+import { INITIAL_TUTORIAL_POLICY_NODES } from './identity-policy-nodes';
+import { INITIAL_IN_LEVEL_POLICY_NODES } from './identity-policy-nodes';
 import { INITIAL_TUTORIAL_RESOURCE_NODES } from './resource-nodes';
 import { INITIAL_IN_LEVEL_RESOURCE_NODES } from './resource-nodes';
 import { INITIAL_TUTORIAL_ROLE_NODES } from './role-nodes';

@@ -33,17 +33,22 @@ describe('createPermissionPolicy', () => {
   it('creates unnecessary policy node when no matching objective exists', () => {
     vi.mocked(findAnyValidObjective).mockReturnValue(undefined);
 
-    const result = createIAMNode(mockContext, mockDocString, mockLabel, IAMNodeEntity.Policy);
+    const result = createIAMNode(
+      mockContext,
+      mockDocString,
+      mockLabel,
+      IAMNodeEntity.IdentityPolicy
+    );
 
     const createdNode = result.updatedContext.nodes.find(
-      (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.Policy
+      (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.IdentityPolicy
     );
 
     expect(createdNode).toMatchObject({
       data: {
         label: mockLabel,
         unnecessary_node: true,
-        entity: IAMNodeEntity.Policy,
+        entity: IAMNodeEntity.IdentityPolicy,
         granted_accesses: [],
       },
     });
@@ -61,16 +66,21 @@ describe('createPermissionPolicy', () => {
 
     vi.mocked(findAnyValidObjective).mockReturnValue(mockObjective);
 
-    const result = createIAMNode(mockContext, mockDocString, mockLabel, IAMNodeEntity.Policy);
+    const result = createIAMNode(
+      mockContext,
+      mockDocString,
+      mockLabel,
+      IAMNodeEntity.IdentityPolicy
+    );
     const createdNode = result.updatedContext.nodes.find(
-      (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.Policy
+      (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.IdentityPolicy
     );
 
     expect(createdNode).toMatchObject({
       data: {
         label: mockLabel,
         unnecessary_node: false,
-        entity: IAMNodeEntity.Policy,
+        entity: IAMNodeEntity.IdentityPolicy,
         granted_accesses: [],
       },
     });

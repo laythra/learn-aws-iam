@@ -87,7 +87,7 @@ export class IAMNodeFilter {
 
   whereIsEditable(): IAMNodeFilter {
     this.currentGroup.filters.push(node => {
-      if (!isNodeOfEntity(node, IAMNodeEntity.Policy)) return false;
+      if (!isNodeOfEntity(node, IAMNodeEntity.IdentityPolicy)) return false;
 
       return node.data.editable;
     });
@@ -96,7 +96,7 @@ export class IAMNodeFilter {
 
   whereIsNotEditable(): IAMNodeFilter {
     this.currentGroup.filters.push(node => {
-      if (!isNodeOfEntity(node, IAMNodeEntity.Policy)) return true;
+      if (!isNodeOfEntity(node, IAMNodeEntity.IdentityPolicy)) return true;
 
       return !node.data.editable;
     });

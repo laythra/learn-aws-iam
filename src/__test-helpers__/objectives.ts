@@ -1,21 +1,21 @@
 import _ from 'lodash';
 
-import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
+import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import {
   BaseFinishEventMap,
-  IAMPermissionPolicyCreationObjective,
+  IAMIdentityPolicyCreationObjective,
   IAMUserGroupCreationObjective,
   ObjectiveType,
 } from '@/levels/types/objective-types';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
 export function createMockPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
-  overrides: Partial<IAMPermissionPolicyCreationObjective<TFinishEventMap>> = {}
-): IAMPermissionPolicyCreationObjective<BaseFinishEventMap> {
+  overrides: Partial<IAMIdentityPolicyCreationObjective<TFinishEventMap>> = {}
+): IAMIdentityPolicyCreationObjective<BaseFinishEventMap> {
   return createPolicyCreationObjective({
     id: _.uniqueId('mock-policy-creation-objective-'),
-    entity: IAMNodeEntity.Policy,
+    entity: IAMNodeEntity.IdentityPolicy,
     type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
     initial_code: MANAGED_POLICIES.EmptyPolicy,
     finished: false,
@@ -24,7 +24,7 @@ export function createMockPolicyCreationObjective<TFinishEventMap extends BaseFi
       granted_accesses: [],
     },
     ...overrides,
-  } satisfies IAMPermissionPolicyCreationObjective<TFinishEventMap>);
+  } satisfies IAMIdentityPolicyCreationObjective<TFinishEventMap>);
 }
 
 export function createMockUserGroupCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
