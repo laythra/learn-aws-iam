@@ -455,6 +455,57 @@ describe('updateConnectionEdges', () => {
       expectEdges(updatedContext.edges, [{ source: permissionBoundary.id, target: user.id }]);
     });
   });
+
+  describe('derived edge labels', () => {
+    it('uses edge_label as hovering_label when provided', () => {
+      const user = createUserNode({});
+      const resource = createResourceNode({});
+      const policy = createPolicyNode({
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              edge_label: 'Deployment Access',
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
+      });
+
+      const ctx = createEdgeTestContext([], [policy, user, resource]);
+      const { updatedContext } = updateConnectionEdges(ctx, policy, user);
+
+      const derivedEdge = updatedContext.edges.find(
+        edge => edge.source === user.id && edge.target === resource.id
+      );
+      expect(derivedEdge?.data.hovering_label).toBe('Deployment Access');
+    });
+
+    it('falls back to access_level as hovering_label when edge_label is not provided', () => {
+      const user = createUserNode({});
+      const resource = createResourceNode({});
+      const policy = createPolicyNode({
+        dataOverrides: {
+          granted_accesses: [
+            {
+              access_level: AccessLevel.Read,
+              target_node: resource.id,
+              target_handle: 'mock-target-handle',
+            },
+          ],
+        },
+      });
+
+      const ctx = createEdgeTestContext([], [policy, user, resource]);
+      const { updatedContext } = updateConnectionEdges(ctx, policy, user);
+
+      const derivedEdge = updatedContext.edges.find(
+        edge => edge.source === user.id && edge.target === resource.id
+      );
+      expect(derivedEdge?.data?.hovering_label).toBe(AccessLevel.Read);
+    });
+  });
 });
 
 describe('applyGuardRailBlockingToEdges', () => {
