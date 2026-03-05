@@ -1,4 +1,4 @@
-import { getEdgeName } from '@/lib/iam/names';
+import { getEdgeName } from '@/domain/iam-graph-utils';
 import { theme } from '@/theme';
 import { PartialWithRequired } from '@/types/common';
 import { IAMEdge, PartialEdge } from '@/types/iam-node-types';

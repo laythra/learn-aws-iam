@@ -2,6 +2,12 @@ import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
 
 type ArnGenerator = (resourceName: string, accountId: string, region?: string) => string;
 
+function generateSuffix(length: number): string {
+  return Math.random()
+    .toString(36)
+    .slice(2, 2 + length);
+}
+
 const arnStrategies: Record<string, ArnGenerator> = {
   [IAMNodeEntity.User]: (resourceName, accountId) =>
     `arn:aws:iam::${accountId}:user/${resourceName}`,
@@ -27,7 +33,7 @@ const arnStrategies: Record<string, ArnGenerator> = {
   [IAMNodeResourceEntity.Billing]: (resourceName, accountId) =>
     `arn:aws:budgets::${accountId}:budget/${resourceName}`,
   [IAMNodeResourceEntity.Secret]: (resourceName, accountId) =>
-    `arn:aws:secretsmanager:${accountId}:secret:${resourceName}`,
+    `arn:aws:secretsmanager:${accountId}:secret:${resourceName}-${generateSuffix(6)}`,
   [IAMNodeResourceEntity.RDS]: (resourceName, accountId, region = 'us-east-1') =>
     `arn:aws:rds:${region}:${accountId}:db:${resourceName}`,
 };

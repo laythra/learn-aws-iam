@@ -14,9 +14,9 @@ import {
   EdgeConnectionObjective,
   ObjectiveType,
 } from '../types/objective-types';
+import { getEdgeName, getEdgeLabel } from '@/domain/iam-graph-utils';
+import { isNodeOfEntity } from '@/domain/node-type-guards';
 import { createEdge } from '@/factories/edge-factory';
-import { getEdgeName, getEdgeLabel } from '@/lib/iam/names';
-import { isNodeOfEntity } from '@/lib/iam/node-type-guards';
 import { theme } from '@/theme';
 import { HandleID, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMGuardRailsNode, PartialEdge } from '@/types/iam-node-types';
