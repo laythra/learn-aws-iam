@@ -1,6 +1,6 @@
 import { XYPosition, Viewport } from '@xyflow/react';
 
-import { getCurrentRegularNodeMetrics } from './node-metrics';
+import { getCurrentRegularNodeMetrics } from '@/domain/node-metrics';
 import { theme } from '@/theme';
 import {
   NodeLayoutGroup,

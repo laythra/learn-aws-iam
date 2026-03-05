@@ -1,7 +1,7 @@
 import { Viewport } from '@xyflow/react';
 import _ from 'lodash';
 
-import { getCurrentRegularNodeMetrics } from '@/features/canvas/utils/node-metrics';
+import { getCurrentRegularNodeMetrics } from '@/domain/node-metrics';
 import { getNodeInitialPosition } from '@/features/canvas/utils/node-position-geometry';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { NodeLayoutGroup } from '@/types/iam-layout-types';

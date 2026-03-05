@@ -1,4 +1,4 @@
-export type NodeSizingBreakpointID = 'sm' | 'md' | 'lg' | 'xl';
+export type NodeSizingBreakpointID = 'sm' | 'md' | 'lg';
 
 export interface RegularNodeMetrics {
   breakpointId: NodeSizingBreakpointID;
@@ -19,23 +19,29 @@ const BREAKPOINT_SCALES: Record<NodeSizingBreakpointID, number> = {
   sm: 0.82,
   md: 0.9,
   lg: 1,
-  xl: 1.08,
 };
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
+/**
+ * Picks a sizing breakpoint based on viewport dimensions.
+ * Both width and height are considered — a tall but narrow screen still gets 'sm'.
+ */
 function resolveBreakpointID(
   viewportWidth: number,
   viewportHeight: number
 ): NodeSizingBreakpointID {
   if (viewportWidth < 1100 || viewportHeight < 700) return 'sm';
   if (viewportWidth < 1400 || viewportHeight < 850) return 'md';
-  if (viewportWidth < 1800 || viewportHeight < 980) return 'lg';
-  return 'xl';
+  return 'lg';
 }
 
+/**
+ * Returns scaled node metrics for the given viewport dimensions.
+ * Sizes are clamped so nodes never get too small or too large regardless of scale.
+ */
 export function getRegularNodeMetrics(
   viewportWidth: number,
   viewportHeight: number
@@ -57,19 +63,9 @@ export function getRegularNodeMetrics(
   };
 }
 
+/**
+ * Reads metrics from the current window size.
+ */
 export function getCurrentRegularNodeMetrics(): RegularNodeMetrics {
-  if (typeof window === 'undefined') {
-    return {
-      breakpointId: 'lg',
-      nodeWidth: BASE_REGULAR_NODE_METRICS.nodeWidth,
-      nodeHeight: BASE_REGULAR_NODE_METRICS.nodeHeight,
-      horizontalSpacing:
-        BASE_REGULAR_NODE_METRICS.nodeWidth + BASE_REGULAR_NODE_METRICS.spacingPadding,
-      verticalSpacing:
-        BASE_REGULAR_NODE_METRICS.nodeHeight + BASE_REGULAR_NODE_METRICS.spacingPadding,
-      offsetScale: 1,
-    };
-  }
-
   return getRegularNodeMetrics(window.innerWidth, window.innerHeight);
 }

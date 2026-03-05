@@ -1,6 +1,6 @@
 import { HandleProps } from '@xyflow/react';
 
-import { getCurrentRegularNodeMetrics } from '@/features/canvas/utils/node-metrics';
+import { getCurrentRegularNodeMetrics } from '@/domain/node-metrics';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAnyNode, IAMNodeMap } from '@/types/iam-node-types';

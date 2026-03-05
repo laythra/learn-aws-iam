@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { BASE_REGULAR_NODE_METRICS, getRegularNodeMetrics } from './node-metrics';
+import { BASE_REGULAR_NODE_METRICS, getRegularNodeMetrics } from '@/domain/node-metrics';
 
 describe('getRegularNodeMetrics', () => {
   it('returns sm metrics for small viewports', () => {

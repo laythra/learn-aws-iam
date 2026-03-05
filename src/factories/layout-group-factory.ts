@@ -1,4 +1,4 @@
-import { BASE_REGULAR_NODE_METRICS } from '@/features/canvas/utils/node-metrics';
+import { BASE_REGULAR_NODE_METRICS } from '@/domain/node-metrics';
 import { NodeLayoutGroup, ValidInitialPosition } from '@/types/iam-layout-types';
 
 const DEFAULT_HORIZONTAL_SPACING = BASE_REGULAR_NODE_METRICS.nodeWidth + 20;

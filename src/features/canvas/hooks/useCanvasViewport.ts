@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import { useWindowSize } from './useWindowSize';
 import { CanvasStore } from '../stores/canvas-store';
-import { getRegularNodeMetrics, NodeSizingBreakpointID } from '../utils/node-metrics';
+import { getRegularNodeMetrics, NodeSizingBreakpointID } from '@/domain/node-metrics';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
