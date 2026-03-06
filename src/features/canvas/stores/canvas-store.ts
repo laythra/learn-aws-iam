@@ -119,7 +119,7 @@ export const CanvasStore = createStore<CanvasStoreState, CanvasStoreEvents, neve
     updateSelectedNodeId: produce((ctx: CanvasStoreState, event: { nodeId: string }) => {
       ctx.selectedNodeId = event.nodeId;
       ctx.nodes.forEach(node => (node.zIndex = 0));
-      ctx.nodes.find(node => node.id == event.nodeId)!.zIndex = 10000;
+      ctx.nodes.find(node => node.id === event.nodeId)!.zIndex = 10000;
     }),
     openNodePanel: produce(
       (

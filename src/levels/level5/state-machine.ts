@@ -284,7 +284,7 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         remove_unnecessary_edges_and_nodes: {
-          entry: 'show_unncessary_edges_or_nodes_warning',
+          entry: 'show_unnecessary_edges_or_nodes_warning',
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
             target: 'tutorial_finished',
@@ -298,7 +298,6 @@ export const stateMachine = createStateMachineSetup<
     inside_level: {
       entry: [
         'store_checkpoint',
-        { type: 'store_snapshot_to_disk', params: { filename: 'level5_stage2' } },
         'disable_tutorial_state',
         'clear_edges',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
@@ -318,7 +317,7 @@ export const stateMachine = createStateMachineSetup<
           type: 'append_creation_objectives',
           params: { objectives: ROLE_CREATION_OBJECTIVES[1] },
         },
-        'hide_unncessary_edges_or_nodes_warning',
+        'hide_unnecessary_edges_or_nodes_warning',
       ],
       initial: 'inside_level_popup1',
       states: {
@@ -493,7 +492,7 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         remove_unnecessary_edges_and_nodes: {
-          entry: 'show_unncessary_edges_or_nodes_warning',
+          entry: 'show_unnecessary_edges_or_nodes_warning',
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
             target: 'level_finished_popup',
@@ -504,7 +503,7 @@ export const stateMachine = createStateMachineSetup<
             'store_checkpoint',
             'hide_popovers',
             'hide_fixed_popovers',
-            'hide_unncessary_edges_or_nodes_warning',
+            'hide_unnecessary_edges_or_nodes_warning',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[4] } },
           ],
         },

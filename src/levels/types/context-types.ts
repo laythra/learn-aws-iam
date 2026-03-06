@@ -14,14 +14,10 @@ import {
 import { ElementID } from '@/config/element-ids';
 import { NodeLayoutGroup } from '@/types/iam-layout-types';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
-
-export type HelpTip = 'ConnectNodes' | 'CreatePolicies';
-
 export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
   edges: IAMEdge[];
   edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];
   level_description: string;
-  level_finished?: boolean;
   level_number: number;
   level_objectives: LevelObjective<TObjectiveID, TBaseFinishEventMap>[];
   level_title: string;
@@ -44,7 +40,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   restricted_element_ids?: string[];
   edges_management_disabled?: boolean;
   elements_with_animated_red_dot?: ElementID[];
-  show_unncessary_edges_or_nodes_warning?: boolean;
+  show_unnecessary_edges_or_nodes_warning?: boolean;
   layout_groups: NodeLayoutGroup[];
   blocked_connections?: { from: string; to: string }[];
 }

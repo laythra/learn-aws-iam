@@ -278,7 +278,7 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         remove_unnecessary_edges_and_nodes: {
-          entry: ['hide_popovers', 'show_unncessary_edges_or_nodes_warning'],
+          entry: ['hide_popovers', 'show_unnecessary_edges_or_nodes_warning'],
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
             target: 'level_finished_popup',
@@ -288,7 +288,7 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'store_checkpoint',
             'hide_popovers',
-            'hide_unncessary_edges_or_nodes_warning',
+            'hide_unnecessary_edges_or_nodes_warning',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[3] } },
           ],
         },

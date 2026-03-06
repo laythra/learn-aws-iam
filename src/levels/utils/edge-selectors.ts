@@ -2,7 +2,7 @@ import { ConnectionFilter } from './connection-filter';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 /**
- * computes outobound nodes connected to the given node
+ * computes outbound edges connected to the given node
  * @param edges all edges in the graph
  * @param node the node to check connections against
  * @returns an array of outbound nodes

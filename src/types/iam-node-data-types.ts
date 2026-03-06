@@ -12,7 +12,6 @@ import { PolicyGrantedAccess } from './iam-policy-types';
 export interface IAMNodeData extends Record<string, unknown> {
   label: string;
   entity: IAMNodeEntity;
-  description?: string;
   parent_id?: string;
   /**
    * The content of the node, namely a JSON string representing the node's data
@@ -40,13 +39,7 @@ export interface IAMNodeData extends Record<string, unknown> {
    */
   vertical_spacing: number;
 
-  // /**
-  //  * Defines the amount of space between its adjacent horizontal nodes
-  //  */
   horizontal_spacing: number;
-  // /**
-  //  * Defines the amount of space between its adjacent nodes
-  //  */
   layout_direction: 'horizontal' | 'vertical';
 
   /**
@@ -58,11 +51,6 @@ export interface IAMNodeData extends Record<string, unknown> {
    * The first element of each pair (the key) must be unique across all tags.
    */
   tags: Array<[string, string]>;
-
-  /**
-   * Defines which node entities can connect to this node
-   */
-  allowed_sources?: IAMNodeEntity[];
   alert_message?: string;
 }
 
@@ -82,13 +70,11 @@ export interface IAMGuardRailsNodeData<
 
 export interface IAMUserNodeData extends IAMNodeData {
   entity: IAMNodeEntity.User;
-  allowed_sources: [IAMNodeEntity.IdentityPolicy, IAMNodeEntity.PermissionBoundary];
   aggregated?: boolean;
 }
 
 export interface IAMAggregatedUsersNodeData extends IAMNodeData {
   entity: IAMNodeEntity.AggregatedUsers;
-  allowed_sources: [IAMNodeEntity.IdentityPolicy, IAMNodeEntity.PermissionBoundary];
   aggregated?: boolean;
   aggregated_user_ids: string[];
   original_edge_mappings: Record<string, string>; // Maps original user IDs to edge IDs
@@ -122,7 +108,6 @@ export interface IAMRoleNodeData extends IAMNodeData {
 export interface IAMResourceNodeData extends IAMNodeData {
   entity: IAMNodeEntity.Resource;
   resource_type: IAMNodeResourceEntity;
-  associated_roles: string[];
 }
 
 export interface IAMAccountNodeData extends IAMNodeData {

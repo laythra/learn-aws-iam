@@ -1,6 +1,6 @@
-import ec2RoleSchema from './schemas/role/ec2-role-schema.json';
-import financeAuditorPolicySchema from './schemas/role/finance-auditor-role-schema.json';
-import lambdaRoleSchema from './schemas/role/lambda-role-schema.json';
+import ec2RoleSchema from './schemas/ec2-role-schema.json';
+import financeAuditorPolicySchema from './schemas/finance-auditor-role-schema.json';
+import lambdaRoleSchema from './schemas/lambda-role-schema.json';
 import { RoleNodeID } from './types/node-id-enums';
 import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';
 

@@ -5,7 +5,7 @@ import { CustomTheme } from '@/types/custom-theme';
 
 export const UnnecessaryEdgesNodesWarning: React.FC = () => {
   const [anyInvalidEdgesOrNodes, sidePanelOpen] = useLevelSelector(state => [
-    state.context.show_unncessary_edges_or_nodes_warning,
+    state.context.show_unnecessary_edges_or_nodes_warning,
     state.context.side_panel_open,
   ]);
 

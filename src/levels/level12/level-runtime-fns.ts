@@ -1,10 +1,10 @@
-import { generateAssumeRolePolicySchema } from './schemas/policy/delegating-permissions-policy';
-import ec2RoleTrustPolicy from './schemas/policy/ec2-role-trust-policy.json';
-import s3UploadPolicySchema from './schemas/policy/ec2-staging-s3-upload-policy.json';
-import elasticacheManagementPolicySchema from './schemas/policy/elasticcache-prod-management-policy.json';
-import launchEc2InstancePolicySchema from './schemas/policy/launch-ec2-instances-policy.json';
-import restrictEc2RegionSCP from './schemas/policy/restrict-ec2-region-scp.json';
-import trailsDeletionSCP from './schemas/policy/trails-deletion-scp.json';
+import { generateAssumeRolePolicySchema } from './schemas/delegating-permissions-policy';
+import ec2RoleTrustPolicy from './schemas/ec2-role-trust-policy.json';
+import s3UploadPolicySchema from './schemas/ec2-staging-s3-upload-policy.json';
+import elasticacheManagementPolicySchema from './schemas/elasticcache-prod-management-policy.json';
+import launchEc2InstancePolicySchema from './schemas/launch-ec2-instances-policy.json';
+import restrictEc2RegionSCP from './schemas/restrict-ec2-region-scp.json';
+import trailsDeletionSCP from './schemas/trails-deletion-scp.json';
 import {
   AccountID,
   PermissionBoundaryID,

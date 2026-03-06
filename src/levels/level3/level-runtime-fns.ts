@@ -1,7 +1,7 @@
-import cloudfrontReadPolicySchema from './schemas/policy/cloudfront-read-policy-schema.json';
-import dynamoReadWritePolicySchema from './schemas/policy/dynamo-db-read-write-policy-schema.json';
-import s3ReadPolicySchema from './schemas/policy/s3-read-policy-schema.json';
-import s3ReadWritePolicySchema from './schemas/policy/s3-read-write-policy-schema.json';
+import cloudfrontReadPolicySchema from './schemas/cloudfront-read-policy-schema.json';
+import dynamoReadWritePolicySchema from './schemas/dynamo-db-read-write-policy-schema.json';
+import s3ReadPolicySchema from './schemas/s3-read-policy-schema.json';
+import s3ReadWritePolicySchema from './schemas/s3-read-write-policy-schema.json';
 import { PolicyNodeID } from './types/node-id-enums';
 import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';
 

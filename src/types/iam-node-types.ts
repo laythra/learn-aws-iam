@@ -1,5 +1,4 @@
 import { Edge, Node } from '@xyflow/react';
-import { DOMKeyframesDefinition, DynamicAnimationOptions } from 'framer-motion';
 
 import { AccessLevel, HandleID, IAMCodeDefinedEntity, IAMNodeEntity } from './iam-enums';
 import {
@@ -61,23 +60,12 @@ export type IAMEdge = Omit<IAMEdgeBase, 'data'> & {
   data: IAMEdgeData;
 };
 
-export type IAMNodeWithPolicies = IAMUserNode | IAMGroupNode | IAMRoleNode;
-export type IAMNodeWithUsers = IAMGroupNode | IAMRoleNode;
-export type IAMNodeWithRoles = IAMUserNode;
-
-export type IAMNodeAnimationConfig = {
-  element_class: string;
-  keyframes: DOMKeyframesDefinition;
-  options: DynamicAnimationOptions;
-}[];
-
 interface IAMEdgeData extends Record<string, unknown> {
   source_node: IAMAnyNode;
   target_node: IAMAnyNode;
   hovering_label?: AccessLevel | string;
   persistent_label?: string;
   type: 'default';
-  achieved_objective_id?: number;
   color: string;
   hovering_color: string;
   stroke_width: number;

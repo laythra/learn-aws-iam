@@ -24,7 +24,7 @@ export function createMockContext<
     show_popups: false,
     show_popovers: false,
     show_fixed_popovers: false,
-    show_unncessary_edges_or_nodes_warning: false,
+    show_unnecessary_edges_or_nodes_warning: false,
     popup_content: undefined,
     popover_content: undefined,
     in_tutorial_state: false,
