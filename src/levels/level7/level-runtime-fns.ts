@@ -1,6 +1,6 @@
-import s3ReadPolicySchema from './schemas/policy/s3-read-policy-schema.json';
-import s3ReadWriteIdentityPolicySchema from './schemas/policy/s3-read-write-identity-policy-schema.json';
-import s3ReadWriteResourcePolicySchema from './schemas/policy/s3-read-write-resource-policy-schema.json';
+import s3ReadPolicySchema from './schemas/s3-read-policy-schema.json';
+import s3ReadWriteIdentityPolicySchema from './schemas/s3-read-write-identity-policy-schema.json';
+import s3ReadWriteResourcePolicySchema from './schemas/s3-read-write-resource-policy-schema.json';
 import { PolicyNodeID, ResourcePolicyNodeID } from './types/node-id-enums';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
 import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';

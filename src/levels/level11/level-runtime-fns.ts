@@ -1,5 +1,5 @@
-import { generateAssumeRolePolicySchema } from './schemas/policy/delegating-permissions-policy';
-import readSecretsPermissionBoundarySchema from './schemas/policy/read-secrets-permission-boundary.json';
+import { generateAssumeRolePolicySchema } from './schemas/delegating-permissions-policy';
+import readSecretsPermissionBoundarySchema from './schemas/read-secrets-permission-boundary.json';
 import {
   PermissionBoundaryID,
   PolicyNodeID,

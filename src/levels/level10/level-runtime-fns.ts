@@ -1,5 +1,5 @@
-import createRDSWithTagsPolicy from './schemas/policy/create-rds-with-tags-policy.json';
-import manageTaggedRdsPolicy from './schemas/policy/manage-tagged-rds-policy.json';
+import createRDSWithTagsPolicy from './schemas/create-rds-with-tags-policy.json';
+import manageTaggedRdsPolicy from './schemas/manage-tagged-rds-policy.json';
 import { PolicyNodeID } from './types/node-id-enums';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
 import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';

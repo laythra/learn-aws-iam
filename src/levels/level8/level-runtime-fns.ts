@@ -1,6 +1,6 @@
 import { IAMNodeFilter } from '../utils/iam-node-filter';
-import slackServicePolicyNoTags from './schemas/policy/slack-manage-service-policy-no-tags.json';
-import slackServicePolicyWithTags from './schemas/policy/slack-manage-service-policy-with-tags.json';
+import slackServicePolicyNoTags from './schemas/slack-manage-service-policy-no-tags.json';
+import slackServicePolicyWithTags from './schemas/slack-manage-service-policy-with-tags.json';
 import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
