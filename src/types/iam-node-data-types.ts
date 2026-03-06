@@ -51,7 +51,7 @@ export interface IAMNodeData extends Record<string, unknown> {
    * The first element of each pair (the key) must be unique across all tags.
    */
   tags: Array<[string, string]>;
-  alert_message?: string;
+  node_tooltip?: string;
 }
 
 export interface IAMGuardRailsNodeData<

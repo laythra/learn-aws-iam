@@ -48,7 +48,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id, width, height }
 
   const withPopoverElementId = useLevelSelector(state => state.context.popover_content?.element_id);
   const regularNodeMetrics = getCurrentRegularNodeMetrics();
-  const { entity, label, handles, image, content, tags, alert_message } = data;
+  const { entity, label, handles, image, content, tags, node_tooltip } = data;
   const resourceType = entity === IAMNodeEntity.Resource && data.resource_type;
   const arn = SupportedArnNodeTypes.includes(resourceType || entity)
     ? generateArn(resourceType || entity, label, data.account_id)
@@ -120,7 +120,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id, width, height }
             borderColor={isSelected ? 'blue.500' : 'gray.200'}
             onClick={() => CanvasStore.send({ type: 'updateSelectedNodeId', nodeId: id })}
           >
-            {alert_message && <IAMNodeHelpTooltip alertMessage={alert_message} nodeId={id} />}
+            {node_tooltip && <IAMNodeHelpTooltip nodeTooltip={node_tooltip} nodeId={id} />}
             <NodeContent
               imageSrc={imageSrc}
               label={label}

@@ -82,9 +82,9 @@ export interface BaseCreationObjective<TFinishEventMap extends BaseFinishEventMa
    */
   extra_data: Record<string, unknown>;
   /**
-   * Optional alert messages to show on the created node.
+   * Optional tooltip to show on the created node via a pulsing dot indicator.
    */
-  alert_message?: string;
+  node_tooltip?: string;
 }
 
 export interface IAMIdentityPolicyCreationObjective<
@@ -209,6 +209,6 @@ export type IAMUserGroupCreationObjective<TFinishEventMap extends BaseFinishEven
   readonly initial_position?: string;
   readonly created_node_parent_id?: string;
   readonly layout_group_id?: string;
-  readonly alert_message?: string;
+  readonly node_tooltip?: string;
   finished: boolean;
 };

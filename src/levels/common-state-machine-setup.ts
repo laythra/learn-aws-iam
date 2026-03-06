@@ -393,7 +393,7 @@ export const createStateMachineSetup = <
         enqueue.raise({
           type: StatefulStateMachineEvent.EditNodeMetadata,
           nodeId,
-          newMetadata: { alert_message: undefined },
+          newMetadata: { node_tooltip: undefined },
         });
       }),
       show_node_help_tooltip: enqueueActions(
@@ -401,7 +401,7 @@ export const createStateMachineSetup = <
           enqueue.raise({
             type: StatefulStateMachineEvent.EditNodeMetadata,
             nodeId,
-            newMetadata: { alert_message: content },
+            newMetadata: { node_tooltip: content },
           });
         }
       ),
