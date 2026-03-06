@@ -38,7 +38,7 @@ const OBJECTIVE1_HINT_MSG1 = `
   - **\`aws:RequestTag/<key>\`**:
     Represents a tag value being passed **with** the request itself.
   - **\`aws:TagKeys\`**:
-    The set of tag key names being passed with the request - We didn't this one before
+    The set of tag key names being passed with the request - We didn’t cover this one before./
 
   Which of these condition keys do you see fitting for each statement's requirements?
 `;
@@ -126,7 +126,7 @@ const OBJECTIVE2_HINT_MSG2 = `
 `;
 
 const OBJECTIVE2_HINT_MSG3 = `
-  The actions requires for starting and stopping RDS instances are
+  The actions required for starting and stopping RDS instances are
   - \`rds:StopDBInstance\`
   - \`rds:???\`.
 `;
