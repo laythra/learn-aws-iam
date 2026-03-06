@@ -5,92 +5,121 @@
     "Version",
     "Statement"
   ],
+  "additionalProperties": false,
   "properties": {
     "Version": {
-      "type": "string",
-      "enum": [
-        "2012-10-17"
-      ]
+      "const": "2012-10-17"
     },
     "Statement": {
       "type": "array",
       "minItems": 2,
       "maxItems": 2,
-      "uniqueItems": true,
       "items": {
         "oneOf": [
           {
-            "$ref": "#/definitions/createTagsPolicy"
+            "$ref": "#/definitions/createTagsStatement"
           },
           {
-            "$ref": "#/definitions/createRDSPolicy"
+            "$ref": "#/definitions/createRDSStatement"
           }
         ]
-      }
+      },
+      "allOf": [
+        {
+          "contains": {
+            "$ref": "#/definitions/createTagsStatement"
+          }
+        },
+        {
+          "contains": {
+            "$ref": "#/definitions/createRDSStatement"
+          }
+        }
+      ]
     }
   },
   "definitions": {
-    "createTagsPolicy": {
+    "createTagsCondition": {
+      "type": "object",
       "required": [
-        "Effect",
-        "Action",
-        "Resource",
-        "Condition"
+        "StringEquals"
       ],
       "additionalProperties": false,
-      "type": "object",
       "properties": {
-        "Effect": {
-          "type": "string",
-          "const": "Allow"
-        },
-        "Action": {
-          "oneOf": [
-            {
-              "type": "array",
-              "minItems": 1,
-              "maxItems": 1,
-              "uniqueItems": true,
-              "items": {
-                "enum": [
-                  "rds:AddTagsToResource"
-                ]
-              }
-            },
-            {
-              "type": "string",
-              "const": "rds:AddTagsToResource"
-            }
-          ]
-        },
-        "Resource": {
-          "type": "string",
-          "const": "*"
-        },
-        "Condition": {
+        "StringEquals": {
           "type": "object",
           "required": [
-            "StringEquals"
+            "rds:CreateAction"
           ],
+          "additionalProperties": false,
           "properties": {
-            "StringEquals": {
-              "type": "object",
-              "required": [
-                "rds:CreateAction"
-              ],
-              "properties": {
-                "rds:CreateAction": {
-                  "const": "CreateDBInstance"
-                }
-              },
-              "additionalProperties": false
+            "rds:CreateAction": {
+              "const": "CreateDBInstance"
             }
-          },
-          "additionalProperties": false
+          }
         }
       }
     },
-    "createRDSPolicy": {
+    "createRDSCondition": {
+      "type": "object",
+      "required": [
+        "StringEquals",
+        "ForAllValues:StringEquals"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "StringEquals": {
+          "type": "object",
+          "required": [
+            "aws:RequestTag/team",
+            "aws:RequestTag/environment"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "aws:RequestTag/team": {
+              "const": "${aws:PrincipalTag/team}"
+            },
+            "aws:RequestTag/environment": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "dev",
+                  "staging",
+                  "prod"
+                ]
+              }
+            }
+          }
+        },
+        "ForAllValues:StringEquals": {
+          "type": "object",
+          "required": [
+            "aws:TagKeys"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "aws:TagKeys": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "team",
+                  "environment",
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "createTagsStatement": {
+      "type": "object",
       "required": [
         "Effect",
         "Action",
@@ -98,96 +127,70 @@
         "Condition"
       ],
       "additionalProperties": false,
-      "type": "object",
       "properties": {
         "Effect": {
-          "type": "string",
           "const": "Allow"
         },
         "Action": {
           "oneOf": [
+            {
+              "const": "rds:AddTagsToResource"
+            },
             {
               "type": "array",
               "minItems": 1,
               "maxItems": 1,
               "uniqueItems": true,
               "items": {
-                "enum": [
-                  "rds:CreateDBInstance"
-                ]
+                "const": "rds:AddTagsToResource"
               }
-            },
-            {
-              "type": "string",
-              "const": "rds:CreateDBInstance"
             }
           ]
         },
         "Resource": {
-          "type": "string",
           "const": "*"
         },
         "Condition": {
-          "type": "object",
-          "required": [
-            "StringEquals",
-            "ForAllValues:StringEquals"
-          ],
-          "properties": {
-            "StringEquals": {
-              "type": "object",
-              "required": [
-                "aws:RequestTag/team",
-                "aws:RequestTag/environment"
-              ],
-              "properties": {
-                "aws:RequestTag/team": {
-                  "type": "string",
-                  "const": "${aws:PrincipalTag/team}"
-                },
-                "aws:RequestTag/environment": {
-                  "type": "array",
-                  "minItems": 3,
-                  "maxItems": 3,
-                  "uniqueItems": true,
-                  "items": {
-                    "enum": [
-                      "dev",
-                      "staging",
-                      "prod"
-                    ]
-                  }
-                }
-              },
-              "additionalProperties": false
+          "$ref": "#/definitions/createTagsCondition"
+        }
+      }
+    },
+    "createRDSStatement": {
+      "type": "object",
+      "required": [
+        "Effect",
+        "Action",
+        "Resource",
+        "Condition"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Effect": {
+          "const": "Allow"
+        },
+        "Action": {
+          "oneOf": [
+            {
+              "const": "rds:CreateDBInstance"
             },
-            "ForAllValues:StringEquals": {
-              "type": "object",
-              "required": [
-                "aws:TagKeys"
-              ],
-              "properties": {
-                "aws:TagKeys": {
-                  "type": "array",
-                  "minItems": 3,
-                  "maxItems": 3,
-                  "uniqueItems": true,
-                  "items": {
-                    "enum": [
-                      "team",
-                      "environment",
-                      "name"
-                    ]
-                  }
-                }
-              },
-              "additionalProperties": false
+            {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "const": "rds:CreateDBInstance"
+              }
             }
-          },
-          "additionalProperties": false
+          ]
+        },
+        "Resource": {
+          "const": "*"
+        },
+        "Condition": {
+          "$ref": "#/definitions/createRDSCondition"
         }
       }
     }
-  },
-  "additionalProperties": false
+  }
 }
