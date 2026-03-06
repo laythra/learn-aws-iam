@@ -32,6 +32,24 @@ export class PopupActions {
     await expect(popup).not.toBeVisible();
   }
 
+  async createSpuriousPolicy(): Promise<void> {
+    await this.submitCreatePolicyPopup(
+      [ElementID.CodeEditorPolicyTab],
+      ElementID.CodeEditorPolicyTab,
+      'spurious-policy',
+      JSON.stringify({
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Effect: 'Allow',
+            Action: ['s3:GetObject', 's3:ListBucket'],
+            Resource: 'arn:aws:s3:::unknown-bucket/*',
+          },
+        ],
+      })
+    );
+  }
+
   async submitCreatePolicyPopup(
     expectedVisibleTabs: CodeEditorTabsElementID[],
     targetTab: CodeEditorTabsElementID,

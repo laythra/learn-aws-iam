@@ -17,7 +17,6 @@ import {
   UserNodeID,
   ResourceNodeID,
 } from '@/levels/level10/types/node-id-enums';
-import { IAMNodeEntity } from '@/types/iam-enums';
 
 const completeInitialTutorial = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);
@@ -82,7 +81,6 @@ const verifyRDSResourcesAndCreatePolicy = async (
   nodes: NodeActions,
   popups: PopupActions
 ): Promise<void> => {
-  await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[0].popover_title);
   await nodes.expectVisible(ResourceNodeID.RDS1, ResourceNodeID.RDS2, ResourceNodeID.RDS3);
 
   await popups.submitCreatePolicyPopup(
@@ -103,7 +101,6 @@ const verifyRDSResourcesAndCreatePolicy = async (
 const connectRDSPolicyToGroups = async (
   nodes: NodeActions,
   edges: EdgeActions,
-  popups: PopupActions,
   groups: string[]
 ): Promise<void> => {
   const groupToResourceMapping: Record<string, { users: string[]; resource: string }> = {
@@ -280,7 +277,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
     });
 
     await test.step('Connect RDS policy to all groups and verify access', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, popups, [
+      await connectRDSPolicyToGroups(nodes, edges, [
         GroupNodeID.AnalyticsTeam,
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
@@ -310,7 +307,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
     });
 
     await test.step('Connect RDS policy to all groups and verify access', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, popups, [
+      await connectRDSPolicyToGroups(nodes, edges, [
         GroupNodeID.ComplianceTeam,
         GroupNodeID.PaymentsTeam,
         GroupNodeID.AnalyticsTeam,
@@ -340,7 +337,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
     });
 
     await test.step('Connect RDS policy to all groups and verify access', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, popups, [
+      await connectRDSPolicyToGroups(nodes, edges, [
         GroupNodeID.AnalyticsTeam,
         GroupNodeID.ComplianceTeam,
         GroupNodeID.PaymentsTeam,
@@ -370,7 +367,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
     });
 
     await test.step('Connect RDS policy to all groups and verify access', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, popups, [
+      await connectRDSPolicyToGroups(nodes, edges, [
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
         GroupNodeID.AnalyticsTeam,
@@ -400,17 +397,12 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
       );
     });
 
-    await test.step('Create unnecessary node to test cleanup', async () => {
-      await popups.createUserGroupNode(
-        'unused-node',
-        ElementID.CreateUserGroupMenuItem,
-        ElementID.IAMIdentityCreatorPopup,
-        IAMNodeEntity.Group
-      );
+    await test.step('Create unnecessary policy to test cleanup', async () => {
+      await popups.createSpuriousPolicy();
     });
 
     await test.step('Connect all policies', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, popups, [
+      await connectRDSPolicyToGroups(nodes, edges, [
         GroupNodeID.AnalyticsTeam,
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
@@ -462,11 +454,12 @@ test.describe('Complete Level - End to End', () => {
     });
 
     await test.step('Complete Stage 3 - Create RDS management policy', async () => {
+      await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[0].popover_title);
       await verifyRDSResourcesAndCreatePolicy(tutorial, nodes, popups);
     });
 
     await test.step('Complete Stage 4 - Attach RDS policy and finish', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, popups, [
+      await connectRDSPolicyToGroups(nodes, edges, [
         GroupNodeID.AnalyticsTeam,
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,

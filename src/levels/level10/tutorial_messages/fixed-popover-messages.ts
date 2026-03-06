@@ -6,20 +6,21 @@ const FIXED_POPOVER_MSG1 = `
   Notice the created RDS instances? They are tagged with the team name,
   which is essential for the next objective.
 
-  One thing remains, we want to allow teams to manage their own RDS instances,
+  One thing remains: we want to allow teams to manage their own RDS instances,
   but not the instances of other teams.
 
-  Managing here means being able to stop/start the instance.
+  Managing here means being able to stop and start the instance.
 `;
 
 const FIXED_POPOVER_MSG2 = `
   There you have it! 🎉
 
-  Teams can now manage **ONLY** their own RDS instances by stopping and starting them,
-  while the RDS instances of other teams remain untouched.
+  Between *request tags* for enforcing tagging rules at creation time,
+  and *resource tags* with *policy variables* for scoping access to the right instances,
+  you've seen how tagging makes IAM policies scale cleanly across any number of teams.
 
-  All thanks to the power of *resource tags*, *request tags*, and *policy variables*,
-  your team can now effectively manage resources in a multi-team environment.
+  Even if a group contains users from different teams,
+  the policy enforces that each user can only manage their own resources.
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [

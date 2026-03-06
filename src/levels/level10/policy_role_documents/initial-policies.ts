@@ -16,4 +16,17 @@ export const INITIAL_POLICIES = {
       },
     ],
   },
+  RDS_MANAGEMENT_POLICY: {
+    Version: '2012-10-17',
+    Statement: [
+      {
+        Effect: 'Allow',
+        Action: ['....'],
+        Resource: '*',
+        Condition: {
+          StringEquals: {},
+        },
+      },
+    ],
+  },
 };
