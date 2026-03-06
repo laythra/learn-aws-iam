@@ -44,7 +44,7 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   restricted_element_ids?: string[];
   edges_management_disabled?: boolean;
   elements_with_animated_red_dot?: ElementID[];
-  show_unncessary_edges_or_nodes_warning?: boolean;
+  show_unnecessary_edges_or_nodes_warning?: boolean;
   layout_groups: NodeLayoutGroup[];
   blocked_connections?: { from: string; to: string }[];
 }

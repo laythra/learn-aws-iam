@@ -575,11 +575,11 @@ export const createStateMachineSetup = <
           return getElementsWithRedDot(context, elementIds, isVisible);
         },
       }),
-      show_unncessary_edges_or_nodes_warning: assign({
-        show_unncessary_edges_or_nodes_warning: true,
+      show_unnecessary_edges_or_nodes_warning: assign({
+        show_unnecessary_edges_or_nodes_warning: true,
       }),
-      hide_unncessary_edges_or_nodes_warning: assign({
-        show_unncessary_edges_or_nodes_warning: false,
+      hide_unnecessary_edges_or_nodes_warning: assign({
+        show_unnecessary_edges_or_nodes_warning: false,
       }),
       clear_edges: enqueueActions(({ context, enqueue }) => {
         enqueue.raise({
