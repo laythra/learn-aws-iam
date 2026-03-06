@@ -83,4 +83,3 @@ export function restartLevelFromCheckpoint(): void {
   LevelDetailsStore.send({ type: 'returnToLastCheckpoint' });
   analytics.logRestartFromCheckpoint(levelNumber);
 }
-

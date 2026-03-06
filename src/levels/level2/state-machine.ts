@@ -168,11 +168,7 @@ export const stateMachine = createStateMachineSetup<
     },
     attach_nodes_to_group: {
       type: 'parallel',
-      entry: [
-        'clear_edges',
-        'enable_edges_management_ability',
-        'store_checkpoint',
-      ],
+      entry: ['clear_edges', 'enable_edges_management_ability', 'store_checkpoint'],
       onDone: [
         {
           guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),

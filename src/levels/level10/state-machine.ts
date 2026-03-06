@@ -294,7 +294,11 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         remove_unnecessary_edges_and_nodes: {
-          entry: ['show_unnecessary_edges_or_nodes_warning', 'hide_popovers', 'hide_fixed_popovers'],
+          entry: [
+            'show_unnecessary_edges_or_nodes_warning',
+            'hide_popovers',
+            'hide_fixed_popovers',
+          ],
           exit: 'hide_unnecessary_edges_or_nodes_warning',
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
