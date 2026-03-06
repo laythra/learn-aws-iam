@@ -19,6 +19,7 @@ import {
   FinishEventMap,
   PolicyCreationFinishEvent,
 } from './types/finish-event-enums';
+import { PolicyNodeID, ResourceNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 
@@ -45,6 +46,7 @@ export const stateMachine = createStateMachineSetup<
     side_panel_open: false,
     layout_groups: [...COMMON_LAYOUT_GROUPS, ...LAYOUT_GROUPS],
     restricted_element_ids: [
+      ElementID.CreateUserGroupMenuItem,
       ElementID.CodeEditorRoleTab,
       ElementID.CodeEditorSCPTab,
       ElementID.CodeEditorResourcePolicyTab,
@@ -118,6 +120,16 @@ export const stateMachine = createStateMachineSetup<
             'close_side_panel',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
             {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: PolicyNodeID.TBACPolicy,
+                content: `
+                  This policy should be attached to all three groups
+                  to meet the objective requirements
+                `,
+              },
+            },
+            {
               type: 'set_edge_connection_objectives',
               params: { objectives: EDGE_CONNECTION_OBJECTIVES[0] },
             },
@@ -157,6 +169,7 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
             { type: 'append_nodes', params: { nodes: INITIAL_IN_LEVEL_RESOURCE_NODES } },
+            { type: 'hide_node_help_tooltip', params: { nodeId: PolicyNodeID.TBACPolicy } },
           ],
           on: { NEXT_FIXED_POPOVER: 'create_policy2' },
         },
@@ -165,6 +178,13 @@ export const stateMachine = createStateMachineSetup<
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
             { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: ResourceNodeID.RDS1,
+                content: 'Create a policy that allows teams to manage their own RDS instances',
+              },
+            },
             {
               type: 'append_creation_objectives',
               params: { objectives: POLICY_CREATION_OBJECTIVES[1] },
@@ -177,6 +197,10 @@ export const stateMachine = createStateMachineSetup<
                 {
                   type: 'finish_level_objective',
                   params: { id: LevelObjectiveID.CREATE_MANAGE_RDS_POLICY },
+                },
+                {
+                  type: 'hide_node_help_tooltip',
+                  params: { nodeId: ResourceNodeID.RDS1 },
                 },
               ],
             },
@@ -192,11 +216,22 @@ export const stateMachine = createStateMachineSetup<
                   type: 'finish_level_objective',
                   params: { id: LevelObjectiveID.ATTACH_POLICY2_TO_GROUPS },
                 },
+                {
+                  type: 'hide_node_help_tooltip',
+                  params: { nodeId: PolicyNodeID.RDSManagePolicy },
+                },
               ],
             },
           ],
           entry: [
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: PolicyNodeID.RDSManagePolicy,
+                content: 'Attach this policy to the same groups as the previous one',
+              },
+            },
             {
               type: 'set_edge_connection_objectives',
               params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
