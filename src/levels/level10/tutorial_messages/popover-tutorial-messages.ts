@@ -5,9 +5,9 @@ import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-typ
 const POPOVER_MSG1 = ``;
 
 const POPOVER_MSG2 = `
-  This was a tough policy to create, you nailed it!
+  This was a tough policy to create — you nailed it!
 
-  keep on...
+  Keep on...
 `;
 
 const POPOVER_MSG3 = `
@@ -15,7 +15,7 @@ const POPOVER_MSG3 = `
 `;
 
 const POPOVER_MSG4 = `
-  Grant the policy to the groups
+  Grant the policy to the groups.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
@@ -37,7 +37,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
   },
   {
     element_id: ElementID.NewEntityBtn,
-    popover_title: "Second Policy let's go",
+    popover_title: "Second Policy — Let's Go!",
     popover_content: POPOVER_MSG3,
     show_next_button: false,
     show_close_button: true,
@@ -48,7 +48,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_title: 'You know the drill by now',
     popover_content: POPOVER_MSG4,
     show_next_button: false,
-    show_close_button: false,
+    show_close_button: true,
     popover_placement: 'top',
   },
 ];

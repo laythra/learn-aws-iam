@@ -1,37 +1,38 @@
 import { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
 const POPUP_MSG1 = `
-  We've been exploring **Tag Based Access Control (TBAC)** so far,
+  We've been exploring **Tag-Based Access Control (TBAC)** so far,
   but there's still much more to discover!
   The only type of tags we've worked with until now are **Resource Tags**,
-  which are tags that are already attached to the resources we want to control access to.|lg
+  which are tags already attached to the resources we want to control access to.
 
-  This level will introduce **Request Tags**, which is a fundamental concept in
+  This level will introduce **Request Tags** — a fundamental concept in
   TBAC that provides even greater flexibility in controlling access to resources.|lg
 
-  * **Resources Tags** are tags that are already attached to the resources we wish to control
-  access to.|lg
+  * ::badge[RULE|color(blue)]:: **Resource Tags**
+  are tags already attached to the resources we wish to control access to.
 
-  * **Request Tags** are tags that we can mandate requests with,
-  and use to control access to resources based on the tags that are attached to the request.|lg
+  * ::badge[RULE|color(blue)]:: **Request Tags**
+  are tags that must be present on a request itself,
+  allowing you to enforce tagging rules at the moment of action.
 `;
 
 const POPUP_MSG2 = `
  For this level, you'll be the DevOps engineer at a fintech company with three teams
  (***payments***, ***analytics***, ***compliance***) that each manage their own databases
- across dev/staging/prod environments. Your goal is to ensure:|lg
+ across dev/staging/prod environments. Your goal is to ensure:
 
 * Teams can only access and manage their own databases,
- for example: The compliance team cannot modify the payments team's database|lg
+ for example, the compliance team cannot modify the payments team's database
 
-* Consistent tagging is enforced for cost tracking and compliance purposes|lg
+* Consistent tagging is enforced for cost tracking and compliance purposes
 `;
 
 const POPUP_MSG3 = `
-To achieve this level of control, we need to define a single policy with two distinct statements:|lg
+To achieve this level of control, we need to define a single policy with two distinct statements:
 
   **1. Tag Creation Statement**|lg
 
-  Allows teams to create tags **only** when creating a new RDS instance|lg
+  Allows teams to create tags **only** when creating a new RDS instance.
 
   **2. RDS Instance Creation Statement**|lg
 
@@ -43,19 +44,19 @@ To achieve this level of control, we need to define a single policy with two dis
 `;
 
 const POPUP_MSG4 = `
-  That was a tough level, give yourself a well-earned pat on the back! 🎉|lg
+  That was a tough level — give yourself a well-earned pat on the back! 🎉|lg
 
   You’ve now mastered ***Tag-Based Access Control (TBAC)***,
-  and not only that, you’ve shown real skill in crafting complex IAM policies.|lg
+  and not only that, you’ve shown real skill in crafting complex IAM policies.
 
   In this level, we explored *Request Tags* and how they can
-  be used to manage access based on the tags attached to the request itself.|lg
+  be used to manage access based on the tags attached to the request itself.
 
-  We're nearing the end of our journey.
+  We’re nearing the end of our journey.
   Next up, we’ll dive into a powerful concept called **Permission Boundaries**,
-  which help define the maximum permissions an IAM entity can receive.|lg
+  which help define the maximum permissions an IAM entity can receive.
 
-  You're doing great. Let’s finish strong! 💪|lg
+  You’re doing great. Let’s finish strong! 💪|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
