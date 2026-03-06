@@ -172,7 +172,6 @@ export const stateMachine = createStateMachineSetup<
         'clear_edges',
         'enable_edges_management_ability',
         'store_checkpoint',
-        { type: 'store_snapshot_to_disk', params: { filename: 'level2_stage2.txt' } },
       ],
       onDone: [
         {
@@ -302,7 +301,6 @@ export const stateMachine = createStateMachineSetup<
               params: { message: POPOVER_TUTORIAL_MESSAGES[5] },
             },
             'store_checkpoint',
-            { type: 'store_snapshot_to_disk', params: { filename: 'level2_stage3.txt' } },
           ],
           on: {
             NEXT_POPOVER: 'create_your_user',

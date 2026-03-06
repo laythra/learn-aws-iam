@@ -84,32 +84,3 @@ export function restartLevelFromCheckpoint(): void {
   analytics.logRestartFromCheckpoint(levelNumber);
 }
 
-/** DEBUG ONLY
- * Saves the current snapshot of the given actor to disk via a local server.
- * This is only for debugging and development purposes.
- */
-export function saveSnapshotToDisk(actor: Actor<AnyActorLogic>, filename: string): void {
-  const snapshot = actor.getPersistedSnapshot();
-  const snapshotString = JSON.stringify(snapshot);
-
-  fetch('http://localhost:3001/save', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      content: snapshotString,
-      filename,
-    }),
-  })
-    .then(response => {
-      if (!response.ok) {
-        console.error(
-          `Failed to save snapshot to disk (status ${response.status} ${response.statusText})`
-        );
-      }
-    })
-    .catch(error => {
-      console.error('Error while saving snapshot to disk', error);
-    });
-}

@@ -18,7 +18,7 @@ import {
   aggregateUserNodes,
   deaggregateUserNodes,
 } from './utils/user-node-aggregation-state-machine-actions';
-import { storeLevelCheckpoint, saveSnapshotToDisk } from '@/app_shell/runtime/level-operations';
+import { storeLevelCheckpoint } from '@/app_shell/runtime/level-operations';
 import { ElementID } from '@/config/element-ids';
 import type { GenericContext } from '@/levels/types/context-types';
 import type { GenericEventData } from '@/levels/types/event-types';
@@ -676,12 +676,6 @@ export const createStateMachineSetup = <
           });
         }
       ),
-      // TODO: Remove this! Only used for testing and debugging purposes.
-      store_snapshot_to_disk: enqueueActions(({ self }, { filename }: { filename: string }) => {
-        queueMicrotask(() => {
-          saveSnapshotToDisk(self as Actor<AnyActorLogic>, filename);
-        });
-      }),
       log_analytics_event: enqueueActions(
         (
           { enqueue, context },

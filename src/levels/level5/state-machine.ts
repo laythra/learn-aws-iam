@@ -298,7 +298,6 @@ export const stateMachine = createStateMachineSetup<
     inside_level: {
       entry: [
         'store_checkpoint',
-        { type: 'store_snapshot_to_disk', params: { filename: 'level5_stage2' } },
         'disable_tutorial_state',
         'clear_edges',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
