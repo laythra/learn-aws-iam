@@ -118,6 +118,7 @@ export const stateMachine = createStateMachineSetup<
           },
           entry: [
             'close_side_panel',
+            'store_checkpoint',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
             {
               type: 'show_node_help_tooltip',
@@ -175,6 +176,7 @@ export const stateMachine = createStateMachineSetup<
         },
         create_policy2: {
           entry: [
+            'store_checkpoint',
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
             { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
@@ -224,6 +226,7 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           entry: [
+            'store_checkpoint',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
             {
               type: 'show_node_help_tooltip',
