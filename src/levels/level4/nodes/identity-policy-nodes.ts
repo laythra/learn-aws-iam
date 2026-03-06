@@ -2,12 +2,12 @@ import { DATA_SCIENTISTS_POLICY_DOCUMENT } from '../policy_role_documents/data-s
 import { DEVELOPERS_POLICY_DOCUMENT } from '../policy_role_documents/developers-policy';
 import { INTERNS_POLICY_DOCUMENT } from '../policy_role_documents/interns-policy';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
+import { createIdentityPolicyNode } from '@/factories/nodes/identity-policy-node-factory';
 import { AccessLevel, CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
-import { IAMPolicyNode } from '@/types/iam-node-types';
+import { IAMIdentityPolicyNode } from '@/types/iam-node-types';
 
-const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [
+const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.DeveloperPolicy,
     label: 'developers-access',
@@ -51,6 +51,6 @@ const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [
   },
 ];
 
-export const INITIAL_IN_LEVEL_POLICY_NODES: IAMPolicyNode[] = IN_LEVEL_POLICY_NODES.map(nodeData =>
-  createPolicyNode({ dataOverrides: nodeData })
+export const INITIAL_IN_LEVEL_POLICY_NODES: IAMIdentityPolicyNode[] = IN_LEVEL_POLICY_NODES.map(
+  nodeData => createIdentityPolicyNode({ dataOverrides: nodeData })
 );

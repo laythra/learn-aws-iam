@@ -36,7 +36,7 @@ export type GenericEventData =
       label: string;
     }
   | {
-      type: StatefulStateMachineEvent.EditIAMPolicyNode;
+      type: StatefulStateMachineEvent.EditIAMIdentityPolicyNode;
       node_id: string;
       doc_string: string;
     }

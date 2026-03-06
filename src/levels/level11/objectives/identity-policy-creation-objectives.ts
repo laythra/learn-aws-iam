@@ -3,8 +3,8 @@ import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap } from '../types/finish-event-enums';
 import { PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID } from '../types/node-id-enums';
-import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
-import { IAMPermissionPolicyCreationObjective } from '@/levels/types/objective-types';
+import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/identity-policy-creation-objective-factory';
+import { IAMIdentityPolicyCreationObjective } from '@/levels/types/objective-types';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 
 const CALLOUT_MSG = `
@@ -52,7 +52,7 @@ const CONDITIONS2_HINT_MSG = `
   What's the missing condition key here?
 `;
 
-export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
+export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
   FinishEventMap,
   ValidateFunctionsFnName
 >[][] = [
@@ -82,7 +82,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
         },
       ],
     } satisfies Partial<
-      IAMPermissionPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
+      IAMIdentityPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
     >,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

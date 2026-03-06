@@ -164,7 +164,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   // =========================================================================
   // Policy Editing
   // =========================================================================
-  [StatefulStateMachineEvent.EditIAMPolicyNode]: {
+  [StatefulStateMachineEvent.EditIAMIdentityPolicyNode]: {
     actions: [
       {
         type: 'edit_policy_node' as const,
@@ -172,7 +172,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event,
         }: {
           event: {
-            type: StatefulStateMachineEvent.EditIAMPolicyNode;
+            type: StatefulStateMachineEvent.EditIAMIdentityPolicyNode;
             node_id: string;
             doc_string: string;
           };

@@ -5,7 +5,7 @@ import { INITIAL_IN_LEVEL_NODES } from './nodes';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
-import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/policy-nodes';
+import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/identity-policy-nodes';
 import { INITIAL_TUTORIAL_RESOURCE_NODES } from './nodes/resource-nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';

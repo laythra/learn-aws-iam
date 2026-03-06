@@ -59,11 +59,11 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents, Record
       warnings: {},
       content: {},
       label: {},
-      selectedIAMEntity: IAMNodeEntity.Policy,
+      selectedIAMEntity: IAMNodeEntity.IdentityPolicy,
       isCodeEditorInitialized: false,
       selectedPolicies: [],
       selectedAccountId: undefined,
-      helpPopupInfo: { isOpen: false, entity: IAMNodeEntity.Policy },
+      helpPopupInfo: { isOpen: false, entity: IAMNodeEntity.IdentityPolicy },
       labelError: undefined,
       isOpen: false,
       mode: 'create',
@@ -109,7 +109,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents, Record
       deinitializeCodeEditor: (context: CodeEditorState) => {
         context.isCodeEditorInitialized = false;
         context.isValidating = false;
-        context.selectedIAMEntity = IAMNodeEntity.Policy;
+        context.selectedIAMEntity = IAMNodeEntity.IdentityPolicy;
         context.errors = {};
         context.warnings = {};
         context.content = {};
@@ -138,7 +138,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents, Record
       hideHelpPopup: (context: CodeEditorState) => {
         context.helpPopupInfo = {
           isOpen: false,
-          entity: IAMNodeEntity.Policy,
+          entity: IAMNodeEntity.IdentityPolicy,
         };
       },
       setNodeLabel: (context: CodeEditorState, event: { label: string; nodeId: string }) => {
@@ -163,7 +163,7 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents, Record
         context.isOpen = true;
         context.mode = event.mode;
         context.selectedNodeId = event.selectedNodeId;
-        context.selectedIAMEntity = event.selectedIAMEntity ?? IAMNodeEntity.Policy;
+        context.selectedIAMEntity = event.selectedIAMEntity ?? IAMNodeEntity.IdentityPolicy;
       },
       close: (context: CodeEditorState) => {
         context.isOpen = false;

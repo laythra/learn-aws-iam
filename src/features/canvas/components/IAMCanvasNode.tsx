@@ -136,7 +136,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id, width, height }
             tags={tags}
             content={content}
             arn={arn}
-            editable={entity === IAMNodeEntity.Policy && !!data.editable}
+            editable={entity === IAMNodeEntity.IdentityPolicy && !!data.editable}
           />
         </Box>
       </TutorialPopover>

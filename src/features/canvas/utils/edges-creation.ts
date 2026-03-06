@@ -3,12 +3,12 @@ import { IAMAnyNode } from '@/types/iam-node-types';
 
 const VALID_CONNECTIONS = new Set<string>(
   [
-    [IAMNodeEntity.Policy, IAMNodeEntity.User],
-    [IAMNodeEntity.Policy, IAMNodeEntity.Group],
+    [IAMNodeEntity.IdentityPolicy, IAMNodeEntity.User],
+    [IAMNodeEntity.IdentityPolicy, IAMNodeEntity.Group],
     [IAMNodeEntity.ResourcePolicy, IAMNodeEntity.Resource],
     [IAMNodeEntity.User, IAMNodeEntity.Group],
     [IAMNodeEntity.User, IAMNodeEntity.Role],
-    [IAMNodeEntity.Policy, IAMNodeEntity.Role],
+    [IAMNodeEntity.IdentityPolicy, IAMNodeEntity.Role],
     [IAMNodeEntity.Resource, IAMNodeEntity.Role],
     [IAMNodeEntity.OU, IAMNodeEntity.Account],
     [IAMNodeEntity.SCP, IAMNodeEntity.OU],
@@ -40,6 +40,4 @@ export const getValidConnectionDirection = (
   if (VALID_CONNECTIONS.has(path2)) {
     return { source: targetNode, target: sourceNode };
   }
-
-  return undefined;
 };

@@ -2,11 +2,14 @@ import { Position } from '@xyflow/react';
 
 import { createNodeFactory } from './create-node-factory';
 import { HandleID, IAMNodeEntity, IAMNodeImage } from '@/types/iam-enums';
-import { IAMPolicyNode } from '@/types/iam-node-types';
+import { IAMIdentityPolicyNode } from '@/types/iam-node-types';
 
-export const createPolicyNode = createNodeFactory<IAMPolicyNode['data'], IAMNodeEntity.Policy>({
+export const createIdentityPolicyNode = createNodeFactory<
+  IAMIdentityPolicyNode['data'],
+  IAMNodeEntity.IdentityPolicy
+>({
   type: 'policy',
-  entity: IAMNodeEntity.Policy,
+  entity: IAMNodeEntity.IdentityPolicy,
   image: IAMNodeImage.Policy,
   defaultHandles: [
     { id: HandleID.Top, type: 'source', position: Position.Top },

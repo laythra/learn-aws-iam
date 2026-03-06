@@ -13,7 +13,7 @@ const arnStrategies: Record<string, ArnGenerator> = {
     `arn:aws:iam::${accountId}:user/${resourceName}`,
   [IAMNodeEntity.Role]: (resourceName, accountId) =>
     `arn:aws:iam::${accountId}:role/${resourceName}`,
-  [IAMNodeEntity.Policy]: (resourceName, accountId) =>
+  [IAMNodeEntity.IdentityPolicy]: (resourceName, accountId) =>
     `arn:aws:iam::${accountId}:policy/${resourceName}`,
   [IAMNodeEntity.Group]: (resourceName, accountId) =>
     `arn:aws:iam::${accountId}:group/${resourceName}`,

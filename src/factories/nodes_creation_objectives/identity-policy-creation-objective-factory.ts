@@ -4,16 +4,16 @@ import {
 } from './build-creation-objectives-factory';
 import {
   BaseFinishEventMap,
-  IAMPermissionPolicyCreationObjective,
+  IAMIdentityPolicyCreationObjective,
   ObjectiveType,
 } from '@/levels/types/objective-types';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
 export function createPolicyCreationObjective<
-  T extends IAMPermissionPolicyCreationObjective<BaseFinishEventMap, string>,
+  T extends IAMIdentityPolicyCreationObjective<BaseFinishEventMap, string>,
 >(overrides: CreationFactoryOverrides<T>): T {
   const factory = buildCreationObjectiveFactory<T>({
-    entity: IAMNodeEntity.Policy,
+    entity: IAMNodeEntity.IdentityPolicy,
     type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
   });
 

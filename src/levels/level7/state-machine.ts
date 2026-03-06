@@ -5,8 +5,8 @@ import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
+import { POLICY_CREATION_OBJECTIVES } from './objectives/identity-policy-creation-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
-import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
 // prettier-ignore
 import {
   RESOURCE_POLICY_CREATION_OBJECTIVES

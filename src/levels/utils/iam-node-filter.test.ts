@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 
 import { IAMNodeFilter } from './iam-node-filter';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
-import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
+import { createIdentityPolicyNode } from '@/factories/nodes/identity-policy-node-factory';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
@@ -43,7 +43,7 @@ describe('IAMIAMNodeFilter', () => {
       }),
 
       // Policies
-      createPolicyNode({
+      createIdentityPolicyNode({
         rootOverrides: { id: 'policy-1' },
         dataOverrides: {
           id: 'policy-1',
@@ -54,7 +54,7 @@ describe('IAMIAMNodeFilter', () => {
           content: '{"Version": "2012-10-17"}',
         },
       }),
-      createPolicyNode({
+      createIdentityPolicyNode({
         rootOverrides: { id: 'policy-2' },
         dataOverrides: {
           id: 'policy-2',
@@ -134,13 +134,13 @@ describe('IAMIAMNodeFilter', () => {
     it('should filter by multiple entity types', () => {
       const usersAndPolicies = IAMNodeFilter.create()
         .fromNodes(mockNodes)
-        .whereEntityIsOneOf(IAMNodeEntity.User, IAMNodeEntity.Policy)
+        .whereEntityIsOneOf(IAMNodeEntity.User, IAMNodeEntity.IdentityPolicy)
         .build();
 
       expect(usersAndPolicies).toHaveLength(4);
       expect(
         usersAndPolicies.every(node =>
-          [IAMNodeEntity.User, IAMNodeEntity.Policy].includes(node.data.entity)
+          [IAMNodeEntity.User, IAMNodeEntity.IdentityPolicy].includes(node.data.entity)
         )
       ).toBe(true);
     });
@@ -265,12 +265,14 @@ describe('IAMIAMNodeFilter', () => {
         .fromNodes(mockNodes)
         .whereEntityIs(IAMNodeEntity.User)
         .or()
-        .whereEntityIs(IAMNodeEntity.Policy)
+        .whereEntityIs(IAMNodeEntity.IdentityPolicy)
         .build();
 
       expect(result).toHaveLength(4);
       expect(
-        result.every(node => [IAMNodeEntity.User, IAMNodeEntity.Policy].includes(node.data.entity))
+        result.every(node =>
+          [IAMNodeEntity.User, IAMNodeEntity.IdentityPolicy].includes(node.data.entity)
+        )
       ).toBe(true);
     });
 
@@ -293,7 +295,7 @@ describe('IAMIAMNodeFilter', () => {
         .fromNodes(mockNodes)
         .whereEntityIs(IAMNodeEntity.User)
         .or()
-        .whereEntityIs(IAMNodeEntity.Policy)
+        .whereEntityIs(IAMNodeEntity.IdentityPolicy)
         .and()
         .whereAccountIs('123456789')
         .build();
@@ -301,7 +303,9 @@ describe('IAMIAMNodeFilter', () => {
       expect(result).toHaveLength(3); // user-1, policy-1, policy-2
       expect(result.every(node => node.data.account_id === '123456789')).toBe(true);
       expect(
-        result.every(node => [IAMNodeEntity.User, IAMNodeEntity.Policy].includes(node.data.entity))
+        result.every(node =>
+          [IAMNodeEntity.User, IAMNodeEntity.IdentityPolicy].includes(node.data.entity)
+        )
       ).toBe(true);
     });
   });

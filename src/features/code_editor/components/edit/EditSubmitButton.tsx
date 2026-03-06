@@ -31,7 +31,7 @@ export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({ nodeId }) =>
     );
 
     levelActor.send({
-      type: StatefulStateMachineEvent.EditIAMPolicyNode,
+      type: StatefulStateMachineEvent.EditIAMIdentityPolicyNode,
       doc_string: content,
       node_id: nodeId,
     });

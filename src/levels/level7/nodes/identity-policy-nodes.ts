@@ -1,10 +1,10 @@
 import { ResourcePolicyNodeID } from '../types/node-id-enums';
-import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
+import { createIdentityPolicyNode } from '@/factories/nodes/identity-policy-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
-import { IAMPolicyNode } from '@/types/iam-node-types';
+import { IAMIdentityPolicyNode } from '@/types/iam-node-types';
 
-const TUTORIAL_POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [
+const TUTORIAL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>[] = [
   {
     id: ResourcePolicyNodeID.TutorialResourceBasedPolicy,
     label: 's3-read-access',
@@ -15,7 +15,7 @@ const TUTORIAL_POLICY_NODES: IAMNodeDataOverrides<IAMPolicyNode['data']>[] = [
 ];
 
 export const INITIAL_TUTORIAL_POLICY_NODES = TUTORIAL_POLICY_NODES.map(nodeInfo =>
-  createPolicyNode({
+  createIdentityPolicyNode({
     dataOverrides: nodeInfo,
   })
 );

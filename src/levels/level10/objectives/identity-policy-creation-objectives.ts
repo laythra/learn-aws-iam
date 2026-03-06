@@ -2,12 +2,9 @@ import { ObjectivesApplicableNodesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
+import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
-import {
-  IAMPermissionPolicyCreationObjective,
-  ObjectiveType,
-} from '@/levels/types/objective-types';
+import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE1_CALLOUT_MSG = `
@@ -109,7 +106,7 @@ const OBJECTIVE2_HELP_BADGES = [
   },
 ];
 
-export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
+export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
   FinishEventMap,
   ObjectivesApplicableNodesFnName
 >[][] = [
@@ -117,7 +114,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
     {
       id: PolicyNodeID.TBACPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyCreationFinishEvent.ALLOW_CREATE_RDS_WITH_TAGS_POLICY_CREATED,
       initial_code: INITIAL_POLICIES.POLICY_WITH_CONDITION,
       limit_new_lines: false,
@@ -142,14 +139,14 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
         granted_accesses: [],
       },
     } satisfies Partial<
-      IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+      IAMIdentityPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
   ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
       id: PolicyNodeID.RDSManagePolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyCreationFinishEvent.MANAGE_RDS_POLICY_CREATED,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       limit_new_lines: false,
@@ -196,7 +193,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
         },
       ],
     } satisfies Partial<
-      IAMPermissionPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
+      IAMIdentityPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
     >,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

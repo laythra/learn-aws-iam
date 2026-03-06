@@ -40,7 +40,7 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
   };
 
   const tabs = [
-    { element_id: ElementID.CodeEditorPolicyTab, node_entity: IAMNodeEntity.Policy },
+    { element_id: ElementID.CodeEditorPolicyTab, node_entity: IAMNodeEntity.IdentityPolicy },
     { element_id: ElementID.CodeEditorRoleTab, node_entity: IAMNodeEntity.Role },
     { element_id: ElementID.CodeEditorSCPTab, node_entity: IAMNodeEntity.SCP },
     {

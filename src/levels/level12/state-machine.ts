@@ -3,10 +3,11 @@ import { LAYOUT_GROUPS } from './layout-groups';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
+import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
+import { POLICY_CREATION_OBJECTIVES } from './objectives/identity-policy-creation-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { PERMISSION_BOUNDARY_CREATION_OBJECTIVES } from './objectives/permission-boundary-creation-objectives';
-import { POLICY_CREATION_OBJECTIVES } from './objectives/policy-creation-objectives';
 import { SCP_CREATION_OBJECTIVES } from './objectives/scp-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
@@ -22,7 +23,6 @@ import {
 import { PermissionBoundaryID, PolicyNodeID, RoleNodeID, SCPNodeID } from './types/node-id-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ROLE_CREATION_OBJECTIVES } from '../level12/objectives/role-creation-objectives';
-import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { ElementID } from '@/config/element-ids';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 

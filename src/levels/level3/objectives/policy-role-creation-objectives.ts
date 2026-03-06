@@ -2,12 +2,9 @@ import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, NodeCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/policy-creation-objective-factory';
+import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
-import {
-  IAMPermissionPolicyCreationObjective,
-  ObjectiveType,
-} from '@/levels/types/objective-types';
+import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const CALLOUT_MESSAGE1 = `
@@ -15,7 +12,7 @@ const CALLOUT_MESSAGE1 = `
   Such as \`arn:aws:s3:::your_bucket_name/*\`
 `;
 
-export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
+export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
   FinishEventMap,
   ValidateFunctionsFnName
 >[][] = [
@@ -23,7 +20,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
     {
       id: PolicyNodeID.S3ReadPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
       initial_code: INITIAL_POLICIES.S3ReadAccess,
       callout_message: CALLOUT_MESSAGE1,
@@ -50,14 +47,14 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
       ],
       limit_new_lines: true,
     } satisfies Partial<
-      IAMPermissionPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
+      IAMIdentityPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
     >,
   ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
       id: PolicyNodeID.S3ReadWritePolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.S3_READ_WRITE_POLICY_CREATED,
       extra_data: {
@@ -72,12 +69,12 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
       },
       layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
     } satisfies Partial<
-      IAMPermissionPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
+      IAMIdentityPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
     >,
     {
       id: PolicyNodeID.CloudFrontReadPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED,
       extra_data: {
@@ -92,12 +89,12 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
       },
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
     } satisfies Partial<
-      IAMPermissionPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
+      IAMIdentityPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
     >,
     {
       id: PolicyNodeID.DynamoDBReadWritePolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       on_finish_event: NodeCreationFinishEvent.DYNAMO_DB_READ_WRITE_POLICY_CREATED,
       extra_data: {
@@ -112,7 +109,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMPermissionPolicyCreationObjective<
       },
       layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     } satisfies Partial<
-      IAMPermissionPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
+      IAMIdentityPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
     >,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

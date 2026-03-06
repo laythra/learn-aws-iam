@@ -14,9 +14,9 @@ import { createMockContext } from '@/__test-helpers__/context';
 import { createEdge } from '@/factories/edge-factory';
 import { createAccountNode } from '@/factories/nodes/account-node-factory';
 import { createGroupNode } from '@/factories/nodes/group-node-factory';
+import { createIdentityPolicyNode } from '@/factories/nodes/identity-policy-node-factory';
 import { createOUNode } from '@/factories/nodes/ou-node-factory';
 import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
-import { createPolicyNode } from '@/factories/nodes/policy-node-factory';
 import { createResourceNode } from '@/factories/nodes/resource-node-factory';
 import { createRoleNode } from '@/factories/nodes/role-node-factory';
 import { createSCPNode } from '@/factories/nodes/scp-node-factory';
@@ -74,7 +74,7 @@ describe('updateConnectionEdges', () => {
 
   describe('policy → user', () => {
     it('creates only a direct edge when no access is granted', () => {
-      const policy = createPolicyNode({});
+      const policy = createIdentityPolicyNode({});
       const user = createUserNode({ dataOverrides: {} });
       const ctx = createEdgeTestContext([], [policy, user]);
 
@@ -89,7 +89,7 @@ describe('updateConnectionEdges', () => {
     it('creates extra edge (user → resource) when access is granted', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});
-      const policy = createPolicyNode({
+      const policy = createIdentityPolicyNode({
         dataOverrides: {
           granted_accesses: [
             {
@@ -113,7 +113,7 @@ describe('updateConnectionEdges', () => {
     it('appends parent_edge_ids when the same dependent edge is created by another parent', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});
-      const policy1 = createPolicyNode({
+      const policy1 = createIdentityPolicyNode({
         dataOverrides: {
           id: 'policy-a',
           granted_accesses: [
@@ -125,7 +125,7 @@ describe('updateConnectionEdges', () => {
           ],
         },
       });
-      const policy2 = createPolicyNode({
+      const policy2 = createIdentityPolicyNode({
         dataOverrides: {
           id: 'policy-b',
           granted_accesses: [
@@ -166,7 +166,7 @@ describe('updateConnectionEdges', () => {
 
       const user = createUserNode({});
       const resource = createResourceNode({});
-      const policy = createPolicyNode({
+      const policy = createIdentityPolicyNode({
         dataOverrides: {
           granted_accesses: [
             {
@@ -188,7 +188,7 @@ describe('updateConnectionEdges', () => {
 
   describe('policy → group', () => {
     it('creates only a direct edge if group has no users', () => {
-      const policy = createPolicyNode({});
+      const policy = createIdentityPolicyNode({});
       const group = createGroupNode({});
       const ctx = createEdgeTestContext([], [policy, group]);
 
@@ -198,7 +198,7 @@ describe('updateConnectionEdges', () => {
     });
 
     it('creates only a direct edge if users exist in group but policy grants no access', () => {
-      const policy = createPolicyNode({});
+      const policy = createIdentityPolicyNode({});
       const group = createGroupNode({});
       const user = createUserNode({});
       const ctx = createEdgeTestContext([{ from: user.id, to: group.id }], [policy, group, user]);
@@ -215,7 +215,7 @@ describe('updateConnectionEdges', () => {
       const resource = createResourceNode({});
       const user = createUserNode({});
       const group = createGroupNode({});
-      const policy = createPolicyNode({
+      const policy = createIdentityPolicyNode({
         dataOverrides: {
           granted_accesses: [
             {
@@ -244,7 +244,7 @@ describe('updateConnectionEdges', () => {
 
   describe('policy → role', () => {
     it('creates only a direct edge if role has no users', () => {
-      const policy = createPolicyNode({});
+      const policy = createIdentityPolicyNode({});
       const role = createRoleNode({});
       const ctx = createEdgeTestContext([], [policy, role]);
 
@@ -255,7 +255,7 @@ describe('updateConnectionEdges', () => {
 
     it("skips extra edges (user → resource) when policies don't grant access", () => {
       const user = createUserNode({});
-      const policy = createPolicyNode({});
+      const policy = createIdentityPolicyNode({});
       const role = createRoleNode({});
       const ctx = createEdgeTestContext([{ from: user.id, to: role.id }], [policy, role, user]);
 
@@ -270,7 +270,7 @@ describe('updateConnectionEdges', () => {
     it('creates extra edge (user → resource) if user exists and policy grants access', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});
-      const policy = createPolicyNode({
+      const policy = createIdentityPolicyNode({
         dataOverrides: {
           granted_accesses: [
             {
@@ -309,7 +309,7 @@ describe('updateConnectionEdges', () => {
     });
 
     it("skips extra edges (user → resource) when attached policies don't grant access", () => {
-      const policy = createPolicyNode({});
+      const policy = createIdentityPolicyNode({});
       const group = createGroupNode({});
       const user = createUserNode({});
       const ctx = createEdgeTestContext([{ from: policy.id, to: group.id }], [policy, group, user]);
@@ -324,7 +324,7 @@ describe('updateConnectionEdges', () => {
 
     it('creates extra (user → resource) edge when attached policies grant access', () => {
       const resource = createResourceNode({});
-      const policy = createPolicyNode({
+      const policy = createIdentityPolicyNode({
         dataOverrides: {
           granted_accesses: [
             {
@@ -365,7 +365,7 @@ describe('updateConnectionEdges', () => {
 
     it("skips extra edges (user → resource) when role's policies grant no access", () => {
       const user = createUserNode({});
-      const policy = createPolicyNode({});
+      const policy = createIdentityPolicyNode({});
       const role = createRoleNode({});
       const ctx = createEdgeTestContext([{ from: user.id, to: role.id }], [policy, role, user]);
 
@@ -393,7 +393,7 @@ describe('updateConnectionEdges', () => {
       const resource1 = createResourceNode({});
       const resource2 = createResourceNode({});
       const role = createRoleNode({});
-      const policy = createPolicyNode({
+      const policy = createIdentityPolicyNode({
         dataOverrides: {
           granted_accesses: [
             {
@@ -460,7 +460,7 @@ describe('updateConnectionEdges', () => {
     it('uses edge_label as hovering_label when provided', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});
-      const policy = createPolicyNode({
+      const policy = createIdentityPolicyNode({
         dataOverrides: {
           granted_accesses: [
             {
@@ -485,7 +485,7 @@ describe('updateConnectionEdges', () => {
     it('falls back to access_level as hovering_label when edge_label is not provided', () => {
       const user = createUserNode({});
       const resource = createResourceNode({});
-      const policy = createPolicyNode({
+      const policy = createIdentityPolicyNode({
         dataOverrides: {
           granted_accesses: [
             {
@@ -516,7 +516,7 @@ describe('applyGuardRailBlockingToEdges', () => {
   it('returns edges unchanged when no guard rails exist', () => {
     const user = createUserNode({});
     const resource = createResourceNode({});
-    const policy = createPolicyNode({
+    const policy = createIdentityPolicyNode({
       dataOverrides: {
         granted_accesses: [
           {
@@ -551,7 +551,7 @@ describe('applyGuardRailBlockingToEdges', () => {
       },
     });
 
-    const policy = createPolicyNode({
+    const policy = createIdentityPolicyNode({
       dataOverrides: {
         granted_accesses: [
           {
@@ -603,7 +603,7 @@ describe('applyGuardRailBlockingToEdges', () => {
       },
     });
 
-    const policyNode = createPolicyNode({
+    const policyNode = createIdentityPolicyNode({
       dataOverrides: {
         granted_accesses: [
           {
@@ -657,7 +657,7 @@ describe('applyGuardRailBlockingToEdges', () => {
       },
     });
 
-    const policyNode = createPolicyNode({
+    const policyNode = createIdentityPolicyNode({
       dataOverrides: {
         granted_accesses: [
           {
@@ -692,7 +692,7 @@ describe('applyGuardRailBlockingToEdges', () => {
 
 describe('deleteConnectionEdges', () => {
   it('should delete the specified edges and their dependents from the context', () => {
-    const policyNode = createPolicyNode({});
+    const policyNode = createIdentityPolicyNode({});
     const userNode = createUserNode({});
     const resourceNode = createResourceNode({});
 

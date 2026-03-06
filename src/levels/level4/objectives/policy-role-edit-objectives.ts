@@ -77,7 +77,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       id: PolicyNodeID.DeveloperPolicy,
       validate_fn_name: PolicyNodeID.DeveloperPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       callout_message: OBJECTIVE_CALLOUT_MSG,
       on_finish_event: PolicyEditFinishEvent.DEVELOPER_POLICY_EDITED,
       resources_to_grant: [
@@ -118,7 +118,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       id: PolicyNodeID.DataScientistPolicy,
       validate_fn_name: PolicyNodeID.DataScientistPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyEditFinishEvent.DATA_SCIENTIST_POLICY_EDITED,
       callout_message: OBJECTIVE_CALLOUT_MSG,
       resources_to_grant: [
@@ -155,7 +155,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       id: PolicyNodeID.InternPolicy,
       validate_fn_name: PolicyNodeID.InternPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
-      entity: IAMNodeEntity.Policy,
+      entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyEditFinishEvent.INTERN_POLICY_EDITED,
       callout_message: OBJECTIVE_CALLOUT_MSG2,
       resources_to_grant: [
