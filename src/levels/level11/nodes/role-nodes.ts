@@ -1,6 +1,6 @@
 import { SECRETS_READER_ROLE_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { RoleNodeID } from '../types/node-id-enums';
-import { createRoleNode } from '@/factories/nodes/role-node-factory';
+import { createRoleNode } from '@/domain/nodes/role-node-factory';
 import { INITIAL_POLICIES } from '@/levels/level11/policy_role_documents/initial-policies';
 import { CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';

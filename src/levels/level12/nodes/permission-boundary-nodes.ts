@@ -1,4 +1,4 @@
-import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
+import { createPermissionBoundaryNode } from '@/domain/nodes/permission-boundary-node-factory';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMPermissionBoundaryNode } from '@/types/iam-node-types';
 

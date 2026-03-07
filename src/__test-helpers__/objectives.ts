@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/identity-policy-creation-objective-factory';
+import { createPolicyCreationObjective } from '@/domain/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import {
   BaseFinishEventMap,

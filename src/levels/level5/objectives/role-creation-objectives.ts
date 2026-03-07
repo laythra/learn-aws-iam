@@ -5,7 +5,7 @@ import {
 } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { RoleNodeID } from '../types/node-id-enums';
-import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
+import { createRoleCreationObjective } from '@/domain/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { IAMRoleCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';

@@ -1,4 +1,4 @@
-import { createRoleNode } from '@/factories/nodes/role-node-factory';
+import { createRoleNode } from '@/domain/nodes/role-node-factory';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMRoleNode } from '@/types/iam-node-types';
 

@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import { EdgeConnectionFinishEvent, FinishEventMap } from '../types/finish-event-enums';
 import { GroupNodeID, PolicyNodeID } from '../types/node-id-enums';
-import { createEdge } from '@/factories/edge-factory';
+import { createEdge } from '@/domain/edge-factory';
 import { EdgeConnectionObjective, ObjectiveType } from '@/levels/types/objective-types';
 
 export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>[][] = [

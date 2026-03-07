@@ -1,5 +1,5 @@
 import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createIdentityPolicyNode } from '@/factories/nodes/identity-policy-node-factory';
+import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMIdentityPolicyNode } from '@/types/iam-node-types';

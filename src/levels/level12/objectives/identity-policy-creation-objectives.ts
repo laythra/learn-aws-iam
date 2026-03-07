@@ -5,7 +5,7 @@ import {
 } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
-import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/identity-policy-creation-objective-factory';
+import { createPolicyCreationObjective } from '@/domain/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { IAMIdentityPolicyCreationObjective } from '@/levels/types/objective-types';
 import { AccessLevel, CommonLayoutGroupID, HandleID } from '@/types/iam-enums';

@@ -14,7 +14,7 @@ import {
 } from './types/node-id-enums';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
 import { generateArn } from '@/domain/arn-generator';
-import { AJV_COMPILER } from '@/lib/iam/iam-policy-validator';
+import { AJV_COMPILER } from '@/domain/iam-policy-validator';
 import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 

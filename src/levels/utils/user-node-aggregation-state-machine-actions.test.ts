@@ -5,8 +5,8 @@ import {
   deaggregateUserNodes,
 } from './user-node-aggregation-state-machine-actions';
 import { createMockContext } from '@/__test-helpers__/context';
-import { createAggregatedUsersNode } from '@/factories/nodes/aggregate-user-nodes-factory';
-import { createUserNode } from '@/factories/nodes/user-node-factory';
+import { createAggregatedUsersNode } from '@/domain/nodes/aggregate-user-nodes-factory';
+import { createUserNode } from '@/domain/nodes/user-node-factory';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMUserNode, IAMAggregatedUsersNode, IAMEdge, IAMAnyNode } from '@/types/iam-node-types';
 

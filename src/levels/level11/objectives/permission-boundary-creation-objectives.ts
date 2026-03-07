@@ -2,7 +2,7 @@ import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/finish-event-enums';
 import { PermissionBoundaryID } from '../types/node-id-enums';
-import { createPermissionBoundaryCreationObjective } from '@/factories/nodes_creation_objectives/permission-boundary-creation-objective-factory';
+import { createPermissionBoundaryCreationObjective } from '@/domain/nodes_creation_objectives/permission-boundary-creation-objective-factory';
 import {
   IAMPermissionBoundaryCreationObjective,
   ObjectiveType,
