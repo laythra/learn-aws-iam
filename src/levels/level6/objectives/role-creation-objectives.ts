@@ -1,6 +1,6 @@
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, RoleNodeID } from '../types/node-id-enums';
-import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
+import { createRoleCreationObjective } from '@/domain/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { IAMRoleCreationObjective } from '@/levels/types/objective-types';
 import { CommonLayoutGroupID } from '@/types/iam-enums';

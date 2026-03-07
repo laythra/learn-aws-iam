@@ -10,7 +10,7 @@ import {
   SCPNodeID,
   UserNodeID,
 } from '../types/node-id-enums';
-import { createEdge } from '@/factories/edge-factory';
+import { createEdge } from '@/domain/edge-factory';
 import { EdgeConnectionObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { HandleID } from '@/types/iam-enums';
 

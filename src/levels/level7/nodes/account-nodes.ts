@@ -1,5 +1,5 @@
 import { AccountID } from '../types/node-id-enums';
-import { createAccountNode } from '@/factories/nodes/account-node-factory';
+import { createAccountNode } from '@/domain/nodes/account-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAccountNode } from '@/types/iam-node-types';

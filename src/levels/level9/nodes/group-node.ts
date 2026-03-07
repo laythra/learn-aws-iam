@@ -1,5 +1,5 @@
 import { GroupNodeID } from '../types/node-id-enums';
-import { createGroupNode } from '@/factories/nodes/group-node-factory';
+import { createGroupNode } from '@/domain/nodes/group-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMGroupNode } from '@/types/iam-node-types';

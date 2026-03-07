@@ -1,5 +1,5 @@
 import { SCPNodeID } from '../types/node-id-enums';
-import { createSCPNode } from '@/factories/nodes/scp-node-factory';
+import { createSCPNode } from '@/domain/nodes/scp-node-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';

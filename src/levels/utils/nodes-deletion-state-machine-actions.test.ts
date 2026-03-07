@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { deleteNode } from './nodes-deletion-state-machine-actions';
 import { createMockContext } from '@/__test-helpers__/context';
-import { createIdentityPolicyNode } from '@/factories/nodes/identity-policy-node-factory';
+import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';
 
 // TODO: Add more tests involving deleting nodes with inbound/outbound edges
 describe('nodes-deletion-state-machine-actions', () => {

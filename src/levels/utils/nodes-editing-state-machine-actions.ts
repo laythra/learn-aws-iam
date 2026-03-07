@@ -4,7 +4,7 @@ import { ConnectionFilter } from './connection-filter';
 import { GetLevelValidateFunctions } from '../functions-registry';
 import { GenericContext } from '../types/context-types';
 import { BaseFinishEventMap, ObjectiveType } from '../types/objective-types';
-import { isJSONValid } from '@/lib/iam/iam-policy-validator';
+import { isJSONValid } from '@/domain/iam-policy-validator';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(

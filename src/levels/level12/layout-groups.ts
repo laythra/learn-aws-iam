@@ -1,5 +1,5 @@
+import { createHorizontalGroup, createVerticalGroup } from '@/domain/layout-group-factory';
 import { BASE_REGULAR_NODE_METRICS } from '@/domain/node-metrics';
-import { createHorizontalGroup, createVerticalGroup } from '@/factories/layout-group-factory';
 
 export enum LayoutGroupID {
   InLevelUsersLayoutGroup = 'in-level-users-layout-group',

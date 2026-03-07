@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
 import { IAMNodeFilter } from './iam-node-filter';
-import { createGroupNode } from '@/factories/nodes/group-node-factory';
-import { createIdentityPolicyNode } from '@/factories/nodes/identity-policy-node-factory';
-import { createResourceNode } from '@/factories/nodes/resource-node-factory';
-import { createRoleNode } from '@/factories/nodes/role-node-factory';
-import { createUserNode } from '@/factories/nodes/user-node-factory';
+import { createGroupNode } from '@/domain/nodes/group-node-factory';
+import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';
+import { createResourceNode } from '@/domain/nodes/resource-node-factory';
+import { createRoleNode } from '@/domain/nodes/role-node-factory';
+import { createUserNode } from '@/domain/nodes/user-node-factory';
 import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
 

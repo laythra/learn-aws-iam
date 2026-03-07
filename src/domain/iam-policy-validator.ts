@@ -2,6 +2,9 @@ import { Diagnostic } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import Ajv, { ValidateFunction } from 'ajv';
 
+import iamPolicySchema from '@/domain/policy-schemas/aws-iam-policy-schema.json';
+import iamRoleTurstPolicySchema from '@/domain/policy-schemas/aws-iam-role-trust-policy-schema.json';
+import sharedConditionSchema from '@/domain/policy-schemas/shared-condition-schema.json';
 import {
   BaseCreationObjective,
   BaseFinishEventMap,
@@ -11,9 +14,6 @@ import {
   IAMRoleCreationObjective,
   IAMSCPCreationObjective,
 } from '@/levels/types/objective-types';
-import iamPolicySchema from '@/schemas/aws-iam-policy-schema.json';
-import iamRoleTurstPolicySchema from '@/schemas/aws-iam-role-trust-policy-schema.json';
-import sharedConditionSchema from '@/schemas/shared-condition-schema.json';
 import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
 

@@ -1,4 +1,4 @@
-import { createRoleNode } from '@/factories/nodes/role-node-factory';
+import { createRoleNode } from '@/domain/nodes/role-node-factory';
 import { RoleNodeID } from '@/levels/level8/types/node-id-enums';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';

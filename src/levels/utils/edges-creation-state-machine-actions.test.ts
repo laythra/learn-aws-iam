@@ -11,16 +11,16 @@ import {
   GetLevelObjectivesApplicableNodesFns,
 } from '../functions-registry';
 import { createMockContext } from '@/__test-helpers__/context';
-import { createEdge } from '@/factories/edge-factory';
-import { createAccountNode } from '@/factories/nodes/account-node-factory';
-import { createGroupNode } from '@/factories/nodes/group-node-factory';
-import { createIdentityPolicyNode } from '@/factories/nodes/identity-policy-node-factory';
-import { createOUNode } from '@/factories/nodes/ou-node-factory';
-import { createPermissionBoundaryNode } from '@/factories/nodes/permission-boundary-node-factory';
-import { createResourceNode } from '@/factories/nodes/resource-node-factory';
-import { createRoleNode } from '@/factories/nodes/role-node-factory';
-import { createSCPNode } from '@/factories/nodes/scp-node-factory';
-import { createUserNode } from '@/factories/nodes/user-node-factory';
+import { createEdge } from '@/domain/edge-factory';
+import { createAccountNode } from '@/domain/nodes/account-node-factory';
+import { createGroupNode } from '@/domain/nodes/group-node-factory';
+import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';
+import { createOUNode } from '@/domain/nodes/ou-node-factory';
+import { createPermissionBoundaryNode } from '@/domain/nodes/permission-boundary-node-factory';
+import { createResourceNode } from '@/domain/nodes/resource-node-factory';
+import { createRoleNode } from '@/domain/nodes/role-node-factory';
+import { createSCPNode } from '@/domain/nodes/scp-node-factory';
+import { createUserNode } from '@/domain/nodes/user-node-factory';
 import { AccessLevel } from '@/types/iam-enums';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 

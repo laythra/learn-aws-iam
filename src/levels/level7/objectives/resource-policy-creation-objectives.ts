@@ -2,7 +2,7 @@ import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, ResourcePolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, ResourceNodeID, ResourcePolicyNodeID } from '../types/node-id-enums';
-import { createResourcePolicyCreationObjective } from '@/factories/nodes_creation_objectives/resource-policy-creation-objective-factory';
+import { createResourcePolicyCreationObjective } from '@/domain/nodes_creation_objectives/resource-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { IAMResourcePolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
