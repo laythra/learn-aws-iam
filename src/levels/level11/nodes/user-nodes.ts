@@ -1,3 +1,4 @@
+import { CLOUD_USER_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/factories/nodes/user-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
@@ -21,10 +22,7 @@ const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
       ['level', 'senior'],
       ['team', 'avalanche'],
     ],
-    alert_message: `
-      Cloud needs to grant permissions to other users,
-      which means he needs to have a policy attached that allows him to do so.
-    `,
+    node_tooltip: CLOUD_USER_ALERT_MESSAGE,
   },
   {
     id: UserNodeID.Tifa,

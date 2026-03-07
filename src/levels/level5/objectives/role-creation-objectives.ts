@@ -1,4 +1,8 @@
 import { INITIAL_TRUST_POLICIES } from '../policy_role_documents/initial-roles';
+import {
+  EC2_ROLE_ALERT_MESSAGE,
+  LAMBDA_ROLE_ALERT_MESSAGE,
+} from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { RoleNodeID } from '../types/node-id-enums';
 import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
@@ -99,7 +103,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
         required_policies: [],
         required_principles: [],
       },
-      alert_message: 'Use this role to grant the EC2 instance the required access',
+      node_tooltip: EC2_ROLE_ALERT_MESSAGE,
     } satisfies Partial<IAMRoleCreationObjective<FinishEventMap>>,
     {
       id: RoleNodeID.LambdaRole,
@@ -115,7 +119,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
         required_policies: [],
         required_principles: [],
       },
-      alert_message: 'Use this role to grant the Lambda function the required access',
+      node_tooltip: LAMBDA_ROLE_ALERT_MESSAGE,
     },
   ].map(objective => createRoleCreationObjective(objective)),
 ];

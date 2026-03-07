@@ -1,3 +1,4 @@
+import { EC2_ROLE_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, RoleNodeID } from '../types/node-id-enums';
 import { createRoleCreationObjective } from '@/factories/nodes_creation_objectives/role-creation-objective-factory';
@@ -15,8 +16,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       on_finish_event: RoleCreationFinishEvent.EC2_ROLE_CREATED,
       layout_group_id: CommonLayoutGroupID.BottomCenterVertical,
-      alert_message:
-        "This role requirs S3 write access. Don't forget to attach the policy to the role! ",
+      node_tooltip: EC2_ROLE_ALERT_MESSAGE,
       extra_data: {
         required_policies: [],
         required_principles: [],

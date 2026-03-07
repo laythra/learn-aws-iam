@@ -1,5 +1,6 @@
 import { LayoutGroupID } from '../layout-groups';
 import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
+import { PERMISSION_BOUNDARY_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/finish-event-enums';
 import { PermissionBoundaryID } from '../types/node-id-enums';
 import { createPermissionBoundaryCreationObjective } from '@/factories/nodes_creation_objectives/permission-boundary-creation-objective-factory';
@@ -22,7 +23,7 @@ export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreat
       on_finish_event: PermissionBoundaryCreationFinishEvent.ROLE_DELEGATION_PB_CREATED,
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
       limit_new_lines: false,
-      alert_message: 'Attach this somewhere to cap permissions',
+      node_tooltip: PERMISSION_BOUNDARY_ALERT_MESSAGE,
       layout_group_id: LayoutGroupID.InLevelPermissionBoundaryLayoutGroup,
       extra_data: {
         blocked_edge_content: 'Access Blocked By Permission Boundary 🔒',

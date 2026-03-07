@@ -1,4 +1,8 @@
 import { LayoutGroupID } from '../layout-groups';
+import {
+  ELASTICACHE_MANAGEMENT_POLICY_ALERT_MESSAGE,
+  S3_WRITE_POLICY_ALERT_MESSAGE,
+} from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
 import { createPolicyCreationObjective } from '@/factories/nodes_creation_objectives/identity-policy-creation-objective-factory';
@@ -21,8 +25,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<Fini
           },
         ],
       },
-      alert_message:
-        'Attach this policy (somewhere) to grant S3 write permissions to the EC2 instance.',
+      node_tooltip: S3_WRITE_POLICY_ALERT_MESSAGE,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
       initial_code: MANAGED_POLICIES.EmptyPolicy,
@@ -63,7 +66,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<Fini
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       created_node_parent_id: AccountID.InLevelProdAccount,
       account_id: AccountID.InLevelProdAccount,
-      alert_message: 'Connect this policy to groups to grant ElastiCache management permissions.',
+      node_tooltip: ELASTICACHE_MANAGEMENT_POLICY_ALERT_MESSAGE,
     } satisfies Partial<IAMIdentityPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
   [

@@ -1,5 +1,6 @@
 import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
+import { SCP_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, SCPCreationFinishEvent } from '../types/finish-event-enums';
 import { SCPNodeID } from '../types/node-id-enums';
 import { createSCPCreationObjective } from '@/factories/nodes_creation_objectives/scp-creation-objective-factory';
@@ -33,7 +34,7 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<
       initial_code: INITIAL_POLICIES.FIRST_SCP_OBJECTIVE_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.TopRightVertical,
-      alert_message: 'Connect the SCP to the appropriate OU/Account node(s)',
+      node_tooltip: SCP_ALERT_MESSAGE,
       extra_data: {
         blocked_edge_content: 'Delete CloudTrail Access Blocked By SCP 🔒',
         is_edge_blocked_fn_name: 'SCP1BlockingFN',
@@ -59,7 +60,7 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<
       initial_code: MANAGED_POLICIES.EmptyPolicy,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.TopRightVertical,
-      alert_message: 'Connect the SCP to the appropriate OU/Account node(s)',
+      node_tooltip: SCP_ALERT_MESSAGE,
       extra_data: {
         blocked_edge_content: 'Access Blocked By SCP 🔒',
         is_edge_blocked_fn_name: 'SCP2BlockingFN',
