@@ -34,7 +34,6 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
     const accountId = codeEditorStateContext.selectedAccountId;
     const label = codeEditorStateContext.label;
 
-    debugger;
     levelActor.send({
       type: StatefulStateMachineEvent.AddIAMNode,
       doc_string: content,

@@ -209,6 +209,18 @@ export const CanvasStore = createStore<CanvasStoreState, CanvasStoreEvents, neve
           event.reactFlowViewport
         );
 
+        const parentNodeIds = new Set(positionedNodes.filterMap(node => node.parentId));
+
+        ctx.nodes.forEach(node => {
+          if (parentNodeIds.has(node.id) && node.data.collapsed) {
+            node.data.collapsed = false;
+          }
+
+          if (node.parentId && parentNodeIds.has(node.parentId)) {
+            node.hidden = false;
+          }
+        });
+
         ctx.nodes.push(...positionedNodes);
       }
     ),
