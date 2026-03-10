@@ -17,10 +17,14 @@ export const theme: CustomTheme = extendTheme({
     sidePanelWidthInPixels: window.innerWidth * 0.2,
   },
   zIndices: {
-    // Modals should be above everything else
-    modal: 9999,
+    modal: 9000,
   },
   components: {
+    Tooltip: {
+      baseStyle: {
+        zIndex: 10000,
+      },
+    },
     Popover: {
       baseStyle: {
         popper: { zIndex: 1000 },
