@@ -9,6 +9,10 @@ import { POLICY_CREATION_OBJECTIVES } from './objectives/identity-policy-creatio
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
 import { PERMISSION_BOUNDARY_CREATION_OBJECTIVES } from './objectives/permission-boundary-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
+import {
+  CLOUD_USER_ALERT_MESSAGE,
+  SECRETS_READER_ROLE_ALERT_MESSAGE,
+} from './tutorial_messages/node-tooltip-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import {
@@ -214,13 +218,12 @@ export const stateMachine = createStateMachineSetup<
               params: { message: POPOVER_TUTORIAL_MESSAGES[6] },
             },
             {
-              type: 'update_restricted_element_ids',
-              params: ({ context }) => ({
-                restricted_element_ids: [
-                  ...(context.restricted_element_ids ?? []),
-                  ElementID.CodeEditorPolicyTab,
-                ],
-              }),
+              type: 'add_restricted_element_ids',
+              params: { element_ids: [ElementID.CodeEditorPolicyTab] },
+            },
+            {
+              type: 'show_node_help_tooltip',
+              params: { nodeId: RoleNodeID.Role1, content: SECRETS_READER_ROLE_ALERT_MESSAGE },
             },
             {
               type: 'append_creation_objectives',
@@ -238,6 +241,10 @@ export const stateMachine = createStateMachineSetup<
             {
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[7] },
+            },
+            {
+              type: 'hide_node_help_tooltip',
+              params: { nodeId: RoleNodeID.Role1 },
             },
           ],
           on: {
@@ -259,13 +266,17 @@ export const stateMachine = createStateMachineSetup<
               params: { objectives: POLICY_CREATION_OBJECTIVES[0] },
             },
             {
-              type: 'update_restricted_element_ids',
-              // TODO: move bulky logic to the action itself
-              params: ({ context }) => ({
-                restricted_element_ids: (context.restricted_element_ids ?? [])
-                  .filter(id => id !== ElementID.CodeEditorPolicyTab)
-                  .concat([ElementID.CodeEditorPermissionBoundaryTab]),
-              }),
+              type: 'remove_restricted_element_ids',
+              params: { element_ids: [ElementID.CodeEditorPolicyTab] },
+            },
+            {
+              type: 'add_restricted_element_ids',
+              params: { element_ids: [ElementID.CodeEditorPermissionBoundaryTab] },
+            },
+
+            {
+              type: 'show_node_help_tooltip',
+              params: { nodeId: UserNodeID.Cloud, content: CLOUD_USER_ALERT_MESSAGE },
             },
           ],
           on: {
@@ -277,7 +288,6 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'store_checkpoint',
             'enable_edges_management_ability',
-
             {
               type: 'show_fixed_popover_message',
               params: { message: FIXED_POPOVER_MESSAGES[1] },
@@ -285,6 +295,10 @@ export const stateMachine = createStateMachineSetup<
             {
               type: 'set_edge_connection_objectives',
               params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
+            },
+            {
+              type: 'hide_node_help_tooltip',
+              params: { nodeId: UserNodeID.Cloud },
             },
           ],
           type: 'parallel',
@@ -294,7 +308,13 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 in_progress: {
                   on: {
-                    [EdgeConnectionFinishEvent.PERMISSION_BOUNDARY_CONNECTED_TO_ROLE]: 'finished',
+                    [EdgeConnectionFinishEvent.PERMISSION_BOUNDARY_CONNECTED_TO_ROLE]: {
+                      target: 'finished',
+                      actions: {
+                        type: 'hide_node_help_tooltip',
+                        params: { nodeId: RoleNodeID.Role1 },
+                      },
+                    },
                   },
                 },
                 finished: {
@@ -307,8 +327,13 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 in_progress: {
                   on: {
-                    [EdgeConnectionFinishEvent.ACCESS_DELEGATION_POLICY_CONNECTED_TO_CLOUD]:
-                      'finished',
+                    [EdgeConnectionFinishEvent.ACCESS_DELEGATION_POLICY_CONNECTED_TO_CLOUD]: {
+                      target: 'finished',
+                      actions: {
+                        type: 'hide_node_help_tooltip',
+                        params: { nodeId: UserNodeID.Cloud },
+                      },
+                    },
                   },
                 },
                 finished: {
@@ -403,6 +428,7 @@ export const stateMachine = createStateMachineSetup<
           type: 'final',
           entry: [
             'hide_fixed_popovers',
+            'store_checkpoint',
             {
               type: 'show_popup_message',
               params: { message: POPUP_TUTORIAL_MESSAGES[4] },

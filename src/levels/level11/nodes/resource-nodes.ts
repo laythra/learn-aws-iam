@@ -38,11 +38,11 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
     tags: [['team', 'avalanche']],
   },
   {
-    id: ResourceNodeID.SNSTopic,
-    label: 'email-notifications',
+    id: ResourceNodeID.ElasticCache,
+    label: 'application-logs',
     layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
-    image: IAMNodeImage.Server,
-    resource_type: IAMNodeResourceEntity.Lambda,
+    image: IAMNodeImage.ElastiCache,
+    resource_type: IAMNodeResourceEntity.ElastiCache,
   },
   {
     id: ResourceNodeID.Secret2,

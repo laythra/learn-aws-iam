@@ -21,7 +21,7 @@ const ACTIONS_HINT_MSG = `
   We should have two actions here:
 
   * \`secretsmanager:GetSecretValue\`
-  * \`secretsmanager:???\`
+  * \`secretsmanager:DescribeSecret\`
 `;
 
 const CONDITIONS1_HINT_MSG = `
@@ -52,6 +52,9 @@ const CONDITIONS2_HINT_MSG = `
   ~~~
 
   The missing value here is the team tag of the user making the request.
+
+  ***Remember the Policy Variables we covered in the last level?
+  This is where they come into play.***
 `;
 
 export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreationObjective<

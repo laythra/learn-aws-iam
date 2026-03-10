@@ -18,6 +18,9 @@ const POPUP_MSG2 = `
 
   This is particularly useful for controlling access
   to sensitive resources and ensuring compliance with security policies.|lg
+
+  ::badge[RULE]:: Permission boundaries **only limit** — they don't grant permissions on their own.
+  An entity still needs an identity policy that explicitly allows the action.|lg
 `;
 
 const POPUP_MSG3 = `

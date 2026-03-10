@@ -1,4 +1,3 @@
-import { SECRETS_READER_ROLE_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { RoleNodeID } from '../types/node-id-enums';
 import { createRoleNode } from '@/domain/nodes/role-node-factory';
 import { INITIAL_POLICIES } from '@/levels/level11/policy_role_documents/initial-policies';
@@ -14,7 +13,6 @@ const IN_LEVEL_ROLE_NODES: IAMNodeDataOverrides<IAMRoleNode['data']>[] = [
     image: IAMNodeImage.Role,
     editable: true,
     content: JSON.stringify(INITIAL_POLICIES.DELEGATE_PERMISSIONS_ROLE, null, 2),
-    node_tooltip: SECRETS_READER_ROLE_ALERT_MESSAGE,
   },
 ];
 
