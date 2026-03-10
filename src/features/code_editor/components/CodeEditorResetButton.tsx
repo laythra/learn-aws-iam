@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { Button, Icon, Tooltip } from '@chakra-ui/react';
+import { Button, Icon } from '@chakra-ui/react';
 import { ArrowPathIcon } from '@heroicons/react/20/solid';
 
+import HoverTooltip from '@/components/HoverTooltip';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 
 interface CodeEditorResetButtonProps {
@@ -22,11 +23,11 @@ const CodeEditorResetButton: React.FC<CodeEditorResetButtonProps> = ({ nodeId })
   };
 
   return (
-    <Tooltip label='Reset the code to its original state' placement='top'>
+    <HoverTooltip label='Reset the code to its original state' placement='top' hasArrow>
       <Button leftIcon={<Icon as={ArrowPathIcon} boxSize={4} />} onClick={resetCode}>
         Reset Code
       </Button>
-    </Tooltip>
+    </HoverTooltip>
   );
 };
 

@@ -19,14 +19,17 @@ const HoverTooltip: React.FC<HoverTooltipProps> = ({
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!openOnMount) return;
-    timerRef.current = setTimeout(() => setIsOpen(true), initialOpenDelay);
+    if (openOnMount) {
+      timerRef.current = setTimeout(() => setIsOpen(true), initialOpenDelay);
+    }
+
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, []);
+  }, [openOnMount, initialOpenDelay]);
 
   const handleMouseEnter = (): void => {
+    if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => setIsOpen(true), openDelay);
   };
 
