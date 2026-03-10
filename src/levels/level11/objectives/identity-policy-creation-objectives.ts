@@ -22,7 +22,7 @@ const ACTIONS_HINT_MSG = `
   - \`iam:DetachRolePolicy\`
 `;
 
-const CONDITIONS1_HINT_MSG = `
+const OBJECTIVE1_HINT_MSG1 = `
   The condition should only allow attaching and detaching policies to roles which
   have the permission boundary with the ARN \`arn:aws:iam::123456789012:policy/ReadOnlyAccess\`
   attached.
@@ -37,19 +37,25 @@ const CONDITIONS1_HINT_MSG = `
   }|fullwidth
   ~~~
 
-  ***If you're really stuck, consult the final hint message.***
 `;
 
-const CONDITIONS2_HINT_MSG = `
+const OBJECTIVE1_HINT_MSG2 = `
   For this specific policy, the conditions will look something like this:
 
   ~~~js
   "Condition": {
-    "StringEquals": { "???": "arn:aws:iam::123456789012:role/secrets-reader-role" }
+    "StringEquals": { "???": "<arn-of-created-permission-boundary>" }
   }|fullwidth
   ~~~
 
   What's the missing condition key here?
+  It should be a condition key that checks the permission boundary attached to the role.
+
+  ***If you're really stuck, consult the final hint message.***
+`;
+
+const OBJECTIVE1_HINT_MSG3 = `
+  The missing condition key is \`iam:PermissionsBoundary\`.
 `;
 
 export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
@@ -74,11 +80,15 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
         },
         {
           title: 'Conditions - Part 1',
-          content: CONDITIONS1_HINT_MSG,
+          content: OBJECTIVE1_HINT_MSG1,
         },
         {
           title: 'Conditions - Part 2',
-          content: CONDITIONS2_HINT_MSG,
+          content: OBJECTIVE1_HINT_MSG2,
+        },
+        {
+          title: 'Conditions - Part 3',
+          content: OBJECTIVE1_HINT_MSG3,
         },
       ],
     } satisfies Partial<

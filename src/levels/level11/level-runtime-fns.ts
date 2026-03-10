@@ -1,4 +1,4 @@
-import { generateAssumeRolePolicySchema } from './schemas/delegating-permissions-policy';
+import { generateDelegatePermissionsPolicySchema } from './schemas/delegating-permissions-policy';
 import readSecretsPermissionBoundarySchema from './schemas/read-secrets-permission-boundary.json';
 import {
   PermissionBoundaryID,
@@ -18,7 +18,7 @@ export const ValidateFunctions = {
     )!;
 
     const pbArn = generateArn(IAMNodeEntity.PermissionBoundary, pbNode.data.label);
-    return AJV_COMPILER.compile(generateAssumeRolePolicySchema(pbArn));
+    return AJV_COMPILER.compile(generateDelegatePermissionsPolicySchema(pbArn));
   },
   [PermissionBoundaryID.SecretsReadingPermissionBoundary]: () =>
     AJV_COMPILER.compile(readSecretsPermissionBoundarySchema),
@@ -29,7 +29,11 @@ export const GuardRailsBlockedEdgesFunctions = {
     return edge.source === UserNodeID.Sephiroth && edge.target === ResourceNodeID.S3BucketTutorial;
   },
   permissionBoundary2BlockingFn: (edge: IAMEdge) => {
-    return [ResourceNodeID.Secret1, ResourceNodeID.Secret2].includes(edge.target);
+    return [
+      ResourceNodeID.LambdaFunction,
+      ResourceNodeID.S3BucketInLevel,
+      ResourceNodeID.ElasticCache,
+    ].includes(edge.target);
   },
 };
 

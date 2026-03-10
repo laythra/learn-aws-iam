@@ -14,7 +14,7 @@ export const ResourceNodeID = {
   S3BucketTutorial: 's3bucket-1',
   S3BucketInLevel: 's3bucket-2',
   LambdaFunction: 'resource-lambda-1',
-  SNSTopic: 'resource-sns-1',
+  ElasticCache: 'resource-elasticache-1',
   Secret1: 'resource-secret-1',
   Secret2: 'resource-secret-2',
 };

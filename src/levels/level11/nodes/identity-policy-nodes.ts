@@ -34,7 +34,7 @@ const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
       ResourceNodeID.S3BucketInLevel,
       ResourceNodeID.Secret1,
       ResourceNodeID.Secret2,
-      ResourceNodeID.SNSTopic,
+      ResourceNodeID.ElasticCache,
     ].map(resource => ({
       target_node: resource,
       target_handle: 'right',

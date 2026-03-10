@@ -1,4 +1,3 @@
-import { CLOUD_USER_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { UserNodeID } from '../types/node-id-enums';
 import { createUserNode } from '@/domain/nodes/user-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
@@ -22,7 +21,6 @@ const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
       ['level', 'senior'],
       ['team', 'avalanche'],
     ],
-    node_tooltip: CLOUD_USER_ALERT_MESSAGE,
   },
   {
     id: UserNodeID.Tifa,
