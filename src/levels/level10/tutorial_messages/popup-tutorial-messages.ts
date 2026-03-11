@@ -8,10 +8,10 @@ const POPUP_MSG1 = `
   This level will introduce **Request Tags** — a fundamental concept in
   TBAC that provides even greater flexibility in controlling access to resources.|lg
 
-  * ::badge[RULE|color(blue)]:: **Resource Tags**
+  * ::badge[RULE]:: **Resource Tags**
   are tags already attached to the resources we wish to control access to.
 
-  * ::badge[RULE|color(blue)]:: **Request Tags**
+  * ::badge[RULE]:: **Request Tags**
   are tags that must be present on a request itself,
   allowing you to enforce tagging rules at the moment of action.
 `;

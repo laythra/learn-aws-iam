@@ -34,8 +34,9 @@ const POPUP_MSG2 = `
   }|fullwidth
   ~~~
 
-  >::badge[WARNING]::
-  Resource-based policies are embedded in a single resource and cannot be reused.
+  > |color(warning)
+  > ::badge[WARNING]::
+  > Resource-based policies are embedded in a single resource and cannot be reused.
 `;
 
 const POPUP_MSG3 = `

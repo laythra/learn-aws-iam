@@ -80,9 +80,9 @@ const SECOND_OBJECTIVE_HINT_MSG1 = `
   - **\`"\${aws:RequestTag/application}"\`**:
     Represents the tag value of the request being made.
 
-
-   > ::badge[TIP]:: Policy variables are condition key values embedded directly
-    into a policy using "**$\{\}**" syntax, rather than being evaluated in a condition block.
+   > |color(tip)
+   > ::badge[TIP]:: Policy variables use the same keys as conditions, but wrapped
+   > in \`"$\{\}"\` so AWS resolves them to actual values at request time.
 `;
 
 const HELP_BADGES1 = [

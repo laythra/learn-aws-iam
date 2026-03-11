@@ -23,7 +23,7 @@ to your **IAM users**, **groups**, or **roles**.
 `;
 
 const POPUP_MSG_3 = `
-::badge[CONCEPT]::
+::badge[RULE]::
 Policies — whether **AWS Managed** or **Customer Managed** — have the same structure:
 
 * **Effect**: Whether the policy allows or denies access
@@ -69,7 +69,7 @@ while maintaining the **principle of least privilege**.|lg
 
 &nbsp;
 
-> **::badge[CONCEPT]:: What is the Principle of Least Privilege?**|lg
+> **::badge[RULE]:: What is the Principle of Least Privilege?**|lg
 >
 > The **principle of least privilege** means giving users or systems
 > only the minimum access they need to perform their tasks.
