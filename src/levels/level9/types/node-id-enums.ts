@@ -10,7 +10,7 @@ export const UserNodeID = {
 export const GroupNodeID = {
   PeachTeam: 'peach-team',
   BowserForce: 'bowser-force',
-};
+} as const;
 
 export const PolicyNodeID = {
   RDSManagePolicy1: 'policy-1',
@@ -27,4 +27,4 @@ export const ResourceNodeID = {
 
 export const RoleNodeID = {
   SlackCodeDeployRole: 'role-1',
-};
+} as const;

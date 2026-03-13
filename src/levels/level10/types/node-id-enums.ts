@@ -11,7 +11,7 @@ export const GroupNodeID = {
   PaymentsTeam: 'payments-team',
   AnalyticsTeam: 'analytics-team',
   ComplianceTeam: 'compliance-team',
-};
+} as const;
 
 export const PolicyNodeID = {
   TBACPolicy: 'policy-1',

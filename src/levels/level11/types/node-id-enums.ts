@@ -17,7 +17,7 @@ export const ResourceNodeID = {
   ElasticCache: 'resource-elasticache-1',
   Secret1: 'resource-secret-1',
   Secret2: 'resource-secret-2',
-};
+} as const;
 
 export const PolicyNodeID = {
   Policy1: 'policy-1',

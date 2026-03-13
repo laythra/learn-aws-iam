@@ -3,7 +3,7 @@ export const AccountID = {
   TutorialProdAccount: '98765432109',
   InLevelStagingAccount: '12345678901',
   InLevelProdAccount: '98765432109',
-};
+} as const;
 
 export const GroupNodeID = {
   TutorialEldianGroup: 'tutorial-group-1',
@@ -11,12 +11,12 @@ export const GroupNodeID = {
   InLevelSearchTeamGroup: 'in-level-group-1',
   InLevelNotificationsTeamGroup: 'in-level-group-2',
   InLevelPaymentsTeamGroup: 'in-level-group-3',
-};
+} as const;
 
 export const OUNodeID = {
   TutorialOU: 'tutorial-ou-1',
   InLevelOU: 'in-level-ou-1',
-};
+} as const;
 
 export const UserNodeID = {
   Eren: 'user-eren',
@@ -56,7 +56,7 @@ export const ResourceNodeID = {
   InLevelProductionElastiCacheCluster2: 'resource-production-elasticache-cluster-2',
   InLevelProductionElastiCacheCluster3: 'resource-production-elasticache-cluster-3',
   InLevelStagingEC2Instance: 'resource-staging-ec2-instance-1',
-};
+} as const;
 
 export const PolicyNodeID = {
   TutorialStagingCloudTrailAccess: 'policy-tutorial-staging-cloudtrail-access',
