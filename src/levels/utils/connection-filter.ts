@@ -1,38 +1,23 @@
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMEdge } from '@/types/iam-node-types';
 
-interface FilterGroup {
-  filters: Array<(edge: IAMEdge) => boolean>;
-  operator: 'AND' | 'OR';
-}
-
-//**
-// Classic fluent interface - method chaining that reads naturally
-// to build complex filters for NodeConnection objects.
-// Example usage:
-// const filteredConnections = ConnectionFilter.create()
-//   .fromConnections(allConnections)
-//   .whereSourceIs('sourceNodeId')
-//   .whereTargetEntityIs(IAMNodeEntity.IdentityPolicy)
-//   .or()
-//   .whereTargetHasTag('Environment', 'Production')
-//   .and()
-//   .whereSourceEntityIs(IAMNodeEntity.User)
-//   .build();
-// */
+/**
+ * Fluent interface for building filters over IAMEdge arrays.
+ * Filters are combined with AND — every chained condition must pass.
+ *
+ * Example usage:
+ * const filteredEdges = ConnectionFilter.create()
+ *   .fromEdges(allEdges)
+ *   .whereSourceIs('sourceNodeId')
+ *   .whereTargetEntityIs(IAMNodeEntity.IdentityPolicy)
+ *   .build();
+ */
 export class ConnectionFilter {
   private edges: IAMEdge[] = [];
-  private filterGroups: FilterGroup[] = [];
-  private currentGroup: FilterGroup;
+  private filters: Array<(edge: IAMEdge) => boolean> = [];
 
   static create(): ConnectionFilter {
     return new ConnectionFilter();
-  }
-
-  constructor() {
-    // Start with an AND group by default
-    this.currentGroup = { filters: [], operator: 'AND' };
-    this.filterGroups.push(this.currentGroup);
   }
 
   fromEdges(edges: IAMEdge[]): ConnectionFilter {
@@ -40,55 +25,33 @@ export class ConnectionFilter {
     return this;
   }
 
-  or(): ConnectionFilter {
-    this.currentGroup = { filters: [], operator: 'OR' };
-    this.filterGroups.push(this.currentGroup);
-    return this;
-  }
-
-  and(): ConnectionFilter {
-    this.currentGroup = { filters: [], operator: 'AND' };
-    this.filterGroups.push(this.currentGroup);
-    return this;
-  }
-
   whereTargetIs(targetId: string): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
-      return edge.data!.target_node.id === targetId;
-    });
+    this.filters.push(edge => edge.data!.target_node.id === targetId);
     return this;
   }
 
   whereTargetIn(targetIds: string[]): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
-      return targetIds.includes(edge.data!.target_node.id);
-    });
+    this.filters.push(edge => targetIds.includes(edge.data!.target_node.id));
     return this;
   }
 
   whereTargetNotIn(targetIds: string[]): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
-      return !targetIds.includes(edge.data!.target_node.id);
-    });
+    this.filters.push(edge => !targetIds.includes(edge.data!.target_node.id));
     return this;
   }
 
   whereSourceIs(sourceId: string): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
-      return edge.source === sourceId;
-    });
+    this.filters.push(edge => edge.source === sourceId);
     return this;
   }
 
   whereSourceEntityIs(entity: IAMNodeEntity): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
-      return edge.data!.source_node.data.entity === entity;
-    });
+    this.filters.push(edge => edge.data!.source_node.data.entity === entity);
     return this;
   }
 
   whereSourceEntityIn(entities: IAMNodeEntity[]): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
+    this.filters.push(edge => {
       const entity = edge.data!.source_node.data.entity;
       return entity !== undefined && entities.includes(entity);
     });
@@ -96,14 +59,12 @@ export class ConnectionFilter {
   }
 
   whereTargetEntityIs(entity: IAMNodeEntity): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
-      return edge.data!.target_node.data.entity === entity;
-    });
+    this.filters.push(edge => edge.data!.target_node.data.entity === entity);
     return this;
   }
 
   whereTargetEntityIn(entities: IAMNodeEntity[]): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
+    this.filters.push(edge => {
       const entity = edge.data!.target_node.data.entity;
       return entity !== undefined && entities.includes(entity);
     });
@@ -111,7 +72,7 @@ export class ConnectionFilter {
   }
 
   whereTargetEntityNotIn(entities: IAMNodeEntity[]): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
+    this.filters.push(edge => {
       const entity = edge.data!.target_node.data.entity;
       return entity === undefined || !entities.includes(entity);
     });
@@ -119,7 +80,7 @@ export class ConnectionFilter {
   }
 
   whereSourceHasTag(tagKey: string, tagValue?: string): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
+    this.filters.push(edge => {
       const tags = edge.data!.source_node.data.tags;
       return this.#tagExists(tags, tagKey, tagValue);
     });
@@ -127,7 +88,7 @@ export class ConnectionFilter {
   }
 
   whereTargetHasTag(tagKey: string, tagValue?: string): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
+    this.filters.push(edge => {
       const tags = edge.data!.target_node.data.tags;
       return this.#tagExists(tags, tagKey, tagValue);
     });
@@ -135,16 +96,12 @@ export class ConnectionFilter {
   }
 
   whereEntityIs(entity: IAMNodeEntity, side: 'source' | 'target' | 'either'): ConnectionFilter {
-    this.currentGroup.filters.push(edge => {
+    this.filters.push(edge => {
       const sourceEntity = edge.data!.source_node.data.entity;
       const targetEntity = edge.data!.target_node.data.entity;
-      if (side === 'either') {
-        return sourceEntity === entity || targetEntity === entity;
-      } else if (side === 'source') {
-        return sourceEntity === entity;
-      } else {
-        return targetEntity === entity;
-      }
+      if (side === 'either') return sourceEntity === entity || targetEntity === entity;
+      if (side === 'source') return sourceEntity === entity;
+      return targetEntity === entity;
     });
     return this;
   }
@@ -158,15 +115,7 @@ export class ConnectionFilter {
   }
 
   build(): IAMEdge[] {
-    return this.edges.filter(edge => {
-      return this.filterGroups.every(group => {
-        if (group.operator === 'AND') {
-          return group.filters.every(filter => filter(edge));
-        } else {
-          return group.filters.some(filter => filter(edge));
-        }
-      });
-    });
+    return this.edges.filter(edge => this.filters.every(filter => filter(edge)));
   }
 
   #tagExists(tags: [string, string][], tagKey: string, tagValue?: string): boolean {

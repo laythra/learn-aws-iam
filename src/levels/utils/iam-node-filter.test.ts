@@ -259,69 +259,7 @@ describe('IAMIAMNodeFilter', () => {
     });
   });
 
-  describe.skip('OR logic', () => {
-    it('should handle simple OR conditions', () => {
-      const result = IAMNodeFilter.create()
-        .fromNodes(mockNodes)
-        .whereEntityIs(IAMNodeEntity.User)
-        .or()
-        .whereEntityIs(IAMNodeEntity.IdentityPolicy)
-        .build();
-
-      expect(result).toHaveLength(4);
-      expect(
-        result.every(node =>
-          [IAMNodeEntity.User, IAMNodeEntity.IdentityPolicy].includes(node.data.entity)
-        )
-      ).toBe(true);
-    });
-
-    it('should handle complex OR with different filter types', () => {
-      const result = IAMNodeFilter.create()
-        .fromNodes(mockNodes)
-        .whereIdIs('user-1')
-        .or()
-        .whereHasTag('Owner', 'DevOps')
-        .build();
-
-      expect(result).toHaveLength(2);
-      expect(result.map(node => node.id).sort()).toEqual(['policy-1', 'user-1']);
-    });
-  });
-
-  describe.skip('AND logic after OR', () => {
-    it('should handle AND conditions after OR', () => {
-      const result = IAMNodeFilter.create()
-        .fromNodes(mockNodes)
-        .whereEntityIs(IAMNodeEntity.User)
-        .or()
-        .whereEntityIs(IAMNodeEntity.IdentityPolicy)
-        .and()
-        .whereAccountIs('123456789')
-        .build();
-
-      expect(result).toHaveLength(3); // user-1, policy-1, policy-2
-      expect(result.every(node => node.data.account_id === '123456789')).toBe(true);
-      expect(
-        result.every(node =>
-          [IAMNodeEntity.User, IAMNodeEntity.IdentityPolicy].includes(node.data.entity)
-        )
-      ).toBe(true);
-    });
-  });
-
   describe('Complex filtering scenarios', () => {
-    it.skip('should handle production resources or development team nodes', () => {
-      const result = IAMNodeFilter.create()
-        .fromNodes(mockNodes)
-        .whereHasTag('Environment', 'production')
-        .or()
-        .whereHasTag('Team', 'development')
-        .build();
-
-      expect(result).toHaveLength(3);
-    });
-
     it('should handle editable policies in specific account', () => {
       const result = IAMNodeFilter.create().fromNodes(mockNodes).whereIsEditable().build();
 
