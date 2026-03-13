@@ -1,15 +1,5 @@
 import { HStack } from '@chakra-ui/react';
 
-// Width per button in Chakra spacing units (~24px each) + right offset of the HStack.
-// Used by the parent node to reserve space and prevent content overlap.
-// Note: this is a layout workaround for absolute positioning — ideally, shouldn't need to be calculated manually.
-const INFO_BUTTON_WIDTH = 6;
-const INFO_BUTTON_RIGHT_OFFSET = 2;
-
-export function getInfoButtonsReservedWidth(buttonCount: number): number {
-  return buttonCount > 0 ? buttonCount * INFO_BUTTON_WIDTH + INFO_BUTTON_RIGHT_OFFSET : 0;
-}
-
 import ARNIconButton from './ARNIconButton';
 import NodePolicyButton from './NodePolicyButton';
 import TagsIconButton from './TagsIconButton';

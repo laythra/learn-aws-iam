@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 import IAMNodeHelpTooltip from './IAMNodeHelpTooltip';
 import NodeContent from './NodeContent';
-import NodeInfoButtons, { getInfoButtonsReservedWidth } from './NodeInfoButtons';
+import NodeInfoButtons from './NodeInfoButtons';
 import { CanvasStore } from '../stores/canvas-store';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { generateArn, SupportedArnNodeTypes } from '@/domain/arn-generator';
@@ -55,8 +55,6 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id, width, height }
     : undefined;
 
   const isSelected = selectedNodeId === id;
-  const infoButtonCount = [tags, content, arn].filter(Boolean).length;
-  const contentPr = getInfoButtonsReservedWidth(infoButtonCount);
 
   useEffect(() => {
     loadLocalImage(image).then(setImageSrc);
@@ -110,7 +108,7 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id, width, height }
             spacing={0}
             justifyContent='center'
             p={3}
-            pr={contentPr || 3}
+            pr={3}
             bg='white'
             boxShadow='sm'
             borderRadius='md'

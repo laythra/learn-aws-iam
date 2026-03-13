@@ -31,7 +31,7 @@ const NodeContent: React.FC<NodeContentProps> = ({
         <Tooltip label={label}>
           <Text
             fontWeight='700'
-            fontSize='14px'
+            fontSize='13px'
             whiteSpace='nowrap'
             overflow='hidden'
             textOverflow='ellipsis'
@@ -48,7 +48,13 @@ const NodeContent: React.FC<NodeContentProps> = ({
           </Tooltip>
         )}
       </HStack>
-      <Text fontSize='14px' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>
+      <Text
+        fontSize='14px'
+        whiteSpace='nowrap'
+        overflow='hidden'
+        textOverflow='ellipsis'
+        width='100%'
+      >
         {entity === IAMNodeEntity.Resource ? resourceType : entity}
       </Text>
     </VStack>
