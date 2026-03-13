@@ -1,4 +1,4 @@
-import { ResourceNodeID, RoleNodeID, UserNodeID } from '../types/node-id-enums';
+import { ResourceNodeID, RoleNodeID, UserNodeID } from '../types/node-ids';
 import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
 

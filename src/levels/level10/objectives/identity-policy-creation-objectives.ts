@@ -1,7 +1,7 @@
 import { ObjectivesApplicableNodesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
-import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { PolicyNodeID, ResourceNodeID } from '../types/node-ids';
 import { createPolicyCreationObjective } from '@/domain/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';

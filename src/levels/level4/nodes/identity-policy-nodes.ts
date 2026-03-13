@@ -1,7 +1,7 @@
 import { DATA_SCIENTISTS_POLICY_DOCUMENT } from '../policy_role_documents/data-scientists-policy';
 import { DEVELOPERS_POLICY_DOCUMENT } from '../policy_role_documents/developers-policy';
 import { INTERNS_POLICY_DOCUMENT } from '../policy_role_documents/interns-policy';
-import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { PolicyNodeID, ResourceNodeID } from '../types/node-ids';
 import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';
 import { AccessLevel, CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';

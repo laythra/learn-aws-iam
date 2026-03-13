@@ -2,7 +2,7 @@ import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap } from '../types/finish-event-enums';
 import { PolicyCreationFinishEvent } from '../types/finish-event-enums';
-import { PolicyNodeID } from '../types/node-id-enums';
+import { PolicyNodeID } from '../types/node-ids';
 import { createPolicyCreationObjective } from '@/domain/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { IAMIdentityPolicyCreationObjective } from '@/levels/types/objective-types';
 import { CommonLayoutGroupID } from '@/types/iam-enums';

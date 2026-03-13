@@ -20,7 +20,7 @@ import {
   RoleCreationFinishEvent,
   SCPCreationFinishEvent,
 } from './types/finish-event-enums';
-import { PermissionBoundaryID, PolicyNodeID, RoleNodeID, SCPNodeID } from './types/node-id-enums';
+import { PermissionBoundaryID, PolicyNodeID, RoleNodeID, SCPNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ROLE_CREATION_OBJECTIVES } from '../level12/objectives/role-creation-objectives';
 import { ElementID } from '@/config/element-ids';

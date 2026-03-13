@@ -2,7 +2,7 @@ import cloudfrontReadPolicySchema from './schemas/cloudfront-read-policy-schema.
 import dynamoReadWritePolicySchema from './schemas/dynamo-db-read-write-policy-schema.json';
 import s3ReadPolicySchema from './schemas/s3-read-policy-schema.json';
 import s3ReadWritePolicySchema from './schemas/s3-read-write-policy-schema.json';
-import { PolicyNodeID } from './types/node-id-enums';
+import { PolicyNodeID } from './types/node-ids';
 import { AJV_COMPILER } from '@/domain/iam-policy-validator';
 
 export const ValidateFunctions = {

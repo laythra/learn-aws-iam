@@ -16,7 +16,7 @@ import {
   FinishEventMap,
   PolicyCreationFinishEvent,
 } from './types/finish-event-enums';
-import { GroupNodeID, PolicyNodeID } from './types/node-id-enums';
+import { GroupNodeID, PolicyNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 

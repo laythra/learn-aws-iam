@@ -10,12 +10,7 @@ import { LEVEL_OBJECTIVES } from '@/levels/level6/objectives/level-objectives';
 import { FIXED_POPOVER_MESSAGES } from '@/levels/level6/tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from '@/levels/level6/tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from '@/levels/level6/tutorial_messages/popup-tutorial-messages';
-import {
-  AccountID,
-  PolicyNodeID,
-  RoleNodeID,
-  UserNodeID,
-} from '@/levels/level6/types/node-id-enums';
+import { AccountID, PolicyNodeID, RoleNodeID, UserNodeID } from '@/levels/level6/types/node-ids';
 
 const completeTutorialPopups = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);

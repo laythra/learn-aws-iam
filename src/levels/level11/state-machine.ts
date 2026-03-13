@@ -21,7 +21,7 @@ import {
   PermissionBoundaryCreationFinishEvent,
   PolicyCreationFinishEvent,
 } from './types/finish-event-enums';
-import { PolicyNodeID, RoleNodeID, UserNodeID } from './types/node-id-enums';
+import { PolicyNodeID, RoleNodeID, UserNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';

@@ -1,5 +1,5 @@
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
-import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-ids';
 import { createPolicyCreationObjective } from '@/domain/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';

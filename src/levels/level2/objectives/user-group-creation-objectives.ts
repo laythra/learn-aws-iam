@@ -1,6 +1,6 @@
 import { GROUP_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, UserGroupCreationFinishEvent } from '../types/finish-event-enums';
-import { GroupNodeID, UserNodeID } from '../types/node-id-enums';
+import { GroupNodeID, UserNodeID } from '../types/node-ids';
 import { IAMUserGroupCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 

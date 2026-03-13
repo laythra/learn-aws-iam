@@ -1,4 +1,4 @@
-import { OUNodeID } from '../types/node-id-enums';
+import { OUNodeID } from '../types/node-ids';
 import { createOUNode } from '@/domain/nodes/ou-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';

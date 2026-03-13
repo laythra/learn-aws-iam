@@ -17,7 +17,7 @@ import {
   PolicyCreationFinishEvent,
   RoleCreationFinishEvent,
 } from './types/finish-event-enums';
-import { RoleNodeID, UserNodeID } from './types/node-id-enums';
+import { RoleNodeID, UserNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 

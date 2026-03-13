@@ -5,7 +5,7 @@ import {
   PolicyNodeID,
   SCPNodeID,
   UserNodeID,
-} from './types/node-id-enums';
+} from './types/node-ids';
 import { HandleID } from '@/types/iam-enums';
 import { InitialNodeConnection } from '@/types/iam-node-types';
 

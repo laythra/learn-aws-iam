@@ -1,4 +1,4 @@
-import { PolicyNodeID, RoleNodeID } from './types/node-id-enums';
+import { PolicyNodeID, RoleNodeID } from './types/node-ids';
 
 export const INITIAL_TUTORIAL_CONNECTIONS: { from: string; to: string }[] = [
   {

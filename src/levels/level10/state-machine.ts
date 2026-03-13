@@ -19,7 +19,7 @@ import {
   FinishEventMap,
   PolicyCreationFinishEvent,
 } from './types/finish-event-enums';
-import { PolicyNodeID, ResourceNodeID } from './types/node-id-enums';
+import { PolicyNodeID, ResourceNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 
@@ -308,6 +308,7 @@ export const stateMachine = createStateMachineSetup<
         level_completed: {
           type: 'final',
           entry: [
+            'store_checkpoint',
             'hide_unnecessary_edges_or_nodes_warning',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[3] } },
           ],

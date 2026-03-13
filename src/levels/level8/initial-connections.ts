@@ -1,4 +1,4 @@
-import { PolicyNodeID, RoleNodeID, UserNodeID } from './types/node-id-enums';
+import { PolicyNodeID, RoleNodeID, UserNodeID } from './types/node-ids';
 import { HandleID } from '@/types/iam-enums';
 import { InitialNodeConnection } from '@/types/iam-node-types';
 

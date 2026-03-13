@@ -15,7 +15,7 @@ import {
   FinishEventMap,
   NodeCreationFinishEvent,
 } from './types/finish-event-enums';
-import { UserNodeID } from './types/node-id-enums';
+import { UserNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { FIXED_POPOVER_MESSAGES } from '../level1/tutorial_messages/fixed-popover-messages';
 import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';

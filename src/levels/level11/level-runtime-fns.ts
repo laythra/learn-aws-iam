@@ -1,11 +1,6 @@
 import { generateDelegatePermissionsPolicySchema } from './schemas/delegating-permissions-policy';
 import readSecretsPermissionBoundarySchema from './schemas/read-secrets-permission-boundary.json';
-import {
-  PermissionBoundaryID,
-  PolicyNodeID,
-  ResourceNodeID,
-  UserNodeID,
-} from './types/node-id-enums';
+import { PermissionBoundaryID, PolicyNodeID, ResourceNodeID, UserNodeID } from './types/node-ids';
 import { generateArn } from '@/domain/arn-generator';
 import { AJV_COMPILER } from '@/domain/iam-policy-validator';
 import { IAMNodeEntity } from '@/types/iam-enums';

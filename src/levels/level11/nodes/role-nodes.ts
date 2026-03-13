@@ -1,4 +1,4 @@
-import { RoleNodeID } from '../types/node-id-enums';
+import { RoleNodeID } from '../types/node-ids';
 import { createRoleNode } from '@/domain/nodes/role-node-factory';
 import { INITIAL_POLICIES } from '@/levels/level11/policy_role_documents/initial-policies';
 import { CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';

@@ -11,7 +11,7 @@ import {
   RoleNodeID,
   PermissionBoundaryID,
   ResourceNodeID,
-} from '@/levels/level11/types/node-id-enums';
+} from '@/levels/level11/types/node-ids';
 
 test.describe('Stage 1 - Permission Boundaries Introduction', () => {
   test('Initial Tutorial and Setup Flow', async ({ tutorial, nodes, edges, goToLevelAtStage }) => {

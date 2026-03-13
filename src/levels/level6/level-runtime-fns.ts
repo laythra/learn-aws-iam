@@ -1,7 +1,7 @@
 import { generateAssumeRolePermissionPolicySchema } from './schemas/assume-role-permission-policy-schema';
 import dynamodbReadPolicySchema from './schemas/dynamodb-read-permission-policy-schema.json';
 import dynamodbRoleTrustPolicy from './schemas/dynamodb-role-trust-policy-schema.json';
-import { AccountID, PolicyNodeID, RoleNodeID } from './types/node-id-enums';
+import { AccountID, PolicyNodeID, RoleNodeID } from './types/node-ids';
 import { generateArn } from '@/domain/arn-generator';
 import { AJV_COMPILER } from '@/domain/iam-policy-validator';
 import { IAMNodeEntity } from '@/types/iam-enums';

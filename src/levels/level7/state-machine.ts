@@ -19,7 +19,7 @@ import {
   FinishEventMap,
   ResourcePolicyCreationFinishEvent,
 } from './types/finish-event-enums';
-import { UserNodeID } from './types/node-id-enums';
+import { UserNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 
