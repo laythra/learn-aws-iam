@@ -3,8 +3,8 @@ import { memo } from 'react';
 import { type PlacementWithLogical, ChakraProps, IconButton } from '@chakra-ui/react';
 import { ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
 
-import { useLevelActor } from '@/app_shell/runtime/level-runtime';
 import { ElementID } from '@/config/element-ids';
+import { useLevelActor } from '@/runtime/level-runtime';
 import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface DeaggregateUserNodesButtonProps extends ChakraProps {

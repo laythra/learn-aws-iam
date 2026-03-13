@@ -14,8 +14,8 @@ import { ListBulletIcon, UserIcon } from '@heroicons/react/20/solid';
 import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { useStateMachineEvent } from '@/app_shell/runtime/useStateMachineEvent';
 import { ElementID } from '@/config/element-ids';
+import { useStateMachineEvent } from '@/runtime/useStateMachineEvent';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 interface AggregatedUsersListButtonProps extends ChakraProps {

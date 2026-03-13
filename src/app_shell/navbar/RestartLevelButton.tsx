@@ -10,8 +10,8 @@ import {
 import { ArrowPathIcon } from '@heroicons/react/16/solid';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
-import { restartLevelFromStart } from '@/app_shell/runtime/level-operations';
 import { NavbarPopoverButton } from '@/components/NavbarPopoverButton';
+import { restartLevelFromStart } from '@/runtime/level-operations';
 
 export const RestartLevelButton: React.FC = () => {
   const { isOpen, onOpen, onClose } = useNavbarPopover('restart-level');

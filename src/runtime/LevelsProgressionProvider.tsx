@@ -4,8 +4,8 @@ import { useSelector } from '@xstate/store/react';
 import isEqual from 'lodash/isEqual';
 
 import { CurrentActorContext, getActorContext, LevelActorContext } from './level-runtime';
-import { loadCheckpoint } from '@/app_shell/runtime/level-persistence';
-import { LevelDetailsStore } from '@/app_shell/runtime/level-store';
+import { loadCheckpoint } from '@/runtime/level-persistence';
+import { LevelDetailsStore } from '@/runtime/level-store';
 
 interface LevelsProgressionProviderProps {
   children: React.ReactNode;

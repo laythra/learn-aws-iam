@@ -8,7 +8,7 @@ import { useCanvasHandlers } from './useCanvasHandlers';
 import { useCanvasStoreSync } from './useCanvasSync';
 import { useCanvasViewport } from './useCanvasViewport';
 import { CanvasStore } from '../stores/canvas-store';
-import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
+import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 interface UseCanvasReturn {

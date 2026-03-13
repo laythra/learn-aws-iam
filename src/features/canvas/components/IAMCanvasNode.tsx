@@ -10,11 +10,11 @@ import IAMNodeHelpTooltip from './IAMNodeHelpTooltip';
 import NodeContent from './NodeContent';
 import NodeInfoButtons, { getInfoButtonsReservedWidth } from './NodeInfoButtons';
 import { CanvasStore } from '../stores/canvas-store';
-import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { generateArn, SupportedArnNodeTypes } from '@/domain/arn-generator';
 import { getCurrentRegularNodeMetrics } from '@/domain/node-metrics';
 import { loadLocalImage } from '@/lib/assets/image-loader';
+import { useLevelSelector } from '@/runtime/level-runtime';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
 

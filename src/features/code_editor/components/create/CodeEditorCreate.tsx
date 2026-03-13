@@ -10,11 +10,11 @@ import { useCodeEditor } from '../../hooks/useCodeEditor';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
-import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { ElementID } from '@/config/element-ids';
 import { findAnyValidObjective, GENERIC_VALIDATION_FNS } from '@/domain/iam-policy-validator';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { GetLevelValidateFunctions } from '@/levels/functions-registry';
+import { useLevelSelector } from '@/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 

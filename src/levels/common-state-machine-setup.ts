@@ -18,7 +18,6 @@ import {
   aggregateUserNodes,
   deaggregateUserNodes,
 } from './utils/user-node-aggregation-state-machine-actions';
-import { storeLevelCheckpoint } from '@/app_shell/runtime/level-operations';
 import { ElementID } from '@/config/element-ids';
 import type { GenericContext } from '@/levels/types/context-types';
 import type { GenericEventData } from '@/levels/types/event-types';
@@ -36,6 +35,7 @@ import type {
   PopupTutorialMessage,
 } from '@/levels/types/tutorial-message-types';
 import { analyticsActor } from '@/lib/analytics-actor';
+import { storeLevelCheckpoint } from '@/runtime/level-operations';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';

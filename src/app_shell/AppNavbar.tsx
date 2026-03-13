@@ -5,10 +5,10 @@ import { NavbarControls } from './navbar/NavbarControls';
 import { NavbarLevelInfo } from './navbar/NavbarLevelInfo';
 import { NavbarSidePanelToggle } from './navbar/NavbarSidePanelToggle';
 import { NavbarPopoverProvider } from './navbar/useNavbarPopover';
-import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
 import { Navbar } from '@/components/Navbar';
 import { ElementID } from '@/config/element-ids';
+import { useLevelSelector } from '@/runtime/level-runtime';
 
 export const AppNavbar: React.FC = () => {
   const [levelNumber, levelTitle] = useLevelSelector(
