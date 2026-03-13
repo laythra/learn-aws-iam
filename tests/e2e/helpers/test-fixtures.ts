@@ -5,6 +5,7 @@ import { PopupActions } from './popup-actions';
 import { loadLevelStage } from './test-solutions';
 import { NodeActions } from '../helpers/node-actions';
 import { TutorialActions } from '../helpers/tutorial-actions';
+import { LEVEL_VERSIONS } from '@/levels/level-versions';
 
 type TestFixtures = {
   tutorial: TutorialActions;
@@ -58,11 +59,16 @@ export const test = base.extend<TestFixtures>({
     ): Promise<void> => {
       await goToLevel(levelNumber);
       const snapshot = await loadLevelStage(levelStages, stageName);
+      const versioned = snapshot
+        ? JSON.stringify({ version: LEVEL_VERSIONS[levelNumber], snapshot: JSON.parse(snapshot) })
+        : undefined;
       await page.addInitScript(
         ([snapshotData, level]) => {
-          window.localStorage.setItem(`learn_aws_iam_level${level}StateCheckpoint`, snapshotData);
+          if (snapshotData) {
+            window.localStorage.setItem(`learn_aws_iam_level${level}StateCheckpoint`, snapshotData);
+          }
         },
-        [snapshot, levelNumber] as [string, number]
+        [versioned, levelNumber] as [string | undefined, number]
       );
 
       await page.goto('http://localhost:5173');
