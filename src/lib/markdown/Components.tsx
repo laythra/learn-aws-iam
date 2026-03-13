@@ -82,10 +82,7 @@ function extractColorFromChildren(children: React.ReactNode): {
   };
 
   const cleanedChildren = React.Children.map(children, cleanNode);
-  return {
-    detectedColor,
-    cleanedChildren,
-  };
+  return { detectedColor, cleanedChildren };
 }
 
 export const customMarkdownComponents: Components = {

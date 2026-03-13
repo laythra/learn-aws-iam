@@ -13,7 +13,7 @@ const POPOVER_MSG2 = `
 `;
 
 const POPOVER_MSG3 = `
-  ::badge[CONCEPT]::
+  ::badge[RULE]::
   What's an **ARN**?
   An **ARN** (Amazon Resource Name) is a unique identifier used to
   distinguish an AWS resource across the entire AWS ecosystem.

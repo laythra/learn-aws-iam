@@ -34,7 +34,7 @@ interface TextNode extends Literal {
  * @example
  * ```markdown
  * This is some text with a ::badge[New]:: indicator.
- * This is some text with a ::badge[Warning|color(orange)]:: indicator.
+ * This is some text with a ::badge[Warning]:: indicator.
  * ```
  *
  * The above will be transformed into a structure where "New" becomes a badge element.
@@ -46,7 +46,9 @@ interface TextNode extends Literal {
  * - `tagName`: 'div'
  * - `properties.as`: 'badge'
  * - `properties.content`: The text content from within the brackets
- * - `properties.colorScheme`: Chakra color scheme extracted from `|color(...)`, or `green` by default
+ * - `properties.colorScheme`: Chakra color scheme extracted from `|color(...)` when provided; otherwise
+ *   semantic color is derived from the badge text (via `BADGE_SEMANTIC_COLORS`), falling back to `green`
+ *   if no match is found.
  *
  * Multiple badges in a single text node are supported, and surrounding text is preserved.
  */
@@ -61,7 +63,7 @@ export function rehypeChakraBadge() {
         const rawContent = match[1] ?? '';
         const { color, cleanedContent } = extractColorDirective(rawContent);
         const text = cleanedContent.trim();
-        const colorScheme = resolveMarkdownColor(color, 'green');
+        const colorScheme = resolveMarkdownColor(color ?? text.toLowerCase(), 'green');
 
         matches.push({
           text,

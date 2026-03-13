@@ -3,8 +3,8 @@ const POPUP_MSG1 = `
   The policies you've created so far were relatively straightforward.
   In this level, you'll write more advanced IAM policies using \`Condition\`.|lg
 
-  ::badge[RULE]:: Conditions define **when** a statement applies using request context values,
-  operators, and condition keys.|lg
+  ::badge[RULE]:: **Conditions define when a statement applies using request context values,
+  operators, and condition keys.**|lg
 `;
 
 const POPUP_MSG2 = `

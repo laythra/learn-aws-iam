@@ -120,8 +120,8 @@ const OBJECTIVE2_HINT_MSG2 = `
   }|fullwidth
   ~~~
 
-  >|color(green)
-  > ::badge[TIP|color(green)]:: Same pattern as the previous level —
+  > |color(tip)
+  > ::badge[TIP]:: Same pattern as the previous level —
   > one policy, any number of teams.
 `;
 
