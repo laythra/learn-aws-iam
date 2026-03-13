@@ -2,9 +2,9 @@ import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, NodeCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-ids';
-import { createPolicyCreationObjective } from '@/domain/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
+import { createPolicyCreationObjective } from '@/levels/utils/factories/identity-policy-creation-objective-factory';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const CALLOUT_MESSAGE1 = `

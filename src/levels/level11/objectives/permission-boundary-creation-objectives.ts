@@ -2,11 +2,11 @@ import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/finish-event-enums';
 import { PermissionBoundaryID } from '../types/node-ids';
-import { createPermissionBoundaryCreationObjective } from '@/domain/nodes_creation_objectives/permission-boundary-creation-objective-factory';
 import {
   IAMPermissionBoundaryCreationObjective,
   ObjectiveType,
 } from '@/levels/types/objective-types';
+import { createPermissionBoundaryCreationObjective } from '@/levels/utils/factories/permission-boundary-creation-objective-factory';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE_CALLOUT_MSG = `

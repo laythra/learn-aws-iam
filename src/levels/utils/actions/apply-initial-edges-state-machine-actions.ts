@@ -1,8 +1,8 @@
 import _ from 'lodash';
 
 import { updateConnectionEdges } from './edges-creation-state-machine-actions';
-import { GenericContext } from '../types/context-types';
-import { BaseFinishEventMap } from '../types/objective-types';
+import { GenericContext } from '../../types/context-types';
+import { BaseFinishEventMap } from '../../types/objective-types';
 import { HandleID } from '@/types/iam-enums';
 import { IAMEdge, InitialNodeConnection } from '@/types/iam-node-types';
 

@@ -9,7 +9,7 @@ import {
 import {
   GetLevelGuardRailsBlockedEdgesFns,
   GetLevelObjectivesApplicableNodesFns,
-} from '../functions-registry';
+} from '../../functions-registry';
 import { createMockContext } from '@/__test-helpers__/context';
 import { createEdge } from '@/domain/edge-factory';
 import { createAccountNode } from '@/domain/nodes/account-node-factory';

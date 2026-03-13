@@ -1,19 +1,22 @@
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
-import { ConnectionFilter } from './connection-filter';
-import { IAMNodeFilter } from './iam-node-filter';
-import { selectAffectingPermissionBoundaryNodes, selectAffectingSCPNodes } from './node-selectors';
 import {
   GetLevelGuardRailsBlockedEdgesFns,
   GetLevelObjectivesApplicableNodesFns,
-} from '../functions-registry';
-import { GenericContext } from '../types/context-types';
+} from '../../functions-registry';
+import { GenericContext } from '../../types/context-types';
 import {
   BaseFinishEventMap,
   EdgeConnectionObjective,
   ObjectiveType,
-} from '../types/objective-types';
+} from '../../types/objective-types';
+import { ConnectionFilter } from '../filters/connection-filter';
+import { IAMNodeFilter } from '../filters/iam-node-filter';
+import {
+  selectAffectingPermissionBoundaryNodes,
+  selectAffectingSCPNodes,
+} from '../filters/node-selectors';
 import { createEdge } from '@/domain/edge-factory';
 import { getEdgeName, getEdgeLabel } from '@/domain/iam-graph-utils';
 import { isNodeOfEntity } from '@/domain/node-type-guards';

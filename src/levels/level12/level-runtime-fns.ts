@@ -12,7 +12,7 @@ import {
   RoleNodeID,
   SCPNodeID,
 } from './types/node-ids';
-import { IAMNodeFilter } from '../utils/iam-node-filter';
+import { IAMNodeFilter } from '../utils/filters/iam-node-filter';
 import { generateArn } from '@/domain/arn-generator';
 import { AJV_COMPILER } from '@/domain/iam-policy-validator';
 import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
