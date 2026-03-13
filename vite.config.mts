@@ -31,5 +31,6 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     exclude: ['**/node_modules/**', '**/tests/e2e/**'],
+    setupFiles: ['./src/lib/array/array.extensions.ts'],
   },
 });
