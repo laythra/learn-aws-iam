@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { Box, IconButton, Tooltip } from '@chakra-ui/react';
+import { Box, IconButton } from '@chakra-ui/react';
 import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid';
 
 import AnimatedRedDot from '@/components/AnimatedRedDot';
+import HoverTooltip from '@/components/HoverTooltip';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
 
@@ -17,13 +18,7 @@ const CodeEditorHelpButton: React.FC<CodeEditorHelpButtonProps> = ({ selectedEnt
 
   return (
     <Box position='relative' display='flex' alignItems='center'>
-      <Tooltip
-        hasArrow
-        label='Show Policy Syntax Help'
-        openDelay={200}
-        shouldWrapChildren
-        defaultIsOpen
-      >
+      <HoverTooltip hasArrow label='Show Policy Syntax Help' openOnMount initialOpenDelay={1000}>
         <IconButton
           icon={<QuestionMarkCircleIcon />}
           aria-label='Help'
@@ -31,7 +26,7 @@ const CodeEditorHelpButton: React.FC<CodeEditorHelpButtonProps> = ({ selectedEnt
           variant='ghost'
           onClick={showPolicyHelpPopup}
         />
-      </Tooltip>
+      </HoverTooltip>
       <AnimatedRedDot placement='top-left' offset={2} />
     </Box>
   );
