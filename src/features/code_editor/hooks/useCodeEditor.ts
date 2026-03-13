@@ -9,10 +9,10 @@ import { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 
 import { badgeExtension, InitializeBadgeWidgets } from '../utils/BaseWidget';
-import { useLevelActor } from '@/app_shell/runtime/level-runtime';
 import { validateIAMName } from '@/domain/iam-graph-utils';
 import { collectValidationDiagnostics } from '@/domain/iam-policy-validator';
 import { HelpBadge } from '@/levels/types/objective-types';
+import { useLevelActor } from '@/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 
 interface UseCodeEditorOptions {

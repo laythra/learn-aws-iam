@@ -9,13 +9,13 @@ import {
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
-import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { PopoverNextButton } from '@/app_shell/tutorial';
 import { HelpVideo } from '@/components/HelpVideo';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
+import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
 
 /***
  * A popover that is fixed to a position on the screen, used for tutorial messages that

@@ -20,12 +20,12 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import { useLevelActor } from '@/app_shell/runtime/level-runtime';
 import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { useIdentityCreator } from '@/app_shell/ui/useIdentityCreator';
 import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
 import { ElementID } from '@/config/element-ids';
 import { validateIAMName } from '@/domain/iam-graph-utils';
+import { useLevelActor } from '@/runtime/level-runtime';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import {
   StatefulStateMachineEvent,

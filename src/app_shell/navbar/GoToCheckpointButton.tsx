@@ -15,9 +15,9 @@ import { ArrowUturnLeftIcon } from '@heroicons/react/16/solid';
 import _ from 'lodash';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
-import { restartLevelFromCheckpoint } from '@/app_shell/runtime/level-operations';
-import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { NavbarPopoverButton } from '@/components/NavbarPopoverButton';
+import { restartLevelFromCheckpoint } from '@/runtime/level-operations';
+import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
 
 const HELP_POPOVER_TIMEOUT = 1000 * 60 * 2; // 2 minutes
 

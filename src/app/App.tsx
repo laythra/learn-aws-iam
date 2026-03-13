@@ -5,8 +5,6 @@ import { ReactFlowProvider } from '@xyflow/react';
 
 import { AppNavbar } from '@/app_shell/AppNavbar';
 import { AppOverlays } from '@/app_shell/AppOverlays';
-import { initializeLevelStore } from '@/app_shell/runtime/level-operations';
-import LevelsProgressionProvider from '@/app_shell/runtime/LevelsProgressionProvider';
 import { GithubCorner } from '@/components/GithubCorner';
 import Canvas from '@/features/canvas/components/Canvas';
 import { CodeEditor } from '@/features/code_editor';
@@ -16,6 +14,8 @@ import ObjectivesSidePanel from '@/features/level_progress/components/Objectives
 import { TutorialPopup } from '@/features/level_progress/components/TutorialPopup';
 import { UnnecessaryEdgesNodesWarning } from '@/features/level_progress/components/UnnecessaryEdgesNodesWarning';
 import { ModalProvider } from '@/hooks/useModal';
+import { initializeLevelStore } from '@/runtime/level-operations';
+import LevelsProgressionProvider from '@/runtime/LevelsProgressionProvider';
 import { theme } from '@/theme';
 
 const App: React.FC = () => {

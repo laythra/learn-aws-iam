@@ -12,11 +12,11 @@ import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import { GoToNextLevelButton } from './GoToNextLevelButton';
-import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { HelpVideo } from '@/components/HelpVideo';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
+import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
 import { CustomTheme } from '@/types/custom-theme';
 
 export const TutorialPopup: React.FC = () => {

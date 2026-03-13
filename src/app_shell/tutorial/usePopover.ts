@@ -2,8 +2,8 @@ import { useCallback, useMemo } from 'react';
 
 import _ from 'lodash';
 
-import { useLevelActor, useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
+import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 
 export interface UsePopoverResult {

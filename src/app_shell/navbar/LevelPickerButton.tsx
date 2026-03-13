@@ -16,9 +16,9 @@ import { useSelector } from '@xstate/store/react';
 import _ from 'lodash';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
-import { pickLevel } from '@/app_shell/runtime/level-operations';
-import { LevelDetailsStore } from '@/app_shell/runtime/level-store';
 import { NavbarPopoverButton } from '@/components/NavbarPopoverButton';
+import { pickLevel } from '@/runtime/level-operations';
+import { LevelDetailsStore } from '@/runtime/level-store';
 
 export const LevelPickerButton: React.FC = () => {
   const { isOpen, onOpen, onClose } = useNavbarPopover('level-picker');

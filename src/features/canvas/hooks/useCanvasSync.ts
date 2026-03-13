@@ -4,7 +4,7 @@ import { ReactFlowInstance } from '@xyflow/react';
 import { Actor } from 'xstate';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { AnyLevelMachine } from '@/app_shell/runtime/level-runtime';
+import { AnyLevelMachine } from '@/runtime/level-runtime';
 import { NodeLayoutGroup } from '@/types/iam-layout-types';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 

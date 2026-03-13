@@ -20,10 +20,10 @@ import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { useStateMachineEvent } from '@/app_shell/runtime/useStateMachineEvent';
 import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
 import AnimatedRedDot from '@/components/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
+import { useStateMachineEvent } from '@/runtime/useStateMachineEvent';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';

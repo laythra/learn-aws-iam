@@ -10,7 +10,6 @@ import { useCodeEditor } from '../../hooks/useCodeEditor';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
-import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/domain/iam-policy-validator';
 import { GetLevelValidateFunctions } from '@/levels/functions-registry';
 import {
@@ -18,6 +17,7 @@ import {
   IAMPolicyEditObjective,
   IAMTrustPolicyEditObjective,
 } from '@/levels/types/objective-types';
+import { useLevelSelector } from '@/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types/iam-enums';
 
