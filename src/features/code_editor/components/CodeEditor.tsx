@@ -101,7 +101,12 @@ export const CodeEditor: React.FC = () => {
 
   return (
     <>
-      <Modal isOpen={isCodeEditorOpen} onClose={closeCodeEditor} id='modal_content'>
+      <Modal
+        isOpen={isCodeEditorOpen}
+        onClose={closeCodeEditor}
+        id='modal_content'
+        returnFocusOnClose={false}
+      >
         <ModalOverlay />
         <ModalContent
           maxW={theme.sizes.modalsMaxWidthInPixels + 300}
