@@ -1,6 +1,12 @@
 import { Actor, AnyActorLogic, Snapshot } from 'xstate';
 
+import { LEVEL_VERSIONS } from '@/levels/level-versions';
 import storage from '@/lib/storage';
+
+type Checkpoint = {
+  version: number;
+  snapshot: Snapshot<unknown>;
+};
 
 export function getCurrentLevel(): number | null {
   const raw = storage.getKey('currentLevel');
@@ -17,10 +23,12 @@ export function clearCheckpoint(levelNumber: number): void {
 }
 
 export function saveCheckpoint(levelNumber: number, actor: Actor<AnyActorLogic>): void {
-  storage.setKey(
-    `level${levelNumber}StateCheckpoint`,
-    JSON.stringify(actor.getPersistedSnapshot())
-  );
+  const checkpoint: Checkpoint = {
+    version: LEVEL_VERSIONS[levelNumber],
+    snapshot: actor.getPersistedSnapshot(),
+  };
+
+  storage.setKey(`level${levelNumber}StateCheckpoint`, JSON.stringify(checkpoint));
 }
 
 export function loadCheckpoint(levelNumber: number): Snapshot<unknown> | undefined {
@@ -28,7 +36,9 @@ export function loadCheckpoint(levelNumber: number): Snapshot<unknown> | undefin
   if (!raw) return undefined;
 
   try {
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw) as Checkpoint;
+    if (parsed.version !== LEVEL_VERSIONS[levelNumber]) return undefined;
+    return parsed.snapshot;
   } catch {
     return undefined;
   }
