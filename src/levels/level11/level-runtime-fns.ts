@@ -29,11 +29,13 @@ export const GuardRailsBlockedEdgesFunctions = {
     return edge.source === UserNodeID.Sephiroth && edge.target === ResourceNodeID.S3BucketTutorial;
   },
   permissionBoundary2BlockingFn: (edge: IAMEdge) => {
-    return [
-      ResourceNodeID.LambdaFunction,
-      ResourceNodeID.S3BucketInLevel,
-      ResourceNodeID.ElasticCache,
-    ].includes(edge.target);
+    return (
+      [
+        ResourceNodeID.LambdaFunction,
+        ResourceNodeID.S3BucketInLevel,
+        ResourceNodeID.ElasticCache,
+      ] as string[]
+    ).includes(edge.target);
   },
 };
 
