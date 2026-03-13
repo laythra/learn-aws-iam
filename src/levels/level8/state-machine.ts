@@ -9,7 +9,7 @@ import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messag
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import { FinishEventMap, PolicyEditFinishEvent } from './types/finish-event-enums';
-import { PolicyNodeID } from './types/node-id-enums';
+import { PolicyNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';

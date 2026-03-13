@@ -1,5 +1,5 @@
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
-import { PolicyNodeID } from '../types/node-id-enums';
+import { PolicyNodeID } from '../types/node-ids';
 import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';

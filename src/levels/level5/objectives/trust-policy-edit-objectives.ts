@@ -1,5 +1,5 @@
 import { FinishEventMap, TrustPolicyEditFinishEvent } from '../types/finish-event-enums';
-import { RoleNodeID } from '../types/node-id-enums';
+import { RoleNodeID } from '../types/node-ids';
 import { IAMTrustPolicyEditObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { IAMNodeEntity } from '@/types/iam-enums';
 

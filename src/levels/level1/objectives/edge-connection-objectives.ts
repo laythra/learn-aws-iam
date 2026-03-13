@@ -1,5 +1,5 @@
 import { EdgeConnectionFinishEvent, FinishEventMap } from '../types/finish-event-enums';
-import { PolicyNodeID, UserNodeID } from '../types/node-id-enums';
+import { PolicyNodeID, UserNodeID } from '../types/node-ids';
 import { createEdge } from '@/domain/edge-factory';
 import { EdgeConnectionObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { AccessLevel } from '@/types/iam-enums';

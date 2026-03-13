@@ -2,7 +2,7 @@ import { LayoutGroupID } from '../layout-groups';
 import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
 import { PERMISSION_BOUNDARY_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/finish-event-enums';
-import { PermissionBoundaryID } from '../types/node-id-enums';
+import { PermissionBoundaryID } from '../types/node-ids';
 import { createPermissionBoundaryCreationObjective } from '@/domain/nodes_creation_objectives/permission-boundary-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import {

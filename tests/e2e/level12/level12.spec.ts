@@ -19,7 +19,7 @@ import {
   RoleNodeID,
   SCPNodeID,
   UserNodeID,
-} from '@/levels/level12/types/node-id-enums';
+} from '@/levels/level12/types/node-ids';
 import { HandleID } from '@/types/iam-enums';
 
 const completeTutorialPopups = async (tutorial: TutorialActions): Promise<void> => {

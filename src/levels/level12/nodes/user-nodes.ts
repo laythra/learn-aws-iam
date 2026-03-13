@@ -1,5 +1,5 @@
 import { LayoutGroupID } from '../layout-groups';
-import { AccountID, OUNodeID, UserNodeID } from '../types/node-id-enums';
+import { AccountID, OUNodeID, UserNodeID } from '../types/node-ids';
 import { createUserNode } from '@/domain/nodes/user-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';

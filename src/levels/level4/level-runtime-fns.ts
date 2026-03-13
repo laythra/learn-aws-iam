@@ -1,7 +1,7 @@
 import dataScientistsPolicy from './schemas/data-scientists-policy.json';
 import developersPolicy from './schemas/developers-policy.json';
 import internsPolicy from './schemas/interns-policy.json';
-import { PolicyNodeID } from './types/node-id-enums';
+import { PolicyNodeID } from './types/node-ids';
 import { AJV_COMPILER } from '@/domain/iam-policy-validator';
 
 export const ValidateFunctions = {

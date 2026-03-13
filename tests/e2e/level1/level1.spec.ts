@@ -10,7 +10,7 @@ import { LEVEL_OBJECTIVES } from '@/levels/level1/objectives/level-objectives';
 import { FIXED_POPOVER_MESSAGES } from '@/levels/level1/tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from '@/levels/level1/tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from '@/levels/level1/tutorial_messages/popup-tutorial-messages';
-import { UserNodeID, ResourceNodeID, PolicyNodeID } from '@/levels/level1/types/node-id-enums';
+import { UserNodeID, ResourceNodeID, PolicyNodeID } from '@/levels/level1/types/node-ids';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
 test.describe('Level 1 Entire Flow', () => {

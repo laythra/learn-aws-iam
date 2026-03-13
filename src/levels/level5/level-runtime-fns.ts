@@ -1,7 +1,7 @@
 import ec2RoleSchema from './schemas/ec2-role-schema.json';
 import financeAuditorPolicySchema from './schemas/finance-auditor-role-schema.json';
 import lambdaRoleSchema from './schemas/lambda-role-schema.json';
-import { RoleNodeID } from './types/node-id-enums';
+import { RoleNodeID } from './types/node-ids';
 import { AJV_COMPILER } from '@/domain/iam-policy-validator';
 
 export const ValidateFunctions = {

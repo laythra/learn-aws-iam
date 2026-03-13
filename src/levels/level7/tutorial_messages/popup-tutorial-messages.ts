@@ -1,4 +1,4 @@
-import { AccountID } from '../types/node-id-enums';
+import { AccountID } from '../types/node-ids';
 import { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPUP_MSG1 = `

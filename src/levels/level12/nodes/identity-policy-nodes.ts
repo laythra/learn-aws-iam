@@ -1,5 +1,5 @@
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
-import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-ids';
 import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';
 import { AccessLevel, CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';

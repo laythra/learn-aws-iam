@@ -16,7 +16,7 @@ import {
   PolicyNodeID,
   UserNodeID,
   ResourceNodeID,
-} from '@/levels/level9/types/node-id-enums';
+} from '@/levels/level9/types/node-ids';
 
 const completeInitialTutorial = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);

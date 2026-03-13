@@ -1,4 +1,4 @@
-import { AccountID, ResourceNodeID } from '../types/node-id-enums';
+import { AccountID, ResourceNodeID } from '../types/node-ids';
 import { createResourceNode } from '@/domain/nodes/resource-node-factory';
 import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';

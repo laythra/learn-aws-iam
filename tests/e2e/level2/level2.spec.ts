@@ -21,7 +21,7 @@ import {
   PolicyNodeID,
   ResourceNodeID,
   UserNodeID,
-} from '@/levels/level2/types/node-id-enums';
+} from '@/levels/level2/types/node-ids';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
 const createCustomGroupNode = async (popups: PopupActions, name: string): Promise<void> => {

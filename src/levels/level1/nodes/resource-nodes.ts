@@ -1,6 +1,6 @@
 import { HandleProps, Position } from '@xyflow/react';
 
-import { ResourceNodeID } from '../types/node-id-enums';
+import { ResourceNodeID } from '../types/node-ids';
 import { createResourceNode } from '@/domain/nodes/resource-node-factory';
 import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';

@@ -11,7 +11,7 @@ import {
   PolicyNodeID,
   RoleNodeID,
   SCPNodeID,
-} from './types/node-id-enums';
+} from './types/node-ids';
 import { IAMNodeFilter } from '../utils/iam-node-filter';
 import { generateArn } from '@/domain/arn-generator';
 import { AJV_COMPILER } from '@/domain/iam-policy-validator';

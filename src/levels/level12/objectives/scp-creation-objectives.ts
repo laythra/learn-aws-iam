@@ -2,7 +2,7 @@ import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { SCP_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, SCPCreationFinishEvent } from '../types/finish-event-enums';
-import { SCPNodeID } from '../types/node-id-enums';
+import { SCPNodeID } from '../types/node-ids';
 import { createSCPCreationObjective } from '@/domain/nodes_creation_objectives/scp-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { IAMSCPCreationObjective, ObjectiveType } from '@/levels/types/objective-types';

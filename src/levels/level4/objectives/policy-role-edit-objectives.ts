@@ -1,6 +1,6 @@
 import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { FinishEventMap, PolicyEditFinishEvent } from '../types/finish-event-enums';
-import { PolicyNodeID, ResourceNodeID } from '../types/node-id-enums';
+import { PolicyNodeID, ResourceNodeID } from '../types/node-ids';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { AccessLevel, IAMNodeEntity } from '@/types/iam-enums';
 

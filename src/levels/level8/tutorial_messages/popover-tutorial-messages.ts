@@ -1,4 +1,4 @@
-import { PolicyNodeID, RoleNodeID, UserNodeID } from '../types/node-id-enums';
+import { PolicyNodeID, RoleNodeID, UserNodeID } from '../types/node-ids';
 import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `

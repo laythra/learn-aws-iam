@@ -1,4 +1,4 @@
-import { UserNodeID } from '../types/node-id-enums';
+import { UserNodeID } from '../types/node-ids';
 import { createUserNode } from '@/domain/nodes/user-node-factory';
 import { CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
