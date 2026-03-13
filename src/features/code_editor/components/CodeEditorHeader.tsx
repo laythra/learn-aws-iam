@@ -3,9 +3,9 @@ import _ from 'lodash';
 
 import CodeEditorHelpButton from './CodeEditorHelpButton';
 import CodeEditorResetButton from './CodeEditorResetButton';
+import { useLevelSelector } from '@/app_shell/runtime/level-runtime';
 import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
 import { ElementID } from '@/config/element-ids';
-import { CanvasStore } from '@/features/canvas/stores/canvas-store';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 interface CodeEditorHeaderProps {
@@ -19,8 +19,9 @@ export const CodeEditorHeader: React.FC<CodeEditorHeaderProps> = ({
   codeEditorMode,
   nodeId,
 }) => {
+  const canvasNodes = useLevelSelector(state => state.context.nodes);
   if (codeEditorMode === 'edit') {
-    const selectedNode = CanvasStore.getSnapshot().context.nodes.find(node => node.id === nodeId)!;
+    const selectedNode = canvasNodes.find(node => node.id === nodeId)!;
 
     return (
       <HStack justifyContent='space-between'>
