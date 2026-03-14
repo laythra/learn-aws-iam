@@ -5,9 +5,9 @@ import {
 } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-ids';
-import { createPolicyCreationObjective } from '@/domain/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { IAMIdentityPolicyCreationObjective } from '@/levels/types/objective-types';
+import { createPolicyCreationObjective } from '@/levels/utils/factories/identity-policy-creation-objective-factory';
 import { AccessLevel, CommonLayoutGroupID, HandleID } from '@/types/iam-enums';
 
 export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<FinishEventMap>[][] = [

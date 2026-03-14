@@ -5,9 +5,9 @@ import {
 } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { RoleNodeID } from '../types/node-ids';
-import { createRoleCreationObjective } from '@/domain/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { IAMRoleCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
+import { createRoleCreationObjective } from '@/levels/utils/factories/role-creation-objective-factory';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const HINT_MSG1 = `

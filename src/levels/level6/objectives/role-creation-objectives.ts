@@ -1,8 +1,8 @@
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, RoleNodeID } from '../types/node-ids';
-import { createRoleCreationObjective } from '@/domain/nodes_creation_objectives/role-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { IAMRoleCreationObjective } from '@/levels/types/objective-types';
+import { createRoleCreationObjective } from '@/levels/utils/factories/role-creation-objective-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 
 export const CALLOUT_MESSAGE1 = `

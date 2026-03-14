@@ -1,9 +1,9 @@
 import { produce } from 'immer';
 
-import { ConnectionFilter } from './connection-filter';
-import { GetLevelValidateFunctions } from '../functions-registry';
-import { GenericContext } from '../types/context-types';
-import { BaseFinishEventMap, ObjectiveType } from '../types/objective-types';
+import { GetLevelValidateFunctions } from '../../functions-registry';
+import { GenericContext } from '../../types/context-types';
+import { BaseFinishEventMap, ObjectiveType } from '../../types/objective-types';
+import { ConnectionFilter } from '../filters/connection-filter';
 import { isJSONValid } from '@/domain/iam-policy-validator';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 

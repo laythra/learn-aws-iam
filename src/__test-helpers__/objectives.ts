@@ -1,6 +1,5 @@
 import _ from 'lodash';
 
-import { createPolicyCreationObjective } from '@/domain/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import {
   BaseFinishEventMap,
@@ -8,6 +7,7 @@ import {
   IAMUserGroupCreationObjective,
   ObjectiveType,
 } from '@/levels/types/objective-types';
+import { createPolicyCreationObjective } from '@/levels/utils/factories/identity-policy-creation-objective-factory';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
 export function createMockPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>(

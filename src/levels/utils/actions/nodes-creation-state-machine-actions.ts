@@ -1,9 +1,13 @@
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
-import { GetLevelValidateFunctions } from '../functions-registry';
-import { GenericContext } from '../types/context-types';
-import { BaseCreationObjective, BaseFinishEventMap, ObjectiveType } from '../types/objective-types';
+import { GetLevelValidateFunctions } from '../../functions-registry';
+import { GenericContext } from '../../types/context-types';
+import {
+  BaseCreationObjective,
+  BaseFinishEventMap,
+  ObjectiveType,
+} from '../../types/objective-types';
 import { findAnyValidObjective } from '@/domain/iam-policy-validator';
 import { createGroupNode } from '@/domain/nodes/group-node-factory';
 import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';

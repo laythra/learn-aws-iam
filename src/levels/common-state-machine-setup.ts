@@ -1,23 +1,21 @@
 import _ from 'lodash';
 import { enqueueActions, assign, setup, AnyActorLogic, Actor } from 'xstate';
 
-import { applyInitialNodeConnections } from './utils/apply-initial-edges-state-machine-actions';
-import { editObjectiveState, getElementsWithRedDot } from './utils/common-state-machine-actions';
 import {
+  applyInitialNodeConnections,
   applyGuardRailBlockingToEdges,
   deleteConnectionEdges,
   updateConnectionEdges,
-} from './utils/edges-creation-state-machine-actions';
-import { createIAMNode, createUserGroupNode } from './utils/nodes-creation-state-machine-actions';
-import { deleteNode } from './utils/nodes-deletion-state-machine-actions';
-import {
+  createIAMNode,
+  createUserGroupNode,
+  deleteNode,
   editNodeAttributes,
   editPermissionPolicy,
-} from './utils/nodes-editing-state-machine-actions';
-import {
   aggregateUserNodes,
   deaggregateUserNodes,
-} from './utils/user-node-aggregation-state-machine-actions';
+  editObjectiveState,
+  getElementsWithRedDot,
+} from './utils/actions';
 import { ElementID } from '@/config/element-ids';
 import type { GenericContext } from '@/levels/types/context-types';
 import type { GenericEventData } from '@/levels/types/event-types';

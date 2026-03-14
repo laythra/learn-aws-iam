@@ -3,8 +3,8 @@ import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap } from '../types/finish-event-enums';
 import { PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID } from '../types/node-ids';
-import { createPolicyCreationObjective } from '@/domain/nodes_creation_objectives/identity-policy-creation-objective-factory';
 import { IAMIdentityPolicyCreationObjective } from '@/levels/types/objective-types';
+import { createPolicyCreationObjective } from '@/levels/utils/factories/identity-policy-creation-objective-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 
 const CALLOUT_MSG = `

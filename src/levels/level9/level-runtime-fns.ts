@@ -1,7 +1,7 @@
-import { IAMNodeFilter } from '../utils/iam-node-filter';
 import { generateRdsManagePolicySchema } from './schemas/per-team-rds-manage-policy';
 import rdsSharedManagePolicySchema from './schemas/rds-shared-manage-policy.json';
 import { PolicyNodeID } from './types/node-ids';
+import { IAMNodeFilter } from '../utils/filters/iam-node-filter';
 import { AJV_COMPILER } from '@/domain/iam-policy-validator';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
