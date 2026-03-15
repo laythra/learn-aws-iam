@@ -106,6 +106,9 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         create_resource_based_policy: {
+          meta: {
+            highlighted_elements: [ElementID.RightSidePanelToggleButton, ElementID.NewEntityBtn],
+          },
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
@@ -114,13 +117,6 @@ export const stateMachine = createStateMachineSetup<
               params: {
                 nodeId: UserNodeID.TutorialFirstUser,
                 content: 'Grant this user access to the S3 bucket via a resource-based policy',
-              },
-            },
-            {
-              type: 'update_red_dot_visibility',
-              params: {
-                elementIds: [ElementID.RightSidePanelToggleButton, ElementID.NewEntityBtn],
-                isVisible: true,
               },
             },
           ],
@@ -157,13 +153,6 @@ export const stateMachine = createStateMachineSetup<
         'disable_tutorial_state',
         'clear_edges',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
-        {
-          type: 'update_red_dot_visibility',
-          params: {
-            elementIds: [ElementID.NewEntityBtn, ElementID.RightSidePanelToggleButton],
-            isVisible: false,
-          },
-        },
       ],
       states: {
         tutorial_popup3: {
@@ -199,12 +188,9 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         create_identity_policy: {
+          meta: { highlighted_elements: [ElementID.NewEntityBtn] },
           entry: [
             'hide_popovers',
-            {
-              type: 'update_red_dot_visibility',
-              params: { elementIds: [ElementID.NewEntityBtn], isVisible: true },
-            },
             {
               type: 'add_restricted_element_ids',
               params: { element_ids: [ElementID.CodeEditorResourcePolicyTab] },
@@ -254,10 +240,6 @@ export const stateMachine = createStateMachineSetup<
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[5] },
             },
-            {
-              type: 'update_red_dot_visibility',
-              params: { elementIds: [ElementID.NewEntityBtn], isVisible: false },
-            },
           ],
           on: {
             [EdgeConnectionFinishEvent.IDENTITY_POLICY_ATTACHED_TO_IAM_USER]: {
@@ -287,12 +269,9 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         create_resource_policy: {
+          meta: { highlighted_elements: [ElementID.NewEntityBtn] },
           entry: [
             'store_checkpoint',
-            {
-              type: 'update_red_dot_visibility',
-              params: { elementIds: [ElementID.NewEntityBtn], isVisible: true },
-            },
             {
               type: 'add_restricted_element_ids',
               params: { element_ids: [ElementID.CodeEditorPolicyTab] },

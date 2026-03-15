@@ -296,19 +296,18 @@ export const stateMachine = createStateMachineSetup<
       },
     },
     inside_level: {
+      meta: {
+        highlighted_elements: [
+          ElementID.RightSidePanelToggleButton,
+          ElementID.CodeEditorHelpButton,
+        ],
+      },
       entry: [
         'store_checkpoint',
         'disable_tutorial_state',
         'clear_edges',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
-        {
-          type: 'update_red_dot_visibility',
-          params: {
-            elementIds: [ElementID.RightSidePanelToggleButton, ElementID.CodeEditorHelpButton],
-            isVisible: true,
-          },
-        },
         {
           type: 'set_edge_connection_objectives',
           params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },

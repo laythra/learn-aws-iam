@@ -303,14 +303,8 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         create_your_user: {
-          entry: [
-            'disable_tutorial_state',
-            'hide_popovers',
-            {
-              type: 'update_red_dot_visibility',
-              params: { isVisible: true, elementIds: [ElementID.NewEntityBtn] },
-            },
-          ],
+          meta: { highlighted_elements: [ElementID.NewEntityBtn] },
+          entry: ['disable_tutorial_state', 'hide_popovers'],
           on: {
             [UserGroupCreationFinishEvent.UserCreated]: {
               target: 'attach_to_group',

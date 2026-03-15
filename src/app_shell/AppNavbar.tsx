@@ -5,9 +5,7 @@ import { NavbarControls } from './navbar/NavbarControls';
 import { NavbarLevelInfo } from './navbar/NavbarLevelInfo';
 import { NavbarSidePanelToggle } from './navbar/NavbarSidePanelToggle';
 import { NavbarPopoverProvider } from './navbar/useNavbarPopover';
-import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
 import { Navbar } from '@/components/Navbar';
-import { ElementID } from '@/config/element-ids';
 import { useLevelSelector } from '@/runtime/level-runtime';
 
 export const AppNavbar: React.FC = () => {
@@ -16,19 +14,13 @@ export const AppNavbar: React.FC = () => {
     _.isEqual
   );
 
-  const { isRedDotEnabledForElement } = useAnimatedRedDot({
-    elementIds: [ElementID.RightSidePanelToggleButton],
-  });
-
   return (
     <NavbarPopoverProvider>
       <Navbar>
         <HStack spacing={4}>
           <NavbarLevelInfo levelNumber={levelNumber} levelTitle={levelTitle} />
           <NavbarControls />
-          <NavbarSidePanelToggle
-            isRedDotEnabled={isRedDotEnabledForElement(ElementID.RightSidePanelToggleButton)}
-          />
+          <NavbarSidePanelToggle />
         </HStack>
       </Navbar>
     </NavbarPopoverProvider>

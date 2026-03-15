@@ -1,9 +1,7 @@
 import { produce } from 'immer';
-import _ from 'lodash';
 
 import { GenericContext } from '../../types/context-types';
 import { BaseFinishEventMap, LevelObjective } from '../../types/objective-types';
-import { ElementID } from '@/config/element-ids';
 
 /**
  *  Edits the state of an objective, namely the `finished` property.
@@ -23,19 +21,4 @@ export function editObjectiveState<TLevelObjectiveID, TFinishEventMap extends Ba
 
     targetObjective.finished = finished;
   });
-}
-
-export function getElementsWithRedDot<
-  TLevelObjectiveID,
-  TFinishEventMap extends BaseFinishEventMap,
->(
-  context: GenericContext<TLevelObjectiveID, TFinishEventMap>,
-  elementIds: ElementID[],
-  isRedDotVisible: boolean
-): ElementID[] {
-  if (isRedDotVisible) {
-    return _.uniq([...(context.elements_with_animated_red_dot ?? []), ...elementIds]);
-  } else {
-    return _.difference(context.elements_with_animated_red_dot ?? [], elementIds);
-  }
 }

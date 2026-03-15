@@ -5,28 +5,17 @@ interface AnimateRedDotContext {
   isRedDotEnabledForElement: (elementId: ElementID) => boolean;
 }
 
-interface UseAnimatedRedDotOptions {
-  elementIds: ElementID[];
-}
-
-export const useAnimatedRedDot = ({
-  elementIds,
-}: UseAnimatedRedDotOptions): AnimateRedDotContext => {
-  const redDotComponents = useLevelSelector(
-    state => state.context.elements_with_animated_red_dot ?? []
+export const useAnimatedRedDot = (): AnimateRedDotContext => {
+  const highlighted = useLevelSelector(state =>
+    Object.values(state.getMeta()).flatMap(
+      m => (m as { highlighted_elements?: ElementID[] })?.highlighted_elements ?? []
+    )
   );
 
-  const elementsWithRedDotEnabled = elementIds.reduce(
-    (memo, elementId) => {
-      memo[elementId] = redDotComponents.includes(elementId);
-      return memo;
-    },
-    {} as Record<ElementID, boolean>
-  );
+  const dismissed = useLevelSelector(state => state.context.dismissed_highlighted_elements ?? []);
 
-  const isRedDotEnabledForElement = (elementId: ElementID): boolean => {
-    return elementsWithRedDotEnabled[elementId];
-  };
+  const isRedDotEnabledForElement = (elementId: ElementID): boolean =>
+    highlighted.includes(elementId) && !dismissed.includes(elementId);
 
   return { isRedDotEnabledForElement };
 };

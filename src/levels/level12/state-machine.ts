@@ -228,16 +228,10 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         in_progress: {
+          meta: { highlighted_elements: [ElementID.RightSidePanelToggleButton] },
           onDone: 'completed',
           type: 'parallel',
-          entry: [
-            'hide_popups',
-            'show_side_panel',
-            {
-              type: 'update_red_dot_visibility',
-              params: { elementIds: [ElementID.RightSidePanelToggleButton], isVisible: true },
-            },
-          ],
+          entry: ['hide_popups', 'show_side_panel'],
           states: {
             objective1: {
               initial: 'create_scp',
