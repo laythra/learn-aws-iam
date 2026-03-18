@@ -61,8 +61,8 @@ export const stateMachine = createStateMachineSetup<
   },
   states: {
     inside_tutorial: {
+      tags: ['tutorial'],
       entry: [
-        'enable_tutorial_state',
         {
           type: 'append_whitelisted_element_ids',
           params: { whitelisted_element_ids: [ElementID.IAMNodeContentButton] },
@@ -157,7 +157,6 @@ export const stateMachine = createStateMachineSetup<
     },
     inside_level: {
       entry: [
-        'disable_tutorial_state',
         'clear_creation_objectives',
         'store_checkpoint',
         'hide_popovers',

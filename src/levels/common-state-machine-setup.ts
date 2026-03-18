@@ -550,14 +550,11 @@ export const createStateMachineSetup = <
       ),
       enable_edges_management_ability: assign({ edges_management_disabled: false }),
       disable_edges_management_ability: assign({ edges_management_disabled: true }),
-      enable_tutorial_state: assign({ in_tutorial_state: true }),
-      disable_tutorial_state: assign({ in_tutorial_state: false }),
       update_whitelisted_element_ids: assign({
         whitelisted_element_ids: (
           {},
           { whitelisted_element_ids }: { whitelisted_element_ids: string[] }
         ) => whitelisted_element_ids,
-        in_tutorial_state: true,
       }),
       append_whitelisted_element_ids: assign({
         whitelisted_element_ids: (

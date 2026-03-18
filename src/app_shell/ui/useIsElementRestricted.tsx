@@ -13,7 +13,7 @@ import { useLevelSelector } from '@/runtime/level-runtime';
 export function useIsElementRestricted(elementIds: string[]): boolean[] {
   const [inTutorialState, whitelistedIds, restrictedIds] = useLevelSelector(
     state => [
-      state.context.in_tutorial_state,
+      state.hasTag('tutorial'),
       state.context.whitelisted_element_ids,
       state.context.restricted_element_ids,
     ],

@@ -1,4 +1,4 @@
-import { and, not } from 'xstate';
+import { and } from 'xstate';
 
 import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
 import { INITIAL_IN_LEVEL_NODES } from './nodes';
@@ -58,12 +58,12 @@ export const stateMachine = createStateMachineSetup<
   },
   states: {
     inside_tutorial: {
+      tags: ['tutorial'],
       initial: 'tutorial_popup1',
       onDone: 'inside_level',
       entry: [
         { type: 'assign_nodes', params: { nodes: INITIAL_TUTORIAL_POLICY_NODES } },
         { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
-        'enable_tutorial_state',
       ],
       states: {
         tutorial_popup1: {
@@ -206,7 +206,6 @@ export const stateMachine = createStateMachineSetup<
           type: 'apply_initial_node_connections',
           params: { initialConnections: INITIAL_IN_LEVEL_CONNECTIONS },
         },
-        'disable_tutorial_state',
         'show_side_panel',
       ],
       states: {
@@ -329,12 +328,11 @@ export const stateMachine = createStateMachineSetup<
           on: {
             NEXT_FIXED_POPOVER: [
               {
-                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
-                target: 'remove_unnecessary_edges_and_nodes',
-              },
-              {
                 guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
                 target: 'level_finished',
+              },
+              {
+                target: 'remove_unnecessary_edges_and_nodes',
               },
             ],
           },

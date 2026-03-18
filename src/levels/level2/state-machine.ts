@@ -1,4 +1,4 @@
-import { and, not } from 'xstate';
+import { and } from 'xstate';
 
 import { INITIAL_CONNECTIONS } from './initial-connections';
 import { INITIAL_LEVEL_NODES } from './nodes';
@@ -42,7 +42,6 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
-    in_tutorial_state: true,
     edges_management_disabled: true,
     restricted_element_ids: [
       ElementID.CreateRolesAndPoliciesMenuItem,
@@ -69,6 +68,7 @@ export const stateMachine = createStateMachineSetup<
   ],
   states: {
     tutorial_popup1: {
+      tags: ['tutorial'],
       entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
       on: {
         NEXT_POPUP: {
@@ -77,6 +77,7 @@ export const stateMachine = createStateMachineSetup<
       },
     },
     fixed_popover1: {
+      tags: ['tutorial'],
       entry: [
         'hide_popups',
         { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
@@ -88,6 +89,7 @@ export const stateMachine = createStateMachineSetup<
       },
     },
     fixed_popover2: {
+      tags: ['tutorial'],
       entry: {
         type: 'show_fixed_popover_message',
         params: { message: FIXED_POPOVER_MESSAGES[1] },
@@ -99,6 +101,7 @@ export const stateMachine = createStateMachineSetup<
       },
     },
     fixed_popover3: {
+      tags: ['tutorial'],
       entry: {
         type: 'show_fixed_popover_message',
         params: { message: FIXED_POPOVER_MESSAGES[2] },
@@ -110,6 +113,7 @@ export const stateMachine = createStateMachineSetup<
       },
     },
     current_user_permissions_popover: {
+      tags: ['tutorial'],
       entry: [
         'hide_fixed_popovers',
         { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
@@ -121,6 +125,7 @@ export const stateMachine = createStateMachineSetup<
       },
     },
     create_group_popover: {
+      tags: ['tutorial'],
       entry: [
         { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
         'clear_edges',
@@ -142,6 +147,7 @@ export const stateMachine = createStateMachineSetup<
       },
     },
     add_group_name_popover: {
+      tags: ['tutorial'],
       entry: { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
       on: {
         [UserGroupCreationFinishEvent.GroupCreated]: {
@@ -156,6 +162,7 @@ export const stateMachine = createStateMachineSetup<
       },
     },
     attach_nodes_to_group_tooltip: {
+      tags: ['tutorial'],
       entry: [
         { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
         'enable_edges_management_ability',
@@ -167,19 +174,10 @@ export const stateMachine = createStateMachineSetup<
       always: 'attach_nodes_to_group',
     },
     attach_nodes_to_group: {
+      tags: ['tutorial'],
       type: 'parallel',
       entry: ['clear_edges', 'enable_edges_management_ability', 'store_checkpoint'],
       onDone: [
-        {
-          guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
-          actions: [
-            {
-              type: 'finish_level_objective',
-              params: { id: LevelObjectiveID.MakeScalingEasier },
-            },
-          ],
-          target: 'remove_unnecessary_edges_and_nodes',
-        },
         {
           guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
           actions: [
@@ -189,6 +187,15 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           target: 'attach_your_user_to_group',
+        },
+        {
+          actions: [
+            {
+              type: 'finish_level_objective',
+              params: { id: LevelObjectiveID.MakeScalingEasier },
+            },
+          ],
+          target: 'remove_unnecessary_edges_and_nodes',
         },
       ],
       states: {
@@ -281,6 +288,7 @@ export const stateMachine = createStateMachineSetup<
       ],
       states: {
         first_user_attached_popover: {
+          tags: ['tutorial'],
           entry: {
             type: 'show_popover_message',
             params: { message: POPOVER_TUTORIAL_MESSAGES[4] },
@@ -290,6 +298,7 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         create_your_user_popover: {
+          tags: ['tutorial'],
           entry: [
             {
               type: 'show_popover_message',
@@ -304,7 +313,7 @@ export const stateMachine = createStateMachineSetup<
         },
         create_your_user: {
           meta: { highlighted_elements: [ElementID.NewEntityBtn] },
-          entry: ['disable_tutorial_state', 'hide_popovers'],
+          entry: ['hide_popovers'],
           on: {
             [UserGroupCreationFinishEvent.UserCreated]: {
               target: 'attach_to_group',
@@ -338,7 +347,6 @@ export const stateMachine = createStateMachineSetup<
             target: 'level_complete',
           },
           {
-            guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
             target: 'remove_unnecessary_edges_and_nodes_final',
           },
         ],

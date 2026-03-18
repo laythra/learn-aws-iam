@@ -1,4 +1,4 @@
-import { and, not } from 'xstate';
+import { and } from 'xstate';
 
 import { INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
@@ -59,6 +59,7 @@ export const stateMachine = createStateMachineSetup<
   },
   states: {
     inside_tutorial: {
+      tags: ['tutorial'],
       initial: 'tutorial_popup1',
       onDone: 'inside_level',
       entry: [
@@ -72,7 +73,6 @@ export const stateMachine = createStateMachineSetup<
           type: 'apply_initial_node_connections',
           params: { initialConnections: INITIAL_TUTORIAL_CONNECTIONS },
         },
-        'enable_tutorial_state',
         'show_side_panel',
         'disable_edges_management_ability',
       ],
@@ -273,12 +273,11 @@ export const stateMachine = createStateMachineSetup<
           on: {
             NEXT_FIXED_POPOVER: [
               {
-                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
-                target: 'remove_unnecessary_edges_and_nodes',
-              },
-              {
                 guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
                 target: 'tutorial_finished',
+              },
+              {
+                target: 'remove_unnecessary_edges_and_nodes',
               },
             ],
           },
@@ -304,7 +303,6 @@ export const stateMachine = createStateMachineSetup<
       },
       entry: [
         'store_checkpoint',
-        'disable_tutorial_state',
         'clear_edges',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
@@ -480,12 +478,11 @@ export const stateMachine = createStateMachineSetup<
           on: {
             NEXT_FIXED_POPOVER: [
               {
-                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
-                target: 'remove_unnecessary_edges_and_nodes',
-              },
-              {
                 guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
                 target: 'level_finished_popup',
+              },
+              {
+                target: 'remove_unnecessary_edges_and_nodes',
               },
             ],
           },

@@ -32,7 +32,6 @@ export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFi
   fixed_popover_content?: FixedPopoverMessage;
   side_panel_open?: boolean;
   user_group_creation_objectives: IAMUserGroupCreationObjective<TBaseFinishEventMap>[];
-  in_tutorial_state?: boolean;
   whitelisted_element_ids?: string[];
   /*
     Defines the list of elements that are always hidden or disabled, regardless of the current state.
