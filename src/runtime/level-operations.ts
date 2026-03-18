@@ -3,8 +3,7 @@ import { Actor, AnyActorLogic } from 'xstate';
 import * as analytics from './level-analytics';
 import * as persistence from './level-persistence';
 import { LevelDetailsStore } from './level-store';
-
-const MAX_LEVEL_NUMBER = 12;
+import { TOTAL_LEVELS } from '@/config/consts';
 
 function startLevel(levelNumber: number): void {
   persistence.setCurrentLevel(levelNumber);
@@ -26,7 +25,7 @@ function setMaxLevelReached(maxReachedLevel: number): void {
 export function advanceToNextLevel(): void {
   const currentLevelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
   const maxReachedLevel = LevelDetailsStore.getSnapshot().context.maxLevelReached;
-  const nextLevelNumber = currentLevelNumber == 12 ? 1 : currentLevelNumber + 1;
+  const nextLevelNumber = currentLevelNumber === TOTAL_LEVELS ? 1 : currentLevelNumber + 1;
 
   finishCurrentLevel();
   startLevel(nextLevelNumber);
@@ -39,7 +38,7 @@ export function advanceToNextLevel(): void {
 export function pickLevel(levelNumber: number): void {
   const maxReachedLevel = LevelDetailsStore.getSnapshot().context.maxLevelReached;
 
-  if (levelNumber < 1 || levelNumber > MAX_LEVEL_NUMBER) return;
+  if (levelNumber < 1 || levelNumber > TOTAL_LEVELS) return;
   if (levelNumber > maxReachedLevel) return;
 
   const currentLevel = LevelDetailsStore.getSnapshot().context.levelNumber;
