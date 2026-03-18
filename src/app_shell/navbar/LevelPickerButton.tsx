@@ -9,7 +9,7 @@ import {
   PopoverFooter,
   Button,
   ButtonGroup,
-  Wrap,
+  Grid,
 } from '@chakra-ui/react';
 import { ForwardIcon } from '@heroicons/react/16/solid';
 import { useSelector } from '@xstate/store/react';
@@ -17,6 +17,7 @@ import _ from 'lodash';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
 import { NavbarPopoverButton } from '@/components/NavbarPopoverButton';
+import { TOTAL_LEVELS } from '@/config/consts';
 import { pickLevel } from '@/runtime/level-operations';
 import { LevelDetailsStore } from '@/runtime/level-store';
 
@@ -55,8 +56,8 @@ export const LevelPickerButton: React.FC = () => {
           Select Level
         </PopoverHeader>
         <PopoverBody pt={0}>
-          <Wrap spacing='4'>
-            {Array.from({ length: 12 }, (__, i) => i + 1).map(lvl => (
+          <Grid templateColumns='repeat(3, 1fr)' gap={2}>
+            {Array.from({ length: TOTAL_LEVELS }, (__, i) => i + 1).map(lvl => (
               <Tooltip
                 key={lvl}
                 label={
@@ -88,7 +89,7 @@ export const LevelPickerButton: React.FC = () => {
                 </Button>
               </Tooltip>
             ))}
-          </Wrap>
+          </Grid>
         </PopoverBody>
         <PopoverFooter border='none'>
           <Box color='red.500' fontSize='sm' mb={3}>

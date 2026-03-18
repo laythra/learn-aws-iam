@@ -1,5 +1,7 @@
 import { IAMNodeEntity } from '@/types/iam-enums';
 
+export const TOTAL_LEVELS = 12;
+
 export const IAMCodeDefinedEntities = [
   IAMNodeEntity.IdentityPolicy,
   IAMNodeEntity.Role,
