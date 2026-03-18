@@ -12,7 +12,7 @@ import { FinishEventMap, PolicyEditFinishEvent } from './types/finish-event-enum
 import { PolicyNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
-import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
+import { VoidEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -98,7 +98,7 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'edit_policy',
+            [VoidEvent.IAMNodeContentOpened]: 'edit_policy',
           },
         },
         edit_policy: {
@@ -150,7 +150,7 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeTagsOpened]: 'fixed_popover3',
+            [VoidEvent.IAMNodeTagsOpened]: 'fixed_popover3',
           },
         },
         fixed_popover3: {
@@ -159,7 +159,7 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[3] } },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeTagsPopoverClosed]: 'popover4',
+            [VoidEvent.IAMNodeTagsPopoverClosed]: 'popover4',
           },
         },
         popover4: {
@@ -169,7 +169,7 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'edit_policy_again',
+            [VoidEvent.IAMNodeContentOpened]: 'edit_policy_again',
           },
         },
         edit_policy_again: {

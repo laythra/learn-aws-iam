@@ -27,10 +27,7 @@ import { ElementID } from '@/config/element-ids';
 import { validateIAMName } from '@/domain/iam-graph-utils';
 import { useLevelActor } from '@/runtime/level-runtime';
 import { IAMNodeEntity } from '@/types/iam-enums';
-import {
-  StatefulStateMachineEvent,
-  StatelessStateMachineEvent,
-} from '@/types/state-machine-event-enums';
+import { DataEvent, VoidEvent } from '@/types/state-machine-event-enums';
 
 export const IdentityCreationPopup: React.FC = () => {
   const levelActor = useLevelActor();
@@ -84,7 +81,7 @@ export const IdentityCreationPopup: React.FC = () => {
 
   const handleTabChange = (index: number): void => {
     const newEntity = index === 0 ? IAMNodeEntity.User : IAMNodeEntity.Group;
-    levelActor.send({ type: StatelessStateMachineEvent.CreateIAMIdentityTabChanged });
+    levelActor.send({ type: VoidEvent.CreateIAMIdentityTabChanged });
 
     setIamIdentityEntity(newEntity);
   };
@@ -95,7 +92,7 @@ export const IdentityCreationPopup: React.FC = () => {
 
   const submit = (): void => {
     levelActor.send({
-      type: StatefulStateMachineEvent.AddIAMUserGroupNode,
+      type: DataEvent.AddIAMUserGroupNode,
       node_data: { label: getNameFieldVal() },
       node_entity: iamIdentityEntity,
     });
@@ -107,7 +104,7 @@ export const IdentityCreationPopup: React.FC = () => {
     if (!isIdentityCreatorOpen) return;
 
     levelActor.send({
-      type: StatelessStateMachineEvent.CreateIAMIdentityPopupOpened,
+      type: VoidEvent.CreateIAMIdentityPopupOpened,
     });
 
     if (!isUserTabRestricted) {

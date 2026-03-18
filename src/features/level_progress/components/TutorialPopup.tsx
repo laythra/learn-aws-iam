@@ -18,6 +18,7 @@ import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
 import { CustomTheme } from '@/types/custom-theme';
+import { VoidEvent } from '@/types/state-machine-event-enums';
 
 export const TutorialPopup: React.FC = () => {
   const theme = useTheme<CustomTheme>();
@@ -28,7 +29,7 @@ export const TutorialPopup: React.FC = () => {
   );
 
   const handleNextPopup = (): void => {
-    levelActor.send({ type: 'NEXT_POPUP' });
+    levelActor.send({ type: VoidEvent.NextPopup });
   };
 
   if (!popupContent) return null;

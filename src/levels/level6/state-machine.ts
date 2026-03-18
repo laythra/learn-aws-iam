@@ -61,9 +61,7 @@ export const stateMachine = createStateMachineSetup<
       tags: ['tutorial'],
       initial: 'tutorial_popup1',
       onDone: 'inside_level',
-      entry: [
-        { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
-      ],
+      entry: [{ type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } }],
       states: {
         tutorial_popup1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },

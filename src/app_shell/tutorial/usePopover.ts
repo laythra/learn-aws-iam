@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
 import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
-import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
+import { VoidEvent } from '@/types/state-machine-event-enums';
 
 export interface UsePopoverResult {
   isOpen: boolean;
@@ -27,11 +27,11 @@ export const usePopover = (elementId: string): UsePopoverResult => {
   const isOpen = showPopovers && popoverContent?.element_id === elementId;
 
   const goNext = useCallback(() => {
-    machineActor.send({ type: 'NEXT_POPOVER' });
+    machineActor.send({ type: VoidEvent.NextPopover });
   }, [machineActor]);
 
   const close = useCallback(() => {
-    machineActor.send({ type: StatelessStateMachineEvent.HidePopovers });
+    machineActor.send({ type: VoidEvent.HidePopovers });
   }, [machineActor]);
 
   return useMemo(

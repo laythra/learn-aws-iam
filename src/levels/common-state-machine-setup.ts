@@ -36,7 +36,7 @@ import { storeLevelCheckpoint } from '@/runtime/level-operations';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
-import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
+import { DataEvent } from '@/types/state-machine-event-enums';
 
 /**
  * Defines a common state machine setup for all levels
@@ -239,7 +239,7 @@ export const createStateMachineSetup = <
           const node = context.nodes.find(n => n.id === nodeId);
           if (node) {
             enqueue.raise({
-              type: StatefulStateMachineEvent.DeleteNode,
+              type: DataEvent.DeleteNode,
               node,
             });
           }
@@ -388,7 +388,7 @@ export const createStateMachineSetup = <
       hide_popovers: assign({ show_popovers: false }),
       hide_node_help_tooltip: enqueueActions(({ enqueue }, { nodeId }: { nodeId: string }) => {
         enqueue.raise({
-          type: StatefulStateMachineEvent.EditNodeMetadata,
+          type: DataEvent.EditNodeMetadata,
           nodeId,
           newMetadata: { node_tooltip: undefined },
         });
@@ -396,7 +396,7 @@ export const createStateMachineSetup = <
       show_node_help_tooltip: enqueueActions(
         ({ enqueue }, { nodeId, content }: { nodeId: string; content: string }) => {
           enqueue.raise({
-            type: StatefulStateMachineEvent.EditNodeMetadata,
+            type: DataEvent.EditNodeMetadata,
             nodeId,
             newMetadata: { node_tooltip: content },
           });
@@ -433,7 +433,7 @@ export const createStateMachineSetup = <
 
         // Log objective completion analytics event
         enqueue.raise({
-          type: StatefulStateMachineEvent.LogAnalyticsEvent,
+          type: DataEvent.LogAnalyticsEvent,
           name: 'OBJECTIVE_COMPLETED',
           payload: {
             objective_id: id,
@@ -480,7 +480,7 @@ export const createStateMachineSetup = <
 
           edgesToCreate.forEach(edge => {
             enqueue.raise({
-              type: StatefulStateMachineEvent.ConnectNodes,
+              type: DataEvent.ConnectNodes,
               sourceNode: nodesById[edge.from],
               targetNode: nodesById[edge.to],
               isInternalConnection: true,
@@ -570,7 +570,7 @@ export const createStateMachineSetup = <
       }),
       clear_edges: enqueueActions(({ context, enqueue }) => {
         enqueue.raise({
-          type: StatefulStateMachineEvent.DeleteEdges,
+          type: DataEvent.DeleteEdges,
           edgeIds: context.edges.map(edge => edge.id),
         });
       }),

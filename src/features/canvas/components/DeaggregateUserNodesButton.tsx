@@ -5,7 +5,7 @@ import { ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
 
 import { ElementID } from '@/config/element-ids';
 import { useLevelActor } from '@/runtime/level-runtime';
-import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
+import { DataEvent } from '@/types/state-machine-event-enums';
 
 interface DeaggregateUserNodesButtonProps extends ChakraProps {
   nodeId: string;
@@ -20,7 +20,7 @@ const DeaggregateUserNodesButton: React.FC<DeaggregateUserNodesButtonProps> = ({
 
   const deaggregateUserNodes = (): void => {
     levelActor.send({
-      type: StatefulStateMachineEvent.DeaggregateUserNodes,
+      type: DataEvent.DeaggregateUserNodes,
       nodeId,
     });
   };

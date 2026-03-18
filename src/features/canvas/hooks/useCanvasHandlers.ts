@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { LevelActorRef } from './useCanvasSync';
 import { getValidConnectionDirection } from '../utils/edges-creation';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
-import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
+import { DataEvent } from '@/types/state-machine-event-enums';
 
 interface UseCanvasHandlersOptions {
   nodes: IAMAnyNode[];
@@ -89,7 +89,7 @@ export function useCanvasHandlers({
       }
 
       levelActor.send({
-        type: StatefulStateMachineEvent.ConnectNodes,
+        type: DataEvent.ConnectNodes,
         sourceNode: connectionDirection.source,
         targetNode: connectionDirection.target,
       });
@@ -106,14 +106,14 @@ export function useCanvasHandlers({
 
   const onEdgeDelete = useCallback(
     (targetEdges: IAMEdge[]) => {
-      levelActor.send({ type: StatefulStateMachineEvent.DeleteEdge, edge: targetEdges[0] });
+      levelActor.send({ type: DataEvent.DeleteEdge, edge: targetEdges[0] });
     },
     [levelActor]
   );
 
   const onNodeDelete = useCallback(
     (targetNodes: IAMAnyNode[]) => {
-      levelActor.send({ type: StatefulStateMachineEvent.DeleteNode, node: targetNodes[0] });
+      levelActor.send({ type: DataEvent.DeleteNode, node: targetNodes[0] });
     },
     [levelActor]
   );

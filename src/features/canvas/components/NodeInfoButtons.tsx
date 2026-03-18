@@ -5,7 +5,7 @@ import NodePolicyButton from './NodePolicyButton';
 import TagsIconButton from './TagsIconButton';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
-import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
+import { VoidEvent } from '@/types/state-machine-event-enums';
 
 export interface NodeInfoButtonsProps {
   nodeId: string;
@@ -32,7 +32,7 @@ const NodeInfoButtons: React.FC<NodeInfoButtonsProps> = ({
         placement='top-end'
         tags={tags}
         nodeId={nodeId}
-        onOpenEvent={StatelessStateMachineEvent.IAMNodeTagsOpened}
+        onOpenEvent={VoidEvent.IAMNodeTagsOpened}
       />
     )}
     {content && (
@@ -49,8 +49,8 @@ const NodeInfoButtons: React.FC<NodeInfoButtonsProps> = ({
       <ARNIconButton
         nodeId={nodeId}
         arn={arn}
-        onCopyEvent={StatelessStateMachineEvent.IAMNodeARNCopied}
-        onOpenEvent={StatelessStateMachineEvent.IAMNodeARNOpened}
+        onCopyEvent={VoidEvent.IAMNodeARNCopied}
+        onOpenEvent={VoidEvent.IAMNodeARNOpened}
         placement='top-end'
       />
     )}

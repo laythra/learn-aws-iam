@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { useLevelActor } from '@/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
-import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
+import { DataEvent } from '@/types/state-machine-event-enums';
 
 interface CreateSubmitButtonProps {
   nodeId: string;
@@ -35,7 +35,7 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
     const label = codeEditorStateContext.label;
 
     levelActor.send({
-      type: StatefulStateMachineEvent.AddIAMNode,
+      type: DataEvent.AddIAMNode,
       doc_string: content,
       account_id: selectedIAMEntity === IAMNodeEntity.SCP ? undefined : accountId,
       label: label[nodeId],

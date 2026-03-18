@@ -20,7 +20,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
-import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
+import { VoidEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -96,7 +96,7 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'fixed_popover1',
+            [VoidEvent.IAMNodeContentOpened]: 'fixed_popover1',
           },
         },
         fixed_popover1: {
@@ -105,7 +105,7 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeContentClosed]: 'fixed_popover2',
+            [VoidEvent.IAMNodeContentClosed]: 'fixed_popover2',
           },
         },
         fixed_popover2: {
@@ -133,13 +133,13 @@ export const stateMachine = createStateMachineSetup<
             { type: 'append_nodes', params: { nodes: INITIAL_TUTORIAL_RESOURCE_NODES } },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeARNOpened]: 'copy_arn',
+            [VoidEvent.IAMNodeARNOpened]: 'copy_arn',
           },
         },
         copy_arn: {
           entry: ['hide_popovers'],
           on: {
-            [StatelessStateMachineEvent.IAMNodeARNCopied]: 'create_your_custom_policy_popover',
+            [VoidEvent.IAMNodeARNCopied]: 'create_your_custom_policy_popover',
           },
         },
         create_your_custom_policy_popover: {

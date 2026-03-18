@@ -24,7 +24,7 @@ import { PermissionBoundaryID, PolicyNodeID, RoleNodeID, SCPNodeID } from './typ
 import { LevelObjectiveID } from './types/objective-enums';
 import { ROLE_CREATION_OBJECTIVES } from '../level12/objectives/role-creation-objectives';
 import { ElementID } from '@/config/element-ids';
-import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
+import { VoidEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -110,7 +110,7 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeContentOpened]: 'fixed_popover1',
+            [VoidEvent.IAMNodeContentOpened]: 'fixed_popover1',
           },
         },
         fixed_popover1: {
@@ -122,7 +122,7 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeContentClosed]: 'create_scp',
+            [VoidEvent.IAMNodeContentClosed]: 'create_scp',
           },
         },
         create_scp: {

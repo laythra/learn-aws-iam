@@ -3,7 +3,7 @@
  * * Can be used from any component to trigger a state machine transition.
  *
  */
-export enum StatelessStateMachineEvent {
+export enum VoidEvent {
   IAMNodeContentOpened = 'IAM_NODE_CONTENT_OPENED',
   IAMNodeContentClosed = 'IAM_NODE_CONTENT_CLOSED',
   IAMNodeARNOpened = 'IAM_NODE_ARN_OPENED',
@@ -16,13 +16,17 @@ export enum StatelessStateMachineEvent {
   SidePanelOpened = 'SIDE_PANEL_OPENED',
   AggregateUserNodes = 'AGGREGATE_USER_NODES',
   HideFixedPopover = 'HIDE_FIXED_POPOVERS',
+  NextPopover = 'NEXT_POPOVER',
+  NextPopup = 'NEXT_POPUP',
+  NextFixedPopover = 'NEXT_FIXED_POPOVER',
+  ToggleSidePanel = 'TOGGLE_SIDE_PANEL',
 }
 
 // /**
 //  * Defines events that are accompanied by data, and are used to trigger state machine transitions.
 //  * Can be used from any component to trigger a state machine transition.
 //  */
-export enum StatefulStateMachineEvent {
+export enum DataEvent {
   AddIAMUserGroupNode = 'ADD_IAM_USER_GROUP_NODE',
   AddIAMNode = 'ADD_IAM_POLICY_NODE',
   EditIAMIdentityPolicyNode = 'EDIT_IAM_IDENTITY_POLICY_NODE',
