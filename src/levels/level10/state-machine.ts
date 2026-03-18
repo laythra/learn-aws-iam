@@ -1,4 +1,4 @@
-import { and, not } from 'xstate';
+import { and } from 'xstate';
 
 import { INITIAL_IN_LEVEL_CONNECTIONS } from './initial-connections';
 import { LAYOUT_GROUPS } from './layout-groups';
@@ -287,7 +287,6 @@ export const stateMachine = createStateMachineSetup<
                 target: 'level_completed',
               },
               {
-                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
                 target: 'remove_unnecessary_edges_and_nodes',
               },
             ],

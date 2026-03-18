@@ -26,7 +26,6 @@ export function createMockContext<
     show_unnecessary_edges_or_nodes_warning: false,
     popup_content: undefined,
     popover_content: undefined,
-    in_tutorial_state: false,
     side_panel_open: false,
     edges_management_disabled: false,
     layout_groups: [],

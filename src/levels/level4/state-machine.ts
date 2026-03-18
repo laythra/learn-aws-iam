@@ -1,4 +1,4 @@
-import { and, not } from 'xstate';
+import { and } from 'xstate';
 
 import { INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
 import { INITIAL_TUTORIAL_NODES } from './nodes';
@@ -39,7 +39,6 @@ export const stateMachine = createStateMachineSetup<
     policy_edit_objectives: [],
     edges_connection_objectives: [],
     user_group_creation_objectives: [],
-    in_tutorial_state: true,
     whitelisted_element_ids: [],
     restricted_element_ids: [ElementID.NewEntityBtn],
     layout_groups: COMMON_LAYOUT_GROUPS,
@@ -49,6 +48,7 @@ export const stateMachine = createStateMachineSetup<
   },
   states: {
     inside_tutorial: {
+      tags: ['tutorial'],
       initial: 'popup1',
       onDone: 'inside_level',
       entry: [
@@ -125,7 +125,6 @@ export const stateMachine = createStateMachineSetup<
     inside_level: {
       initial: 'fix_permission_policies',
       entry: [
-        'disable_tutorial_state',
         {
           type: 'set_permission_policy_edit_objectives',
           params: { objectives: POLICY_EDIT_OBJECTIVES[0] },
@@ -212,12 +211,11 @@ export const stateMachine = createStateMachineSetup<
           on: {
             NEXT_FIXED_POPOVER: [
               {
-                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
-                target: 'remove_unnecessary_edges_and_nodes',
-              },
-              {
                 guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
                 target: 'level_finished',
+              },
+              {
+                target: 'remove_unnecessary_edges_and_nodes',
               },
             ],
           },

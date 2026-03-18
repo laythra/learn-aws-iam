@@ -1,4 +1,4 @@
-import { and, not } from 'xstate';
+import { and } from 'xstate';
 
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { createStateMachineSetup } from '../common-state-machine-setup';
@@ -60,8 +60,8 @@ export const stateMachine = createStateMachineSetup<
   },
   states: {
     inside_tutorial: {
+      tags: ['tutorial'],
       entry: [
-        'enable_tutorial_state',
         { type: 'assign_nodes', params: { nodes: INITIAL_TUTORIAL_NODES } },
         {
           type: 'update_whitelisted_element_ids',
@@ -150,7 +150,6 @@ export const stateMachine = createStateMachineSetup<
       initial: 'tutorial_popup3',
       entry: [
         'store_checkpoint',
-        'disable_tutorial_state',
         'clear_edges',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
       ],
@@ -341,7 +340,6 @@ export const stateMachine = createStateMachineSetup<
                 target: 'level_completed',
               },
               {
-                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
                 target: 'remove_unnecessary_edges_and_nodes',
               },
             ],

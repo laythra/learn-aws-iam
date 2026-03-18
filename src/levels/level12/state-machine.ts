@@ -54,6 +54,7 @@ export const stateMachine = createStateMachineSetup<
   },
   states: {
     inside_tutorial: {
+      tags: ['tutorial'],
       entry: [
         { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
         {
@@ -185,7 +186,6 @@ export const stateMachine = createStateMachineSetup<
     inside_level: {
       entry: [
         'store_checkpoint',
-        'disable_tutorial_state',
         {
           type: 'set_restricted_element_ids',
           params: {

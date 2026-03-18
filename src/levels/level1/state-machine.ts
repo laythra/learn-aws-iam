@@ -1,4 +1,4 @@
-import { and, not } from 'xstate';
+import { and } from 'xstate';
 
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
@@ -53,6 +53,7 @@ export const stateMachine = createStateMachineSetup<
   },
   states: {
     inside_tutorial: {
+      tags: ['tutorial'],
       meta: { highlighted_elements: [ElementID.RightSidePanelToggleButton] },
       entry: [
         {
@@ -265,7 +266,6 @@ export const stateMachine = createStateMachineSetup<
                 target: 'level_complete',
               },
               {
-                guard: not(and(['no_unnecessary_edges', 'no_unnecessary_nodes'])),
                 target: 'remove_unnecessary_edges_and_nodes_final',
               },
             ],
