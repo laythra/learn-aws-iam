@@ -26,7 +26,7 @@ import { ElementID } from '@/config/element-ids';
 import { useStateMachineEvent } from '@/runtime/useStateMachineEvent';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
-import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
+import { VoidEvent } from '@/types/state-machine-event-enums';
 
 interface NodePolicyButtonProps {
   nodeId: string;
@@ -100,7 +100,7 @@ const NodePolicyButton: React.FC<NodePolicyButtonProps> = ({
           width='16px'
           minWidth='auto'
           onClick={() => {
-            emitEvent(StatelessStateMachineEvent.IAMNodeContentOpened);
+            emitEvent(VoidEvent.IAMNodeContentOpened);
             toggleNodeContentPopover();
           }}
           _hover={{ bg: 'gray.200', opacity: 1 }}
@@ -121,7 +121,7 @@ const NodePolicyButton: React.FC<NodePolicyButtonProps> = ({
         </PopoverHeader>
         <PopoverCloseButton
           onClick={() => {
-            emitEvent(StatelessStateMachineEvent.IAMNodeContentClosed);
+            emitEvent(VoidEvent.IAMNodeContentClosed);
             CanvasStore.send({ type: 'closeAllNodePanels' });
           }}
           aria-label='close'

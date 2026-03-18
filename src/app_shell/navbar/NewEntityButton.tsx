@@ -10,7 +10,7 @@ import AnimatedRedDot from '@/components/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
 import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
-import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
+import { VoidEvent } from '@/types/state-machine-event-enums';
 
 export const NewEntityButton: React.FC = () => {
   const { openIdentityCreator } = useIdentityCreator();
@@ -39,7 +39,7 @@ export const NewEntityButton: React.FC = () => {
     (showPopovers && popoverContent?.show_next_button) || showFixedPopovers;
 
   const handleMenuOpen = (): void => {
-    levelActor.send({ type: StatelessStateMachineEvent.HidePopovers });
+    levelActor.send({ type: VoidEvent.HidePopovers });
   };
 
   const openCodeEditor = (): void => {

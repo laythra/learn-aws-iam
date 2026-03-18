@@ -2,7 +2,6 @@ import { and } from 'xstate';
 
 import { createStateMachineSetup } from '../common-state-machine-setup';
 import { COMMON_LAYOUT_GROUPS } from '../consts';
-import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/identity-policy-nodes';
 import { INITIAL_TUTORIAL_RESOURCE_NODES } from './nodes/resource-nodes';
 import { INITIAL_TUTORIAL_USER_NODES } from './nodes/user-nodes';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
@@ -19,6 +18,7 @@ import { UserNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { FIXED_POPOVER_MESSAGES } from '../level1/tutorial_messages/fixed-popover-messages';
 import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
+import { INITIAL_TUTORIAL_POLICY_NODES } from './nodes/identity-policy-nodes';
 import { ElementID } from '@/config/element-ids';
 
 export const stateMachine = createStateMachineSetup<

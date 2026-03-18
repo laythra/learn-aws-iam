@@ -19,7 +19,7 @@ import {
 import { RoleNodeID, UserNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
-import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
+import { VoidEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -105,7 +105,7 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeContentOpened]: {
+            [VoidEvent.IAMNodeContentOpened]: {
               actions: 'hide_popovers',
               target: 'fixed_popover1',
             },
@@ -117,7 +117,7 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
           ],
           on: {
-            [StatelessStateMachineEvent.IAMNodeContentClosed]: 'fixed_popover2',
+            [VoidEvent.IAMNodeContentClosed]: 'fixed_popover2',
           },
         },
         fixed_popover2: {

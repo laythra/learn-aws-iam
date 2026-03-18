@@ -1,10 +1,7 @@
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
-import {
-  StatefulStateMachineEvent,
-  StatelessStateMachineEvent,
-} from '@/types/state-machine-event-enums';
+import { DataEvent, VoidEvent } from '@/types/state-machine-event-enums';
 
 /**
  * Shared top-level event handlers for XState machines.
@@ -27,7 +24,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   // =========================================================================
   // User/Group Node Management
   // =========================================================================
-  [StatefulStateMachineEvent.AddIAMUserGroupNode]: {
+  [DataEvent.AddIAMUserGroupNode]: {
     actions: [
       {
         type: 'add_iam_user_group_node' as const,
@@ -35,7 +32,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event,
         }: {
           event: {
-            type: StatefulStateMachineEvent.AddIAMUserGroupNode;
+            type: DataEvent.AddIAMUserGroupNode;
             node_entity: IAMNodeEntity.Group | IAMNodeEntity.User;
             node_data:
               | IAMNodeDataOverrides<IAMUserNode['data']>
@@ -52,7 +49,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   // =========================================================================
   // Node Creation (Policies, Roles, etc.)
   // =========================================================================
-  [StatefulStateMachineEvent.AddIAMNode]: {
+  [DataEvent.AddIAMNode]: {
     actions: [
       {
         type: 'add_iam_node' as const,
@@ -60,7 +57,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event,
         }: {
           event: {
-            type: StatefulStateMachineEvent.AddIAMNode;
+            type: DataEvent.AddIAMNode;
             doc_string: string;
             label: string;
             node_entity: IAMCodeDefinedEntity;
@@ -79,7 +76,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   // =========================================================================
   // Edge/Node Connections
   // =========================================================================
-  [StatefulStateMachineEvent.ConnectNodes]: {
+  [DataEvent.ConnectNodes]: {
     actions: [
       {
         type: 'connect_nodes' as const,
@@ -87,7 +84,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event,
         }: {
           event: {
-            type: StatefulStateMachineEvent.ConnectNodes;
+            type: DataEvent.ConnectNodes;
             sourceNode: IAMAnyNode;
             targetNode: IAMAnyNode;
             isInternalConnection?: boolean;
@@ -104,7 +101,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   // =========================================================================
   // Edge Deletion
   // =========================================================================
-  [StatefulStateMachineEvent.DeleteEdge]: {
+  [DataEvent.DeleteEdge]: {
     actions: [
       {
         type: 'delete_edge' as const,
@@ -112,7 +109,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event,
         }: {
           event: {
-            type: StatefulStateMachineEvent.DeleteEdge;
+            type: DataEvent.DeleteEdge;
             edge: IAMEdge;
           };
         }) => ({
@@ -122,7 +119,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
     ],
   },
 
-  [StatefulStateMachineEvent.DeleteEdges]: {
+  [DataEvent.DeleteEdges]: {
     actions: [
       {
         type: 'delete_edges' as const,
@@ -130,7 +127,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event,
         }: {
           event: {
-            type: StatefulStateMachineEvent.DeleteEdges;
+            type: DataEvent.DeleteEdges;
             edgeIds: string[];
           };
         }) => ({
@@ -143,7 +140,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   // =========================================================================
   // Node Deletion
   // =========================================================================
-  [StatefulStateMachineEvent.DeleteNode]: {
+  [DataEvent.DeleteNode]: {
     actions: [
       {
         type: 'delete_node' as const,
@@ -151,7 +148,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event,
         }: {
           event: {
-            type: StatefulStateMachineEvent.DeleteNode;
+            type: DataEvent.DeleteNode;
             node: IAMAnyNode;
           };
         }) => ({
@@ -164,7 +161,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   // =========================================================================
   // Policy Editing
   // =========================================================================
-  [StatefulStateMachineEvent.EditIAMIdentityPolicyNode]: {
+  [DataEvent.EditIAMIdentityPolicyNode]: {
     actions: [
       {
         type: 'edit_policy_node' as const,
@@ -172,7 +169,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event,
         }: {
           event: {
-            type: StatefulStateMachineEvent.EditIAMIdentityPolicyNode;
+            type: DataEvent.EditIAMIdentityPolicyNode;
             node_id: string;
             doc_string: string;
           };
@@ -187,7 +184,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   // =========================================================================
   // Node Metadata Editing
   // =========================================================================
-  [StatefulStateMachineEvent.EditNodeMetadata]: {
+  [DataEvent.EditNodeMetadata]: {
     actions: [
       {
         type: 'edit_node_attributes' as const,
@@ -195,7 +192,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event,
         }: {
           event: {
-            type: StatefulStateMachineEvent.EditNodeMetadata;
+            type: DataEvent.EditNodeMetadata;
             nodeId: string;
             newMetadata: IAMNodeDataOverrides<IAMAnyNode['data']>;
           };
@@ -210,7 +207,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   // =========================================================================
   // Node Aggregation (Level 12)
   // =========================================================================
-  [StatelessStateMachineEvent.AggregateUserNodes]: {
+  [VoidEvent.AggregateUserNodes]: {
     actions: [
       {
         type: 'aggregate_user_nodes' as const,
@@ -218,7 +215,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
     ],
   },
 
-  [StatefulStateMachineEvent.DeaggregateUserNodes]: {
+  [DataEvent.DeaggregateUserNodes]: {
     actions: [
       {
         type: 'deaggregate_user_nodes' as const,
@@ -226,7 +223,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event,
         }: {
           event: {
-            type: StatefulStateMachineEvent.DeaggregateUserNodes;
+            type: DataEvent.DeaggregateUserNodes;
             nodeId: string;
           };
         }) => ({
@@ -238,15 +235,15 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   // =========================================================================
   // Popover/Popup Visibility
   // =========================================================================
-  [StatelessStateMachineEvent.HidePopovers]: {
+  [VoidEvent.HidePopovers]: {
     actions: 'hide_popovers' as const,
   },
 
-  [StatelessStateMachineEvent.HideFixedPopover]: {
+  [VoidEvent.HideFixedPopover]: {
     actions: 'hide_fixed_popovers' as const,
   },
 
-  [StatefulStateMachineEvent.LogAnalyticsEvent]: {
+  [DataEvent.LogAnalyticsEvent]: {
     actions: [
       {
         type: 'log_analytics_event' as const,
@@ -254,7 +251,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
           event,
         }: {
           event: {
-            type: StatefulStateMachineEvent.LogAnalyticsEvent;
+            type: DataEvent.LogAnalyticsEvent;
             name: string;
             payload: Record<string, unknown>;
           };
@@ -268,7 +265,7 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   // =========================================================================
   // Side Panel
   // =========================================================================
-  TOGGLE_SIDE_PANEL: {
+  [VoidEvent.ToggleSidePanel]: {
     actions: 'toggle_side_panel' as const,
   },
 };

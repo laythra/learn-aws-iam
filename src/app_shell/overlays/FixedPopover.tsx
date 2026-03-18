@@ -16,6 +16,7 @@ import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
+import { VoidEvent } from '@/types/state-machine-event-enums';
 
 /***
  * A popover that is fixed to a position on the screen, used for tutorial messages that
@@ -43,11 +44,11 @@ export const FixedPopover: React.FC = () => {
   const rightPos = position.includes('right') ? '10px' : 'auto';
 
   const showNextFixedPopover = (): void => {
-    machineActor.send({ type: 'NEXT_FIXED_POPOVER' });
+    machineActor.send({ type: VoidEvent.NextFixedPopover });
   };
 
   const hideFixedPopovers = (): void => {
-    machineActor.send({ type: 'HIDE_FIXED_POPOVERS' });
+    machineActor.send({ type: VoidEvent.HideFixedPopover });
   };
 
   return (

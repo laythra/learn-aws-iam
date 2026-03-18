@@ -7,7 +7,7 @@ import AnimatedRedDot from '@/components/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
 import { useLevelActor } from '@/runtime/level-runtime';
 import { useStateMachineEvent } from '@/runtime/useStateMachineEvent';
-import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
+import { VoidEvent } from '@/types/state-machine-event-enums';
 
 export const NavbarSidePanelToggle: React.FC = () => {
   const { emitEvent } = useStateMachineEvent();
@@ -15,8 +15,8 @@ export const NavbarSidePanelToggle: React.FC = () => {
   const { isRedDotEnabledForElement } = useAnimatedRedDot();
 
   const toggleSidePanel = (): void => {
-    emitEvent(StatelessStateMachineEvent.SidePanelOpened);
-    levelActor.send({ type: 'TOGGLE_SIDE_PANEL' });
+    emitEvent(VoidEvent.SidePanelOpened);
+    levelActor.send({ type: VoidEvent.ToggleSidePanel });
   };
 
   return (

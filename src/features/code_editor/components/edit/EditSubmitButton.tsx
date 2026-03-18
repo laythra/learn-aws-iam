@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { useLevelActor } from '@/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
-import { StatefulStateMachineEvent } from '@/types/state-machine-event-enums';
+import { DataEvent } from '@/types/state-machine-event-enums';
 
 interface EditSubmitButtonProps {
   nodeId: string;
@@ -31,7 +31,7 @@ export const EditSubmitButton: React.FC<EditSubmitButtonProps> = ({ nodeId }) =>
     );
 
     levelActor.send({
-      type: StatefulStateMachineEvent.EditIAMIdentityPolicyNode,
+      type: DataEvent.EditIAMIdentityPolicyNode,
       doc_string: content,
       node_id: nodeId,
     });
