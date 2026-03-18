@@ -20,7 +20,6 @@ export function createMockContext<
     edges_connection_objectives: [],
     level_objectives: [],
     whitelisted_element_ids: [],
-    elements_with_animated_red_dot: [],
     show_popups: false,
     show_popovers: false,
     show_fixed_popovers: false,

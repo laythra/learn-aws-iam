@@ -105,22 +105,18 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         tutorial_finished: {
+          meta: {
+            highlighted_elements: [
+              ElementID.RightSidePanelToggleButton,
+              ElementID.IAMNodeContentEditButton,
+            ],
+          },
           entry: [
             {
               type: 'show_fixed_popover_message',
               params: { message: FIXED_POPOVER_MESSAGES[3] },
             },
             'hide_popovers',
-            {
-              type: 'update_red_dot_visibility',
-              params: {
-                elementIds: [
-                  ElementID.RightSidePanelToggleButton,
-                  ElementID.IAMNodeContentEditButton,
-                ],
-                isVisible: true,
-              },
-            },
           ],
           type: 'final',
         },

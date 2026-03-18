@@ -1,4 +1,4 @@
-export { editObjectiveState, getElementsWithRedDot } from './common-state-machine-actions';
+export { editObjectiveState } from './common-state-machine-actions';
 export { createIAMNode, createUserGroupNode } from './nodes-creation-state-machine-actions';
 export { deleteNode } from './nodes-deletion-state-machine-actions';
 export { editPermissionPolicy, editNodeAttributes } from './nodes-editing-state-machine-actions';

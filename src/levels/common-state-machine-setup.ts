@@ -14,7 +14,6 @@ import {
   aggregateUserNodes,
   deaggregateUserNodes,
   editObjectiveState,
-  getElementsWithRedDot,
 } from './utils/actions';
 import { ElementID } from '@/config/element-ids';
 import type { GenericContext } from '@/levels/types/context-types';
@@ -503,10 +502,11 @@ export const createStateMachineSetup = <
       }),
       toggle_side_panel: assign({
         side_panel_open: ({ context }) => !context.side_panel_open,
-        elements_with_animated_red_dot: ({ context }) =>
-          context.elements_with_animated_red_dot?.filter(
-            element => element != ElementID.RightSidePanelToggleButton
-          ),
+        dismissed_highlighted_elements: ({ context }) =>
+          _.uniq([
+            ...(context.dismissed_highlighted_elements ?? []),
+            ElementID.RightSidePanelToggleButton,
+          ]),
       }),
       show_side_panel: assign({ side_panel_open: true }),
       close_side_panel: assign({ side_panel_open: false }),
@@ -564,14 +564,6 @@ export const createStateMachineSetup = <
           { context },
           { whitelisted_element_ids }: { whitelisted_element_ids: string[] }
         ) => [...(context.whitelisted_element_ids || []), ...whitelisted_element_ids],
-      }),
-      update_red_dot_visibility: assign({
-        elements_with_animated_red_dot: (
-          { context },
-          { elementIds, isVisible }: { elementIds: ElementID[]; isVisible: boolean }
-        ) => {
-          return getElementsWithRedDot(context, elementIds, isVisible);
-        },
       }),
       show_unnecessary_edges_or_nodes_warning: assign({
         show_unnecessary_edges_or_nodes_warning: true,

@@ -60,9 +60,7 @@ const NodePolicyButton: React.FC<NodePolicyButtonProps> = ({
     });
   };
 
-  const { isRedDotEnabledForElement } = useAnimatedRedDot({
-    elementIds: [ElementID.IAMNodeContentEditButton],
-  });
+  const { isRedDotEnabledForElement } = useAnimatedRedDot();
 
   // Prevent scrolling on the popover content from zooming in/out the canvas
   useEffect(() => {

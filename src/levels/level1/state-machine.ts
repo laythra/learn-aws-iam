@@ -53,6 +53,7 @@ export const stateMachine = createStateMachineSetup<
   },
   states: {
     inside_tutorial: {
+      meta: { highlighted_elements: [ElementID.RightSidePanelToggleButton] },
       entry: [
         {
           type: 'assign_nodes',
@@ -71,13 +72,6 @@ export const stateMachine = createStateMachineSetup<
           type: 'update_whitelisted_element_ids',
           params: {
             whitelisted_element_ids: [],
-          },
-        },
-        {
-          type: 'update_red_dot_visibility',
-          params: {
-            isVisible: true,
-            elementIds: [ElementID.RightSidePanelToggleButton],
           },
         },
       ],
@@ -180,6 +174,7 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         create_user_popover: {
+          meta: { highlighted_elements: [ElementID.NewEntityBtn] },
           entry: [
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[7] } },
             {
@@ -190,13 +185,6 @@ export const stateMachine = createStateMachineSetup<
                   ElementID.CreateUserGroupMenuItem,
                   ElementID.IdentityCreationPopupUserTab,
                 ],
-              },
-            },
-            {
-              type: 'update_red_dot_visibility',
-              params: {
-                isVisible: true,
-                elementIds: [ElementID.NewEntityBtn],
               },
             },
           ],
@@ -237,13 +225,6 @@ export const stateMachine = createStateMachineSetup<
                 {
                   type: 'finish_level_objective',
                   params: { id: LevelObjectiveID.GrantIAMUserReadAccessToS3Bucket },
-                },
-                {
-                  type: 'update_red_dot_visibility',
-                  params: {
-                    isVisible: false,
-                    elementIds: [ElementID.NewEntityBtn],
-                  },
                 },
                 {
                   type: 'hide_node_help_tooltip',

@@ -15,9 +15,7 @@ import { StatelessStateMachineEvent } from '@/types/state-machine-event-enums';
 export const NewEntityButton: React.FC = () => {
   const { openIdentityCreator } = useIdentityCreator();
   const levelActor = useLevelActor();
-  const { isRedDotEnabledForElement: isRedDotEnabled } = useAnimatedRedDot({
-    elementIds: [ElementID.NewEntityBtn],
-  });
+  const { isRedDotEnabledForElement: isRedDotEnabled } = useAnimatedRedDot();
 
   const [isUserGroupMenuItemRestricted, isRolesMenuItemRestricted, isNewEntityBtnRestricted] =
     useIsElementRestricted([

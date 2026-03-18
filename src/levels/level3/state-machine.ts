@@ -103,13 +103,6 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'hide_popovers',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
-            {
-              type: 'update_red_dot_visibility',
-              params: {
-                elementIds: [ElementID.IAMNodeContentCloseButton],
-                isVisible: true,
-              },
-            },
           ],
           on: {
             [StatelessStateMachineEvent.IAMNodeContentClosed]: 'fixed_popover2',
@@ -150,6 +143,12 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         create_your_custom_policy_popover: {
+          meta: {
+            highlighted_elements: [
+              ElementID.NewEntityBtn,
+              ElementID.CreateRolesAndPoliciesMenuItem,
+            ],
+          },
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
@@ -166,13 +165,6 @@ export const stateMachine = createStateMachineSetup<
                   ElementID.CreateRolesAndPoliciesMenuItem,
                   ElementID.CodeEditorPolicyTab,
                 ],
-              },
-            },
-            {
-              type: 'update_red_dot_visibility',
-              params: {
-                elementIds: [ElementID.NewEntityBtn, ElementID.CreateRolesAndPoliciesMenuItem],
-                isVisible: true,
               },
             },
           ],
