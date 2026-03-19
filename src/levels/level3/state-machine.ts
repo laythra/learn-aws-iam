@@ -59,26 +59,26 @@ export const stateMachine = createStateMachineSetup<
   states: {
     inside_tutorial: {
       tags: ['tutorial'],
-      initial: 'tutorial_popup1',
+      initial: 'popup_1',
       onDone: 'inside_level',
       entry: [
         { type: 'assign_nodes', params: { nodes: INITIAL_TUTORIAL_POLICY_NODES } },
         { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
       ],
       states: {
-        tutorial_popup1: {
+        popup_1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
-            NEXT_POPUP: 'tutorial_popup2',
+            NEXT_POPUP: 'popup_2',
           },
         },
-        tutorial_popup2: {
+        popup_2: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           on: {
-            NEXT_POPUP: 'tutorial_popup3',
+            NEXT_POPUP: 'popup_3',
           },
         },
-        tutorial_popup3: {
+        popup_3: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },
           on: {
             NEXT_POPUP: 'aws_managed_policy_popover',
@@ -96,27 +96,27 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [VoidEvent.IAMNodeContentOpened]: 'fixed_popover1',
+            [VoidEvent.IAMNodeContentOpened]: 'fixed_popover_1',
           },
         },
-        fixed_popover1: {
+        fixed_popover_1: {
           entry: [
             'hide_popovers',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
           ],
           on: {
-            [VoidEvent.IAMNodeContentClosed]: 'fixed_popover2',
+            [VoidEvent.IAMNodeContentClosed]: 'fixed_popover_2',
           },
         },
-        fixed_popover2: {
+        fixed_popover_2: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
           ],
           on: {
-            NEXT_FIXED_POPOVER: 'fixed_popover3',
+            NEXT_FIXED_POPOVER: 'fixed_popover_3',
           },
         },
-        fixed_popover3: {
+        fixed_popover_3: {
           entry: {
             type: 'show_fixed_popover_message',
             params: { message: FIXED_POPOVER_MESSAGES[2] },
@@ -185,9 +185,11 @@ export const stateMachine = createStateMachineSetup<
             type: 'show_popover_message',
             params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
           },
-          exit: 'hide_popovers',
           on: {
-            NEXT_POPOVER: 'tutorial_finished',
+            NEXT_POPOVER: {
+              target: 'tutorial_finished',
+              actions: 'hide_popovers',
+            },
           },
         },
         tutorial_finished: {
@@ -196,7 +198,7 @@ export const stateMachine = createStateMachineSetup<
       },
     },
     inside_level: {
-      initial: 'popup1',
+      initial: 'popup_1',
       entry: [
         'clear_creation_objectives',
         'store_checkpoint',
@@ -209,13 +211,13 @@ export const stateMachine = createStateMachineSetup<
         'show_side_panel',
       ],
       states: {
-        popup1: {
+        popup_1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[3] } },
           on: {
-            NEXT_POPUP: 'popup2',
+            NEXT_POPUP: 'popup_2',
           },
         },
-        popup2: {
+        popup_2: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[4] } },
           on: {
             NEXT_POPUP: 'create_and_attach_policies',
@@ -329,7 +331,7 @@ export const stateMachine = createStateMachineSetup<
             NEXT_FIXED_POPOVER: [
               {
                 guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
-                target: 'level_finished',
+                target: 'level_completed',
               },
               {
                 target: 'remove_unnecessary_edges_and_nodes',
@@ -341,10 +343,10 @@ export const stateMachine = createStateMachineSetup<
           entry: ['show_unnecessary_edges_or_nodes_warning', 'hide_popovers'],
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
-            target: 'level_finished',
+            target: 'level_completed',
           },
         },
-        level_finished: {
+        level_completed: {
           type: 'final',
           entry: [
             'store_checkpoint',

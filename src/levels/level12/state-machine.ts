@@ -70,50 +70,50 @@ export const stateMachine = createStateMachineSetup<
           params: { initialConnections: INITIAL_TUTORIAL_CONNECTIONS },
         },
       ],
-      initial: 'popup1',
+      initial: 'popup_1',
       onDone: {
         target: 'inside_level',
       },
       states: {
-        popup1: {
+        popup_1: {
           entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } }],
           on: {
-            NEXT_POPUP: 'popup2',
+            NEXT_POPUP: 'popup_2',
           },
         },
-        popup2: {
+        popup_2: {
           entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } }],
           on: {
-            NEXT_POPUP: 'popover1',
+            NEXT_POPUP: 'popover_1',
           },
         },
-        popover1: {
+        popover_1: {
           entry: [
             'hide_popups',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
           ],
           on: {
-            NEXT_POPOVER: 'popover2',
+            NEXT_POPOVER: 'popover_2',
           },
         },
-        popover2: {
+        popover_2: {
           entry: [
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
           ],
           on: {
-            NEXT_POPOVER: 'popover3',
+            NEXT_POPOVER: 'popover_3',
           },
         },
-        popover3: {
+        popover_3: {
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
           ],
           on: {
-            [VoidEvent.IAMNodeContentOpened]: 'fixed_popover1',
+            [VoidEvent.IAMNodeContentOpened]: 'fixed_popover_1',
           },
         },
-        fixed_popover1: {
+        fixed_popover_1: {
           entry: [
             'hide_popovers',
             {
@@ -162,10 +162,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [EdgeConnectionFinishEvent.COULDTRAIL_SCP_CONNECTED]: 'fixed_popover2',
+            [EdgeConnectionFinishEvent.COULDTRAIL_SCP_CONNECTED]: 'fixed_popover_2',
           },
         },
-        fixed_popover2: {
+        fixed_popover_2: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
             {
@@ -174,10 +174,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            NEXT_FIXED_POPOVER: 'tutorial_complete',
+            NEXT_FIXED_POPOVER: 'tutorial_finished',
           },
         },
-        tutorial_complete: {
+        tutorial_finished: {
           entry: 'hide_fixed_popovers',
           type: 'final',
         },
@@ -214,9 +214,9 @@ export const stateMachine = createStateMachineSetup<
           params: { initialConnections: INITIAL_IN_LEVEL_CONNECTIONS },
         },
       ],
-      initial: 'popup3',
+      initial: 'popup_1',
       states: {
-        popup3: {
+        popup_1: {
           entry: [
             {
               type: 'show_popup_message',
@@ -229,7 +229,7 @@ export const stateMachine = createStateMachineSetup<
         },
         in_progress: {
           meta: { highlighted_elements: [ElementID.RightSidePanelToggleButton] },
-          onDone: 'completed',
+          onDone: 'level_completed',
           type: 'parallel',
           entry: ['hide_popups', 'show_side_panel'],
           states: {
@@ -256,10 +256,10 @@ export const stateMachine = createStateMachineSetup<
                 },
                 attach_scp: {
                   on: {
-                    [EdgeConnectionFinishEvent.EC2_REGION_SCP_CONNECTED]: 'finished',
+                    [EdgeConnectionFinishEvent.EC2_REGION_SCP_CONNECTED]: 'completed',
                   },
                 },
-                finished: {
+                completed: {
                   type: 'final',
                 },
               },
@@ -288,7 +288,7 @@ export const stateMachine = createStateMachineSetup<
                 },
                 create_policy_and_attach_pb: {
                   type: 'parallel',
-                  onDone: 'finished',
+                  onDone: 'completed',
                   entry: [
                     {
                       type: 'append_creation_objectives',
@@ -308,10 +308,10 @@ export const stateMachine = createStateMachineSetup<
                         in_progress: {
                           on: {
                             [PolicyCreationFinishEvent.ACCESS_DELEGATION_POLICY_CREATED]:
-                              'finished',
+                              'completed',
                           },
                         },
-                        finished: {
+                        completed: {
                           type: 'final',
                         },
                       },
@@ -321,10 +321,10 @@ export const stateMachine = createStateMachineSetup<
                       states: {
                         in_progress: {
                           on: {
-                            [EdgeConnectionFinishEvent.EC2_LAUNCH_PB_ATTACHED_TO_ROLE]: 'finished',
+                            [EdgeConnectionFinishEvent.EC2_LAUNCH_PB_ATTACHED_TO_ROLE]: 'completed',
                           },
                         },
-                        finished: {
+                        completed: {
                           entry: {
                             type: 'hide_node_help_tooltip',
                             params: { nodeId: PermissionBoundaryID.Ec2LaunchPermissionBoundary },
@@ -339,17 +339,17 @@ export const stateMachine = createStateMachineSetup<
                         in_progress: {
                           on: {
                             [EdgeConnectionFinishEvent.ACCESS_DELEGATION_POLICY_ATTACHED_TO_USER]:
-                              'finished',
+                              'completed',
                           },
                         },
-                        finished: {
+                        completed: {
                           type: 'final',
                         },
                       },
                     },
                   },
                 },
-                finished: {
+                completed: {
                   type: 'final',
                 },
               },
@@ -377,10 +377,10 @@ export const stateMachine = createStateMachineSetup<
                     attach_trust_policy_to_ec2: {
                       on: {
                         [EdgeConnectionFinishEvent.TRUST_POLICY_ATTACHED_TO_EC2_INSTANCE]:
-                          'finished',
+                          'completed',
                       },
                     },
-                    finished: {
+                    completed: {
                       entry: {
                         type: 'hide_node_help_tooltip',
                         params: { nodeId: RoleNodeID.S3WriteAccessRole },
@@ -400,10 +400,10 @@ export const stateMachine = createStateMachineSetup<
                     },
                     attach_permission_policy: {
                       on: {
-                        [EdgeConnectionFinishEvent.S3_WRITE_POLICY_ATTACHED_TO_ROLE]: 'finished',
+                        [EdgeConnectionFinishEvent.S3_WRITE_POLICY_ATTACHED_TO_ROLE]: 'completed',
                       },
                     },
-                    finished: {
+                    completed: {
                       entry: {
                         type: 'hide_node_help_tooltip',
                         params: { nodeId: PolicyNodeID.S3WriteAccessPolicy },
@@ -437,7 +437,7 @@ export const stateMachine = createStateMachineSetup<
                   },
                 },
                 attach_elasticache_manage_policy_to_group: {
-                  onDone: 'finished',
+                  onDone: 'completed',
                   type: 'parallel',
                   states: {
                     attach_to_group1: {
@@ -446,10 +446,10 @@ export const stateMachine = createStateMachineSetup<
                         in_progress: {
                           on: {
                             [EdgeConnectionFinishEvent.EC_MANAGEMENT_POLICY_ATTACHED_TO_GROUP1]:
-                              'finished',
+                              'completed',
                           },
                         },
-                        finished: {
+                        completed: {
                           type: 'final',
                         },
                       },
@@ -460,10 +460,10 @@ export const stateMachine = createStateMachineSetup<
                         in_progress: {
                           on: {
                             [EdgeConnectionFinishEvent.EC_MANAGEMENT_POLICY_ATTACHED_TO_GROUP2]:
-                              'finished',
+                              'completed',
                           },
                         },
-                        finished: {
+                        completed: {
                           type: 'final',
                         },
                       },
@@ -474,27 +474,27 @@ export const stateMachine = createStateMachineSetup<
                         in_progress: {
                           on: {
                             [EdgeConnectionFinishEvent.EC_MANAGEMENT_POLICY_ATTACHED_TO_GROUP3]:
-                              'finished',
+                              'completed',
                           },
                         },
-                        finished: {
+                        completed: {
                           type: 'final',
                         },
                       },
                     },
                   },
                 },
-                finished: {
+                completed: {
                   type: 'final',
                 },
               },
             },
           },
         },
-        completed: {
-          initial: 'popup3',
+        level_completed: {
+          initial: 'popup_1',
           states: {
-            popup3: {
+            popup_1: {
               entry: [
                 {
                   type: 'show_popup_message',

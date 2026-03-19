@@ -78,22 +78,22 @@ export const stateMachine = createStateMachineSetup<
         },
         'disable_edges_management_ability',
       ],
-      initial: 'popup1',
+      initial: 'popup_1',
       onDone: 'inside_level',
       states: {
-        popup1: {
+        popup_1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
-            NEXT_POPUP: 'popup2',
+            NEXT_POPUP: 'popup_2',
           },
         },
-        popup2: {
+        popup_2: {
           entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } }],
           on: {
-            NEXT_POPUP: 'popover1',
+            NEXT_POPUP: 'popover_1',
           },
         },
-        popover1: {
+        popover_1: {
           entry: [
             'hide_popups',
             {
@@ -102,10 +102,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [VoidEvent.IAMNodeContentOpened]: 'fixed_popover1',
+            [VoidEvent.IAMNodeContentOpened]: 'fixed_popover_1',
           },
         },
-        fixed_popover1: {
+        fixed_popover_1: {
           entry: [
             'hide_popovers',
             {
@@ -114,10 +114,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [VoidEvent.IAMNodeContentClosed]: 'popover2',
+            [VoidEvent.IAMNodeContentClosed]: 'popover_2',
           },
         },
-        popover2: {
+        popover_2: {
           entry: [
             'hide_fixed_popovers',
             'enable_edges_management_ability',
@@ -131,10 +131,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [EdgeConnectionFinishEvent.TUTORIAL_POLICY1_ATTACHED_TO_USER]: 'popover3',
+            [EdgeConnectionFinishEvent.TUTORIAL_POLICY1_ATTACHED_TO_USER]: 'popover_3',
           },
         },
-        popover3: {
+        popover_3: {
           entry: [
             'disable_edges_management_ability',
             {
@@ -163,9 +163,9 @@ export const stateMachine = createStateMachineSetup<
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
       ],
-      initial: 'popup3',
+      initial: 'popup_1',
       states: {
-        popup3: {
+        popup_1: {
           entry: [
             {
               type: 'show_popup_message',
@@ -173,10 +173,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            NEXT_POPUP: 'popover4',
+            NEXT_POPUP: 'popover_1',
           },
         },
-        popover4: {
+        popover_1: {
           entry: [
             'hide_popups',
             {
@@ -185,10 +185,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            NEXT_POPOVER: 'popover5',
+            NEXT_POPOVER: 'popover_2',
           },
         },
-        popover5: {
+        popover_2: {
           entry: [
             {
               type: 'show_popover_message',
@@ -196,10 +196,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            NEXT_POPOVER: 'popover6',
+            NEXT_POPOVER: 'popover_3',
           },
         },
-        popover6: {
+        popover_3: {
           entry: [
             {
               type: 'show_popover_message',
@@ -231,10 +231,10 @@ export const stateMachine = createStateMachineSetup<
           ],
           on: {
             [PermissionBoundaryCreationFinishEvent.READ_SECRETS_PERMISSION_BOUNDARY_CREATED]:
-              'permission_boundary_created',
+              'popover_4',
           },
         },
-        permission_boundary_created: {
+        popover_4: {
           entry: [
             'store_checkpoint',
             {
@@ -283,7 +283,7 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         attach_nodes: {
-          onDone: 'attach_nodes_finished',
+          onDone: 'fixed_popover_1',
           entry: [
             'store_checkpoint',
             'enable_edges_management_ability',
@@ -308,7 +308,7 @@ export const stateMachine = createStateMachineSetup<
                 in_progress: {
                   on: {
                     [EdgeConnectionFinishEvent.PERMISSION_BOUNDARY_CONNECTED_TO_ROLE]: {
-                      target: 'finished',
+                      target: 'completed',
                       actions: {
                         type: 'hide_node_help_tooltip',
                         params: { nodeId: RoleNodeID.Role1 },
@@ -316,7 +316,7 @@ export const stateMachine = createStateMachineSetup<
                     },
                   },
                 },
-                finished: {
+                completed: {
                   type: 'final',
                 },
               },
@@ -327,7 +327,7 @@ export const stateMachine = createStateMachineSetup<
                 in_progress: {
                   on: {
                     [EdgeConnectionFinishEvent.ACCESS_DELEGATION_POLICY_CONNECTED_TO_CLOUD]: {
-                      target: 'finished',
+                      target: 'completed',
                       actions: {
                         type: 'hide_node_help_tooltip',
                         params: { nodeId: UserNodeID.Cloud },
@@ -335,14 +335,14 @@ export const stateMachine = createStateMachineSetup<
                     },
                   },
                 },
-                finished: {
+                completed: {
                   type: 'final',
                 },
               },
             },
           },
         },
-        attach_nodes_finished: {
+        fixed_popover_1: {
           entry: [
             'store_checkpoint',
             {
@@ -351,10 +351,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            NEXT_FIXED_POPOVER: 'fixed_popover3',
+            NEXT_FIXED_POPOVER: 'popover_5',
           },
         },
-        fixed_popover3: {
+        popover_5: {
           entry: [
             'hide_fixed_popovers',
             'disable_edges_management_ability',
@@ -368,17 +368,19 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            NEXT_POPOVER: 'admin_policy_attached_to_role',
-          },
-          exit: {
-            type: 'connect_nodes',
-            params: ({ context }) => ({
-              sourceNode: context.nodes.find(n => n.id === PolicyNodeID.FullAccessPolicy)!,
-              targetNode: context.nodes.find(n => n.id === RoleNodeID.Role1)!,
-            }),
+            NEXT_POPOVER: {
+              target: 'popover_6',
+              actions: {
+                type: 'connect_nodes',
+                params: ({ context }) => ({
+                  sourceNode: context.nodes.find(n => n.id === PolicyNodeID.FullAccessPolicy)!,
+                  targetNode: context.nodes.find(n => n.id === RoleNodeID.Role1)!,
+                }),
+              },
+            },
           },
         },
-        admin_policy_attached_to_role: {
+        popover_6: {
           entry: [
             {
               type: 'show_popover_message',
@@ -386,10 +388,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            NEXT_POPOVER: 'attach_tifa_user_to_role',
+            NEXT_POPOVER: 'popover_7',
           },
         },
-        attach_tifa_user_to_role: {
+        popover_7: {
           entry: [
             {
               type: 'show_popover_message',
@@ -401,17 +403,19 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            NEXT_POPOVER: 'tifa_user_attached_to_role',
-          },
-          exit: {
-            type: 'connect_nodes',
-            params: ({ context }) => ({
-              sourceNode: context.nodes.find(n => n.id === UserNodeID.Tifa)!,
-              targetNode: context.nodes.find(n => n.id === RoleNodeID.Role1)!,
-            }),
+            NEXT_POPOVER: {
+              target: 'fixed_popover_2',
+              actions: {
+                type: 'connect_nodes',
+                params: ({ context }) => ({
+                  sourceNode: context.nodes.find(n => n.id === UserNodeID.Tifa)!,
+                  targetNode: context.nodes.find(n => n.id === RoleNodeID.Role1)!,
+                }),
+              },
+            },
           },
         },
-        tifa_user_attached_to_role: {
+        fixed_popover_2: {
           entry: [
             'hide_popovers',
             {

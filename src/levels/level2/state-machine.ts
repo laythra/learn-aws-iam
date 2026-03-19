@@ -24,7 +24,7 @@ export const stateMachine = createStateMachineSetup<
   FinishEventMap
 >().createMachine({
   id: 'level2_state_machine',
-  initial: 'tutorial_popup1',
+  initial: 'popup_1',
   context: {
     level_title: 'IAM Groups',
     level_description: `
@@ -67,16 +67,16 @@ export const stateMachine = createStateMachineSetup<
     },
   ],
   states: {
-    tutorial_popup1: {
+    popup_1: {
       tags: ['tutorial'],
       entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
       on: {
         NEXT_POPUP: {
-          target: 'fixed_popover1',
+          target: 'fixed_popover_1',
         },
       },
     },
-    fixed_popover1: {
+    fixed_popover_1: {
       tags: ['tutorial'],
       entry: [
         'hide_popups',
@@ -84,11 +84,11 @@ export const stateMachine = createStateMachineSetup<
       ],
       on: {
         NEXT_FIXED_POPOVER: {
-          target: 'fixed_popover2',
+          target: 'fixed_popover_2',
         },
       },
     },
-    fixed_popover2: {
+    fixed_popover_2: {
       tags: ['tutorial'],
       entry: {
         type: 'show_fixed_popover_message',
@@ -96,11 +96,11 @@ export const stateMachine = createStateMachineSetup<
       },
       on: {
         NEXT_FIXED_POPOVER: {
-          target: 'fixed_popover3',
+          target: 'fixed_popover_3',
         },
       },
     },
-    fixed_popover3: {
+    fixed_popover_3: {
       tags: ['tutorial'],
       entry: {
         type: 'show_fixed_popover_message',
@@ -204,10 +204,10 @@ export const stateMachine = createStateMachineSetup<
           states: {
             in_progress: {
               on: {
-                [EdgeConnectionFinishEvent.User1AttachedToGroup]: 'complete',
+                [EdgeConnectionFinishEvent.User1AttachedToGroup]: 'completed',
               },
             },
-            complete: {
+            completed: {
               type: 'final',
             },
           },
@@ -218,7 +218,7 @@ export const stateMachine = createStateMachineSetup<
             in_progress: {
               type: 'parallel',
               onDone: {
-                target: 'complete',
+                target: 'completed',
               },
               states: {
                 policy1_attached: {
@@ -226,10 +226,10 @@ export const stateMachine = createStateMachineSetup<
                   states: {
                     in_progress: {
                       on: {
-                        [EdgeConnectionFinishEvent.Policy1AttachedToGroup]: 'complete',
+                        [EdgeConnectionFinishEvent.Policy1AttachedToGroup]: 'completed',
                       },
                     },
-                    complete: {
+                    completed: {
                       type: 'final',
                     },
                   },
@@ -239,10 +239,10 @@ export const stateMachine = createStateMachineSetup<
                   states: {
                     in_progress: {
                       on: {
-                        [EdgeConnectionFinishEvent.Policy2AttachedToGroup]: 'complete',
+                        [EdgeConnectionFinishEvent.Policy2AttachedToGroup]: 'completed',
                       },
                     },
-                    complete: {
+                    completed: {
                       type: 'final',
                     },
                   },
@@ -252,17 +252,17 @@ export const stateMachine = createStateMachineSetup<
                   states: {
                     in_progress: {
                       on: {
-                        [EdgeConnectionFinishEvent.Policy3AttachedToGroup]: 'complete',
+                        [EdgeConnectionFinishEvent.Policy3AttachedToGroup]: 'completed',
                       },
                     },
-                    complete: {
+                    completed: {
                       type: 'final',
                     },
                   },
                 },
               },
             },
-            complete: {
+            completed: {
               type: 'final',
             },
           },
@@ -329,11 +329,11 @@ export const stateMachine = createStateMachineSetup<
                   params: { id: LevelObjectiveID.AttachUserToGroup },
                 },
               ],
-              target: 'user_attached',
+              target: 'completed',
             },
           },
         },
-        user_attached: {
+        completed: {
           type: 'final',
         },
       },
@@ -344,7 +344,7 @@ export const stateMachine = createStateMachineSetup<
         NEXT_POPOVER: [
           {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
-            target: 'level_complete',
+            target: 'level_completed',
           },
           {
             target: 'remove_unnecessary_edges_and_nodes_final',
@@ -356,10 +356,10 @@ export const stateMachine = createStateMachineSetup<
       entry: ['show_unnecessary_edges_or_nodes_warning', 'hide_popovers'],
       always: {
         guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
-        target: 'level_complete',
+        target: 'level_completed',
       },
     },
-    level_complete: {
+    level_completed: {
       entry: [
         'hide_unnecessary_edges_or_nodes_warning',
         { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
