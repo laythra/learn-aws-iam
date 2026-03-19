@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 import {
   Text,
   Flex,
@@ -39,10 +41,17 @@ const ObjectivesSidePanel: React.FC = () => {
     _.isEqual
   );
 
+  const [panelReady, setPanelReady] = useState(false);
+
+  useEffect(() => {
+    if (!isSidePanelOpen) setPanelReady(false);
+  }, [isSidePanelOpen]);
+
   return (
     <SidePanel
       isOpen={isSidePanelOpen ?? false}
       transitionDuration={SIDEPANEL_TRANSITION_DURATION_MS}
+      onOpenTransitionEnd={() => setPanelReady(true)}
     >
       <Flex direction='column' alignItems='center' height='100%' width='100%'>
         <HStack alignItems='center'>
@@ -67,10 +76,7 @@ const ObjectivesSidePanel: React.FC = () => {
           </Popover>
         </HStack>
         <Divider my={2} />
-        <TutorialPopover
-          elementId={ElementID.ObjectivesSidePanel}
-          delay={SIDEPANEL_TRANSITION_DURATION_MS}
-        >
+        <TutorialPopover elementId={ElementID.ObjectivesSidePanel} readyToShow={panelReady}>
           <Box mt={2} overflowY='auto' data-element-id={ElementID.ObjectivesSidePanel}>
             <List spacing={3}>
               {Object.values(levelObjectives).map((objective, index) => {

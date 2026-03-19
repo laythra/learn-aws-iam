@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React from 'react';
 
 import {
   Popover,
@@ -23,7 +23,7 @@ import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 interface TutorialPopoverProps {
   children: React.ReactNode;
   elementId: string;
-  delay?: number;
+  readyToShow?: boolean;
 }
 
 /**
@@ -37,7 +37,7 @@ interface TutorialPopoverProps {
  * @param {TutorialPopoverProps} props - The component props
  * @param {React.ReactNode} props.children - The element that triggers the popover when rendered
  * @param {string} props.elementId - Unique identifier for the tutorial element, used to fetch and manage popover state
- * @param {number} [props.delay] - Optional delay in milliseconds before showing the popover after the component mountsa
+ * @param {boolean} [props.readyToShow] - Determines if the popover is ready to be shown
  * @example
  * ```tsx
  * <TutorialPopover elementId="welcome-button">
@@ -45,9 +45,12 @@ interface TutorialPopoverProps {
  * </TutorialPopover>
  * ```
  */
-export const TutorialPopover: React.FC<TutorialPopoverProps> = ({ children, elementId, delay }) => {
+export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
+  children,
+  elementId,
+  readyToShow = true,
+}) => {
   const { isOpen, content, goNext, close } = usePopover(elementId);
-  const [canShow, setCanShow] = useState(false);
 
   const {
     popover_title: label,
@@ -58,24 +61,9 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({ children, elem
     tutorial_video: videoName,
   } = content || {};
 
-  useEffect(() => {
-    if (!isOpen) {
-      setCanShow(false);
-      return;
-    }
-
-    if (delay === 0) {
-      setCanShow(true);
-      return;
-    }
-
-    const timer = setTimeout(() => setCanShow(true), delay);
-    return () => clearTimeout(timer);
-  }, [isOpen, delay]);
-
   return (
     <Popover
-      isOpen={canShow}
+      isOpen={isOpen && readyToShow}
       placement={placement}
       closeOnEsc={showCloseButton}
       closeOnBlur={showCloseButton}
