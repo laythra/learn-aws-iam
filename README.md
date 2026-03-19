@@ -1,74 +1,59 @@
 # Learn AWS IAM Interactively
 
+An interactive visual simulator for learning AWS IAM (Identity and Access Management). No AWS account required.
+
 ![Tests](https://github.com/laythra/learnawsiam/actions/workflows/test.yml/badge.svg)
 ![Lint](https://github.com/laythra/learnawsiam/actions/workflows/lint.yml/badge.svg)
 ![Playwright Tests](https://github.com/laythra/learnawsiam/actions/workflows/playwright.yml/badge.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 🎯 Purpose
+![Demo](./assets/gifs/demo_overview.gif)
 
-AWS IAM is easily the most fundamental and most used service in the AWS ecosystem. It’s pretty powerful and flexible, but with this great power and flexibility comes inevitable complexity and a steep learning curve.
+**[Try it live — no setup required](https://learnawsiam.com)**
 
-This Interactive Project, inspired by learn-git-branching, aims to provide a hands-on learning experience that reinforces core principles, helps developers (and anyone working with AWS) develop practical mastery, and build a fundamental understanding of AWS IAM.
+## What This Is
 
-## 📚 What You'll Learn
+A visual interactive learning simulator for AWS IAM aimed at developers and anyone working with AWS. Inspired by [learn-git-branching](https://github.com/pcottle/learnGitBranching), it presents real-world access management scenarios that you solve using IAM
 
-- IAM Users, Groups, and Roles fundamentals
-- Policy structure and syntax (Identity-based, Resource-based, Trust policies)
-- Permission Boundaries and Service Control Policies (SCPs)
-- AWS Organizations and multi-account architectures
-- Real-world access control scenarios
+Users will write real IAM policies, attach them to users, groups, roles, and other resources, and see the effects of their changes in real time. The goal is to provide an intuitive, practical learning experience that helps you master the core principles of AWS IAM.
 
-## 🧠 How it works
+## Features
 
-The project presents AWS IAM through an interactive, visual canvas. Instead of reading lengthy documentation, learning happens by directly building real IAM policies to solve concrete, real-world scenarios.
+- **12 progressive levels** - Covering basic scenarios to the more advanced ones revolving around multi-account access and real-world complex scenarios
+- **Visual canvas** - You will learn with an interactive visual canvas, where everything is presented as nodes and edges
+- **Integrated policy editor with continuous feedback loop** - You write real JSON policies and see real-time feedback on what you write
+- **Guided tutorials** - each level walks you through the concepts before you solve it
+- **Runs entirely in the browser** — all IAM simulation logic is client-side. No AWS credentials or infrastructure required. The only backend is a small stats tracker
 
-The experience is divided into levels, each offering a concrete set of objectives and a clear visual tutorial to help users lay the foundation for the topic it covers.
-Users attempt to finish each objective, where each action performed is validated against actual IAM Rules, the resulting permissions are immediately visible, and the user keeps iterating until the proposed scenario fully resolves
+## Topics Covered
 
-The project presents AWS IAM through an interactive, visual canvas where you **solve real scenarios** by:
+| Levels | Topic                                                                                |
+| ------ | ------------------------------------------------------------------------------------ |
+| 1–4    | Introduction to IAM basics, users, groups, and identity policies                     |
+| 5–6    | Using IAM roles, cross-account access, and resource-based policies                   |
+| 7–10   | Writing complex policies with tag-based access control through the use of conditions |
+| 11–12  | Utilizing IAM guardrails, ie: SCP and permission boundaries                          |
 
-- ✅ **Building policies** - Write JSON policies in an integrated editor with real-time validation
-- ✅ **Connecting entities** - Drag-and-drop to attach policies to users, groups, and roles
-- ✅ **Seeing results** - Immediate visual feedback shows which permissions are granted or denied
-- ✅ **Progressive learning** - 12 levels from basics to advanced multi-account scenarios
+## Built With
 
-Each level provides clear objectives, visual tutorials, and validates your solution against actual IAM rules.
-
-## 🏗️ Built With
-
-- **React + TypeScript** - Modern, type-safe UI development
-- **XState** - Deterministic state machines for tutorial orchestration
-- **ReactFlow** - Interactive canvas for IAM entity visualization
-- **CodeMirror** - Professional JSON policy editor
-- **Chakra UI** - Accessible, themeable component library
+- **React + TypeScript** - The core framework and language for the frontend
+- **XState** - State management for complex level logic and the IAM simulation engine
+- **ReactFlow** - Interactive graph visualization for the canvas and node-based UI
+- **CodeMirror** - Used for the integrated policy editor with real-time feedback
+- **Chakra UI** - Component library for pretty much every UI element you see
 
 For detailed architecture, see [ARCHITECTURE.md](ARCHITECTURE.md)
 
-## Demo
+## Run Locally
 
-![Demo of Learn AWS IAM Interactive](./assets/gifs/demo_overview.gif)
-
-## 📋 Prerequisites
-
-**To run locally:**
-
-- **Docker** - That's it! Everything else runs in containers.
-
-**No AWS account needed** - This is a learning simulator, not connected to real AWS.
-
-## 🚀 Getting Started
-
-### Try Online (Recommended)
-
-Visit **[learnawsiam.com](https://learnawsiam.com)** - no installation needed!
-
-### Run Locally
+The site at **[learnawsiam.com](https://learnawsiam.com)** serves the same static build — all the logic runs in your browser, no server-side processing. To run it yourself:
 
 ```bash
-# Clone the repository
 git clone git@github.com:laythra/learnawsiam.git
 cd learnawsiam
-
-# Install dependencies and run (requires Docker)
 make run-dev
 ```
+
+## Contributing
+
+Contributions are welcome. If you're interested in contributing in any form (bug fixes, docs, new levels), please open an issue or fork the repo and submit a pull request. For major changes (like adding a new level or changing the core mechanics), please open an issue first to discuss what you would like to change.
