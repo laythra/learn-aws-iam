@@ -44,7 +44,7 @@ export const test = base.extend<TestFixtures>({
   goToLevel: async ({ page }, use) => {
     const goToLevel = async (levelNumber: number): Promise<void> => {
       page.addInitScript(level => {
-        window.localStorage.setItem(`learn_aws_iam_currentLevel`, level.toString());
+        window.localStorage.setItem(`currentLevel`, level.toString());
       }, levelNumber);
     };
 
@@ -65,7 +65,7 @@ export const test = base.extend<TestFixtures>({
       await page.addInitScript(
         ([snapshotData, level]) => {
           if (snapshotData) {
-            window.localStorage.setItem(`learn_aws_iam_level${level}StateCheckpoint`, snapshotData);
+            window.localStorage.setItem(`level${level}StateCheckpoint`, snapshotData);
           }
         },
         [versioned, levelNumber] as [string | undefined, number]

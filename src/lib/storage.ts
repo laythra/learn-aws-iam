@@ -1,14 +1,12 @@
-const storagePrefix = 'learn_aws_iam_';
-
 const storage = {
   getKey: (key: string, defaultVal: string = '') => {
-    return window.localStorage.getItem(`${storagePrefix}${key}` as string) || defaultVal;
+    return window.localStorage.getItem(key) || defaultVal;
   },
   setKey: (key: string, value: string) => {
-    window.localStorage.setItem(`${storagePrefix}${key}`, value);
+    window.localStorage.setItem(key, value);
   },
   removeKey: (key: string) => {
-    window.localStorage.removeItem(`${storagePrefix}${key}`);
+    window.localStorage.removeItem(key);
   },
 };
 
