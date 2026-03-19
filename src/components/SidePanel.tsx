@@ -4,9 +4,15 @@ interface SidePanelProps {
   children: React.ReactNode;
   isOpen: boolean;
   transitionDuration: number;
+  onOpenTransitionEnd?: () => void;
 }
 
-const SidePanel: React.FC<SidePanelProps> = ({ children, isOpen, transitionDuration }) => {
+const SidePanel: React.FC<SidePanelProps> = ({
+  children,
+  isOpen,
+  transitionDuration,
+  onOpenTransitionEnd,
+}) => {
   const theme = useTheme();
   const openWidth = { base: '50%', md: '30%', lg: '25%', xl: '20%' };
   const width = isOpen ? openWidth : '0%';
@@ -21,6 +27,9 @@ const SidePanel: React.FC<SidePanelProps> = ({ children, isOpen, transitionDurat
       w={width}
       transition={`width ${transitionDuration}ms ease-in-out`}
       overflow='hidden'
+      onTransitionEnd={() => {
+        if (isOpen) onOpenTransitionEnd?.();
+      }}
     >
       <Box
         flex='1'
