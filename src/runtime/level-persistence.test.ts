@@ -3,10 +3,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearCheckpoint, loadCheckpoint, saveCheckpoint } from './level-persistence';
 import { LEVEL_VERSIONS } from '@/levels/level-versions';
 
-const STORAGE_PREFIX = 'learn_aws_iam_';
 const LEVEL = 1;
 const CURRENT_VERSION = LEVEL_VERSIONS[LEVEL];
-const STORAGE_KEY = `${STORAGE_PREFIX}level${LEVEL}StateCheckpoint`;
+const STORAGE_KEY = `level${LEVEL}StateCheckpoint`;
 
 const MOCK_SNAPSHOT = { status: 'active', value: 'playing', context: { score: 42 } };
 
