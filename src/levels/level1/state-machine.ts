@@ -76,27 +76,27 @@ export const stateMachine = createStateMachineSetup<
           },
         },
       ],
-      initial: 'welcoming_message',
+      initial: 'popup_1',
       onDone: 'level_conclusion',
       states: {
-        welcoming_message: {
+        popup_1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
             NEXT_POPUP: {
-              target: 'tutorial_popover1',
+              target: 'popover_1',
             },
           },
         },
-        tutorial_popover1: {
+        popover_1: {
           entry: [
             'hide_popups',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
           ],
           on: {
-            NEXT_POPOVER: 'tutorial_popover2',
+            NEXT_POPOVER: 'popover_2',
           },
         },
-        tutorial_popover2: {
+        popover_2: {
           entry: [
             {
               type: 'show_popover_message',
@@ -104,19 +104,19 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            NEXT_POPOVER: 'tutorial_popover3',
+            NEXT_POPOVER: 'popover_3',
           },
         },
-        tutorial_popover3: {
+        popover_3: {
           entry: {
             type: 'show_popover_message',
             params: { message: POPOVER_TUTORIAL_MESSAGES[2] },
           },
           on: {
-            NEXT_POPOVER: 'tutorial_popover4',
+            NEXT_POPOVER: 'popover_4',
           },
         },
-        tutorial_popover4: {
+        popover_4: {
           entry: [
             { type: 'append_nodes', params: { nodes: INITIAL_TUTORIAL_RESOURCE_NODES } },
             {
@@ -125,13 +125,12 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            NEXT_POPOVER: 'tutorial_popover5',
+            NEXT_POPOVER: 'popover_5',
           },
         },
-        tutorial_popover5: {
+        popover_5: {
           entry: [
             { type: 'append_nodes', params: { nodes: INITIAL_TUTORIAL_POLICY_NODES } },
-
             {
               type: 'show_popover_message',
               params: { message: POPOVER_TUTORIAL_MESSAGES[4] },
@@ -232,20 +231,20 @@ export const stateMachine = createStateMachineSetup<
                   params: { nodeId: UserNodeID.FirstUser },
                 },
               ],
-              target: 'policy_attached',
+              target: 'popover_6',
             },
           },
         },
-        policy_attached: {
+        popover_6: {
           entry: {
             type: 'show_popover_message',
             params: { message: POPOVER_TUTORIAL_MESSAGES[10] },
           },
           on: {
-            NEXT_POPOVER: 'completed',
+            NEXT_POPOVER: 'tutorial_finished',
           },
         },
-        completed: {
+        tutorial_finished: {
           entry: 'hide_popovers',
           type: 'final',
         },
@@ -263,7 +262,7 @@ export const stateMachine = createStateMachineSetup<
             NEXT_POPOVER: [
               {
                 guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
-                target: 'level_complete',
+                target: 'level_completed',
               },
               {
                 target: 'remove_unnecessary_edges_and_nodes_final',
@@ -275,10 +274,10 @@ export const stateMachine = createStateMachineSetup<
           entry: ['show_unnecessary_edges_or_nodes_warning', 'hide_popovers'],
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
-            target: 'level_complete',
+            target: 'level_completed',
           },
         },
-        level_complete: {
+        level_completed: {
           entry: [
             'hide_popovers',
             'hide_unnecessary_edges_or_nodes_warning',

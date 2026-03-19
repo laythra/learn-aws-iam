@@ -53,39 +53,39 @@ export const stateMachine = createStateMachineSetup<
         'disable_edges_management_ability',
         { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
       ],
-      initial: 'popup1',
+      initial: 'popup_1',
       states: {
-        popup1: {
+        popup_1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
-            NEXT_POPUP: 'popup2',
+            NEXT_POPUP: 'popup_2',
           },
         },
-        popup2: {
+        popup_2: {
           entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } }],
           on: {
-            NEXT_POPUP: 'popover1',
+            NEXT_POPUP: 'popover_1',
           },
         },
-        popover1: {
+        popover_1: {
           entry: [
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
             'hide_popups',
           ],
           on: {
-            NEXT_POPOVER: 'fixed_popover1',
+            NEXT_POPOVER: 'fixed_popover_1',
           },
         },
-        fixed_popover1: {
+        fixed_popover_1: {
           entry: [
             'hide_popovers',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
           ],
           on: {
-            NEXT_FIXED_POPOVER: 'popover2',
+            NEXT_FIXED_POPOVER: 'popover_2',
           },
         },
-        popover2: {
+        popover_2: {
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[1] } },
@@ -109,7 +109,7 @@ export const stateMachine = createStateMachineSetup<
           ],
           on: {
             [PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_FIRST_TIME]: {
-              target: 'fixed_popover2',
+              target: 'fixed_popover_2',
               actions: [
                 {
                   type: 'finish_level_objective',
@@ -134,35 +134,35 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        fixed_popover2: {
+        fixed_popover_2: {
           entry: [
             'hide_popovers',
             'store_checkpoint',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
           ],
           on: {
-            NEXT_FIXED_POPOVER: 'popover3',
+            NEXT_FIXED_POPOVER: 'popover_3',
           },
         },
-        popover3: {
+        popover_3: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
           ],
           on: {
-            [VoidEvent.IAMNodeTagsOpened]: 'fixed_popover3',
+            [VoidEvent.IAMNodeTagsOpened]: 'fixed_popover_3',
           },
         },
-        fixed_popover3: {
+        fixed_popover_3: {
           entry: [
             'hide_popovers',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[3] } },
           ],
           on: {
-            [VoidEvent.IAMNodeTagsPopoverClosed]: 'popover4',
+            [VoidEvent.IAMNodeTagsPopoverClosed]: 'popover_4',
           },
         },
-        popover4: {
+        popover_4: {
           meta: { highlighted_elements: [ElementID.IAMNodeContentEditButton] },
           entry: [
             'hide_fixed_popovers',
@@ -197,7 +197,7 @@ export const stateMachine = createStateMachineSetup<
           ],
           on: {
             [PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_SECOND_TIME]: {
-              target: 'popover5',
+              target: 'popover_5',
               actions: [
                 {
                   type: 'hide_node_help_tooltip',
@@ -215,16 +215,16 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        popover5: {
+        popover_5: {
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[4] } },
           ],
           on: {
-            NEXT_POPOVER: 'popup3',
+            NEXT_POPOVER: 'level_completed',
           },
         },
-        popup3: {
+        level_completed: {
           entry: [
             'hide_popovers',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },

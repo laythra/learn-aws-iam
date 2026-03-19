@@ -60,7 +60,7 @@ export const stateMachine = createStateMachineSetup<
   states: {
     inside_tutorial: {
       tags: ['tutorial'],
-      initial: 'tutorial_popup1',
+      initial: 'popup_1',
       onDone: 'inside_level',
       entry: [
         { type: 'assign_nodes', params: { nodes: INITIAL_TUTORIAL_NODES } },
@@ -77,27 +77,27 @@ export const stateMachine = createStateMachineSetup<
         'disable_edges_management_ability',
       ],
       states: {
-        tutorial_popup1: {
+        popup_1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
-            NEXT_POPUP: 'tutorial_popup2',
+            NEXT_POPUP: 'popup_2',
           },
         },
-        tutorial_popup2: {
+        popup_2: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           on: {
-            NEXT_POPUP: 'tutorial_popup3',
+            NEXT_POPUP: 'popup_3',
           },
         },
-        tutorial_popup3: {
+        popup_3: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },
-          exit: 'hide_popups',
           on: {
-            NEXT_POPUP: 'tutorial_popover1',
+            NEXT_POPUP: 'popover_1',
           },
         },
-        tutorial_popover1: {
+        popover_1: {
           entry: [
+            'hide_popups',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
             {
               type: 'update_whitelisted_element_ids',
@@ -107,27 +107,27 @@ export const stateMachine = createStateMachineSetup<
           on: {
             [VoidEvent.IAMNodeContentOpened]: {
               actions: 'hide_popovers',
-              target: 'fixed_popover1',
+              target: 'fixed_popover_1',
             },
           },
         },
-        fixed_popover1: {
+        fixed_popover_1: {
           entry: [
             'hide_popovers',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
           ],
           on: {
-            [VoidEvent.IAMNodeContentClosed]: 'fixed_popover2',
+            [VoidEvent.IAMNodeContentClosed]: 'fixed_popover_2',
           },
         },
-        fixed_popover2: {
+        fixed_popover_2: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
             'enable_edges_management_ability',
           ],
           on: {
             [EdgeConnectionFinishEvent.TUTORIAL_ROLE1_ATTACHED_TO_USER]: {
-              target: 'user_attached_to_tutorial_role_popover',
+              target: 'popover_2',
               actions: [
                 {
                   type: 'finish_level_objective',
@@ -137,7 +137,7 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        user_attached_to_tutorial_role_popover: {
+        popover_2: {
           entry: [
             'hide_fixed_popovers',
             'disable_edges_management_ability',
@@ -169,7 +169,7 @@ export const stateMachine = createStateMachineSetup<
           ],
           on: {
             [RoleCreationFinishEvent.TUTORIAL_ROLE_CREATED]: {
-              target: 'role_creation_finished_popover1',
+              target: 'popover_3',
               actions: [
                 {
                   type: 'finish_level_objective',
@@ -179,16 +179,16 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        role_creation_finished_popover1: {
+        popover_3: {
           entry: {
             type: 'show_popover_message',
             params: { message: POPOVER_TUTORIAL_MESSAGES[3] },
           },
           on: {
-            NEXT_POPOVER: 'role_creation_finished_popover2',
+            NEXT_POPOVER: 'popover_4',
           },
         },
-        role_creation_finished_popover2: {
+        popover_4: {
           entry: {
             type: 'show_popover_message',
             params: { message: POPOVER_TUTORIAL_MESSAGES[4] },
@@ -215,7 +215,7 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           onDone: {
-            target: 'tutorial_finished_popover',
+            target: 'popover_5',
             actions: [
               {
                 type: 'finish_level_objective',
@@ -257,15 +257,15 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        tutorial_finished_popover: {
+        popover_5: {
           entry: [
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[6] } },
           ],
           on: {
-            NEXT_POPOVER: 'tutorial_finished_fixed_popover1',
+            NEXT_POPOVER: 'fixed_popover_3',
           },
         },
-        tutorial_finished_fixed_popover1: {
+        fixed_popover_3: {
           entry: [
             'hide_popovers',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
@@ -316,18 +316,18 @@ export const stateMachine = createStateMachineSetup<
         },
         'hide_unnecessary_edges_or_nodes_warning',
       ],
-      initial: 'inside_level_popup1',
+      initial: 'popup_1',
       states: {
-        inside_level_popup1: {
+        popup_1: {
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[3] } },
           ],
           on: {
-            NEXT_POPUP: 'inside_level_fixed_popover1',
+            NEXT_POPUP: 'fixed_popover_1',
           },
         },
-        inside_level_fixed_popover1: {
+        fixed_popover_1: {
           entry: [
             'hide_popups',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[3] } },
@@ -338,7 +338,7 @@ export const stateMachine = createStateMachineSetup<
         },
         create_role_and_policy: {
           entry: ['hide_fixed_popovers'],
-          onDone: 'level_finished_fixed_popover',
+          onDone: 'fixed_popover_2',
           type: 'parallel',
           states: {
             create_lambda_role: {
@@ -470,7 +470,7 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        level_finished_fixed_popover: {
+        fixed_popover_2: {
           entry: {
             type: 'show_fixed_popover_message',
             params: { message: FIXED_POPOVER_MESSAGES[4] },
@@ -479,7 +479,7 @@ export const stateMachine = createStateMachineSetup<
             NEXT_FIXED_POPOVER: [
               {
                 guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
-                target: 'level_finished_popup',
+                target: 'level_completed',
               },
               {
                 target: 'remove_unnecessary_edges_and_nodes',
@@ -491,10 +491,10 @@ export const stateMachine = createStateMachineSetup<
           entry: 'show_unnecessary_edges_or_nodes_warning',
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
-            target: 'level_finished_popup',
+            target: 'level_completed',
           },
         },
-        level_finished_popup: {
+        level_completed: {
           entry: [
             'store_checkpoint',
             'hide_popovers',

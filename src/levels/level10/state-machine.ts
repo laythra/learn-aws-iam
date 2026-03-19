@@ -68,17 +68,17 @@ export const stateMachine = createStateMachineSetup<
         },
         'disable_edges_management_ability',
       ],
-      initial: 'popup1',
+      initial: 'popup_1',
       states: {
-        popup1: {
+        popup_1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
-          on: { NEXT_POPUP: 'popup2' },
+          on: { NEXT_POPUP: 'popup_2' },
         },
-        popup2: {
+        popup_2: {
           entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } }],
-          on: { NEXT_POPUP: 'popup3' },
+          on: { NEXT_POPUP: 'popup_3' },
         },
-        popup3: {
+        popup_3: {
           entry: [{ type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } }],
           on: { NEXT_POPUP: 'create_policy1' },
         },
@@ -108,7 +108,7 @@ export const stateMachine = createStateMachineSetup<
         attach_policy1_to_groups: {
           type: 'parallel',
           onDone: {
-            target: 'level_objective1_finished',
+            target: 'fixed_popover_1',
             actions: [
               {
                 type: 'finish_level_objective',
@@ -166,7 +166,7 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        level_objective1_finished: {
+        fixed_popover_1: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
             { type: 'append_nodes', params: { nodes: INITIAL_IN_LEVEL_RESOURCE_NODES } },
@@ -212,7 +212,7 @@ export const stateMachine = createStateMachineSetup<
           type: 'parallel',
           onDone: [
             {
-              target: 'level_objectives_completed',
+              target: 'fixed_popover_2',
               actions: [
                 {
                   type: 'finish_level_objective',
@@ -276,7 +276,7 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        level_objectives_completed: {
+        fixed_popover_2: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
           ],
@@ -298,7 +298,6 @@ export const stateMachine = createStateMachineSetup<
             'hide_popovers',
             'hide_fixed_popovers',
           ],
-          exit: 'hide_unnecessary_edges_or_nodes_warning',
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
             target: 'level_completed',

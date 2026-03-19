@@ -82,21 +82,21 @@ export const stateMachine = createStateMachineSetup<
         },
       ],
       onDone: 'inside_level',
-      initial: 'welcoming_message',
+      initial: 'popup_1',
       states: {
-        welcoming_message: {
+        popup_1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
-            NEXT_POPUP: 'tutorial_popup1',
+            NEXT_POPUP: 'popup_2',
           },
         },
-        tutorial_popup1: {
+        popup_2: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           on: {
-            NEXT_POPUP: ['fixed_popover1'],
+            NEXT_POPUP: ['fixed_popover_1'],
           },
         },
-        fixed_popover1: {
+        fixed_popover_1: {
           entry: [
             'hide_popups',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
@@ -122,7 +122,7 @@ export const stateMachine = createStateMachineSetup<
           ],
           on: {
             [ResourcePolicyCreationFinishEvent.TUTORIAL_RESOURCE_BASED_POLICY_CREATED]: {
-              target: 'access_granted_popover',
+              target: 'popover_1',
               actions: [
                 {
                   type: 'finish_level_objective',
@@ -132,7 +132,7 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        access_granted_popover: {
+        popover_1: {
           entry: {
             type: 'show_popover_message',
             params: { message: POPOVER_TUTORIAL_MESSAGES[1] },
@@ -147,38 +147,38 @@ export const stateMachine = createStateMachineSetup<
       },
     },
     inside_level: {
-      initial: 'tutorial_popup3',
+      initial: 'popup_1',
       entry: [
         'store_checkpoint',
         'clear_edges',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
       ],
       states: {
-        tutorial_popup3: {
+        popup_1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },
           on: {
-            NEXT_POPUP: 'fixed_popover2',
+            NEXT_POPUP: 'fixed_popover_1',
           },
         },
-        fixed_popover2: {
+        fixed_popover_1: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
             'hide_popups',
           ],
           on: {
-            NEXT_FIXED_POPOVER: 'resource_node_popover',
+            NEXT_FIXED_POPOVER: 'popover_1',
           },
         },
-        resource_node_popover: {
+        popover_1: {
           entry: [
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
             'hide_fixed_popovers',
           ],
           on: {
-            NEXT_POPOVER: 'user_node_popover',
+            NEXT_POPOVER: 'popover_2',
           },
         },
-        user_node_popover: {
+        popover_2: {
           entry: [
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
           ],
@@ -242,7 +242,7 @@ export const stateMachine = createStateMachineSetup<
           ],
           on: {
             [EdgeConnectionFinishEvent.IDENTITY_POLICY_ATTACHED_TO_IAM_USER]: {
-              target: 'popover6',
+              target: 'popover_3',
               actions: [
                 {
                   type: 'finish_level_objective',
@@ -256,7 +256,7 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        popover6: {
+        popover_3: {
           entry: [
             {
               type: 'show_popover_message',
@@ -298,7 +298,7 @@ export const stateMachine = createStateMachineSetup<
           ],
           on: {
             [ResourcePolicyCreationFinishEvent.IN_LEVEL_RESOURCE_BASED_POLICY_CREATED]: {
-              target: 'create_and_attach_policies_completed',
+              target: 'popover_4',
               actions: [
                 {
                   type: 'finish_level_objective',
@@ -312,24 +312,24 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        create_and_attach_policies_completed: {
+        popover_4: {
           entry: [
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[8] } },
           ],
           on: {
-            NEXT_POPOVER: 'fixed_popover3',
+            NEXT_POPOVER: 'fixed_popover_2',
           },
         },
-        fixed_popover3: {
+        fixed_popover_2: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
             'hide_popovers',
           ],
           on: {
-            NEXT_FIXED_POPOVER: 'fixed_popover4',
+            NEXT_FIXED_POPOVER: 'fixed_popover_3',
           },
         },
-        fixed_popover4: {
+        fixed_popover_3: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[3] } },
           ],

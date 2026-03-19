@@ -59,40 +59,42 @@ export const stateMachine = createStateMachineSetup<
   states: {
     inside_tutorial: {
       tags: ['tutorial'],
-      initial: 'tutorial_popup1',
+      initial: 'popup_1',
       onDone: 'inside_level',
       entry: [{ type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } }],
       states: {
-        tutorial_popup1: {
+        popup_1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
-            NEXT_POPUP: 'tutorial_popup2',
+            NEXT_POPUP: 'popup_2',
           },
         },
-        tutorial_popup2: {
+        popup_2: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           on: {
-            NEXT_POPUP: 'tutorial_popup3',
+            NEXT_POPUP: 'popup_3',
           },
         },
-        tutorial_popup3: {
+        popup_3: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },
           on: {
             NEXT_POPUP: {
-              target: 'fixed_popover1',
+              target: 'fixed_popover_1',
             },
           },
         },
-        fixed_popover1: {
+        fixed_popover_1: {
           entry: [
             'hide_popups',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
             'show_side_panel',
             { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
           ],
-          exit: 'hide_fixed_popovers',
           on: {
-            NEXT_FIXED_POPOVER: 'tutorial_finished',
+            NEXT_FIXED_POPOVER: {
+              target: 'tutorial_finished',
+              actions: 'hide_fixed_popovers',
+            },
           },
         },
         tutorial_finished: {
@@ -265,7 +267,7 @@ export const stateMachine = createStateMachineSetup<
             NEXT_POPOVER: [
               {
                 guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
-                target: 'level_finished_popup',
+                target: 'level_completed',
               },
               {
                 target: 'remove_unnecessary_edges_and_nodes',
@@ -277,10 +279,10 @@ export const stateMachine = createStateMachineSetup<
           entry: ['hide_popovers', 'show_unnecessary_edges_or_nodes_warning'],
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
-            target: 'level_finished_popup',
+            target: 'level_completed',
           },
         },
-        level_finished_popup: {
+        level_completed: {
           entry: [
             'store_checkpoint',
             'hide_popovers',

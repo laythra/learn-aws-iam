@@ -66,24 +66,24 @@ export const stateMachine = createStateMachineSetup<
         'disable_edges_management_ability',
         { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[0] } },
       ],
-      initial: 'popup1',
+      initial: 'popup_1',
       states: {
-        popup1: {
+        popup_1: {
           entry: { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[0] } },
           on: {
-            NEXT_POPUP: 'fixed_popover1',
+            NEXT_POPUP: 'fixed_popover_1',
           },
         },
-        fixed_popover1: {
+        fixed_popover_1: {
           entry: [
             'hide_popups',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[0] } },
           ],
           on: {
-            NEXT_FIXED_POPOVER: 'fixed_popover2',
+            NEXT_FIXED_POPOVER: 'fixed_popover_2',
           },
         },
-        fixed_popover2: {
+        fixed_popover_2: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
           ],
@@ -93,7 +93,7 @@ export const stateMachine = createStateMachineSetup<
         },
         create_policy: {
           type: 'parallel',
-          onDone: 'fixed_popover3',
+          onDone: 'fixed_popover_3',
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[0] } },
@@ -214,16 +214,16 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        fixed_popover3: {
+        fixed_popover_3: {
           entry: [
             'store_checkpoint',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
           ],
           on: {
-            NEXT_FIXED_POPOVER: 'fixed_popover4',
+            NEXT_FIXED_POPOVER: 'fixed_popover_4',
           },
         },
-        fixed_popover4: {
+        fixed_popover_4: {
           entry: [
             'hide_popovers',
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[3] } },
@@ -271,7 +271,7 @@ export const stateMachine = createStateMachineSetup<
         attach_policy1_to_groups: {
           type: 'parallel',
           onDone: {
-            target: 'policy_creation_completed',
+            target: 'fixed_popover_5',
             actions: {
               type: 'finish_level_objective',
               params: { id: LevelObjectiveID.GRANT_ACCESS_WITH_SHARED_POLICY },
@@ -320,15 +320,15 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        policy_creation_completed: {
+        fixed_popover_5: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[4] } },
           ],
           on: {
-            NEXT_FIXED_POPOVER: 'popover4',
+            NEXT_FIXED_POPOVER: 'popover_1',
           },
         },
-        popover4: {
+        popover_1: {
           entry: [
             {
               type: 'show_popover_message',
@@ -350,7 +350,6 @@ export const stateMachine = createStateMachineSetup<
         },
         remove_unnecessary_edges_and_nodes: {
           entry: ['show_unnecessary_edges_or_nodes_warning', 'hide_fixed_popovers'],
-          exit: 'hide_unnecessary_edges_or_nodes_warning',
           always: {
             guard: and(['no_unnecessary_edges', 'no_unnecessary_nodes']),
             target: 'level_completed',
@@ -359,6 +358,7 @@ export const stateMachine = createStateMachineSetup<
         level_completed: {
           entry: [
             'hide_fixed_popovers',
+            'hide_unnecessary_edges_or_nodes_warning',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },
           ],
           type: 'final',
