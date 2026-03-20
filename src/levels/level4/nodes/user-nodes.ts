@@ -9,27 +9,27 @@ import { IAMUserNode } from '@/types/iam-node-types';
 const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.Developer1,
-    label: 'Omar',
+    label: 'alex',
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
   },
   {
     id: UserNodeID.Developer2,
-    label: 'Sara',
+    label: 'sam',
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
   },
   {
     id: UserNodeID.DataScientist1,
-    label: 'Ahmad',
+    label: 'morgan',
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
   },
   {
     id: UserNodeID.Intern1,
-    label: 'Layla',
+    label: 'casey',
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
   },
   {
     id: UserNodeID.Intern2,
-    label: 'Mohammad',
+    label: 'jordan',
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
   },
 ];

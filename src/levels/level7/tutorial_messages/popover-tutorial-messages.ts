@@ -13,7 +13,7 @@ const POPOVER_MSG2 = `
 
 const POPOVER_MSG3 = `
   We need to create a **resource-based policy** for this **S3 bucket**
-  that grants *read/write* access to the external IAM user \`leon-kennedy\`.
+  that grants *read/write* access to the external IAM user \`alex\`.
 `;
 
 const POPOVER_MSG4 = `
@@ -22,12 +22,12 @@ const POPOVER_MSG4 = `
 `;
 
 const POPOVER_MSG5 = `
-  Create an identity-based policy for \`leon-kennedy\`
+  Create an identity-based policy for \`alex\`
   with \`s3:GetObject\` and \`s3:PutObject\` on \`rpd-case-files/*\`.
 `;
 
 const POPOVER_MSG6 = `
-  Great. Now attach this identity-based policy to the IAM user \`leon-kennedy\`.
+  Great. Now attach this identity-based policy to the IAM user \`alex\`.
 `;
 
 const POPOVER_MSG7 = `
@@ -38,7 +38,7 @@ const POPOVER_MSG7 = `
 
 const POPOVER_MSG8 = `
   Create the resource-based policy on \`rpd-case-files\`
-  and set \`leon-kennedy\` as the allowed principal.
+  and set \`alex\` as the allowed principal.
 `;
 
 const POPOVER_MSG9 = `

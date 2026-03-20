@@ -34,10 +34,10 @@ const completeInitialTutorial = async (tutorial: TutorialActions): Promise<void>
 
 const verifyInitialLevelSetup = async (nodes: NodeActions, edges: EdgeActions): Promise<void> => {
   await nodes.expectMultipleVisible([
-    UserNodeID.JuniorBruce,
-    UserNodeID.JuniorClark,
-    UserNodeID.SeniorKent,
-    UserNodeID.SeniorWayne,
+    UserNodeID.JuniorAlex,
+    UserNodeID.JuniorMorgan,
+    UserNodeID.SeniorJordan,
+    UserNodeID.SeniorSam,
     ResourceNodeID.SlackIntegrationSecret,
     ResourceNodeID.SlackCrashlyticsNotifierService,
     PolicyNodeID.SlackServiceManagePolicy,
@@ -45,40 +45,40 @@ const verifyInitialLevelSetup = async (nodes: NodeActions, edges: EdgeActions): 
   ]);
 
   await edges.expectMutlipleVisible([
-    [UserNodeID.JuniorBruce, ResourceNodeID.SlackIntegrationSecret],
-    [UserNodeID.JuniorBruce, ResourceNodeID.SlackCrashlyticsNotifierService],
-    [UserNodeID.JuniorClark, ResourceNodeID.SlackIntegrationSecret],
-    [UserNodeID.JuniorClark, ResourceNodeID.SlackCrashlyticsNotifierService],
-    [UserNodeID.SeniorKent, ResourceNodeID.SlackIntegrationSecret],
-    [UserNodeID.SeniorKent, ResourceNodeID.SlackCrashlyticsNotifierService],
-    [UserNodeID.SeniorWayne, ResourceNodeID.SlackIntegrationSecret],
-    [UserNodeID.SeniorWayne, ResourceNodeID.SlackCrashlyticsNotifierService],
-    [UserNodeID.JuniorBruce, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.JuniorClark, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.SeniorKent, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.SeniorWayne, RoleNodeID.SlackCodeDeployRole],
+    [UserNodeID.JuniorAlex, ResourceNodeID.SlackIntegrationSecret],
+    [UserNodeID.JuniorAlex, ResourceNodeID.SlackCrashlyticsNotifierService],
+    [UserNodeID.JuniorMorgan, ResourceNodeID.SlackIntegrationSecret],
+    [UserNodeID.JuniorMorgan, ResourceNodeID.SlackCrashlyticsNotifierService],
+    [UserNodeID.SeniorJordan, ResourceNodeID.SlackIntegrationSecret],
+    [UserNodeID.SeniorJordan, ResourceNodeID.SlackCrashlyticsNotifierService],
+    [UserNodeID.SeniorSam, ResourceNodeID.SlackIntegrationSecret],
+    [UserNodeID.SeniorSam, ResourceNodeID.SlackCrashlyticsNotifierService],
+    [UserNodeID.JuniorAlex, RoleNodeID.SlackCodeDeployRole],
+    [UserNodeID.JuniorMorgan, RoleNodeID.SlackCodeDeployRole],
+    [UserNodeID.SeniorJordan, RoleNodeID.SlackCodeDeployRole],
+    [UserNodeID.SeniorSam, RoleNodeID.SlackCodeDeployRole],
     [PolicyNodeID.SlackServiceManagePolicy, RoleNodeID.SlackCodeDeployRole],
   ]);
 };
 
 const verifyLevelSetupAfterPolicyEdit = async (edges: EdgeActions): Promise<void> => {
   await edges.expectMutlipleVisible([
-    [UserNodeID.JuniorBruce, ResourceNodeID.SlackCrashlyticsNotifierService],
-    [UserNodeID.JuniorClark, ResourceNodeID.SlackCrashlyticsNotifierService],
-    [UserNodeID.SeniorKent, ResourceNodeID.SlackIntegrationSecret],
-    [UserNodeID.SeniorKent, ResourceNodeID.SlackCrashlyticsNotifierService],
-    [UserNodeID.SeniorWayne, ResourceNodeID.SlackIntegrationSecret],
-    [UserNodeID.SeniorWayne, ResourceNodeID.SlackCrashlyticsNotifierService],
-    [UserNodeID.JuniorBruce, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.JuniorClark, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.SeniorKent, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.SeniorWayne, RoleNodeID.SlackCodeDeployRole],
+    [UserNodeID.JuniorAlex, ResourceNodeID.SlackCrashlyticsNotifierService],
+    [UserNodeID.JuniorMorgan, ResourceNodeID.SlackCrashlyticsNotifierService],
+    [UserNodeID.SeniorJordan, ResourceNodeID.SlackIntegrationSecret],
+    [UserNodeID.SeniorJordan, ResourceNodeID.SlackCrashlyticsNotifierService],
+    [UserNodeID.SeniorSam, ResourceNodeID.SlackIntegrationSecret],
+    [UserNodeID.SeniorSam, ResourceNodeID.SlackCrashlyticsNotifierService],
+    [UserNodeID.JuniorAlex, RoleNodeID.SlackCodeDeployRole],
+    [UserNodeID.JuniorMorgan, RoleNodeID.SlackCodeDeployRole],
+    [UserNodeID.SeniorJordan, RoleNodeID.SlackCodeDeployRole],
+    [UserNodeID.SeniorSam, RoleNodeID.SlackCodeDeployRole],
     [PolicyNodeID.SlackServiceManagePolicy, RoleNodeID.SlackCodeDeployRole],
   ]);
 
   await edges.expectMutlipleHidden([
-    [UserNodeID.JuniorBruce, ResourceNodeID.SlackIntegrationSecret],
-    [UserNodeID.JuniorClark, ResourceNodeID.SlackIntegrationSecret],
+    [UserNodeID.JuniorAlex, ResourceNodeID.SlackIntegrationSecret],
+    [UserNodeID.JuniorMorgan, ResourceNodeID.SlackIntegrationSecret],
   ]);
 };
 
@@ -90,13 +90,13 @@ const goThroughPopoversAfterFirstEdit = async (
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[1].popover_title);
   await tutorial.expectFixedPopoverWithTutorialGif(FIXED_POPOVER_MESSAGES[2].popover_title);
   await tutorial.expectPopoverWithoutNextButton(
-    UserNodeID.JuniorBruce,
+    UserNodeID.JuniorAlex,
     POPOVER_TUTORIAL_MESSAGES[2].popover_title
   );
 
-  await findNodeTagsButton(page, UserNodeID.JuniorBruce).click();
+  await findNodeTagsButton(page, UserNodeID.JuniorAlex).click();
   await tutorial.expectFixedPopoverWithoutNextButton(FIXED_POPOVER_MESSAGES[3].popover_title);
-  await nodes.closeNodePopover(UserNodeID.JuniorBruce, 'tags');
+  await nodes.closeNodePopover(UserNodeID.JuniorAlex, 'tags');
   await tutorial.expectPopoverWithoutNextButton(
     PolicyNodeID.SlackServiceManagePolicy,
     POPOVER_TUTORIAL_MESSAGES[3].popover_title

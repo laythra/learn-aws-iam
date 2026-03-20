@@ -43,7 +43,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'top',
   },
   {
-    element_id: UserNodeID.JuniorBruce,
+    element_id: UserNodeID.JuniorAlex,
     popover_title: 'View the Tags 🏷️',
     popover_content: POPOVER_MSG3,
     show_next_button: false,

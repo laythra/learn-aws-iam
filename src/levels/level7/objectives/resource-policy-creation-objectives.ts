@@ -16,7 +16,7 @@ const OBJECTIVE1_CALLOUT_MSG = `
 `;
 
 const OBJECTIVE2_CALLOUT_MSG = `
-  Create an resource-based policy that grants the user \`leon-kennedy\`
+  Create an resource-based policy that grants the user \`alex\`
   read/write access to the S3 bucket \`rpd-case-files\`
 `;
 

@@ -111,14 +111,14 @@ export const stateMachine = createStateMachineSetup<
             {
               type: 'show_node_help_tooltip',
               params: {
-                nodeId: GroupNodeID.BowserForce,
+                nodeId: GroupNodeID.BetaTeam,
                 content: "Grant this group's users access to their RDS instance",
               },
             },
             {
               type: 'show_node_help_tooltip',
               params: {
-                nodeId: GroupNodeID.PeachTeam,
+                nodeId: GroupNodeID.AlphaTeam,
                 content: "Grant this group's users access to their RDS instance",
               },
             },
@@ -160,7 +160,7 @@ export const stateMachine = createStateMachineSetup<
                       actions: [
                         {
                           type: 'finish_level_objective',
-                          params: { id: LevelObjectiveID.GRANT_ACCESS_FOR_TEAM_PEACH },
+                          params: { id: LevelObjectiveID.GRANT_ACCESS_FOR_ALPHA_TEAM },
                         },
                       ],
                     },
@@ -170,7 +170,7 @@ export const stateMachine = createStateMachineSetup<
                   entry: [
                     {
                       type: 'hide_node_help_tooltip',
-                      params: { nodeId: GroupNodeID.PeachTeam },
+                      params: { nodeId: GroupNodeID.AlphaTeam },
                     },
                     {
                       type: 'show_popover_message',
@@ -194,7 +194,7 @@ export const stateMachine = createStateMachineSetup<
                       actions: [
                         {
                           type: 'finish_level_objective',
-                          params: { id: LevelObjectiveID.GRANT_ACCESS_FOR_BOWSER_FORCE },
+                          params: { id: LevelObjectiveID.GRANT_ACCESS_FOR_BETA_TEAM },
                         },
                       ],
                     },
@@ -205,7 +205,7 @@ export const stateMachine = createStateMachineSetup<
                     'store_checkpoint',
                     {
                       type: 'hide_node_help_tooltip',
-                      params: { nodeId: GroupNodeID.BowserForce },
+                      params: { nodeId: GroupNodeID.BetaTeam },
                     },
                   ],
                   type: 'final',
@@ -250,7 +250,7 @@ export const stateMachine = createStateMachineSetup<
             {
               type: 'show_node_help_tooltip',
               params: {
-                nodeId: GroupNodeID.BowserForce,
+                nodeId: GroupNodeID.BetaTeam,
                 content:
                   "Grant this group's users access to their RDS instance through one shared policy",
               },
@@ -258,7 +258,7 @@ export const stateMachine = createStateMachineSetup<
             {
               type: 'show_node_help_tooltip',
               params: {
-                nodeId: GroupNodeID.PeachTeam,
+                nodeId: GroupNodeID.AlphaTeam,
                 content:
                   "Grant this group's users access to their RDS instance through one shared policy",
               },
@@ -294,7 +294,7 @@ export const stateMachine = createStateMachineSetup<
                 completed: {
                   entry: {
                     type: 'hide_node_help_tooltip',
-                    params: { nodeId: GroupNodeID.PeachTeam },
+                    params: { nodeId: GroupNodeID.AlphaTeam },
                   },
                   type: 'final',
                 },
@@ -312,7 +312,7 @@ export const stateMachine = createStateMachineSetup<
                 completed: {
                   entry: {
                     type: 'hide_node_help_tooltip',
-                    params: { nodeId: GroupNodeID.BowserForce },
+                    params: { nodeId: GroupNodeID.BetaTeam },
                   },
                   type: 'final',
                 },

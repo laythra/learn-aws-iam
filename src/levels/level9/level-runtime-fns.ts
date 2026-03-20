@@ -7,27 +7,27 @@ import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
 export const ObjectivesApplicableNodesFns = {
-  peachTeamApplicableNodes: (nodes: IAMAnyNode[]) =>
+  alphaTeamApplicableNodes: (nodes: IAMAnyNode[]) =>
     IAMNodeFilter.create()
       .fromNodes(nodes)
       .whereEntityIs(IAMNodeEntity.User)
-      .whereHasTag('application', 'peach-team')
+      .whereHasTag('application', 'alpha-team')
       .build(),
-  bowserForceApplicableNodes: (nodes: IAMAnyNode[]) =>
+  betaTeamApplicableNodes: (nodes: IAMAnyNode[]) =>
     IAMNodeFilter.create()
       .fromNodes(nodes)
       .whereEntityIs(IAMNodeEntity.User)
-      .whereHasTag('application', 'bowser-force')
+      .whereHasTag('application', 'beta-team')
       .build(),
 } as const;
 
 export const ValidateFunctions = {
   [PolicyNodeID.RDSManagePolicy1]: () => {
-    const schema = generateRdsManagePolicySchema('peach-team', 'PEACHDB123');
+    const schema = generateRdsManagePolicySchema('alpha-team', 'ALPHADB123');
     return AJV_COMPILER.compile(schema);
   },
   [PolicyNodeID.RDSManagePolicy2]: () => {
-    const schema = generateRdsManagePolicySchema('bowser-force', 'BOWSERDB123');
+    const schema = generateRdsManagePolicySchema('beta-team', 'BETADB123');
     return AJV_COMPILER.compile(schema);
   },
   [PolicyNodeID.RDSSharedPolicy]: () => AJV_COMPILER.compile(rdsSharedManagePolicySchema),

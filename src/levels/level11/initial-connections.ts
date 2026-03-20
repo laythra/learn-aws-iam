@@ -5,7 +5,7 @@ import { InitialNodeConnection } from '@/types/iam-node-types';
 export const INITIAL_TUTORIAL_CONNECTIONS: InitialNodeConnection[] = [
   {
     from: PermissionBoundaryID.PermissionBoundary1,
-    to: UserNodeID.Sephiroth,
+    to: UserNodeID.Alex,
     source_handle: HandleID.Top,
     target_handle: HandleID.Bottom,
   },

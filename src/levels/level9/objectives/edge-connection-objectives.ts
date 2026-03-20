@@ -11,7 +11,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         createEdge({
           rootOverrides: {
             source: PolicyNodeID.RDSManagePolicy1,
-            target: GroupNodeID.PeachTeam,
+            target: GroupNodeID.AlphaTeam,
           },
         }),
       ],
@@ -27,7 +27,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         createEdge({
           rootOverrides: {
             source: PolicyNodeID.RDSManagePolicy2,
-            target: GroupNodeID.BowserForce,
+            target: GroupNodeID.BetaTeam,
           },
         }),
       ],
@@ -45,7 +45,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         createEdge({
           rootOverrides: {
             source: PolicyNodeID.RDSSharedPolicy,
-            target: GroupNodeID.PeachTeam,
+            target: GroupNodeID.AlphaTeam,
           },
         }),
       ],
@@ -61,7 +61,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         createEdge({
           rootOverrides: {
             source: PolicyNodeID.RDSSharedPolicy,
-            target: GroupNodeID.BowserForce,
+            target: GroupNodeID.BetaTeam,
           },
         }),
       ],

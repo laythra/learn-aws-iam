@@ -7,15 +7,15 @@ import { IAMGroupNode } from '@/types/iam-node-types';
 
 const TUTORIAL_GROUP_NODES: IAMNodeDataOverrides<IAMGroupNode['data']>[] = [
   {
-    id: GroupNodeID.TutorialEldianGroup,
-    label: 'Eldians',
+    id: GroupNodeID.TutorialProdTeamGroup,
+    label: 'Prod Team',
     layout_group_id: CommonLayoutGroupID.TopRightHorizontal,
     parent_id: AccountID.TutorialProdAccount,
     account_id: AccountID.TutorialProdAccount,
   },
   {
-    id: GroupNodeID.TutorialMarleyGroup,
-    label: 'Marliyans',
+    id: GroupNodeID.TutorialStagingTeamGroup,
+    label: 'Staging Team',
     layout_group_id: CommonLayoutGroupID.TopRightHorizontal,
     parent_id: AccountID.TutorialStagingAccount,
     account_id: AccountID.TutorialStagingAccount,

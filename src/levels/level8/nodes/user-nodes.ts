@@ -9,29 +9,29 @@ const TUTORIAL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [];
 
 const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
   {
-    id: UserNodeID.JuniorBruce,
-    label: 'junior-bruce',
+    id: UserNodeID.JuniorAlex,
+    label: 'junior-alex',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     vertical_spacing: theme.sizes.iamNodeHeightInPixels + 20,
     tags: [['role', 'junior']],
   },
   {
-    id: UserNodeID.SeniorWayne,
-    label: 'senior-wayne',
+    id: UserNodeID.SeniorSam,
+    label: 'senior-sam',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     horizontal_spacing: theme.sizes.iamNodeHeightInPixels + 20,
     tags: [['role', 'senior']],
   },
   {
-    id: UserNodeID.JuniorClark,
-    label: 'junior-clark',
+    id: UserNodeID.JuniorMorgan,
+    label: 'junior-morgan',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     vertical_spacing: theme.sizes.iamNodeHeightInPixels + 20,
     tags: [['role', 'junior']],
   },
   {
-    id: UserNodeID.SeniorKent,
-    label: 'senior-kent',
+    id: UserNodeID.SeniorJordan,
+    label: 'senior-jordan',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     vertical_spacing: theme.sizes.iamNodeHeightInPixels + 20,
     tags: [['role', 'senior']],

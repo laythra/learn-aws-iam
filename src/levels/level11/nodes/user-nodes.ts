@@ -6,38 +6,38 @@ import { IAMUserNode } from '@/types/iam-node-types';
 
 const TUTORIAL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
   {
-    id: UserNodeID.Sephiroth,
-    label: 'Sephiroth',
+    id: UserNodeID.Alex,
+    label: 'alex',
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
   },
 ];
 
 const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
   {
-    id: UserNodeID.Cloud,
-    label: 'Cloud',
+    id: UserNodeID.Sam,
+    label: 'sam',
     layout_group_id: CommonLayoutGroupID.CenterVertical,
     tags: [
       ['level', 'senior'],
-      ['team', 'avalanche'],
+      ['team', 'alpha-team'],
     ],
   },
   {
-    id: UserNodeID.Tifa,
-    label: 'Tifa',
+    id: UserNodeID.Morgan,
+    label: 'morgan',
     layout_group_id: CommonLayoutGroupID.CenterVertical,
     tags: [
       ['level', 'junior'],
-      ['team', 'avalanche'],
+      ['team', 'alpha-team'],
     ],
   },
   {
-    id: UserNodeID.Rufus,
-    label: 'Rufus',
+    id: UserNodeID.Jordan,
+    label: 'jordan',
     layout_group_id: CommonLayoutGroupID.CenterVertical,
     tags: [
       ['level', 'junior'],
-      ['team', 'shinra'],
+      ['team', 'beta-team'],
     ],
   },
 ];

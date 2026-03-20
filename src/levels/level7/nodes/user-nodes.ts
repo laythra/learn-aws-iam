@@ -7,7 +7,7 @@ import { IAMUserNode } from '@/types/iam-node-types';
 const TUTORIAL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.TutorialFirstUser,
-    label: 'leon-kennedy',
+    label: 'alex',
     layout_group_id: CommonLayoutGroupID.RightCenterVertical,
     image: IAMNodeImage.User,
   },
@@ -16,7 +16,7 @@ const TUTORIAL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
 const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.InsideLevelUser,
-    label: 'leon-kennedy',
+    label: 'alex',
     layout_group_id: CommonLayoutGroupID.RightCenterVertical,
     image: IAMNodeImage.User,
     account_id: AccountID.TrustedAccount,

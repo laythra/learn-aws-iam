@@ -29,20 +29,20 @@ const verifyInitialLevelSetup = async (nodes: NodeActions, edges: EdgeActions): 
     GroupNodeID.PaymentsTeam,
     GroupNodeID.AnalyticsTeam,
     GroupNodeID.ComplianceTeam,
-    UserNodeID.John,
-    UserNodeID.Smith,
-    UserNodeID.Sarah,
-    UserNodeID.Johnson,
-    UserNodeID.Michael,
-    UserNodeID.Davis
+    UserNodeID.Sam,
+    UserNodeID.Jordan,
+    UserNodeID.Morgan,
+    UserNodeID.Casey,
+    UserNodeID.Taylor,
+    UserNodeID.Alex
   );
 
-  await edges.expectVisible(UserNodeID.Davis, GroupNodeID.PaymentsTeam);
-  await edges.expectVisible(UserNodeID.John, GroupNodeID.PaymentsTeam);
-  await edges.expectVisible(UserNodeID.Johnson, GroupNodeID.AnalyticsTeam);
-  await edges.expectVisible(UserNodeID.Michael, GroupNodeID.AnalyticsTeam);
-  await edges.expectVisible(UserNodeID.Sarah, GroupNodeID.ComplianceTeam);
-  await edges.expectVisible(UserNodeID.Smith, GroupNodeID.ComplianceTeam);
+  await edges.expectVisible(UserNodeID.Alex, GroupNodeID.PaymentsTeam);
+  await edges.expectVisible(UserNodeID.Sam, GroupNodeID.PaymentsTeam);
+  await edges.expectVisible(UserNodeID.Casey, GroupNodeID.AnalyticsTeam);
+  await edges.expectVisible(UserNodeID.Taylor, GroupNodeID.AnalyticsTeam);
+  await edges.expectVisible(UserNodeID.Morgan, GroupNodeID.ComplianceTeam);
+  await edges.expectVisible(UserNodeID.Jordan, GroupNodeID.ComplianceTeam);
 };
 
 const createTBACPolicy = async (
@@ -105,15 +105,15 @@ const connectRDSPolicyToGroups = async (
 ): Promise<void> => {
   const groupToResourceMapping: Record<string, { users: string[]; resource: string }> = {
     [GroupNodeID.ComplianceTeam]: {
-      users: [UserNodeID.Sarah, UserNodeID.Smith],
+      users: [UserNodeID.Morgan, UserNodeID.Jordan],
       resource: ResourceNodeID.RDS2,
     },
     [GroupNodeID.AnalyticsTeam]: {
-      users: [UserNodeID.Johnson, UserNodeID.Michael],
+      users: [UserNodeID.Casey, UserNodeID.Taylor],
       resource: ResourceNodeID.RDS3,
     },
     [GroupNodeID.PaymentsTeam]: {
-      users: [UserNodeID.Davis, UserNodeID.John],
+      users: [UserNodeID.Alex, UserNodeID.Sam],
       resource: ResourceNodeID.RDS1,
     },
   };

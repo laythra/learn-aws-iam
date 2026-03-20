@@ -7,13 +7,13 @@ import { createPolicyCreationObjective } from '@/levels/utils/factories/identity
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 
 const OBJECTIVE1_CALLOUT_MSG = `
-  Create a policy for **Peach Team** that lets its users:
+  Create a policy for **Alpha Team** that lets its users:
   - retrieve their team database secret
   - connect to their team RDS database
 `;
 
 const OBJECTIVE2_CALLOUT_MSG = `
-  Now do the same for **Bowser Force**:
+  Now do the same for **Beta Team**:
   allow secret retrieval and RDS connection for their team only.
 `;
 
@@ -156,7 +156,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyCreationFinishEvent.RDS1_MANAGE_POLICY_CREATED,
-      initial_code: INITIAL_POLICIES.PEACH_TEAM_RDS_POLICY,
+      initial_code: INITIAL_POLICIES.ALPHA_TEAM_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
       extra_data: {
@@ -166,14 +166,14 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
             access_level: AccessLevel.Read,
             source_handle: 'right',
             target_handle: 'bottom',
-            applicable_nodes_fn_name: 'peachTeamApplicableNodes',
+            applicable_nodes_fn_name: 'alphaTeamApplicableNodes',
           },
           {
-            target_node: ResourceNodeID.TeamPeachSecret,
+            target_node: ResourceNodeID.TeamAlphaSecret,
             access_level: AccessLevel.Read,
             source_handle: 'right',
             target_handle: 'bottom',
-            applicable_nodes_fn_name: 'peachTeamApplicableNodes',
+            applicable_nodes_fn_name: 'alphaTeamApplicableNodes',
           },
         ],
       },
@@ -188,7 +188,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyCreationFinishEvent.RDS2_MANAGE_POLICY_CREATED,
-      initial_code: INITIAL_POLICIES.BOWSER_FORCE_RDS_POLICY,
+      initial_code: INITIAL_POLICIES.BETA_TEAM_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
       callout_message: OBJECTIVE2_CALLOUT_MSG,
@@ -199,14 +199,14 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
             access_level: AccessLevel.Read,
             source_handle: 'left',
             target_handle: 'bottom',
-            applicable_nodes_fn_name: 'bowserForceApplicableNodes',
+            applicable_nodes_fn_name: 'betaTeamApplicableNodes',
           },
           {
-            target_node: ResourceNodeID.TeamBowserSecret,
+            target_node: ResourceNodeID.TeamBetaSecret,
             access_level: AccessLevel.Read,
             source_handle: 'left',
             target_handle: 'bottom',
-            applicable_nodes_fn_name: 'bowserForceApplicableNodes',
+            applicable_nodes_fn_name: 'betaTeamApplicableNodes',
           },
         ],
       },
@@ -233,28 +233,28 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
             access_level: AccessLevel.Read,
             source_handle: 'right',
             target_handle: 'bottom',
-            applicable_nodes_fn_name: 'peachTeamApplicableNodes',
+            applicable_nodes_fn_name: 'alphaTeamApplicableNodes',
           },
           {
-            target_node: ResourceNodeID.TeamPeachSecret,
+            target_node: ResourceNodeID.TeamAlphaSecret,
             access_level: AccessLevel.Read,
             source_handle: 'right',
             target_handle: 'bottom',
-            applicable_nodes_fn_name: 'peachTeamApplicableNodes',
+            applicable_nodes_fn_name: 'alphaTeamApplicableNodes',
           },
           {
             target_node: ResourceNodeID.RDS2,
             access_level: AccessLevel.Read,
             source_handle: 'left',
             target_handle: 'bottom',
-            applicable_nodes_fn_name: 'bowserForceApplicableNodes',
+            applicable_nodes_fn_name: 'betaTeamApplicableNodes',
           },
           {
-            target_node: ResourceNodeID.TeamBowserSecret,
+            target_node: ResourceNodeID.TeamBetaSecret,
             access_level: AccessLevel.Read,
             source_handle: 'left',
             target_handle: 'bottom',
-            applicable_nodes_fn_name: 'bowserForceApplicableNodes',
+            applicable_nodes_fn_name: 'betaTeamApplicableNodes',
           },
         ],
       },

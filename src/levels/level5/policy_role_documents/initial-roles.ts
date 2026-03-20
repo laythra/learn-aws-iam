@@ -4,7 +4,7 @@ export const INITIAL_TRUST_POLICIES = {
     Statement: [
       {
         Effect: 'Allow',
-        Principal: { AWS: 'arn:aws:iam::123456789012:user/finance-user' },
+        Principal: { AWS: 'arn:aws:iam::123456789012:user/alex' },
         Action: 'sts:AssumeRole',
       },
     ],

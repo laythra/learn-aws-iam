@@ -7,7 +7,7 @@ import { IAMUserNode } from '@/types/iam-node-types';
 const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
   {
     id: UserNodeID.TrustedAccountIAMUser,
-    label: 'omar',
+    label: 'alex',
     layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
     image: IAMNodeImage.User,
     account_id: AccountID.TrustedAccount,

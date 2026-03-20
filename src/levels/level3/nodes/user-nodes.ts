@@ -6,23 +6,23 @@ import { IAMUserNode } from '@/types/iam-node-types';
 
 const USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
   {
-    id: UserNodeID.Laith,
-    label: 'Laith',
+    id: UserNodeID.Alex,
+    label: 'alex',
     layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
   },
   {
-    id: UserNodeID.Ali,
-    label: 'Ali',
+    id: UserNodeID.Sam,
+    label: 'sam',
     layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
   },
   {
-    id: UserNodeID.Mohammad,
-    label: 'Mohammad',
+    id: UserNodeID.Morgan,
+    label: 'morgan',
     layout_group_id: CommonLayoutGroupID.RightCenterVertical,
   },
   {
-    id: UserNodeID.Khalid,
-    label: 'Khalid',
+    id: UserNodeID.Jordan,
+    label: 'jordan',
     layout_group_id: CommonLayoutGroupID.RightCenterVertical,
   },
 ];

@@ -33,14 +33,14 @@ const verifyTutorialInitialSetup = async (nodes: NodeActions): Promise<void> => 
     AccountID.TutorialStagingAccount,
     AccountID.TutorialProdAccount,
     SCPNodeID.DefaultSCP,
-    UserNodeID.Eren,
-    UserNodeID.Mikasa,
-    UserNodeID.Armin,
-    UserNodeID.Reiner,
-    UserNodeID.Bertolt,
-    UserNodeID.Annie,
-    GroupNodeID.TutorialEldianGroup,
-    GroupNodeID.TutorialMarleyGroup,
+    UserNodeID.TutorialMorgan,
+    UserNodeID.TutorialSam,
+    UserNodeID.TutorialAlex,
+    UserNodeID.TutorialTaylor,
+    UserNodeID.TutorialCasey,
+    UserNodeID.TutorialJordan,
+    GroupNodeID.TutorialProdTeamGroup,
+    GroupNodeID.TutorialStagingTeamGroup,
     PolicyNodeID.TutorialStagingCloudTrailAccess,
     PolicyNodeID.TutorialProdCloudTrailAccess,
     ResourceNodeID.TutorialCloudTrailStaging,
@@ -147,7 +147,7 @@ const connectPBAndPolicyForObjective2 = async (nodes: NodeActions): Promise<void
     PermissionBoundaryID.Ec2LaunchPermissionBoundary,
     RoleNodeID.EC2LaunchRole
   );
-  await nodes.connectNodes(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Laith);
+  await nodes.connectNodes(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Alex);
 };
 
 const createS3WriteRole = async (nodes: NodeActions, popups: PopupActions): Promise<void> => {

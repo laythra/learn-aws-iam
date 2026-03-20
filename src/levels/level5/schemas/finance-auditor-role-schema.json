@@ -38,7 +38,7 @@
             "properties": {
               "AWS": {
                 "type": "string",
-                "const": "arn:aws:iam::123456789012:user/finance-user"
+                "const": "arn:aws:iam::123456789012:user/alex"
               }
             }
           },

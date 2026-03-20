@@ -27,7 +27,7 @@ const POPUP_MSG2 = `
         "Action": ["s3:GetObject"], ::badge[READING OBJECTS]::
         "Resource": "arn:aws:s3:::my-bucket/*", ::badge[THIS SPECIFIC BUCKET]::
         "Principal": { ::badge[IAM USER THAT IS ALLOWED ACCESS]::
-          "AWS": "arn:aws:iam::${AccountID.TrustedAccount}:user/leon-kennedy"
+          "AWS": "arn:aws:iam::${AccountID.TrustedAccount}:user/alex"
         }
       }
     ]

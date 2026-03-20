@@ -7,41 +7,41 @@ import { IAMResourceNode } from '@/types/iam-node-types';
 const TUTORIAL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [];
 const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [
   {
-    id: ResourceNodeID.TeamPeachSecret,
-    label: 'db/peach-team',
+    id: ResourceNodeID.TeamAlphaSecret,
+    label: 'db/alpha-team',
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,
     layout_direction: 'horizontal',
-    tags: [['application', 'peach-team']],
+    tags: [['application', 'alpha-team']],
   },
   {
     id: ResourceNodeID.RDS1,
-    label: 'peach-team-rds',
+    label: 'alpha-team-rds',
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Database,
     resource_type: IAMNodeResourceEntity.RDS,
     layout_direction: 'horizontal',
-    tags: [['application', 'peach-team']],
+    tags: [['application', 'alpha-team']],
   },
 
   {
-    id: ResourceNodeID.TeamBowserSecret,
-    label: 'db/bowser-force',
+    id: ResourceNodeID.TeamBetaSecret,
+    label: 'db/beta-team',
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,
     layout_direction: 'horizontal',
-    tags: [['application', 'bowser-force']],
+    tags: [['application', 'beta-team']],
   },
   {
     id: ResourceNodeID.RDS2,
-    label: 'bowser-force-rds',
+    label: 'beta-team-rds',
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Database,
     resource_type: IAMNodeResourceEntity.RDS,
     layout_direction: 'horizontal',
-    tags: [['application', 'bowser-force']],
+    tags: [['application', 'beta-team']],
   },
 ];
 

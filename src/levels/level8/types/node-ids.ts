@@ -1,8 +1,8 @@
 export const UserNodeID = {
-  JuniorBruce: 'user-1',
-  SeniorWayne: 'user-2',
-  JuniorClark: 'user-3',
-  SeniorKent: 'user-4',
+  JuniorAlex: 'user-1',
+  SeniorSam: 'user-2',
+  JuniorMorgan: 'user-3',
+  SeniorJordan: 'user-4',
 } as const;
 
 export const PolicyNodeID = {

@@ -56,7 +56,7 @@
               "AWS": {
                 "type": "string",
                 "enum": [
-                  "arn:aws:iam::987654321098:user/leon-kennedy"
+                  "arn:aws:iam::987654321098:user/alex"
                 ]
               }
             }
