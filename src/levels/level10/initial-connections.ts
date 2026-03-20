@@ -6,37 +6,37 @@ export const INITIAL_TUTORIAL_CONNECTIONS: InitialNodeConnection[] = [];
 
 export const INITIAL_IN_LEVEL_CONNECTIONS: InitialNodeConnection[] = [
   {
-    from: UserNodeID.Davis,
+    from: UserNodeID.Alex,
     to: GroupNodeID.PaymentsTeam,
     source_handle: HandleID.Left,
     target_handle: HandleID.Right,
   },
   {
-    from: UserNodeID.John,
+    from: UserNodeID.Sam,
     to: GroupNodeID.PaymentsTeam,
     source_handle: HandleID.Left,
     target_handle: HandleID.Right,
   },
   {
-    from: UserNodeID.Johnson,
+    from: UserNodeID.Casey,
     to: GroupNodeID.AnalyticsTeam,
     source_handle: HandleID.Left,
     target_handle: HandleID.Right,
   },
   {
-    from: UserNodeID.Michael,
+    from: UserNodeID.Taylor,
     to: GroupNodeID.AnalyticsTeam,
     source_handle: HandleID.Left,
     target_handle: HandleID.Right,
   },
   {
-    from: UserNodeID.Sarah,
+    from: UserNodeID.Morgan,
     to: GroupNodeID.ComplianceTeam,
     source_handle: HandleID.Left,
     target_handle: HandleID.Right,
   },
   {
-    from: UserNodeID.Smith,
+    from: UserNodeID.Jordan,
     to: GroupNodeID.ComplianceTeam,
     source_handle: HandleID.Left,
     target_handle: HandleID.Right,

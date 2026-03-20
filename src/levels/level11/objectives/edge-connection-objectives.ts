@@ -11,7 +11,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         createEdge({
           rootOverrides: {
             source: PolicyNodeID.Policy1,
-            target: UserNodeID.Sephiroth,
+            target: UserNodeID.Alex,
           },
         }),
       ],
@@ -45,11 +45,11 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         createEdge({
           rootOverrides: {
             source: PolicyNodeID.AccessDelegationPolicy,
-            target: UserNodeID.Cloud,
+            target: UserNodeID.Sam,
           },
         }),
       ],
-      on_finish_event: EdgeConnectionFinishEvent.ACCESS_DELEGATION_POLICY_CONNECTED_TO_CLOUD,
+      on_finish_event: EdgeConnectionFinishEvent.ACCESS_DELEGATION_POLICY_CONNECTED_TO_SAM,
       is_finished: false,
       established_edge_hovering_label: 'Attached To',
       established_edge_target_handle: 'right',
@@ -80,12 +80,12 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       required_edges: [
         createEdge({
           rootOverrides: {
-            source: UserNodeID.Tifa,
+            source: UserNodeID.Morgan,
             target: RoleNodeID.Role1,
           },
         }),
       ],
-      on_finish_event: EdgeConnectionFinishEvent.TIFA_USER_ATTACHED_TO_ROLE,
+      on_finish_event: EdgeConnectionFinishEvent.MORGAN_USER_ATTACHED_TO_ROLE,
       is_finished: false,
       established_edge_hovering_label: 'Assumes',
       established_edge_target_handle: 'right',

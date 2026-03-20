@@ -24,13 +24,13 @@ export const INITIAL_TUTORIAL_CONNECTIONS: InitialNodeConnection[] = [
   },
   {
     from: PolicyNodeID.TutorialProdCloudTrailAccess,
-    to: GroupNodeID.TutorialEldianGroup,
+    to: GroupNodeID.TutorialProdTeamGroup,
     source_handle: HandleID.Top,
     target_handle: HandleID.Bottom,
   },
   {
     from: PolicyNodeID.TutorialStagingCloudTrailAccess,
-    to: GroupNodeID.TutorialMarleyGroup,
+    to: GroupNodeID.TutorialStagingTeamGroup,
     source_handle: HandleID.Top,
     target_handle: HandleID.Bottom,
   },
@@ -40,15 +40,15 @@ export const INITIAL_TUTORIAL_CONNECTIONS: InitialNodeConnection[] = [
     source_handle: HandleID.Left,
     target_handle: HandleID.Right,
   },
-  ...[UserNodeID.Reiner, UserNodeID.Bertolt, UserNodeID.Annie].map(id => ({
+  ...[UserNodeID.TutorialJordan, UserNodeID.TutorialCasey, UserNodeID.TutorialTaylor].map(id => ({
     from: id,
-    to: GroupNodeID.TutorialMarleyGroup,
+    to: GroupNodeID.TutorialStagingTeamGroup,
     source_handle: HandleID.Right,
     target_handle: HandleID.Left,
   })),
-  ...[UserNodeID.Eren, UserNodeID.Mikasa, UserNodeID.Armin].map(id => ({
+  ...[UserNodeID.TutorialAlex, UserNodeID.TutorialSam, UserNodeID.TutorialMorgan].map(id => ({
     from: id,
-    to: GroupNodeID.TutorialEldianGroup,
+    to: GroupNodeID.TutorialProdTeamGroup,
     source_handle: HandleID.Right,
     target_handle: HandleID.Left,
   })),
@@ -61,19 +61,19 @@ export const INITIAL_IN_LEVEL_CONNECTIONS: InitialNodeConnection[] = [
     source_handle: HandleID.Bottom,
     target_handle: HandleID.Top,
   })),
-  ...[UserNodeID.Karim, UserNodeID.Yasmin].map(id => ({
+  ...[UserNodeID.Robin, UserNodeID.Riley].map(id => ({
     from: id,
     to: GroupNodeID.InLevelNotificationsTeamGroup,
     source_handle: HandleID.Top,
     target_handle: HandleID.Bottom,
   })),
-  ...[UserNodeID.Salma, UserNodeID.Tareq].map(id => ({
+  ...[UserNodeID.Blake, UserNodeID.Quinn].map(id => ({
     from: id,
     to: GroupNodeID.InLevelSearchTeamGroup,
     source_handle: HandleID.Top,
     target_handle: HandleID.Bottom,
   })),
-  ...[UserNodeID.Omar, UserNodeID.Rania].map(id => ({
+  ...[UserNodeID.Casey, UserNodeID.Taylor].map(id => ({
     from: id,
     to: GroupNodeID.InLevelPaymentsTeamGroup,
     source_handle: HandleID.Top,

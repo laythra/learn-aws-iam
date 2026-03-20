@@ -9,18 +9,18 @@ const Objective1Description = `
 
 const Objective2Description = `
   Create an **identity-based policy** in the *Trusted Account*
-  that allows the **IAM user** \`leon-kennedy\` to read/write
+  that allows the **IAM user** \`alex\` to read/write
   to the **S3 bucket** \`rpd-case-files\`.
 `;
 
 const Objective3Description = `
-  Attach that identity-based policy to the **IAM user** \`leon-kennedy\`
+  Attach that identity-based policy to the **IAM user** \`alex\`
   in the *Trusted Account*.
 `;
 
 const Objective4Description = `
   Create a **resource-based policy** in the *Trusting Account*
-  that allows \`leon-kennedy\` to read/write
+  that allows \`alex\` to read/write
   to the **S3 bucket** \`rpd-case-files\`.
 `;
 
@@ -39,7 +39,7 @@ const OBJECTIVE3_HINT = `
 `;
 
 const OBJECTIVE4_HINT = `
-  This policy must include a \`Principal\` for \`leon-kennedy\`.
+  This policy must include a \`Principal\` for \`alex\`.
   Cross-account access requires both identity-side and resource-side permission.
 `;
 

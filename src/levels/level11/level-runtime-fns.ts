@@ -21,7 +21,7 @@ export const ValidateFunctions = {
 
 export const GuardRailsBlockedEdgesFunctions = {
   permissionBoundary1BlockingFn: (edge: IAMEdge) => {
-    return edge.source === UserNodeID.Sephiroth && edge.target === ResourceNodeID.S3BucketTutorial;
+    return edge.source === UserNodeID.Alex && edge.target === ResourceNodeID.S3BucketTutorial;
   },
   permissionBoundary2BlockingFn: (edge: IAMEdge) => {
     return (

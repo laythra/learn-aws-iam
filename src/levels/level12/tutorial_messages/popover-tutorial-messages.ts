@@ -37,7 +37,7 @@ const POPOVER_MSG5 = `
 `;
 
 const POPOVER_MSG6 = `
-  Laith can now safely delegate permissions: he can attach any policies to the ec2-launch-role,
+  alex can now safely delegate permissions: he can attach any policies to the ec2-launch-role,
   while the permission boundary ensures the role can only perform allowed actions.
 `;
 
@@ -89,8 +89,8 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_next_button: false,
   },
   {
-    element_id: UserNodeID.Laith,
-    popover_title: 'Laith Can Now Delegate Permissions Safely!',
+    element_id: UserNodeID.Alex,
+    popover_title: 'alex Can Now Delegate Permissions Safely!',
     popover_content: POPOVER_MSG6,
     popover_placement: 'top',
     show_close_button: true,

@@ -24,13 +24,13 @@ test.describe('Stage 1 - Permission Boundaries Introduction', () => {
 
     await test.step('Verify initial tutorial setup with permission boundaries', async () => {
       await nodes.expectVisible(
-        UserNodeID.Sephiroth,
+        UserNodeID.Alex,
         PermissionBoundaryID.PermissionBoundary1,
         PolicyNodeID.Policy1,
         ResourceNodeID.S3BucketTutorial
       );
 
-      await edges.expectVisible(PermissionBoundaryID.PermissionBoundary1, UserNodeID.Sephiroth);
+      await edges.expectVisible(PermissionBoundaryID.PermissionBoundary1, UserNodeID.Alex);
     });
 
     await test.step('View permission boundary content', async () => {
@@ -50,11 +50,11 @@ test.describe('Stage 1 - Permission Boundaries Introduction', () => {
       );
 
       // Connect S3 policy to Sephiroth
-      await nodes.connectNodes(PolicyNodeID.Policy1, UserNodeID.Sephiroth);
-      await edges.expectVisible(PolicyNodeID.Policy1, UserNodeID.Sephiroth);
+      await nodes.connectNodes(PolicyNodeID.Policy1, UserNodeID.Alex);
+      await edges.expectVisible(PolicyNodeID.Policy1, UserNodeID.Alex);
 
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Sephiroth,
+        UserNodeID.Alex,
         POPOVER_TUTORIAL_MESSAGES[2].popover_title
       );
     });
@@ -71,11 +71,11 @@ test.describe('Stage 2 - Create Permission Boundary and Delegation Policy', () =
 
     await test.step('Navigate through permission boundary creation tutorial', async () => {
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Cloud,
+        UserNodeID.Sam,
         POPOVER_TUTORIAL_MESSAGES[3].popover_title
       );
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Cloud,
+        UserNodeID.Sam,
         POPOVER_TUTORIAL_MESSAGES[4].popover_title
       );
       await tutorial.expectPopoverAndClickNext(
@@ -143,14 +143,14 @@ test.describe('Stage 3 - Connect Nodes and Complete Level', () => {
     });
 
     await test.step('Connect delegation policy to Cloud user', async () => {
-      await nodes.connectNodes(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Cloud);
-      await edges.expectVisible(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Cloud);
+      await nodes.connectNodes(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Sam);
+      await edges.expectVisible(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Sam);
     });
 
     await test.step('Proceed through following popovers and fixed popovers', async () => {
       await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Cloud,
+        UserNodeID.Sam,
         POPOVER_TUTORIAL_MESSAGES[9].popover_title
       );
 
@@ -163,11 +163,11 @@ test.describe('Stage 3 - Connect Nodes and Complete Level', () => {
     await test.step('Proceed through final tutorial stages with auto-connections', async () => {
       await edges.expectVisible(PolicyNodeID.FullAccessPolicy, RoleNodeID.Role1);
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Tifa,
+        UserNodeID.Morgan,
         POPOVER_TUTORIAL_MESSAGES[11].popover_title
       );
 
-      await edges.expectVisible(UserNodeID.Tifa, RoleNodeID.Role1);
+      await edges.expectVisible(UserNodeID.Morgan, RoleNodeID.Role1);
 
       await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[3].popover_title);
     });
@@ -182,8 +182,8 @@ test.describe('Stage 3 - Connect Nodes and Complete Level', () => {
 
     await test.step('Connect delegation policy to Cloud user first', async () => {
       await tutorial.expectFixedPopoverWithoutNextButton(FIXED_POPOVER_MESSAGES[1].popover_title);
-      await nodes.connectNodes(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Cloud);
-      await edges.expectVisible(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Cloud);
+      await nodes.connectNodes(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Sam);
+      await edges.expectVisible(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Sam);
     });
 
     await test.step('Connect permission boundary to role second', async () => {
@@ -200,7 +200,7 @@ test.describe('Stage 3 - Connect Nodes and Complete Level', () => {
     await test.step('Proceed through following popovers and fixed popovers', async () => {
       await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Cloud,
+        UserNodeID.Sam,
         POPOVER_TUTORIAL_MESSAGES[9].popover_title
       );
 
@@ -214,11 +214,11 @@ test.describe('Stage 3 - Connect Nodes and Complete Level', () => {
       await edges.expectVisible(PolicyNodeID.FullAccessPolicy, RoleNodeID.Role1);
 
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Tifa,
+        UserNodeID.Morgan,
         POPOVER_TUTORIAL_MESSAGES[11].popover_title
       );
 
-      await edges.expectVisible(UserNodeID.Tifa, RoleNodeID.Role1);
+      await edges.expectVisible(UserNodeID.Morgan, RoleNodeID.Role1);
 
       await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[3].popover_title);
     });
@@ -244,7 +244,7 @@ test.describe('Complete Level Workflow - End to End', () => {
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
 
       await nodes.expectVisible(
-        UserNodeID.Sephiroth,
+        UserNodeID.Alex,
         PermissionBoundaryID.PermissionBoundary1,
         PolicyNodeID.Policy1,
         ResourceNodeID.S3BucketTutorial
@@ -262,10 +262,10 @@ test.describe('Complete Level Workflow - End to End', () => {
         PolicyNodeID.Policy1,
         POPOVER_TUTORIAL_MESSAGES[1].popover_title
       );
-      await nodes.connectNodes(PolicyNodeID.Policy1, UserNodeID.Sephiroth);
-      await edges.expectVisible(PolicyNodeID.Policy1, UserNodeID.Sephiroth);
+      await nodes.connectNodes(PolicyNodeID.Policy1, UserNodeID.Alex);
+      await edges.expectVisible(PolicyNodeID.Policy1, UserNodeID.Alex);
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Sephiroth,
+        UserNodeID.Alex,
         POPOVER_TUTORIAL_MESSAGES[2].popover_title
       );
     });
@@ -274,11 +274,11 @@ test.describe('Complete Level Workflow - End to End', () => {
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[2].title);
 
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Cloud,
+        UserNodeID.Sam,
         POPOVER_TUTORIAL_MESSAGES[3].popover_title
       );
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Cloud,
+        UserNodeID.Sam,
         POPOVER_TUTORIAL_MESSAGES[4].popover_title
       );
       await tutorial.expectPopoverAndClickNext(
@@ -330,12 +330,12 @@ test.describe('Complete Level Workflow - End to End', () => {
         RoleNodeID.Role1
       );
 
-      await nodes.connectNodes(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Cloud);
-      await edges.expectVisible(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Cloud);
+      await nodes.connectNodes(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Sam);
+      await edges.expectVisible(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Sam);
 
       await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Cloud,
+        UserNodeID.Sam,
         POPOVER_TUTORIAL_MESSAGES[9].popover_title
       );
 
@@ -346,10 +346,10 @@ test.describe('Complete Level Workflow - End to End', () => {
       await edges.expectVisible(PolicyNodeID.FullAccessPolicy, RoleNodeID.Role1);
 
       await tutorial.expectPopoverAndClickNext(
-        UserNodeID.Tifa,
+        UserNodeID.Morgan,
         POPOVER_TUTORIAL_MESSAGES[11].popover_title
       );
-      await edges.expectVisible(UserNodeID.Tifa, RoleNodeID.Role1);
+      await edges.expectVisible(UserNodeID.Morgan, RoleNodeID.Role1);
 
       await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[3].popover_title);
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[4].title);

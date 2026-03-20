@@ -1,15 +1,15 @@
 export const UserNodeID = {
-  Mario: 'mario',
-  Luigi: 'luigi',
-  Peach: 'peach',
-  Bowser: 'bowser',
-  Wario: 'wario',
-  Waluigi: 'waluigi',
+  Alex: 'alex',
+  Sam: 'sam',
+  Morgan: 'morgan',
+  Jordan: 'jordan',
+  Casey: 'casey',
+  Taylor: 'taylor',
 } as const;
 
 export const GroupNodeID = {
-  PeachTeam: 'peach-team',
-  BowserForce: 'bowser-force',
+  AlphaTeam: 'alpha-team',
+  BetaTeam: 'beta-team',
 } as const;
 
 export const PolicyNodeID = {
@@ -21,8 +21,8 @@ export const PolicyNodeID = {
 export const ResourceNodeID = {
   RDS1: 'resource-1',
   RDS2: 'resource-2',
-  TeamPeachSecret: 'team-peach-secret',
-  TeamBowserSecret: 'team-bowser-secret',
+  TeamAlphaSecret: 'team-alpha-secret',
+  TeamBetaSecret: 'team-beta-secret',
 } as const;
 
 export const RoleNodeID = {

@@ -6,8 +6,8 @@ export const AccountID = {
 } as const;
 
 export const GroupNodeID = {
-  TutorialEldianGroup: 'tutorial-group-1',
-  TutorialMarleyGroup: 'tutorial-group-2',
+  TutorialProdTeamGroup: 'tutorial-group-1',
+  TutorialStagingTeamGroup: 'tutorial-group-2',
   InLevelSearchTeamGroup: 'in-level-group-1',
   InLevelNotificationsTeamGroup: 'in-level-group-2',
   InLevelPaymentsTeamGroup: 'in-level-group-3',
@@ -19,22 +19,22 @@ export const OUNodeID = {
 } as const;
 
 export const UserNodeID = {
-  Eren: 'user-eren',
-  Mikasa: 'user-mikasa',
-  Armin: 'user-armin',
-  Reiner: 'user-reiner',
-  Bertolt: 'user-bertolt',
-  Annie: 'user-annie',
-  Laith: 'user-laith',
-  Mohammad: 'user-mohammad',
-  Ayman: 'user-ayman',
-  Firas: 'user-firas',
-  Yasmin: 'user-yasmin',
-  Tareq: 'user-tareq',
-  Rania: 'user-rania',
-  Karim: 'user-karim',
-  Salma: 'user-salma',
-  Omar: 'user-omar',
+  TutorialAlex: 'user-tutorial-alex',
+  TutorialSam: 'user-tutorial-sam',
+  TutorialMorgan: 'user-tutorial-morgan',
+  TutorialJordan: 'user-tutorial-jordan',
+  TutorialCasey: 'user-tutorial-casey',
+  TutorialTaylor: 'user-tutorial-taylor',
+  Alex: 'user-alex',
+  Sam: 'user-sam',
+  Morgan: 'user-morgan',
+  Jordan: 'user-jordan',
+  Casey: 'user-casey',
+  Taylor: 'user-taylor',
+  Riley: 'user-riley',
+  Robin: 'user-robin',
+  Quinn: 'user-quinn',
+  Blake: 'user-blake',
 } as const;
 
 export const SCPNodeID = {

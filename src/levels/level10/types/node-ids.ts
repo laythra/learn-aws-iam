@@ -1,10 +1,10 @@
 export const UserNodeID = {
-  John: 'john',
-  Smith: 'smith',
-  Sarah: 'sarah',
-  Johnson: 'johnson',
-  Michael: 'michael',
-  Davis: 'davis',
+  Alex: 'alex',
+  Sam: 'sam',
+  Morgan: 'morgan',
+  Jordan: 'jordan',
+  Casey: 'casey',
+  Taylor: 'taylor',
 } as const;
 
 export const GroupNodeID = {

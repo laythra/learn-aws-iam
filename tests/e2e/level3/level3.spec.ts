@@ -91,17 +91,17 @@ const verifyStage3InitialSetup = async (nodes: NodeActions, edges: EdgeActions):
     ResourceNodeID.CloudFront,
     GroupNodeID.BackendGroup,
     GroupNodeID.FrontendGroup,
-    UserNodeID.Ali,
-    UserNodeID.Laith,
-    UserNodeID.Mohammad,
-    UserNodeID.Khalid,
+    UserNodeID.Sam,
+    UserNodeID.Alex,
+    UserNodeID.Morgan,
+    UserNodeID.Jordan,
   ]);
 
   await edges.expectMutlipleVisible([
-    [UserNodeID.Laith, GroupNodeID.FrontendGroup],
-    [UserNodeID.Ali, GroupNodeID.FrontendGroup],
-    [UserNodeID.Mohammad, GroupNodeID.BackendGroup],
-    [UserNodeID.Khalid, GroupNodeID.BackendGroup],
+    [UserNodeID.Alex, GroupNodeID.FrontendGroup],
+    [UserNodeID.Sam, GroupNodeID.FrontendGroup],
+    [UserNodeID.Morgan, GroupNodeID.BackendGroup],
+    [UserNodeID.Jordan, GroupNodeID.BackendGroup],
   ]);
 };
 
@@ -145,12 +145,12 @@ const verifyFinalState = async (
     [PolicyNodeID.S3ReadWritePolicy, GroupNodeID.FrontendGroup],
     [PolicyNodeID.DynamoDBReadWritePolicy, GroupNodeID.BackendGroup],
     [PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup],
-    [UserNodeID.Laith, ResourceNodeID.PublicAssetsS3Bucket],
-    [UserNodeID.Ali, ResourceNodeID.PublicAssetsS3Bucket],
-    [UserNodeID.Mohammad, ResourceNodeID.DynamoDBTable],
-    [UserNodeID.Khalid, ResourceNodeID.DynamoDBTable],
-    [UserNodeID.Laith, ResourceNodeID.CloudFront],
-    [UserNodeID.Ali, ResourceNodeID.CloudFront],
+    [UserNodeID.Alex, ResourceNodeID.PublicAssetsS3Bucket],
+    [UserNodeID.Sam, ResourceNodeID.PublicAssetsS3Bucket],
+    [UserNodeID.Morgan, ResourceNodeID.DynamoDBTable],
+    [UserNodeID.Jordan, ResourceNodeID.DynamoDBTable],
+    [UserNodeID.Alex, ResourceNodeID.CloudFront],
+    [UserNodeID.Sam, ResourceNodeID.CloudFront],
   ]);
 
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[4].popover_title);

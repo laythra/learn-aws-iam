@@ -29,11 +29,11 @@ const POPOVER_MSG5 = `
 
 const POPOVER_MSG6 = `
   Try connecting this **IAM Policy** — which grants read access to the **S3 Bucket** —
-  to the **IAM User (Laith)** and see what happens.
+  to the **IAM User (alex)** and see what happens.
 `;
 
 const POPOVER_MSG7 = `
-  **IAM User** (Laith) now has read access to the objects inside the S3 Bucket \`public-images\`! 🎉
+  **IAM User** (alex) now has read access to the objects inside the S3 Bucket \`public-images\`! 🎉
 
   Hover over the edge connecting the **IAM Policy** to the **S3 Bucket**
   to inspect the access level.

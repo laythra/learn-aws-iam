@@ -12,10 +12,10 @@ export enum GroupNodeID {
 }
 
 export enum UserNodeID {
-  Laith = 'user-laith',
-  Ali = 'user-ali',
-  Mohammad = 'user-mohammad',
-  Khalid = 'user-khalid',
+  Alex = 'user-alex',
+  Sam = 'user-sam',
+  Morgan = 'user-morgan',
+  Jordan = 'user-jordan',
 }
 
 export enum ResourceNodeID {

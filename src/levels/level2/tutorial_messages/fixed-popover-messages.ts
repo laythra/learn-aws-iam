@@ -1,7 +1,7 @@
 import { FixedPopoverMessage } from '@/levels/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
-  The current setup has a single **IAM User (Kyouma)** with 3 policies attached.
+  The current setup has a single **IAM User (sam)** with 3 policies attached.
   Each policy grants access to a different **AWS Service**.
 
   ::badge[TIP]:: Hover over the edges to view the permission level.

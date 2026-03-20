@@ -275,7 +275,7 @@ export const stateMachine = createStateMachineSetup<
 
             {
               type: 'show_node_help_tooltip',
-              params: { nodeId: UserNodeID.Cloud, content: CLOUD_USER_ALERT_MESSAGE },
+              params: { nodeId: UserNodeID.Sam, content: CLOUD_USER_ALERT_MESSAGE },
             },
           ],
           on: {
@@ -297,7 +297,7 @@ export const stateMachine = createStateMachineSetup<
             },
             {
               type: 'hide_node_help_tooltip',
-              params: { nodeId: UserNodeID.Cloud },
+              params: { nodeId: UserNodeID.Sam },
             },
           ],
           type: 'parallel',
@@ -326,11 +326,11 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 in_progress: {
                   on: {
-                    [EdgeConnectionFinishEvent.ACCESS_DELEGATION_POLICY_CONNECTED_TO_CLOUD]: {
+                    [EdgeConnectionFinishEvent.ACCESS_DELEGATION_POLICY_CONNECTED_TO_SAM]: {
                       target: 'completed',
                       actions: {
                         type: 'hide_node_help_tooltip',
-                        params: { nodeId: UserNodeID.Cloud },
+                        params: { nodeId: UserNodeID.Sam },
                       },
                     },
                   },
@@ -408,7 +408,7 @@ export const stateMachine = createStateMachineSetup<
               actions: {
                 type: 'connect_nodes',
                 params: ({ context }) => ({
-                  sourceNode: context.nodes.find(n => n.id === UserNodeID.Tifa)!,
+                  sourceNode: context.nodes.find(n => n.id === UserNodeID.Morgan)!,
                   targetNode: context.nodes.find(n => n.id === RoleNodeID.Role1)!,
                 }),
               },

@@ -35,7 +35,7 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
     layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,
-    tags: [['team', 'avalanche']],
+    tags: [['team', 'alpha-team']],
   },
   {
     id: ResourceNodeID.ElasticCache,
@@ -50,7 +50,7 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
     layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,
-    tags: [['team', 'avalanche']],
+    tags: [['team', 'alpha-team']],
   },
 ];
 

@@ -152,7 +152,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         createEdge({
           rootOverrides: {
             source: PolicyNodeID.AccessDelegationPolicy,
-            target: UserNodeID.Laith,
+            target: UserNodeID.Alex,
           },
         }),
       ],

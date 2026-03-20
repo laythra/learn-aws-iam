@@ -6,14 +6,14 @@ import { IAMGroupNode } from '@/types/iam-node-types';
 
 const IN_LEVEL_GROUP_NODES: IAMNodeDataOverrides<IAMGroupNode['data']>[] = [
   {
-    id: GroupNodeID.PeachTeam,
-    label: 'peach-team',
+    id: GroupNodeID.AlphaTeam,
+    label: 'alpha-team',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     layout_direction: 'horizontal',
   },
   {
-    id: GroupNodeID.BowserForce,
-    label: 'bowser-force',
+    id: GroupNodeID.BetaTeam,
+    label: 'beta-team',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     layout_direction: 'horizontal',
   },

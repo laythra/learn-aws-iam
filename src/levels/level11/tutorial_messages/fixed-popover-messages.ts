@@ -1,7 +1,7 @@
 import { FixedPopoverMessage } from '@/levels/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
-  Sephiroth’s permission boundary caps him to **listing SNS topics only**.
+  alex's permission boundary caps him to **listing SNS topics only**.
   **Close this popover to continue.**
 `;
 
@@ -11,7 +11,7 @@ const FIXED_POPOVER_MSG2 = `
   Connect the nodes you created:
 
   * Permission boundary → role
-  * Delegation policy → Cloud
+  * Delegation policy → sam
 `;
 
 const FIXED_POPOVER_MSG3 = `
@@ -25,9 +25,9 @@ const FIXED_POPOVER_MSG3 = `
 `;
 
 const FIXED_POPOVER_MSG4 = `
-  Even with an admin policy attached, Tifa is still constrained by the boundary.
+  Even with an admin policy attached, morgan is still constrained by the boundary.
 
-  And Cloud can only attach policies to roles that already have that permission boundary attached.
+  And sam can only attach policies to roles that already have that permission boundary attached.
 
   That's the strength of permission boundaries. 🔥
 `;

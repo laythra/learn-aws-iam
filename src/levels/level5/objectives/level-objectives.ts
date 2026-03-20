@@ -3,16 +3,16 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/levels/types/objective-types';
 
 const TutorialObjective1Description = `
-  Make the **IAM User** \`finance-user\` assume the **IAM Role** \`finance-auditor-role\`
+  Make the **IAM User** \`alex\` assume the **IAM Role** \`finance-auditor-role\`
 `;
 
 const TutorialObjective2Description = `
-  Create a new role that can be assumed by \`finance-user\`
+  Create a new role that can be assumed by \`alex\`
   and attach the **IAM Policy** \`s3-read-policy\` to it
 `;
 
 const TutorialObjective3Description = `
-  Grant the IAM User \`finance-user\` read access
+  Grant the IAM User \`alex\` read access
   to the S3 Bucket \`financial-reports-bucket\` through the IAM Role you just created
 `;
 
