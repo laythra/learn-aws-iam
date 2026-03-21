@@ -58,7 +58,7 @@ export const IdentityCreationPopup: React.FC = () => {
     () =>
       _.debounce((name: string, entity: IAMNodeEntity.User | IAMNodeEntity.Group) => {
         const existingNames = levelActor.getSnapshot().context.nodes.map(n => n.data.label);
-        const error = validateIAMName(name, existingNames, 64);
+        const error = validateIAMName(name, existingNames, entity);
 
         setFormState(prev => ({
           ...prev,

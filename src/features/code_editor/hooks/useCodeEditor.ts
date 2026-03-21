@@ -14,6 +14,7 @@ import { collectValidationDiagnostics } from '@/domain/iam-policy-validator';
 import { HelpBadge } from '@/levels/types/objective-types';
 import { useLevelActor } from '@/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 interface UseCodeEditorOptions {
   nodeId: string;
@@ -108,7 +109,7 @@ export function useCodeEditor({
 
   const validateNodeLabel = _.debounce((label: string): void => {
     const existinglabels = levelActor.getSnapshot().context.nodes.map(node => node.data.label);
-    const error = validateIAMName(label, existinglabels, 64);
+    const error = validateIAMName(label, existinglabels, IAMNodeEntity.IdentityPolicy);
 
     codeEditorStateStore.send({
       type: 'setNodeLabelError',
