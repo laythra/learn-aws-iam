@@ -11,7 +11,7 @@ import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { ElementID } from '@/config/element-ids';
-import { findAnyValidObjective, GENERIC_VALIDATION_FNS } from '@/domain/iam-policy-validator';
+import { findAnyValidObjective, BASE_VALIDATION_FNS } from '@/domain/iam-policy-validator';
 import { MANAGED_POLICIES } from '@/levels/consts';
 import { GetLevelValidateFunctions } from '@/levels/functions-registry';
 import { useLevelSelector } from '@/runtime/level-runtime';
@@ -83,7 +83,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     editorView,
     getWarnings,
     initialContent,
-    validateFns: _.isEmpty(validateFns) ? [GENERIC_VALIDATION_FNS[selectedIAMEntity]] : validateFns,
+    validateFns: _.isEmpty(validateFns) ? [BASE_VALIDATION_FNS[selectedIAMEntity]] : validateFns,
     helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
   });
 

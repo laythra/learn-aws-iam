@@ -1,5 +1,7 @@
 {
-  "$id": "aws-iam-policy-schema.json",
+  "$id": "aws-iam-resource-policy-schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IAM Resource-Based Policy",
   "type": "object",
   "required": [
     "Statement"
@@ -16,19 +18,21 @@
       "type": "string"
     },
     "Statement": {
-      "minItems": 1,
       "type": "array",
-      "oneOf": [
-        {
-          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Statement"
-        },
-        {
-          "type": "array",
-          "items": {
+      "minItems": 1,
+      "items": {
+        "allOf": [
+          {
             "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Statement"
+          },
+          {
+            "type": "object",
+            "required": [
+              "Principal"
+            ]
           }
-        }
-      ]
+        ]
+      }
     }
   }
 }

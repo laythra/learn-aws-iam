@@ -35,7 +35,7 @@
             ]
           },
           "Principal": {
-            "$ref": "shared-condition-schema.json#/definitions/Principal"
+            "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Principal"
           },
           "Action": {
             "type": "string",
@@ -44,7 +44,7 @@
             ]
           },
           "Condition": {
-            "$ref": "shared-condition-schema.json#/definitions/Condition"
+            "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Condition"
           }
         }
       }
