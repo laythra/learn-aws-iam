@@ -34,7 +34,7 @@ Your task:
 
 const FIXED_POPOVER_MSG4 = `
   ::badge[CORE]::
-  You can edit a policy's content by clicking the \`:icon[PencilSquareIcon]:\` icon
+  You can edit a policy's content by clicking the \`::icon[PencilSquareIcon]::\` icon
   in the top-right corner of the policy's content view.
 `;
 

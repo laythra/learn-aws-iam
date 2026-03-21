@@ -6,7 +6,7 @@ const POPOVER_MSG1 = `
   Permission boundaries are merely policy documents that cap the maximum permissions
   that can be granted to a user or role.
 
-  **Click the \`:icon[CodeBracketIcon]:\` icon
+  **Click the \`::icon[CodeBracketIcon]::\` icon
   to view the permission boundary attached to alex**
 `;
 

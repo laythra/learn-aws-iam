@@ -9,7 +9,7 @@ const POPOVER_MSG1 = `
 
 const POPOVER_MSG2 = `
   In addition to the **Policy's** content, you can also view its **ARN** by clicking
-  the \`:icon[IdentificationIcon]:\` icon next to the content button
+  the \`::icon[IdentificationIcon]::\` icon next to the content button
 `;
 
 const POPOVER_MSG3 = `
@@ -26,8 +26,8 @@ const POPOVER_MSG3 = `
 
 const POPOVER_MSG4 = `
   An **S3 Bucket** resource is now visible.
-  Copy the **Bucket's ARN** by clicking the *id* icon \`:icon[IdentificationIcon]:\`
-  and then the copy \`:icon[ClipboardDocumentIcon]:\` icon next to the ARN.
+  Copy the **Bucket's ARN** by clicking the *id* icon \`::icon[IdentificationIcon]::\`
+  and then the copy \`::icon[ClipboardDocumentIcon]::\` icon next to the ARN.
 `;
 
 const POPOVER_MSG5 = `

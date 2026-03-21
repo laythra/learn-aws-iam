@@ -21,7 +21,7 @@ const FIXED_POPOVER_MSG2 = `
 `;
 
 const FIXED_POPOVER_MSG3 = `
-  You can view tags associated with an IAM entity by clicking on the tags \`:icon[TagIcon]:\`
+  You can view tags associated with an IAM entity by clicking on the tags \`::icon[TagIcon]::\`
   icon on the top-right of the node.
 `;
 
