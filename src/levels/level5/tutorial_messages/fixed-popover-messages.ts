@@ -7,7 +7,7 @@ const FIXED_POPOVER_MSG1 = `
   notice the **Identity-based Policy** that's attached to the **Role**,
   it defines the permissions that the principal will have once they assume the role.
 
-  ***Close the Trust Policy through the :icon[XMarkIcon]: button in the top right to continue.***
+  ***Close the Trust Policy through the ::icon[XMarkIcon]:: button in the top right to continue.***
 `;
 
 const FIXED_POPOVER_MSG2 = `

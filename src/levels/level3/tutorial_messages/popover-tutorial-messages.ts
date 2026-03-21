@@ -3,7 +3,7 @@ import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  This is an **AWS Managed Policy**. Click the top-right icon \`:icon[CodeBracketIcon]:\`
+  This is an **AWS Managed Policy**. Click the top-right icon \`::icon[CodeBracketIcon]::\`
   to view its contents.
 `;
 

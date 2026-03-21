@@ -7,12 +7,12 @@ const POPOVER_MSG1 = `
 `;
 
 const POPOVER_MSG2 = `
-  Open the policy content with the \`:icon[CodeBracketIcon]:\` button,
-  and click \`:icon[PencilSquareIcon]:\` to edit the policy.
+  Open the policy content with the \`::icon[CodeBracketIcon]::\` button,
+  and click \`::icon[PencilSquareIcon]::\` to edit the policy.
 `;
 
 const POPOVER_MSG3 = `
-  Open this user's tags \`:icon[TagIcon]:\` so we can use tag values in the next policy update.
+  Open this user's tags \`::icon[TagIcon]::\` so we can use tag values in the next policy update.
 `;
 
 const POPOVER_MSG4 = `

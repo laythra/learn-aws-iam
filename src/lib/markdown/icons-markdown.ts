@@ -16,7 +16,7 @@ interface TextNode extends Literal {
 }
 
 /**
- * A rehype plugin that transforms custom icon syntax (:icon[IconName]:) into icon elements.
+ * A rehype plugin that transforms custom icon syntax (::icon[IconName]::) into icon elements.
  *
  * This plugin processes text nodes in the markdown AST and replaces instances of the custom icon
  * syntax with element nodes that can be rendered as Heroicons.
@@ -25,13 +25,13 @@ interface TextNode extends Literal {
  *
  * @example
  * ```markdown
- * Click the :icon[EyeIcon]: to view details.
+ * Click the ::icon[EyeIcon]:: to view details.
  * ```
  *
  * The above will be transformed into an element node where "EyeIcon" becomes an icon component.
  *
  * @remarks
- * The plugin searches for the pattern `:icon[IconName]:` in text nodes and replaces them
+ * The plugin searches for the pattern `::icon[IconName]::` in text nodes and replaces them
  * with element nodes containing:
  * - `type`: 'element'
  * - `tagName`: 'icon'
@@ -42,7 +42,7 @@ interface TextNode extends Literal {
 export function rehypeIcon() {
   return (tree: Root) => {
     visit(tree, 'text', (node: Text, index: number | undefined, parent: Parent | undefined) => {
-      const regex = /:icon\[(.*?)\]:/g;
+      const regex = /::icon\[(.*?)\]::/g;
       const matches = [];
       let match;
 
