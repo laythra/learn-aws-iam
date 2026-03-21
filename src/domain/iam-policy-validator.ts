@@ -3,8 +3,9 @@ import { EditorView } from '@codemirror/view';
 import Ajv, { ValidateFunction } from 'ajv';
 
 import iamPolicySchema from '@/domain/policy-schemas/aws-iam-policy-schema.json';
+import iamResourcePolicySchema from '@/domain/policy-schemas/aws-iam-resource-policy-schema.json';
 import iamRoleTurstPolicySchema from '@/domain/policy-schemas/aws-iam-role-trust-policy-schema.json';
-import sharedConditionSchema from '@/domain/policy-schemas/shared-condition-schema.json';
+import sharedDefinitionsSchema from '@/domain/policy-schemas/aws-iam-shared-definitions-schema.json';
 import {
   BaseCreationObjective,
   BaseFinishEventMap,
@@ -23,14 +24,19 @@ interface ValidationConfig {
 }
 
 export const AJV_COMPILER = new Ajv({
-  schemas: [iamPolicySchema, iamRoleTurstPolicySchema, sharedConditionSchema],
+  schemas: [
+    iamPolicySchema,
+    iamResourcePolicySchema,
+    iamRoleTurstPolicySchema,
+    sharedDefinitionsSchema,
+  ],
 });
 
 export const GENERIC_VALIDATION_FNS = {
   [IAMNodeEntity.IdentityPolicy]: AJV_COMPILER.compile(iamPolicySchema),
   [IAMNodeEntity.Role]: AJV_COMPILER.compile(iamRoleTurstPolicySchema),
   [IAMNodeEntity.SCP]: AJV_COMPILER.compile(iamPolicySchema),
-  [IAMNodeEntity.ResourcePolicy]: AJV_COMPILER.compile(iamPolicySchema),
+  [IAMNodeEntity.ResourcePolicy]: AJV_COMPILER.compile(iamResourcePolicySchema),
   [IAMNodeEntity.PermissionBoundary]: AJV_COMPILER.compile(iamPolicySchema),
 };
 
