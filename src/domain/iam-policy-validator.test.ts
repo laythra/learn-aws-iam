@@ -5,14 +5,12 @@ import {
   isJSONValid,
   findAnyValidObjective,
   getObjectiveValidationFunction,
-  GENERIC_VALIDATION_FNS,
+  BASE_VALIDATION_FNS,
   AJV_COMPILER,
 } from './iam-policy-validator';
 import { ObjectiveType } from '@/levels/types/objective-types';
 import type { BaseCreationObjective, BaseFinishEventMap } from '@/levels/types/objective-types';
 import { IAMNodeEntity } from '@/types/iam-enums';
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
 
 const VALID_IDENTITY_POLICY = JSON.stringify({
   Version: '2012-10-17',
@@ -46,10 +44,8 @@ const makeObjective = (
   ...overrides,
 });
 
-// ─── isJSONValid ─────────────────────────────────────────────────────────────
-
 describe('isJSONValid', () => {
-  const validateFn = GENERIC_VALIDATION_FNS[IAMNodeEntity.IdentityPolicy];
+  const validateFn = BASE_VALIDATION_FNS[IAMNodeEntity.IdentityPolicy];
 
   it('returns true for a valid identity policy', () => {
     expect(isJSONValid(VALID_IDENTITY_POLICY, validateFn)).toBe(true);
@@ -68,23 +64,21 @@ describe('isJSONValid', () => {
   });
 
   it('validates a trust policy with the role validate function', () => {
-    const roleFn = GENERIC_VALIDATION_FNS[IAMNodeEntity.Role];
+    const roleFn = BASE_VALIDATION_FNS[IAMNodeEntity.Role];
     expect(isJSONValid(VALID_TRUST_POLICY, roleFn)).toBe(true);
   });
 
   it('rejects an identity policy document against the role trust policy schema', () => {
-    const roleFn = GENERIC_VALIDATION_FNS[IAMNodeEntity.Role];
+    const roleFn = BASE_VALIDATION_FNS[IAMNodeEntity.Role];
     expect(isJSONValid(VALID_IDENTITY_POLICY, roleFn)).toBe(false);
   });
 });
 
-// ─── getObjectiveValidationFunction ──────────────────────────────────────────
-
 describe('getObjectiveValidationFunction', () => {
-  it('returns the generic validation function when no custom fn is registered', () => {
+  it('returns the base validation function when no custom fn is registered', () => {
     const objective = makeObjective({ id: 'obj-1', entity: IAMNodeEntity.IdentityPolicy });
     const fn = getObjectiveValidationFunction(objective, [], {});
-    expect(fn).toBe(GENERIC_VALIDATION_FNS[IAMNodeEntity.IdentityPolicy]);
+    expect(fn).toBe(BASE_VALIDATION_FNS[IAMNodeEntity.IdentityPolicy]);
   });
 
   it('returns the custom function when one is registered for the objective id', () => {
@@ -100,11 +94,9 @@ describe('getObjectiveValidationFunction', () => {
     const validateFunctions = { 'other-obj': () => customFn };
     const objective = makeObjective({ id: 'obj-1', entity: IAMNodeEntity.SCP });
     const fn = getObjectiveValidationFunction(objective, [], validateFunctions);
-    expect(fn).toBe(GENERIC_VALIDATION_FNS[IAMNodeEntity.SCP]);
+    expect(fn).toBe(BASE_VALIDATION_FNS[IAMNodeEntity.SCP]);
   });
 });
-
-// ─── findAnyValidObjective ────────────────────────────────────────────────────
 
 describe('findAnyValidObjective', () => {
   it('returns the first unfinished objective that matches the document', () => {

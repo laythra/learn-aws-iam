@@ -26,6 +26,7 @@
             "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Statement"
           },
           {
+            "type": "object",
             "required": [
               "Principal"
             ]

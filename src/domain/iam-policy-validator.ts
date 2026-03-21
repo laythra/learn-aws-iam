@@ -32,7 +32,7 @@ export const AJV_COMPILER = new Ajv({
   ],
 });
 
-export const GENERIC_VALIDATION_FNS = {
+export const BASE_VALIDATION_FNS = {
   [IAMNodeEntity.IdentityPolicy]: AJV_COMPILER.compile(iamPolicySchema),
   [IAMNodeEntity.Role]: AJV_COMPILER.compile(iamRoleTurstPolicySchema),
   [IAMNodeEntity.SCP]: AJV_COMPILER.compile(iamPolicySchema),
@@ -47,7 +47,7 @@ export const getObjectiveValidationFunction = <TFinishEventMap extends BaseFinis
 ): ValidateFunction => {
   return validateFunctions[objective.id]
     ? validateFunctions[objective.id](nodes)
-    : GENERIC_VALIDATION_FNS[objective.entity as IAMCodeDefinedEntity];
+    : BASE_VALIDATION_FNS[objective.entity as IAMCodeDefinedEntity];
 };
 
 function validatePolicyDocument(

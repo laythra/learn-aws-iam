@@ -10,7 +10,7 @@ import { useCodeEditor } from '../../hooks/useCodeEditor';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
-import { GENERIC_VALIDATION_FNS, isJSONValid } from '@/domain/iam-policy-validator';
+import { BASE_VALIDATION_FNS, isJSONValid } from '@/domain/iam-policy-validator';
 import { GetLevelValidateFunctions } from '@/levels/functions-registry';
 import {
   BaseFinishEventMap,
@@ -76,7 +76,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
     const currentContent = editorView.current.state.doc.toString();
     const isHarmfulEdit = !isJSONValid(
       currentContent,
-      objectiveValidationFn ?? GENERIC_VALIDATION_FNS[selectedIAMEntity]
+      objectiveValidationFn ?? BASE_VALIDATION_FNS[selectedIAMEntity]
     );
 
     if (currentContent === selectedNode.data.content) {
@@ -93,7 +93,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
     editorView,
     getWarnings,
     initialContent: JSON.parse(selectedNode.data.content ?? '{}'),
-    validateFns: [objectiveValidationFn ?? GENERIC_VALIDATION_FNS[selectedIAMEntity]],
+    validateFns: [objectiveValidationFn ?? BASE_VALIDATION_FNS[selectedIAMEntity]],
     helpBadges: objectiveToValidate?.help_badges ?? [],
   });
 
