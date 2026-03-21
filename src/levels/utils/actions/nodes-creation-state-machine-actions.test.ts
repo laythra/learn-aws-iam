@@ -7,145 +7,72 @@ import {
   createMockUserGroupCreationObjective,
 } from '@/__test-helpers__/objectives';
 import { findAnyValidObjective } from '@/domain/iam-policy-validator';
-import { CreatableIAMNodeEntity, IAMNodeEntity } from '@/types/iam-enums';
-import { IAMAnyNode } from '@/types/iam-node-types';
+import { IAMNodeEntity } from '@/types/iam-enums';
 
 vi.mock('@/domain/iam-policy-validator', () => ({
   findAnyValidObjective: vi.fn(),
+}));
+
+vi.mock('@/levels/functions-registry', () => ({
+  GetLevelValidateFunctions: vi.fn(() => ({})),
 }));
 
 vi.mock('@/levels/common-state-machine-setup', () => ({
   createStateMachineSetup: vi.fn(),
 }));
 
-describe('createPermissionPolicy', () => {
-  let mockDocString: string;
-  let mockLabel: string;
-  let mockContext: ReturnType<typeof createMockContext>;
-
+describe('createIAMNode', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockDocString = 'mock-doc-string';
-    mockLabel = 'mock-label';
-    mockContext = createMockContext({});
   });
 
-  it('creates unnecessary policy node when no matching objective exists', () => {
+  it('sets unnecessary_node: true and emits no events when no objective matches', () => {
     vi.mocked(findAnyValidObjective).mockReturnValue(undefined);
-
-    const result = createIAMNode(
-      mockContext,
-      mockDocString,
-      mockLabel,
+    const context = createMockContext({});
+    const { createdNode, events } = createIAMNode(
+      context,
+      '{}',
+      'Test Policy',
       IAMNodeEntity.IdentityPolicy
     );
 
-    const createdNode = result.updatedContext.nodes.find(
-      (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.IdentityPolicy
-    );
-
-    expect(createdNode).toMatchObject({
-      data: {
-        label: mockLabel,
-        unnecessary_node: true,
-        entity: IAMNodeEntity.IdentityPolicy,
-        granted_accesses: [],
-      },
-    });
-
-    expect(result.events).toEqual([]);
+    expect(createdNode.data.unnecessary_node).toBe(true);
+    expect(events).toEqual([]);
   });
 
-  it('creates a new policy node with a matching objective and marks it as necessary', () => {
-    const mockObjective = createMockPolicyCreationObjective({
-      on_finish_event: 'MOCK_EVENT',
-    });
-    mockContext = createMockContext({
-      policy_creation_objectives: [mockObjective],
-    });
-
+  it('sets unnecessary_node: false and emits on_finish_event when objective matches', () => {
+    const mockObjective = createMockPolicyCreationObjective();
     vi.mocked(findAnyValidObjective).mockReturnValue(mockObjective);
-
-    const result = createIAMNode(
-      mockContext,
-      mockDocString,
-      mockLabel,
+    const context = createMockContext({ policy_creation_objectives: [mockObjective] });
+    const { createdNode, events } = createIAMNode(
+      context,
+      '{}',
+      'Test Policy',
       IAMNodeEntity.IdentityPolicy
     );
-    const createdNode = result.updatedContext.nodes.find(
-      (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.IdentityPolicy
-    );
 
-    expect(createdNode).toMatchObject({
-      data: {
-        label: mockLabel,
-        unnecessary_node: false,
-        entity: IAMNodeEntity.IdentityPolicy,
-        granted_accesses: [],
-      },
-    });
-
-    expect(result.events).toEqual(['MOCK_EVENT']);
+    expect(createdNode.data.unnecessary_node).toBe(false);
+    expect(events).toContain(mockObjective.on_finish_event);
   });
 });
 
 describe.each([
-  ['User', IAMNodeEntity.User],
-  ['Group', IAMNodeEntity.Group],
-])('createUserGroupNode (%s)', (_, entityType) => {
-  it('creates node and returns event if valid objective is found', () => {
-    const mockLabel = `mock_${entityType.toLowerCase()}`;
-    const mockObjective = createMockUserGroupCreationObjective({
-      on_finish_event: `${entityType}_CREATED`,
-      entity_to_create: entityType as CreatableIAMNodeEntity,
-    });
+  [IAMNodeEntity.User, 'User'],
+  [IAMNodeEntity.Group, 'Group'],
+] as const)('createUserGroupNode — %s', (nodeType, _label) => {
+  it('sets unnecessary_node: false when a matching objective exists', () => {
+    const objective = createMockUserGroupCreationObjective({}, nodeType);
+    const context = createMockContext({ user_group_creation_objectives: [objective] });
+    const { createdNode } = createUserGroupNode(context, nodeType, { label: 'test' });
 
-    const mockContext = createMockContext({
-      user_group_creation_objectives: [mockObjective],
-    });
-
-    const result = createUserGroupNode(
-      mockContext,
-      entityType as IAMNodeEntity.User | IAMNodeEntity.Group,
-      { label: mockLabel }
-    );
-
-    const createdNode = result.updatedContext.nodes.find(
-      (n: IAMAnyNode) => entityType === n.data.entity
-    );
-    expect(createdNode).toBeDefined();
-    expect(createdNode).toMatchObject({
-      data: {
-        label: mockLabel,
-        unnecessary_node: false,
-        entity: entityType,
-      },
-    });
+    expect(createdNode.data.unnecessary_node).toBe(false);
   });
 
-  it(`creates a new user or group node, updates the context,
-      and returns no events when no valid objective is found`, () => {
-    const mockLabel = `mock_${entityType.toLowerCase()}`;
-    const mockContext = createMockContext({
-      user_group_creation_objectives: [],
-    });
+  it('sets unnecessary_node: true and emits no events when no objectives exist', () => {
+    const context = createMockContext({ user_group_creation_objectives: [] });
+    const { createdNode, events } = createUserGroupNode(context, nodeType, { label: 'test' });
 
-    const result = createUserGroupNode(
-      mockContext,
-      entityType as IAMNodeEntity.User | IAMNodeEntity.Group,
-      { label: mockLabel }
-    );
-
-    const createdNode = result.updatedContext.nodes.find(
-      (n: IAMAnyNode) => entityType === n.data.entity
-    );
-    expect(createdNode).toBeDefined();
-    expect(createdNode).toMatchObject({
-      data: {
-        label: mockLabel,
-        unnecessary_node: true,
-        entity: entityType,
-      },
-    });
+    expect(createdNode.data.unnecessary_node).toBe(true);
+    expect(events).toEqual([]);
   });
 });

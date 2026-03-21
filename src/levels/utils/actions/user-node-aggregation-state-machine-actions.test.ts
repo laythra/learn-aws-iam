@@ -5,10 +5,11 @@ import {
   deaggregateUserNodes,
 } from './user-node-aggregation-state-machine-actions';
 import { createMockContext } from '@/__test-helpers__/context';
+import { isNodeOfEntity } from '@/domain/node-type-guards';
 import { createAggregatedUsersNode } from '@/domain/nodes/aggregate-user-nodes-factory';
 import { createUserNode } from '@/domain/nodes/user-node-factory';
 import { IAMNodeEntity } from '@/types/iam-enums';
-import { IAMUserNode, IAMAggregatedUsersNode, IAMEdge, IAMAnyNode } from '@/types/iam-node-types';
+import { IAMEdge, IAMAnyNode, IAMNodeMap } from '@/types/iam-node-types';
 
 const createTestContext = (
   nodes: IAMAnyNode[],
@@ -50,18 +51,26 @@ describe('user-node-aggregation-state-machine-actions', () => {
 
       const result = aggregateUserNodes(context);
 
-      const aggregatedNode = result.nodes.find(
-        (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.AggregatedUsers
-      ) as IAMAggregatedUsersNode;
+      const aggregatedNode = result.nodes.find(n =>
+        isNodeOfEntity(n, IAMNodeEntity.AggregatedUsers)
+      );
       expect(aggregatedNode).toBeDefined();
-      expect(aggregatedNode.data.aggregated_user_ids).toEqual(['user1', 'user2']);
+      expect(aggregatedNode!.data.aggregated_user_ids).toEqual(['user1', 'user2']);
 
-      const user1 = result.nodes.find((n: IAMAnyNode) => n.id === 'user1') as IAMUserNode;
-      const user2 = result.nodes.find((n: IAMAnyNode) => n.id === 'user2') as IAMUserNode;
-      expect(user1.hidden).toBe(true);
-      expect(user1.data.aggregated).toBe(true);
-      expect(user2.hidden).toBe(true);
-      expect(user2.data.aggregated).toBe(true);
+      const user1 = result.nodes.find(
+        (n): n is IAMNodeMap[IAMNodeEntity.User] =>
+          n.id === 'user1' && isNodeOfEntity(n, IAMNodeEntity.User)
+      );
+      const user2 = result.nodes.find(
+        (n): n is IAMNodeMap[IAMNodeEntity.User] =>
+          n.id === 'user2' && isNodeOfEntity(n, IAMNodeEntity.User)
+      );
+      expect(user1).toBeDefined();
+      expect(user2).toBeDefined();
+      expect(user1!.hidden).toBe(true);
+      expect(user1!.data.aggregated).toBe(true);
+      expect(user2!.hidden).toBe(true);
+      expect(user2!.data.aggregated).toBe(true);
     });
 
     it('should rewire edges to aggregated node', () => {
@@ -84,11 +93,12 @@ describe('user-node-aggregation-state-machine-actions', () => {
 
       const result = aggregateUserNodes(context);
 
-      const aggregatedNode = result.nodes.find(
-        (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.AggregatedUsers
-      ) as IAMAggregatedUsersNode;
-      expect(result.edges[0].source).toBe(aggregatedNode.id);
-      expect(result.edges[1].source).toBe(aggregatedNode.id);
+      const aggregatedNode = result.nodes.find(n =>
+        isNodeOfEntity(n, IAMNodeEntity.AggregatedUsers)
+      );
+      expect(aggregatedNode).toBeDefined();
+      expect(result.edges[0].source).toBe(aggregatedNode!.id);
+      expect(result.edges[1].source).toBe(aggregatedNode!.id);
     });
 
     it('should store original edge mappings', () => {
@@ -111,10 +121,11 @@ describe('user-node-aggregation-state-machine-actions', () => {
 
       const result = aggregateUserNodes(context);
 
-      const aggregatedNode = result.nodes.find(
-        (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.AggregatedUsers
-      ) as IAMAggregatedUsersNode;
-      expect(aggregatedNode.data.original_edge_mappings).toEqual({
+      const aggregatedNode = result.nodes.find(n =>
+        isNodeOfEntity(n, IAMNodeEntity.AggregatedUsers)
+      );
+      expect(aggregatedNode).toBeDefined();
+      expect(aggregatedNode!.data.original_edge_mappings).toEqual({
         e1: 'user1',
         e2: 'user2',
       });
@@ -134,8 +145,8 @@ describe('user-node-aggregation-state-machine-actions', () => {
 
       const result = aggregateUserNodes(context);
 
-      const aggregatedNodes = result.nodes.filter(
-        (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.AggregatedUsers
+      const aggregatedNodes = result.nodes.filter(n =>
+        isNodeOfEntity(n, IAMNodeEntity.AggregatedUsers)
       );
       expect(aggregatedNodes).toHaveLength(0);
     });
@@ -160,8 +171,8 @@ describe('user-node-aggregation-state-machine-actions', () => {
 
       const result = aggregateUserNodes(context);
 
-      const aggregatedNodes = result.nodes.filter(
-        (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.AggregatedUsers
+      const aggregatedNodes = result.nodes.filter(n =>
+        isNodeOfEntity(n, IAMNodeEntity.AggregatedUsers)
       );
       expect(aggregatedNodes).toHaveLength(0);
       expect(result.nodes).toHaveLength(2);
@@ -187,8 +198,8 @@ describe('user-node-aggregation-state-machine-actions', () => {
 
       const result = aggregateUserNodes(context);
 
-      const aggregatedNodes = result.nodes.filter(
-        (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.AggregatedUsers
+      const aggregatedNodes = result.nodes.filter(n =>
+        isNodeOfEntity(n, IAMNodeEntity.AggregatedUsers)
       );
       expect(aggregatedNodes).toHaveLength(0);
     });
@@ -213,13 +224,13 @@ describe('user-node-aggregation-state-machine-actions', () => {
 
       const result = aggregateUserNodes(context);
 
-      const aggregatedNode = result.nodes.find(
-        (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.AggregatedUsers
-      ) as IAMAggregatedUsersNode;
+      const aggregatedNode = result.nodes.find(n =>
+        isNodeOfEntity(n, IAMNodeEntity.AggregatedUsers)
+      );
 
       expect(aggregatedNode).toBeDefined();
-      expect(aggregatedNode.parentId).toBe('parent1');
-      expect(aggregatedNode.data.parent_id).toBe('parent1');
+      expect(aggregatedNode!.parentId).toBe('parent1');
+      expect(aggregatedNode!.data.parent_id).toBe('parent1');
     });
 
     it('should handle multiple groups of users to aggregate', () => {
@@ -252,9 +263,9 @@ describe('user-node-aggregation-state-machine-actions', () => {
 
       const result = aggregateUserNodes(context);
 
-      const aggregatedNodes = result.nodes.filter(
-        (n: IAMAnyNode) => n.data.entity === IAMNodeEntity.AggregatedUsers
-      ) as IAMAggregatedUsersNode[];
+      const aggregatedNodes = result.nodes.filter(n =>
+        isNodeOfEntity(n, IAMNodeEntity.AggregatedUsers)
+      );
 
       expect(aggregatedNodes).toHaveLength(2);
       expect(aggregatedNodes[0].data.aggregated_user_ids).toEqual(['user1', 'user2']);
@@ -285,13 +296,21 @@ describe('user-node-aggregation-state-machine-actions', () => {
 
       const result = deaggregateUserNodes(context, 'aggregated-1');
 
-      expect(result.nodes.find((n: IAMAnyNode) => n.id === 'aggregated-1')).toBeUndefined();
-      const user1 = result.nodes.find((n: IAMAnyNode) => n.id === 'user1') as IAMUserNode;
-      const user2 = result.nodes.find((n: IAMAnyNode) => n.id === 'user2') as IAMUserNode;
-      expect(user1.hidden).toBe(false);
-      expect(user1.data.aggregated).toBe(false);
-      expect(user2.hidden).toBe(false);
-      expect(user2.data.aggregated).toBe(false);
+      expect(result.nodes.find(n => n.id === 'aggregated-1')).toBeUndefined();
+      const user1 = result.nodes.find(
+        (n): n is IAMNodeMap[IAMNodeEntity.User] =>
+          n.id === 'user1' && isNodeOfEntity(n, IAMNodeEntity.User)
+      );
+      const user2 = result.nodes.find(
+        (n): n is IAMNodeMap[IAMNodeEntity.User] =>
+          n.id === 'user2' && isNodeOfEntity(n, IAMNodeEntity.User)
+      );
+      expect(user1).toBeDefined();
+      expect(user2).toBeDefined();
+      expect(user1!.hidden).toBe(false);
+      expect(user1!.data.aggregated).toBe(false);
+      expect(user2!.hidden).toBe(false);
+      expect(user2!.data.aggregated).toBe(false);
     });
 
     it('should restore original edge sources', () => {
