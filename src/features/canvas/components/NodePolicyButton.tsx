@@ -20,9 +20,9 @@ import { CodeBracketIcon, PencilSquareIcon } from '@heroicons/react/20/solid';
 import { useSelector } from '@xstate/store/react';
 
 import { CanvasStore } from '../stores/canvas-store';
-import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
 import AnimatedRedDot from '@/components/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
+import { useAnimatedRedDot } from '@/runtime/ui/useAnimatedRedDot';
 import { useStateMachineEvent } from '@/runtime/useStateMachineEvent';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';

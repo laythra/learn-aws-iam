@@ -1,6 +1,6 @@
 import { FinishEventMap } from '../types/finish-event-enums';
 import { LevelObjectiveID } from '../types/objective-enums';
-import { LevelObjective, ObjectiveType } from '@/levels/types/objective-types';
+import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const TutorialObjective1Description = `
   Make the **IAM User** \`alex\` assume the **IAM Role** \`finance-auditor-role\`

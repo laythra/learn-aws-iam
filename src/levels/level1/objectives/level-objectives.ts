@@ -1,6 +1,6 @@
 import { FinishEventMap } from '../types/finish-event-enums';
 import { LevelObjectiveID } from '../types/objective-enums';
-import { LevelObjective, ObjectiveType } from '@/levels/types/objective-types';
+import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE_MSG1 = `
   Connect \`public-images\` policy to the **IAM User** named \`alex\`

@@ -3,10 +3,10 @@ import React from 'react';
 import { Box, IconButton } from '@chakra-ui/react';
 import { QuestionMarkCircleIcon } from '@heroicons/react/16/solid';
 
-import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
 import AnimatedRedDot from '@/components/AnimatedRedDot';
 import HoverTooltip from '@/components/HoverTooltip';
 import { ElementID } from '@/config/element-ids';
+import { useAnimatedRedDot } from '@/runtime/ui/useAnimatedRedDot';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
 

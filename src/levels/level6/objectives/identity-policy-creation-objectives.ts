@@ -1,9 +1,9 @@
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-ids';
-import { MANAGED_POLICIES } from '@/levels/consts';
-import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
+import { MANAGED_POLICIES } from '@/domain/managed-policies';
 import { createPolicyCreationObjective } from '@/levels/utils/factories/identity-policy-creation-objective-factory';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/types/objective-types';
 
 export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<FinishEventMap>[][] = [
   [

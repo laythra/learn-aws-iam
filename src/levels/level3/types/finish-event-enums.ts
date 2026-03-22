@@ -1,4 +1,4 @@
-import { FinishEventMapWithDefaults, ObjectiveType } from '@/levels/types/objective-types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/types/objective-types';
 
 export enum LevelObjectiveFinishEvent {
   LEVEL_OBJECTIVE_FINISHED = 'LEVEL_OBJECTIVE_FINISHED',

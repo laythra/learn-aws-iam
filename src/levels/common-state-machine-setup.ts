@@ -18,6 +18,11 @@ import {
 import { ElementID } from '@/config/element-ids';
 import type { GenericContext } from '@/levels/types/context-types';
 import type { GenericEventData } from '@/levels/types/event-types';
+import { analyticsActor } from '@/lib/analytics-actor';
+import { storeLevelCheckpoint } from '@/runtime/level-operations';
+import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
+import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
 import type {
   BaseCreationObjective,
   BaseFinishEventMap,
@@ -25,18 +30,13 @@ import type {
   IAMPolicyEditObjective,
   IAMUserGroupCreationObjective,
   LevelObjective,
-} from '@/levels/types/objective-types';
+} from '@/types/objective-types';
+import { DataEvent } from '@/types/state-machine-event-enums';
 import type {
   FixedPopoverMessage,
   PopoverTutorialMessage,
   PopupTutorialMessage,
-} from '@/levels/types/tutorial-message-types';
-import { analyticsActor } from '@/lib/analytics-actor';
-import { storeLevelCheckpoint } from '@/runtime/level-operations';
-import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
-import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
-import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
-import { DataEvent } from '@/types/state-machine-event-enums';
+} from '@/types/tutorial-message-types';
 
 /**
  * Defines a common state machine setup for all levels

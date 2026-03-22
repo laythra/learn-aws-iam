@@ -1,4 +1,4 @@
-import { FixedPopoverMessage } from '@/levels/types/tutorial-message-types';
+import { FixedPopoverMessage } from '@/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
   The current setup has a single **IAM User (sam)** with 3 policies attached.

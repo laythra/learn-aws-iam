@@ -21,13 +21,13 @@ import _ from 'lodash';
 import Markdown from 'react-markdown';
 
 import SidePanelObjectiveHintButton from './SidePanelObjectiveHintButton';
-import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import SidePanel from '@/components/SidePanel';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 import { useLevelSelector } from '@/runtime/level-runtime';
+import { TutorialPopover } from '@/runtime/tutorial/TutorialPopover';
 
 const SIDEPANEL_TRANSITION_DURATION_MS = 300;
 

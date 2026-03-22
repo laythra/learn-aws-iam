@@ -1,9 +1,9 @@
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, PolicyNodeID } from '../types/node-ids';
-import { MANAGED_POLICIES } from '@/levels/consts';
-import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
+import { MANAGED_POLICIES } from '@/domain/managed-policies';
 import { createPolicyCreationObjective } from '@/levels/utils/factories/identity-policy-creation-objective-factory';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/types/objective-types';
 
 const CALLOUT_MESSAGE1 = `
   Create an identity-based policy that grants the user read/write access to the S3 bucket

@@ -12,6 +12,10 @@ export const VALID_INITIAL_POSITIONS = [
 
 export type ValidInitialPosition = (typeof VALID_INITIAL_POSITIONS)[number];
 
+export const LAYOUT_DIRECTIONS = ['horizontal', 'vertical'] as const;
+
+export type LayoutDirection = (typeof LAYOUT_DIRECTIONS)[number];
+
 /**
  * Defines logical placement of nodes in layout groups inside the canvas.
  * Nodes in the same group are positioned relative to each other and stacked by direction.

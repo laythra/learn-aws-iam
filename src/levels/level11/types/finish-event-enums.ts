@@ -1,4 +1,4 @@
-import { FinishEventMapWithDefaults, ObjectiveType } from '@/levels/types/objective-types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/types/objective-types';
 
 export enum EdgeConnectionFinishEvent {
   TUTORIAL_POLICY1_ATTACHED_TO_USER = 'TUTORIAL_POLICY1_ATTACHED_TO_USER',

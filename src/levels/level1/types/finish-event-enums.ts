@@ -1,4 +1,4 @@
-import { FinishEventMapWithDefaults, ObjectiveType } from '@/levels/types/objective-types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/types/objective-types';
 
 export enum NodeCreationFinishEvent {
   USER_NODE_CREATED = 'USER_NODE_CREATED',

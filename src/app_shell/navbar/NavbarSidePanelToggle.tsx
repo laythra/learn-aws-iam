@@ -1,11 +1,11 @@
 import { Box, IconButton } from '@chakra-ui/react';
 import { Bars3Icon } from '@heroicons/react/16/solid';
 
-import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
-import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
 import AnimatedRedDot from '@/components/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
 import { useLevelActor } from '@/runtime/level-runtime';
+import { TutorialPopover } from '@/runtime/tutorial/TutorialPopover';
+import { useAnimatedRedDot } from '@/runtime/ui/useAnimatedRedDot';
 import { useStateMachineEvent } from '@/runtime/useStateMachineEvent';
 import { VoidEvent } from '@/types/state-machine-event-enums';
 

@@ -1,4 +1,4 @@
-import { FixedPopoverMessage } from '@/levels/types/tutorial-message-types';
+import { FixedPopoverMessage } from '@/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
   Complete the objectives in the right-side panel to establish cross-account access.

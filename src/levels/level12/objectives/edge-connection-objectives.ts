@@ -11,8 +11,8 @@ import {
   UserNodeID,
 } from '../types/node-ids';
 import { createEdge } from '@/domain/edge-factory';
-import { EdgeConnectionObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { HandleID } from '@/types/iam-enums';
+import { EdgeConnectionObjective, ObjectiveType } from '@/types/objective-types';
 
 export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>[][] = [
   [

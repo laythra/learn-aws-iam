@@ -2,12 +2,8 @@ import {
   buildCreationObjectiveFactory,
   CreationFactoryOverrides,
 } from './build-creation-objectives-factory';
-import {
-  BaseCreationObjective,
-  BaseFinishEventMap,
-  ObjectiveType,
-} from '@/levels/types/objective-types';
 import { IAMNodeEntity } from '@/types/iam-enums';
+import { BaseCreationObjective, BaseFinishEventMap, ObjectiveType } from '@/types/objective-types';
 
 export function createPermissionBoundaryCreationObjective<
   T extends BaseCreationObjective<BaseFinishEventMap>,

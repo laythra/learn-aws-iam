@@ -1,16 +1,7 @@
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
-import {
-  GetLevelGuardRailsBlockedEdgesFns,
-  GetLevelObjectivesApplicableNodesFns,
-} from '../../functions-registry';
 import { GenericContext } from '../../types/context-types';
-import {
-  BaseFinishEventMap,
-  EdgeConnectionObjective,
-  ObjectiveType,
-} from '../../types/objective-types';
 import { ConnectionFilter } from '../filters/connection-filter';
 import { IAMNodeFilter } from '../filters/iam-node-filter';
 import {
@@ -20,6 +11,10 @@ import {
 import { createEdge } from '@/domain/edge-factory';
 import { getEdgeName, getEdgeLabel } from '@/domain/iam-graph-utils';
 import { isNodeOfEntity } from '@/domain/node-type-guards';
+import {
+  GetLevelGuardRailsBlockedEdgesFns,
+  GetLevelObjectivesApplicableNodesFns,
+} from '@/runtime/functions-registry';
 import { theme } from '@/theme';
 import { HandleID, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMGuardRailsNode, PartialEdge } from '@/types/iam-node-types';
@@ -37,6 +32,11 @@ import {
   IAMUserNode,
 } from '@/types/iam-node-types';
 import { PolicyGrantedAccess } from '@/types/iam-policy-types';
+import {
+  BaseFinishEventMap,
+  EdgeConnectionObjective,
+  ObjectiveType,
+} from '@/types/objective-types';
 
 function getAffectingGuardRailsNodes(edges: IAMEdge[], target: IAMAnyNode): IAMGuardRailsNode[] {
   const affectingPBNodes = selectAffectingPermissionBoundaryNodes(edges, target);

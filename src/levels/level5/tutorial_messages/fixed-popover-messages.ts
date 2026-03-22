@@ -1,4 +1,4 @@
-import { FixedPopoverMessage } from '@/levels/types/tutorial-message-types';
+import { FixedPopoverMessage } from '@/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
   Notice the \`Principal\` in the **Trust Policy**.

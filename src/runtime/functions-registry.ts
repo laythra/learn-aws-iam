@@ -19,29 +19,29 @@ import { ValidateFunction } from 'ajv';
 import {
   ObjectivesApplicableNodesFns as Level10ObjectivesApplicableNodesFns,
   ValidateFunctions as Level10ValidateFunctions,
-} from './level10/level-runtime-fns';
+} from '@/levels/level10/level-runtime-fns';
 import {
   ValidateFunctions as Level11ValidateFunctions,
   GuardRailsBlockedEdgesFunctions as Level11GuardRailsBlockedEdgesFunctions,
-} from './level11/level-runtime-fns';
+} from '@/levels/level11/level-runtime-fns';
 import {
   ObjectivesApplicableNodesFns as Level12ObjectivesApplicableNodesFns,
   ValidateFunctions as Level12ValidateFunctions,
   GuardRailsBlockedEdgesFunctions as Level12GuardRailsBlockedEdgesFunctions,
-} from './level12/level-runtime-fns';
-import { ValidateFunctions as Level3ValidateFunctions } from './level3/level-runtime-fns';
-import { ValidateFunctions as Level4ValidateFunctions } from './level4/level-runtime-fns';
-import { ValidateFunctions as Level5ValidateFunctions } from './level5/level-runtime-fns';
-import { ValidateFunctions as Level6ValidateFunctions } from './level6/level-runtime-fns';
-import { ValidateFunctions as Level7ValidateFunctions } from './level7/level-runtime-fns';
+} from '@/levels/level12/level-runtime-fns';
+import { ValidateFunctions as Level3ValidateFunctions } from '@/levels/level3/level-runtime-fns';
+import { ValidateFunctions as Level4ValidateFunctions } from '@/levels/level4/level-runtime-fns';
+import { ValidateFunctions as Level5ValidateFunctions } from '@/levels/level5/level-runtime-fns';
+import { ValidateFunctions as Level6ValidateFunctions } from '@/levels/level6/level-runtime-fns';
+import { ValidateFunctions as Level7ValidateFunctions } from '@/levels/level7/level-runtime-fns';
 import {
   ObjectivesApplicableNodesFns as Level8ObjectivesApplicableNodesFns,
   ValidateFunctions as Level8ValidateFunctions,
-} from './level8/level-runtime-fns';
+} from '@/levels/level8/level-runtime-fns';
 import {
   ObjectivesApplicableNodesFns as Level9ObjectivesApplicableNodesFns,
   ValidateFunctions as Level9ValidateFunctions,
-} from './level9/level-runtime-fns';
+} from '@/levels/level9/level-runtime-fns';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
 type RegistryFns = {

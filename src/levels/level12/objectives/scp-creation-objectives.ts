@@ -3,10 +3,10 @@ import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { SCP_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, SCPCreationFinishEvent } from '../types/finish-event-enums';
 import { SCPNodeID } from '../types/node-ids';
-import { MANAGED_POLICIES } from '@/levels/consts';
-import { IAMSCPCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
+import { MANAGED_POLICIES } from '@/domain/managed-policies';
 import { createSCPCreationObjective } from '@/levels/utils/factories/scp-creation-objective-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMSCPCreationObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE_CALLOUT_MSG = `
   We need to create a Service Control Policy (SCP) which blocks the

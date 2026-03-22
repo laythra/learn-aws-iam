@@ -1,13 +1,7 @@
 import { produce, WritableDraft } from 'immer';
 import _ from 'lodash';
 
-import { GetLevelValidateFunctions } from '../../functions-registry';
 import { GenericContext } from '../../types/context-types';
-import {
-  BaseCreationObjective,
-  BaseFinishEventMap,
-  ObjectiveType,
-} from '../../types/objective-types';
 import { findAnyValidObjective } from '@/domain/iam-policy-validator';
 import { createGroupNode } from '@/domain/nodes/group-node-factory';
 import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';
@@ -16,6 +10,7 @@ import { createResourcePolicyNode } from '@/domain/nodes/resource-policy-node-fa
 import { createRoleNode } from '@/domain/nodes/role-node-factory';
 import { createSCPNode } from '@/domain/nodes/scp-node-factory';
 import { createUserNode } from '@/domain/nodes/user-node-factory';
+import { GetLevelValidateFunctions } from '@/runtime/functions-registry';
 import { IAMNodeEntity, CommonLayoutGroupID, IAMCodeDefinedEntity } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import {
@@ -29,6 +24,7 @@ import {
   IAMPermissionBoundaryNode,
   IAMSCPNode,
 } from '@/types/iam-node-types';
+import { BaseCreationObjective, BaseFinishEventMap, ObjectiveType } from '@/types/objective-types';
 
 type EntityToNode = {
   [IAMNodeEntity.IdentityPolicy]: IAMIdentityPolicyNode;

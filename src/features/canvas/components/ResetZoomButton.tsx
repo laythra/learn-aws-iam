@@ -1,7 +1,7 @@
 import { useReactFlow, Viewport, ControlButton } from '@xyflow/react';
 
-import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
 import { ElementID } from '@/config/element-ids';
+import { TutorialPopover } from '@/runtime/tutorial/TutorialPopover';
 
 export const ResetZoomButton: React.FC = () => {
   const { setViewport } = useReactFlow();

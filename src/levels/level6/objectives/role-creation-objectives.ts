@@ -1,9 +1,9 @@
 import { FinishEventMap, RoleCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, RoleNodeID } from '../types/node-ids';
-import { MANAGED_POLICIES } from '@/levels/consts';
-import { IAMRoleCreationObjective } from '@/levels/types/objective-types';
+import { MANAGED_POLICIES } from '@/domain/managed-policies';
 import { createRoleCreationObjective } from '@/levels/utils/factories/role-creation-objective-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMRoleCreationObjective } from '@/types/objective-types';
 
 export const CALLOUT_MESSAGE1 = `
   The \`Principal\` element in a trust policy defines

@@ -6,6 +6,8 @@ import iamPolicySchema from '@/domain/policy-schemas/aws-iam-policy-schema.json'
 import iamResourcePolicySchema from '@/domain/policy-schemas/aws-iam-resource-policy-schema.json';
 import iamRoleTurstPolicySchema from '@/domain/policy-schemas/aws-iam-role-trust-policy-schema.json';
 import sharedDefinitionsSchema from '@/domain/policy-schemas/aws-iam-shared-definitions-schema.json';
+import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types/iam-enums';
+import { IAMAnyNode } from '@/types/iam-node-types';
 import {
   BaseCreationObjective,
   BaseFinishEventMap,
@@ -14,9 +16,7 @@ import {
   IAMResourcePolicyCreationObjective,
   IAMRoleCreationObjective,
   IAMSCPCreationObjective,
-} from '@/levels/types/objective-types';
-import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types/iam-enums';
-import { IAMAnyNode } from '@/types/iam-node-types';
+} from '@/types/objective-types';
 
 interface ValidationConfig {
   validateFunction: ValidateFunction;

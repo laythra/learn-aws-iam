@@ -2,12 +2,12 @@ import {
   buildCreationObjectiveFactory,
   CreationFactoryOverrides,
 } from './build-creation-objectives-factory';
+import { IAMNodeEntity } from '@/types/iam-enums';
 import {
   BaseFinishEventMap,
   IAMRoleCreationObjective,
   ObjectiveType,
-} from '@/levels/types/objective-types';
-import { IAMNodeEntity } from '@/types/iam-enums';
+} from '@/types/objective-types';
 
 export function createRoleCreationObjective<T extends IAMRoleCreationObjective<BaseFinishEventMap>>(
   overrides: CreationFactoryOverrides<T>

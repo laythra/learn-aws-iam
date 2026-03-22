@@ -13,7 +13,7 @@ vi.mock('@/domain/iam-policy-validator', () => ({
   findAnyValidObjective: vi.fn(),
 }));
 
-vi.mock('@/levels/functions-registry', () => ({
+vi.mock('@/runtime/functions-registry', () => ({
   GetLevelValidateFunctions: vi.fn(() => ({})),
 }));
 

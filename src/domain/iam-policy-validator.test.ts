@@ -8,9 +8,9 @@ import {
   BASE_VALIDATION_FNS,
   AJV_COMPILER,
 } from './iam-policy-validator';
-import { ObjectiveType } from '@/levels/types/objective-types';
-import type { BaseCreationObjective, BaseFinishEventMap } from '@/levels/types/objective-types';
 import { IAMNodeEntity } from '@/types/iam-enums';
+import { ObjectiveType } from '@/types/objective-types';
+import type { BaseCreationObjective, BaseFinishEventMap } from '@/types/objective-types';
 
 const VALID_IDENTITY_POLICY = JSON.stringify({
   Version: '2012-10-17',

@@ -1,8 +1,8 @@
 import { produce } from 'immer';
 
 import { GenericContext } from '@/levels/types/context-types';
-import { BaseFinishEventMap } from '@/levels/types/objective-types';
 import { IAMAnyNode } from '@/types/iam-node-types';
+import { BaseFinishEventMap } from '@/types/objective-types';
 
 /**
  * Deletes an edge from the context and all its children

@@ -2,13 +2,13 @@ import { Box, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-u
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
 import _ from 'lodash';
 
-import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
-import { useAnimatedRedDot } from '@/app_shell/ui/useAnimatedRedDot';
-import { useIdentityCreator } from '@/app_shell/ui/useIdentityCreator';
-import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
 import AnimatedRedDot from '@/components/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
 import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
+import { TutorialPopover } from '@/runtime/tutorial/TutorialPopover';
+import { useAnimatedRedDot } from '@/runtime/ui/useAnimatedRedDot';
+import { useIdentityCreator } from '@/runtime/ui/useIdentityCreator';
+import { useIsElementRestricted } from '@/runtime/ui/useIsElementRestricted';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { VoidEvent } from '@/types/state-machine-event-enums';
 

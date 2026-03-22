@@ -1,6 +1,6 @@
 import { PolicyNodeID, UserNodeID } from '../types/node-ids';
 import { ElementID } from '@/config/element-ids';
-import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
+import type { PopoverTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
   Create the first team-specific policy.

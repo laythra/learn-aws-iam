@@ -1,6 +1,6 @@
 import { GroupNodeID, UserNodeID } from '../types/node-ids';
 import { ElementID } from '@/config/element-ids';
-import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
+import type { PopoverTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
   Notice how this user has several **IAM Policies** attached to it.
