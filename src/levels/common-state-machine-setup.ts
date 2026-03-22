@@ -16,10 +16,10 @@ import {
   editObjectiveState,
 } from './utils/actions';
 import { ElementID } from '@/config/element-ids';
+import { LevelEventBus } from '@/levels/level-event-bus';
 import type { GenericContext } from '@/levels/types/context-types';
 import type { GenericEventData } from '@/levels/types/event-types';
 import { analyticsActor } from '@/lib/analytics-actor';
-import { storeLevelCheckpoint } from '@/runtime/level-operations';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMAnyNode, IAMEdge, IAMGroupNode, IAMUserNode } from '@/types/iam-node-types';
@@ -640,7 +640,9 @@ export const createStateMachineSetup = <
         ) => blocked_connections,
       }),
       store_checkpoint: enqueueActions(({ self }) => {
-        queueMicrotask(() => storeLevelCheckpoint(self as Actor<AnyActorLogic>));
+        queueMicrotask(() =>
+          LevelEventBus.emit('store_checkpoint', { actor: self as Actor<AnyActorLogic> })
+        );
       }),
       aggregate_user_nodes: enqueueActions(({ context, enqueue }) => {
         const updatedContext = aggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(context);
