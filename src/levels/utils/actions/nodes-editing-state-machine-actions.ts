@@ -1,11 +1,11 @@
 import { produce } from 'immer';
 
-import { GetLevelValidateFunctions } from '../../functions-registry';
 import { GenericContext } from '../../types/context-types';
-import { BaseFinishEventMap, ObjectiveType } from '../../types/objective-types';
 import { ConnectionFilter } from '../filters/connection-filter';
 import { isJSONValid } from '@/domain/iam-policy-validator';
+import { GetLevelValidateFunctions } from '@/runtime/functions-registry';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
+import { BaseFinishEventMap, ObjectiveType } from '@/types/objective-types';
 
 export function editPermissionPolicy<TLevelObjectiveID, TFinishEventMap extends BaseFinishEventMap>(
   context: GenericContext<TLevelObjectiveID, TFinishEventMap>,

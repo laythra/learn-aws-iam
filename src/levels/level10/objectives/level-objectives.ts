@@ -1,6 +1,6 @@
 import { FinishEventMap } from '../types/finish-event-enums';
 import { LevelObjectiveID } from '../types/objective-enums';
-import { LevelObjective, ObjectiveType } from '@/levels/types/objective-types';
+import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const Objective1Description = `
   Create a policy containing two statements, one for managing RDS instances with specific tags,

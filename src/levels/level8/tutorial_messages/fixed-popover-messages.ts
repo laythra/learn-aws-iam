@@ -1,4 +1,4 @@
-import { FixedPopoverMessage } from '@/levels/types/tutorial-message-types';
+import { FixedPopoverMessage } from '@/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
   Right now, one role allows users to deploy the Slack alerting service

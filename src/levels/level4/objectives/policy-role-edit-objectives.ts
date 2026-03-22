@@ -1,8 +1,8 @@
 import { ValidateFunctionsFnName } from '../level-runtime-fns';
 import { FinishEventMap, PolicyEditFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-ids';
-import { IAMPolicyEditObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { AccessLevel, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMPolicyEditObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE_CALLOUT_MSG = `
   IAM covers hundreds of actions across AWS services.

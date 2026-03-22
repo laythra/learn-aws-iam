@@ -1,8 +1,8 @@
 import { FIRST_USER_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, NodeCreationFinishEvent } from '../types/finish-event-enums';
 import { UserNodeID } from '../types/node-ids';
-import { IAMUserGroupCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMUserGroupCreationObjective, ObjectiveType } from '@/types/objective-types';
 
 export const USER_GROUP_CREATION_OBJECTIVES: IAMUserGroupCreationObjective<FinishEventMap>[] = [
   {

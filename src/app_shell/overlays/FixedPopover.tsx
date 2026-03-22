@@ -9,13 +9,13 @@ import {
 import _ from 'lodash';
 import Markdown from 'react-markdown';
 
-import { PopoverNextButton } from '@/app_shell/tutorial';
 import { HelpVideo } from '@/components/HelpVideo';
 import { ElementID } from '@/config/element-ids';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
 import { customMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
+import { PopoverNextButton } from '@/runtime/tutorial';
 import { VoidEvent } from '@/types/state-machine-event-enums';
 
 /***

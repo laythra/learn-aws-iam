@@ -12,7 +12,7 @@ import { PolicyNodeID, ResourceNodeID } from '@/levels/level4/types/node-ids';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMNodeMap } from '@/types/iam-node-types';
 
-vi.mock('@/levels/functions-registry', () => ({
+vi.mock('@/runtime/functions-registry', () => ({
   GetLevelValidateFunctions: vi.fn(() => ValidateFunctions),
 }));
 

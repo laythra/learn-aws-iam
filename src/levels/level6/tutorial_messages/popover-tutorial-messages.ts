@@ -1,5 +1,5 @@
 import { UserNodeID } from '../types/node-ids';
-import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
+import type { PopoverTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
   The IAM user \`omar\` now has *read access* to the DynamoDB table \`finance-reports\`.

@@ -1,3 +1,6 @@
+import { ElementID } from '@/config/element-ids';
+import { NodeLayoutGroup } from '@/types/iam-layout-types';
+import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 import {
   BaseCreationObjective,
   BaseFinishEventMap,
@@ -5,15 +8,12 @@ import {
   IAMPolicyEditObjective,
   IAMUserGroupCreationObjective,
   LevelObjective,
-} from './objective-types';
+} from '@/types/objective-types';
 import {
   FixedPopoverMessage,
   PopoverTutorialMessage,
   PopupTutorialMessage,
-} from './tutorial-message-types';
-import { ElementID } from '@/config/element-ids';
-import { NodeLayoutGroup } from '@/types/iam-layout-types';
-import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
+} from '@/types/tutorial-message-types';
 export interface GenericContext<TObjectiveID, TBaseFinishEventMap extends BaseFinishEventMap> {
   edges: IAMEdge[];
   edges_connection_objectives: EdgeConnectionObjective<TBaseFinishEventMap>[];

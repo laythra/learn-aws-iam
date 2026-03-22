@@ -3,9 +3,9 @@ import _ from 'lodash';
 
 import CodeEditorHelpButton from './CodeEditorHelpButton';
 import CodeEditorResetButton from './CodeEditorResetButton';
-import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
 import { ElementID } from '@/config/element-ids';
 import { useLevelSelector } from '@/runtime/level-runtime';
+import { useIsElementRestricted } from '@/runtime/ui/useIsElementRestricted';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 interface CodeEditorHeaderProps {

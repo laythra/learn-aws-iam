@@ -2,9 +2,9 @@ import { useCallback, useMemo } from 'react';
 
 import _ from 'lodash';
 
-import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
 import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
 import { VoidEvent } from '@/types/state-machine-event-enums';
+import type { PopoverTutorialMessage } from '@/types/tutorial-message-types';
 
 export interface UsePopoverResult {
   isOpen: boolean;

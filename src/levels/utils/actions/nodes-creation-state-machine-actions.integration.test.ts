@@ -9,7 +9,7 @@ import { POLICY_CREATION_OBJECTIVES } from '@/levels/level3/objectives/policy-ro
 import { PolicyNodeID } from '@/levels/level3/types/node-ids';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
-vi.mock('@/levels/functions-registry', () => ({
+vi.mock('@/runtime/functions-registry', () => ({
   GetLevelValidateFunctions: vi.fn(() => ValidateFunctions),
 }));
 

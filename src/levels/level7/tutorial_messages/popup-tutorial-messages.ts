@@ -1,5 +1,5 @@
 import { AccountID } from '../types/node-ids';
-import { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
+import { PopupTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPUP_MSG1 = `
   All the policies we've dealt with so far granted permissions

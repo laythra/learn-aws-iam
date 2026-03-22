@@ -1,4 +1,4 @@
-import { FinishEventMapWithDefaults, ObjectiveType } from '@/levels/types/objective-types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/types/objective-types';
 
 export enum EdgeConnectionFinishEvent {
   COULDTRAIL_SCP_CONNECTED = 'COULDTRAIL_SCP_CONNECTED',

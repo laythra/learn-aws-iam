@@ -3,13 +3,10 @@ import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
 import { PERMISSION_BOUNDARY_ALERT_MESSAGE } from '../tutorial_messages/node-tooltip-messages';
 import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/finish-event-enums';
 import { PermissionBoundaryID } from '../types/node-ids';
-import { MANAGED_POLICIES } from '@/levels/consts';
-import {
-  IAMPermissionBoundaryCreationObjective,
-  ObjectiveType,
-} from '@/levels/types/objective-types';
+import { MANAGED_POLICIES } from '@/domain/managed-policies';
 import { createPermissionBoundaryCreationObjective } from '@/levels/utils/factories/permission-boundary-creation-objective-factory';
 import { IAMNodeEntity } from '@/types/iam-enums';
+import { IAMPermissionBoundaryCreationObjective, ObjectiveType } from '@/types/objective-types';
 
 export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreationObjective<
   FinishEventMap,

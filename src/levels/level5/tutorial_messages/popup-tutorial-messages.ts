@@ -1,4 +1,4 @@
-import { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
+import { PopupTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPUP_MSG1 = `
   We've covered great ground so far! We got to learn about:|lg

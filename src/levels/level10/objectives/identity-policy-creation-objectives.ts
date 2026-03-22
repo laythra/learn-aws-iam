@@ -2,9 +2,9 @@ import { ObjectivesApplicableNodesFnName } from '../level-runtime-fns';
 import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-ids';
-import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/levels/types/objective-types';
 import { createPolicyCreationObjective } from '@/levels/utils/factories/identity-policy-creation-objective-factory';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
+import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE1_CALLOUT_MSG = `
   This policy needs two statements working together:

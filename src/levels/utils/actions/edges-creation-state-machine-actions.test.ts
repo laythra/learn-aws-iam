@@ -6,10 +6,6 @@ import {
   applyGuardRailBlockingToEdges,
   deleteConnectionEdges,
 } from './edges-creation-state-machine-actions';
-import {
-  GetLevelGuardRailsBlockedEdgesFns,
-  GetLevelObjectivesApplicableNodesFns,
-} from '../../functions-registry';
 import { createMockContext } from '@/__test-helpers__/context';
 import { createEdge } from '@/domain/edge-factory';
 import { createAccountNode } from '@/domain/nodes/account-node-factory';
@@ -21,6 +17,10 @@ import { createResourceNode } from '@/domain/nodes/resource-node-factory';
 import { createRoleNode } from '@/domain/nodes/role-node-factory';
 import { createSCPNode } from '@/domain/nodes/scp-node-factory';
 import { createUserNode } from '@/domain/nodes/user-node-factory';
+import {
+  GetLevelGuardRailsBlockedEdgesFns,
+  GetLevelObjectivesApplicableNodesFns,
+} from '@/runtime/functions-registry';
 import { AccessLevel } from '@/types/iam-enums';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
@@ -30,7 +30,7 @@ type ExpectedEdge = {
   data?: Partial<IAMEdge['data']>;
 };
 
-vi.mock('@/levels/functions-registry', () => ({
+vi.mock('@/runtime/functions-registry', () => ({
   GetLevelObjectivesApplicableNodesFns: vi.fn(() => ({})),
   GetLevelGuardRailsBlockedEdgesFns: vi.fn(() => ({})),
   GetLevelValidateFunctionsFns: vi.fn(() => ({})),

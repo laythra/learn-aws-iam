@@ -2,8 +2,8 @@ import { memo } from 'react';
 
 import { Tooltip, Box } from '@chakra-ui/react';
 
-import { usePopover } from '@/app_shell/tutorial/usePopover';
 import AnimatedRedDot from '@/components/AnimatedRedDot';
+import { usePopover } from '@/runtime/tutorial/usePopover';
 
 interface IAMNodeHelpTooltipProps {
   nodeTooltip: string;

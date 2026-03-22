@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+
 interface ModalProviderProps {
   children: React.ReactNode;
 }

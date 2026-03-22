@@ -20,12 +20,12 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 
-import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
-import { useIdentityCreator } from '@/app_shell/ui/useIdentityCreator';
-import { useIsElementRestricted } from '@/app_shell/ui/useIsElementRestricted';
 import { ElementID } from '@/config/element-ids';
 import { validateIAMName } from '@/domain/iam-graph-utils';
 import { useLevelActor } from '@/runtime/level-runtime';
+import { TutorialPopover } from '@/runtime/tutorial/TutorialPopover';
+import { useIdentityCreator } from '@/runtime/ui/useIdentityCreator';
+import { useIsElementRestricted } from '@/runtime/ui/useIsElementRestricted';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { DataEvent, VoidEvent } from '@/types/state-machine-event-enums';
 

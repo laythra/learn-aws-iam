@@ -1,5 +1,5 @@
 import { ElementID } from '@/config/element-ids';
-import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
+import type { PopoverTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
   Your objectives are listed in the right panel. Good luck! 💪|lg

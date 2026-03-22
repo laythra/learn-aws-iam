@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FormControl, FormLabel, FormHelperText, Input } from '@chakra-ui/react';
 
-import { TutorialPopover } from '@/app_shell/tutorial/TutorialPopover';
+import { TutorialPopover } from '@/runtime/tutorial/TutorialPopover';
 
 interface IAMUserCreationPopupSectionProps {
   userName: string;

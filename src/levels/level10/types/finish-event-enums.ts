@@ -1,4 +1,4 @@
-import { FinishEventMapWithDefaults, ObjectiveType } from '@/levels/types/objective-types';
+import { FinishEventMapWithDefaults, ObjectiveType } from '@/types/objective-types';
 
 export enum EdgeConnectionFinishEvent {
   TBAC_POLICY_ATTACHED_GROUP1 = 'TBAC_POLICY_ATTACHED_GROUP1',

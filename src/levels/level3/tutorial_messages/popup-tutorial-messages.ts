@@ -1,4 +1,4 @@
-import { PopupTutorialMessage } from '@/levels/types/tutorial-message-types';
+import { PopupTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
 In the previous level, we covered **IAM Groups** and

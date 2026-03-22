@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 
 import { GenericContext } from '../../types/context-types';
-import { BaseFinishEventMap, LevelObjective } from '../../types/objective-types';
+import { BaseFinishEventMap, LevelObjective } from '@/types/objective-types';
 
 /**
  *  Edits the state of an objective, namely the `finished` property.

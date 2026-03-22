@@ -1,5 +1,5 @@
 import { PolicyNodeID, RoleNodeID, UserNodeID } from '../types/node-ids';
-import type { PopoverTutorialMessage } from '@/levels/types/tutorial-message-types';
+import type { PopoverTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
   This role currently lets all assigned users deploy the Slack alerting service

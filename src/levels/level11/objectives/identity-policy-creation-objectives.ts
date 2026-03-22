@@ -3,9 +3,9 @@ import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap } from '../types/finish-event-enums';
 import { PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID } from '../types/node-ids';
-import { IAMIdentityPolicyCreationObjective } from '@/levels/types/objective-types';
 import { createPolicyCreationObjective } from '@/levels/utils/factories/identity-policy-creation-objective-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';
+import { IAMIdentityPolicyCreationObjective } from '@/types/objective-types';
 
 const CALLOUT_MSG = `
   This objective requires creating a policy which allows a user

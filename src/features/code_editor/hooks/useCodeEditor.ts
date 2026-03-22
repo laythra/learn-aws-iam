@@ -11,10 +11,10 @@ import _ from 'lodash';
 import { badgeExtension, InitializeBadgeWidgets } from '../utils/BaseWidget';
 import { validateIAMName } from '@/domain/iam-graph-utils';
 import { collectValidationDiagnostics } from '@/domain/iam-policy-validator';
-import { HelpBadge } from '@/levels/types/objective-types';
 import { useLevelActor } from '@/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity } from '@/types/iam-enums';
+import { HelpBadge } from '@/types/objective-types';
 
 interface UseCodeEditorOptions {
   nodeId: string;

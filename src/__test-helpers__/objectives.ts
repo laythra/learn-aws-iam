@@ -1,14 +1,14 @@
 import _ from 'lodash';
 
-import { MANAGED_POLICIES } from '@/levels/consts';
+import { MANAGED_POLICIES } from '@/domain/managed-policies';
+import { createPolicyCreationObjective } from '@/levels/utils/factories/identity-policy-creation-objective-factory';
+import { IAMNodeEntity } from '@/types/iam-enums';
 import {
   BaseFinishEventMap,
   IAMIdentityPolicyCreationObjective,
   IAMUserGroupCreationObjective,
   ObjectiveType,
-} from '@/levels/types/objective-types';
-import { createPolicyCreationObjective } from '@/levels/utils/factories/identity-policy-creation-objective-factory';
-import { IAMNodeEntity } from '@/types/iam-enums';
+} from '@/types/objective-types';
 
 export function createMockPolicyCreationObjective<TFinishEventMap extends BaseFinishEventMap>(
   overrides: Partial<IAMIdentityPolicyCreationObjective<TFinishEventMap>> = {}
