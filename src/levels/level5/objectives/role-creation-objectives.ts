@@ -23,7 +23,7 @@ const CALLOUT_MSG1 = `
   What you're creating now is called a **Trust Policy**.
   It's another type of policy that defines which IAM entities can assume the role.
 
-  a trust policy can be attached to one role at a time,
+  A trust policy can be attached to one role at a time,
   so it's embedded in the role itself
 `;
 

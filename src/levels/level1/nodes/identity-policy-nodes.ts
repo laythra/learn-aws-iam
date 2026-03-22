@@ -8,7 +8,7 @@ import { IAMIdentityPolicyNode } from '@/types/iam-node-types';
 const TUTORIAL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.S3ReadPolicy,
-    label: 'public-images-read-policy',
+    label: 'PublicImagesReadPolicy',
     image: IAMNodeImage.Policy,
     content: JSON.stringify(INITIAL_POLICIES.S3_READ_POLICY, null, 2),
     layout_group_id: CommonLayoutGroupID.BottomLeftVertical,

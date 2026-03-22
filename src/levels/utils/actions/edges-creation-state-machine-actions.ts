@@ -143,7 +143,7 @@ function createEdgeWithEvents<TLevelObjectiveID, TFinishEventMap extends BaseFin
           deletable: false,
         },
         dataOverrides: {
-          hovering_label: edgeLabel,
+          hovering_label: objective.established_edge_hovering_label ?? edgeLabel,
           source_node: sourceNode,
           target_node: targetNode,
           attached_as: sourceNode.data.entity,

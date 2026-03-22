@@ -16,9 +16,9 @@ const POPUP_MSG2 = `
   named \`finance-reports\` in the *Trusting Account*.|lg
 
   You hire a third-party auditor. Their identity is an **IAM User**
-  named \`omar\` in a different AWS account (the *Trusted Account*).|lg
+  named \`alex\` in a different AWS account (the *Trusted Account*).|lg
 
-  Your goal is to let \`omar\` read from \`finance-reports\`
+  Your goal is to let \`alex\` read from \`finance-reports\`
   without creating a new IAM user in the trusting account.|lg
 `;
 
@@ -29,7 +29,7 @@ const POPUP_MSG3 = `
   * In the **Trusted Account**, the user's **identity policy** must allow \`sts:AssumeRole\`
     on that specific role ARN.
 
-  >**If either side is missing, role assumption fails**
+  >::badge[WARNING]::  **If either side is missing, role assumption fails**
 `;
 
 const POPUP_MSG4 = `

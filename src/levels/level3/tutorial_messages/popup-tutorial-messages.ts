@@ -8,7 +8,7 @@ This level introduces **Customer Managed IAM Policies** and **AWS Managed Polici
 `;
 
 const POPUP_MSG_2 = `
-Every policy we've used so far was **AWS Managed**.|lg
+In **Level 2**, the pre-built policies you worked with were **AWS Managed**.|lg
 
 * **AWS Managed Policies** are pre-built policies you can attach
  to your IAM \`users\`, \`groups\`, and \`roles\`.
@@ -36,12 +36,16 @@ Policies — whether **AWS Managed** or **Customer Managed** — have the same s
   Statement: [
     {
       "Effect": "Allow", ::badge[ALLOWS SPECIFIED ACTIONS]::
-      "Action": ["s3:Get*", "s3:List*"], ::badge[LISTING ALL OBJECTS AND BUCKETS]::
+      "Action": ["s3:Get*", "s3:List*"], ::badge[READ AND LIST S3 RESOURCES]::
       "Resource": "*" ::badge[ALL S3 BUCKETS]::
     }
   ]
 }|fullwidth
 ~~~
+
+>|color(warning) ::badge[WARNING]:: **Deny** takes precedence over **Allow**.
+If a user has one policy that allows an action but another policy that denies it,
+the action will be denied
 `;
 
 const POPUP_MSG_4 = `
@@ -54,9 +58,9 @@ The company has two teams: **Frontend** and **Backend**.
   - Requires ***read/write*** access to specific **S3 buckets**
    for storing static assets (e.g., images).
   - Needs read access to specific **CloudFront Distributions**
-   to monitor content delivery.
+   to view distribution configuration.
 * **Backend Team**:
-  - Requires full access to specific **DynamoDB** tables.
+  - Requires ***read/write*** access to specific **DynamoDB** tables.
 `;
 
 const POPUP_MSG_5 = `
@@ -69,13 +73,14 @@ while maintaining the **principle of least privilege**.|lg
 
 &nbsp;
 
-> **::badge[RULE]:: What is the Principle of Least Privilege?**|lg
+> |color(blue)
+> **What is the Principle of Least Privilege?**|lg
 >
-> The **principle of least privilege** means giving users or systems
-> only the minimum access they need to perform their tasks.
-> For example, allowing a database administrator to view
-> but not modify financial records unless their role specifically requires it.
-> It's not IAM-specific — it's a foundational security best practice.|lg
+> The **principle of least privilege** means giving users or systems only the permissions
+> they need to do their job - nothing more. For example,
+> a database admin might need access to read financial records,
+> but shouldn't be able to modify them unless that's explicitly part of their role.
+> This isn't an IAM concept - it's a general security principle.
 `;
 
 const POPUP_MSG_6 = `

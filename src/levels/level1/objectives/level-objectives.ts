@@ -3,7 +3,7 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE_MSG1 = `
-  Connect \`public-images\` policy to the **IAM User** named \`alex\`
+  Connect \`PublicImagesReadPolicy\` to the **IAM User** named \`alex\`
 `;
 
 const OBJECTIVE_MSG2 = `

@@ -4,10 +4,11 @@ const FIXED_POPOVER_MSG1 = `
   Notice the \`Principal\` in the **Trust Policy**.
   It specifies the entity that can assume the role and it's an **IAM User**.
 
-  notice the **Identity-based Policy** that's attached to the **Role**,
+  There's also an **Identity-based Policy** that's attached to the **Role**,
   it defines the permissions that the principal will have once they assume the role.
 
-  ***Close the Trust Policy through the ::icon[XMarkIcon]:: button in the top right to continue.***
+  ***Close the Trust Policy through the ::icon[XMarkIcon]::
+  button in the top right to view the attached policy.***
 `;
 
 const FIXED_POPOVER_MSG2 = `
@@ -20,7 +21,7 @@ const FIXED_POPOVER_MSG4 = `
 
   There are a few key differences that are too boring to list here, but here's a summary:
   * **IAM Roles** provide temporary credentials to trusted entities,
-  unlike policies which are permanently attached
+    unlike identity-based policies which grant persistent access.
   * **IAM Roles** solve use cases not possible with policies,
   like cross-account access, or service-to-service access
 

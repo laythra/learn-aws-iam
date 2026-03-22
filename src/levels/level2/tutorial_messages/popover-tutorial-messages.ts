@@ -10,11 +10,11 @@ const POPOVER_MSG1 = `
   Click ***NEXT*** to get started.
 `;
 
-const POPOVER_MSG3 = ``;
-
 const POPOVER_MSG2 = `
   Let's create an **IAM Group**.
 `;
+
+const POPOVER_MSG3 = ``;
 
 const POPOVER_MSG4 = `
   ::badge[CORE]:: You can attach both policies and users to your **IAM Group**.

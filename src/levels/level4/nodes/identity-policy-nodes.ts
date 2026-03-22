@@ -10,7 +10,7 @@ import { IAMIdentityPolicyNode } from '@/types/iam-node-types';
 const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.DeveloperPolicy,
-    label: 'developers-access',
+    label: 'DevelopersAccess',
     content: DEVELOPERS_POLICY_DOCUMENT,
     granted_accesses: [
       {
@@ -24,7 +24,7 @@ const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
   },
   {
     id: PolicyNodeID.DataScientistPolicy,
-    label: 'data-scientists-access',
+    label: 'DataScientistsAccess',
     content: DATA_SCIENTISTS_POLICY_DOCUMENT,
     granted_accesses: [
       {
@@ -43,7 +43,7 @@ const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
   },
   {
     id: PolicyNodeID.InternPolicy,
-    label: 'interns-access',
+    label: 'InternsAccess',
     content: INTERNS_POLICY_DOCUMENT,
     granted_accesses: [],
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,

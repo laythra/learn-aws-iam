@@ -8,7 +8,7 @@ const TutorialObjective1Description = `
 
 const TutorialObjective2Description = `
   Create a new role that can be assumed by \`alex\`
-  and attach the **IAM Policy** \`s3-read-policy\` to it
+  and attach the **IAM Policy** \`S3ReadPolicy\` to it
 `;
 
 const TutorialObjective3Description = `

@@ -7,6 +7,11 @@ export const INITIAL_POLICIES = {
         Action: ['s3:GetObject'],
         Resource: 'arn:aws:s3:::public-images/*',
       },
+      {
+        Effect: 'Allow',
+        Action: ['s3:ListBucket'],
+        Resource: 'arn:aws:s3:::public-images',
+      },
     ],
   },
 };

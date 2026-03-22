@@ -18,7 +18,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       ],
       on_finish_event: EdgeConnectionFinishEvent.S3_READ_WRITE_POLICY_CONNECTED,
       is_finished: false,
-      established_edge_hovering_label: AccessLevel.Write,
+      established_edge_hovering_label: AccessLevel.ReadWrite,
       established_edge_source_handle: HandleID.Top,
       established_edge_target_handle: HandleID.Bottom,
     },

@@ -14,9 +14,9 @@ export default `
     "Statement": [
       {
         "Effect": "Allow", ::badge[ALLOWS SPECIFIED ACTIONS]::
-        "Action": ["s3:Get*", "s3:List*"], ::badge[LISTING ALL OBJECTS AND BUCKETS]::
+        "Action": ["s3:Get*", "s3:List*"], ::badge[READ-ONLY ACCESS TO S3]::
         "Resource": "*", ::badge[ALL S3 BUCKETS]::
-        "Condition": { ::badge[APPLY THIS POLICY IFF USER HAS 2FA ENABLED]::
+        "Condition": { ::badge[APPLY THIS POLICY IF USER HAS 2FA ENABLED]::
           "BoolIfExists": {
             "aws:MultiFactorAuthPresent": "true"
           }
@@ -25,4 +25,8 @@ export default `
     ]
   }|fullwidth
   ~~~
+
+  > |color(warning) ::badge[WARNING]:: **Deny** takes precedence over **Allow**.
+  If a user has one policy that allows an action but another policy that denies it,
+  the action will be denied.
 `;

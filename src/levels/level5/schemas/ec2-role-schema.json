@@ -10,9 +10,7 @@
   "properties": {
     "Version": {
       "type": "string",
-      "enum": [
-        "2012-10-17"
-      ]
+      "const": "2012-10-17"
     },
     "Statement": {
       "minItems": 1,
@@ -40,20 +38,17 @@
             "properties": {
               "Service": {
                 "type": "string",
-                "enum": [
-                  "ec2.amazonaws.com"
-                ]
+                "const": "ec2.amazonaws.com"
               }
             }
           },
           "Action": {
             "type": "string",
-            "enum": [
-              "sts:AssumeRole"
-            ]
+            "const": "sts:AssumeRole"
           }
         }
       }
     }
-  }
+  },
+  "additionalProperties": false
 }

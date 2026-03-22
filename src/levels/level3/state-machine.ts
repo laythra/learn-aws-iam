@@ -152,7 +152,6 @@ export const stateMachine = createStateMachineSetup<
           entry: [
             'hide_fixed_popovers',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[2] } },
-            'show_side_panel',
             {
               type: 'append_creation_objectives',
               params: { objectives: POLICY_CREATION_OBJECTIVES[0] },
@@ -188,7 +187,7 @@ export const stateMachine = createStateMachineSetup<
           on: {
             NEXT_POPOVER: {
               target: 'tutorial_finished',
-              actions: 'hide_popovers',
+              actions: ['hide_popovers', 'close_side_panel'],
             },
           },
         },

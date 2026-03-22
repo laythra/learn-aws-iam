@@ -1,3 +1,4 @@
+import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-ids';
 import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';
 import { AccessLevel, CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';
@@ -7,9 +8,10 @@ import { IAMIdentityPolicyNode } from '@/types/iam-node-types';
 const POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.PolicyNode1,
-    label: 'S3ReadPolicy',
+    label: 'AmazonS3ReadOnlyAccess',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.Policy,
+    content: JSON.stringify(INITIAL_POLICIES.S3_READ_POLICY, null, 2),
     granted_accesses: [
       {
         access_level: AccessLevel.Read,
@@ -20,9 +22,10 @@ const POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>[] = [
   },
   {
     id: PolicyNodeID.PolicyNode2,
-    label: 'DynamoDBReadPolicy',
+    label: 'AmazonDynamoDBReadOnlyAccess',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.Policy,
+    content: JSON.stringify(INITIAL_POLICIES.DYNAMO_DB_READ_POLICY, null, 2),
     granted_accesses: [
       {
         access_level: AccessLevel.Read,
@@ -33,9 +36,10 @@ const POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>[] = [
   },
   {
     id: PolicyNodeID.PolicyNode3,
-    label: 'EC2ReadPolicy',
+    label: 'AmazonEC2ReadOnlyAccess',
     image: IAMNodeImage.Policy,
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
+    content: JSON.stringify(INITIAL_POLICIES.EC2_READ_POLICY, null, 2),
     granted_accesses: [
       {
         access_level: AccessLevel.Read,

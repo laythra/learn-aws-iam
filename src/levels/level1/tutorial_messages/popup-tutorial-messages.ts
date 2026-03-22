@@ -4,7 +4,7 @@ const POPUP_MSG1 = `
   This interactive tutorial guides you through
   **AWS Identity and Access Management (IAM)**, from the basics to more advanced concepts.|lg
 
-  It doesn't aim to cover every IAM feature —
+  It doesn't aim to cover every IAM feature,
   instead, it focuses on the core ideas you'll need to confidently tackle real-world scenarios.|lg
 
   You'll create users, manage permissions, and write policies

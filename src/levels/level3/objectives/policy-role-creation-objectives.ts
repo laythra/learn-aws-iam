@@ -101,7 +101,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
         granted_accesses: [
           {
             target_node: ResourceNodeID.DynamoDBTable,
-            access_level: AccessLevel.Read,
+            access_level: AccessLevel.ReadWrite,
             target_handle: 'bottom',
             source_handle: 'top',
           },
