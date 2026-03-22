@@ -64,7 +64,7 @@ test.describe('Level 1 Entire Flow', () => {
 
     await tutorial.expectPopoverAndClickNext(
       UserNodeID.TutorialUser,
-      POPOVER_TUTORIAL_MESSAGES[6].popover_title
+      POPOVER_TUTORIAL_MESSAGES[5].popover_title
     );
   };
 
@@ -103,7 +103,7 @@ test.describe('Level 1 Entire Flow', () => {
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
       await tutorial.expectPopoverWithoutNextButton(
         UserNodeID.FirstUser,
-        POPOVER_TUTORIAL_MESSAGES[9].popover_title
+        POPOVER_TUTORIAL_MESSAGES[8].popover_title
       );
     });
 
@@ -115,12 +115,12 @@ test.describe('Level 1 Entire Flow', () => {
     await test.step('Complete Level', async () => {
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.FirstUser,
-        POPOVER_TUTORIAL_MESSAGES[10].popover_title
+        POPOVER_TUTORIAL_MESSAGES[9].popover_title
       );
 
       await tutorial.expectPopoverAndClickNext(
         ElementID.ObjectivesSidePanel,
-        POPOVER_TUTORIAL_MESSAGES[11].popover_title
+        POPOVER_TUTORIAL_MESSAGES[10].popover_title
       );
 
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
@@ -151,7 +151,7 @@ test.describe('Level 1 Entire Flow', () => {
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
       await tutorial.expectPopoverWithoutNextButton(
         UserNodeID.FirstUser,
-        POPOVER_TUTORIAL_MESSAGES[9].popover_title
+        POPOVER_TUTORIAL_MESSAGES[8].popover_title
       );
 
       await createCustomUserNode(popups, 'UnnecessaryUser');
@@ -165,12 +165,12 @@ test.describe('Level 1 Entire Flow', () => {
     await test.step('Complete Level', async () => {
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.FirstUser,
-        POPOVER_TUTORIAL_MESSAGES[10].popover_title
+        POPOVER_TUTORIAL_MESSAGES[9].popover_title
       );
 
       await tutorial.expectPopoverAndClickNext(
         ElementID.ObjectivesSidePanel,
-        POPOVER_TUTORIAL_MESSAGES[11].popover_title
+        POPOVER_TUTORIAL_MESSAGES[10].popover_title
       );
     });
 

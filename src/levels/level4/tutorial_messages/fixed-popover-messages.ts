@@ -9,12 +9,13 @@ it stems from subtle misconfigurations in their **IAM policies**.
 const FIXED_POPOVER_MSG2 = `
   *TimeShift Labs* has a straightforward technical hierarchy:|lg
 
-  * **Developers** — Should only have read access
-      to the \`AnalyticsData\` table in **DynamoDB**, with no access to \`CustomerData\`.
+  * **Developers** — Should have ***read/write*** access to the \`CustomerData\`
+      table in **DynamoDB** and ***read/write*** access
+      to the \`timeshift-assets\` **S3 Bucket** objects.
 
-  * **Data Scientists** — Should be able to ***read/write*** objects
-    from/to the \`timeshift-assets\` **S3 Bucket** and ***read/write*** from/to
-    the \`AnalyticsData\` table in **DynamoDB**.
+  * **Data Scientists** — Should have ***read/write*** access to the \`timeshift-assets\`
+    **S3 Bucket** objects and ***read/write*** access
+    to the \`AnalyticsData\` table in **DynamoDB**.
 
   * **Interns** — Should only be able to read objects from the \`timeshift-assets\` **S3 Bucket**.
 

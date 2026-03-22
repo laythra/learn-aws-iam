@@ -18,9 +18,9 @@ const POPOVER_MSG3 = `
   An **ARN** (Amazon Resource Name) is a unique identifier used to
   distinguish an AWS resource across the entire AWS ecosystem.
 
-  e.g. \`arn:aws:iam::123456456789012:policy/my-policy\`
+  e.g. \`arn:aws:iam::123456789012:policy/my-policy\`
 
-  ARNs aren't exclusive to **IAM** —
+  ARNs aren't exclusive to **IAM** -
   they're an AWS-wide concept used to identify and reference any resource.
 `;
 

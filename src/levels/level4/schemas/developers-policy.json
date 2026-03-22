@@ -53,13 +53,14 @@
             "enum": [
               "dynamodb:GetItem",
               "dynamodb:PutItem",
+              "dynamodb:UpdateItem",
               "dynamodb:Scan",
               "dynamodb:Query"
             ]
           },
           "uniqueItems": true,
-          "minItems": 4,
-          "maxItems": 4
+          "minItems": 5,
+          "maxItems": 5
         },
         "Resource": {
           "oneOf": [

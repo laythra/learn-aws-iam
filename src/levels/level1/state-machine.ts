@@ -166,7 +166,7 @@ export const stateMachine = createStateMachineSetup<
             'store_checkpoint',
             {
               type: 'show_popover_message',
-              params: { message: POPOVER_TUTORIAL_MESSAGES[6] },
+              params: { message: POPOVER_TUTORIAL_MESSAGES[5] },
             },
           ],
           on: {
@@ -176,7 +176,7 @@ export const stateMachine = createStateMachineSetup<
         create_user_popover: {
           meta: { highlighted_elements: [ElementID.NewEntityBtn] },
           entry: [
-            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[7] } },
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[6] } },
             {
               type: 'update_whitelisted_element_ids',
               params: {
@@ -197,7 +197,7 @@ export const stateMachine = createStateMachineSetup<
         add_your_name_popover: {
           entry: {
             type: 'show_popover_message',
-            params: { message: POPOVER_TUTORIAL_MESSAGES[8] },
+            params: { message: POPOVER_TUTORIAL_MESSAGES[7] },
           },
           on: {
             [NodeCreationFinishEvent.USER_NODE_CREATED]: {
@@ -213,7 +213,7 @@ export const stateMachine = createStateMachineSetup<
         },
         connect_iam_policy_to_user: {
           entry: [
-            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[9] } },
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[8] } },
             {
               type: 'set_edge_connection_objectives',
               params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
@@ -238,7 +238,7 @@ export const stateMachine = createStateMachineSetup<
         popover_6: {
           entry: {
             type: 'show_popover_message',
-            params: { message: POPOVER_TUTORIAL_MESSAGES[10] },
+            params: { message: POPOVER_TUTORIAL_MESSAGES[9] },
           },
           on: {
             NEXT_POPOVER: 'tutorial_finished',
@@ -256,7 +256,7 @@ export const stateMachine = createStateMachineSetup<
         level_objectives_popover: {
           entry: [
             'show_side_panel',
-            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[11] } },
+            { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[10] } },
           ],
           on: {
             NEXT_POPOVER: [
@@ -279,6 +279,7 @@ export const stateMachine = createStateMachineSetup<
         },
         level_completed: {
           entry: [
+            'store_checkpoint',
             'hide_popovers',
             'hide_unnecessary_edges_or_nodes_warning',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[1] } },

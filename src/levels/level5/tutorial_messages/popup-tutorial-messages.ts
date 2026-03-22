@@ -17,10 +17,10 @@ Unlike **IAM Users** or **Groups**, roles aren’t permanently assigned to a spe
 Instead, they are **temporarily assumed** by trusted principals
 like **IAM Users**, **applications**, or **AWS services**.
 
-::badge[RULE]:: An IAM Role operates using two key policies:|lg
+::badge[RULE]:: **An IAM Role operates using two key policies:**|lg
 
 * **Trust Policy** (embedded in the role) – Specifies **who is allowed to assume** the role.
-* **Permission Policy** (attached to the role) –
+* **Identity-based Policy** (attached to the role) –
   Specifies **what actions the role can perform** once assumed.
 `;
 
@@ -39,7 +39,7 @@ Here’s a quick breakdown of a Trust Policy statement:
 - **Effect** – Typically \`Allow\`, stating that the principal **can assume** the role.
 - **Action** – Usually \`sts:AssumeRole\`.
 
-So the intent is reversed from permission policies:
+So the intent is reversed from identity-based policies:
 instead of "what can I do?", a Trust Policy answers
 "**who can become this role?**"
 
@@ -50,7 +50,7 @@ instead of "what can I do?", a Trust Policy answers
     {
       "Effect": "Allow", ::badge[THE PRINCIPAL IS ALLOWED TO ASSUME THE ROLE]::
       "Principal": {
-        "Service": "s3.amazonaws.com" ::badge[AWS SERVICE PRINCIPAL]::
+        "Service": "ec2.amazonaws.com" ::badge[AWS SERVICE PRINCIPAL]::
       },
       "Action": "sts:AssumeRole" ::badge[THE PRINCIPAL CAN ASSUME THIS ROLE]::
     }

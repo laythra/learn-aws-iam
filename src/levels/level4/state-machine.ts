@@ -11,6 +11,7 @@ import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messag
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-messages';
 import { FinishEventMap, PolicyEditFinishEvent } from './types/finish-event-enums';
+import { PolicyNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 
@@ -129,6 +130,27 @@ export const stateMachine = createStateMachineSetup<
           type: 'set_permission_policy_edit_objectives',
           params: { objectives: POLICY_EDIT_OBJECTIVES[0] },
         },
+        {
+          type: 'show_node_help_tooltip',
+          params: {
+            nodeId: PolicyNodeID.DeveloperPolicy,
+            content: "Edit this policy node's content",
+          },
+        },
+        {
+          type: 'show_node_help_tooltip',
+          params: {
+            nodeId: PolicyNodeID.DataScientistPolicy,
+            content: "Edit this policy node's content",
+          },
+        },
+        {
+          type: 'show_node_help_tooltip',
+          params: {
+            nodeId: PolicyNodeID.InternPolicy,
+            content: "Edit this policy node's content",
+          },
+        },
       ],
       states: {
         fix_permission_policies: {
@@ -146,6 +168,10 @@ export const stateMachine = createStateMachineSetup<
                         {
                           type: 'finish_level_objective',
                           params: { id: LevelObjectiveID.DeveloperAnalyticsDataReadAccess },
+                        },
+                        {
+                          type: 'hide_node_help_tooltip',
+                          params: { nodeId: PolicyNodeID.DeveloperPolicy },
                         },
                       ],
                     },
@@ -169,6 +195,10 @@ export const stateMachine = createStateMachineSetup<
                           type: 'finish_level_objective',
                           params: { id: LevelObjectiveID.DataScientistS3ReadWriteAccess },
                         },
+                        {
+                          type: 'hide_node_help_tooltip',
+                          params: { nodeId: PolicyNodeID.DataScientistPolicy },
+                        },
                       ],
                     },
                   },
@@ -190,6 +220,10 @@ export const stateMachine = createStateMachineSetup<
                         {
                           type: 'finish_level_objective',
                           params: { id: LevelObjectiveID.InternS3ReadAccess },
+                        },
+                        {
+                          type: 'hide_node_help_tooltip',
+                          params: { nodeId: PolicyNodeID.InternPolicy },
                         },
                       ],
                     },

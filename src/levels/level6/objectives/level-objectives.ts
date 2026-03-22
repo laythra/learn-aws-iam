@@ -3,25 +3,25 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const Objective1Description = `
-  Create an **IAM Role** in the *Trusting Account* to be assumed by the **IAM User** \`omar\`.
+  Create an **IAM Role** in the *Trusting Account* to be assumed by the **IAM User** \`alex\`.
 `;
 
 const Objective2Description = `
-  Create a **permissions policy** that allows anyone assuming that role
+  Create an **Identity-based Policy** that allows anyone assuming that role
   to read from the **DynamoDB table** \`finance-reports\`.
 `;
 
 const Objective3Description = `
   Create an **IAM policy** in the *Trusted Account* that allows
-  the **IAM User** \`omar\` to assume the role in the *Trusting Account*.
+  the **IAM User** \`alex\` to assume the role in the *Trusting Account*.
 `;
 
 const Objective4Description = `
-  Grant \`omar\` *read* access to the **DynamoDB table** \`finance-reports\`.
+  Grant \`alex\` *read* access to the **DynamoDB table** \`finance-reports\`.
 `;
 
 const OBJECTIVE1_HINT = `
-  The role's **trust policy** must include the **IAM User** \`omar\` as a trusted principal.
+  The role's **trust policy** must include the **IAM User** \`alex\` as a trusted principal.
 
   This role will eventually let its principals access the **DynamoDB table**.
 
@@ -37,9 +37,8 @@ const OBJECTIVE2_HINT = `
 `;
 
 const OBJECTIVE3_HINT = `
-  Use \`sts:AssumeRole\` for this policy action.
-
-
+  The **action** responsible for allowing role assumption is \`sts:AssumeRole\`.
+  The **resource** should be the ARN of the role you previously created.
 `;
 
 const OBJECTIVE4_HINT = `

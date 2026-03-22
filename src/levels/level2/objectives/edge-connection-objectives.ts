@@ -1,7 +1,6 @@
 import { EdgeConnectionFinishEvent, FinishEventMap } from '../types/finish-event-enums';
 import { GroupNodeID, PolicyNodeID, UserNodeID } from '../types/node-ids';
 import { createEdge } from '@/domain/edge-factory';
-import { AccessLevel } from '@/types/iam-enums';
 import { EdgeConnectionObjective, ObjectiveType } from '@/types/objective-types';
 
 export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>[][] = [
@@ -15,7 +14,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.User1AttachedToGroup,
-      established_edge_hovering_label: AccessLevel.Read,
+      established_edge_hovering_label: 'Member of',
       established_edge_target_handle: 'left',
       established_edge_source_handle: 'right',
     },
@@ -28,7 +27,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.Policy1AttachedToGroup,
-      established_edge_hovering_label: AccessLevel.Read,
+      established_edge_hovering_label: 'Attached to',
       established_edge_target_handle: 'bottom',
       established_edge_source_handle: 'top',
     },
@@ -41,7 +40,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.Policy2AttachedToGroup,
-      established_edge_hovering_label: AccessLevel.Read,
+      established_edge_hovering_label: 'Attached to',
       established_edge_target_handle: 'bottom',
       established_edge_source_handle: 'top',
     },
@@ -54,7 +53,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.Policy3AttachedToGroup,
-      established_edge_hovering_label: AccessLevel.Read,
+      established_edge_hovering_label: 'Attached to',
       established_edge_target_handle: 'bottom',
       established_edge_source_handle: 'top',
     },
@@ -67,7 +66,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       ],
       is_finished: false,
       on_finish_event: EdgeConnectionFinishEvent.User2AttachedToGroup,
-      established_edge_hovering_label: AccessLevel.Read,
+      established_edge_hovering_label: 'Member of',
       established_edge_target_handle: 'bottom',
       established_edge_source_handle: 'top',
     },

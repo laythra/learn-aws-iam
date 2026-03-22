@@ -9,12 +9,12 @@ export const INITIAL_POLICIES = {
       },
     ],
   },
-  S3ListBucketsAccess: {
+  AmazonS3ReadOnlyAccess: {
     Version: '2012-10-17',
     Statement: [
       {
         Effect: 'Allow',
-        Action: ['s3:ListAllMyBuckets'],
+        Action: ['s3:Get*', 's3:List*'],
         Resource: '*',
       },
     ],

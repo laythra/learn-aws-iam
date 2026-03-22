@@ -4,7 +4,7 @@ import { ObjectiveType, type LevelObjective } from '@/types/objective-types';
 
 const LEVEL_OBJECTIVE1 = `
 **Developers** should have *read/write* access to the \`CustomerData\` **DynamoDB Table**
-and *read* access to the \`timeshift-assets\` **S3 Bucket** objects
+and *read/write* access to the \`timeshift-assets\` **S3 Bucket** objects
 `;
 
 const LEVEL_OBJECTIVE2 = `

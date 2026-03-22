@@ -27,7 +27,13 @@ const VALID_DEVELOPER_POLICY = JSON.stringify({
   Statement: [
     {
       Effect: 'Allow',
-      Action: ['dynamodb:GetItem', 'dynamodb:PutItem', 'dynamodb:Scan', 'dynamodb:Query'],
+      Action: [
+        'dynamodb:GetItem',
+        'dynamodb:PutItem',
+        'dynamodb:UpdateItem',
+        'dynamodb:Scan',
+        'dynamodb:Query',
+      ],
       Resource: 'arn:aws:dynamodb:us-east-1:123456789012:table/customer-data',
     },
     {

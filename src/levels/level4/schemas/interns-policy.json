@@ -8,68 +8,137 @@
     },
     "Statement": {
       "type": "array",
-      "minItems": 1,
-      "maxItems": 1,
+      "minItems": 2,
+      "maxItems": 2,
       "items": {
-        "type": "object",
-        "properties": {
-          "Sid": {
-            "type": "string",
-            "minLength": 1
+        "oneOf": [
+          {
+            "$ref": "#/definitions/getObjectStmt"
           },
-          "Effect": {
-            "type": "string",
-            "const": "Allow"
-          },
-          "Action": {
-            "oneOf": [
-              {
-                "type": "string",
-                "const": "s3:GetObject"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "const": "s3:GetObject"
-                },
-                "minItems": 1,
-                "maxItems": 1,
-                "uniqueItems": true
-              }
-            ]
-          },
-          "Resource": {
-            "oneOf": [
-              {
-                "type": "array",
-                "minItems": 1,
-                "maxItems": 1,
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "const": "arn:aws:s3:::timeshift-assets/*"
-                }
-              },
-              {
-                "type": "string",
-                "const": "arn:aws:s3:::timeshift-assets/*"
-              }
-            ]
+          {
+            "$ref": "#/definitions/listBucketStmt"
+          }
+        ]
+      },
+      "allOf": [
+        {
+          "contains": {
+            "$ref": "#/definitions/getObjectStmt"
           }
         },
-        "required": [
-          "Effect",
-          "Action",
-          "Resource"
-        ],
-        "additionalProperties": false
-      }
+        {
+          "contains": {
+            "$ref": "#/definitions/listBucketStmt"
+          }
+        }
+      ]
     }
   },
   "required": [
     "Version",
     "Statement"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "definitions": {
+    "getObjectStmt": {
+      "type": "object",
+      "properties": {
+        "Effect": {
+          "type": "string",
+          "const": "Allow"
+        },
+        "Action": {
+          "oneOf": [
+            {
+              "type": "string",
+              "const": "s3:GetObject"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "const": "s3:GetObject"
+              },
+              "minItems": 1,
+              "maxItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "Resource": {
+          "oneOf": [
+            {
+              "type": "string",
+              "const": "arn:aws:s3:::timeshift-assets/*"
+            },
+            {
+              "type": "array",
+              "items": {
+                "const": "arn:aws:s3:::timeshift-assets/*"
+              },
+              "minItems": 1,
+              "maxItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        }
+      },
+      "required": [
+        "Effect",
+        "Action",
+        "Resource"
+      ],
+      "additionalProperties": false
+    },
+    "listBucketStmt": {
+      "type": "object",
+      "properties": {
+        "Effect": {
+          "type": "string",
+          "const": "Allow"
+        },
+        "Action": {
+          "oneOf": [
+            {
+              "type": "string",
+              "const": "s3:ListBucket"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "const": "s3:ListBucket"
+              },
+              "minItems": 1,
+              "maxItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "Resource": {
+          "oneOf": [
+            {
+              "type": "string",
+              "const": "arn:aws:s3:::timeshift-assets"
+            },
+            {
+              "type": "array",
+              "items": {
+                "const": "arn:aws:s3:::timeshift-assets"
+              },
+              "minItems": 1,
+              "maxItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        }
+      },
+      "required": [
+        "Effect",
+        "Action",
+        "Resource"
+      ],
+      "additionalProperties": false
+    }
+  }
 }

@@ -10,10 +10,7 @@
   "properties": {
     "Version": {
       "type": "string",
-      "enum": [
-        "2012-10-17"
-      ],
-      "description": "The version of the IAM policy language."
+      "const": "2012-10-17"
     },
     "Statement": {
       "type": "array",
@@ -48,16 +45,12 @@
                     "uniqueItems": true,
                     "items": {
                       "type": "string",
-                      "enum": [
-                        "arn:aws:iam::987654321098:user/omar"
-                      ]
+                      "const": "arn:aws:iam::987654321098:user/alex"
                     }
                   },
                   {
                     "type": "string",
-                    "enum": [
-                      "arn:aws:iam::987654321098:user/omar"
-                    ]
+                    "const": "arn:aws:iam::987654321098:user/alex"
                   }
                 ]
               }
@@ -70,9 +63,7 @@
                 "uniqueItems": true,
                 "items": {
                   "type": "string",
-                  "enum": [
-                    "sts:AssumeRole"
-                  ]
+                  "const": "sts:AssumeRole"
                 },
                 "minItems": 1,
                 "maxItems": 1

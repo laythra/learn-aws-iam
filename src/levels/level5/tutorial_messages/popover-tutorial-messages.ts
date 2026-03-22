@@ -14,7 +14,7 @@ const POPOVER_MSG4 = `
   \`financial-reports-bucket\`
 `;
 const POPOVER_MSG5 = `
-  The **IAM Role** you just created merely has a **Trust Policy** attached to it
+  The **IAM Role** you just created merely has a **Trust Policy** embedded in it
 `;
 
 const POPOVER_MSG6 = `
@@ -30,15 +30,6 @@ const POPOVER_MSG7 = `
 const POPOVER_MSG8 = `
   Your Finance User now has *read access* to the **S3 bucket**
   and the **Billing and Cost Management service** 🔥
-`;
-
-const POPOVER_MSG9 = `
-  We're going to introduce a more intricate scenario involving **IAM Roles**
-  and service-to-service communication.
-`;
-
-const POPOVER_MSG10 = `
-  Your **Lambda Function** now has the necessary permissions to read objects from the **S3 Bucket**.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
@@ -97,21 +88,5 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     show_next_button: true,
     show_close_button: false,
     popover_placement: 'left',
-  },
-  {
-    element_id: UserNodeID.FinanceUser,
-    popover_title: 'Moving Forward',
-    popover_content: POPOVER_MSG9,
-    show_next_button: true,
-    show_close_button: false,
-    popover_placement: 'top',
-  },
-  {
-    element_id: ResourceNodeID.LambdaFunction,
-    popover_title: 'Great Work Again 🔥',
-    popover_content: POPOVER_MSG10,
-    show_next_button: true,
-    show_close_button: false,
-    popover_placement: 'top',
   },
 ];

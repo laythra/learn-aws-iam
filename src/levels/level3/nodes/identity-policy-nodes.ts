@@ -8,8 +8,8 @@ import { IAMIdentityPolicyNode } from '@/types/iam-node-types';
 const TUTORIAL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>[] = [
   {
     id: PolicyNodeID.S3ListBucketsPolicy,
-    label: 'S3ListBuckets',
-    content: JSON.stringify(INITIAL_POLICIES.S3ListBucketsAccess, null, 2),
+    label: 'AmazonS3ReadOnlyAccess',
+    content: JSON.stringify(INITIAL_POLICIES.AmazonS3ReadOnlyAccess, null, 2),
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     editable: false,
   },

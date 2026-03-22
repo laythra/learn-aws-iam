@@ -15,6 +15,10 @@ const POPUP_MSG_2 = `
 
   Next up: **Customer Managed IAM Policies** — a more flexible way
   to define and reuse permissions across your AWS account.|lg
+
+  > |color(rule)
+    ::badge[RULE]:: **FYI: Permissions are additive. If a user belongs to multiple groups,
+   they receive the combined permissions of all those groups.**
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

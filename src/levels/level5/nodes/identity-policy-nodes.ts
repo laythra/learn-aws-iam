@@ -11,6 +11,7 @@ const TUTORIAL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
     label: 'BillingReadPolicy',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.Policy,
+    content: JSON.stringify(INITIAL_POLICIES.BILLING_READ_POLICY, null, 2),
     granted_accesses: [
       {
         target_node: ResourceNodeID.BillingAndCostManagement,
@@ -25,6 +26,7 @@ const TUTORIAL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
     label: 'S3ReadPolicy',
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
     image: IAMNodeImage.Policy,
+    content: JSON.stringify(INITIAL_POLICIES.FINANCE_S3_READ_POLICY, null, 2),
     granted_accesses: [
       {
         target_node: ResourceNodeID.FinanceS3Bucket,
