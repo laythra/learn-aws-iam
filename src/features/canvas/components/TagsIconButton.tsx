@@ -17,7 +17,7 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { TagIcon } from '@heroicons/react/16/solid';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { ElementID } from '@/config/element-ids';

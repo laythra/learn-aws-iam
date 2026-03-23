@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import { Select, Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
 import { Diagnostic } from '@codemirror/lint';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 import _ from 'lodash';
 
 import { useCodeEditor } from '../../hooks/useCodeEditor';

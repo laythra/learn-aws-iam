@@ -4,7 +4,7 @@ import { json } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
 import { EditorView } from '@codemirror/view';
 import { Extension } from '@uiw/react-codemirror';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 import { ValidateFunction } from 'ajv';
 import _ from 'lodash';
 

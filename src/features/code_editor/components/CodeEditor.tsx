@@ -11,7 +11,7 @@ import {
   useTheme,
   VStack,
 } from '@chakra-ui/react';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 import _ from 'lodash';
 
 import { CodeEditorHeader } from './CodeEditorHeader';

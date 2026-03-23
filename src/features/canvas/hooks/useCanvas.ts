@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 import { Connection, ReactFlowInstance } from '@xyflow/react';
 import _ from 'lodash';
 

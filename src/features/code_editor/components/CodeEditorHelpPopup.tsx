@@ -11,7 +11,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 import Markdown from 'react-markdown';
 
 import { HELP_CONTENT } from '../config/help-content';
