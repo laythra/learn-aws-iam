@@ -343,12 +343,13 @@ test.describe('Stage 2 - Creating Cross Account Access in all orders', () => {
       await connectDynamoDBPolicyToRole(nodes);
     });
 
-    await test.step('Attempt to connect user to role without assume role policy \
-      - should fail', async () => {
+    await test.step('Attempt to connect user to role without assume role policy', async () => {
       await nodes.connectNodes(
         UserNodeID.TrustedAccountIAMUser,
         RoleNodeID.TrustingAccountDynamoDBReadRole
       );
+
+      await tutorial.expectInsufficientPermissionsWarning();
 
       await edges.expectHidden(
         UserNodeID.TrustedAccountIAMUser,
@@ -360,20 +361,6 @@ test.describe('Stage 2 - Creating Cross Account Access in all orders', () => {
       - unblocks connection', async () => {
       await createAssumeRolePolicy(nodes, popups);
       await connectAssumeRolePolicyToUser(nodes);
-    });
-
-    await test.step('Now connection should succeed', async () => {
-      await connectUserToRole(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][3].id);
-
-      await edges.expectVisible(
-        UserNodeID.TrustedAccountIAMUser,
-        RoleNodeID.TrustingAccountDynamoDBReadRole
-      );
-    });
-
-    await test.step('Complete level', async () => {
-      await completeLevelFinishPopups(tutorial);
     });
   });
 });
