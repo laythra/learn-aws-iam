@@ -85,3 +85,7 @@ export const findObjectiveCompleteToast = (page: Page, objectiveId: string): Loc
     `[data-element-id="objective-complete-toast"][data-objective-id="${objectiveId}"]`
   );
 };
+
+export const findInsufficientPermissionsToast = (page: Page): Locator => {
+  return page.getByText('Insufficient Permissions to Create Connection');
+};

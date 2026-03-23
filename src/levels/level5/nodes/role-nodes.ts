@@ -8,7 +8,7 @@ import { IAMRoleNode } from '@/types/iam-node-types';
 const TUTORIAL_ROLE_NODES: IAMNodeDataOverrides<IAMRoleNode['data']>[] = [
   {
     id: RoleNodeID.FinanceAuditorRole,
-    label: 'finance-auditor-role',
+    label: 'FinanceAuditorRole',
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     image: IAMNodeImage.Role,
     editable: true,

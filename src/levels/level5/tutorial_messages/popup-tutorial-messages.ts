@@ -22,12 +22,16 @@ like **IAM Users**, **applications**, or **AWS services**.
 * **Trust Policy** (embedded in the role) – Specifies **who is allowed to assume** the role.
 * **Identity-based Policy** (attached to the role) –
   Specifies **what actions the role can perform** once assumed.
+
+> |color(warning)
+> ::badge[WARNING]::
+ In order for **IAM Users** to assume a role, not only must the role's trust policy allow it,
+ but the user must also have an appropriate identity-based
+ policy that allows them to call \`sts:AssumeRole\` on that role.
 `;
 
 const POPUP_MSG3 = `
 Every **IAM Role** has a **Trust Policy** that defines **who can assume it**.
-
-
 
 A **Trust Policy** looks similar to other IAM policies,
 but it introduces the **\`Principal\`** element.
@@ -79,6 +83,14 @@ const POPUP_MSG4 = `
 
   2. A **Lambda function** is automatically triggered by the upload event.
     It processes the image and generates metadata, which it then stores elsewhere.
+
+  &nbsp;
+
+  > |color(rule)
+  > ::badge[RULE]:: For service-to-service access, you don't call \`sts:AssumeRole\` yourself
+  > (like we did with IAM Users previously).
+  > Instead, the AWS service assumes its execution role automatically.
+  > You just attach the role with the right permissions.
 `;
 
 const POPUP_MSG5 = `

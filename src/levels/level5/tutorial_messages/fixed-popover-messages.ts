@@ -13,6 +13,9 @@ const FIXED_POPOVER_MSG1 = `
 
 const FIXED_POPOVER_MSG2 = `
   Try attaching the role to the **IAM User** so that the user assumes the role.
+
+  > **Remember**: You need also allow the user to assume the role first.
+  There's an existing policy laying around for that.
 `;
 
 const FIXED_POPOVER_MSG4 = `
