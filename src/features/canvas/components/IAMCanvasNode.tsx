@@ -1,7 +1,7 @@
 import { useEffect, memo, useState } from 'react';
 
 import { Box, VStack } from '@chakra-ui/react';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 import { Handle } from '@xyflow/react';
 import { motion } from 'framer-motion';
 import _ from 'lodash';

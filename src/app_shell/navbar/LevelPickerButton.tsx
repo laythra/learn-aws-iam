@@ -12,7 +12,7 @@ import {
   Grid,
 } from '@chakra-ui/react';
 import { ForwardIcon } from '@heroicons/react/16/solid';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 import _ from 'lodash';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';

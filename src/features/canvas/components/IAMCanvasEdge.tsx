@@ -1,7 +1,7 @@
 import React, { useEffect, memo } from 'react';
 
 import { Box, useTheme } from '@chakra-ui/react';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 import { getBezierPath, EdgeLabelRenderer, EdgeProps, BaseEdge } from '@xyflow/react';
 import { motion } from 'framer-motion';
 import _ from 'lodash';

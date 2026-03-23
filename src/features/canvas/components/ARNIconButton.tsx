@@ -12,7 +12,7 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { IdentificationIcon, ClipboardDocumentIcon } from '@heroicons/react/20/solid';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { ElementID } from '@/config/element-ids';

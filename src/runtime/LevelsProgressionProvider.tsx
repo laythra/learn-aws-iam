@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 import isEqual from 'lodash/isEqual';
 
 import { CurrentActorContext, getActorContext, LevelActorContext } from './level-runtime';

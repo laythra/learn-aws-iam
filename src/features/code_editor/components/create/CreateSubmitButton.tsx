@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/react';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 import _ from 'lodash';
 
 import { useLevelActor } from '@/runtime/level-runtime';

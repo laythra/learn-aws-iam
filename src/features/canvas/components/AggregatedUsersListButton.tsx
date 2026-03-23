@@ -11,7 +11,7 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { ListBulletIcon, UserIcon } from '@heroicons/react/20/solid';
-import { useSelector } from '@xstate/store/react';
+import { useSelector } from '@xstate/store-react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { ElementID } from '@/config/element-ids';
