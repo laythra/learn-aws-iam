@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 
 import {
   Modal,
@@ -21,27 +21,11 @@ import { CreateSubmitButton } from './create/CreateSubmitButton';
 import { CodeEditorEdit } from './edit/CodeEditorEdit';
 import { EditSubmitButton } from './edit/EditSubmitButton';
 import { ElementID } from '@/config/element-ids';
-import { useIsElementRestricted } from '@/runtime/ui/useIsElementRestricted';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { CustomTheme } from '@/types/custom-theme';
-import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 
 export const CodeEditor: React.FC = () => {
   const theme = useTheme<CustomTheme>();
-  const [
-    isPolicyTabRestricted,
-    isRoleTabRestricted,
-    isSCPTabRestricted,
-    isResourcePolicyTabRestricted,
-    isPermissionBoundaryTabRestricted,
-  ] = useIsElementRestricted([
-    ElementID.CodeEditorPolicyTab,
-    ElementID.CodeEditorRoleTab,
-    ElementID.CodeEditorSCPTab,
-    ElementID.CodeEditorResourcePolicyTab,
-    ElementID.CodeEditorPermissionBoundaryTab,
-  ]);
-
   const [
     selectedIAMEntity,
     errorsMap,
@@ -72,32 +56,6 @@ export const CodeEditor: React.FC = () => {
   const closeCodeEditor = (): void => {
     codeEditorStateStore.send({ type: 'close' });
   };
-
-  useEffect(() => {
-    const entityOrder = [
-      { restricted: isPolicyTabRestricted, entity: IAMNodeEntity.IdentityPolicy },
-      { restricted: isRoleTabRestricted, entity: IAMNodeEntity.Role },
-      { restricted: isSCPTabRestricted, entity: IAMNodeEntity.SCP },
-      { restricted: isResourcePolicyTabRestricted, entity: IAMNodeEntity.ResourcePolicy },
-      { restricted: isPermissionBoundaryTabRestricted, entity: IAMNodeEntity.PermissionBoundary },
-    ];
-
-    const isSelectedEntityRestricted = entityOrder.some(
-      item => item.entity === selectedIAMEntity && item.restricted
-    );
-
-    if (!isSelectedEntityRestricted) {
-      return;
-    }
-
-    const availableEntity = entityOrder.find(item => !item.restricted);
-    if (availableEntity) {
-      codeEditorStateStore.send({
-        type: 'setSelectedIAMEntity',
-        payload: availableEntity.entity as IAMCodeDefinedEntity,
-      });
-    }
-  }, [isCodeEditorOpen]);
 
   return (
     <>

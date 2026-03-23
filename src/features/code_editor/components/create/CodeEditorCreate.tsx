@@ -15,6 +15,7 @@ import { findAnyValidObjective, BASE_VALIDATION_FNS } from '@/domain/iam-policy-
 import { MANAGED_POLICIES } from '@/domain/managed-policies';
 import { GetLevelValidateFunctions } from '@/runtime/functions-registry';
 import { useLevelSelector } from '@/runtime/level-runtime';
+import { useIsElementRestricted } from '@/runtime/ui/useIsElementRestricted';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 
@@ -47,6 +48,20 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     state => [state.context.selectedAccountId, state.context.labelError, state.context.label],
     _.isEqual
   );
+
+  const [
+    isPolicyTabRestricted,
+    isRoleTabRestricted,
+    isSCPTabRestricted,
+    isResourcePolicyTabRestricted,
+    isPermissionBoundaryTabRestricted,
+  ] = useIsElementRestricted([
+    ElementID.CodeEditorPolicyTab,
+    ElementID.CodeEditorRoleTab,
+    ElementID.CodeEditorSCPTab,
+    ElementID.CodeEditorResourcePolicyTab,
+    ElementID.CodeEditorPermissionBoundaryTab,
+  ]);
 
   const multiAccount = nodes.some(node => node.data.entity === IAMNodeEntity.Account);
   const editorView = useRef<EditorView | null>(null);
@@ -86,6 +101,37 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     validateFns: _.isEmpty(validateFns) ? [BASE_VALIDATION_FNS[selectedIAMEntity]] : validateFns,
     helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
   });
+
+  useEffect(() => {
+    const entityOrder = [
+      { restricted: isPolicyTabRestricted, entity: IAMNodeEntity.IdentityPolicy },
+      { restricted: isRoleTabRestricted, entity: IAMNodeEntity.Role },
+      { restricted: isSCPTabRestricted, entity: IAMNodeEntity.SCP },
+      { restricted: isResourcePolicyTabRestricted, entity: IAMNodeEntity.ResourcePolicy },
+      { restricted: isPermissionBoundaryTabRestricted, entity: IAMNodeEntity.PermissionBoundary },
+    ];
+
+    const isSelectedEntityRestricted = entityOrder.some(
+      item => item.entity === selectedIAMEntity && item.restricted
+    );
+
+    if (isSelectedEntityRestricted) {
+      const availableEntity = entityOrder.find(item => !item.restricted);
+      if (availableEntity) {
+        codeEditorStateStore.send({
+          type: 'setSelectedIAMEntity',
+          payload: availableEntity.entity as IAMCodeDefinedEntity,
+        });
+      }
+    }
+  }, [
+    isPolicyTabRestricted,
+    isRoleTabRestricted,
+    isSCPTabRestricted,
+    isResourcePolicyTabRestricted,
+    isPermissionBoundaryTabRestricted,
+    selectedIAMEntity,
+  ]);
 
   useEffect(() => {
     const accountNodes = nodes.filter(node => node.data.entity === IAMNodeEntity.Account);
