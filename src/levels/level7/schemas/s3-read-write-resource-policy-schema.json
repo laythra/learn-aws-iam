@@ -43,8 +43,21 @@
             "maxItems": 2
           },
           "Resource": {
-            "type": "string",
-            "const": "arn:aws:s3:::rpd-case-files/*"
+            "oneOf": [
+              {
+                "type": "string",
+                "const": "arn:aws:s3:::incident-response-artifacts/*"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "const": "arn:aws:s3:::incident-response-artifacts/*"
+                },
+                "minItems": 1,
+                "maxItems": 1
+              }
+            ]
           },
           "Principal": {
             "type": "object",

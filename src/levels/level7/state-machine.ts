@@ -17,6 +17,7 @@ import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-mess
 import {
   EdgeConnectionFinishEvent,
   FinishEventMap,
+  PolicyCreationFinishEvent,
   ResourcePolicyCreationFinishEvent,
 } from './types/finish-event-enums';
 import { UserNodeID } from './types/node-ids';
@@ -126,7 +127,7 @@ export const stateMachine = createStateMachineSetup<
               actions: [
                 {
                   type: 'finish_level_objective',
-                  params: { id: LevelObjectiveID.CREATE_TUTORIAL_RESOURCE_BASED_POLICY },
+                  params: { id: LevelObjectiveID.CREATED_TUTORIAL_RESOURCE_BASED_POLICY },
                 },
               ],
             },
@@ -213,17 +214,17 @@ export const stateMachine = createStateMachineSetup<
               params: {
                 nodeId: UserNodeID.InsideLevelUser,
                 content:
-                  'Grant this user read access to the S3 bucket via an identity-based policy',
+                  'Grant this user read/write access to the S3 bucket via an identity-based policy',
               },
             },
           ],
           on: {
-            [ResourcePolicyCreationFinishEvent.IN_LEVEL_IDENTITY_POLICY_CREATED]: {
+            [PolicyCreationFinishEvent.IN_LEVEL_IDENTITY_POLICY_CREATED]: {
               target: 'attach_identity_policy_to_user',
               actions: [
                 {
                   type: 'finish_level_objective',
-                  params: { id: LevelObjectiveID.CREATE_IN_LEVEL_IDENTITY_POLICY },
+                  params: { id: LevelObjectiveID.CREATED_IN_LEVEL_IDENTITY_POLICY },
                 },
               ],
             },
@@ -246,7 +247,7 @@ export const stateMachine = createStateMachineSetup<
               actions: [
                 {
                   type: 'finish_level_objective',
-                  params: { id: LevelObjectiveID.ATTACH_IDENTITY_BASED_POLICY_TO_USER },
+                  params: { id: LevelObjectiveID.ATTACHED_IDENTITY_BASED_POLICY_TO_USER },
                 },
                 {
                   type: 'hide_node_help_tooltip',
@@ -302,7 +303,7 @@ export const stateMachine = createStateMachineSetup<
               actions: [
                 {
                   type: 'finish_level_objective',
-                  params: { id: LevelObjectiveID.CREATE_IN_LEVEL_RESOURCE_BASED_POLICY },
+                  params: { id: LevelObjectiveID.CREATED_IN_LEVEL_RESOURCE_BASED_POLICY },
                 },
                 {
                   type: 'hide_node_help_tooltip',

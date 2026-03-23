@@ -95,7 +95,7 @@ const createFirstResourcePolicy = async (
   await popups.submitCreatePolicyPopup(
     [ElementID.CodeEditorResourcePolicyTab],
     ElementID.CodeEditorResourcePolicyTab,
-    'umbrella-files-access-policy',
+    'NovaFilesAccessPolicy',
     await getTestSolution(ENCODED_TEST_SOLUTIONS, 'resource_policy1')
   );
 
@@ -109,7 +109,7 @@ const createIdentityBasedPolicy = async (
   await popups.submitCreatePolicyPopup(
     [ElementID.CodeEditorPolicyTab],
     ElementID.CodeEditorPolicyTab,
-    'rpd-case-files-access-policy',
+    'RpdCaseFilesAccessPolicy',
     await getTestSolution(ENCODED_TEST_SOLUTIONS, 'identity_policy1'),
     AccountID.TrustedAccount
   );
@@ -124,7 +124,7 @@ const createSecondResourcePolicy = async (
   await popups.submitCreatePolicyPopup(
     [ElementID.CodeEditorResourcePolicyTab],
     ElementID.CodeEditorResourcePolicyTab,
-    'rpd-case-files-resource-policy',
+    'RpdCaseFilesResourcePolicy',
     await getTestSolution(ENCODED_TEST_SOLUTIONS, 'resource_policy2')
   );
 

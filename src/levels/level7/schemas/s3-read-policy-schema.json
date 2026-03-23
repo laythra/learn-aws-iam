@@ -48,8 +48,21 @@
             ]
           },
           "Resource": {
-            "type": "string",
-            "const": "arn:aws:s3:::umbrella-files/*"
+            "oneOf": [
+              {
+                "type": "string",
+                "const": "arn:aws:s3:::compliance-audit-trail/*"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "const": "arn:aws:s3:::compliance-audit-trail/*"
+                },
+                "minItems": 1,
+                "maxItems": 1
+              }
+            ]
           },
           "Principal": {
             "type": "object",
