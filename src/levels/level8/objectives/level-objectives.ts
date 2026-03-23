@@ -4,7 +4,7 @@ import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const Objective1Description = `
   Allow only **Senior** users to read \`Slack Integration Secret\`
-  by checking for the username prefix \`senior-\`.
+  by explicitly listing their ARNs in the condition.
 `;
 
 const Objective2Description = `

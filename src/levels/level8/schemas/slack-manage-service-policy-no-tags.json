@@ -41,6 +41,25 @@
     }
   },
   "definitions": {
+    "principalArnValue": {
+      "type": "object",
+      "required": ["aws:PrincipalArn"],
+      "properties": {
+        "aws:PrincipalArn": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "arn:aws:iam::123456789012:user/senior-sam",
+              "arn:aws:iam::123456789012:user/senior-jordan"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "secretsManagerStatement": {
       "type": "object",
       "required": [
@@ -71,24 +90,22 @@
         },
         "Condition": {
           "type": "object",
-          "required": [
-            "StringLike"
-          ],
-          "properties": {
-            "StringLike": {
-              "type": "object",
-              "required": [
-                "aws:username"
-              ],
+          "oneOf": [
+            {
+              "required": ["StringEquals"],
               "properties": {
-                "aws:username": {
-                  "const": "senior-*"
-                }
+                "StringEquals": { "$ref": "#/definitions/principalArnValue" }
+              },
+              "additionalProperties": false
+            },
+            {
+              "required": ["ArnEquals"],
+              "properties": {
+                "ArnEquals": { "$ref": "#/definitions/principalArnValue" }
               },
               "additionalProperties": false
             }
-          },
-          "additionalProperties": false
+          ]
         }
       },
       "additionalProperties": false
