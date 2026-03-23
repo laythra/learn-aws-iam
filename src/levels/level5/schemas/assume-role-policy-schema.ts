@@ -32,11 +32,17 @@ export function generateAssumeRolePolicySchema(additionalRoleArn: string): objec
               type: 'array',
               minItems: 2,
               maxItems: 2,
-              items: [
-                { type: 'string', const: 'arn:aws:iam::123456789012:role/FinanceAuditorRole' },
-                { type: 'string', const: additionalRoleArn },
+              uniqueItems: true,
+              items: { type: 'string' },
+              allOf: [
+                {
+                  contains: {
+                    type: 'string',
+                    const: 'arn:aws:iam::123456789012:role/FinanceAuditorRole',
+                  },
+                },
+                { contains: { type: 'string', const: additionalRoleArn } },
               ],
-              additionalItems: false,
             },
           },
         },
