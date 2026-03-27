@@ -72,22 +72,14 @@
           "const": "Allow"
         },
         "Action": {
-          "oneOf": [
-            {
-              "type": "string",
-              "const": "secretsmanager:GetSecretValue"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "const": "secretsmanager:GetSecretValue"
-              },
-              "minItems": 1,
-              "maxItems": 1,
-              "uniqueItems": true
-            }
-          ]
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true
         },
         "Resource": {
           "const": "arn:aws:secretsmanager:us-east-1:123456789012:secret:db/*"

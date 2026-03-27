@@ -46,26 +46,41 @@ const SHARED_HINT_MSG2 = `
   Which operator is best suited for this?
 `;
 
-const SHARED_HINT_MSG3 = `
+const STAGE1_HINT_CONDITION_KEY = `
   The most commonly used condition keys for this purpose are:
 
-  - **\`"\aws:PrincipalTag/application"\`**:
+  - **\`"aws:PrincipalTag/application"\`**:
     Represents the tag value of the user making the request.
-  - **\`"\aws:ResourceTag/application"\`**:
+  - **\`"aws:ResourceTag/application"\`**:
     Represents the tag value of the resource being accessed.
-  - **\`"\aws:RequestTag/application"\`**:
-    Represents the tag value of the request being made.
+  - **\`"aws:RequestTag/application"\`**:
+    Represents a tag included in a resource-creation or tagging request.
 
-  In this scenario, since we want to restrict access based on the resource's team tag,
-  which condition key should we use?
+  In this scenario, we want to restrict access based on the **calling user's** team tag.
+  Which condition key represents that?
+`;
+
+const STAGE2_HINT_CONDITION_KEY = `
+  The most commonly used condition keys for this purpose are:
+
+  - **\`"aws:PrincipalTag/application"\`**:
+    Represents the tag value of the user making the request.
+  - **\`"aws:ResourceTag/application"\`**:
+    Represents the tag value of the resource being accessed.
+  - **\`"aws:RequestTag/application"\`**:
+    Represents a tag included in a resource-creation or tagging request.
+
+  In this scenario, we want to match the **resource's** application tag against the user's tag.
+  Which condition key represents the resource's tag?
 `;
 
 const SHARED_HINT_MSG4 = `
-  The missing action in the first statement should allow
-  users to retrieve
-  the database credentials from Secrets Manager.
+  The first statement needs two actions for working with secrets in Secrets Manager.
 
-  You can use the \`secretsmanager:GetSecretValue\` action for this purpose.
+  The primary one is \`secretsmanager:GetSecretValue\`, which lets users retrieve the secret value.
+
+  Oh, and we also need an action to **describe** the secret's metadata.
+  What do you think that action might be called?
 `;
 
 const SECOND_OBJECTIVE_HINT_MSG1 = `
@@ -78,7 +93,7 @@ const SECOND_OBJECTIVE_HINT_MSG1 = `
   - **\`"\${aws:ResourceTag/application}"\`**:
     Represents the tag value of the resource being accessed.
   - **\`"\${aws:RequestTag/application}"\`**:
-    Represents the tag value of the request being made.
+    Represents a tag included in a resource-creation or tagging request.
 
    > |color(tip)
    > ::badge[TIP]:: Policy variables use the same keys as conditions, but wrapped
@@ -88,7 +103,7 @@ const SECOND_OBJECTIVE_HINT_MSG1 = `
 const HELP_BADGES1 = [
   {
     path: '/Statement/0/Action',
-    content: 'Add the action used to retrieve the database secret',
+    content: 'Add the two actions needed to retrieve and describe the database secret',
     color: 'yellow',
   },
   {
@@ -127,7 +142,7 @@ const SHARED_HINT_MESSAGES = [
   },
   {
     title: 'Condition Key',
-    content: SHARED_HINT_MSG3,
+    content: STAGE1_HINT_CONDITION_KEY,
   },
   {
     title: 'Action for Secret Retrieval',
@@ -138,7 +153,7 @@ const SHARED_HINT_MESSAGES = [
 const SECOND_OBJECTIVE_HINT_MESSAGES = [
   {
     title: 'Condition Key',
-    content: SHARED_HINT_MSG3,
+    content: STAGE2_HINT_CONDITION_KEY,
   },
   {
     title: 'Policy Variable for Tag Value',

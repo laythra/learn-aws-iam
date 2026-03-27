@@ -5,7 +5,7 @@ export const INITIAL_POLICIES = {
       {
         Effect: 'Allow',
         Action: 'INSERT_ACTION_HERE',
-        Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:db/alpha-team',
+        Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:db/alpha-team-AbCdEf',
         Condition: {},
       },
       {
@@ -22,7 +22,7 @@ export const INITIAL_POLICIES = {
       {
         Effect: 'Allow',
         Action: 'INSERT_ACTION_HERE',
-        Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:db/beta-team',
+        Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:db/beta-team-GhIjKl',
         Condition: {},
       },
       {
@@ -38,7 +38,7 @@ export const INITIAL_POLICIES = {
     Statement: [
       {
         Effect: 'Allow',
-        Action: 'secretsmanager:GetSecretValue',
+        Action: ['secretsmanager:GetSecretValue', 'secretsmanager:DescribeSecret'],
         Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:db/*',
         Condition: {},
       },
