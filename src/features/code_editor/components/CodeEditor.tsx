@@ -14,12 +14,14 @@ import {
 import { useSelector } from '@xstate/store-react';
 import _ from 'lodash';
 
+import { CodeEditorErrorFallback } from './CodeEditorErrorFallback';
 import { CodeEditorHeader } from './CodeEditorHeader';
 import { CodeEditorHelpPopup } from './CodeEditorHelpPopup';
 import { CodeEditorCreate } from './create/CodeEditorCreate';
 import { CreateSubmitButton } from './create/CreateSubmitButton';
 import { CodeEditorEdit } from './edit/CodeEditorEdit';
 import { EditSubmitButton } from './edit/EditSubmitButton';
+import { ErrorBoundary } from '@/app/ErrorBoundary';
 import { ElementID } from '@/config/element-ids';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { CustomTheme } from '@/types/custom-theme';
@@ -66,42 +68,39 @@ export const CodeEditor: React.FC = () => {
         returnFocusOnClose={false}
       >
         <ModalOverlay />
-        <ModalContent
-          maxW={theme.sizes.modalsMaxWidthInPixels + 300}
-          maxH={theme.sizes.codeEditorMaxHeightInPixels}
-          data-element-id={ElementID.CodeEditorPopup}
-        >
-          <ModalHeader>
-            <CodeEditorHeader
-              codeEditorMode={codeEditorMode}
-              selectedIAMEntity={selectedIAMEntity}
-              nodeId={nodeId}
-            />
-          </ModalHeader>
-          <ModalBody>
-            <CodeEditorHelpPopup />
-            <VStack align='stretch' spacing={4}>
-              {React.createElement(codeEditorMode == 'create' ? CodeEditorCreate : CodeEditorEdit, {
-                nodeId,
-                selectedIAMEntity,
-                errors,
-                warnings,
-              })}
-            </VStack>
-          </ModalBody>
-          <ModalFooter>
-            {React.createElement(
-              codeEditorMode === 'create' ? CreateSubmitButton : EditSubmitButton,
-              {
-                nodeId,
-                selectedIAMEntity,
-              }
-            )}
-            <Button variant='ghost' onClick={closeCodeEditor}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+        <ErrorBoundary fallback={<CodeEditorErrorFallback />}>
+          <ModalContent
+            maxW={theme.sizes.modalsMaxWidthInPixels + 300}
+            maxH={theme.sizes.codeEditorMaxHeightInPixels}
+            data-element-id={ElementID.CodeEditorPopup}
+          >
+            <ModalHeader>
+              <CodeEditorHeader
+                codeEditorMode={codeEditorMode}
+                selectedIAMEntity={selectedIAMEntity}
+                nodeId={nodeId}
+              />
+            </ModalHeader>
+            <ModalBody>
+              <CodeEditorHelpPopup />
+              <VStack align='stretch' spacing={4}>
+                {React.createElement(
+                  codeEditorMode == 'create' ? CodeEditorCreate : CodeEditorEdit,
+                  { nodeId, selectedIAMEntity, errors, warnings }
+                )}
+              </VStack>
+            </ModalBody>
+            <ModalFooter>
+              {React.createElement(
+                codeEditorMode === 'create' ? CreateSubmitButton : EditSubmitButton,
+                { nodeId, selectedIAMEntity }
+              )}
+              <Button variant='ghost' onClick={closeCodeEditor}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </ErrorBoundary>
       </Modal>
     </>
   );
