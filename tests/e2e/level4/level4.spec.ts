@@ -1,7 +1,7 @@
 import { ENCODED_TEST_SOLUTIONS, ENCODED_LEVEL_STAGES } from './data';
 import { EdgeActions } from '../helpers/edge-actions';
+import { LevelProgressActions } from '../helpers/level-progress-actions';
 import { NodeActions } from '../helpers/node-actions';
-import { PopupActions } from '../helpers/popup-actions';
 import { test } from '../helpers/test-fixtures';
 import { getTestSolution } from '../helpers/test-solutions';
 import { TutorialActions } from '../helpers/tutorial-actions';
@@ -73,11 +73,11 @@ const editPolicyNode = async (
 const editDeveloperPolicyNode = async (
   nodes: NodeActions,
   edges: EdgeActions,
-  popups: PopupActions
+  progress: LevelProgressActions
 ): Promise<void> => {
   const content = await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy1');
   await editPolicyNode(nodes, PolicyNodeID.DeveloperPolicy, content);
-  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0].id);
+  await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0].id);
   await edges.expectMutlipleVisible([
     [PolicyNodeID.DeveloperPolicy, UserNodeID.Developer1],
     [PolicyNodeID.DeveloperPolicy, UserNodeID.Developer2],
@@ -91,11 +91,11 @@ const editDeveloperPolicyNode = async (
 const editDataScientistPolicyNode = async (
   nodes: NodeActions,
   edges: EdgeActions,
-  popups: PopupActions
+  progress: LevelProgressActions
 ): Promise<void> => {
   const content = await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2');
   await editPolicyNode(nodes, PolicyNodeID.DataScientistPolicy, content);
-  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
+  await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
   await edges.expectMutlipleVisible([
     [PolicyNodeID.DataScientistPolicy, UserNodeID.DataScientist1],
     [UserNodeID.DataScientist1, ResourceNodeID.AnalyticsDataDynamoTable],
@@ -108,11 +108,11 @@ const editDataScientistPolicyNode = async (
 const editInternPolicyNode = async (
   nodes: NodeActions,
   edges: EdgeActions,
-  popups: PopupActions
+  progress: LevelProgressActions
 ): Promise<void> => {
   const content = await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy3');
   await editPolicyNode(nodes, PolicyNodeID.InternPolicy, content);
-  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].id);
+  await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].id);
   await edges.expectMutlipleVisible([
     [PolicyNodeID.InternPolicy, UserNodeID.Intern1],
     [PolicyNodeID.InternPolicy, UserNodeID.Intern2],
@@ -157,85 +157,85 @@ test.describe('Stage 2 - Editing Policies in all orders', () => {
   test('Order 1: Developer → Data Scientist → Intern', async ({
     nodes,
     edges,
-    popups,
+    progress,
     tutorial,
     goToLevelAtStage,
   }) => {
     await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
 
-    await editDeveloperPolicyNode(nodes, edges, popups);
-    await editDataScientistPolicyNode(nodes, edges, popups);
-    await editInternPolicyNode(nodes, edges, popups);
+    await editDeveloperPolicyNode(nodes, edges, progress);
+    await editDataScientistPolicyNode(nodes, edges, progress);
+    await editInternPolicyNode(nodes, edges, progress);
   });
 
   test('Order 2: Developer → Intern → Data Scientist', async ({
     nodes,
     edges,
-    popups,
+    progress,
     tutorial,
     goToLevelAtStage,
   }) => {
     await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
 
-    await editDeveloperPolicyNode(nodes, edges, popups);
-    await editInternPolicyNode(nodes, edges, popups);
-    await editDataScientistPolicyNode(nodes, edges, popups);
+    await editDeveloperPolicyNode(nodes, edges, progress);
+    await editInternPolicyNode(nodes, edges, progress);
+    await editDataScientistPolicyNode(nodes, edges, progress);
   });
 
   test('Order 3: Data Scientist → Developer → Intern', async ({
     nodes,
     edges,
-    popups,
+    progress,
     tutorial,
     goToLevelAtStage,
   }) => {
     await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
 
-    await editDataScientistPolicyNode(nodes, edges, popups);
-    await editDeveloperPolicyNode(nodes, edges, popups);
-    await editInternPolicyNode(nodes, edges, popups);
+    await editDataScientistPolicyNode(nodes, edges, progress);
+    await editDeveloperPolicyNode(nodes, edges, progress);
+    await editInternPolicyNode(nodes, edges, progress);
   });
 
   test('Order 4: Data Scientist → Intern → Developer', async ({
     nodes,
     edges,
-    popups,
+    progress,
     tutorial,
     goToLevelAtStage,
   }) => {
     await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
 
-    await editDataScientistPolicyNode(nodes, edges, popups);
-    await editInternPolicyNode(nodes, edges, popups);
-    await editDeveloperPolicyNode(nodes, edges, popups);
+    await editDataScientistPolicyNode(nodes, edges, progress);
+    await editInternPolicyNode(nodes, edges, progress);
+    await editDeveloperPolicyNode(nodes, edges, progress);
   });
 
   test('Order 5: Intern → Developer → Data Scientist', async ({
     nodes,
     edges,
-    popups,
+    progress,
     tutorial,
     goToLevelAtStage,
   }) => {
     await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
 
-    await editInternPolicyNode(nodes, edges, popups);
-    await editDeveloperPolicyNode(nodes, edges, popups);
-    await editDataScientistPolicyNode(nodes, edges, popups);
+    await editInternPolicyNode(nodes, edges, progress);
+    await editDeveloperPolicyNode(nodes, edges, progress);
+    await editDataScientistPolicyNode(nodes, edges, progress);
   });
 
   test('Order 6: Intern → Data Scientist → Developer', async ({
     nodes,
     edges,
-    popups,
+    progress,
     tutorial,
     goToLevelAtStage,
   }) => {
     await goToStage2AndDismissTutorial(tutorial, goToLevelAtStage);
 
-    await editInternPolicyNode(nodes, edges, popups);
-    await editDataScientistPolicyNode(nodes, edges, popups);
-    await editDeveloperPolicyNode(nodes, edges, popups);
+    await editInternPolicyNode(nodes, edges, progress);
+    await editDataScientistPolicyNode(nodes, edges, progress);
+    await editDeveloperPolicyNode(nodes, edges, progress);
   });
 });
 
@@ -244,7 +244,7 @@ test.describe('Complete Level - End to End', () => {
     tutorial,
     nodes,
     edges,
-    popups,
+    progress,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(4, ENCODED_LEVEL_STAGES, 'stage1');
@@ -256,9 +256,9 @@ test.describe('Complete Level - End to End', () => {
     });
 
     await test.step('Complete Stage 2 - Edit all policies and finish level', async () => {
-      await editDeveloperPolicyNode(nodes, edges, popups);
-      await editDataScientistPolicyNode(nodes, edges, popups);
-      await editInternPolicyNode(nodes, edges, popups);
+      await editDeveloperPolicyNode(nodes, edges, progress);
+      await editDataScientistPolicyNode(nodes, edges, progress);
+      await editInternPolicyNode(nodes, edges, progress);
 
       await completeLevelFinishPopups(tutorial);
     });

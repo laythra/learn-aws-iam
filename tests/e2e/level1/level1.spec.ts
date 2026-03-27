@@ -1,7 +1,7 @@
 import { EdgeActions } from '../helpers/edge-actions';
+import { EntityCreationActions } from '../helpers/entity-creation-actions';
 import { findUnnecessaryNode } from '../helpers/locator-helpers';
 import { NodeActions } from '../helpers/node-actions';
-import { PopupActions } from '../helpers/popup-actions';
 import { test } from '../helpers/test-fixtures';
 import { TutorialActions } from '../helpers/tutorial-actions';
 import { ENCODED_LEVEL_STAGES } from '../level1/data';
@@ -68,8 +68,11 @@ test.describe('Level 1 Entire Flow', () => {
     );
   };
 
-  const createCustomUserNode = async (popups: PopupActions, name: string): Promise<void> => {
-    await popups.createUserGroupNode(
+  const createCustomUserNode = async (
+    entities: EntityCreationActions,
+    name: string
+  ): Promise<void> => {
+    await entities.createUserGroupNode(
       name,
       ElementID.CreateUserGroupMenuItem,
       ElementID.IAMIdentityCreatorPopup,
@@ -86,7 +89,14 @@ test.describe('Level 1 Entire Flow', () => {
     await edges.expectVisible(UserNodeID.FirstUser, ResourceNodeID.PublicImagesS3Bucket);
   };
 
-  test('Go Through Entire Flow', async ({ tutorial, edges, nodes, popups, goToLevelAtStage }) => {
+  test('Go Through Entire Flow', async ({
+    tutorial,
+    edges,
+    nodes,
+    entities,
+    progress,
+    goToLevelAtStage,
+  }) => {
     await goToLevelAtStage(1, ENCODED_LEVEL_STAGES, 'stage1');
 
     await test.step('Go Through Initial Tutorial', async () => {
@@ -95,12 +105,12 @@ test.describe('Level 1 Entire Flow', () => {
 
     await test.step('Connect Policy to Tutorial User', async () => {
       await connectPolicyToTutorialUser(nodes, edges, tutorial);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0].id);
     });
 
     await test.step('Create Custom User Node', async () => {
-      await createCustomUserNode(popups, 'FirstUser');
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
+      await createCustomUserNode(entities, 'FirstUser');
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
       await tutorial.expectPopoverWithoutNextButton(
         UserNodeID.FirstUser,
         POPOVER_TUTORIAL_MESSAGES[8].popover_title
@@ -109,7 +119,7 @@ test.describe('Level 1 Entire Flow', () => {
 
     await test.step('Connect Policy to Custom User', async () => {
       await connectPolicyToCustomUser(nodes, edges);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].id);
     });
 
     await test.step('Complete Level', async () => {
@@ -132,7 +142,9 @@ test.describe('Level 1 Entire Flow', () => {
     tutorial,
     edges,
     nodes,
-    popups,
+    entities,
+    progress,
+    ui,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(1, ENCODED_LEVEL_STAGES, 'stage1');
@@ -143,23 +155,23 @@ test.describe('Level 1 Entire Flow', () => {
 
     await test.step('Connect Policy to Tutorial User', async () => {
       await connectPolicyToTutorialUser(nodes, edges, tutorial);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0].id);
     });
 
     await test.step('Create Custom User Node with an Unnecessary Node', async () => {
-      await createCustomUserNode(popups, 'FirstUser');
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
+      await createCustomUserNode(entities, 'FirstUser');
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1].id);
       await tutorial.expectPopoverWithoutNextButton(
         UserNodeID.FirstUser,
         POPOVER_TUTORIAL_MESSAGES[8].popover_title
       );
 
-      await createCustomUserNode(popups, 'UnnecessaryUser');
+      await createCustomUserNode(entities, 'UnnecessaryUser');
     });
 
     await test.step('Connect Policy to Custom User', async () => {
       await connectPolicyToCustomUser(nodes, edges);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2].id);
     });
 
     await test.step('Complete Level', async () => {
@@ -175,12 +187,12 @@ test.describe('Level 1 Entire Flow', () => {
     });
 
     await test.step('Expect and handle Unnecessary Nodes/Edges warning', async () => {
-      await tutorial.expectUnnecessaryEdgesNodesWarning(true);
+      await ui.expectUnnecessaryEdgesNodesWarning(true);
       const unnecessaryNode = findUnnecessaryNode(page);
       await unnecessaryNode.click();
       await page.keyboard.press('Backspace');
 
-      await tutorial.expectUnnecessaryEdgesNodesWarning(false);
+      await ui.expectUnnecessaryEdgesNodesWarning(false);
     });
 
     await test.step('Go Through Last Popup', async () => {

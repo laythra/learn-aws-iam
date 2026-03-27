@@ -62,7 +62,7 @@ test.describe('Stage 1 - Permission Boundaries Introduction', () => {
 });
 
 test.describe('Stage 2 - Create Permission Boundary and Delegation Policy', () => {
-  test('Create Permission Boundary', async ({ tutorial, nodes, popups, goToLevelAtStage }) => {
+  test('Create Permission Boundary', async ({ tutorial, nodes, entities, goToLevelAtStage }) => {
     await goToLevelAtStage(11, ENCODED_LEVEL_STAGES, 'stage2');
 
     await test.step('Complete main level introduction', async () => {
@@ -89,7 +89,7 @@ test.describe('Stage 2 - Create Permission Boundary and Delegation Policy', () =
     });
 
     await test.step('Create secrets reading permission boundary', async () => {
-      await popups.submitCreatePolicyPopup(
+      await entities.submitCreatePolicyPopup(
         [ElementID.CodeEditorPermissionBoundaryTab],
         ElementID.CodeEditorPermissionBoundaryTab,
         'pb',
@@ -109,7 +109,7 @@ test.describe('Stage 2 - Create Permission Boundary and Delegation Policy', () =
         POPOVER_TUTORIAL_MESSAGES[8].popover_title
       );
 
-      await popups.submitCreatePolicyPopup(
+      await entities.submitCreatePolicyPopup(
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         PolicyNodeID.AccessDelegationPolicy,
@@ -234,7 +234,7 @@ test.describe('Complete Level Workflow - End to End', () => {
     tutorial,
     nodes,
     edges,
-    popups,
+    entities,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(11, ENCODED_LEVEL_STAGES, 'stage1');
@@ -290,7 +290,7 @@ test.describe('Complete Level Workflow - End to End', () => {
         POPOVER_TUTORIAL_MESSAGES[6].popover_title
       );
 
-      await popups.submitCreatePolicyPopup(
+      await entities.submitCreatePolicyPopup(
         [ElementID.CodeEditorPermissionBoundaryTab],
         ElementID.CodeEditorPermissionBoundaryTab,
         'pb',
@@ -308,7 +308,7 @@ test.describe('Complete Level Workflow - End to End', () => {
         POPOVER_TUTORIAL_MESSAGES[8].popover_title
       );
 
-      await popups.submitCreatePolicyPopup(
+      await entities.submitCreatePolicyPopup(
         [ElementID.CodeEditorPolicyTab],
         ElementID.CodeEditorPolicyTab,
         PolicyNodeID.AccessDelegationPolicy,

@@ -1,11 +1,13 @@
 import { ENCODED_LEVEL_STAGES, ENCODED_TEST_SOLUTIONS } from './data';
 import { EdgeActions } from '../helpers/edge-actions';
+import { EntityCreationActions } from '../helpers/entity-creation-actions';
+import { LevelProgressActions } from '../helpers/level-progress-actions';
 import { findUnnecessaryNode } from '../helpers/locator-helpers';
 import { NodeActions } from '../helpers/node-actions';
-import { PopupActions } from '../helpers/popup-actions';
 import { test } from '../helpers/test-fixtures';
 import { getTestSolution } from '../helpers/test-solutions';
 import { TutorialActions } from '../helpers/tutorial-actions';
+import { UIActions } from '../helpers/ui-actions';
 import { ElementID } from '@/config/element-ids';
 import { LEVEL_OBJECTIVES } from '@/levels/level10/objectives/level-objectives';
 import { FIXED_POPOVER_MESSAGES } from '@/levels/level10/tutorial_messages/fixed-popover-messages';
@@ -46,11 +48,12 @@ const verifyInitialLevelSetup = async (nodes: NodeActions, edges: EdgeActions): 
 };
 
 const createTBACPolicy = async (
-  popups: PopupActions,
+  entities: EntityCreationActions,
   nodes: NodeActions,
+  progress: LevelProgressActions,
   tutorial: TutorialActions
 ): Promise<void> => {
-  await popups.submitCreatePolicyPopup(
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorPolicyTab],
     ElementID.CodeEditorPolicyTab,
     PolicyNodeID.TBACPolicy,
@@ -58,7 +61,7 @@ const createTBACPolicy = async (
   );
 
   await nodes.expectVisible(PolicyNodeID.TBACPolicy);
-  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+  await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
   await tutorial.expectPopoverWithoutNextButton(
     PolicyNodeID.TBACPolicy,
     POPOVER_TUTORIAL_MESSAGES[1].popover_title
@@ -76,14 +79,15 @@ const connectTBACPolicyToGroups = async (
   }
 };
 
-const verifyRDSResourcesAndCreatePolicy = async (
+const verifyEC2ResourcesAndCreatePolicy = async (
   tutorial: TutorialActions,
   nodes: NodeActions,
-  popups: PopupActions
+  entities: EntityCreationActions,
+  progress: LevelProgressActions
 ): Promise<void> => {
   await nodes.expectVisible(ResourceNodeID.RDS1, ResourceNodeID.RDS2, ResourceNodeID.RDS3);
 
-  await popups.submitCreatePolicyPopup(
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorPolicyTab],
     ElementID.CodeEditorPolicyTab,
     PolicyNodeID.RDSManagePolicy,
@@ -91,14 +95,14 @@ const verifyRDSResourcesAndCreatePolicy = async (
   );
 
   await nodes.expectVisible(PolicyNodeID.RDSManagePolicy);
-  await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+  await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
   await tutorial.expectPopoverWithoutNextButton(
     PolicyNodeID.RDSManagePolicy,
     POPOVER_TUTORIAL_MESSAGES[3].popover_title
   );
 };
 
-const connectRDSPolicyToGroups = async (
+const connectEC2PolicyToGroups = async (
   nodes: NodeActions,
   edges: EdgeActions,
   groups: string[]
@@ -127,9 +131,12 @@ const connectRDSPolicyToGroups = async (
   }
 };
 
-const completeLevelFinishPopups = async (tutorial: TutorialActions): Promise<void> => {
+const completeLevelFinishPopups = async (
+  tutorial: TutorialActions,
+  ui: UIActions
+): Promise<void> => {
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[1].popover_title);
-  await tutorial.expectUnnecessaryEdgesNodesWarning(false);
+  await ui.expectUnnecessaryEdgesNodesWarning(false);
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[3].title);
 };
 
@@ -138,7 +145,8 @@ test.describe('Stage 1 - TBAC Request Tags Introduction', () => {
     tutorial,
     nodes,
     edges,
-    popups,
+    entities,
+    progress,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage1');
@@ -152,7 +160,7 @@ test.describe('Stage 1 - TBAC Request Tags Introduction', () => {
     });
 
     await test.step('Create TBAC Policy', async () => {
-      await createTBACPolicy(popups, nodes, tutorial);
+      await createTBACPolicy(entities, nodes, progress, tutorial);
     });
   });
 });
@@ -161,7 +169,7 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
   test('Connection order: Analytics -> Payments -> Compliance', async ({
     edges,
     nodes,
-    popups,
+    progress,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage2');
@@ -172,14 +180,14 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 
   test('Connection order: Compliance -> Payments -> Analytics', async ({
     edges,
     nodes,
-    popups,
+    progress,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage2');
@@ -190,14 +198,14 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
         GroupNodeID.PaymentsTeam,
         GroupNodeID.AnalyticsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 
   test('Connection order: Analytics -> Compliance -> Payments', async ({
     edges,
     nodes,
-    popups,
+    progress,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage2');
@@ -208,14 +216,14 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
         GroupNodeID.ComplianceTeam,
         GroupNodeID.PaymentsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 
   test('Connection order: Compliance -> Analytics -> Payments', async ({
     edges,
     nodes,
-    popups,
+    progress,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage2');
@@ -226,14 +234,14 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
         GroupNodeID.AnalyticsTeam,
         GroupNodeID.PaymentsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 
   test('Connection order: Payments -> Compliance -> Analytics', async ({
     edges,
     nodes,
-    popups,
+    progress,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage2');
@@ -244,28 +252,35 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
         GroupNodeID.ComplianceTeam,
         GroupNodeID.AnalyticsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 });
 
-test.describe('Stage 3 - Create RDS Management Policy and Final Connections', () => {
-  test('Create RDS management policy', async ({ popups, nodes, tutorial, goToLevelAtStage }) => {
+test.describe('Stage 3 - Create EC2 Management Policy and Final Connections', () => {
+  test('Create EC2 management policy', async ({
+    entities,
+    progress,
+    nodes,
+    tutorial,
+    goToLevelAtStage,
+  }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage3');
 
-    await test.step('Verify RDS resources and create policy', async () => {
-      await verifyRDSResourcesAndCreatePolicy(tutorial, nodes, popups);
+    await test.step('Verify EC2 resources and create policy', async () => {
+      await verifyEC2ResourcesAndCreatePolicy(tutorial, nodes, entities, progress);
     });
   });
 });
 
-test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () => {
+test.describe('Stage 4 - Attach EC2 Management Policy and Complete Level', () => {
   test('Connection order: Analytics -> Payments -> Compliance', async ({
     edges,
     nodes,
-    popups,
+    progress,
     goToLevelAtStage,
     tutorial,
+    ui,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage4');
 
@@ -276,26 +291,27 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
       );
     });
 
-    await test.step('Connect RDS policy to all groups and verify access', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, [
+    await test.step('Connect EC2 policy to all groups and verify access', async () => {
+      await connectEC2PolicyToGroups(nodes, edges, [
         GroupNodeID.AnalyticsTeam,
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Complete level tutorial', async () => {
-      await completeLevelFinishPopups(tutorial);
+      await completeLevelFinishPopups(tutorial, ui);
     });
   });
 
   test('Connection order: Compliance -> Payments -> Analytics', async ({
     edges,
     nodes,
-    popups,
+    progress,
     tutorial,
     goToLevelAtStage,
+    ui,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage4');
 
@@ -306,26 +322,27 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
       );
     });
 
-    await test.step('Connect RDS policy to all groups and verify access', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, [
+    await test.step('Connect EC2 policy to all groups and verify access', async () => {
+      await connectEC2PolicyToGroups(nodes, edges, [
         GroupNodeID.ComplianceTeam,
         GroupNodeID.PaymentsTeam,
         GroupNodeID.AnalyticsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Complete level tutorial', async () => {
-      await completeLevelFinishPopups(tutorial);
+      await completeLevelFinishPopups(tutorial, ui);
     });
   });
 
   test('Connection order: Analytics -> Compliance -> Payments', async ({
     edges,
     nodes,
-    popups,
+    progress,
     tutorial,
     goToLevelAtStage,
+    ui,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage4');
 
@@ -336,26 +353,27 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
       );
     });
 
-    await test.step('Connect RDS policy to all groups and verify access', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, [
+    await test.step('Connect EC2 policy to all groups and verify access', async () => {
+      await connectEC2PolicyToGroups(nodes, edges, [
         GroupNodeID.AnalyticsTeam,
         GroupNodeID.ComplianceTeam,
         GroupNodeID.PaymentsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Complete level tutorial', async () => {
-      await completeLevelFinishPopups(tutorial);
+      await completeLevelFinishPopups(tutorial, ui);
     });
   });
 
   test('Connection order: Payments -> Compliance -> Analytics', async ({
     edges,
     nodes,
-    popups,
+    progress,
     tutorial,
     goToLevelAtStage,
+    ui,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage4');
 
@@ -366,17 +384,17 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
       );
     });
 
-    await test.step('Connect RDS policy to all groups and verify access', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, [
+    await test.step('Connect EC2 policy to all groups and verify access', async () => {
+      await connectEC2PolicyToGroups(nodes, edges, [
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
         GroupNodeID.AnalyticsTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Complete level tutorial', async () => {
-      await completeLevelFinishPopups(tutorial);
+      await completeLevelFinishPopups(tutorial, ui);
     });
   });
 
@@ -384,9 +402,11 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
     page,
     nodes,
     edges,
-    popups,
+    entities,
+    progress,
     goToLevelAtStage,
     tutorial,
+    ui,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage4');
 
@@ -398,16 +418,16 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
     });
 
     await test.step('Create unnecessary policy to test cleanup', async () => {
-      await popups.createSpuriousPolicy();
+      await entities.createSpuriousPolicy();
     });
 
     await test.step('Connect all policies', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, [
+      await connectEC2PolicyToGroups(nodes, edges, [
         GroupNodeID.AnalyticsTeam,
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Trigger warning check', async () => {
@@ -415,14 +435,14 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
     });
 
     await test.step('Verify unnecessary nodes warning appears', async () => {
-      await tutorial.expectUnnecessaryEdgesNodesWarning(true);
+      await ui.expectUnnecessaryEdgesNodesWarning(true);
     });
 
     await test.step('Remove unnecessary node to complete level', async () => {
       const unnecessaryNode = findUnnecessaryNode(page);
       const unnecessaryNodeId = await unnecessaryNode.getAttribute('data-element-id');
       await nodes.deleteNode(unnecessaryNodeId!);
-      await tutorial.expectUnnecessaryEdgesNodesWarning(false);
+      await ui.expectUnnecessaryEdgesNodesWarning(false);
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[3].title);
     });
   });
@@ -433,15 +453,17 @@ test.describe('Complete Level - End to End', () => {
     tutorial,
     nodes,
     edges,
-    popups,
+    entities,
+    progress,
     goToLevelAtStage,
+    ui,
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage1');
 
     await test.step('Complete Stage 1 - Initial tutorial and TBAC policy creation', async () => {
       await completeInitialTutorial(tutorial);
       await verifyInitialLevelSetup(nodes, edges);
-      await createTBACPolicy(popups, nodes, tutorial);
+      await createTBACPolicy(entities, nodes, progress, tutorial);
     });
 
     await test.step('Complete Stage 2 - Attach TBAC policy to groups', async () => {
@@ -450,22 +472,22 @@ test.describe('Complete Level - End to End', () => {
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
 
-    await test.step('Complete Stage 3 - Create RDS management policy', async () => {
+    await test.step('Complete Stage 3 - Create EC2 management policy', async () => {
       await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[0].popover_title);
-      await verifyRDSResourcesAndCreatePolicy(tutorial, nodes, popups);
+      await verifyEC2ResourcesAndCreatePolicy(tutorial, nodes, entities, progress);
     });
 
-    await test.step('Complete Stage 4 - Attach RDS policy and finish', async () => {
-      await connectRDSPolicyToGroups(nodes, edges, [
+    await test.step('Complete Stage 4 - Attach EC2 policy and finish', async () => {
+      await connectEC2PolicyToGroups(nodes, edges, [
         GroupNodeID.AnalyticsTeam,
         GroupNodeID.PaymentsTeam,
         GroupNodeID.ComplianceTeam,
       ]);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
-      await completeLevelFinishPopups(tutorial);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await completeLevelFinishPopups(tutorial, ui);
     });
   });
 });
