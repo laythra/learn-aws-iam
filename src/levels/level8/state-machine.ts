@@ -226,6 +226,7 @@ export const stateMachine = createStateMachineSetup<
         },
         level_completed: {
           entry: [
+            'store_checkpoint',
             'hide_popovers',
             { type: 'show_popup_message', params: { message: POPUP_TUTORIAL_MESSAGES[2] } },
           ],
