@@ -25,6 +25,9 @@
           "Principal"
         ],
         "properties": {
+          "Sid": {
+            "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Sid"
+          },
           "Effect": {
             "type": "string",
             "const": "Allow"

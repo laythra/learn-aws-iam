@@ -20,8 +20,8 @@ const POPUP_MSG2 = `
 
   ~~~js
   {
-    Version: "2012-10-17",
-    Statement: [
+    "Version": "2012-10-17", ::badge[POLICY LANGUAGE VERSION]::
+    "Statement": [
       {
         "Effect": "Deny", ::badge[DENIES SPECIFIED ACTIONS]::
         "Action": ["*"], ::badge[ALL ACTIONS]::

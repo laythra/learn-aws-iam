@@ -43,6 +43,9 @@
     "getObjectStmt": {
       "type": "object",
       "properties": {
+        "Sid": {
+          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Sid"
+        },
         "Effect": {
           "type": "string",
           "const": "Allow"
@@ -93,6 +96,9 @@
     "listBucketStmt": {
       "type": "object",
       "properties": {
+        "Sid": {
+          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Sid"
+        },
         "Effect": {
           "type": "string",
           "const": "Allow"

@@ -43,6 +43,9 @@
     "dynamoStatement": {
       "type": "object",
       "properties": {
+        "Sid": {
+          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Sid"
+        },
         "Effect": {
           "type": "string",
           "const": "Allow"
@@ -92,6 +95,9 @@
     "s3Statement": {
       "type": "object",
       "properties": {
+        "Sid": {
+          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Sid"
+        },
         "Effect": {
           "type": "string",
           "const": "Allow"
