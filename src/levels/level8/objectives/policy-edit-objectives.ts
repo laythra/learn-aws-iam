@@ -6,15 +6,10 @@ import { PolicyGrantedAccess } from '@/types/iam-policy-types';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE1_CALLOUT_MSG = `
-  **AWS CodeDeploy** is a service that automates application deployments to instances or containers.
-  The CodeDeploy statements in this policy are already correct — don't worry about them.
+  Edit this policy so only senior users can access
+  the \`slack-integration-secret\` secret.
 
-  Focus on the **SecretsManager statement**: add a \`Condition\` to restrict
-  secret access to senior developers only.
-`;
-
-const OBJECTIVE1_HINT_MSG1 = `
-  The \`Condition\` element goes inside the SecretsManager statement:
+  Use a **Condition** on the **SecretsManager statement**:
 
   ~~~js
   "Condition": {
@@ -23,9 +18,11 @@ const OBJECTIVE1_HINT_MSG1 = `
     }
   }|fullwidth
   ~~~
+
+  Use the hints below if needed.
 `;
 
-const OBJECTIVE1_HINT_MSG2 = `
+const OBJECTIVE1_HINT_MSG1 = `
   For exact matching, the most commonly used condition operators are:
   - **\`StringEquals\`**: checks if a string exactly matches a value — works great for ARNs too.
   - **\`ArnEquals\`**: ARN-specific variant of \`StringEquals\`,
@@ -34,7 +31,7 @@ const OBJECTIVE1_HINT_MSG2 = `
   For this objective, you need to explicitly list the ARNs of the senior developers.
 `;
 
-const OBJECTIVE1_HINT_MSG3 = `
+const OBJECTIVE1_HINT_MSG2 = `
   For ARN-related condition keys:
   - **\`aws:PrincipalArn\`**: checks the ARN of the principal making the request.
   - **\`aws:SourceArn\`**: checks the source ARN for service-to-service calls.
@@ -43,7 +40,7 @@ const OBJECTIVE1_HINT_MSG3 = `
   Which key identifies the calling principal by ARN?
 `;
 
-const OBJECTIVE1_HINT_MSG4 = `
+const OBJECTIVE1_HINT_MSG3 = `
   IAM user ARNs follow this format:
   \`arn:aws:iam::<account-id>:user/<username>\`
 
@@ -73,12 +70,6 @@ const GRANTED_RESOURCES: PolicyGrantedAccess<ObjectivesApplicableNodesFnName>[] 
     target_handle: HandleID.Bottom,
     applicable_nodes_fn_name: 'seniorUsersApplicableNodes',
   } satisfies PolicyGrantedAccess<ObjectivesApplicableNodesFnName>,
-  {
-    access_level: AccessLevel.Read,
-    target_node: ResourceNodeID.SlackCrashlyticsNotifierService,
-    source_handle: HandleID.Top,
-    target_handle: HandleID.Bottom,
-  },
 ];
 
 export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
@@ -87,7 +78,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
 >[][] = [
   [
     {
-      id: PolicyNodeID.SlackServiceManagePolicy,
+      id: PolicyNodeID.SlackSecretsAccessPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       validate_fn_name: 'slackManagePolicyValidateFn1',
       entity: IAMNodeEntity.IdentityPolicy,
@@ -96,25 +87,21 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       resources_to_grant: GRANTED_RESOURCES,
       hint_messages: [
         {
-          title: 'Condition Structure',
+          title: 'Condition Operators',
           content: OBJECTIVE1_HINT_MSG1,
         },
         {
-          title: 'Condition Operators',
+          title: 'Condition Keys',
           content: OBJECTIVE1_HINT_MSG2,
         },
         {
-          title: 'Condition Keys',
-          content: OBJECTIVE1_HINT_MSG3,
-        },
-        {
           title: 'Condition Values',
-          content: OBJECTIVE1_HINT_MSG4,
+          content: OBJECTIVE1_HINT_MSG3,
         },
       ],
       help_badges: [
         {
-          path: '/Statement/3',
+          path: '/Statement/0',
           content: 'Add a condition to this statement to restrict access to senior users only',
           color: 'yellow',
         },
@@ -124,7 +111,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
   ],
   [
     {
-      id: PolicyNodeID.SlackServiceManagePolicy,
+      id: PolicyNodeID.SlackSecretsAccessPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       validate_fn_name: 'slackManagePolicyValidateFn2',
       entity: IAMNodeEntity.IdentityPolicy,

@@ -42,7 +42,8 @@ const OBJECTIVE1_HINT_MSG2 = `
 const OBJECTIVE1_HINT_MSG3 = `
   Statement 2 needs three conditions:
 
-  1. \`aws:RequestTag/application\` must equal the caller's own application tag — use a policy variable.
+  1. \`aws:RequestTag/application\` must equal the caller's own application tag
+  - use a policy variable.
 
   2. \`aws:RequestTag/environment\` must be one of \`dev\`, \`staging\`, or \`prod\`.
 

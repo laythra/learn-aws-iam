@@ -1,5 +1,5 @@
 export const INITIAL_POLICIES = {
-  INITIAL_ROLE: {
+  CODEDEPLOY: {
     Version: '2012-10-17',
     Statement: [
       {
@@ -9,7 +9,10 @@ export const INITIAL_POLICIES = {
           'codedeploy:ListApplicationRevisions',
           'codedeploy:GetApplication',
         ],
-        Resource: 'arn:aws:codedeploy:us-east-1:123456789012:application:slack-alerting-app',
+        Resource: [
+          'arn:aws:codedeploy:us-east-1:123456789012:',
+          'deploymentgroup:slack-alerting-app/staging-group',
+        ].join(''),
       },
       {
         Effect: 'Allow',
@@ -20,8 +23,10 @@ export const INITIAL_POLICIES = {
           'codedeploy:GetDeploymentGroup',
           'codedeploy:GetDeploymentConfig',
         ],
-        Resource:
-          'arn:aws:codedeploy:us-east-1:123456789012:deploymentgroup:slack-alerting-app/staging-group',
+        Resource: [
+          'arn:aws:codedeploy:us-east-1:123456789012:',
+          'deploymentgroup:slack-alerting-app/staging-group',
+        ].join(''),
       },
       {
         Effect: 'Allow',
@@ -29,6 +34,11 @@ export const INITIAL_POLICIES = {
         Resource:
           'arn:aws:codedeploy:us-east-1:123456789012:deploymentconfig:CodeDeployDefault.AllAtOnce',
       },
+    ],
+  },
+  SECRETS_ACCESS: {
+    Version: '2012-10-17',
+    Statement: [
       {
         Effect: 'Allow',
         Action: ['secretsmanager:GetSecretValue'],
