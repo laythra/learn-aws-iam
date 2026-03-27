@@ -336,8 +336,8 @@ test.describe('Stage 3 - Create Shared Policy for Both Groups', () => {
 
     await test.step('Complete Stage 3 with unnecessary user node', async () => {
       await completeStage3IntroPopups(tutorial);
-      await createUnnecessaryPolicy(popups);
       await createSharedPolicy(popups, nodes);
+      await createUnnecessaryPolicy(popups);
       await connectSharedPolicyToGroups(nodes);
       await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
       await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[4].popover_title);

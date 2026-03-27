@@ -99,6 +99,7 @@ export class NodeActions {
     await expect(submitButton).toBeEnabled({ timeout: 1000 });
 
     await submitButton.click();
+    await expect(codeEditorPopup).not.toBeVisible();
   }
 
   async deleteNode(nodeId: string): Promise<void> {
