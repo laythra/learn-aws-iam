@@ -2,8 +2,11 @@ import { PolicyNodeID, RoleNodeID, UserNodeID } from '../types/node-ids';
 import type { PopoverTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  This role currently lets all assigned users deploy the Slack alerting service
-  and read the Slack integration secret.
+  The whole team rotates on-call, so everyone — junior and senior — can redeploy
+  the Slack alerting service when it goes down.
+
+  But the Slack integration secret contains a live API token. Right now the policy
+  lets anyone read it, which is too broad.
 `;
 
 const POPOVER_MSG2 = `

@@ -14,29 +14,21 @@
     },
     "Statement": {
       "type": "array",
-      "minItems": 2,
-      "maxItems": 2,
+      "minItems": 4,
+      "maxItems": 4,
       "items": {
         "oneOf": [
-          {
-            "$ref": "#/definitions/secretsManagerStatement"
-          },
-          {
-            "$ref": "#/definitions/codeDeployStatement"
-          }
+          { "$ref": "#/definitions/secretsManagerStatement" },
+          { "$ref": "#/definitions/codeDeployApplicationStatement" },
+          { "$ref": "#/definitions/codeDeployDeploymentGroupStatement" },
+          { "$ref": "#/definitions/codeDeployDeploymentConfigStatement" }
         ]
       },
       "allOf": [
-        {
-          "contains": {
-            "$ref": "#/definitions/secretsManagerStatement"
-          }
-        },
-        {
-          "contains": {
-            "$ref": "#/definitions/codeDeployStatement"
-          }
-        }
+        { "contains": { "$ref": "#/definitions/secretsManagerStatement" } },
+        { "contains": { "$ref": "#/definitions/codeDeployApplicationStatement" } },
+        { "contains": { "$ref": "#/definitions/codeDeployDeploymentGroupStatement" } },
+        { "contains": { "$ref": "#/definitions/codeDeployDeploymentConfigStatement" } }
       ]
     }
   },
@@ -62,26 +54,15 @@
     },
     "secretsManagerStatement": {
       "type": "object",
-      "required": [
-        "Effect",
-        "Action",
-        "Resource",
-        "Condition"
-      ],
+      "required": ["Effect", "Action", "Resource", "Condition"],
       "properties": {
-        "Effect": {
-          "const": "Allow"
-        },
+        "Effect": { "const": "Allow" },
         "Action": {
           "oneOf": [
-            {
-              "const": "secretsmanager:GetSecretValue"
-            },
+            { "const": "secretsmanager:GetSecretValue" },
             {
               "type": "array",
-              "contains": {
-                "const": "secretsmanager:GetSecretValue"
-              }
+              "contains": { "const": "secretsmanager:GetSecretValue" }
             }
           ]
         },
@@ -110,33 +91,74 @@
       },
       "additionalProperties": false
     },
-    "codeDeployStatement": {
+    "codeDeployApplicationStatement": {
       "type": "object",
-      "required": [
-        "Effect",
-        "Action",
-        "Resource"
-      ],
+      "required": ["Effect", "Action", "Resource"],
       "properties": {
-        "Effect": {
-          "const": "Allow"
-        },
+        "Effect": { "const": "Allow" },
         "Action": {
           "type": "array",
-          "minItems": 4,
-          "maxItems": 4,
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "codedeploy:RegisterApplicationRevision",
+              "codedeploy:ListApplicationRevisions",
+              "codedeploy:GetApplication"
+            ]
+          }
+        },
+        "Resource": {
+          "const": "arn:aws:codedeploy:us-east-1:123456789012:application:slack-alerting-app"
+        }
+      },
+      "additionalProperties": false
+    },
+    "codeDeployDeploymentGroupStatement": {
+      "type": "object",
+      "required": ["Effect", "Action", "Resource"],
+      "properties": {
+        "Effect": { "const": "Allow" },
+        "Action": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
           "uniqueItems": true,
           "items": {
             "enum": [
               "codedeploy:CreateDeployment",
               "codedeploy:GetDeployment",
               "codedeploy:ListDeployments",
-              "codedeploy:RegisterApplicationRevision"
+              "codedeploy:GetDeploymentGroup",
+              "codedeploy:GetDeploymentConfig"
             ]
           }
         },
         "Resource": {
-          "const": "arn:aws:codedeploy:us-east-1:123456789012:application:SlackCodeDeployApp"
+          "const": "arn:aws:codedeploy:us-east-1:123456789012:deploymentgroup:slack-alerting-app/staging-group"
+        }
+      },
+      "additionalProperties": false
+    },
+    "codeDeployDeploymentConfigStatement": {
+      "type": "object",
+      "required": ["Effect", "Action", "Resource"],
+      "properties": {
+        "Effect": { "const": "Allow" },
+        "Action": {
+          "oneOf": [
+            { "const": "codedeploy:GetDeploymentConfig" },
+            {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": { "const": "codedeploy:GetDeploymentConfig" }
+            }
+          ]
+        },
+        "Resource": {
+          "const": "arn:aws:codedeploy:us-east-1:123456789012:deploymentconfig:CodeDeployDefault.AllAtOnce"
         }
       },
       "additionalProperties": false

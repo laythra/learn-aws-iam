@@ -6,10 +6,15 @@ import { PolicyGrantedAccess } from '@/types/iam-policy-types';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE1_CALLOUT_MSG = `
-  Edit this policy so only senior users can access
-  the \`slack-integration-secret\` secret.
+  **AWS CodeDeploy** is a service that automates application deployments to instances or containers.
+  The CodeDeploy statements in this policy are already correct — don't worry about them.
 
-  Use a **Condition** on the **SecretsManager statement**:
+  Focus on the **SecretsManager statement**: add a \`Condition\` to restrict
+  secret access to senior developers only.
+`;
+
+const OBJECTIVE1_HINT_MSG1 = `
+  The \`Condition\` element goes inside the SecretsManager statement:
 
   ~~~js
   "Condition": {
@@ -18,11 +23,9 @@ const OBJECTIVE1_CALLOUT_MSG = `
     }
   }|fullwidth
   ~~~
-
-  Use the hints below if needed.
 `;
 
-const OBJECTIVE1_HINT_MSG1 = `
+const OBJECTIVE1_HINT_MSG2 = `
   For exact matching, the most commonly used condition operators are:
   - **\`StringEquals\`**: checks if a string exactly matches a value — works great for ARNs too.
   - **\`ArnEquals\`**: ARN-specific variant of \`StringEquals\`,
@@ -31,7 +34,7 @@ const OBJECTIVE1_HINT_MSG1 = `
   For this objective, you need to explicitly list the ARNs of the senior developers.
 `;
 
-const OBJECTIVE1_HINT_MSG2 = `
+const OBJECTIVE1_HINT_MSG3 = `
   For ARN-related condition keys:
   - **\`aws:PrincipalArn\`**: checks the ARN of the principal making the request.
   - **\`aws:SourceArn\`**: checks the source ARN for service-to-service calls.
@@ -40,7 +43,7 @@ const OBJECTIVE1_HINT_MSG2 = `
   Which key identifies the calling principal by ARN?
 `;
 
-const OBJECTIVE1_HINT_MSG3 = `
+const OBJECTIVE1_HINT_MSG4 = `
   IAM user ARNs follow this format:
   \`arn:aws:iam::<account-id>:user/<username>\`
 
@@ -93,21 +96,25 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       resources_to_grant: GRANTED_RESOURCES,
       hint_messages: [
         {
-          title: 'Condition Operators',
+          title: 'Condition Structure',
           content: OBJECTIVE1_HINT_MSG1,
         },
         {
-          title: 'Condition Keys',
+          title: 'Condition Operators',
           content: OBJECTIVE1_HINT_MSG2,
         },
         {
-          title: 'Condition Values',
+          title: 'Condition Keys',
           content: OBJECTIVE1_HINT_MSG3,
+        },
+        {
+          title: 'Condition Values',
+          content: OBJECTIVE1_HINT_MSG4,
         },
       ],
       help_badges: [
         {
-          path: '/Statement/1',
+          path: '/Statement/3',
           content: 'Add a condition to this statement to restrict access to senior users only',
           color: 'yellow',
         },
