@@ -28,11 +28,14 @@ export default `
   }|fullwidth
   ~~~
 
-  &nbsp;
-
   In this example, even if a user has full administrator access,
   the permission boundary ensures they can only work with S3, DynamoDB, and Lambda services.
 
-  **Important**: Permission boundaries use the same syntax as identity-based policies.
-  An identity-based policy can be attached to a user or a role as a permission boundary.
+  > |color(warning)
+  > In AWS, permission boundaries aren’t a separate type of policy.
+  > They’re just normal IAM policies.
+  > You create them the same way, the only difference is how you attach them.
+  > When attached as a permission boundary,
+  > they act as a maximum permissions limit instead of granting permissions.
+
 `;
