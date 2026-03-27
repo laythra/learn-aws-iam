@@ -37,7 +37,7 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
     resource_type: IAMNodeResourceEntity.S3Bucket,
   },
   {
-    id: ResourceNodeID.TimeshiftLabsEC2Instance,
+    id: ResourceNodeID.EC2Instance,
     label: 'web-server',
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
     image: IAMNodeImage.Server,

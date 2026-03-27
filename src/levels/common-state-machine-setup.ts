@@ -310,7 +310,10 @@ export const createStateMachineSetup = <
             ({ updatedContext, newlyAddedEdges: recreatedEdges } = updateConnectionEdges<
               TLevelObjectiveID,
               TFinishEventMap
-            >(updatedContext, sourceNode, targetNode, true));
+            >(updatedContext, sourceNode, targetNode, true, {
+              targetHandle: edge.targetHandle,
+              sourceHandle: edge.sourceHandle,
+            }));
 
             edgesToRecreate.push(...recreatedEdges);
           });

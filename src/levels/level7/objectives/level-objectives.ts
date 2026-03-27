@@ -4,13 +4,13 @@ import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const Objective1Description = `
   Create a **resource-based policy** that allows *read*
-  access to the **S3 bucket** \`umbrella-files\`.
+  access to the **S3 bucket** \`compliance-audit-trail\`.
 `;
 
 const Objective2Description = `
   Create an **identity-based policy** in the *Trusted Account*
   that allows the **IAM user** \`alex\` to read/write
-  to the **S3 bucket** \`rpd-case-files\`.
+  to the **S3 bucket** \`incident-response-artifacts\`.
 `;
 
 const Objective3Description = `
@@ -21,7 +21,7 @@ const Objective3Description = `
 const Objective4Description = `
   Create a **resource-based policy** in the *Trusting Account*
   that allows \`alex\` to read/write
-  to the **S3 bucket** \`rpd-case-files\`.
+  to the **S3 bucket** \`incident-response-artifacts\`.
 `;
 
 const OBJECTIVE2_HINT = `
@@ -48,7 +48,7 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.CREATE_TUTORIAL_RESOURCE_BASED_POLICY,
+      id: LevelObjectiveID.CREATED_TUTORIAL_RESOURCE_BASED_POLICY,
       label: Objective1Description,
     },
   ],
@@ -56,14 +56,14 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.CREATE_IN_LEVEL_IDENTITY_POLICY,
+      id: LevelObjectiveID.CREATED_IN_LEVEL_IDENTITY_POLICY,
       label: Objective2Description,
       hint_text: OBJECTIVE2_HINT,
     },
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.ATTACH_IDENTITY_BASED_POLICY_TO_USER,
+      id: LevelObjectiveID.ATTACHED_IDENTITY_BASED_POLICY_TO_USER,
       label: Objective3Description,
       hint_text: OBJECTIVE3_HINT,
     },
@@ -72,7 +72,7 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.CREATE_IN_LEVEL_RESOURCE_BASED_POLICY,
+      id: LevelObjectiveID.CREATED_IN_LEVEL_RESOURCE_BASED_POLICY,
       label: Objective4Description,
       hint_text: OBJECTIVE4_HINT,
     },

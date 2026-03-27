@@ -8,7 +8,7 @@ const TUTORIAL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
 const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.SlackIntegrationSecret,
-    label: 'slack-alert-token',
+    label: 'slack-integration-secret',
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,

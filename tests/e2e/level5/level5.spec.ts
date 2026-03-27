@@ -16,6 +16,7 @@ import {
   RoleNodeID,
   UserNodeID,
 } from '@/levels/level5/types/node-ids';
+import { HandleID } from '@/types/iam-enums';
 
 const completeInitialPopupTutorial = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);
@@ -57,6 +58,12 @@ const attachFinanceUserToAuditorRole = async (
   popups: PopupActions
 ): Promise<void> => {
   await tutorial.expectFixedPopoverWithoutNextButton(FIXED_POPOVER_MESSAGES[1].popover_title);
+  await nodes.connectNodes(
+    PolicyNodeID.AssumeRolePolicy,
+    UserNodeID.FinanceUser,
+    HandleID.Right,
+    HandleID.Left
+  );
   await nodes.connectNodes(UserNodeID.FinanceUser, RoleNodeID.FinanceAuditorRole);
   await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
 
@@ -107,6 +114,10 @@ const attachS3RoleToPolicyAndUser = async (
   nodes: NodeActions,
   popups: PopupActions
 ): Promise<void> => {
+  await tutorial.expectPopoverWithoutNextButtonAndClose(
+    UserNodeID.FinanceUser,
+    POPOVER_TUTORIAL_MESSAGES[5].popover_title
+  );
   await nodes.connectNodes(PolicyNodeID.S3ReadPolicy, RoleNodeID.S3ReadAccessRole);
   await nodes.connectNodes(UserNodeID.FinanceUser, RoleNodeID.S3ReadAccessRole);
   await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][2].id);
@@ -117,6 +128,13 @@ const attachS3RoleToPolicyAndUser = async (
   );
 
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[2].popover_title);
+};
+
+const editAssumeRolePolicy = async (nodes: NodeActions): Promise<void> => {
+  await nodes.editPolicyNodeContent(
+    PolicyNodeID.AssumeRolePolicy,
+    await getTestSolution(ENCODED_TEST_SOLUTIONS, 'assumeRolePolicy')
+  );
 };
 
 const createServiceRole = async (
@@ -179,6 +197,7 @@ test.describe('Stage 1 - IAM Roles Tutorial Introduction', () => {
     });
 
     await test.step('Attach S3 role to policy and user', async () => {
+      await editAssumeRolePolicy(nodes);
       await attachS3RoleToPolicyAndUser(tutorial, nodes, popups);
     });
   });
@@ -201,6 +220,7 @@ test.describe('Stage 1 - IAM Roles Tutorial Introduction', () => {
 
       await attachFinanceUserToAuditorRole(tutorial, nodes, edges, popups);
       await createS3ReadAccessRole(tutorial, nodes, popups);
+      await editAssumeRolePolicy(nodes);
       await attachS3RoleToPolicyAndUser(tutorial, nodes, popups);
     });
 
@@ -211,6 +231,53 @@ test.describe('Stage 1 - IAM Roles Tutorial Introduction', () => {
     await test.step('Remove unnecessary edges and nodes to complete level', async () => {
       await edges.deleteEdge(PolicyNodeID.BillingPolicy, UserNodeID.FinanceUser);
       await tutorial.expectUnnecessaryEdgesNodesWarning(false);
+    });
+  });
+
+  test.describe('Verify blocked connections and insufficient permissions message', () => {
+    test('shows insufficient permissions message when connecting user to first role', async ({
+      tutorial,
+      nodes,
+      edges,
+      goToLevelAtStage,
+    }) => {
+      await goToLevelAtStage(5, ENCODED_LEVEL_STAGES, 'stage1');
+
+      await test.step('Complete initial tutorial steps', async () => {
+        await completeInitialPopupTutorial(tutorial);
+        await verifyInitialLevelSetup(nodes, edges);
+        await completeTrustPolicyExplanation(tutorial, nodes);
+      });
+
+      await test.step('Attempt to connect user to role without\
+         attaching assume role policy', async () => {
+        await nodes.connectNodes(UserNodeID.FinanceUser, RoleNodeID.FinanceAuditorRole);
+        await tutorial.expectInsufficientPermissionsWarning();
+      });
+    });
+
+    test('shows insufficient permissions message when connecting user to second role', async ({
+      tutorial,
+      nodes,
+      popups,
+      edges,
+      goToLevelAtStage,
+    }) => {
+      await goToLevelAtStage(5, ENCODED_LEVEL_STAGES, 'stage1');
+
+      await test.step('Complete first part of the stage', async () => {
+        await completeInitialPopupTutorial(tutorial);
+        await verifyInitialLevelSetup(nodes, edges);
+        await completeTrustPolicyExplanation(tutorial, nodes);
+        await attachFinanceUserToAuditorRole(tutorial, nodes, edges, popups);
+        await createS3ReadAccessRole(tutorial, nodes, popups);
+      });
+
+      await test.step('Attempt to connect user to role and expect\
+       insufficient permissions message', async () => {
+        await nodes.connectNodes(UserNodeID.FinanceUser, RoleNodeID.S3ReadAccessRole);
+        await tutorial.expectInsufficientPermissionsWarning();
+      });
     });
   });
 });
@@ -244,7 +311,7 @@ test.describe('Stage 2 - Creating Service Roles in all orders', () => {
         'role2',
         RoleNodeID.EC2Role,
         PolicyNodeID.ChatImagesS3WritePolicy,
-        ResourceNodeID.TimeshiftLabsEC2Instance,
+        ResourceNodeID.EC2Instance,
         LEVEL_OBJECTIVES[1][0].id
       );
     });
@@ -269,7 +336,7 @@ test.describe('Stage 2 - Creating Service Roles in all orders', () => {
         'role2',
         RoleNodeID.EC2Role,
         PolicyNodeID.ChatImagesS3WritePolicy,
-        ResourceNodeID.TimeshiftLabsEC2Instance,
+        ResourceNodeID.EC2Instance,
         LEVEL_OBJECTIVES[1][0].id
       );
     });
@@ -311,7 +378,7 @@ test.describe('Stage 2 - Creating Service Roles in all orders', () => {
         'role2',
         RoleNodeID.EC2Role,
         PolicyNodeID.ChatImagesS3WritePolicy,
-        ResourceNodeID.TimeshiftLabsEC2Instance,
+        ResourceNodeID.EC2Instance,
         LEVEL_OBJECTIVES[1][0].id
       );
 
@@ -340,6 +407,34 @@ test.describe('Stage 2 - Creating Service Roles in all orders', () => {
       await tutorial.expectUnnecessaryEdgesNodesWarning(false);
     });
   });
+
+  test('Verify blocked connections and insufficient permissions message', async ({
+    tutorial,
+    nodes,
+    popups,
+    goToLevelAtStage,
+  }) => {
+    await goToLevelAtStage(5, ENCODED_LEVEL_STAGES, 'stage2');
+
+    await test.step('Complete stage 2 intro popups', async () => {
+      await completeStage2IntroPopups(tutorial);
+    });
+
+    await test.step('Attempt to create Lambda role with incorrect policy\
+       connection and expect insufficient permissions message', async () => {
+      await popups.submitCreatePolicyPopup(
+        [ElementID.CodeEditorRoleTab],
+        ElementID.CodeEditorRoleTab,
+        'lambda-service-role',
+        await getTestSolution(ENCODED_TEST_SOLUTIONS, 'role3')
+      );
+
+      await nodes.expectVisible(RoleNodeID.LambdaRole);
+
+      await nodes.connectNodes(ResourceNodeID.EC2Instance, RoleNodeID.LambdaRole);
+      await tutorial.expectInsufficientPermissionsWarning();
+    });
+  });
 });
 
 test.describe('Complete Level - End to End', () => {
@@ -358,6 +453,7 @@ test.describe('Complete Level - End to End', () => {
       await completeTrustPolicyExplanation(tutorial, nodes);
       await attachFinanceUserToAuditorRole(tutorial, nodes, edges, popups);
       await createS3ReadAccessRole(tutorial, nodes, popups);
+      await editAssumeRolePolicy(nodes);
       await attachS3RoleToPolicyAndUser(tutorial, nodes, popups);
     });
 
@@ -382,7 +478,7 @@ test.describe('Complete Level - End to End', () => {
         'role2',
         RoleNodeID.EC2Role,
         PolicyNodeID.ChatImagesS3WritePolicy,
-        ResourceNodeID.TimeshiftLabsEC2Instance,
+        ResourceNodeID.EC2Instance,
         LEVEL_OBJECTIVES[1][0].id
       );
 

@@ -1,6 +1,11 @@
 import { Page, expect } from '@playwright/test';
 
-import { findPopover, findTutorialPopup, findFixedPopover } from './locator-helpers';
+import {
+  findPopover,
+  findTutorialPopup,
+  findFixedPopover,
+  findInsufficientPermissionsToast,
+} from './locator-helpers';
 import { ElementID } from '@/config/element-ids';
 export class TutorialActions {
   constructor(private readonly page: Page) {}
@@ -48,6 +53,15 @@ export class TutorialActions {
     await expect(popover.getByRole('button', { name: /next/i })).toHaveCount(0);
   }
 
+  async expectPopoverWithoutNextButtonAndClose(nodeId: string, title: string): Promise<void> {
+    const popover = findPopover(this.page, nodeId, title);
+    await expect(popover).toBeVisible();
+    await expect(popover.getByRole('button', { name: /next/i })).toHaveCount(0);
+
+    await popover.getByRole('button', { name: /close/i }).click();
+    await expect(popover).not.toBeVisible();
+  }
+
   async expectFixedPopoverWithoutNextButton(title: string): Promise<void> {
     const fixedPopover = findFixedPopover(this.page, title);
     await expect(fixedPopover).toBeVisible();
@@ -72,12 +86,22 @@ export class TutorialActions {
 
   async expectUnnecessaryEdgesNodesWarning(isVisible: boolean): Promise<void> {
     const warning = this.page.getByTestId('unnecessary-edges-nodes-warning');
-    isVisible ? await expect(warning).toBeVisible() : await expect(warning).not.toBeVisible();
+
+    if (isVisible) {
+      await expect(warning).toBeVisible();
+    } else {
+      await expect(warning).not.toBeVisible();
+    }
   }
 
   async closeSidePanel(): Promise<void> {
     const toggleButton = this.page.getByTestId(ElementID.RightSidePanelToggleButton);
     await expect(toggleButton).toBeVisible();
     await toggleButton.click();
+  }
+
+  async expectInsufficientPermissionsWarning(): Promise<void> {
+    const warning = findInsufficientPermissionsToast(this.page);
+    await expect(warning).toBeVisible();
   }
 }

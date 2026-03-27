@@ -7,14 +7,14 @@ import { IAMPolicyEditObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE1_CALLOUT_MSG = `
   Edit this policy so only senior users can access
-  the \`slack-alert-token\` secret.
+  the \`slack-integration-secret\` secret.
 
-  Use a **Condition**:
+  Use a **Condition** on the **SecretsManager statement**:
 
   ~~~js
   "Condition": {
-    "Bool": { ::badge[CONDITION OPERATOR]::
-      "aws:MultiFactorAuthPresent": "false" ::badge[CONDITION KEY AND VALUE]::
+    "StringEquals": { ::badge[CONDITION OPERATOR]::
+      "aws:PrincipalArn": ["arn:aws:iam::..."] ::badge[CONDITION KEY AND VALUE]::
     }
   }|fullwidth
   ~~~
@@ -23,40 +23,33 @@ const OBJECTIVE1_CALLOUT_MSG = `
 `;
 
 const OBJECTIVE1_HINT_MSG1 = `
-  For the condition operators, the most commonly used ones are:
-  - **\`StringEquals\`**: checks if a string matches a specific value.
-  - **\`StringLike\`**: checks if a string matches a pattern (supports wildcards).
-  - **\`Bool\`**: evaluates to true or false.
-  - **\`NumericEquals\`**: checks if a numeric value matches a specific number.
+  For exact matching, the most commonly used condition operators are:
+  - **\`StringEquals\`**: checks if a string exactly matches a value — works great for ARNs too.
+  - **\`ArnEquals\`**: ARN-specific variant of \`StringEquals\`,
+  functionally identical for exact matches.
 
-  For this objective, we need to match usernames that start with \`senior-\`.
-  Which operator is best for wildcard matching?
+  For this objective, you need to explicitly list the ARNs of the senior developers.
 `;
 
 const OBJECTIVE1_HINT_MSG2 = `
-  There are many condition keys, and each serves a different purpose.
-  The most commonly used ones are:
-  - **\`aws:username\`**: checks that the username of the principal
-  making the request matches a specific value.
-  - **\`aws:userid\`**: checks that the unique identifier of
-  the principal making the request matches a specific value.
+  For ARN-related condition keys:
+  - **\`aws:PrincipalArn\`**: checks the ARN of the principal making the request.
+  - **\`aws:SourceArn\`**: checks the source ARN for service-to-service calls.
 
-  Which key is best for this case?
+  The senior developers are **senior-sam** and **senior-jordan**.
+  Which key identifies the calling principal by ARN?
 `;
 
 const OBJECTIVE1_HINT_MSG3 = `
-  Condition values can be fixed values, such as "true" or "false".
-  We'll cover variables in a later stage, so for now, focus on using fixed values only.
+  IAM user ARNs follow this format:
+  \`arn:aws:iam::<account-id>:user/<username>\`
 
-  **Extra Hint: You should use a wildcard (\`*\`) in the value**
+  The account ID is \`123456789012\`.
+  List both senior developer ARNs as an array in the condition value.
 `;
 
 const OBJECTIVE2_HINT_MSG1 = `
-  Recall condition operators from earlier.
-  For this objective, **\`StringLike\`** is unnecessary
-  because we need an exact match for \`role = senior\`.
-
-  Which operator is best here?
+  Recall ***condition operators*** from earlier. We will need to use something similar here.
 `;
 
 const OBJECTIVE2_HINT_MSG2 = `

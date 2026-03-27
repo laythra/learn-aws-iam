@@ -171,6 +171,28 @@ describe('editPermissionPolicy — Level 4 integration (validator → policy edi
       expect(edgesToRefresh.map(e => e.id)).not.toContain(unrelatedEdge.id);
     });
 
+    it('preserves the original sourceHandle and targetHandle on returned edges', () => {
+      const existingEdge = createEdge({
+        rootOverrides: {
+          source: PolicyNodeID.DeveloperPolicy,
+          target: 'user-1',
+          sourceHandle: 'right',
+          targetHandle: 'left',
+        },
+      });
+
+      context = makeContext({ edges: [existingEdge] });
+      const { edgesToRefresh } = editPermissionPolicy(
+        context,
+        PolicyNodeID.DeveloperPolicy,
+        VALID_DEVELOPER_POLICY
+      );
+
+      const refreshed = edgesToRefresh.find(e => e.id === existingEdge.id);
+      expect(refreshed?.sourceHandle).toBe('right');
+      expect(refreshed?.targetHandle).toBe('left');
+    });
+
     it('returns an empty array when the node has no outgoing edges', () => {
       const { edgesToRefresh } = editPermissionPolicy(
         context,

@@ -7,7 +7,7 @@ import { IAMResourceNode } from '@/types/iam-node-types';
 const TUTORIAL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.TutorialS3Bucket,
-    label: 'umbrella-files',
+    label: 'compliance-audit-trail',
     layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,
@@ -17,7 +17,7 @@ const TUTORIAL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
 const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.InsideLevelS3Bucket,
-    label: 'rpd-case-files',
+    label: 'incident-response-artifacts',
     layout_group_id: CommonLayoutGroupID.LeftCenterHorizontal,
     image: IAMNodeImage.S3Bucket,
     resource_type: IAMNodeResourceEntity.S3Bucket,

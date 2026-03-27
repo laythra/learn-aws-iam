@@ -7,7 +7,7 @@ export const ResourceNodeID = {
   FinanceS3Bucket: 'resource-2',
   LambdaFunction: 'resource-3',
   ChatImagesS3Bucket: 'resource-4',
-  TimeshiftLabsEC2Instance: 'resource-5',
+  EC2Instance: 'resource-5',
 } as const;
 
 export const RoleNodeID = {
@@ -22,4 +22,5 @@ export const PolicyNodeID = {
   S3ReadPolicy: 'policy-2',
   ChatImagesS3WritePolicy: 'policy-3',
   ChatImagesS3ReadPolicy: 'policy-4',
+  AssumeRolePolicy: 'policy-5',
 } as const;

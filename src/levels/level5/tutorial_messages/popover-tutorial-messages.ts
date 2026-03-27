@@ -79,7 +79,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_content: POPOVER_MSG7,
     show_next_button: false,
     show_close_button: true,
-    popover_placement: 'left',
+    popover_placement: 'right',
   },
   {
     element_id: UserNodeID.FinanceUser,

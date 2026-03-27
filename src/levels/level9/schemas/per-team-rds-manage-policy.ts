@@ -1,4 +1,12 @@
-export function generateRdsManagePolicySchema(teamName: string, resourceId: string): object {
+export function generateRdsManagePolicySchema(
+  teamName: string,
+  resourceId: string,
+  secretSuffix: string
+): object {
+  const secretArn = `
+    arn:aws:secretsmanager:us-east-1:123456789012:secret:db/${teamName}-${secretSuffix}
+  `.trim();
+
   return {
     $schema: 'http://json-schema.org/draft-07/schema#',
     type: 'object',
@@ -93,23 +101,17 @@ export function generateRdsManagePolicySchema(teamName: string, resourceId: stri
             const: 'Allow',
           },
           Action: {
-            oneOf: [
-              {
-                const: 'secretsmanager:GetSecretValue',
-              },
-              {
-                type: 'array',
-                items: {
-                  const: 'secretsmanager:GetSecretValue',
-                },
-                minItems: 1,
-                maxItems: 1,
-                uniqueItems: true,
-              },
-            ],
+            type: 'array',
+            items: {
+              type: 'string',
+              enum: ['secretsmanager:GetSecretValue', 'secretsmanager:DescribeSecret'],
+            },
+            minItems: 2,
+            maxItems: 2,
+            uniqueItems: true,
           },
           Resource: {
-            const: `arn:aws:secretsmanager:us-east-1:123456789012:secret:db/${teamName}`,
+            const: secretArn,
           },
           Condition: {
             $ref: '#/definitions/principalCondition',

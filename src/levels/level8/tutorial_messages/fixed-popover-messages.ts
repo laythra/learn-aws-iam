@@ -7,17 +7,20 @@ const FIXED_POPOVER_MSG1 = `
   to view the token for debugging.
 
   How can we identify senior developers?
-  ***By checking whether their username starts with \`senior-\`.***
+  ***For now, we'll explicitly list their ARNs in the policy condition***
+
+  - \`junior-alex\` and \`junior-morgan\` are junior developers.
+  - \`senior-sam\` and \`senior-jordan\` are senior developers.
 `;
 
 const FIXED_POPOVER_MSG2 = `
   Nice work. Now only senior developers can read the Slack integration secret.
 
-  However, matching usernames with wildcards is not ideal.
-  If a user's role changes from junior to senior,
-  this approach is cumbersome because IAM usernames are immutable.
+  However, hardcoding ARNs is not ideal.
+  Every time a developer joins or leaves the team,
+  you'd need to manually update the policy.
 
-  Next, we'll switch to **Tag-Based Access Control (TBAC)**.
+  Next, we'll switch to **Tag-Based Access Control (TBAC)** for a more scalable approach.
 `;
 
 const FIXED_POPOVER_MSG3 = `
@@ -30,7 +33,7 @@ const FIXED_POPOVER_MSG4 = `
   (for example, a user or a role).
 
   This user has a \`role\` tag with a value of \`senior\` or \`junior\`.
-  We'll use that with the condition key \`aws:PrincipalTag/role\`.
+  We'll use this tag to enforce better access control.
 
   **Close the popover to continue editing the policy.**
 `;

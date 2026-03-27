@@ -7,6 +7,7 @@ import { COMMON_LAYOUT_GROUPS } from '../consts';
 import { SHARED_TOP_LEVEL_EVENTS } from '../shared-top-level-events';
 import { EDGE_CONNECTION_OBJECTIVES } from './objectives/edge-connection-objectives';
 import { LEVEL_OBJECTIVES } from './objectives/level-objectives';
+import { POLICY_EDIT_OBJECTIVES } from './objectives/policy-edit-objectives';
 import { ROLE_CREATION_OBJECTIVES } from './objectives/role-creation-objectives';
 import { FIXED_POPOVER_MESSAGES } from './tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from './tutorial_messages/popover-tutorial-messages';
@@ -14,9 +15,10 @@ import { POPUP_TUTORIAL_MESSAGES } from './tutorial_messages/popup-tutorial-mess
 import {
   EdgeConnectionFinishEvent,
   FinishEventMap,
+  PolicyEditFinishEvent,
   RoleCreationFinishEvent,
 } from './types/finish-event-enums';
-import { RoleNodeID, UserNodeID } from './types/node-ids';
+import { PolicyNodeID, ResourceNodeID, RoleNodeID, UserNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
 import { VoidEvent } from '@/types/state-machine-event-enums';
@@ -123,8 +125,24 @@ export const stateMachine = createStateMachineSetup<
         fixed_popover_2: {
           entry: [
             { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[1] } },
+            {
+              type: 'update_blocked_connections',
+              params: {
+                blocked_connections: [
+                  { from: UserNodeID.FinanceUser, to: RoleNodeID.FinanceAuditorRole },
+                ],
+              },
+            },
             'enable_edges_management_ability',
           ],
+          on: {
+            [EdgeConnectionFinishEvent.TUTORIAL_POLICY1_ATTACHED_TO_USER]: {
+              target: 'attach_user_to_role_1',
+            },
+          },
+        },
+        attach_user_to_role_1: {
+          entry: { type: 'update_blocked_connections', params: { blocked_connections: [] } },
           on: {
             [EdgeConnectionFinishEvent.TUTORIAL_ROLE1_ATTACHED_TO_USER]: {
               target: 'popover_2',
@@ -213,6 +231,29 @@ export const stateMachine = createStateMachineSetup<
                   'Give this user read access to the S3 Bucket through the role you just created',
               },
             },
+            {
+              type: 'set_permission_policy_edit_objectives',
+              params: { objectives: POLICY_EDIT_OBJECTIVES[0] },
+            },
+            {
+              type: 'edit_node_attributes',
+              params: { nodeId: PolicyNodeID.AssumeRolePolicy, attributes: { editable: true } },
+            },
+            {
+              type: 'update_blocked_connections',
+              params: {
+                blocked_connections: [
+                  { from: UserNodeID.FinanceUser, to: RoleNodeID.S3ReadAccessRole },
+                ],
+              },
+            },
+            {
+              type: 'show_node_help_tooltip',
+              params: {
+                nodeId: PolicyNodeID.AssumeRolePolicy,
+                content: 'Edit this policy to allow the FinanceUser to assume the S3ReadAccessRole',
+              },
+            },
           ],
           onDone: {
             target: 'popover_5',
@@ -234,7 +275,7 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 attach_s3_policy_to_role2_in_progress: {
                   on: {
-                    [EdgeConnectionFinishEvent.TUTORIAL_POLICY_ATTACHED_TO_ROLE2]: 'completed',
+                    [EdgeConnectionFinishEvent.TUTORIAL_POLICY2_ATTACHED_TO_ROLE2]: 'completed',
                   },
                 },
                 completed: {
@@ -243,9 +284,24 @@ export const stateMachine = createStateMachineSetup<
               },
             },
             attach_role2_to_finance_user: {
-              initial: 'attach_role2_to_finance_user_in_progress',
+              initial: 'edit_assume_role_policy',
               states: {
-                attach_role2_to_finance_user_in_progress: {
+                edit_assume_role_policy: {
+                  on: {
+                    [PolicyEditFinishEvent.TUTORIAL_POLICY_EDITED]: 'attach_role2_to_finance_user',
+                  },
+                },
+                attach_role2_to_finance_user: {
+                  entry: [
+                    {
+                      type: 'update_blocked_connections',
+                      params: { blocked_connections: [] },
+                    },
+                    {
+                      type: 'hide_node_help_tooltip',
+                      params: { nodeId: PolicyNodeID.AssumeRolePolicy },
+                    },
+                  ],
                   on: {
                     [EdgeConnectionFinishEvent.TUTORIAL_ROLE2_ATTACHED_TO_USER]: 'completed',
                   },
@@ -304,6 +360,21 @@ export const stateMachine = createStateMachineSetup<
       entry: [
         'store_checkpoint',
         'clear_edges',
+        {
+          type: 'update_blocked_connections',
+          params: {
+            blocked_connections: [
+              {
+                to: RoleNodeID.LambdaRole,
+                from: ResourceNodeID.EC2Instance,
+              },
+              {
+                to: RoleNodeID.EC2Role,
+                from: ResourceNodeID.LambdaFunction,
+              },
+            ],
+          },
+        },
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         { type: 'set_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
         {

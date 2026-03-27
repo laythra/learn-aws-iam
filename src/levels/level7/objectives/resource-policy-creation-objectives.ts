@@ -16,8 +16,8 @@ const OBJECTIVE1_CALLOUT_MSG = `
 `;
 
 const OBJECTIVE2_CALLOUT_MSG = `
-  Create an resource-based policy that grants the user \`alex\`
-  read/write access to the S3 bucket \`rpd-case-files\`
+  Create a resource-based policy that grants the user \`alex\`
+  read/write access to the S3 bucket \`incident-response-artifacts\`
 `;
 
 const OBJECTIVE1_HINT_MSG1 = `
@@ -97,7 +97,7 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
       type: ObjectiveType.RESOURCE_POLICY_CREATION_OBJECTIVE,
       entity: IAMNodeEntity.ResourcePolicy,
       on_finish_event: ResourcePolicyCreationFinishEvent.IN_LEVEL_RESOURCE_BASED_POLICY_CREATED,
-      initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
+      initial_code: MANAGED_POLICIES.EmptyResourceBasedPolicy,
       account_id: AccountID.TrustingAccount,
       created_node_parent_id: AccountID.TrustingAccount,
       limit_new_lines: false,
@@ -122,7 +122,7 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
             target_node: ResourceNodeID.InsideLevelS3Bucket,
             target_handle: 'right',
             source_handle: 'left',
-            access_level: AccessLevel.Read,
+            access_level: AccessLevel.ReadWrite,
           },
         ],
       },

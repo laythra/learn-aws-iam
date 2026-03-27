@@ -5,9 +5,9 @@ import { createPolicyCreationObjective } from '@/levels/utils/factories/identity
 import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/types/objective-types';
 
-const CALLOUT_MESSAGE1 = `
-  Create an identity-based policy that grants the user read/write access to the S3 bucket
-  \`rpd-case-files\`
+const OBJECTIVE_MESSAGE1 = `
+  Create an **Identity-Based Policy** that grants the user \`alex\`
+  read/write access to the S3 bucket \`incident-response-artifacts\`
 `;
 
 const HINT_MESSAGE1 = `
@@ -29,6 +29,10 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<Fini
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
       hint_messages: [
         {
+          title: 'Objective',
+          content: OBJECTIVE_MESSAGE1,
+        },
+        {
           title: 'Hint',
           content: HINT_MESSAGE1,
         },
@@ -36,7 +40,6 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<Fini
       extra_data: {
         granted_accesses: [],
       },
-      callout_message: CALLOUT_MESSAGE1,
     } satisfies Partial<IAMIdentityPolicyCreationObjective<FinishEventMap>>,
   ].map(objective => createPolicyCreationObjective(objective)),
 ];

@@ -35,6 +35,14 @@ const TUTORIAL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
       },
     ],
   },
+  {
+    id: PolicyNodeID.AssumeRolePolicy,
+    label: 'AssumeRolePolicy',
+    layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
+    image: IAMNodeImage.Policy,
+    content: JSON.stringify(INITIAL_POLICIES.ASSUME_ROLE_POLICY, null, 2),
+    granted_accesses: [],
+  },
 ];
 
 const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>[] = [

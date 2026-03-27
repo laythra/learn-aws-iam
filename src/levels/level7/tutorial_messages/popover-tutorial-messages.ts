@@ -23,7 +23,6 @@ const POPOVER_MSG4 = `
 
 const POPOVER_MSG5 = `
   Create an identity-based policy for \`alex\`
-  with \`s3:GetObject\` and \`s3:PutObject\` on \`rpd-case-files/*\`.
 `;
 
 const POPOVER_MSG6 = `
@@ -37,7 +36,7 @@ const POPOVER_MSG7 = `
 `;
 
 const POPOVER_MSG8 = `
-  Create the resource-based policy on \`rpd-case-files\`
+  Create the resource-based policy on \`incident-response-artifacts\`
   and set \`alex\` as the allowed principal.
 `;
 

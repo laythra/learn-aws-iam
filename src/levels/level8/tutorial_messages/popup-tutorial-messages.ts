@@ -25,7 +25,7 @@ const POPUP_MSG2 = `
       {
         "Effect": "Deny", ::badge[DENIES SPECIFIED ACTIONS]::
         "Action": ["*"], ::badge[ALL ACTIONS]::
-        "Resource": "*" ::badge[ALL AWS RESOURCES]::
+        "Resource": "*", ::badge[ALL AWS RESOURCES]::
         "Condition": {
           "Bool": { ::badge[CONDITION OPERATOR]::
             "aws:MultiFactorAuthPresent": "false" ::badge[CONDITION KEY AND VALUE]::

@@ -7,7 +7,7 @@ const FIXED_POPOVER_MSG1 = `
 
 const FIXED_POPOVER_MSG2 = `
   You now have a canvas with two accounts, like in the previous level.
-  This time, achieve cross-account access without creating an IAM role.
+  This time, we'll achieve cross-account access without creating an IAM role.
 `;
 
 const FIXED_POPOVER_MSG3 = `
@@ -18,8 +18,10 @@ const FIXED_POPOVER_MSG3 = `
 `;
 
 const FIXED_POPOVER_MSG4 = `
-  Resources like **S3 buckets** and **SNS topics** can use resource-based policies.
-  Others, like **EC2 instances**, cannot.
+  Not all AWS resources support resource-based policies.
+  **S3 buckets** and **SNS topics** do, but **EC2 instances** and **DynamoDB tables** don't.
+  For those, the only option for cross-account access is IAM roles,
+  making role assumption the more universal approach.
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [

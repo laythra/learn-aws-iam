@@ -36,15 +36,27 @@ const POPUP_MSG2 = `
 
   > |color(warning)
   > ::badge[WARNING]::
-  > Resource-based policies are embedded in a single resource and cannot be reused.
+  > **Resource-based policies** are embedded in a single resource and cannot be reused.
+  >
+  > Unlike role-based cross-account access, they grant access directly - no \`sts:AssumeRole\`
+   needed.
 `;
 
 const POPUP_MSG3 = `
   A **resource-based policy** is essentially a permissions policy
-  with an added **Principal** field.|lg
-
+  with an added **Principal** field.
   The **Principal** field defines who is allowed access to the resource
   and follows the same principal formats used in trust policies.|lg
+
+  For this stage of the level, we'll achieve the same cross-account access as before,
+  but this time using a **resource-based policy** instead of a role trust policy.|lg
+
+  &nbsp;
+
+  > |color(warning)
+  > ::badge[WARNING]::
+  > ***Now that we entered the multi-account territory (again),
+  > a mutual "agreement" from both accounts is required to set up cross-account access.***
 `;
 
 const POPUP_MSG4 = `
