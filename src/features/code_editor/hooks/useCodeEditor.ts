@@ -91,7 +91,22 @@ export function useCodeEditor({
     if (!editorViewState) return;
 
     validateChange();
-    InitializeBadgeWidgets(editorViewState, helpBadges, initialContent);
+
+    let hasBeenEdited = false;
+
+    if (nodeId in content) {
+      try {
+        hasBeenEdited = !_.isEqual(JSON.parse(content[nodeId]), initialContent);
+      } catch {
+        hasBeenEdited = true;
+      }
+    }
+
+    // If the user edited the content, skip badge re-initialization.
+    // Badges depend on content structure for positioning, and user edits can change that structure.
+    if (!hasBeenEdited) {
+      InitializeBadgeWidgets(editorViewState, helpBadges, initialContent);
+    }
   }, [editorViewState, selectedIAMEntity]);
 
   useEffect(() => {
