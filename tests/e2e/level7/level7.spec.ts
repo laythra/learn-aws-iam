@@ -1,7 +1,7 @@
 import { ENCODED_LEVEL_STAGES, ENCODED_TEST_SOLUTIONS } from './data';
 import { EdgeActions } from '../helpers/edge-actions';
+import { EntityCreationActions } from '../helpers/entity-creation-actions';
 import { NodeActions } from '../helpers/node-actions';
-import { PopupActions } from '../helpers/popup-actions';
 import { test } from '../helpers/test-fixtures';
 import { getTestSolution } from '../helpers/test-solutions';
 import { TutorialActions } from '../helpers/tutorial-actions';
@@ -89,10 +89,10 @@ const completeLevelFinishPopups = async (tutorial: TutorialActions): Promise<voi
 };
 
 const createFirstResourcePolicy = async (
-  popups: PopupActions,
+  entities: EntityCreationActions,
   nodes: NodeActions
 ): Promise<void> => {
-  await popups.submitCreatePolicyPopup(
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorResourcePolicyTab],
     ElementID.CodeEditorResourcePolicyTab,
     'NovaFilesAccessPolicy',
@@ -103,10 +103,10 @@ const createFirstResourcePolicy = async (
 };
 
 const createIdentityBasedPolicy = async (
-  popups: PopupActions,
+  entities: EntityCreationActions,
   nodes: NodeActions
 ): Promise<void> => {
-  await popups.submitCreatePolicyPopup(
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorPolicyTab],
     ElementID.CodeEditorPolicyTab,
     'RpdCaseFilesAccessPolicy',
@@ -118,10 +118,10 @@ const createIdentityBasedPolicy = async (
 };
 
 const createSecondResourcePolicy = async (
-  popups: PopupActions,
+  entities: EntityCreationActions,
   nodes: NodeActions
 ): Promise<void> => {
-  await popups.submitCreatePolicyPopup(
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorResourcePolicyTab],
     ElementID.CodeEditorResourcePolicyTab,
     'RpdCaseFilesResourcePolicy',
@@ -136,7 +136,8 @@ test.describe('Stage 1 - Resource Policies Introduction', () => {
     tutorial,
     goToLevelAtStage,
     nodes,
-    popups,
+    entities,
+    progress,
   }) => {
     await goToLevelAtStage(7, ENCODED_LEVEL_STAGES, 'stage1');
 
@@ -149,8 +150,8 @@ test.describe('Stage 1 - Resource Policies Introduction', () => {
     });
 
     await test.step('Create first resource policy', async () => {
-      await createFirstResourcePolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await createFirstResourcePolicy(entities, nodes);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.TutorialFirstUser,
         POPOVER_TUTORIAL_MESSAGES[1].popover_title
@@ -164,7 +165,8 @@ test.describe('Stage 2 - Identity Based Policy Creation', () => {
     tutorial,
     goToLevelAtStage,
     nodes,
-    popups,
+    entities,
+    progress,
   }) => {
     await goToLevelAtStage(7, ENCODED_LEVEL_STAGES, 'stage2');
 
@@ -177,8 +179,8 @@ test.describe('Stage 2 - Identity Based Policy Creation', () => {
     });
 
     await test.step('Create identity based policy', async () => {
-      await createIdentityBasedPolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+      await createIdentityBasedPolicy(entities, nodes);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
       await tutorial.expectPopoverWithoutNextButton(
         PolicyNodeID.InsideLevelIdentityBasedPolicy,
         POPOVER_TUTORIAL_MESSAGES[5].popover_title
@@ -190,7 +192,7 @@ test.describe('Stage 2 - Identity Based Policy Creation', () => {
         PolicyNodeID.InsideLevelIdentityBasedPolicy,
         UserNodeID.InsideLevelUser
       );
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.InsideLevelUser,
         POPOVER_TUTORIAL_MESSAGES[6].popover_title
@@ -205,7 +207,8 @@ test.describe('Stage 3 - Creating Cross Account Access through Resource Based Po
     goToLevelAtStage,
     nodes,
     edges,
-    popups,
+    entities,
+    progress,
   }) => {
     await goToLevelAtStage(7, ENCODED_LEVEL_STAGES, 'stage3');
 
@@ -218,8 +221,8 @@ test.describe('Stage 3 - Creating Cross Account Access through Resource Based Po
     });
 
     await test.step('Create second resource policy', async () => {
-      await createSecondResourcePolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2][0].id);
+      await createSecondResourcePolicy(entities, nodes);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2][0].id);
     });
 
     await test.step('Complete level finish popups', async () => {
@@ -233,7 +236,8 @@ test.describe('Complete Level - End to End', () => {
     tutorial,
     nodes,
     edges,
-    popups,
+    entities,
+    progress,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(7, ENCODED_LEVEL_STAGES, 'stage1');
@@ -241,8 +245,8 @@ test.describe('Complete Level - End to End', () => {
     await test.step('Complete Stage 1 - Initial tutorial and first resource policy', async () => {
       await completeTutorialPopups(tutorial);
       await verifyLevelInitialSetup(nodes);
-      await createFirstResourcePolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await createFirstResourcePolicy(entities, nodes);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.TutorialFirstUser,
         POPOVER_TUTORIAL_MESSAGES[1].popover_title
@@ -252,8 +256,8 @@ test.describe('Complete Level - End to End', () => {
     await test.step('Complete Stage 2 - Identity based policy creation & attachment', async () => {
       await completeStage2IntroPopups(tutorial);
       await verifyStage2InitialSetup(nodes);
-      await createIdentityBasedPolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+      await createIdentityBasedPolicy(entities, nodes);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
       await tutorial.expectPopoverWithoutNextButton(
         PolicyNodeID.InsideLevelIdentityBasedPolicy,
         POPOVER_TUTORIAL_MESSAGES[5].popover_title
@@ -262,7 +266,7 @@ test.describe('Complete Level - End to End', () => {
         PolicyNodeID.InsideLevelIdentityBasedPolicy,
         UserNodeID.InsideLevelUser
       );
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
       await tutorial.expectPopoverAndClickNext(
         UserNodeID.InsideLevelUser,
         POPOVER_TUTORIAL_MESSAGES[6].popover_title
@@ -272,8 +276,8 @@ test.describe('Complete Level - End to End', () => {
     await test.step('Complete Stage 3 - Cross account access with resource policy', async () => {
       await completeStage3IntroPopups(tutorial);
       await verifyStage3InitialSetup(nodes, edges);
-      await createSecondResourcePolicy(popups, nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2][0].id);
+      await createSecondResourcePolicy(entities, nodes);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[2][0].id);
       await completeLevelFinishPopups(tutorial);
     });
   });

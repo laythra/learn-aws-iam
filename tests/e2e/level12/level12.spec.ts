@@ -1,6 +1,6 @@
 import { ENCODED_TEST_SOLUTIONS, ENCODED_LEVEL_STAGES } from './data';
+import { EntityCreationActions } from '../helpers/entity-creation-actions';
 import { NodeActions } from '../helpers/node-actions';
-import { PopupActions } from '../helpers/popup-actions';
 import { test } from '../helpers/test-fixtures';
 import { getTestSolution } from '../helpers/test-solutions';
 import { TutorialActions } from '../helpers/tutorial-actions';
@@ -72,8 +72,11 @@ const navigateTutorialPopovers = async (
   await nodes.closeNodePopover(SCPNodeID.DefaultSCP, 'content');
 };
 
-const createCloudTrailSCP = async (nodes: NodeActions, popups: PopupActions): Promise<void> => {
-  await popups.submitCreatePolicyPopup(
+const createCloudTrailSCP = async (
+  nodes: NodeActions,
+  entities: EntityCreationActions
+): Promise<void> => {
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorSCPTab],
     ElementID.CodeEditorSCPTab,
     SCPNodeID.BlockCloudTrailDeletionSCP,
@@ -93,8 +96,11 @@ const completeTutorialPhase = async (tutorial: TutorialActions): Promise<void> =
 
 // ==================== Stage 2 Helper Functions ====================
 
-const createEC2RegionSCP = async (nodes: NodeActions, popups: PopupActions): Promise<void> => {
-  await popups.submitCreatePolicyPopup(
+const createEC2RegionSCP = async (
+  nodes: NodeActions,
+  entities: EntityCreationActions
+): Promise<void> => {
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorSCPTab],
     ElementID.CodeEditorSCPTab,
     SCPNodeID.RestrictEC2RegionSCP,
@@ -115,9 +121,9 @@ const connectEC2SCPToStagingAccount = async (nodes: NodeActions): Promise<void> 
 
 const createPermissionBoundary = async (
   nodes: NodeActions,
-  popups: PopupActions
+  entities: EntityCreationActions
 ): Promise<void> => {
-  await popups.submitCreatePolicyPopup(
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorPermissionBoundaryTab],
     ElementID.CodeEditorPermissionBoundaryTab,
     PermissionBoundaryID.Ec2LaunchPermissionBoundary,
@@ -129,9 +135,9 @@ const createPermissionBoundary = async (
 
 const createAccessDelegationPolicy = async (
   nodes: NodeActions,
-  popups: PopupActions
+  entities: EntityCreationActions
 ): Promise<void> => {
-  await popups.submitCreatePolicyPopup(
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorPolicyTab],
     ElementID.CodeEditorPolicyTab,
     PolicyNodeID.AccessDelegationPolicy,
@@ -150,8 +156,11 @@ const connectPBAndPolicyForObjective2 = async (nodes: NodeActions): Promise<void
   await nodes.connectNodes(PolicyNodeID.AccessDelegationPolicy, UserNodeID.Alex);
 };
 
-const createS3WriteRole = async (nodes: NodeActions, popups: PopupActions): Promise<void> => {
-  await popups.submitCreatePolicyPopup(
+const createS3WriteRole = async (
+  nodes: NodeActions,
+  entities: EntityCreationActions
+): Promise<void> => {
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorRoleTab],
     ElementID.CodeEditorRoleTab,
     RoleNodeID.S3WriteAccessRole,
@@ -161,8 +170,11 @@ const createS3WriteRole = async (nodes: NodeActions, popups: PopupActions): Prom
 
   await nodes.expectVisible(RoleNodeID.S3WriteAccessRole);
 };
-const createS3WritePolicy = async (nodes: NodeActions, popups: PopupActions): Promise<void> => {
-  await popups.submitCreatePolicyPopup(
+const createS3WritePolicy = async (
+  nodes: NodeActions,
+  entities: EntityCreationActions
+): Promise<void> => {
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorPolicyTab],
     ElementID.CodeEditorPolicyTab,
     PolicyNodeID.S3WriteAccessPolicy,
@@ -178,8 +190,11 @@ const connectRoleAndPolicyForObjective3 = async (nodes: NodeActions): Promise<vo
   await nodes.connectNodes(PolicyNodeID.S3WriteAccessPolicy, RoleNodeID.S3WriteAccessRole);
 };
 
-const createElastiCachePolicy = async (nodes: NodeActions, popups: PopupActions): Promise<void> => {
-  await popups.submitCreatePolicyPopup(
+const createElastiCachePolicy = async (
+  nodes: NodeActions,
+  entities: EntityCreationActions
+): Promise<void> => {
+  await entities.submitCreatePolicyPopup(
     [ElementID.CodeEditorPolicyTab],
     ElementID.CodeEditorPolicyTab,
     PolicyNodeID.ElasticCacheManagementPolicy,
@@ -210,7 +225,7 @@ const completeLevelFinishPopup = async (tutorial: TutorialActions): Promise<void
 };
 
 test.describe('Stage 1 - Tutorial Phase: Understanding SCPs and Organizational Units', () => {
-  test('Initial Tutorial Flow', async ({ tutorial, nodes, popups, goToLevelAtStage }) => {
+  test('Initial Tutorial Flow', async ({ tutorial, nodes, entities, goToLevelAtStage }) => {
     await goToLevelAtStage(12, ENCODED_LEVEL_STAGES, 'stage1');
 
     await test.step('Complete tutorial popups', async () => {
@@ -230,7 +245,7 @@ test.describe('Stage 1 - Tutorial Phase: Understanding SCPs and Organizational U
         ElementID.NewEntityBtn,
         POPOVER_TUTORIAL_MESSAGES[3].popover_title
       );
-      await createCloudTrailSCP(nodes, popups);
+      await createCloudTrailSCP(nodes, entities);
     });
 
     await test.step('Connect SCP to OU', async () => {
@@ -250,41 +265,43 @@ test.describe('Stage 1 - Tutorial Phase: Understanding SCPs and Organizational U
 test.describe('Stage 2 - Main Challenge: All Objectives Completion Orders', () => {
   test('Order 1: SCP → PB+Policy → Role+Policy → ElastiCache', async ({
     nodes,
-    popups,
+    entities,
+    progress,
     tutorial,
+    ui,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(12, ENCODED_LEVEL_STAGES, 'stage2');
 
     await test.step('Complete intro popup', async () => {
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[2].title);
-      await tutorial.closeSidePanel();
+      await ui.closeSidePanel();
     });
 
     await test.step('Objective 1: Restrict EC2 Region', async () => {
-      await createEC2RegionSCP(nodes, popups);
+      await createEC2RegionSCP(nodes, entities);
       await connectEC2SCPToStagingAccount(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
     });
 
     await test.step('Objective 2: Delegate EC2 Launching', async () => {
-      await createPermissionBoundary(nodes, popups);
-      await createAccessDelegationPolicy(nodes, popups);
+      await createPermissionBoundary(nodes, entities);
+      await createAccessDelegationPolicy(nodes, entities);
       await connectPBAndPolicyForObjective2(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Objective 3: Enable EC2 to S3 Communication', async () => {
-      await createS3WriteRole(nodes, popups);
-      await createS3WritePolicy(nodes, popups);
+      await createS3WriteRole(nodes, entities);
+      await createS3WritePolicy(nodes, entities);
       await connectRoleAndPolicyForObjective3(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
     });
 
     await test.step('Objective 4: ElastiCache Access Management', async () => {
-      await createElastiCachePolicy(nodes, popups);
+      await createElastiCachePolicy(nodes, entities);
       await connectElastiCachePolicyToGroups(nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
+      await progress.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
     });
 
     await test.step('Complete level', async () => {
@@ -294,41 +311,43 @@ test.describe('Stage 2 - Main Challenge: All Objectives Completion Orders', () =
 
   test('Order 2: ElastiCache → Role+Policy → PB+Policy → SCP', async ({
     nodes,
-    popups,
+    entities,
+    progress,
     tutorial,
+    ui,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(12, ENCODED_LEVEL_STAGES, 'stage2');
 
     await test.step('Complete intro popup', async () => {
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[2].title);
-      await tutorial.closeSidePanel();
+      await ui.closeSidePanel();
     });
 
     await test.step('Objective 4: ElastiCache Access Management', async () => {
-      await createElastiCachePolicy(nodes, popups);
+      await createElastiCachePolicy(nodes, entities);
       await connectElastiCachePolicyToGroups(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][3].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][3].id);
     });
 
     await test.step('Objective 3: Enable EC2 to S3 Communication', async () => {
-      await createS3WriteRole(nodes, popups);
-      await createS3WritePolicy(nodes, popups);
+      await createS3WriteRole(nodes, entities);
+      await createS3WritePolicy(nodes, entities);
       await connectRoleAndPolicyForObjective3(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
     });
 
     await test.step('Objective 2: Delegate EC2 Launching', async () => {
-      await createPermissionBoundary(nodes, popups);
-      await createAccessDelegationPolicy(nodes, popups);
+      await createPermissionBoundary(nodes, entities);
+      await createAccessDelegationPolicy(nodes, entities);
       await connectPBAndPolicyForObjective2(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Objective 1: Restrict EC2 Region', async () => {
-      await createEC2RegionSCP(nodes, popups);
+      await createEC2RegionSCP(nodes, entities);
       await connectEC2SCPToStagingAccount(nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
+      await progress.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][0].id);
     });
 
     await test.step('Complete level', async () => {
@@ -338,44 +357,46 @@ test.describe('Stage 2 - Main Challenge: All Objectives Completion Orders', () =
 
   test('Order 3: PB first, then Policy for Objective 2', async ({
     nodes,
-    popups,
+    entities,
+    progress,
     tutorial,
+    ui,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(12, ENCODED_LEVEL_STAGES, 'stage2');
 
     await test.step('Complete intro popup', async () => {
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[2].title);
-      await tutorial.closeSidePanel();
+      await ui.closeSidePanel();
     });
 
     await test.step('Objective 2: Create Permission Boundary first', async () => {
-      await createPermissionBoundary(nodes, popups);
+      await createPermissionBoundary(nodes, entities);
     });
 
     await test.step('Objective 1: Restrict EC2 Region', async () => {
-      await createEC2RegionSCP(nodes, popups);
+      await createEC2RegionSCP(nodes, entities);
       await connectEC2SCPToStagingAccount(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
     });
 
     await test.step('Objective 2: Complete with Access Delegation Policy', async () => {
-      await createAccessDelegationPolicy(nodes, popups);
+      await createAccessDelegationPolicy(nodes, entities);
       await connectPBAndPolicyForObjective2(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Objective 3: Enable EC2 to S3 Communication', async () => {
-      await createS3WriteRole(nodes, popups);
-      await createS3WritePolicy(nodes, popups);
+      await createS3WriteRole(nodes, entities);
+      await createS3WritePolicy(nodes, entities);
       await connectRoleAndPolicyForObjective3(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
     });
 
     await test.step('Objective 4: ElastiCache Access Management', async () => {
-      await createElastiCachePolicy(nodes, popups);
+      await createElastiCachePolicy(nodes, entities);
       await connectElastiCachePolicyToGroups(nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
+      await progress.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
     });
 
     await test.step('Complete level', async () => {
@@ -385,44 +406,46 @@ test.describe('Stage 2 - Main Challenge: All Objectives Completion Orders', () =
 
   test('Order 4: Role first, then Policy for Objective 3', async ({
     nodes,
-    popups,
+    entities,
+    progress,
     tutorial,
+    ui,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(12, ENCODED_LEVEL_STAGES, 'stage2');
 
     await test.step('Complete intro popup', async () => {
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[2].title);
-      await tutorial.closeSidePanel();
+      await ui.closeSidePanel();
     });
 
     await test.step('Objective 3: Create Role first', async () => {
-      await createS3WriteRole(nodes, popups);
+      await createS3WriteRole(nodes, entities);
     });
 
     await test.step('Objective 1: Restrict EC2 Region', async () => {
-      await createEC2RegionSCP(nodes, popups);
+      await createEC2RegionSCP(nodes, entities);
       await connectEC2SCPToStagingAccount(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
     });
 
     await test.step('Objective 3: Complete with S3 Write Policy', async () => {
-      await createS3WritePolicy(nodes, popups);
+      await createS3WritePolicy(nodes, entities);
       await connectRoleAndPolicyForObjective3(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
     });
 
     await test.step('Objective 2: Delegate EC2 Launching', async () => {
-      await createPermissionBoundary(nodes, popups);
-      await createAccessDelegationPolicy(nodes, popups);
+      await createPermissionBoundary(nodes, entities);
+      await createAccessDelegationPolicy(nodes, entities);
       await connectPBAndPolicyForObjective2(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Objective 4: ElastiCache Access Management', async () => {
-      await createElastiCachePolicy(nodes, popups);
+      await createElastiCachePolicy(nodes, entities);
       await connectElastiCachePolicyToGroups(nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
+      await progress.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
     });
 
     await test.step('Complete level', async () => {
@@ -432,39 +455,41 @@ test.describe('Stage 2 - Main Challenge: All Objectives Completion Orders', () =
 
   test('Order 5: Connect ElastiCache policy to groups in different order', async ({
     nodes,
-    popups,
+    entities,
+    progress,
     tutorial,
+    ui,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(12, ENCODED_LEVEL_STAGES, 'stage2');
 
     await test.step('Complete intro popup', async () => {
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[2].title);
-      await tutorial.closeSidePanel();
+      await ui.closeSidePanel();
     });
 
     await test.step('Objective 1: Restrict EC2 Region', async () => {
-      await createEC2RegionSCP(nodes, popups);
+      await createEC2RegionSCP(nodes, entities);
       await connectEC2SCPToStagingAccount(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
     });
 
     await test.step('Objective 2: Delegate EC2 Launching', async () => {
-      await createPermissionBoundary(nodes, popups);
-      await createAccessDelegationPolicy(nodes, popups);
+      await createPermissionBoundary(nodes, entities);
+      await createAccessDelegationPolicy(nodes, entities);
       await connectPBAndPolicyForObjective2(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Objective 3: Enable EC2 to S3 Communication', async () => {
-      await createS3WriteRole(nodes, popups);
-      await createS3WritePolicy(nodes, popups);
+      await createS3WriteRole(nodes, entities);
+      await createS3WritePolicy(nodes, entities);
       await connectRoleAndPolicyForObjective3(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
     });
 
     await test.step('Objective 4: Connect groups in reverse order', async () => {
-      await createElastiCachePolicy(nodes, popups);
+      await createElastiCachePolicy(nodes, entities);
       // Connect in different order: Payments → Notifications → Search
       await nodes.connectNodes(
         PolicyNodeID.ElasticCacheManagementPolicy,
@@ -478,7 +503,7 @@ test.describe('Stage 2 - Main Challenge: All Objectives Completion Orders', () =
         PolicyNodeID.ElasticCacheManagementPolicy,
         GroupNodeID.InLevelSearchTeamGroup
       );
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
+      await progress.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
     });
 
     await test.step('Complete level', async () => {
@@ -488,50 +513,52 @@ test.describe('Stage 2 - Main Challenge: All Objectives Completion Orders', () =
 
   test('Order 6: Mixed order - interleaving objectives', async ({
     nodes,
-    popups,
+    entities,
+    progress,
     tutorial,
+    ui,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(12, ENCODED_LEVEL_STAGES, 'stage2');
 
     await test.step('Complete intro popup', async () => {
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[2].title);
-      await tutorial.closeSidePanel();
+      await ui.closeSidePanel();
     });
 
     await test.step('Start Objective 2: Create Permission Boundary', async () => {
-      await createPermissionBoundary(nodes, popups);
+      await createPermissionBoundary(nodes, entities);
     });
 
     await test.step('Start Objective 3: Create Role', async () => {
-      await createS3WriteRole(nodes, popups);
+      await createS3WriteRole(nodes, entities);
     });
 
     await test.step('Complete Objective 1: Restrict EC2 Region', async () => {
-      await createEC2RegionSCP(nodes, popups);
+      await createEC2RegionSCP(nodes, entities);
       await connectEC2SCPToStagingAccount(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
     });
 
     await test.step('Start Objective 4: Create ElastiCache Policy', async () => {
-      await createElastiCachePolicy(nodes, popups);
+      await createElastiCachePolicy(nodes, entities);
     });
 
     await test.step('Complete Objective 3: Connect Role and Policy', async () => {
-      await createS3WritePolicy(nodes, popups);
+      await createS3WritePolicy(nodes, entities);
       await connectRoleAndPolicyForObjective3(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
     });
 
     await test.step('Complete Objective 2: Connect PB and Policy', async () => {
-      await createAccessDelegationPolicy(nodes, popups);
+      await createAccessDelegationPolicy(nodes, entities);
       await connectPBAndPolicyForObjective2(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
     });
 
     await test.step('Complete Objective 4: Connect to all groups', async () => {
       await connectElastiCachePolicyToGroups(nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
+      await progress.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
     });
 
     await test.step('Complete level', async () => {
@@ -544,7 +571,9 @@ test.describe('Complete Level - End to End', () => {
   test('Complete entire level flow from start to finish', async ({
     tutorial,
     nodes,
-    popups,
+    entities,
+    progress,
+    ui,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(12, ENCODED_LEVEL_STAGES, 'stage1');
@@ -558,7 +587,7 @@ test.describe('Complete Level - End to End', () => {
         ElementID.NewEntityBtn,
         POPOVER_TUTORIAL_MESSAGES[3].popover_title
       );
-      await createCloudTrailSCP(nodes, popups);
+      await createCloudTrailSCP(nodes, entities);
 
       await tutorial.expectPopoverWithoutNextButton(
         SCPNodeID.BlockCloudTrailDeletionSCP,
@@ -571,25 +600,25 @@ test.describe('Complete Level - End to End', () => {
 
     await test.step('Stage 2: Complete all objectives', async () => {
       await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[2].title);
-      await tutorial.closeSidePanel();
+      await ui.closeSidePanel();
 
-      await createEC2RegionSCP(nodes, popups);
+      await createEC2RegionSCP(nodes, entities);
       await connectEC2SCPToStagingAccount(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
 
-      await createPermissionBoundary(nodes, popups);
-      await createAccessDelegationPolicy(nodes, popups);
+      await createPermissionBoundary(nodes, entities);
+      await createAccessDelegationPolicy(nodes, entities);
       await connectPBAndPolicyForObjective2(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 
-      await createS3WriteRole(nodes, popups);
-      await createS3WritePolicy(nodes, popups);
+      await createS3WriteRole(nodes, entities);
+      await createS3WritePolicy(nodes, entities);
       await connectRoleAndPolicyForObjective3(nodes);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
 
-      await createElastiCachePolicy(nodes, popups);
+      await createElastiCachePolicy(nodes, entities);
       await connectElastiCachePolicyToGroups(nodes);
-      await popups.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
+      await progress.expectLevelObjectiveCompleteToast(LEVEL_OBJECTIVES[1][3].id);
 
       await completeLevelFinishPopup(tutorial);
     });

@@ -1,15 +1,11 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 
-import { findObjectiveCompleteToast, findOperationalPopup } from './locator-helpers';
+import { findOperationalPopup } from './locator-helpers';
 import { CodeEditorTabsElementID, ElementID } from '@/config/element-ids';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
-export class PopupActions {
-  constructor(private page: Page) {}
-
-  async expectVisible(popupId: string): Promise<void> {
-    await expect(findOperationalPopup(this.page, popupId)).toBeVisible();
-  }
+export class EntityCreationActions {
+  constructor(private readonly page: Page) {}
 
   async createUserGroupNode(
     name: string,
@@ -87,19 +83,5 @@ export class PopupActions {
 
     await popup.getByRole('button', { name: 'submit' }).click();
     await expect(popup).not.toBeVisible();
-  }
-
-  async expectLevelObjectiveCompleteToast(objectiveDescription: string): Promise<Locator> {
-    const toast = findObjectiveCompleteToast(this.page, objectiveDescription);
-    await expect(toast).toBeVisible();
-
-    return toast;
-  }
-
-  async expectLevelObjectiveCompleteToastAndClose(objectiveDescription: string): Promise<void> {
-    const toast = findObjectiveCompleteToast(this.page, objectiveDescription);
-    await expect(toast).toBeVisible();
-    await toast.getByRole('button', { name: 'close' }).click();
-    await expect(toast).not.toBeVisible();
   }
 }

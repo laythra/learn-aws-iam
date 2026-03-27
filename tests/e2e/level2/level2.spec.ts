@@ -1,7 +1,7 @@
 import { ENCODED_LEVEL_STAGES } from './data';
 import { EdgeActions } from '../helpers/edge-actions';
+import { EntityCreationActions } from '../helpers/entity-creation-actions';
 import { NodeActions } from '../helpers/node-actions';
-import { PopupActions } from '../helpers/popup-actions';
 import { test } from '../helpers/test-fixtures';
 import { TutorialActions } from '../helpers/tutorial-actions';
 import { ElementID } from '@/config/element-ids';
@@ -24,8 +24,11 @@ import {
 } from '@/levels/level2/types/node-ids';
 import { IAMNodeEntity } from '@/types/iam-enums';
 
-const createCustomGroupNode = async (popups: PopupActions, name: string): Promise<void> => {
-  await popups.createUserGroupNode(
+const createCustomGroupNode = async (
+  entities: EntityCreationActions,
+  name: string
+): Promise<void> => {
+  await entities.createUserGroupNode(
     name,
     ElementID.CreateUserGroupMenuItem,
     ElementID.IAMIdentityCreatorPopup,
@@ -33,8 +36,11 @@ const createCustomGroupNode = async (popups: PopupActions, name: string): Promis
   );
 };
 
-const createCustomUserNode = async (popups: PopupActions, name: string): Promise<void> => {
-  await popups.createUserGroupNode(
+const createCustomUserNode = async (
+  entities: EntityCreationActions,
+  name: string
+): Promise<void> => {
+  await entities.createUserGroupNode(
     name,
     ElementID.CreateUserGroupMenuItem,
     ElementID.IAMIdentityCreatorPopup,
@@ -120,7 +126,8 @@ test.describe('Stage 1 - Introduction to IAM Groups', () => {
     nodes,
     edges,
     goToLevelAtStage,
-    popups,
+    entities,
+    progress,
   }) => {
     await goToLevelAtStage(2, ENCODED_LEVEL_STAGES, 'stage1');
 
@@ -137,8 +144,8 @@ test.describe('Stage 1 - Introduction to IAM Groups', () => {
     });
 
     await test.step('Create first IAM Group', async () => {
-      await createCustomGroupNode(popups, 'DevTeam');
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await createCustomGroupNode(entities, 'DevTeam');
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
     });
   });
 });
@@ -148,7 +155,7 @@ test.describe('Stage 2 - Attach Users and Policies to Group', () => {
     nodes,
     edges,
     goToLevelAtStage,
-    popups,
+    progress,
   }) => {
     await goToLevelAtStage(2, ENCODED_LEVEL_STAGES, 'stage2');
 
@@ -163,7 +170,7 @@ test.describe('Stage 2 - Attach Users and Policies to Group', () => {
 
     await test.step('Connect all policies to group', async () => {
       await connectAllPoliciesToGroup(nodes, edges);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
   });
 
@@ -235,10 +242,10 @@ test.describe('Stage 2 - Attach Users and Policies to Group', () => {
   });
 
   test('Handle unnecessary edges warning - leave old policy connections', async ({
-    tutorial,
     nodes,
     edges,
     goToLevelAtStage,
+    ui,
   }) => {
     await goToLevelAtStage(2, ENCODED_LEVEL_STAGES, 'stage2');
 
@@ -259,7 +266,7 @@ test.describe('Stage 2 - Attach Users and Policies to Group', () => {
     });
 
     await test.step('Verify unnecessary edges warning appears', async () => {
-      await tutorial.expectUnnecessaryEdgesNodesWarning(true);
+      await ui.expectUnnecessaryEdgesNodesWarning(true);
     });
   });
 });
@@ -269,7 +276,7 @@ test.describe('Stage 3 - Create Second User and Attach to Group', () => {
     tutorial,
     nodes,
     edges,
-    popups,
+    entities,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(2, ENCODED_LEVEL_STAGES, 'stage3');
@@ -285,7 +292,7 @@ test.describe('Stage 3 - Create Second User and Attach to Group', () => {
     });
 
     await test.step('Create second user', async () => {
-      await createCustomUserNode(popups, 'User2');
+      await createCustomUserNode(entities, 'User2');
       await nodes.expectVisible(UserNodeID.SecondUser);
     });
 
@@ -303,7 +310,8 @@ test.describe('Stage 3 - Create Second User and Attach to Group', () => {
     tutorial,
     nodes,
     edges,
-    popups,
+    entities,
+    ui,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(2, ENCODED_LEVEL_STAGES, 'stage3');
@@ -318,7 +326,7 @@ test.describe('Stage 3 - Create Second User and Attach to Group', () => {
     });
 
     await test.step('Create second user and attach to group', async () => {
-      await createCustomUserNode(popups, 'JaneDevOps');
+      await createCustomUserNode(entities, 'JaneDevOps');
       await nodes.expectVisible(UserNodeID.SecondUser);
 
       await nodes.connectNodes(UserNodeID.SecondUser, GroupNodeID.FirstGroup);
@@ -333,7 +341,7 @@ test.describe('Stage 3 - Create Second User and Attach to Group', () => {
     });
 
     await test.step('Verify unnecessary edges warning appears', async () => {
-      await tutorial.expectUnnecessaryEdgesNodesWarning(true);
+      await ui.expectUnnecessaryEdgesNodesWarning(true);
     });
   });
 });
@@ -343,7 +351,8 @@ test.describe('Complete Level - End to End', () => {
     tutorial,
     nodes,
     edges,
-    popups,
+    entities,
+    progress,
     goToLevelAtStage,
   }) => {
     await goToLevelAtStage(2, ENCODED_LEVEL_STAGES, 'stage1');
@@ -353,8 +362,8 @@ test.describe('Complete Level - End to End', () => {
       await verifyLevelInitialSetup(nodes, edges);
       await completeStage1IntroTutorial(tutorial);
 
-      await createCustomGroupNode(popups, 'DevTeam');
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
+      await createCustomGroupNode(entities, 'DevTeam');
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
       await nodes.expectVisible(GroupNodeID.FirstGroup);
     });
 
@@ -369,18 +378,18 @@ test.describe('Complete Level - End to End', () => {
         POPOVER_TUTORIAL_MESSAGES[4].popover_title
       );
 
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
     });
 
     await test.step('Complete Stage 3 - Create second user and finish level', async () => {
       await completeStage3IntroTutorial(tutorial);
 
-      await createCustomUserNode(popups, 'JaneDevOps');
+      await createCustomUserNode(entities, 'JaneDevOps');
       await nodes.expectVisible(UserNodeID.SecondUser);
 
       await nodes.connectNodes(UserNodeID.SecondUser, GroupNodeID.FirstGroup);
       await edges.expectVisible(UserNodeID.SecondUser, GroupNodeID.FirstGroup);
-      await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
+      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
 
       await completeLevelFinishPopups(tutorial);
     });
