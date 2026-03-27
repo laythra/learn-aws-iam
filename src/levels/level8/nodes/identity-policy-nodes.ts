@@ -9,11 +9,11 @@ const TUTORIAL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
 
 const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>[] = [
   {
-    id: PolicyNodeID.SlackServiceManagePolicy,
-    label: 'slack-service-manage-policy',
-    layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
-    content: JSON.stringify(INITIAL_POLICIES.INITIAL_ROLE, null, 2),
-    editable: true,
+    id: PolicyNodeID.SlackCodeDeployPolicy,
+    label: 'SlackCodeDeployPolicy',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
+    content: JSON.stringify(INITIAL_POLICIES.CODEDEPLOY, null, 2),
+    editable: false,
     granted_accesses: [
       {
         target_node: ResourceNodeID.SlackCrashlyticsNotifierService,
@@ -22,6 +22,15 @@ const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
         target_handle: HandleID.Bottom,
         edge_label: 'Deployment Access',
       },
+    ],
+  },
+  {
+    id: PolicyNodeID.SlackSecretsAccessPolicy,
+    label: 'SlackSecretsAccessPolicy',
+    layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
+    content: JSON.stringify(INITIAL_POLICIES.SECRETS_ACCESS, null, 2),
+    editable: true,
+    granted_accesses: [
       {
         target_node: ResourceNodeID.SlackIntegrationSecret,
         access_level: AccessLevel.Read,

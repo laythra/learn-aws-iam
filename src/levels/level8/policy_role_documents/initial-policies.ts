@@ -1,5 +1,5 @@
 export const INITIAL_POLICIES = {
-  INITIAL_ROLE: {
+  CODEDEPLOY: {
     Version: '2012-10-17',
     Statement: [
       {
@@ -12,6 +12,11 @@ export const INITIAL_POLICIES = {
         ],
         Resource: 'arn:aws:codedeploy:us-east-1:123456789012:application:SlackCodeDeployApp',
       },
+    ],
+  },
+  SECRETS_ACCESS: {
+    Version: '2012-10-17',
+    Statement: [
       {
         Effect: 'Allow',
         Action: ['secretsmanager:GetSecretValue'],

@@ -11,23 +11,18 @@ import { LEVEL_OBJECTIVES } from '@/levels/level8/objectives/level-objectives';
 import { FIXED_POPOVER_MESSAGES } from '@/levels/level8/tutorial_messages/fixed-popover-messages';
 import { POPOVER_TUTORIAL_MESSAGES } from '@/levels/level8/tutorial_messages/popover-tutorial-messages';
 import { POPUP_TUTORIAL_MESSAGES } from '@/levels/level8/tutorial_messages/popup-tutorial-messages';
-import {
-  PolicyNodeID,
-  ResourceNodeID,
-  RoleNodeID,
-  UserNodeID,
-} from '@/levels/level8/types/node-ids';
+import { PolicyNodeID, ResourceNodeID, UserNodeID } from '@/levels/level8/types/node-ids';
 
 const completeInitialTutorial = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[0].title);
   await tutorial.expectTutorialPopupAndClickNext(POPUP_TUTORIAL_MESSAGES[1].title);
   await tutorial.expectPopoverAndClickNext(
-    RoleNodeID.SlackCodeDeployRole,
+    PolicyNodeID.SlackSecretsAccessPolicy,
     POPOVER_TUTORIAL_MESSAGES[0].popover_title
   );
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[0].popover_title);
   await tutorial.expectPopoverWithoutNextButton(
-    PolicyNodeID.SlackServiceManagePolicy,
+    PolicyNodeID.SlackSecretsAccessPolicy,
     POPOVER_TUTORIAL_MESSAGES[1].popover_title
   );
 };
@@ -40,8 +35,8 @@ const verifyInitialLevelSetup = async (nodes: NodeActions, edges: EdgeActions): 
     UserNodeID.SeniorSam,
     ResourceNodeID.SlackIntegrationSecret,
     ResourceNodeID.SlackCrashlyticsNotifierService,
-    PolicyNodeID.SlackServiceManagePolicy,
-    RoleNodeID.SlackCodeDeployRole,
+    PolicyNodeID.SlackCodeDeployPolicy,
+    PolicyNodeID.SlackSecretsAccessPolicy,
   ]);
 
   await edges.expectMutlipleVisible([
@@ -53,11 +48,14 @@ const verifyInitialLevelSetup = async (nodes: NodeActions, edges: EdgeActions): 
     [UserNodeID.SeniorJordan, ResourceNodeID.SlackCrashlyticsNotifierService],
     [UserNodeID.SeniorSam, ResourceNodeID.SlackIntegrationSecret],
     [UserNodeID.SeniorSam, ResourceNodeID.SlackCrashlyticsNotifierService],
-    [UserNodeID.JuniorAlex, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.JuniorMorgan, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.SeniorJordan, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.SeniorSam, RoleNodeID.SlackCodeDeployRole],
-    [PolicyNodeID.SlackServiceManagePolicy, RoleNodeID.SlackCodeDeployRole],
+    [PolicyNodeID.SlackCodeDeployPolicy, UserNodeID.JuniorAlex],
+    [PolicyNodeID.SlackCodeDeployPolicy, UserNodeID.JuniorMorgan],
+    [PolicyNodeID.SlackCodeDeployPolicy, UserNodeID.SeniorSam],
+    [PolicyNodeID.SlackCodeDeployPolicy, UserNodeID.SeniorJordan],
+    [PolicyNodeID.SlackSecretsAccessPolicy, UserNodeID.JuniorAlex],
+    [PolicyNodeID.SlackSecretsAccessPolicy, UserNodeID.JuniorMorgan],
+    [PolicyNodeID.SlackSecretsAccessPolicy, UserNodeID.SeniorSam],
+    [PolicyNodeID.SlackSecretsAccessPolicy, UserNodeID.SeniorJordan],
   ]);
 };
 
@@ -69,11 +67,14 @@ const verifyLevelSetupAfterPolicyEdit = async (edges: EdgeActions): Promise<void
     [UserNodeID.SeniorJordan, ResourceNodeID.SlackCrashlyticsNotifierService],
     [UserNodeID.SeniorSam, ResourceNodeID.SlackIntegrationSecret],
     [UserNodeID.SeniorSam, ResourceNodeID.SlackCrashlyticsNotifierService],
-    [UserNodeID.JuniorAlex, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.JuniorMorgan, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.SeniorJordan, RoleNodeID.SlackCodeDeployRole],
-    [UserNodeID.SeniorSam, RoleNodeID.SlackCodeDeployRole],
-    [PolicyNodeID.SlackServiceManagePolicy, RoleNodeID.SlackCodeDeployRole],
+    [PolicyNodeID.SlackCodeDeployPolicy, UserNodeID.JuniorAlex],
+    [PolicyNodeID.SlackCodeDeployPolicy, UserNodeID.JuniorMorgan],
+    [PolicyNodeID.SlackCodeDeployPolicy, UserNodeID.SeniorSam],
+    [PolicyNodeID.SlackCodeDeployPolicy, UserNodeID.SeniorJordan],
+    [PolicyNodeID.SlackSecretsAccessPolicy, UserNodeID.JuniorAlex],
+    [PolicyNodeID.SlackSecretsAccessPolicy, UserNodeID.JuniorMorgan],
+    [PolicyNodeID.SlackSecretsAccessPolicy, UserNodeID.SeniorSam],
+    [PolicyNodeID.SlackSecretsAccessPolicy, UserNodeID.SeniorJordan],
   ]);
 
   await edges.expectMutlipleHidden([
@@ -90,7 +91,7 @@ const goThroughPopoversAfterFirstEdit = async (
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[1].popover_title);
   await tutorial.expectFixedPopoverWithTutorialGif(FIXED_POPOVER_MESSAGES[2].popover_title);
   await tutorial.expectPopoverWithoutNextButton(
-    UserNodeID.JuniorAlex,
+    UserNodeID.JuniorMorgan,
     POPOVER_TUTORIAL_MESSAGES[2].popover_title
   );
 
@@ -98,14 +99,14 @@ const goThroughPopoversAfterFirstEdit = async (
   await tutorial.expectFixedPopoverWithoutNextButton(FIXED_POPOVER_MESSAGES[3].popover_title);
   await nodes.closeNodePopover(UserNodeID.JuniorAlex, 'tags');
   await tutorial.expectPopoverWithoutNextButton(
-    PolicyNodeID.SlackServiceManagePolicy,
+    PolicyNodeID.SlackSecretsAccessPolicy,
     POPOVER_TUTORIAL_MESSAGES[3].popover_title
   );
 };
 
 const goThroughPopoversAfterSecondEdit = async (tutorial: TutorialActions): Promise<void> => {
   await tutorial.expectPopoverAndClickNext(
-    PolicyNodeID.SlackServiceManagePolicy,
+    PolicyNodeID.SlackSecretsAccessPolicy,
     POPOVER_TUTORIAL_MESSAGES[4].popover_title
   );
 
@@ -132,7 +133,7 @@ test.describe('Stage 1 - Initial tutorial and first edit', () => {
 
     await test.step('Edit policy to restrict junior users', async () => {
       await nodes.editPolicyNodeContent(
-        PolicyNodeID.SlackServiceManagePolicy,
+        PolicyNodeID.SlackSecretsAccessPolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy1')
       );
       await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
@@ -161,7 +162,7 @@ test.describe('Stage 2 - Post-first-edit tutorial popovers', () => {
 
     await test.step('Edit policy again to use tags instead of username prefix', async () => {
       await nodes.editPolicyNodeContent(
-        PolicyNodeID.SlackServiceManagePolicy,
+        PolicyNodeID.SlackSecretsAccessPolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
       await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
@@ -192,7 +193,7 @@ test.describe('Complete Level - End to End', () => {
       await completeInitialTutorial(tutorial);
       await verifyInitialLevelSetup(nodes, edges);
       await nodes.editPolicyNodeContent(
-        PolicyNodeID.SlackServiceManagePolicy,
+        PolicyNodeID.SlackSecretsAccessPolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy1')
       );
       await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][0].id);
@@ -202,7 +203,7 @@ test.describe('Complete Level - End to End', () => {
     await test.step('Complete Stage 2 - Post-edit tutorial and second policy edit', async () => {
       await goThroughPopoversAfterFirstEdit(page, tutorial, nodes);
       await nodes.editPolicyNodeContent(
-        PolicyNodeID.SlackServiceManagePolicy,
+        PolicyNodeID.SlackSecretsAccessPolicy,
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
       );
       await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
