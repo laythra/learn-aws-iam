@@ -128,6 +128,9 @@
       ],
       "additionalProperties": false,
       "properties": {
+        "Sid": {
+          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Sid"
+        },
         "Effect": {
           "const": "Allow"
         },
@@ -165,6 +168,9 @@
       ],
       "additionalProperties": false,
       "properties": {
+        "Sid": {
+          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Sid"
+        },
         "Effect": {
           "const": "Allow"
         },

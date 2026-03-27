@@ -52,6 +52,9 @@
         "Condition"
       ],
       "properties": {
+        "Sid": {
+          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Sid"
+        },
         "Effect": {
           "const": "Allow"
         },

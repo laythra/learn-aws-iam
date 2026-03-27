@@ -29,12 +29,14 @@ Policies — whether **AWS Managed** or **Customer Managed** — have the same s
 * **Effect**: Whether the policy allows or denies access
 * **Action**: The specific actions that the policy allows or denies
 * **Resource**: The resources to which the policy applies
+* **Sid**: An optional identifier for the statement
 
 ~~~js
 {
-  Version: "2012-10-17",
-  Statement: [
+  "Version": "2012-10-17", ::badge[POLICY LANGUAGE VERSION]::
+  "Statement": [
     {
+      "Sid": "AllowS3Read", ::badge[OPTIONAL STATEMENT IDENTIFIER]::
       "Effect": "Allow", ::badge[ALLOWS SPECIFIED ACTIONS]::
       "Action": ["s3:Get*", "s3:List*"], ::badge[READ AND LIST S3 RESOURCES]::
       "Resource": "*" ::badge[ALL S3 BUCKETS]::

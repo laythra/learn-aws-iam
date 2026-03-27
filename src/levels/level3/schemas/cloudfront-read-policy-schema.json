@@ -23,8 +23,7 @@
         ],
         "properties": {
           "Sid": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Sid"
           },
           "Effect": {
             "type": "string",

@@ -14,6 +14,9 @@
         "required": ["Effect", "Action", "Resource", "Condition"],
         "additionalProperties": false,
         "properties": {
+          "Sid": {
+            "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Sid"
+          },
           "Effect": { "const": "Allow" },
           "Action": {
             "type": "array",
