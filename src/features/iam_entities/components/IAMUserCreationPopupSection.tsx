@@ -26,10 +26,6 @@ export const IAMUserCreationPopupSection: React.FC<IAMUserCreationPopupSectionPr
         </TutorialPopover>
         <FormHelperText>This could be any username you like</FormHelperText>
       </FormControl>
-
-      {/* <Box pt={8}>
-        <PoliciesList />
-      </Box> */}
     </>
   );
 };
