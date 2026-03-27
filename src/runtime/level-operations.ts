@@ -4,6 +4,7 @@ import * as analytics from './level-analytics';
 import * as persistence from './level-persistence';
 import { LevelDetailsStore } from './level-store';
 import { TOTAL_LEVELS } from '@/config/consts';
+import { LevelEventBus } from '@/levels/level-event-bus';
 
 function startLevel(levelNumber: number): void {
   persistence.setCurrentLevel(levelNumber);
@@ -82,3 +83,9 @@ export function restartLevelFromCheckpoint(): void {
   LevelDetailsStore.send({ type: 'returnToLastCheckpoint' });
   analytics.logRestartFromCheckpoint(levelNumber);
 }
+
+// Subscribe to events from levels (breaks the levels → runtime import cycle)
+LevelEventBus.on('store_checkpoint', ({ actor }) => storeLevelCheckpoint(actor));
+LevelEventBus.on('save_checkpoint_to_disk', ({ actor, filename }) =>
+  saveCheckpointToDisk(actor, filename)
+);
