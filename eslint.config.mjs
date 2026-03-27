@@ -1,4 +1,3 @@
-import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -14,61 +13,14 @@ import react from 'eslint-plugin-react';
 import unusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import {
+  crossLayerAliasConfigs,
+  featureRestrictedImportConfigs,
+  levelRestrictedImportConfigs,
+  restrictedImportZones,
+} from './eslint.import-boundaries.mjs';
 
-const featureDirs = readdirSync(path.join(__dirname, 'src/features'), {
-  withFileTypes: true,
-})
-  .filter(entry => entry.isDirectory())
-  .map(entry => entry.name.toLowerCase());
-
-const levelDirs = readdirSync(path.join(__dirname, 'src/levels'), {
-  withFileTypes: true,
-})
-  .filter(entry => entry.isDirectory() && /^level\d+$/.test(entry.name))
-  .map(entry => entry.name.toLowerCase());
-
-const restrictedImportZones = [
-  ...featureDirs.map(feature => ({
-    target: `./src/features/${feature}`,
-    from: './src/features',
-    except: [`./${feature}`],
-  })),
-  ...levelDirs.map(level => ({
-    target: `./src/levels/${level}`,
-    from: './src/levels',
-    except: [`./${level}`, './types', './utils'],
-  })),
-];
-
-const featureRestrictedImportConfigs = featureDirs.map(feature => ({
-  files: [`src/features/${feature}/**/*.{js,jsx,ts,tsx}`],
-  rules: {
-    'no-restricted-imports': [
-      'error',
-      {
-        patterns: featureDirs
-          .filter(otherFeature => otherFeature !== feature)
-          .flatMap(otherFeature => [`@/features/${otherFeature}`, `@/features/${otherFeature}/*`]),
-      },
-    ],
-  },
-}));
-
-const levelRestrictedImportConfigs = levelDirs.map(level => ({
-  files: [`src/levels/${level}/**/*.{js,jsx,ts,tsx}`],
-  rules: {
-    'no-restricted-imports': [
-      'error',
-      {
-        patterns: levelDirs
-          .filter(otherLevel => otherLevel !== level)
-          .flatMap(otherLevel => [`@/levels/${otherLevel}`, `@/levels/${otherLevel}/*`]),
-      },
-    ],
-  },
-}));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
@@ -223,7 +175,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['**/use[A-Z]*.tsx', '**/use[A-Z]*.tsx', '**/use[A-Z]*.ts', '**/use[A-Z]*.ts'],
+    files: ['**/use[A-Z]*.tsx', '**/use[A-Z]*.ts'],
 
     rules: {
       'check-file/filename-naming-convention': [
@@ -239,14 +191,7 @@ export default defineConfig([
     },
   },
   {
-    files: [
-      '**/*IAM*.tsx',
-      '**/*IAM*.tsx',
-      '**/*ARN*.tsx',
-      '**/*ARN*.tsx',
-      '**/index.tsx',
-      '**/index.tsx',
-    ],
+    files: ['**/*IAM*.tsx', '**/*ARN*.tsx', '**/index.tsx'],
 
     rules: {
       'check-file/filename-naming-convention': 'off',
@@ -254,4 +199,5 @@ export default defineConfig([
   },
   ...featureRestrictedImportConfigs,
   ...levelRestrictedImportConfigs,
+  ...crossLayerAliasConfigs,
 ]);
