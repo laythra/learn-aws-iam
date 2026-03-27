@@ -1,8 +1,10 @@
 import { test as base } from '@playwright/test';
 
 import { EdgeActions } from './edge-actions';
-import { PopupActions } from './popup-actions';
+import { EntityCreationActions } from './entity-creation-actions';
+import { LevelProgressActions } from './level-progress-actions';
 import { loadLevelStage } from './test-solutions';
+import { UIActions } from './ui-actions';
 import { NodeActions } from '../helpers/node-actions';
 import { TutorialActions } from '../helpers/tutorial-actions';
 import { LEVEL_VERSIONS } from '@/levels/level-versions';
@@ -11,7 +13,9 @@ type TestFixtures = {
   tutorial: TutorialActions;
   nodes: NodeActions;
   edges: EdgeActions;
-  popups: PopupActions;
+  entities: EntityCreationActions;
+  progress: LevelProgressActions;
+  ui: UIActions;
   goToLevel: (levelNumber: number) => Promise<void>;
   goToLevelAtStage: <K extends string>(
     levelNumber: number,
@@ -36,9 +40,19 @@ export const test = base.extend<TestFixtures>({
     await use(edges);
   },
 
-  popups: async ({ page }, use) => {
-    const popups = new PopupActions(page);
-    await use(popups);
+  entities: async ({ page }, use) => {
+    const entities = new EntityCreationActions(page);
+    await use(entities);
+  },
+
+  progress: async ({ page }, use) => {
+    const progress = new LevelProgressActions(page);
+    await use(progress);
+  },
+
+  ui: async ({ page }, use) => {
+    const ui = new UIActions(page);
+    await use(ui);
   },
 
   goToLevel: async ({ page }, use) => {
