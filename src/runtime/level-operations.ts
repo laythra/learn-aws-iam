@@ -86,6 +86,3 @@ export function restartLevelFromCheckpoint(): void {
 
 // Subscribe to events from levels (breaks the levels → runtime import cycle)
 LevelEventBus.on('store_checkpoint', ({ actor }) => storeLevelCheckpoint(actor));
-LevelEventBus.on('save_checkpoint_to_disk', ({ actor, filename }) =>
-  saveCheckpointToDisk(actor, filename)
-);
