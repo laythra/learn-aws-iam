@@ -33,9 +33,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
-    "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md}\" --config ./.prettierrc.json"
+    "lint": "eslint \"{src,tests}/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --fix \"{src,tests}/**/*.{js,jsx,ts,tsx}\"",
+    "format": "prettier --write \"{src,tests}/**/*.{js,jsx,ts,tsx,css,md}\" --config ./.prettierrc.json"
   },
   "eslintConfig": {
     "extends": [
