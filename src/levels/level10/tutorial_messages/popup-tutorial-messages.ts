@@ -1,62 +1,61 @@
 import { PopupTutorialMessage } from '@/types/tutorial-message-types';
 const POPUP_MSG1 = `
-  We've been exploring **Tag-Based Access Control (TBAC)** so far,
-  but there's still much more to discover!
-  The only type of tags we've worked with until now are **Resource Tags**,
-  which are tags already attached to the resources we want to control access to.
+  So far in TBAC, we've worked with two types of tag-based conditions:
 
-  This level will introduce **Request Tags** — a fundamental concept in
-  TBAC that provides even greater flexibility in controlling access to resources.|lg
+  * **Principal Tags** (\`aws:PrincipalTag\`):
+  tags on the IAM user making the request.
 
-  * ::badge[RULE]:: **Resource Tags**
-  are tags already attached to the resources we wish to control access to.
+  * **Resource Tags** (\`aws:ResourceTag\`):
+  tags on the resource being accessed.
 
-  * ::badge[RULE]:: **Request Tags**
-  are tags that must be present on a request itself,
-  allowing you to enforce tagging rules at the moment of action.
+  This level adds a third: **Request Tags** : tags carried by the API call itself.|lg
+
+  * **Request Tags** (\`aws:RequestTag\`) are tags included in an API request,
+  letting you enforce that resources are tagged correctly **before they even exist**.
 `;
 
 const POPUP_MSG2 = `
  For this level, you'll be the DevOps engineer at a fintech company with three teams
- (***payments***, ***analytics***, ***compliance***) that each manage their own databases
+ (***payments***, ***analytics***, ***compliance***) that each manage their own EC2 instances
  across dev/staging/prod environments. Your goal is to ensure:
 
-* Teams can only access and manage their own databases,
- for example, the compliance team cannot modify the payments team's database
+* Teams can only access and manage their own instances,
+ for example, the compliance team cannot stop the payments team's instance
 
 * Consistent tagging is enforced for cost tracking and compliance purposes
 `;
 
 const POPUP_MSG3 = `
-To achieve this level of control, we need to define a single policy with two distinct statements:
+  The first policy needs two statements working together:
 
   **1. Tag Creation Statement**|lg
 
-  Allows teams to create tags **only** when creating a new RDS instance.
+  Allows teams to create tags **only** when launching a new EC2 instance.
 
-  **2. RDS Instance Creation Statement**|lg
+  **2. EC2 Instance Launch Statement**|lg
 
-  Allows teams to create RDS instances, while **enforcing** the presence of the following tags:
+  Allows teams to launch EC2 instances, while **enforcing** the presence of the following tags:
 
-  * \`team\` - Must match the principal's team name
+  * \`application\` - Must match the principal's application tag
   * \`environment\` - Must be one of: \`dev\`, \`staging\`, or \`prod\`
-  * \`name\` - Can be any descriptive name for the RDS instance
+  * \`Name\` - Optional but recommended; any descriptive label for the instance.
+    If included, it must be one of the allowed tag keys.
 `;
 
 const POPUP_MSG4 = `
   That was a tough level — give yourself a well-earned pat on the back! 🎉|lg
 
-  You’ve now mastered ***Tag-Based Access Control (TBAC)***,
-  and not only that, you’ve shown real skill in crafting complex IAM policies.
+  You've now mastered ***Tag-Based Access Control (TBAC)***,
+  and not only that, you've shown real skill in crafting complex IAM policies.
 
   In this level, we explored *Request Tags* and how they can
   be used to manage access based on the tags attached to the request itself.
 
-  We’re nearing the end of our journey.
-  Next up, we’ll dive into a powerful concept called **Permission Boundaries**,
+  We're nearing the end of our journey.
+  Next up, we'll dive into a powerful concept called **Permission Boundaries**,
   which help define the maximum permissions an IAM entity can receive.
 
-  You’re doing great. Let’s finish strong! 💪|lg
+  You're doing great. Let's finish strong! 💪|lg
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

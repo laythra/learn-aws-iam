@@ -5,13 +5,13 @@ import type { PopoverTutorialMessage } from '@/types/tutorial-message-types';
 const POPOVER_MSG1 = ``;
 
 const POPOVER_MSG2 = `
-  This was a tough policy to create — you nailed it!
+  This was a tough policy to create — nice work.
 
-  Keep on...
+  Now attach it to all three groups.
 `;
 
 const POPOVER_MSG3 = `
-  Create your RDS management policy.
+  Create your EC2 management policy.
 `;
 
 const POPOVER_MSG4 = `
@@ -44,7 +44,7 @@ export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [
     popover_placement: 'top',
   },
   {
-    element_id: PolicyNodeID.RDSManagePolicy,
+    element_id: PolicyNodeID.EC2ManagePolicy,
     popover_title: 'You know the drill by now',
     popover_content: POPOVER_MSG4,
     show_next_button: false,

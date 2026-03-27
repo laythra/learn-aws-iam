@@ -70,12 +70,6 @@ const GRANTED_RESOURCES: PolicyGrantedAccess<ObjectivesApplicableNodesFnName>[] 
     target_handle: HandleID.Bottom,
     applicable_nodes_fn_name: 'seniorUsersApplicableNodes',
   } satisfies PolicyGrantedAccess<ObjectivesApplicableNodesFnName>,
-  {
-    access_level: AccessLevel.Read,
-    target_node: ResourceNodeID.SlackCrashlyticsNotifierService,
-    source_handle: HandleID.Top,
-    target_handle: HandleID.Bottom,
-  },
 ];
 
 export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
@@ -84,7 +78,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
 >[][] = [
   [
     {
-      id: PolicyNodeID.SlackServiceManagePolicy,
+      id: PolicyNodeID.SlackSecretsAccessPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       validate_fn_name: 'slackManagePolicyValidateFn1',
       entity: IAMNodeEntity.IdentityPolicy,
@@ -107,7 +101,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       ],
       help_badges: [
         {
-          path: '/Statement/1',
+          path: '/Statement/0',
           content: 'Add a condition to this statement to restrict access to senior users only',
           color: 'yellow',
         },
@@ -117,7 +111,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
   ],
   [
     {
-      id: PolicyNodeID.SlackServiceManagePolicy,
+      id: PolicyNodeID.SlackSecretsAccessPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       validate_fn_name: 'slackManagePolicyValidateFn2',
       entity: IAMNodeEntity.IdentityPolicy,

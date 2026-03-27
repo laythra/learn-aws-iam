@@ -47,6 +47,7 @@ export enum IAMNodeResourceEntity {
   RDS = 'RDS',
   CloudTrail = 'CloudTrail',
   ElastiCache = 'ElastiCache',
+  CodeDeploy = 'CodeDeploy',
 }
 
 export enum IAMNodeImage {
@@ -65,6 +66,7 @@ export enum IAMNodeImage {
   SCP = 'scp',
   CloudTrail = 'cloudtrail',
   ElastiCache = 'elasticache',
+  CodeDeploy = 'codedeploy',
 }
 
 export type CreatableIAMNodeEntity =

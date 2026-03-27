@@ -7,134 +7,87 @@ import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enu
 import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE1_CALLOUT_MSG = `
-  This policy needs two statements working together:
+  This policy needs two statements:
 
   **Statement 1 — Tag Creation**
-  Permits adding tags to RDS resources, but **only** during instance creation.
-  Without this, the creation action won't be allowed to attach tags at all.
+  Allows adding tags to a resource, but only during a \`RunInstances\` call.
+  This is necessary because EC2 applies tags via a separate \`CreateTags\` call at launch time.
 
-  **Statement 2 — Instance Creation**
-  Permits creating RDS instances, but **only** if the request includes the correct tags.
-  This is where Request Tags enforce your tagging rules.
-
-  Use the hints below for guidance on the condition keys and operators needed.
+  **Statement 2 — Instance Launch**
+  Allows launching EC2 instances only when the request carries the correct tags:
+  the caller's application, a valid environment, and optionally a Name.
 `;
 
 const OBJECTIVE2_CALLOUT_MSG = `
-  Teams should only be able to ***Stop*** and ***Start*** their **own** RDS instances.
+  Allow teams to start and stop their own EC2 instances.
 
-  Think about what differentiates one team's RDS instance from another's,
-  and how you can use that to restrict access.
+  Each instance is tagged with the application (team) that owns it — use that to scope access.
 `;
 
 const OBJECTIVE1_HINT_MSG1 = `
-  Recall from the last level that IAM Policies can include specific Condition Keys
-  to enforce tag-based rules.
+  Three condition key types are relevant:
 
-  - **\`aws:PrincipalTag/<key>\`**:
-    Represents the tag value of the user making the request.
-  - **\`aws:ResourceTag/<key>\`**:
-    Represents the tag value of the resource being accessed.
-  - **\`aws:RequestTag/<key>\`**:
-    Represents a tag value being passed **with** the request itself.
-  - **\`aws:TagKeys\`**:
-    The set of tag key names being passed with the request - We didn’t cover this one before./
-
-  Which of these condition keys do you see fitting for each statement's requirements?
+  - **\`aws:PrincipalTag/<key>\`** — tag on the calling user
+  - **\`aws:RequestTag/<key>\`** — tag value included in the request
+  - **\`aws:TagKeys\`** — the set of tag key names in the request
 `;
 
 const OBJECTIVE1_HINT_MSG2 = `
-  For Statement 1, the action needs to be restricted so that tagging
-  can only happen as part of a specific operation — not standalone.
+  \`ec2:CreateTags\` fires as a side-effect of \`RunInstances\`,
+  but it can also be called standalone — which you don't want to allow.
 
-  Here's a reminder of condition syntax:
-
-  ~~~js
-  "Condition": {
-    "StringEquals": { ::badge[CONDITION OPERATOR]::
-      "<condition-key>": "<condition-value>" ::badge[CONDITION KEY AND VALUE]::
-    }
-  }|fullwidth
-  ~~~
-
-  AWS exposes service-specific condition keys that let you inspect what operation
-  triggered a given action. Think about what value the condition should check against —
-  what is the "parent" operation that should gate this tagging action?
+  Use \`ec2:CreateAction\` to restrict it to only fire when triggered by a specific parent action.
 `;
 
 const OBJECTIVE1_HINT_MSG3 = `
-  For Statement 2, three conditions need to be satisfied:
+  Statement 2 needs three conditions:
 
-  1. The \`team\` tag on the request must match the caller's own team tag.
-     Which condition key from hint 1 represents a tag being passed with a request?
-     And which represents the caller's identity tag? Remember policy variables from the last level.
+  1. \`aws:RequestTag/application\` must equal the caller's own application tag
+  - use a policy variable.
 
-  2. The \`environment\` tag must be one of the allowed values.
-     For multiple valid values, what do you think the condition value looks like?
+  2. \`aws:RequestTag/environment\` must be one of \`dev\`, \`staging\`, or \`prod\`.
 
-  3. No tag keys beyond the required three should be allowed.
-     The \`aws:TagKeys\` condition key holds all tag keys in the request.
-     What operator would enforce that every key belongs to a known set?
+  3. \`aws:TagKeys\` must not contain any keys outside the allowed set.
+     Which condition operator enforces that?
 `;
 
 const OBJECTIVE1_HINT_MSG4 = `
-  Still stuck? Here are the specific building blocks — the rest is up to you.
+  **Statement 1** — \`ec2:CreateTags\` with \`ec2:CreateAction: "RunInstances"\`
 
-  >|color(blue)
-  > IAM condition keys come in two types:
-  > - **Global** (\`aws:*\`) — apply across all services,
-   e.g. \`aws:RequestTag\`, \`aws:PrincipalTag\`
-  > - **Service-specific** (\`rds:*\`, \`s3:*\`, ...)
-   — defined by a service for its own concepts
-
-  Among the relevant RDS actions: \`rds:AddTagsToResource\` (Statement 1)
-  and \`rds:CreateDBInstance\` (Statement 2).
-
-  For **Statement 1** — there's a service-specific condition key called \`rds:CreateAction\`.
-  What value do you think it should be set to?
-
-  For **Statement 2** — to prevent extra tags, the \`ForAllValues:StringEquals\` operator
-  checks that every key in the request belongs to a specified set.
-  Pair it with \`aws:TagKeys\` and the three tag names you need to enforce.
+  **Statement 2** — \`ec2:RunInstances\` with:
+  - \`StringEquals\` for \`aws:RequestTag/application\` and \`aws:RequestTag/environment\`
+  - \`ForAllValues:StringEquals\` for \`aws:TagKeys\`
 `;
 
 const OBJECTIVE2_HINT_MSG1 = `
-  Each RDS instance is tagged with the \`team\` that owns it.
+  Each EC2 instance is tagged with the \`application\` that owns it.
 
-  Here's a little reminder of common condition key/values for tag-based access control:
+  Two condition keys are relevant:
 
-  - **\`aws:PrincipalTag/<key>\`**:
-    Represents the tag value of the user making the request.
-  - **\`aws:ResourceTag/<key>\`**:
-    Represents the tag value of the resource being accessed.
-  - **\`aws:RequestTag/<key>\`**:
-    Represents a tag value being passed **with** the request itself.
+  - **\`aws:PrincipalTag/application\`** — the \`application\` tag on the calling user
+  - **\`aws:ResourceTag/application\`** — the \`application\` tag on the resource
 `;
 
 const OBJECTIVE2_HINT_MSG2 = `
-  Use a policy variable to dynamically match the resource's team against the caller's team.
+  Match the resource's \`application\` tag against the caller's using a policy variable:
 
   ~~~js
   "StringEquals": {
-    "???": "???" ::badge[CALLER'S TEAM TAG]::
+    "aws:ResourceTag/application": "???" ::badge[CALLER'S APPLICATION TAG]::
   }|fullwidth
   ~~~
-
-  > |color(tip)
-  > ::badge[TIP]:: Same pattern as the previous level —
-  > one policy, any number of teams.
 `;
 
 const OBJECTIVE2_HINT_MSG3 = `
-  The actions required for starting and stopping RDS instances are
-  - \`rds:StopDBInstance\`
-  - \`rds:???\`.
+  The two actions for managing EC2 instance state are:
+  - \`ec2:StopInstances\`
+  - \`ec2:StartInstances\`
 `;
 
 const OBJECTIVE1_HELP_BADGES = [
   {
     path: '/Statement/0/Action',
-    content: 'Which RDS action allows tagging a resource?',
+    content: 'Which EC2 action allows tagging a resource?',
     color: 'yellow',
   },
   {
@@ -144,7 +97,7 @@ const OBJECTIVE1_HELP_BADGES = [
   },
   {
     path: '/Statement/1/Action',
-    content: 'Which RDS action creates a new instance?',
+    content: 'Which EC2 action launches a new instance?',
     color: 'yellow',
   },
   {
@@ -171,7 +124,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
       id: PolicyNodeID.TBACPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity: IAMNodeEntity.IdentityPolicy,
-      on_finish_event: PolicyCreationFinishEvent.ALLOW_CREATE_RDS_WITH_TAGS_POLICY_CREATED,
+      on_finish_event: PolicyCreationFinishEvent.ALLOW_CREATE_EC2_WITH_TAGS_POLICY_CREATED,
       initial_code: INITIAL_POLICIES.POLICY_WITH_CONDITION,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
@@ -190,7 +143,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
           content: OBJECTIVE1_HINT_MSG3,
         },
         {
-          title: 'Last Resort',
+          title: 'Show Me the Keys',
           content: OBJECTIVE1_HINT_MSG4,
         },
       ],
@@ -204,11 +157,11 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
   ].map(objective => createPolicyCreationObjective(objective)),
   [
     {
-      id: PolicyNodeID.RDSManagePolicy,
+      id: PolicyNodeID.EC2ManagePolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity: IAMNodeEntity.IdentityPolicy,
-      on_finish_event: PolicyCreationFinishEvent.MANAGE_RDS_POLICY_CREATED,
-      initial_code: INITIAL_POLICIES.RDS_MANAGEMENT_POLICY,
+      on_finish_event: PolicyCreationFinishEvent.MANAGE_EC2_POLICY_CREATED,
+      initial_code: INITIAL_POLICIES.EC2_MANAGEMENT_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
       extra_data: {
@@ -217,21 +170,21 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
             access_level: AccessLevel.StartStopControl,
             target_handle: 'left',
             source_handle: 'right',
-            target_node: ResourceNodeID.RDS1,
+            target_node: ResourceNodeID.EC2Instance1,
             applicable_nodes_fn_name: 'paymentsTeamApplicableNodes',
           },
           {
             access_level: AccessLevel.StartStopControl,
             target_handle: 'left',
             source_handle: 'right',
-            target_node: ResourceNodeID.RDS2,
+            target_node: ResourceNodeID.EC2Instance2,
             applicable_nodes_fn_name: 'complianceTeamApplicableNodes',
           },
           {
             access_level: AccessLevel.StartStopControl,
             target_handle: 'left',
             source_handle: 'right',
-            target_node: ResourceNodeID.RDS3,
+            target_node: ResourceNodeID.EC2Instance3,
             applicable_nodes_fn_name: 'analyticsTeamApplicableNodes',
           },
         ],

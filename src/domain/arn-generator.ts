@@ -36,6 +36,8 @@ const arnStrategies: Record<string, ArnGenerator> = {
     `arn:aws:secretsmanager:${accountId}:secret:${resourceName}-${generateSuffix(6)}`,
   [IAMNodeResourceEntity.RDS]: (resourceName, accountId, region = 'us-east-1') =>
     `arn:aws:rds:${region}:${accountId}:db:${resourceName}`,
+  [IAMNodeResourceEntity.CodeDeploy]: (resourceName, accountId, region = 'us-east-1') =>
+    `arn:aws:codedeploy:${region}:${accountId}:application:${resourceName}`,
 };
 
 export const SupportedArnNodeTypes = Object.keys(arnStrategies);

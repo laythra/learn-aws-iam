@@ -92,7 +92,7 @@ export const stateMachine = createStateMachineSetup<
             {
               type: 'show_node_help_tooltip',
               params: {
-                nodeId: PolicyNodeID.SlackServiceManagePolicy,
+                nodeId: PolicyNodeID.SlackSecretsAccessPolicy,
                 content: 'Edit the policy by clicking the edit button in the node content',
               },
             },
@@ -120,14 +120,14 @@ export const stateMachine = createStateMachineSetup<
                 {
                   type: 'edit_node_attributes',
                   params: {
-                    nodeId: PolicyNodeID.SlackServiceManagePolicy,
+                    nodeId: PolicyNodeID.SlackSecretsAccessPolicy,
                     attributes: { editable: false },
                   },
                 },
                 {
                   type: 'hide_node_help_tooltip',
                   params: {
-                    nodeId: PolicyNodeID.SlackServiceManagePolicy,
+                    nodeId: PolicyNodeID.SlackSecretsAccessPolicy,
                   },
                 },
               ],
@@ -178,14 +178,14 @@ export const stateMachine = createStateMachineSetup<
             {
               type: 'edit_node_attributes',
               params: {
-                nodeId: PolicyNodeID.SlackServiceManagePolicy,
+                nodeId: PolicyNodeID.SlackSecretsAccessPolicy,
                 attributes: { editable: true },
               },
             },
             {
               type: 'show_node_help_tooltip',
               params: {
-                nodeId: PolicyNodeID.SlackServiceManagePolicy,
+                nodeId: PolicyNodeID.SlackSecretsAccessPolicy,
                 content: 'Edit the policy again to use tags in the policy conditions',
               },
             },
@@ -202,7 +202,7 @@ export const stateMachine = createStateMachineSetup<
                 {
                   type: 'hide_node_help_tooltip',
                   params: {
-                    nodeId: PolicyNodeID.SlackServiceManagePolicy,
+                    nodeId: PolicyNodeID.SlackSecretsAccessPolicy,
                   },
                 },
                 {

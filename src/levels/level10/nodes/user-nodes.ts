@@ -9,37 +9,37 @@ const IN_LEVEL_USER_NODES: IAMNodeDataOverrides<IAMUserNode['data']>[] = [
     id: UserNodeID.Alex,
     label: 'alex',
     layout_group_id: CommonLayoutGroupID.TopCenterVertical,
-    tags: [['team', 'payments-team']],
+    tags: [['application', 'payments-team']],
   },
   {
     id: UserNodeID.Sam,
     label: 'sam',
     layout_group_id: CommonLayoutGroupID.TopCenterVertical,
-    tags: [['team', 'payments-team']],
+    tags: [['application', 'payments-team']],
   },
   {
     id: UserNodeID.Morgan,
     label: 'morgan',
     layout_group_id: CommonLayoutGroupID.CenterVertical,
-    tags: [['team', 'compliance-team']],
+    tags: [['application', 'compliance-team']],
   },
   {
     id: UserNodeID.Jordan,
     label: 'jordan',
     layout_group_id: CommonLayoutGroupID.CenterVertical,
-    tags: [['team', 'compliance-team']],
+    tags: [['application', 'compliance-team']],
   },
   {
     id: UserNodeID.Casey,
     label: 'casey',
     layout_group_id: CommonLayoutGroupID.BottomCenterVertical,
-    tags: [['team', 'analytics-team']],
+    tags: [['application', 'analytics-team']],
   },
   {
     id: UserNodeID.Taylor,
     label: 'taylor',
     layout_group_id: CommonLayoutGroupID.BottomCenterVertical,
-    tags: [['team', 'analytics-team']],
+    tags: [['application', 'analytics-team']],
   },
 ];
 

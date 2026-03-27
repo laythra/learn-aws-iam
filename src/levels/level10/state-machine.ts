@@ -93,13 +93,13 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [PolicyCreationFinishEvent.ALLOW_CREATE_RDS_WITH_TAGS_POLICY_CREATED]: {
+            [PolicyCreationFinishEvent.ALLOW_CREATE_EC2_WITH_TAGS_POLICY_CREATED]: {
               target: 'attach_policy1_to_groups',
               actions: [
                 'close_side_panel',
                 {
                   type: 'finish_level_objective',
-                  params: { id: LevelObjectiveID.ALLOW_CREATE_RDS_WITH_TAGS_POLICY },
+                  params: { id: LevelObjectiveID.ALLOW_CREATE_EC2_WITH_TAGS_POLICY },
                 },
               ],
             },
@@ -183,8 +183,8 @@ export const stateMachine = createStateMachineSetup<
             {
               type: 'show_node_help_tooltip',
               params: {
-                nodeId: ResourceNodeID.RDS1,
-                content: 'Create a policy that allows teams to manage their own RDS instances',
+                nodeId: ResourceNodeID.EC2Instance1,
+                content: 'Create a policy that allows teams to manage their own EC2 instances',
               },
             },
             {
@@ -193,16 +193,16 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [PolicyCreationFinishEvent.MANAGE_RDS_POLICY_CREATED]: {
+            [PolicyCreationFinishEvent.MANAGE_EC2_POLICY_CREATED]: {
               target: 'attach_policy2_to_groups',
               actions: [
                 {
                   type: 'finish_level_objective',
-                  params: { id: LevelObjectiveID.CREATE_MANAGE_RDS_POLICY },
+                  params: { id: LevelObjectiveID.CREATE_MANAGE_EC2_POLICY },
                 },
                 {
                   type: 'hide_node_help_tooltip',
-                  params: { nodeId: ResourceNodeID.RDS1 },
+                  params: { nodeId: ResourceNodeID.EC2Instance1 },
                 },
               ],
             },
@@ -220,7 +220,7 @@ export const stateMachine = createStateMachineSetup<
                 },
                 {
                   type: 'hide_node_help_tooltip',
-                  params: { nodeId: PolicyNodeID.RDSManagePolicy },
+                  params: { nodeId: PolicyNodeID.EC2ManagePolicy },
                 },
               ],
             },
@@ -231,7 +231,7 @@ export const stateMachine = createStateMachineSetup<
             {
               type: 'show_node_help_tooltip',
               params: {
-                nodeId: PolicyNodeID.RDSManagePolicy,
+                nodeId: PolicyNodeID.EC2ManagePolicy,
                 content: 'Attach this policy to the same groups as the previous one',
               },
             },
@@ -246,7 +246,7 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 in_progress: {
                   on: {
-                    [EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP1]: 'completed',
+                    [EdgeConnectionFinishEvent.MANAGE_EC2_POLICY_ATTACHED_GROUP1]: 'completed',
                   },
                 },
                 completed: { type: 'final' },
@@ -257,7 +257,7 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 in_progress: {
                   on: {
-                    [EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP2]: 'completed',
+                    [EdgeConnectionFinishEvent.MANAGE_EC2_POLICY_ATTACHED_GROUP2]: 'completed',
                   },
                 },
                 completed: { type: 'final' },
@@ -268,7 +268,7 @@ export const stateMachine = createStateMachineSetup<
               states: {
                 in_progress: {
                   on: {
-                    [EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP3]: 'completed',
+                    [EdgeConnectionFinishEvent.MANAGE_EC2_POLICY_ATTACHED_GROUP3]: 'completed',
                   },
                 },
                 completed: { type: 'final' },

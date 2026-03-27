@@ -35,9 +35,9 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
   _.zip(
     [GroupNodeID.PaymentsTeam, GroupNodeID.AnalyticsTeam, GroupNodeID.ComplianceTeam],
     [
-      EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP1,
-      EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP2,
-      EdgeConnectionFinishEvent.MANAGE_RDS_POLICY_ATTACHED_GROUP3,
+      EdgeConnectionFinishEvent.MANAGE_EC2_POLICY_ATTACHED_GROUP1,
+      EdgeConnectionFinishEvent.MANAGE_EC2_POLICY_ATTACHED_GROUP2,
+      EdgeConnectionFinishEvent.MANAGE_EC2_POLICY_ATTACHED_GROUP3,
     ]
   ).map(
     ([groupId, finishEvent]) =>
@@ -46,7 +46,7 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
         required_edges: [
           createEdge({
             rootOverrides: {
-              source: PolicyNodeID.RDSManagePolicy,
+              source: PolicyNodeID.EC2ManagePolicy,
               target: groupId!,
             },
           }),

@@ -3,42 +3,42 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const Objective1Description = `
-  Create a policy containing two statements, one for managing RDS instances with specific tags,
-  and another for allowing tag creation when creating RDS instances.
+  Create a policy that lets teams launch tagged EC2 instances,
+  enforcing that every new instance carries the correct application, environment, and Name tags.
 `;
 
 const Objective2Description = `
-  Attach the RDS creation policy to the appropriate team groups.
+  Attach the EC2 launch policy to the appropriate team groups.
 `;
 
 const Objective3Description = `
-  Create a policy that allows stopping/starting RDS instances,
-  but only by the team to whom the instance belongs.
+  Create a policy that lets teams start and stop their own EC2 instances,
+  but not those belonging to other teams.
 `;
 
 const Objective4Description = `
-  Attach the RDS management policy to the respective team groups.
+  Attach the EC2 management policy to the respective team groups.
 `;
 
 const Objective1Hint = `
-  The policy should include two statements:
+  The policy needs two statements:
 
   **1. Tag Creation Statement**
 
-  Allows teams to create tags **only** when creating a new RDS instance
+  \`ec2:CreateTags\`, restricted to fire only during a \`RunInstances\` call.
+  This is necessary because EC2 applies tags via a separate API call at launch time.
 
-  **2. RDS Instance Creation Statement**
+  **2. Instance Launch Statement**
 
-  Allows teams to create RDS instances, while **enforcing** the presence of the following tags:
-
-  * \`team\` - Must match the principal's team name
-  * \`environment\` - Must be one of: \`dev\`, \`staging\`, or \`prod\`
-  * \`name\` - Can be any descriptive name for the RDS instance
+  \`ec2:RunInstances\`, allowed only when the request carries:
+  * \`application\` — must match the caller's own application tag
+  * \`environment\` — must be one of \`dev\`, \`staging\`, or \`prod\`
+  * \`Name\` — optional, but if included must be one of the allowed tag keys
 `;
 
 const Objective3Hint = `
-  How can you know the team to which the RDS instance belongs?
-  We can utilize **Resource Tags** to achieve this!
+  Each EC2 instance carries an \`application\` tag. Use that to restrict
+  which users can act on it.
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [
@@ -46,7 +46,7 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.ALLOW_CREATE_RDS_WITH_TAGS_POLICY,
+      id: LevelObjectiveID.ALLOW_CREATE_EC2_WITH_TAGS_POLICY,
       label: Objective1Description,
       hint_text: Objective1Hint,
     },
@@ -61,7 +61,7 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.CREATE_MANAGE_RDS_POLICY,
+      id: LevelObjectiveID.CREATE_MANAGE_EC2_POLICY,
       label: Objective3Description,
       hint_text: Objective3Hint,
     },
