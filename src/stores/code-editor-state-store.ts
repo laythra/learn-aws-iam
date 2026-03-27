@@ -1,5 +1,5 @@
 import { Diagnostic } from '@codemirror/lint';
-import { createStoreWithProducer } from '@xstate/store';
+import { createStore } from '@xstate/store';
 import { produce } from 'immer';
 
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
@@ -51,25 +51,24 @@ export type CodeEditorState = {
   selectedNodeId?: string;
 };
 
-export default createStoreWithProducer<CodeEditorState, CodeEditorEvents, Record<string, unknown>>(
-  produce,
-  {
-    context: {
-      errors: {},
-      warnings: {},
-      content: {},
-      label: {},
-      selectedIAMEntity: IAMNodeEntity.IdentityPolicy,
-      isCodeEditorInitialized: false,
-      selectedPolicies: [],
-      selectedAccountId: undefined,
-      helpPopupInfo: { isOpen: false, entity: IAMNodeEntity.IdentityPolicy },
-      labelError: undefined,
-      isOpen: false,
-      mode: 'create',
-    },
-    on: {
-      setCodeErrorsAndWarnings: (
+export default createStore<CodeEditorState, CodeEditorEvents, never>({
+  context: {
+    errors: {},
+    warnings: {},
+    content: {},
+    label: {},
+    selectedIAMEntity: IAMNodeEntity.IdentityPolicy,
+    isCodeEditorInitialized: false,
+    selectedPolicies: [],
+    selectedAccountId: undefined,
+    helpPopupInfo: { isOpen: false, entity: IAMNodeEntity.IdentityPolicy },
+    labelError: undefined,
+    isOpen: false,
+    mode: 'create',
+  },
+  on: {
+    setCodeErrorsAndWarnings: produce(
+      (
         context: CodeEditorState,
         event: {
           errors: Diagnostic[];
@@ -79,11 +78,10 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents, Record
       ) => {
         context.errors[event.nodeId] = event.errors;
         context.warnings[event.nodeId] = event.warnings;
-      },
-      setContent: (
-        context: CodeEditorState,
-        event: { content: string | undefined; nodeId: string }
-      ) => {
+      }
+    ),
+    setContent: produce(
+      (context: CodeEditorState, event: { content: string | undefined; nodeId: string }) => {
         context.isValidating = true;
         // delete key if content is undefined
         if (event.content === undefined) {
@@ -92,67 +90,69 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents, Record
         }
 
         context.content[event.nodeId] = event.content;
-      },
-      clearContent: (context: CodeEditorState, event: { nodeId: string }) => {
-        context.isValidating = true;
-        delete context.content[event.nodeId];
-      },
-      setSelectedIAMEntity: (
-        context: CodeEditorState,
-        event: { payload: IAMCodeDefinedEntity }
-      ) => {
+      }
+    ),
+    clearContent: produce((context: CodeEditorState, event: { nodeId: string }) => {
+      context.isValidating = true;
+      delete context.content[event.nodeId];
+    }),
+    setSelectedIAMEntity: produce(
+      (context: CodeEditorState, event: { payload: IAMCodeDefinedEntity }) => {
         context.selectedIAMEntity = event.payload;
-      },
-      setIsValidating: (context: CodeEditorState, event: { payload: boolean }) => {
-        context.isValidating = event.payload;
-      },
-      deinitializeCodeEditor: (context: CodeEditorState) => {
-        context.isCodeEditorInitialized = false;
-        context.isValidating = false;
-        context.selectedIAMEntity = IAMNodeEntity.IdentityPolicy;
-        context.errors = {};
-        context.warnings = {};
-        context.content = {};
-        context.label = {};
-        context.labelError = undefined;
-        context.isOpen = false;
-      },
-      selectPolicy: (context: CodeEditorState, event: { policyId: string }) => {
-        context.selectedPolicies.push(event.policyId);
-      },
-      deselectPolicy: (context: CodeEditorState, event: { policyId: string }) => {
-        context.selectedPolicies = context.selectedPolicies.filter(
-          selectedPolicy => selectedPolicy !== event.policyId
-        );
-      },
-      setSelectedAccount: (context: CodeEditorState, event: { selectedAccountId: string }) => {
+      }
+    ),
+    setIsValidating: produce((context: CodeEditorState, event: { payload: boolean }) => {
+      context.isValidating = event.payload;
+    }),
+    deinitializeCodeEditor: produce((context: CodeEditorState) => {
+      context.isCodeEditorInitialized = false;
+      context.isValidating = false;
+      context.selectedIAMEntity = IAMNodeEntity.IdentityPolicy;
+      context.errors = {};
+      context.warnings = {};
+      context.content = {};
+      context.label = {};
+      context.labelError = undefined;
+      context.isOpen = false;
+    }),
+    selectPolicy: produce((context: CodeEditorState, event: { policyId: string }) => {
+      context.selectedPolicies.push(event.policyId);
+    }),
+    deselectPolicy: produce((context: CodeEditorState, event: { policyId: string }) => {
+      context.selectedPolicies = context.selectedPolicies.filter(
+        selectedPolicy => selectedPolicy !== event.policyId
+      );
+    }),
+    setSelectedAccount: produce(
+      (context: CodeEditorState, event: { selectedAccountId: string }) => {
         context.isValidating = true;
         context.selectedAccountId = event.selectedAccountId;
-      },
-      showHelpPopup: (context: CodeEditorState, event: { entity: IAMCodeDefinedEntity }) => {
-        context.helpPopupInfo = {
-          isOpen: true,
-          entity: event.entity,
-        };
-      },
-      hideHelpPopup: (context: CodeEditorState) => {
-        context.helpPopupInfo = {
-          isOpen: false,
-          entity: IAMNodeEntity.IdentityPolicy,
-        };
-      },
-      setNodeLabel: (context: CodeEditorState, event: { label: string; nodeId: string }) => {
-        context.isValidating = true;
-        context.label[event.nodeId] = event.label;
-      },
-      setNodeLabelError: (
-        context: CodeEditorState,
-        event: { error: string | undefined; isValidating: boolean }
-      ) => {
+      }
+    ),
+    showHelpPopup: produce((context: CodeEditorState, event: { entity: IAMCodeDefinedEntity }) => {
+      context.helpPopupInfo = {
+        isOpen: true,
+        entity: event.entity,
+      };
+    }),
+    hideHelpPopup: produce((context: CodeEditorState) => {
+      context.helpPopupInfo = {
+        isOpen: false,
+        entity: IAMNodeEntity.IdentityPolicy,
+      };
+    }),
+    setNodeLabel: produce((context: CodeEditorState, event: { label: string; nodeId: string }) => {
+      context.isValidating = true;
+      context.label[event.nodeId] = event.label;
+    }),
+    setNodeLabelError: produce(
+      (context: CodeEditorState, event: { error: string | undefined; isValidating: boolean }) => {
         context.labelError = event.error;
         context.isValidating = event.isValidating;
-      },
-      open: (
+      }
+    ),
+    open: produce(
+      (
         context: CodeEditorState,
         event: {
           mode: 'create' | 'edit';
@@ -164,10 +164,10 @@ export default createStoreWithProducer<CodeEditorState, CodeEditorEvents, Record
         context.mode = event.mode;
         context.selectedNodeId = event.selectedNodeId;
         context.selectedIAMEntity = event.selectedIAMEntity ?? IAMNodeEntity.IdentityPolicy;
-      },
-      close: (context: CodeEditorState) => {
-        context.isOpen = false;
-      },
-    },
-  }
-);
+      }
+    ),
+    close: produce((context: CodeEditorState) => {
+      context.isOpen = false;
+    }),
+  },
+});
