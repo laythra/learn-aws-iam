@@ -1,5 +1,5 @@
-import createRDSWithTagsPolicy from './schemas/create-rds-with-tags-policy.json';
-import manageTaggedRdsPolicy from './schemas/manage-tagged-rds-policy.json';
+import createEC2WithTagsPolicy from './schemas/create-ec2-with-tags-policy.json';
+import manageTaggedEC2Policy from './schemas/manage-tagged-ec2-policy.json';
 import { PolicyNodeID } from './types/node-ids';
 import { IAMNodeFilter } from '../utils/filters/iam-node-filter';
 import { AJV_COMPILER } from '@/domain/iam-policy-validator';
@@ -11,25 +11,25 @@ export const ObjectivesApplicableNodesFns = {
     IAMNodeFilter.create()
       .fromNodes(nodes)
       .whereEntityIs(IAMNodeEntity.User)
-      .whereHasTag('team', 'payments-team')
+      .whereHasTag('application', 'payments-team')
       .build(),
   complianceTeamApplicableNodes: (nodes: IAMAnyNode[]) =>
     IAMNodeFilter.create()
       .fromNodes(nodes)
       .whereEntityIs(IAMNodeEntity.User)
-      .whereHasTag('team', 'compliance-team')
+      .whereHasTag('application', 'compliance-team')
       .build(),
   analyticsTeamApplicableNodes: (nodes: IAMAnyNode[]) =>
     IAMNodeFilter.create()
       .fromNodes(nodes)
       .whereEntityIs(IAMNodeEntity.User)
-      .whereHasTag('team', 'analytics-team')
+      .whereHasTag('application', 'analytics-team')
       .build(),
 } as const;
 
 export const ValidateFunctions = {
-  [PolicyNodeID.TBACPolicy]: () => AJV_COMPILER.compile(createRDSWithTagsPolicy),
-  [PolicyNodeID.RDSManagePolicy]: () => AJV_COMPILER.compile(manageTaggedRdsPolicy),
+  [PolicyNodeID.TBACPolicy]: () => AJV_COMPILER.compile(createEC2WithTagsPolicy),
+  [PolicyNodeID.EC2ManagePolicy]: () => AJV_COMPILER.compile(manageTaggedEC2Policy),
 } as const;
 
 export type ValidateFunctionsFnName = keyof typeof ValidateFunctions;

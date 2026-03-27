@@ -71,14 +71,27 @@
             ],
             "properties": {
               "StringEquals": {
-                "type": "object",
-                "properties": {
-                  "rds:ResourceTag/team": {
-                    "const": "${aws:PrincipalTag/team}"
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": ["aws:ResourceTag/team"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "aws:ResourceTag/team": {
+                        "const": "${aws:PrincipalTag/team}"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": ["rds:ResourceTag/team"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "rds:ResourceTag/team": {
+                        "const": "${aws:PrincipalTag/team}"
+                      }
+                    }
                   }
-                },
-                "required": [
-                  "rds:ResourceTag/team"
                 ]
               }
             }

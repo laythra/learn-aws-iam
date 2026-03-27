@@ -8,18 +8,19 @@ import { IAMResourceNode } from '@/types/iam-node-types';
 
 const TUTORIAL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [];
 const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = _.zip(
-  [ResourceNodeID.RDS1, ResourceNodeID.RDS2, ResourceNodeID.RDS3],
+  [ResourceNodeID.EC2Instance1, ResourceNodeID.EC2Instance2, ResourceNodeID.EC2Instance3],
   [
-    ['team', 'payments-team'],
-    ['team', 'compliance-team'],
-    ['team', 'analytics-team'],
-  ]
-).map(([id, tags]) => ({
+    ['application', 'payments-team'],
+    ['application', 'compliance-team'],
+    ['application', 'analytics-team'],
+  ],
+  ['payments-ec2', 'compliance-ec2', 'analytics-ec2']
+).map(([id, tags, label]) => ({
   id,
-  label: `${id}-rds`,
+  label,
   layout_group_id: CommonLayoutGroupID.RightCenterVertical,
-  image: IAMNodeImage.Database,
-  resource_type: IAMNodeResourceEntity.RDS,
+  image: IAMNodeImage.Server,
+  resource_type: IAMNodeResourceEntity.EC2Instance,
   tags: [tags as [string, string]],
 }));
 

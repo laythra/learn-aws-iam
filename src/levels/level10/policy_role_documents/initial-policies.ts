@@ -16,7 +16,7 @@ export const INITIAL_POLICIES = {
       },
     ],
   },
-  RDS_MANAGEMENT_POLICY: {
+  EC2_MANAGEMENT_POLICY: {
     Version: '2012-10-17',
     Statement: [
       {

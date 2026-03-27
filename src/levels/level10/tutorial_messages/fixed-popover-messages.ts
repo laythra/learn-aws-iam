@@ -3,24 +3,22 @@ import { FixedPopoverMessage } from '@/types/tutorial-message-types';
 const FIXED_POPOVER_MSG1 = `
   Phenomenal efforts so far! 🔥
 
-  Notice the created RDS instances? They are tagged with the team name,
-  which is essential for the next objective.
+  These EC2 instances represent each team's compute resources, pre-tagged with the application name.
+  That tag is what makes the next objective possible.
 
-  One thing remains: we want to allow teams to manage their own RDS instances,
-  but not the instances of other teams.
-
-  Managing here means being able to stop and start the instance.
+  One thing remains: allow each team to start and stop their own instances,
+  but not those belonging to other teams.
 `;
 
 const FIXED_POPOVER_MSG2 = `
   There you have it! 🎉
 
-  Between *request tags* for enforcing tagging rules at creation time,
+  Between *request tags* for enforcing tagging rules at launch time,
   and *resource tags* with *policy variables* for scoping access to the right instances,
-  you've seen how tagging makes IAM policies scale cleanly across any number of teams.
+  you've seen how tagging makes IAM policies scale cleanly across teams.
 
-  Even if a group contains users from different teams,
-  the policy enforces that each user can only manage their own resources.
+  The same principle applies here: access is governed by the user's \`application\` tag,
+  not which group they belong to.
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [

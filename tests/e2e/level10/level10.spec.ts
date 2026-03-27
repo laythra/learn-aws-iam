@@ -81,19 +81,23 @@ const verifyRDSResourcesAndCreatePolicy = async (
   nodes: NodeActions,
   popups: PopupActions
 ): Promise<void> => {
-  await nodes.expectVisible(ResourceNodeID.RDS1, ResourceNodeID.RDS2, ResourceNodeID.RDS3);
+  await nodes.expectVisible(
+    ResourceNodeID.EC2Instance1,
+    ResourceNodeID.EC2Instance2,
+    ResourceNodeID.EC2Instance3
+  );
 
   await popups.submitCreatePolicyPopup(
     [ElementID.CodeEditorPolicyTab],
     ElementID.CodeEditorPolicyTab,
-    PolicyNodeID.RDSManagePolicy,
+    PolicyNodeID.EC2ManagePolicy,
     await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy2')
   );
 
-  await nodes.expectVisible(PolicyNodeID.RDSManagePolicy);
+  await nodes.expectVisible(PolicyNodeID.EC2ManagePolicy);
   await popups.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
   await tutorial.expectPopoverWithoutNextButton(
-    PolicyNodeID.RDSManagePolicy,
+    PolicyNodeID.EC2ManagePolicy,
     POPOVER_TUTORIAL_MESSAGES[3].popover_title
   );
 };
@@ -106,21 +110,21 @@ const connectRDSPolicyToGroups = async (
   const groupToResourceMapping: Record<string, { users: string[]; resource: string }> = {
     [GroupNodeID.ComplianceTeam]: {
       users: [UserNodeID.Morgan, UserNodeID.Jordan],
-      resource: ResourceNodeID.RDS2,
+      resource: ResourceNodeID.EC2Instance2,
     },
     [GroupNodeID.AnalyticsTeam]: {
       users: [UserNodeID.Casey, UserNodeID.Taylor],
-      resource: ResourceNodeID.RDS3,
+      resource: ResourceNodeID.EC2Instance3,
     },
     [GroupNodeID.PaymentsTeam]: {
       users: [UserNodeID.Alex, UserNodeID.Sam],
-      resource: ResourceNodeID.RDS1,
+      resource: ResourceNodeID.EC2Instance1,
     },
   };
 
   for (const group of groups) {
-    await nodes.connectNodes(PolicyNodeID.RDSManagePolicy, group);
-    await edges.expectVisible(PolicyNodeID.RDSManagePolicy, group);
+    await nodes.connectNodes(PolicyNodeID.EC2ManagePolicy, group);
+    await edges.expectVisible(PolicyNodeID.EC2ManagePolicy, group);
 
     const mapping = groupToResourceMapping[group];
     await edges.expectMutlipleVisible(mapping.users.map(user => [user, mapping.resource]));
@@ -271,7 +275,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
 
     await test.step('Verify initial popover message', async () => {
       await tutorial.expectPopoverWithoutNextButton(
-        PolicyNodeID.RDSManagePolicy,
+        PolicyNodeID.EC2ManagePolicy,
         POPOVER_TUTORIAL_MESSAGES[3].popover_title
       );
     });
@@ -301,7 +305,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
 
     await test.step('Verify initial popover message', async () => {
       await tutorial.expectPopoverWithoutNextButton(
-        PolicyNodeID.RDSManagePolicy,
+        PolicyNodeID.EC2ManagePolicy,
         POPOVER_TUTORIAL_MESSAGES[3].popover_title
       );
     });
@@ -331,7 +335,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
 
     await test.step('Verify initial popover message', async () => {
       await tutorial.expectPopoverWithoutNextButton(
-        PolicyNodeID.RDSManagePolicy,
+        PolicyNodeID.EC2ManagePolicy,
         POPOVER_TUTORIAL_MESSAGES[3].popover_title
       );
     });
@@ -361,7 +365,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
 
     await test.step('Verify initial popover message', async () => {
       await tutorial.expectPopoverWithoutNextButton(
-        PolicyNodeID.RDSManagePolicy,
+        PolicyNodeID.EC2ManagePolicy,
         POPOVER_TUTORIAL_MESSAGES[3].popover_title
       );
     });
@@ -392,7 +396,7 @@ test.describe('Stage 4 - Attach RDS Management Policy and Complete Level', () =>
 
     await test.step('Verify initial popover message', async () => {
       await tutorial.expectPopoverWithoutNextButton(
-        PolicyNodeID.RDSManagePolicy,
+        PolicyNodeID.EC2ManagePolicy,
         POPOVER_TUTORIAL_MESSAGES[3].popover_title
       );
     });
