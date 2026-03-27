@@ -1037,13 +1037,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource/lato@npm:^5.2.7":
-  version: 5.2.7
-  resolution: "@fontsource/lato@npm:5.2.7"
-  checksum: 10c0/2d3e3f8da0e5ce733377406619066222ebc8786477b33bd2131d0137c069bc0e31416ed3dfa3b2fd2f57d22029f8ecd33cc693dfa08c8b42b5d028f18bacc3d3
-  languageName: node
-  linkType: hard
-
 "@gar/promise-retry@npm:^1.0.0":
   version: 1.0.3
   resolution: "@gar/promise-retry@npm:1.0.3"
@@ -4800,7 +4793,6 @@ __metadata:
     "@eslint/js": "npm:^9.39.2"
     "@fontsource/ibm-plex-mono": "npm:^5.2.7"
     "@fontsource/ibm-plex-sans": "npm:^5.2.8"
-    "@fontsource/lato": "npm:^5.2.7"
     "@heroicons/react": "npm:^2.2.0"
     "@playwright/test": "npm:^1.58.2"
     "@testing-library/dom": "npm:^10.4.1"
