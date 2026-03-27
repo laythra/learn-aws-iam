@@ -5,14 +5,16 @@ export default `
   * **Action**: The specific actions that the policy allows or denies
   * **Resource**: The resources to which the policy applies
   * **Condition**: Additional conditions that must be met for the policy to apply
+  * **Sid**: An optional identifier for the statement
 
   &nbsp;
 
   ~~~js
   {
-    "Version": "2012-10-17",
+    "Version": "2012-10-17", ::badge[POLICY LANGUAGE VERSION]::
     "Statement": [
       {
+        "Sid": "AllowS3Read", ::badge[OPTIONAL STATEMENT IDENTIFIER]::
         "Effect": "Allow", ::badge[ALLOWS SPECIFIED ACTIONS]::
         "Action": ["s3:Get*", "s3:List*"], ::badge[READ-ONLY ACCESS TO S3]::
         "Resource": "*", ::badge[ALL S3 BUCKETS]::

@@ -32,7 +32,7 @@ const FIXED_POPOVER_MSG4 = `
 `;
 
 const FIXED_POPOVER_MSG6 = `
-  As the IAM Security Specialist at ***Timeshift Labs***,
+  As the IAM Security Specialist at **Timeshift Labs**,
   you have some exciting challenges ahead:
 
   * Grant the **EC2 instance** the necessary permissions to *write* into the **S3 bucket**

@@ -2,20 +2,20 @@ import { PopupTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
 In the previous level, we covered **IAM Groups** and
-how they simplify permission management at scale.|lg
+how they simplify permission management at scale.
 
-This level introduces **Customer Managed IAM Policies** and **AWS Managed Policies**.|lg
+This level introduces **Customer Managed IAM Policies** and **AWS Managed Policies**.
 `;
 
 const POPUP_MSG_2 = `
-In **Level 2**, the pre-built policies you worked with were **AWS Managed**.|lg
+In **Level 2**, the pre-built policies you worked with were **AWS Managed**.
 
 * **AWS Managed Policies** are pre-built policies you can attach
  to your IAM \`users\`, \`groups\`, and \`roles\`.
 * They're designed to cover common use cases and are maintained by AWS.
 * They can't be edited — only attached or detached.
 
-**Customer Managed Policies** are policies you create and manage yourself.|lg
+**Customer Managed Policies** are policies you create and manage yourself.
 
 * You create them as \`JSON\` documents and attach them
 to your **IAM users**, **groups**, or **roles**.
@@ -50,31 +50,31 @@ the action will be denied
 
 const POPUP_MSG_4 = `
 You're a DevOps engineer responsible for managing **IAM policies**
- for a small startup.|lg
+ for a small startup.
 
 \\
 The company has two teams: **Frontend** and **Backend**.
 * **Frontend Team**:
-  - Requires ***read/write*** access to specific **S3 buckets**
+  - Requires *read/write* access to specific **S3 buckets**
    for storing static assets (e.g., images).
   - Needs read access to specific **CloudFront Distributions**
    to view distribution configuration.
 * **Backend Team**:
-  - Requires ***read/write*** access to specific **DynamoDB** tables.
+  - Requires *read/write* access to specific **DynamoDB** tables.
 `;
 
 const POPUP_MSG_5 = `
 **Important note:** Backend developers sometimes need access
-to the same \`S3\` buckets that frontend developers use.|lg
+to the same \`S3\` buckets that frontend developers use.
 
 ::badge[RULE]::
 Ensure you create reusable policies
-while maintaining the **principle of least privilege**.|lg
+while maintaining the **principle of least privilege**.
 
 &nbsp;
 
 > |color(blue)
-> **What is the Principle of Least Privilege?**|lg
+> **What is the Principle of Least Privilege?**
 >
 > The **principle of least privilege** means giving users or systems only the permissions
 > they need to do their job - nothing more. For example,
@@ -85,11 +85,11 @@ while maintaining the **principle of least privilege**.|lg
 
 const POPUP_MSG_6 = `
 Your teams now have the proper permissions to access the resources they need,
-and the principle of least privilege is being followed.|lg
+and the principle of least privilege is being followed.
 
 This level reinforced everything we've covered so far.
 In the next level, we'll start editing customer managed policies
-to fine-tune the permissions you need.|lg
+to fine-tune the permissions you need.
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

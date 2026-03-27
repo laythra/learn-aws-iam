@@ -1,10 +1,10 @@
 import { PopupTutorialMessage } from '@/types/tutorial-message-types';
 const POPUP_MSG1 = `
   The policies you've created so far were relatively straightforward.
-  In this level, you'll write more advanced IAM policies using \`Condition\`.|lg
+  In this level, you'll write more advanced IAM policies using \`Condition\`.
 
   ::badge[RULE]:: **Conditions define when a statement applies using request context values,
-  operators, and condition keys.**|lg
+  operators, and condition keys.**
 `;
 
 const POPUP_MSG2 = `
@@ -49,10 +49,10 @@ const POPUP_MSG5 = `
 
   You learned how to create more sophisticated IAM policies
   using conditions to restrict access based on user attributes.
-  You also got a glimpse of **Tag-Based Access Control (TBAC)**.|lg
+  You also got a glimpse of **Tag-Based Access Control (TBAC)**.
 
   This is just the start of conditions and tags.
-  You'll go deeper into these concepts in the next levels.|lg
+  You'll go deeper into these concepts in the next levels.
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

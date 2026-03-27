@@ -15,7 +15,7 @@ const OBJECTIVE1_CALLOUT_MSG = `
   \`{ "Service": "<service-name>.amazonaws.com" }\` for an AWS service principal.
 `;
 
-const OBJECTIVE2_CALLOUT_MSG = `
+const OBJECTIVE_DESCRIPTION = `
   Create a resource-based policy that grants the user \`alex\`
   read/write access to the S3 bucket \`incident-response-artifacts\`
 `;
@@ -47,7 +47,6 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
       initial_code: INITIAL_POLICIES.S3_READ_RESOURCE_BASED_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
-      callout_message: OBJECTIVE1_CALLOUT_MSG,
       initial_edges: [
         {
           from: ResourcePolicyNodeID.TutorialResourceBasedPolicy,
@@ -77,6 +76,7 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
           color: 'yellow',
         },
       ],
+      callout_message: OBJECTIVE1_CALLOUT_MSG,
       hint_messages: [
         {
           title: 'Hint #1',
@@ -108,8 +108,11 @@ export const RESOURCE_POLICY_CREATION_OBJECTIVES: IAMResourcePolicyCreationObjec
           to: ResourceNodeID.InsideLevelS3Bucket,
         },
       ],
-      callout_message: OBJECTIVE2_CALLOUT_MSG,
       hint_messages: [
+        {
+          title: 'Objective',
+          content: OBJECTIVE_DESCRIPTION,
+        },
         {
           title: 'Hint',
           content: OBJECTIVE2_HINT_MSG3,

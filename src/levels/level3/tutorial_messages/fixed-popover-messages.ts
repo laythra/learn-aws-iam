@@ -26,7 +26,7 @@ const POPOVER_MSG3 = `
 
 const POPOVER_MSG4 = `
   An **S3 Bucket** resource is now visible.
-  Copy the **Bucket's ARN** by clicking the *id* icon \`::icon[IdentificationIcon]::\`
+  Copy the **Bucket's ARN** by clicking the **id** icon \`::icon[IdentificationIcon]::\`
   and then the copy \`::icon[ClipboardDocumentIcon]::\` icon next to the ARN.
 `;
 

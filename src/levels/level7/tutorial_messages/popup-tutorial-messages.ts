@@ -46,17 +46,17 @@ const POPUP_MSG3 = `
   A **resource-based policy** is essentially a permissions policy
   with an added **Principal** field.
   The **Principal** field defines who is allowed access to the resource
-  and follows the same principal formats used in trust policies.|lg
+  and follows the same principal formats used in trust policies.
 
   For this stage of the level, we'll achieve the same cross-account access as before,
-  but this time using a **resource-based policy** instead of a role trust policy.|lg
+  but this time using a **resource-based policy** instead of a role trust policy.
 
   &nbsp;
 
   > |color(warning)
   > ::badge[WARNING]::
-  > ***Now that we entered the multi-account territory (again),
-  > a mutual "agreement" from both accounts is required to set up cross-account access.***
+  > Now that we entered the multi-account territory (again),
+  > a mutual "agreement" from both accounts is required to set up cross-account access.
 `;
 
 const POPUP_MSG4 = `
@@ -69,7 +69,7 @@ const POPUP_MSG4 = `
   - **Trust Policies**: attached to IAM roles, specifying which entities can assume the role
 
   The next level introduces another powerful policy type:
-  *permission boundaries* 🔥.
+  **permission boundaries** 🔥.
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

@@ -60,7 +60,7 @@ const POPOVER_MSG11 = `
 const POPOVER_MSG12 = `
   morgan is a junior developer (see the \`level\` tag), and she will now attempt to assume the role.
 
-  ***The principal in the role allows anyone with a \`level: junior\` tag to assume it.*** 😉
+  The principal in the role allows anyone with a \`level: junior\` tag to assume it. 😉
 `;
 
 const POPOVER_MSG13 = `

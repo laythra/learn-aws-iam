@@ -8,13 +8,13 @@ import { createSCPCreationObjective } from '@/levels/utils/factories/scp-creatio
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMSCPCreationObjective, ObjectiveType } from '@/types/objective-types';
 
-const OBJECTIVE_CALLOUT_MSG = `
+const OBJECTIVE_DESCRIPTION = `
   We need to create a Service Control Policy (SCP) which blocks the
   deletion of CloudTrail trails in all accounts.
 `;
 const EFFECT_HINT_MSG = `
   What should the effect be for this SCP?
-  We want to ***Deny*** the deletion of CloudTrail trails.
+  We want to **Deny** the deletion of CloudTrail trails.
 `;
 
 const ACTIONS_HINT_MSG = `
@@ -39,8 +39,11 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<
         blocked_edge_content: 'Delete CloudTrail Access Blocked By SCP 🔒',
         is_edge_blocked_fn_name: 'SCP1BlockingFN',
       },
-      callout_message: OBJECTIVE_CALLOUT_MSG,
       hint_messages: [
+        {
+          title: 'Objective',
+          content: OBJECTIVE_DESCRIPTION,
+        },
         {
           title: 'Effect',
           content: EFFECT_HINT_MSG,

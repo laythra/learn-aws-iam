@@ -6,7 +6,7 @@ import { createPolicyCreationObjective } from '@/levels/utils/factories/identity
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/types/objective-types';
 
-const OBJECTIVE1_CALLOUT_MSG = `
+const OBJECTIVE1_DESCRIPTION = `
   This policy needs two statements:
 
   **Statement 1 — Tag Creation**
@@ -18,7 +18,7 @@ const OBJECTIVE1_CALLOUT_MSG = `
   the caller's application, a valid environment, and optionally a Name.
 `;
 
-const OBJECTIVE2_CALLOUT_MSG = `
+const OBJECTIVE2_DESCRIPTION = `
   Allow teams to start and stop their own EC2 instances.
 
   Each instance is tagged with the application (team) that owns it — use that to scope access.
@@ -128,8 +128,11 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
       initial_code: INITIAL_POLICIES.POLICY_WITH_CONDITION,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
-      callout_message: OBJECTIVE1_CALLOUT_MSG,
       hint_messages: [
+        {
+          title: 'Objective',
+          content: OBJECTIVE1_DESCRIPTION,
+        },
         {
           title: 'Tag Condition Keys',
           content: OBJECTIVE1_HINT_MSG1,
@@ -189,9 +192,12 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
           },
         ],
       },
-      callout_message: OBJECTIVE2_CALLOUT_MSG,
       help_badges: OBJECTIVE2_HELP_BADGES,
       hint_messages: [
+        {
+          title: 'Objective',
+          content: OBJECTIVE2_DESCRIPTION,
+        },
         {
           title: 'Identifying Team Ownership',
           content: OBJECTIVE2_HINT_MSG1,

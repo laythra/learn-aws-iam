@@ -5,7 +5,7 @@ import { AccessLevel, HandleID, IAMNodeEntity } from '@/types/iam-enums';
 import { PolicyGrantedAccess } from '@/types/iam-policy-types';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/types/objective-types';
 
-const OBJECTIVE1_CALLOUT_MSG = `
+const OBJECTIVE_DESCRIPTION = `
   Edit this policy so only senior users can access
   the \`slack-integration-secret\` secret.
 
@@ -49,7 +49,7 @@ const OBJECTIVE1_HINT_MSG3 = `
 `;
 
 const OBJECTIVE2_HINT_MSG1 = `
-  Recall ***condition operators*** from earlier. We will need to use something similar here.
+  Recall **condition operators** from earlier. We will need to use something similar here.
 `;
 
 const OBJECTIVE2_HINT_MSG2 = `
@@ -82,10 +82,13 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       validate_fn_name: 'slackManagePolicyValidateFn1',
       entity: IAMNodeEntity.IdentityPolicy,
-      callout_message: OBJECTIVE1_CALLOUT_MSG,
       on_finish_event: PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_FIRST_TIME,
       resources_to_grant: GRANTED_RESOURCES,
       hint_messages: [
+        {
+          title: 'Objective',
+          content: OBJECTIVE_DESCRIPTION,
+        },
         {
           title: 'Condition Operators',
           content: OBJECTIVE1_HINT_MSG1,

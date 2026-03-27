@@ -7,11 +7,14 @@ import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMPermissionBoundaryCreationObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE_CALLOUT_MSG = `
-  This objective requires creating a permission boundary which caps the permissions to:
-  * Reading Secrets' Values
-  * Retrieving Secrets Metadata
+  In AWS, permission boundaries aren’t a separate type of policy.
+  They’re just normal IAM policies.
+  You create them the same way, the only difference is how you attach them.
+  When attached as a permission boundary,
+  they act as a maximum permissions limit instead of granting permissions.
 
-  **ONLY** if the secrets are tagged with the same \`team\` tag the user making the request has
+  For the sake of simplicity, permission boundaries in this simulation are created separately
+  in order to make attaching them to roles and users more intuitive.
 `;
 
 const ACTIONS_HINT_MSG = `
@@ -19,6 +22,14 @@ const ACTIONS_HINT_MSG = `
 
   * \`secretsmanager:GetSecretValue\`
   * \`secretsmanager:DescribeSecret\`
+`;
+
+const OBJECTIVE_MSG = `
+  This objective requires creating a permission boundary which caps the permissions to:
+  * Reading Secrets' Values
+  * Retrieving Secrets Metadata
+
+  only if the secrets are tagged with the same \`team\` tag the user making the request has
 `;
 
 const CONDITIONS1_HINT_MSG = `
@@ -50,8 +61,7 @@ const CONDITIONS2_HINT_MSG = `
 
   The missing value here is the team tag of the user making the request.
 
-  ***Remember the Policy Variables we covered in the last level?
-  This is where they come into play.***
+  Remember the **Policy Variables** we covered in the last level? This is where they come into play.
 `;
 
 export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreationObjective<
@@ -74,6 +84,10 @@ export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreat
       },
       callout_message: OBJECTIVE_CALLOUT_MSG,
       hint_messages: [
+        {
+          title: 'Objective Details',
+          content: OBJECTIVE_MSG,
+        },
         {
           title: 'Actions',
           content: ACTIONS_HINT_MSG,

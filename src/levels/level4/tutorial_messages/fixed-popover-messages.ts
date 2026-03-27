@@ -1,20 +1,20 @@
 import { FixedPopoverMessage } from '@/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
-***TimeShift Labs*** has discovered that some users have access to data and services
+**TimeShift Labs** has discovered that some users have access to data and services
 beyond what their roles require. The over-permissioning isn't obvious —
 it stems from subtle misconfigurations in their **IAM policies**.
 `;
 
 const FIXED_POPOVER_MSG2 = `
-  *TimeShift Labs* has a straightforward technical hierarchy:|lg
+  **TimeShift Labs** has a straightforward technical hierarchy:|lg
 
-  * **Developers** — Should have ***read/write*** access to the \`CustomerData\`
-      table in **DynamoDB** and ***read/write*** access
+  * **Developers** — Should have *read/write* access to the \`CustomerData\`
+      table in **DynamoDB** and *read/write* access
       to the \`timeshift-assets\` **S3 Bucket** objects.
 
-  * **Data Scientists** — Should have ***read/write*** access to the \`timeshift-assets\`
-    **S3 Bucket** objects and ***read/write*** access
+  * **Data Scientists** — Should have *read/write* access to the \`timeshift-assets\`
+    **S3 Bucket** objects and *read/write* access
     to the \`AnalyticsData\` table in **DynamoDB**.
 
   * **Interns** — Should only be able to read objects from the \`timeshift-assets\` **S3 Bucket**.
@@ -23,7 +23,7 @@ const FIXED_POPOVER_MSG2 = `
 `;
 
 const FIXED_POPOVER_MSG3 = `
-You will be presented with *TimeShift Labs*' current IAM setup, including their
+You will be presented with **TimeShift Labs**' current IAM setup, including their
 **IAM Users**, **IAM Resources**, and **IAM Policies**.
 
 Your task:

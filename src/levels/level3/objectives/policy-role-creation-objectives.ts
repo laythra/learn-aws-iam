@@ -7,7 +7,7 @@ import { createPolicyCreationObjective } from '@/levels/utils/factories/identity
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/types/objective-types';
 
-const CALLOUT_MESSAGE1 = `
+const HINT_MESSAGE_0 = `
   We can grant read access to objects within an S3 bucket using wildcards.
   Such as \`arn:aws:s3:::your_bucket_name/*\`
 `;
@@ -23,7 +23,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
       entity: IAMNodeEntity.IdentityPolicy,
       layout_group_id: CommonLayoutGroupID.BottomLeftVertical,
       initial_code: INITIAL_POLICIES.S3ReadAccess,
-      callout_message: CALLOUT_MESSAGE1,
+      hint_messages: [{ title: 'S3 Wildcard Resources', content: HINT_MESSAGE_0 }],
       on_finish_event: NodeCreationFinishEvent.S3_READ_POLICY_CREATED,
       extra_data: {
         granted_accesses: [],

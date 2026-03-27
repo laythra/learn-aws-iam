@@ -3,11 +3,11 @@ import { FixedPopoverMessage } from '@/types/tutorial-message-types';
 const FIXED_POPOVER_MSG1 = `
   Right now, one role allows users to deploy the Slack alerting service
   and read the Slack integration secret. That is not ideal.
-  We only want ***Senior*** developers
+  We only want **Senior** developers
   to view the token for debugging.
 
   How can we identify senior developers?
-  ***For now, we'll explicitly list their ARNs in the policy condition***
+  For now, we'll explicitly list their ARNs in the policy condition.
 
   - \`junior-alex\` and \`junior-morgan\` are junior developers.
   - \`senior-sam\` and \`senior-jordan\` are senior developers.
@@ -35,7 +35,7 @@ const FIXED_POPOVER_MSG4 = `
   This user has a \`role\` tag with a value of \`senior\` or \`junior\`.
   We'll use this tag to enforce better access control.
 
-  **Close the popover to continue editing the policy.**
+  ***Close the popover to continue editing the policy.***
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [

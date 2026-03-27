@@ -8,7 +8,7 @@ const POPUP_MSG1 = `
   * **Resource Tags** (\`aws:ResourceTag\`):
   tags on the resource being accessed.
 
-  This level adds a third: **Request Tags** : tags carried by the API call itself.|lg
+  This level adds a third: **Request Tags**: tags carried by the API call itself.
 
   * **Request Tags** (\`aws:RequestTag\`) are tags included in an API request,
   letting you enforce that resources are tagged correctly **before they even exist**.
@@ -16,7 +16,7 @@ const POPUP_MSG1 = `
 
 const POPUP_MSG2 = `
  For this level, you'll be the DevOps engineer at a fintech company with three teams
- (***payments***, ***analytics***, ***compliance***) that each manage their own EC2 instances
+ (**payments**, **analytics**, **compliance**) that each manage their own EC2 instances
  across dev/staging/prod environments. Your goal is to ensure:
 
 * Teams can only access and manage their own instances,
@@ -28,11 +28,11 @@ const POPUP_MSG2 = `
 const POPUP_MSG3 = `
   The first policy needs two statements working together:
 
-  **1. Tag Creation Statement**|lg
+  **1. Tag Creation Statement**
 
-  Allows teams to create tags **only** when launching a new EC2 instance.
+  Allows teams to create tags only when launching a new EC2 instance.
 
-  **2. EC2 Instance Launch Statement**|lg
+  **2. EC2 Instance Launch Statement**
 
   Allows teams to launch EC2 instances, while **enforcing** the presence of the following tags:
 
@@ -43,19 +43,19 @@ const POPUP_MSG3 = `
 `;
 
 const POPUP_MSG4 = `
-  That was a tough level — give yourself a well-earned pat on the back! 🎉|lg
+  That was a tough level — give yourself a well-earned pat on the back! 🎉
 
-  You've now mastered ***Tag-Based Access Control (TBAC)***,
+  You've now mastered **Tag-Based Access Control (TBAC)**,
   and not only that, you've shown real skill in crafting complex IAM policies.
 
-  In this level, we explored *Request Tags* and how they can
+  In this level, we explored **Request Tags** and how they can
   be used to manage access based on the tags attached to the request itself.
 
   We're nearing the end of our journey.
   Next up, we'll dive into a powerful concept called **Permission Boundaries**,
   which help define the maximum permissions an IAM entity can receive.
 
-  You're doing great. Let's finish strong! 💪|lg
+  You're doing great. Let's finish strong! 💪
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

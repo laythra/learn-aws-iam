@@ -3,7 +3,7 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const Objective1Description = `
-  Create an **IAM Role** in the *Trusting Account* to be assumed by the **IAM User** \`alex\`.
+  Create an **IAM Role** in the **Trusting Account** to be assumed by the **IAM User** \`alex\`.
 `;
 
 const Objective2Description = `
@@ -12,8 +12,8 @@ const Objective2Description = `
 `;
 
 const Objective3Description = `
-  Create an **IAM policy** in the *Trusted Account* that allows
-  the **IAM User** \`alex\` to assume the role in the *Trusting Account*.
+  Create an **IAM policy** in the **Trusted Account** that allows
+  the **IAM User** \`alex\` to assume the role in the **Trusting Account**.
 `;
 
 const Objective4Description = `
@@ -25,7 +25,7 @@ const OBJECTIVE1_HINT = `
 
   This role will eventually let its principals access the **DynamoDB table**.
 
-  Which account should contain the role: *Trusted* or *Trusting*?
+  Which account should contain the role: **Trusted** or **Trusting**?
 `;
 
 const OBJECTIVE2_HINT = `
@@ -42,8 +42,8 @@ const OBJECTIVE3_HINT = `
 `;
 
 const OBJECTIVE4_HINT = `
-  One connection must originate in the *Trusted Account*
-  and point to an identity in the *Trusting Account*.
+  One connection must originate in the **Trusted Account**
+  and point to an identity in the **Trusting Account**.
   Which connection is that?
 `;
 

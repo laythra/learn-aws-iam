@@ -2,24 +2,24 @@ import { PopupTutorialMessage } from '@/types/tutorial-message-types';
 const POPUP_MSG1 = `
   **IAM Roles** are powerful in AWS.
   Beyond temporary credentials and service-to-service access,
-  they are also a core mechanism for **cross-account access**.|lg
+  they are also a core mechanism for **cross-account access**.
 
   If you need to grant a third party access to resources in your account,
-  roles let you do that without creating long-term users in your account.|lg
+  roles let you do that without creating long-term users in your account.
 
   This challenge will test your understanding of how roles enable
-  secure cross-account access.|lg
+  secure cross-account access.
 `;
 
 const POPUP_MSG2 = `
   Suppose your company stores financial data in a **DynamoDB table**
-  named \`finance-reports\` in the *Trusting Account*.|lg
+  named \`finance-reports\` in the **Trusting Account**.
 
   You hire a third-party auditor. Their identity is an **IAM User**
-  named \`alex\` in a different AWS account (the *Trusted Account*).|lg
+  named \`alex\` in a different AWS account (the **Trusted Account**).
 
   Your goal is to let \`alex\` read from \`finance-reports\`
-  without creating a new IAM user in the trusting account.|lg
+  without creating a new IAM user in the trusting account.
 `;
 
 const POPUP_MSG3 = `
@@ -34,13 +34,13 @@ const POPUP_MSG3 = `
 
 const POPUP_MSG4 = `
   Cross-account access lets you grant permissions in one account
-  to principals from another account.|lg
+  to principals from another account.
 
   This avoids creating and managing duplicate IAM users
-  and sharing long-lived credentials across organizations.|lg
+  and sharing long-lived credentials across organizations.
 
   Next, you'll learn **resource-based policies**,
-  another way to grant cross-account access.|lg
+  another way to grant cross-account access.
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

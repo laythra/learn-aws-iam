@@ -7,12 +7,12 @@ import { createPolicyCreationObjective } from '@/levels/utils/factories/identity
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMIdentityPolicyCreationObjective } from '@/types/objective-types';
 
-const CALLOUT_MSG = `
+const OBJECTIVE_DESCRIPTION = `
   This objective requires creating a policy which allows a user
   to delegate permissions to other users.
 
   Specifically, the policy should allow the user to attach and detach policies to any role,
-  but **ONLY** if that role has the permission boundary created in the previous step attached.
+  but only if that role has the permission boundary created in the previous step attached.
 `;
 
 const ACTIONS_HINT_MSG = `
@@ -71,9 +71,12 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
       },
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
-      callout_message: CALLOUT_MSG,
       initial_code: INITIAL_POLICIES.DELEGATE_ACCESS_MANAGEMENT_POLICY,
       hint_messages: [
+        {
+          title: 'Objective',
+          content: OBJECTIVE_DESCRIPTION,
+        },
         {
           title: 'Actions',
           content: ACTIONS_HINT_MSG,
