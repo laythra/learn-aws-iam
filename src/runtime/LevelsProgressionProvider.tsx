@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { Center, Spinner } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store-react';
 import isEqual from 'lodash/isEqual';
 
@@ -38,7 +39,11 @@ const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ c
   }, [levelNumber, restartKey]);
 
   if (!ActorCtx) {
-    return null;
+    return (
+      <Center h='100vh'>
+        <Spinner size='xl' />
+      </Center>
+    );
   }
 
   return (

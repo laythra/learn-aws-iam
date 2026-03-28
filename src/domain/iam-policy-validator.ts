@@ -1,5 +1,5 @@
-import { Diagnostic } from '@codemirror/lint';
-import { EditorView } from '@codemirror/view';
+import type { Diagnostic } from '@codemirror/lint';
+import type { EditorView } from '@codemirror/view';
 import Ajv, { ValidateFunction } from 'ajv';
 
 import iamPolicySchema from '@/domain/policy-schemas/aws-iam-policy-schema.json';
