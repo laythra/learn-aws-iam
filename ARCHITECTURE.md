@@ -196,8 +196,8 @@ The event bus is intentionally minimal: no middleware, no ordering guarantees, n
 Checkpointing requires the machine snapshot to survive JSON serialization. That rules out functions in machine context entirely. However, objectives need validator functions, and guard rails need filter functions for runtime connection checks. The workaround is [functions-registry.ts](src/runtime/functions-registry.ts): a plain object mapping each level to the functions it needs.
 
 ```typescript
-FunctionsRegistry[5].validate_functions['create_admin_policy'];
-FunctionsRegistry[5].objectives_guard_rails_blocked_edges_fns['scp_blocks_s3'];
+GetLevelValidateFunctions(5)['create_admin_policy'];
+// ...similar helpers exist for other function groups (guard rails, etc.)
 // etc.
 ```
 
