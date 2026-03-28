@@ -267,7 +267,7 @@ This hook ([useCanvas.ts](src/features/canvas/hooks/useCanvas.ts)) is the glue o
 3. Handles connection validation when users try to draw edges
 4. Manages the animation timing for adds/deletes
 
-When a user drags a connection, `useCanvas` runs it through validation (through the ([useCanvasHandlers.ts](src/features/canvas/hooks/useCanvasHandlers.ts)) hook) before sending an `ADD_EDGE` event to the machine:
+When a user drags a connection, `useCanvas` runs it through validation (through the [useCanvasHandlers.ts](src/features/canvas/hooks/useCanvasHandlers.ts) hook) before sending an `ADD_EDGE` event to the machine:
 
 1. Check [edges-creation.ts](src/features/canvas/utils/edges-creation.ts) utility: is this entity pair even allowed?
 2. Check `edges_management_disabled` in the machine context: are connections allowed at this point in the level?
