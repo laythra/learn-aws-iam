@@ -334,7 +334,7 @@ CodeMirror 6 powers the actual editing. It's configured with:
 - Validating the written policy on each keystroke with AJV validation
 - A custom badge extension that renders help icons inline where the user might need help
 
-CodeMirror has the ability to manage its own internal state without intervention from React. In normal circumstances, this is sufficient. However, in our case, we still impose structure and control around it using a custom hook [useCodeEditor.tsx](src/features/code_editor/hooks/useCodeEditor.ts), since the editor's state must be shared across multiple components.
+CodeMirror has the ability to manage its own internal state without intervention from React. In normal circumstances, this is sufficient. However, in our case, we still impose structure and control around it using a custom hook [useCodeEditor.ts](src/features/code_editor/hooks/useCodeEditor.ts), since the editor's state must be shared across multiple components.
 
 ### Code Editor Validation
 
@@ -456,12 +456,12 @@ src/
 │   ├── level1/ through level12/  # Per-level definitions
 │   ├── common-state-machine-setup.ts
 │   ├── shared-top-level-events.ts
-│   ├── functions-registry.ts
 │   ├── types/            # Level-specific types
 │   └── utils/            # Shared level utilities
 │
 ├── lib/                  # Analytics, storage, markdown plugins
 ├── runtime/              # Level lifecycle, persistence, provider
+│   └── functions-registry.ts
 ├── stores/               # @xstate/store instances
 └── types/                # TypeScript definitions
 ```
@@ -501,8 +501,8 @@ The hooks in [src/hooks/](src/hooks/) offer the same functionality but composabl
 
 ```typescript
 function MyButton() {
-  const restricted = useIsElementRestricted(ElementID.MyButton);
-  const { isPopoverActive } = useTutorialPopover(ElementID.MyButton);
+  const restricted = useIsElementRestricted([ElementID.MyButton]);
+  const { isOpen } = usePopover(nodeId);
 
   if (restricted) return null;
   return <Button>...</Button>;
