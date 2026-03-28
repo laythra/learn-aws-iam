@@ -21,17 +21,23 @@ const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ c
   );
 
   const [ActorCtx, setActorCtx] = useState<LevelActorContext | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  if (error) throw error;
 
   useEffect(() => {
     let mounted = true;
-    setActorCtx(null); // Clear previous actor context while loading new one
+    setActorCtx(null);
     const snapshot = loadCheckpoint(levelNumber);
 
-    loadLevelMachine(levelNumber, snapshot).then(ctx => {
-      if (mounted) {
-        setActorCtx(ctx);
-      }
-    });
+    loadLevelMachine(levelNumber, snapshot)
+      .then(ctx => {
+        if (mounted) {
+          setActorCtx(ctx);
+        }
+      })
+      .catch(err => {
+        if (mounted) setError(err);
+      });
 
     return () => {
       mounted = false;
