@@ -322,7 +322,7 @@ It works, but it's loosely typed.
 
 Most of the objectives in each level revolve around creating policies, which are merely JSON documents following a specific schema. Each policy creation objective must follow a specific schema in order for the user to be able to submit and finish the objective.
 
-The **Policy Editor** is the place where the user writes down the policy for the objective
+The **Policy Editor** is the place where the user writes down the policy for the objective.
 
 ### Implementation
 
