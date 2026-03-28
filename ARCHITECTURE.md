@@ -519,8 +519,8 @@ The project initially used HOC (Higher Order Components) for these patterns, but
 
 1. Subscribes to `LevelDetailsStore` for the current `levelNumber` and `restartKey` through a `useEffect` hook
 2. On either change, clears the active actor context and calls `loadCheckpoint` to check localStorage for a saved snapshot
-3. It then calls `getActorContext(levelNumber, snapshot)` to fetch the state machine corresponding to the `levelNumber` from the registry inside `src/runtime/level-runtime` and creates an XState actor context, potentially hydrating it with the snapshot if it exists
-4. Before the actor context is ready, it renders null to halt the previous machine from receiving/sending events. This would also come in handy if we were to use code splitting for machines in the future, as loading the machine would take longer in that case.
+3. It then calls `loadLevelMachine(levelNumber, snapshot)` to load the state machine corresponding to the `levelNumber` from the registry inside `src/runtime/level-runtime` and creates an XState actor context, potentially hydrating it with the snapshot if it exists
+4. While the level machine is loading and before the actor context is ready, it renders a full-screen Chakra `<Spinner />` to block interaction and prevent the previous machine from receiving/sending events. This also plays well with potential future code splitting for machines, where loading could take longer.
 
 If either keys (`currentLevelNumber` or `restartKey`) changes, the provider re-runs the effect. `restartKey` is merely used for when the user wishes to restart the level from scratch again.
 
