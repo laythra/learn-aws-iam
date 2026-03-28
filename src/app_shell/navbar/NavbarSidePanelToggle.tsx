@@ -25,7 +25,7 @@ export const NavbarSidePanelToggle: React.FC = () => {
         <IconButton
           data-element-id={ElementID.RightSidePanelToggleButton}
           onClick={toggleSidePanel}
-          icon={<Bars3Icon />}
+          icon={<Bars3Icon width={24} height={24} />}
           aria-label='side-panel-button'
           color='gray.600'
           _hover={{ color: 'black' }}

@@ -24,7 +24,7 @@ const CodeEditorHelpButton: React.FC<CodeEditorHelpButtonProps> = ({ selectedEnt
     <Box position='relative' display='flex' alignItems='center'>
       <HoverTooltip hasArrow label='Show Policy Syntax Help' openOnMount initialOpenDelay={1000}>
         <IconButton
-          icon={<QuestionMarkCircleIcon />}
+          icon={<QuestionMarkCircleIcon width={24} height={24} />}
           aria-label='Help'
           size='sm'
           variant='ghost'

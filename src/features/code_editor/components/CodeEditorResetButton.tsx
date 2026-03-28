@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button, Icon } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { ArrowPathIcon } from '@heroicons/react/20/solid';
 
 import HoverTooltip from '@/components/HoverTooltip';
@@ -24,7 +24,7 @@ const CodeEditorResetButton: React.FC<CodeEditorResetButtonProps> = ({ nodeId })
 
   return (
     <HoverTooltip label='Reset the code to its original state' placement='top' hasArrow>
-      <Button leftIcon={<Icon as={ArrowPathIcon} boxSize={4} />} onClick={resetCode}>
+      <Button leftIcon={<ArrowPathIcon width={16} height={16} />} onClick={resetCode}>
         Reset Code
       </Button>
     </HoverTooltip>

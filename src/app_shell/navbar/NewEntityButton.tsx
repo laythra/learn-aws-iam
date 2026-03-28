@@ -58,7 +58,7 @@ export const NewEntityButton: React.FC = () => {
                 as={IconButton}
                 size='sm'
                 aria-label='New'
-                icon={<PlusCircleIcon />}
+                icon={<PlusCircleIcon width={32} height={32} />}
                 color={'gray.600'}
                 _hover={{ color: 'black' }}
                 _active={{ color: 'black' }}

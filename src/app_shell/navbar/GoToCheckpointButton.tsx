@@ -77,7 +77,7 @@ export const GoToCheckpointButton: React.FC = () => {
       onClick={handleButtonClick}
       placement='bottom-end'
       tooltipLabel='Return to Checkpoint'
-      icon={<ArrowUturnLeftIcon />}
+      icon={ArrowUturnLeftIcon}
       ariaLabel='return-to-checkpoint-button'
     >
       <PopoverContent shadow='xl'>
