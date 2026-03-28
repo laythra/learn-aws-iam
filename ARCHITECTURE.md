@@ -376,7 +376,7 @@ Each level has a guided experience using three overlay types: popups (modal dial
 
 ### Authoring
 
-Tutorial content is written as plain strings in `tutorial_messages/popups.ts` and `popovers.ts` for each level. These are rendered using `react-markdown` with two custom plugins:
+Tutorial content is written as plain strings in `tutorial_messages/popup-tutorial-messages.ts`, `tutorial_messages/popover-tutorial-messages.ts`, and `tutorial_messages/fixed-popover-messages.ts` for each level. These are rendered using `react-markdown` with two custom plugins:
 
 - `rehypeChakraBadge` turns `::badge[text]::` into styled Chakra badges
 - `rehypeIcon` turns `::icon[IconName]::` into actual icon components
