@@ -84,5 +84,39 @@ export function restartLevelFromCheckpoint(): void {
   analytics.logRestartFromCheckpoint(levelNumber);
 }
 
+const SNAPSHOT_SERVER_URL = import.meta.env.VITE_SNAPSHOT_SERVER_URL ?? 'http://localhost:3001';
+
+async function saveSnapshotToDisk(
+  actor: Actor<AnyActorLogic>,
+  filename: string,
+  levelNumber: number
+): Promise<void> {
+  const content = JSON.stringify(actor.getPersistedSnapshot());
+  const res = await fetch(`${SNAPSHOT_SERVER_URL}/save`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content, filename, levelNumber }),
+  });
+  if (!res.ok) {
+    let bodyText: string | undefined;
+    try {
+      bodyText = await res.text();
+    } catch {
+      bodyText = undefined;
+    }
+    const message =
+      `[snapshot] Server responded ${res.status} for ${filename}` +
+      (bodyText ? `: ${bodyText}` : '');
+    throw new Error(message);
+  }
+}
+
 // Subscribe to events from levels (breaks the levels → runtime import cycle)
 LevelEventBus.on('store_checkpoint', ({ actor }) => storeLevelCheckpoint(actor));
+LevelEventBus.on('store_snapshot_to_disk', ({ actor, filename }) => {
+  if (!import.meta.env.DEV) return;
+  const levelNumber = LevelDetailsStore.getSnapshot().context.levelNumber;
+  saveSnapshotToDisk(actor, filename, levelNumber).catch(err =>
+    console.error('[snapshot] Failed to save snapshot:', err)
+  );
+});

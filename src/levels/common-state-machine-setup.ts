@@ -647,6 +647,14 @@ export const createStateMachineSetup = <
           LevelEventBus.emit('store_checkpoint', { actor: self as Actor<AnyActorLogic> })
         );
       }),
+      store_snapshot_to_disk: enqueueActions(({ self }, { filename }: { filename: string }) => {
+        queueMicrotask(() => {
+          LevelEventBus.emit('store_snapshot_to_disk', {
+            actor: self as Actor<AnyActorLogic>,
+            filename,
+          });
+        });
+      }),
       aggregate_user_nodes: enqueueActions(({ context, enqueue }) => {
         const updatedContext = aggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(context);
 
