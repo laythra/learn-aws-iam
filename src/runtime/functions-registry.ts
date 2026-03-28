@@ -14,7 +14,7 @@
  * const validators = GetLevelValidateFunctions(3);
  * const applicableNodes = GetLevelObjectivesApplicableNodesFns(8);
  */
-import { ValidateFunction } from 'ajv';
+import type { ValidateFunction } from 'ajv';
 
 import {
   ObjectivesApplicableNodesFns as Level10ObjectivesApplicableNodesFns,

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 
+import { Center, Spinner } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store-react';
 import isEqual from 'lodash/isEqual';
 
-import { CurrentActorContext, getActorContext, LevelActorContext } from './level-runtime';
+import { CurrentActorContext, loadLevelMachine, LevelActorContext } from './level-runtime';
 import { loadCheckpoint } from '@/runtime/level-persistence';
 import { LevelDetailsStore } from '@/runtime/level-store';
 
@@ -20,15 +21,35 @@ const LevelsProgressionProvider: React.FC<LevelsProgressionProviderProps> = ({ c
   );
 
   const [ActorCtx, setActorCtx] = useState<LevelActorContext | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  if (error) throw error;
 
   useEffect(() => {
-    setActorCtx(null); // Clear previous actor context while loading new one
+    let mounted = true;
+    setActorCtx(null);
     const snapshot = loadCheckpoint(levelNumber);
-    setActorCtx(getActorContext(levelNumber, snapshot));
+
+    loadLevelMachine(levelNumber, snapshot)
+      .then(ctx => {
+        if (mounted) {
+          setActorCtx(ctx);
+        }
+      })
+      .catch(err => {
+        if (mounted) setError(err);
+      });
+
+    return () => {
+      mounted = false;
+    };
   }, [levelNumber, restartKey]);
 
   if (!ActorCtx) {
-    return null;
+    return (
+      <Center h='100vh'>
+        <Spinner size='xl' />
+      </Center>
+    );
   }
 
   return (

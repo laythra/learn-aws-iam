@@ -1,4 +1,4 @@
-import { Diagnostic } from '@codemirror/lint';
+import type { Diagnostic } from '@codemirror/lint';
 import { createStore } from '@xstate/store';
 import { produce } from 'immer';
 
