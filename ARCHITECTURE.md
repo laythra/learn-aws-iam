@@ -254,8 +254,9 @@ This is an `@xstate/store`, not a full state machine. It's the store that sits b
 - Which node or edge is selected or hovered
 - The position of each node on the canvas
 - Which nodes are in the middle of a delete animation
+- Which edges are in the middle of a delete animation
 - Which node has its content / ARN / tags panel open
-- Side panel visibility state
+- Other open canvas panels (for example, the users list)
 
 ### useCanvas hook
 
