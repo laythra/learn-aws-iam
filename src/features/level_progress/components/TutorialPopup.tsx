@@ -14,11 +14,13 @@ import Markdown from 'react-markdown';
 import { GoToNextLevelButton } from './GoToNextLevelButton';
 import { HelpVideo } from '@/components/HelpVideo';
 import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
-import { customMarkdownComponents } from '@/lib/markdown/Components';
+import { createMarkdownComponents } from '@/lib/markdown/Components';
 import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
 import { CustomTheme } from '@/types/custom-theme';
 import { VoidEvent } from '@/types/state-machine-event-enums';
+
+const popupMarkdownComponents = createMarkdownComponents({ defaultFontSize: 'lg' });
 
 export const TutorialPopup: React.FC = () => {
   const theme = useTheme<CustomTheme>();
@@ -43,7 +45,7 @@ export const TutorialPopup: React.FC = () => {
         </ModalHeader>
         <ModalBody overflow='auto'>
           <Markdown
-            components={customMarkdownComponents}
+            components={popupMarkdownComponents}
             rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
           >
             {popupContent.content}

@@ -14,11 +14,11 @@ work together to manage access to AWS resources securely and effectively.
 
 🚀 **Coming soon:** We’ll dive deeper into advanced IAM concepts like:|weight(700)
 
-* 🔒 *Permission Boundaries*
+* 🔒 **Permission Boundaries**
 
-* 🏢 *Service Control Policies (SCPs)*
+* 🏢 **Service Control Policies (SCPs)**
 
-* 🌐 *Federated Access*
+* 🌐 **Federated Access**
 ...and more!
 
 &nbsp;

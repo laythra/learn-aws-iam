@@ -3,7 +3,7 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const Objective1Description = `
-  Attach the S3 read policy to ***alex***
+  Attach the S3 read policy to **alex**
 `;
 
 const Objective2Description = `

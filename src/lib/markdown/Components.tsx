@@ -3,6 +3,7 @@ import * as React from 'react';
 import {
   Code,
   Heading,
+  ListItem,
   Text,
   Tooltip,
   UnorderedList,
@@ -85,208 +86,221 @@ function extractColorFromChildren(children: React.ReactNode): {
   return { detectedColor, cleanedChildren };
 }
 
-export const customMarkdownComponents: Components = {
-  p: ({ children }: JSX.IntrinsicElements['p']) => {
-    let fontColor = 'black';
-    let fontWeight = 'normal';
-    let fontSize = 'md';
+export function createMarkdownComponents({
+  defaultFontSize = 'md',
+}: { defaultFontSize?: string } = {}): Components {
+  return {
+    p: ({ children }: JSX.IntrinsicElements['p']) => {
+      let fontColor = 'black';
+      let fontWeight = 'normal';
+      let fontSize = defaultFontSize;
 
-    const sizeRegex = /\|(xs|sm|md|lg|xl)$/;
-    const weightRegex = /\|weight\((\d+)\)/;
+      const sizeRegex = /\|(xs|sm|md|lg|xl)$/;
+      const weightRegex = /\|weight\((\d+)\)/;
 
-    const { detectedColor, cleanedChildren } = extractColorFromChildren(children);
-    if (detectedColor) {
-      fontColor = resolveMarkdownColor(detectedColor, 'gray');
-    }
-
-    const processedChildren = React.Children.map(cleanedChildren, child => {
-      if (typeof child !== 'string') return child;
-
-      let str = child;
-
-      const weightMatch = str.match(weightRegex);
-      const sizeMatch = str.match(sizeRegex);
-
-      if (weightMatch) {
-        fontWeight = weightMatch[1] || 'normal';
-        str = str.replace(weightRegex, '');
+      const { detectedColor, cleanedChildren } = extractColorFromChildren(children);
+      if (detectedColor) {
+        fontColor = resolveMarkdownColor(detectedColor, 'gray');
       }
 
-      if (sizeMatch) {
-        fontSize = sizeMatch[1] || 'md';
-        str = str.replace(sizeRegex, '');
-      }
+      const processedChildren = React.Children.map(cleanedChildren, child => {
+        if (typeof child !== 'string') return child;
 
-      return str;
-    });
+        let str = child;
 
-    return (
-      <Text fontSize={fontSize} py={1} fontWeight={fontWeight} color={fontColor}>
-        {processedChildren}
-      </Text>
-    );
-  },
-  code: ({ children, ...props }: JSX.IntrinsicElements['code']) => {
-    let isFullWidth = false;
+        const weightMatch = str.match(weightRegex);
+        const sizeMatch = str.match(sizeRegex);
 
-    const processedChildren = React.Children.map(children, child => {
-      if (typeof child === 'string' && child.includes('|fullwidth')) {
-        isFullWidth = true;
-        return child.replace('|fullwidth', '');
-      }
-      return child;
-    });
+        if (weightMatch) {
+          fontWeight = weightMatch[1] || 'normal';
+          str = str.replace(weightRegex, '');
+        }
 
-    return (
-      <Code
-        display={isFullWidth ? 'block' : 'inline'}
-        width={isFullWidth ? '100%' : 'auto'}
-        p={isFullWidth ? 2 : 0}
-        whiteSpace='pre-wrap'
-        {...props}
-      >
-        {processedChildren}
-      </Code>
-    );
-  },
-  pre: (props: JSX.IntrinsicElements['pre']) => {
-    const { children } = props;
-    return <chakra.pre>{children}</chakra.pre>;
-  },
-  h1: (props: JSX.IntrinsicElements['h1']) => {
-    const { children } = props;
-    return (
-      <Heading as='h1' size='2xl'>
-        {children}
-      </Heading>
-    );
-  },
-  h2: (props: JSX.IntrinsicElements['h2']) => {
-    const { children } = props;
-    return (
-      <Heading as='h2' size='xl'>
-        {children}
-      </Heading>
-    );
-  },
-  h3: (props: JSX.IntrinsicElements['h3']) => {
-    const { children } = props;
-    return (
-      <Heading as='h3' size='lg'>
-        {children}
-      </Heading>
-    );
-  },
-  h4: (props: JSX.IntrinsicElements['h4']) => {
-    const { children } = props;
-    return (
-      <Heading as='h4' size='md'>
-        {children}
-      </Heading>
-    );
-  },
-  h5: (props: JSX.IntrinsicElements['h5']) => {
-    const { children } = props;
-    return (
-      <Heading as='h5' size='md'>
-        {children}
-      </Heading>
-    );
-  },
-  h6: (props: JSX.IntrinsicElements['h6']) => {
-    const { children } = props;
-    return (
-      <Heading as='h6' size='xs'>
-        {children}
-      </Heading>
-    );
-  },
-  ul: (props: JSX.IntrinsicElements['ul']) => {
-    const { children } = props;
-    return <UnorderedList py={1}>{children}</UnorderedList>;
-  },
-  ol: (props: JSX.IntrinsicElements['ol']) => {
-    const { children } = props;
-    return <OrderedList py={1}>{children}</OrderedList>;
-  },
-  a: (props: JSX.IntrinsicElements['a']) => {
-    const { children, href } = props;
-    return (
-      <Tooltip label={href} aria-label='link'>
-        <a
-          {...props}
-          target='_blank'
-          rel='noopener noreferrer'
-          style={{ color: 'blue', textDecoration: 'underline' }}
-        >
-          {children}
-        </a>
-      </Tooltip>
-    );
-  },
-  span: ({ node, ...props }) => {
-    if (node?.properties['as'] === 'badge') {
-      const colorScheme = resolveBadgeColor(node?.properties?.colorScheme as string | undefined);
-      return <Badge colorScheme={colorScheme}>{node?.properties.content}</Badge>;
-    } else {
-      return <span {...props} />;
-    }
-  },
-  div: ({ node, ...props }) => {
-    if (node?.properties['as'] === 'badge') {
-      const colorScheme = resolveBadgeColor(node?.properties?.colorScheme as string | undefined);
+        if (sizeMatch) {
+          fontSize = sizeMatch[1] || 'md';
+          str = str.replace(sizeRegex, '');
+        }
+
+        return str;
+      });
+
       return (
-        <Badge colorScheme={colorScheme} isTruncated maxW='100%'>
-          {node?.properties.content}
-        </Badge>
+        <Text fontSize={fontSize} py={1} fontWeight={fontWeight} color={fontColor}>
+          {processedChildren}
+        </Text>
       );
-    } else {
-      return <div {...props} />;
-    }
-  },
-  blockquote: ({ children }: JSX.IntrinsicElements['blockquote']) => {
-    const { detectedColor, cleanedChildren } = extractColorFromChildren(children);
-    const color = resolveBlockquoteColor(detectedColor);
+    },
+    code: ({ children, ...props }: JSX.IntrinsicElements['code']) => {
+      let isFullWidth = false;
 
-    return (
-      <Alert
-        status='info'
-        variant='subtle'
-        borderLeftWidth='4px'
-        borderLeftColor={`${color}.500`}
-        bg={`${color}.50`}
-        color={`${color}.900`}
-        borderRadius='sm'
-        fontSize='sm'
-        my={2}
-      >
-        <AlertDescription>{cleanedChildren}</AlertDescription>
-      </Alert>
-    );
-  },
-  icon: ({ node, ...props }: { node?: MarkdownNode; [key: string]: unknown }) => {
-    const iconName = node?.properties?.name as string;
+      const processedChildren = React.Children.map(children, child => {
+        if (typeof child === 'string' && child.includes('|fullwidth')) {
+          isFullWidth = true;
+          return child.replace('|fullwidth', '');
+        }
+        return child;
+      });
 
-    if (!iconName) {
-      return null;
-    }
+      return (
+        <Code
+          display={isFullWidth ? 'block' : 'inline'}
+          width={isFullWidth ? '100%' : 'auto'}
+          p={isFullWidth ? 2 : 0}
+          whiteSpace='pre-wrap'
+          {...props}
+        >
+          {processedChildren}
+        </Code>
+      );
+    },
+    pre: (props: JSX.IntrinsicElements['pre']) => {
+      const { children } = props;
+      return <chakra.pre>{children}</chakra.pre>;
+    },
+    h1: (props: JSX.IntrinsicElements['h1']) => {
+      const { children } = props;
+      return (
+        <Heading as='h1' size='2xl'>
+          {children}
+        </Heading>
+      );
+    },
+    h2: (props: JSX.IntrinsicElements['h2']) => {
+      const { children } = props;
+      return (
+        <Heading as='h2' size='xl'>
+          {children}
+        </Heading>
+      );
+    },
+    h3: (props: JSX.IntrinsicElements['h3']) => {
+      const { children } = props;
+      return (
+        <Heading as='h3' size='lg'>
+          {children}
+        </Heading>
+      );
+    },
+    h4: (props: JSX.IntrinsicElements['h4']) => {
+      const { children } = props;
+      return (
+        <Heading as='h4' size='md'>
+          {children}
+        </Heading>
+      );
+    },
+    h5: (props: JSX.IntrinsicElements['h5']) => {
+      const { children } = props;
+      return (
+        <Heading as='h5' size='md'>
+          {children}
+        </Heading>
+      );
+    },
+    h6: (props: JSX.IntrinsicElements['h6']) => {
+      const { children } = props;
+      return (
+        <Heading as='h6' size='xs'>
+          {children}
+        </Heading>
+      );
+    },
+    ul: (props: JSX.IntrinsicElements['ul']) => {
+      const { children } = props;
+      return <UnorderedList py={1}>{children}</UnorderedList>;
+    },
+    ol: (props: JSX.IntrinsicElements['ol']) => {
+      const { children } = props;
+      return <OrderedList py={1}>{children}</OrderedList>;
+    },
+    a: (props: JSX.IntrinsicElements['a']) => {
+      const { children, href } = props;
+      return (
+        <Tooltip label={href} aria-label='link'>
+          <a
+            {...props}
+            target='_blank'
+            rel='noopener noreferrer'
+            style={{ color: 'blue', textDecoration: 'underline' }}
+          >
+            {children}
+          </a>
+        </Tooltip>
+      );
+    },
+    span: ({ node, ...props }) => {
+      if (node?.properties['as'] === 'badge') {
+        const colorScheme = resolveBadgeColor(node?.properties?.colorScheme as string | undefined);
+        return <Badge colorScheme={colorScheme}>{node?.properties.content}</Badge>;
+      } else {
+        return <span {...props} />;
+      }
+    },
+    div: ({ node, ...props }) => {
+      if (node?.properties['as'] === 'badge') {
+        const colorScheme = resolveBadgeColor(node?.properties?.colorScheme as string | undefined);
+        return (
+          <Badge colorScheme={colorScheme} isTruncated maxW='100%'>
+            {node?.properties.content}
+          </Badge>
+        );
+      } else {
+        return <div {...props} />;
+      }
+    },
+    blockquote: ({ children }: JSX.IntrinsicElements['blockquote']) => {
+      const { detectedColor, cleanedChildren } = extractColorFromChildren(children);
+      const color = resolveBlockquoteColor(detectedColor);
 
-    const IconComponent = HeroIcons[iconName as keyof typeof HeroIcons];
+      return (
+        <Alert
+          status='info'
+          variant='subtle'
+          borderLeftWidth='4px'
+          borderLeftColor={`${color}.500`}
+          bg={`${color}.50`}
+          color={`${color}.900`}
+          borderRadius='sm'
+          fontSize='sm'
+          my={3}
+        >
+          <AlertDescription>{cleanedChildren}</AlertDescription>
+        </Alert>
+      );
+    },
+    icon: ({ node, ...props }: { node?: MarkdownNode; [key: string]: unknown }) => {
+      const iconName = node?.properties?.name as string;
 
-    if (!IconComponent) {
-      console.warn(`Icon "${iconName}" not found in Heroicons`);
-      return null;
-    }
+      if (!iconName) {
+        return null;
+      }
 
-    return (
-      <Icon
-        as={IconComponent}
-        display='inline-block'
-        verticalAlign='middle'
-        boxSize='1em'
-        mx={1}
-        {...props}
-      />
-    );
-  },
-} as Components;
+      const IconComponent = HeroIcons[iconName as keyof typeof HeroIcons];
+
+      if (!IconComponent) {
+        console.warn(`Icon "${iconName}" not found in Heroicons`);
+        return null;
+      }
+
+      return (
+        <Icon
+          as={IconComponent}
+          display='inline-block'
+          verticalAlign='middle'
+          boxSize='1em'
+          mx={1}
+          {...props}
+        />
+      );
+    },
+    li: ({ children }: JSX.IntrinsicElements['li']) => {
+      return (
+        <ListItem fontSize={defaultFontSize} py={0.5}>
+          {children}
+        </ListItem>
+      );
+    },
+  } as Components;
+}
+
+export const customMarkdownComponents = createMarkdownComponents();

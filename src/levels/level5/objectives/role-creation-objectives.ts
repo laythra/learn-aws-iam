@@ -97,8 +97,8 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       on_finish_event: RoleCreationFinishEvent.EC2_ROLE_CREATED,
       layout_group_id: CommonLayoutGroupID.RightCenterVertical,
       help_badges: [],
-      hint_messages: HINT_MESSAGES,
       callout_message: CALLOUT_MSG2,
+      hint_messages: HINT_MESSAGES,
       extra_data: {
         required_policies: [],
         required_principles: [],
@@ -113,8 +113,8 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       layout_group_id: CommonLayoutGroupID.LeftCenterVertical,
       on_finish_event: RoleCreationFinishEvent.LAMBDA_ROLE_CREATED,
       help_badges: [],
-      hint_messages: HINT_MESSAGES,
       callout_message: CALLOUT_MSG2,
+      hint_messages: HINT_MESSAGES,
       extra_data: {
         required_policies: [],
         required_principles: [],

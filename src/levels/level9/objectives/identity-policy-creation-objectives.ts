@@ -6,13 +6,13 @@ import { createPolicyCreationObjective } from '@/levels/utils/factories/identity
 import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/types/objective-types';
 
-const OBJECTIVE1_CALLOUT_MSG = `
+const OBJECTIVE1_DESCRIPTION = `
   Create a policy for **Alpha Team** that lets its users:
   - retrieve their team database secret
   - connect to their team RDS database
 `;
 
-const OBJECTIVE2_CALLOUT_MSG = `
+const OBJECTIVE2_DESCRIPTION = `
   Now do the same for **Beta Team**:
   allow secret retrieval and RDS connection for their team only.
 `;
@@ -192,8 +192,10 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
           },
         ],
       },
-      callout_message: OBJECTIVE1_CALLOUT_MSG,
-      hint_messages: SHARED_HINT_MESSAGES,
+      hint_messages: [
+        { title: 'Objective', content: OBJECTIVE1_DESCRIPTION },
+        ...SHARED_HINT_MESSAGES,
+      ],
       help_badges: HELP_BADGES1,
     } satisfies Partial<
       IAMIdentityPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
@@ -206,7 +208,6 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
       initial_code: INITIAL_POLICIES.BETA_TEAM_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
-      callout_message: OBJECTIVE2_CALLOUT_MSG,
       extra_data: {
         granted_accesses: [
           {
@@ -225,7 +226,10 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
           },
         ],
       },
-      hint_messages: SHARED_HINT_MESSAGES,
+      hint_messages: [
+        { title: 'Objective', content: OBJECTIVE2_DESCRIPTION },
+        ...SHARED_HINT_MESSAGES,
+      ],
       help_badges: HELP_BADGES1,
     } satisfies Partial<
       IAMIdentityPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>
@@ -240,7 +244,6 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
       initial_code: INITIAL_POLICIES.SHARED_RDS_POLICY,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.CenterHorizontal,
-      callout_message: OBJECTIVE3_CALLOUT_MSG,
       extra_data: {
         granted_accesses: [
           {
@@ -273,7 +276,10 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
           },
         ],
       },
-      hint_messages: SECOND_OBJECTIVE_HINT_MESSAGES,
+      hint_messages: [
+        ...SECOND_OBJECTIVE_HINT_MESSAGES,
+        { title: 'Context', content: OBJECTIVE3_CALLOUT_MSG },
+      ],
       help_badges: HELP_BADGES2,
     } satisfies Partial<
       IAMIdentityPolicyCreationObjective<FinishEventMap, ObjectivesApplicableNodesFnName>

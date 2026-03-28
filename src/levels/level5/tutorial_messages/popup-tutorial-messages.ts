@@ -1,7 +1,7 @@
 import { PopupTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPUP_MSG1 = `
-  We've covered great ground so far! We got to learn about:|lg
+  We've covered great ground so far! We got to learn about:
   * **IAM Users** - Entities that can interact with AWS services, like humans or applications
   * **IAM Groups** - Entities that encapsulate multiple users that share the same permissions
   * **IAM Policies** - JSON documents that define permissions, attached to users or groups
@@ -9,7 +9,7 @@ const POPUP_MSG1 = `
   &nbsp;
 
   We'll now explore **IAM Roles**—temporary identities that define
-  a set of permissions for making AWS service requests.|lg
+  a set of permissions for making AWS service requests.
 `;
 
 const POPUP_MSG2 = `
@@ -17,7 +17,7 @@ Unlike **IAM Users** or **Groups**, roles aren’t permanently assigned to a spe
 Instead, they are **temporarily assumed** by trusted principals
 like **IAM Users**, **applications**, or **AWS services**.
 
-::badge[RULE]:: **An IAM Role operates using two key policies:**|lg
+::badge[RULE]:: **An IAM Role operates using two key policies:**
 
 * **Trust Policy** (embedded in the role) – Specifies **who is allowed to assume** the role.
 * **Identity-based Policy** (attached to the role) –
@@ -72,7 +72,7 @@ instead of "what can I do?", a Trust Policy answers
 `;
 
 const POPUP_MSG4 = `
-  We're back at ***TimeShift Labs***, where we're integrating a new image processing system
+  We're back at **TimeShift Labs**, where we're integrating a new image processing system
   to generate important metadata for every image users upload.
 
   &nbsp;
@@ -94,12 +94,12 @@ const POPUP_MSG4 = `
 `;
 
 const POPUP_MSG5 = `
-  Using *IAM roles* is paramount when it comes to
-  establishing Service-To-Service communication inside your AWS account.|lg
+  Using **IAM roles** is paramount when it comes to
+  establishing Service-To-Service communication inside your AWS account.
 
   Roles serve more complex use cases. In the upcoming level, we will learn how to use roles for
   establishing cross-account access, where resources from your main AWS account
-  can be accessed from users (or even resources) in other accounts or vice-versa!|lg
+  can be accessed from users (or even resources) in other accounts or vice-versa!
 `;
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [

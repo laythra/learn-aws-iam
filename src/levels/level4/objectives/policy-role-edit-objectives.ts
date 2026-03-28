@@ -11,7 +11,6 @@ const OBJECTIVE_CALLOUT_MSG = `
 `;
 
 const OBJECTIVE_CALLOUT_MSG2 = `
-  ::badge[ADVANCED]::
   This policy uses the \`Condition\` key, which we haven't covered yet.
   It restricts when a policy takes effect — in this case,
   it denies all actions if the user isn't authenticated with MFA.
@@ -88,7 +87,6 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       validate_fn_name: PolicyNodeID.DeveloperPolicy,
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       entity: IAMNodeEntity.IdentityPolicy,
-      callout_message: OBJECTIVE_CALLOUT_MSG,
       on_finish_event: PolicyEditFinishEvent.DEVELOPER_POLICY_EDITED,
       resources_to_grant: [
         {
@@ -104,6 +102,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
           source_handle: 'top',
         },
       ],
+      callout_message: OBJECTIVE_CALLOUT_MSG,
       hint_messages: [
         {
           title: 'Level Objective',
@@ -130,7 +129,6 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyEditFinishEvent.DATA_SCIENTIST_POLICY_EDITED,
-      callout_message: OBJECTIVE_CALLOUT_MSG,
       resources_to_grant: [
         {
           access_level: AccessLevel.ReadWrite,
@@ -145,6 +143,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
           source_handle: 'top',
         },
       ],
+      callout_message: OBJECTIVE_CALLOUT_MSG,
       hint_messages: [
         {
           title: 'Level Objective',
@@ -167,7 +166,6 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       type: ObjectiveType.POLICY_EDIT_OBJECTIVE,
       entity: IAMNodeEntity.IdentityPolicy,
       on_finish_event: PolicyEditFinishEvent.INTERN_POLICY_EDITED,
-      callout_message: OBJECTIVE_CALLOUT_MSG2,
       resources_to_grant: [
         {
           access_level: AccessLevel.Read,
@@ -176,10 +174,15 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
           source_handle: 'top',
         },
       ],
+      callout_message: OBJECTIVE_CALLOUT_MSG,
       hint_messages: [
         {
           title: 'Level Objective',
           content: OBJECTIVE3_HINT_MSG1,
+        },
+        {
+          title: 'Condition Key',
+          content: OBJECTIVE_CALLOUT_MSG2,
         },
         {
           title: 'Hint #1',

@@ -13,8 +13,8 @@ const FIXED_POPOVER_MSG1 = `
 const FIXED_POPOVER_MSG2 = `
   There you have it! 🎉
 
-  Between *request tags* for enforcing tagging rules at launch time,
-  and *resource tags* with *policy variables* for scoping access to the right instances,
+  Between **request tags** for enforcing tagging rules at launch time,
+  and **resource tags** with **policy variables** for scoping access to the right instances,
   you've seen how tagging makes IAM policies scale cleanly across teams.
 
   The same principle applies here: access is governed by the user's \`application\` tag,
