@@ -91,9 +91,9 @@ useEffect(() => {
 
 With the machine emitting `NODES_DELETED` with IDs, none of that scaffolding exists. The machine knew what it deleted at the moment it decided to delete it, and it simply tells you exactly that.
 
-Machines also need to be serializable so that the user's level progress can be saved at certain parts as checkpoints. For this reason, runtime-dependent logic lives outside the machine definition in `level-runtime-fns.ts` and is injected into the machine context on runtime as needed.
+Machines also need to be serializable so that the user's level progress can be saved at certain parts as checkpoints. For this reason, runtime-dependent logic lives outside the machine definition in `level-runtime-fns.ts`, and the machine context itself is kept function-free.
 
-These per-level function maps are aggregated by [functions-registry.ts](src/runtime/functions-registry.ts) in runtime/, which provides the centralized lookup used at runtime. See [Functions Registry](#functions-registry) for details.
+At runtime, callers resolve the appropriate per-level validation and guard functions on demand via [functions-registry.ts](src/runtime/functions-registry.ts) in runtime/ (for example, `GetLevelValidateFunctions(...)`), rather than injecting functions into the machine context. See [Functions Registry](#functions-registry) for details.
 
 ### Levels Structure
 
