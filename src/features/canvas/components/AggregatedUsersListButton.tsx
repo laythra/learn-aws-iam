@@ -56,7 +56,7 @@ const AggregatedUsersListButton: React.FC<AggregatedUsersListButtonProps> = ({
         <IconButton
           data-element-id={ElementID.IAMNodeArnButton}
           aria-label='arn'
-          icon={<ListBulletIcon />}
+          icon={<ListBulletIcon width={16} height={16} />}
           variant='ghost'
           opacity={0.5}
           height='16px'

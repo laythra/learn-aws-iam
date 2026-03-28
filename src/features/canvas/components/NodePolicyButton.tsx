@@ -93,7 +93,7 @@ const NodePolicyButton: React.FC<NodePolicyButtonProps> = ({
         <IconButton
           data-element-id={ElementID.IAMNodeContentButton}
           aria-label='info'
-          icon={<CodeBracketIcon />}
+          icon={<CodeBracketIcon width={16} height={16} />}
           variant='ghost'
           opacity={0.5}
           height='16px'
@@ -145,7 +145,7 @@ const NodePolicyButton: React.FC<NodePolicyButtonProps> = ({
                     }}
                     ml={1}
                     aria-label='edit'
-                    icon={<PencilSquareIcon />}
+                    icon={<PencilSquareIcon width={20} height={20} />}
                     variant='ghost'
                     minWidth='auto'
                     height='20px'

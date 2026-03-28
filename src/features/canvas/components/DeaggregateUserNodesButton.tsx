@@ -29,7 +29,7 @@ const DeaggregateUserNodesButton: React.FC<DeaggregateUserNodesButtonProps> = ({
     <IconButton
       data-element-id={ElementID.IAMNodeArnButton}
       aria-label='arn'
-      icon={<ArrowsPointingOutIcon />}
+      icon={<ArrowsPointingOutIcon width={16} height={16} />}
       variant='ghost'
       opacity={0.5}
       height='16px'

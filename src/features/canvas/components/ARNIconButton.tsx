@@ -72,7 +72,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
         <IconButton
           data-element-id={ElementID.IAMNodeArnButton}
           aria-label='arn'
-          icon={<IdentificationIcon />}
+          icon={<IdentificationIcon width={16} height={16} />}
           variant='ghost'
           opacity={0.5}
           height='16px'
@@ -102,7 +102,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
               h='16px'
               w='16px'
               aria-label='copy'
-              icon={<ClipboardDocumentIcon />}
+              icon={<ClipboardDocumentIcon width={16} height={16} />}
               variant='ghost'
               opacity={0.5}
               size='sm'

@@ -63,7 +63,7 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
         <IconButton
           data-element-id={ElementID.IAMNodeTagsButton}
           aria-label='arn'
-          icon={<TagIcon />}
+          icon={<TagIcon width={16} height={16} />}
           variant='ghost'
           opacity={0.5}
           height='16px'

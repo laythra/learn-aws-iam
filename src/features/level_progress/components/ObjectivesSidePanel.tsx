@@ -61,7 +61,7 @@ const ObjectivesSidePanel: React.FC = () => {
           <Popover>
             <PopoverTrigger>
               <IconButton
-                icon={<InformationCircleIcon />}
+                icon={<InformationCircleIcon width={24} height={24} />}
                 aria-label='info-button'
                 size='xs'
                 bg='transparent'

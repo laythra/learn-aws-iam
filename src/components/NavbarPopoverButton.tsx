@@ -1,3 +1,5 @@
+import { ComponentType, SVGProps } from 'react';
+
 import {
   Box,
   IconButton,
@@ -13,7 +15,8 @@ interface NavbarPopoverButtonProps {
   onClick: () => void;
   placement?: PlacementWithLogical;
   tooltipLabel: string;
-  icon: React.ReactElement;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+  iconSize?: number;
   ariaLabel: string;
   children: React.ReactNode;
 }
@@ -24,7 +27,8 @@ export const NavbarPopoverButton: React.FC<NavbarPopoverButtonProps> = ({
   onClick,
   placement = 'bottom-start',
   tooltipLabel,
-  icon,
+  icon: IconComponent,
+  iconSize = 24,
   ariaLabel,
   children,
 }) => {
@@ -35,7 +39,7 @@ export const NavbarPopoverButton: React.FC<NavbarPopoverButtonProps> = ({
           <Tooltip label={tooltipLabel} isDisabled={isOpen}>
             <IconButton
               onClick={onClick}
-              icon={icon}
+              icon={<IconComponent width={iconSize} height={iconSize} />}
               aria-label={ariaLabel}
               color='gray.600'
               _hover={{ color: 'black' }}

@@ -1,4 +1,4 @@
-import { Icon, Button, Flex } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@heroicons/react/16/solid';
 
 interface PopoverNextButtonProps {
@@ -9,7 +9,7 @@ export const PopoverNextButton: React.FC<PopoverNextButtonProps> = ({ onNextClic
   return (
     <Flex justifyContent='flex-end' pt={3} pr={1} pb={1}>
       <Button
-        rightIcon={<Icon as={ArrowRightIcon} verticalAlign='middle' />}
+        rightIcon={<ArrowRightIcon width={16} height={16} />}
         variant='solid'
         onClick={onNextClick}
       >

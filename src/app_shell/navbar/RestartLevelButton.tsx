@@ -27,7 +27,7 @@ export const RestartLevelButton: React.FC = () => {
       onClose={onClose}
       onClick={onOpen}
       tooltipLabel='Restart Level'
-      icon={<ArrowPathIcon />}
+      icon={ArrowPathIcon}
       ariaLabel='restart-level-button'
     >
       <PopoverContent shadow='xl'>

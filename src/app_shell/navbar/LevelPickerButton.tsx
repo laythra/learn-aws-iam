@@ -48,7 +48,7 @@ export const LevelPickerButton: React.FC = () => {
       onClose={closePopover}
       onClick={onOpen}
       tooltipLabel='Pick Level'
-      icon={<ForwardIcon />}
+      icon={ForwardIcon}
       ariaLabel='level-picker-button'
     >
       <PopoverContent shadow='xl'>
