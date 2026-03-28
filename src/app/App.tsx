@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 
 import { ChakraProvider, Flex } from '@chakra-ui/react';
 import { ReactFlowProvider } from '@xyflow/react';
+import { useSelector } from '@xstate/store-react';
 
 import { AppNavbar } from '@/app_shell/AppNavbar';
 import { AppOverlays } from '@/app_shell/AppOverlays';
 import { GithubCorner } from '@/components/GithubCorner';
 import Canvas from '@/features/canvas/components/Canvas';
-import { CodeEditor } from '@/features/code_editor';
 import { IdentityCreationPopup } from '@/features/iam_entities/components/IdentityCreationPopup';
 import { ObjectiveCompleteToast } from '@/features/level_progress/components/ObjectiveCompleteToast';
 import ObjectivesSidePanel from '@/features/level_progress/components/ObjectivesSidePanel';
@@ -16,12 +16,25 @@ import { UnnecessaryEdgesNodesWarning } from '@/features/level_progress/componen
 import { ModalProvider } from '@/hooks/useModal';
 import { initializeLevelStore } from '@/runtime/level-operations';
 import LevelsProgressionProvider from '@/runtime/LevelsProgressionProvider';
+import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { theme } from '@/theme';
+
+const CodeEditor = lazy(() =>
+  import('@/features/code_editor').then(m => ({ default: m.CodeEditor }))
+);
 
 const App: React.FC = () => {
   useEffect(() => {
     initializeLevelStore();
   }, []);
+
+  // Mount CodeEditor once it has been opened and keep it mounted so that
+  // close animations work correctly on subsequent open/close cycles.
+  const [hasEverOpened, setHasEverOpened] = useState(false);
+  const isOpen = useSelector(codeEditorStateStore, s => s.context.isOpen);
+  useEffect(() => {
+    if (isOpen) setHasEverOpened(true);
+  }, [isOpen]);
 
   return (
     <ChakraProvider theme={theme}>
@@ -34,7 +47,11 @@ const App: React.FC = () => {
             <ObjectiveCompleteToast />
             <TutorialPopup />
             <GithubCorner url='https://github.com/laythra/learnawsiam' />
-            <CodeEditor />
+            {hasEverOpened && (
+              <Suspense fallback={null}>
+                <CodeEditor />
+              </Suspense>
+            )}
             <UnnecessaryEdgesNodesWarning />
             <Flex direction='row' h='100vh' w='100vw'>
               <Canvas />
