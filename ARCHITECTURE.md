@@ -334,7 +334,7 @@ CodeMirror 6 powers the actual editing. It's configured with:
 - Validating the written policy on each keystroke with AJV validation
 - A custom badge extension that renders help icons inline where the user might need help
 
-CodeMirror has the ability to manage its own internal state without intervention from React. In normal circumstance, This is sufficient. However, in our case, we still impose structure and control around it using a custom hook [useCodeEditor.tsx](src/features/code_editor/hooks/useCodeEditor.ts), since the editor's state must be shared across multiple components.
+CodeMirror has the ability to manage its own internal state without intervention from React. In normal circumstances, this is sufficient. However, in our case, we still impose structure and control around it using a custom hook [useCodeEditor.tsx](src/features/code_editor/hooks/useCodeEditor.ts), since the editor's state must be shared across multiple components.
 
 ### Code Editor Validation
 
@@ -420,7 +420,7 @@ The three overlay types map to different UI treatments: popups are modal dialogs
 
 ### Element IDs
 
-There is a central `ElementId` enum that ties several parts of the system together:
+There is a central `ElementID` enum that ties several parts of the system together:
 
 - Components (via `data-element-id` attributes)
 - Tutorial popovers (via `popover_target`)
@@ -429,7 +429,7 @@ There is a central `ElementId` enum that ties several parts of the system togeth
 
 This keeps everything in sync. When a new interactive element is introduced, it only needs an entry in the enum. From there, it can immediately be targeted by tutorials and e2e tests.
 
-> For targeting elements with popovers, component must be explicitly wrapped in a `TutorialPopover` component and provided with the corresponding `ElementId`. And for element restriction, the component itself must read from the `useIsElementRestricted` hook and decide how to handle the restricted state (hide, disable, etc.)
+> For targeting elements with popovers, component must be explicitly wrapped in a `TutorialPopover` component and provided with the corresponding `ElementID`. And for element restriction, the component itself must read from the `useIsElementRestricted` hook and decide how to handle the restricted state (hide, disable, etc.)
 
 ## Project Layout
 
@@ -501,8 +501,8 @@ The hooks in [src/hooks/](src/hooks/) offer the same functionality but composabl
 
 ```typescript
 function MyButton() {
-  const restricted = useIsElementRestricted(ElementId.MyButton);
-  const { isPopoverActive } = useTutorialPopover(ElementId.MyButton);
+  const restricted = useIsElementRestricted(ElementID.MyButton);
+  const { isPopoverActive } = useTutorialPopover(ElementID.MyButton);
 
   if (restricted) return null;
   return <Button>...</Button>;
