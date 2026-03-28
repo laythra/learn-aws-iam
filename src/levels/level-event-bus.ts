@@ -4,7 +4,7 @@ import { createEventBus } from '@/lib/event-bus';
 
 type LevelEvents = {
   store_checkpoint: { actor: Actor<AnyActorLogic> };
-  save_checkpoint_to_disk: { actor: Actor<AnyActorLogic>; filename: string };
+  store_snapshot_to_disk: { actor: Actor<AnyActorLogic>; filename: string };
 };
 
 // An event bus used mainly for communication between levels and runtime
