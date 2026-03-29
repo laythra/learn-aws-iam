@@ -12,8 +12,6 @@ a regular IAM user or even an AWS account
 * **Effect**: Whether the principal is allowed or denied the access
 * **Action**: The action the principal is allowed to perform, it's almost always \`sts:AssumeRole\`
 
-&nbsp;
-
 ~~~js
 {
   "Version": "2012-10-17",
@@ -28,8 +26,6 @@ a regular IAM user or even an AWS account
   ]
 }|fullwidth
 ~~~
-
-&nbsp;
 
 The Principal can take the following formats:|lg
 * **AWS service**:  \`{ "Service": "ec2.amazonaws.com" }\`

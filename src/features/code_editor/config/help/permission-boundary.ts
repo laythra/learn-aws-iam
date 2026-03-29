@@ -6,14 +6,10 @@ export default `
   Even if a user's policy allows broader access,
   the permission boundary limits what actions can actually be executed.
 
-  &nbsp;
-
   * **Effect**: Whether the policy permits or denies the access
   * **Action**: The specific actions that the policy permits or denies
   * **Resource**: The resources to which the policy applies
   * **Condition**: Additional conditions that must be met for the policy to apply
-
-  &nbsp;
 
   ~~~js
   {
