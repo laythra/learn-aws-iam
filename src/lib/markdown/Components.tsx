@@ -105,7 +105,7 @@ export function createMarkdownComponents({
 
   const listContext: MarkdownContextValue = {
     fontSize: defaultListFontSize,
-    compact: false,
+    compact: true,
   };
 
   const blockquoteContext: MarkdownContextValue = {
@@ -311,7 +311,7 @@ export function createMarkdownComponents({
             bg={`${color}.50`}
             color={`${color}.900`}
             borderRadius='sm'
-            fontSize='sm'
+            fontSize={blockquoteContext.fontSize}
             my={3}
           >
             <AlertDescription>{cleanedChildren}</AlertDescription>
@@ -345,8 +345,10 @@ export function createMarkdownComponents({
       );
     },
     li: ({ children }: JSX.IntrinsicElements['li']) => {
+      const ctx = React.useContext(MarkdownContext) ?? defaultContext;
+
       return (
-        <ListItem fontSize={defaultListFontSize} py={0}>
+        <ListItem fontSize={ctx.fontSize} py={0}>
           {children}
         </ListItem>
       );

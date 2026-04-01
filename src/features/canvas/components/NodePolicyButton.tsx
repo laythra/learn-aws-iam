@@ -107,11 +107,12 @@ const NodePolicyButton: React.FC<NodePolicyButtonProps> = ({
         />
       </PopoverTrigger>
       <PopoverContent
-        w='500px'
+        w='600px'
         overflow='auto'
         maxH='400px'
         ref={popoverContentRef}
         data-element-id={`${nodeId}-content`}
+        boxShadow='lg'
       >
         <PopoverArrow />
         <PopoverHeader textAlign='left' display='flex' alignItems='center'>
