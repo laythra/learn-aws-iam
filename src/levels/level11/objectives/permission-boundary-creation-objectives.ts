@@ -64,6 +64,19 @@ const CONDITIONS2_HINT_MSG = `
   Remember the **Policy Variables** we covered in the last level? This is where they come into play.
 `;
 
+const OBJECTIVE1_HELP_BADGES = [
+  {
+    path: '/Statement/0/Action',
+    content: 'Limit to reading/describing secrets',
+    color: 'yellow',
+  },
+  {
+    path: '/Statement/0/Condition',
+    content: 'Apply only to resources with matching team tag',
+    color: 'yellow',
+  },
+];
+
 export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreationObjective<
   FinishEventMap,
   GuardRailsBlockedEdgesFnName
@@ -101,6 +114,7 @@ export const PERMISSION_BOUNDARY_CREATION_OBJECTIVES: IAMPermissionBoundaryCreat
           content: CONDITIONS2_HINT_MSG,
         },
       ],
+      help_badges: OBJECTIVE1_HELP_BADGES,
     } satisfies Partial<
       IAMPermissionBoundaryCreationObjective<FinishEventMap, GuardRailsBlockedEdgesFnName>
     >,

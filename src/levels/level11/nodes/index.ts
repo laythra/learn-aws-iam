@@ -1,4 +1,3 @@
-import { INITIAL_IN_LEVEL_GROUP_NODES } from './group-nodes';
 import { INITIAL_IN_LEVEL_POLICY_NODES } from './identity-policy-nodes';
 import { INITIAL_TUTORIAL_POLICY_NODES } from './identity-policy-nodes';
 import { INITIAL_TUTORIAL_PERMISSION_BOUNDARY_NODES } from './permission-boundary-nodes';
@@ -17,7 +16,6 @@ export const INITIAL_TUTORIAL_NODES: IAMAnyNode[] = [
 export const INITIAL_IN_LEVEL_NODES: IAMAnyNode[] = [
   ...INITIAL_IN_LEVEL_RESOURCE_NODES,
   ...INITIAL_IN_LEVEL_POLICY_NODES,
-  ...INITIAL_IN_LEVEL_GROUP_NODES,
   ...INITIAL_IN_LEVEL_USER_NODES,
   ...INITIAL_IN_LEVEL_ROLE_NODES,
 ];
