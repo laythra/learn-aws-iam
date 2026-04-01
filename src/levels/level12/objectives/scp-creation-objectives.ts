@@ -8,6 +8,13 @@ import { createSCPCreationObjective } from '@/levels/utils/factories/scp-creatio
 import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMSCPCreationObjective, ObjectiveType } from '@/types/objective-types';
 
+const CALLOUT_MESSAGE = `
+  **A word of caution**: SCPs define the maximum permissions available to accounts under them.
+  If an SCP only allows listing S3 buckets,
+  then IAM policies in those accounts cannot grant any actions beyond that.
+  Any additional permissions allowed by IAM policies will still be denied by the SCP.
+`;
+
 const OBJECTIVE_DESCRIPTION = `
   We need to create a Service Control Policy (SCP) which blocks the
   deletion of CloudTrail trails in all accounts.
@@ -39,6 +46,7 @@ export const SCP_CREATION_OBJECTIVES: IAMSCPCreationObjective<
         blocked_edge_content: 'Delete CloudTrail Access Blocked By SCP 🔒',
         is_edge_blocked_fn_name: 'SCP1BlockingFN',
       },
+      callout_message: CALLOUT_MESSAGE,
       hint_messages: [
         {
           title: 'Objective',

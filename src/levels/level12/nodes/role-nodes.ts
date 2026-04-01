@@ -13,8 +13,8 @@ const IN_LEVEL_ROLE_NODES: IAMNodeDataOverrides<IAMRoleNode['data']>[] = [
     image: IAMNodeImage.Role,
     editable: true,
     content: JSON.stringify(INITIAL_POLICIES.EC2_TRUST_POLICY, null, 2),
-    account_id: AccountID.TutorialStagingAccount,
-    parent_id: AccountID.TutorialStagingAccount,
+    account_id: AccountID.InLevelStagingAccount,
+    parent_id: AccountID.InLevelStagingAccount,
   },
 ];
 
