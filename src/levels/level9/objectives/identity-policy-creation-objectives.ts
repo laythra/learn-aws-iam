@@ -79,7 +79,7 @@ const SHARED_HINT_MSG4 = `
 
   The primary one is \`secretsmanager:GetSecretValue\`, which lets users retrieve the secret value.
 
-  Oh, and we also need an action to **describe** the secret's metadata.
+  And we also need an action to **describe** the secret's metadata.
   What do you think that action might be called?
 `;
 
@@ -95,9 +95,8 @@ const SECOND_OBJECTIVE_HINT_MSG1 = `
   - **\`"\${aws:RequestTag/application}"\`**:
     Represents a tag included in a resource-creation or tagging request.
 
-   > |color(tip)
-   > ::badge[TIP]:: Policy variables use the same keys as conditions, but wrapped
-   > in \`"$\{\}"\` so AWS resolves them to actual values at request time.
+  ***And in case you haven't noticed, Policy variables use the same keys as conditions, but wrapped
+  in \`"$\{\}"\` so AWS resolves them to actual values at request time.***
 `;
 
 const HELP_BADGES1 = [

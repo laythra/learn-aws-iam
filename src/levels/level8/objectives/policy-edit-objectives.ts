@@ -5,11 +5,10 @@ import { AccessLevel, HandleID, IAMNodeEntity } from '@/types/iam-enums';
 import { PolicyGrantedAccess } from '@/types/iam-policy-types';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/types/objective-types';
 
-const OBJECTIVE_DESCRIPTION = `
+const OBJECTIVE1_DESCRIPTION = `
   Edit this policy so only senior users can access
-  the \`slack-integration-secret\` secret.
-
-  Use a **Condition** on the **SecretsManager statement**:
+  the \`slack-integration-secret\` secret by listing their ARNs
+  in the condition element of the policy statement.
 
   ~~~js
   "Condition": {
@@ -20,6 +19,11 @@ const OBJECTIVE_DESCRIPTION = `
   ~~~
 
   Use the hints below if needed.
+`;
+
+const OBJECTIVE2_DESCRIPTION = `
+  Now edit the policy again to allow all senior users to access the secret,
+  without listing their ARNs explicitly.
 `;
 
 const OBJECTIVE1_HINT_MSG1 = `
@@ -87,7 +91,7 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       hint_messages: [
         {
           title: 'Objective',
-          content: OBJECTIVE_DESCRIPTION,
+          content: OBJECTIVE1_DESCRIPTION,
         },
         {
           title: 'Condition Operators',
@@ -121,6 +125,10 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
       on_finish_event: PolicyEditFinishEvent.SLACK_SERVICE_MANAGE_POLICY_EDITED_SECOND_TIME,
       resources_to_grant: GRANTED_RESOURCES,
       hint_messages: [
+        {
+          title: 'Objective',
+          content: OBJECTIVE2_DESCRIPTION,
+        },
         {
           title: 'Condition Operator',
           content: OBJECTIVE2_HINT_MSG1,

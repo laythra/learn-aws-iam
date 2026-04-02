@@ -19,8 +19,8 @@ const FIXED_POPOVER_MSG3 = `
 
 const FIXED_POPOVER_MSG4 = `
   Not all AWS resources support resource-based policies.
-  **S3 buckets** and **SNS topics** do, but **EC2 instances** and **DynamoDB tables** don't.
-  For those, the only option for cross-account access is IAM roles,
+  **S3 buckets** and **SNS topics** do, but **EC2 instances** and **Auto Scaling groups** don't.
+  For those, the only option for cross-account access is **IAM roles**,
   making role assumption the more universal approach.
 `;
 

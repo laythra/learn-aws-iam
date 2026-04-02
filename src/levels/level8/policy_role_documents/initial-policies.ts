@@ -8,11 +8,9 @@ export const INITIAL_POLICIES = {
           'codedeploy:RegisterApplicationRevision',
           'codedeploy:ListApplicationRevisions',
           'codedeploy:GetApplication',
+          'codedeploy:GetApplicationRevision',
         ],
-        Resource: [
-          'arn:aws:codedeploy:us-east-1:123456789012:',
-          'deploymentgroup:slack-alerting-app/staging-group',
-        ].join(''),
+        Resource: 'arn:aws:codedeploy:us-east-1:123456789012:application:slack-alerting-app',
       },
       {
         Effect: 'Allow',
@@ -24,8 +22,8 @@ export const INITIAL_POLICIES = {
           'codedeploy:GetDeploymentConfig',
         ],
         Resource: [
-          'arn:aws:codedeploy:us-east-1:123456789012:',
-          'deploymentgroup:slack-alerting-app/staging-group',
+          'arn:aws:codedeploy:us-east-1:123456789012:deploymentgroup:',
+          'slack-alerting-app/staging-group',
         ].join(''),
       },
       {
@@ -41,7 +39,7 @@ export const INITIAL_POLICIES = {
     Statement: [
       {
         Effect: 'Allow',
-        Action: ['secretsmanager:GetSecretValue'],
+        Action: ['secretsmanager:GetSecretValue', 'secretsmanager:DescribeSecret'],
         Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:slack-integration-secret',
       },
     ],

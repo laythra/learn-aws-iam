@@ -4,29 +4,31 @@ import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const Objective1Description = `
   Create a policy that allows users tagged \`alpha-team\`
-  to retrieve their team's database secret and connect to their team's RDS instance.
+  to retrieve their team's database secret and execute statements
+  against their team's **Aurora** cluster.
 `;
 
 const Objective2Description = `
   Similarly, create a policy that allows users tagged \`beta-team\`
-  to retrieve their team's database secret and connect to their team's RDS instance.
+  to retrieve their team's database secret and execute statements
+  against their team's **Aurora** cluster.
 `;
 
 const Objective3Description = `
   Replace the two previous policies with one shared policy.
   It should allow both \`alpha-team\` and \`beta-team\` tagged users
-  to retrieve their team's database secret and connect to their team's RDS instance.
+  to retrieve their team's database secret and execute statements
+  against their team's **Aurora** cluster.
 `;
 
 const Objective1Hint = `
-  How do we know which RDS instance belongs to which user?
-  The answer is in the tags. Users tagged \`alpha-team\` should
-  only be able to retrieve secrets and connect to RDS instances tagged \`alpha-team\`.
+  Use a condition to verify the calling user's **application** tag matches their team.
+  The resource ARNs are already scoped to the alpha team's specific secret and cluster.
 `;
 
 const Objective2Hint = `
-  Similar to the previous objective, users tagged \`beta-team\`
-  should only be able to retrieve secrets and connect to RDS instances tagged \`beta-team\`.
+  Same idea as before, but for the beta team's resources.
+  Use a condition on the calling user's **application** tag.
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [

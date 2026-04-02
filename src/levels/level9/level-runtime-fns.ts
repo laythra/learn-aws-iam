@@ -23,11 +23,11 @@ export const ObjectivesApplicableNodesFns = {
 
 export const ValidateFunctions = {
   [PolicyNodeID.RDSManagePolicy1]: () => {
-    const schema = generateRdsManagePolicySchema('alpha-team', 'ALPHADB123', 'AbCdEf');
+    const schema = generateRdsManagePolicySchema('alpha-team', 'AbCdEf');
     return AJV_COMPILER.compile(schema);
   },
   [PolicyNodeID.RDSManagePolicy2]: () => {
-    const schema = generateRdsManagePolicySchema('beta-team', 'BETADB123', 'GhIjKl');
+    const schema = generateRdsManagePolicySchema('beta-team', 'GhIjKl');
     return AJV_COMPILER.compile(schema);
   },
   [PolicyNodeID.RDSSharedPolicy]: () => AJV_COMPILER.compile(rdsSharedManagePolicySchema),
