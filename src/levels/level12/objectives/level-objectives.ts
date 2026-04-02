@@ -3,58 +3,60 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const Objective1Description = `
-  Create an SCP that prevents the deletion of CloudTrails in every account
+  Block **CloudTrail** trail deletion across all accounts
 `;
 
 const Objective2Description = `
-  Allow EC2 instance creation only in the \`us-east-1\` region within the Staging Account.
+  Restrict **EC2** launches to \`us-east-1\` in the Staging Account
 `;
 
 const Objective3Description = `
-  Enable **DevOps** users to assign \`ec2:RunInstances\`
-  permissions through the IAM Role \`ec2-launch-role\` to users belonging to the backend team,
-  ensuring they cannot grant more permissions than intended.
+  Allow the user belonging to the **devops** team to
+  delegate \`ec2:RunInstances\` access via \`ec2-launch-role\`,
+  without being able to exceed the role's intended permissions
 `;
 
 const Objective4Description = `
-  In the **Staging Account**, ensure that EC2 instances upload logs and artifacts to the S3 bucket
-  named \`staging-artifacts-bucket\`. The uploads must use the \`GLACIER\` storage class, specified
-  in the \`s3:x-amz-storage-class\` Condition key.
+  Give **EC2** instances in the Staging Account write access to \`staging-artifacts\`
+  using **GLACIER** storage
 `;
 
 const Objective5Description = `
-  Users in the **Production Account** should manage ElastiCache clusters
-  tagged with their team name.
+  Let Production users manage **ElastiCache** replication groups
+  that match their own squad tag
 `;
 
 const Objective2Hint = `
-  The specific action here is \`ec2:RunInstances\`. What type of policy allows restricting
-  actions across an entire AWS account?
+  The action is \`ec2:RunInstances\`. What type of policy restricts actions
+  across an entire account? We just covered this.
 `;
+
 const Objective3Hint = `
-  We can use permission boundaries to limit the maximum permissions a user can delegate.
+  By delegation, we are referring to being able to attach and detach policies to the role.
+
+  A **Permission Boundary** can cap what a role is allowed to do,
+  even if someone attaches a broader policy to it later.
+
+  You can consult the tags on the users to see which one belongs to the devops team.
 `;
 
 const Objective4Hint = `
-  This scenario involves enabling communication between AWS resources.
-
-  Achieving this objective is a two-step process:
-  1. Create an IAM Role that can be assumed by EC2 instances
-  2. Create a policy that allows the necessary S3 actions with the appropriate
-     condition, and attach it to the role.
-
-  For the required S3 permissions, you need a simple \`PutObject\` action. Remember to include
-  the condition for the **storage class**.
+  Service-to-service access is required here. We need to ensure that the policy granting the access
+  has the \`s3:PutObject\` action, with a condition that
+  requires the \`s3:x-amz-storage-class\` to be \`GLACIER\`.
 `;
 
 const Objective5Hint = `
-  To manage ElastiCache clusters, users need permissions for:
-  - Modifying the cluster: \`elasticache:???\`
-  - Deleting the cluster: \`elasticache:DeleteCacheCluster\`
-  - Describing the cluster: \`elasticache:???\`
+  Users need permissions to modify, delete, and describe replication groups —
+  but only for groups tagged with their own squad.
 
-  Use conditions to ensure users can only manage clusters which belong to their team,
-  identified by the \`team\` tag.
+  - Modifying: \`elasticache:???\`
+  - Deleting: \`elasticache:DeleteReplicationGroup\`
+  - Describing: \`elasticache:???\`
+
+  The condition should match the \`squad\` tag on the resource against the user's own \`squad\` tag.
+
+  Still stuck on the actions? Check [here](https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazonelasticache.html).
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [

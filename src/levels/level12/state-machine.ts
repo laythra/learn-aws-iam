@@ -34,7 +34,8 @@ export const stateMachine = createStateMachineSetup<
   initial: 'inside_tutorial',
   context: {
     level_title: 'Final Level',
-    level_description: 'Final Level',
+    level_description:
+      'Wrapping up all concepts learned in previous levels with a final challenge.',
     level_number: 12,
     show_popovers: false,
     show_popups: false,

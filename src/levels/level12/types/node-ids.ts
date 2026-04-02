@@ -50,7 +50,6 @@ export const PermissionBoundaryID = {
 export const ResourceNodeID = {
   TutorialCloudTrailStaging: 'resource-cloudtrail-staging-1',
   TutorialCloudTrailProd: 'resource-cloudtrail-prod-1',
-  InLevelProductionS3Bucket: 'resource-production-s3-bucket-1',
   InLevelStagingS3Bucket: 'resource-staging-s3-bucket-1',
   InLevelProductionElastiCacheCluster1: 'resource-production-elasticache-cluster-1',
   InLevelProductionElastiCacheCluster2: 'resource-production-elasticache-cluster-2',
@@ -63,7 +62,6 @@ export const PolicyNodeID = {
   TutorialProdCloudTrailAccess: 'policy-prod-cloudtrail-access',
   S3WriteAccessPolicy: 'policy-s3-write-access',
   ElasticCacheManagementPolicy: 'policy-elasticache-management',
-  RunEc2InstancesPolicy: 'policy-run-ec2-instances',
   AccessDelegationPolicy: 'policy-access-delegation',
 } as const;
 

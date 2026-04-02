@@ -1,4 +1,4 @@
-import { generateAssumeRolePolicySchema } from './schemas/delegating-permissions-policy';
+import { generateDelegatePermissionsPolicySchema } from './schemas/delegating-permissions-policy';
 import ec2RoleTrustPolicy from './schemas/ec2-role-trust-policy.json';
 import s3UploadPolicySchema from './schemas/ec2-staging-s3-upload-policy.json';
 import elasticacheManagementPolicySchema from './schemas/elasticcache-prod-management-policy.json';
@@ -29,7 +29,7 @@ export const ValidateFunctions = {
       pbNode.data.label,
       AccountID.InLevelStagingAccount
     );
-    return AJV_COMPILER.compile(generateAssumeRolePolicySchema(pbArn));
+    return AJV_COMPILER.compile(generateDelegatePermissionsPolicySchema(pbArn));
   },
   [PermissionBoundaryID.Ec2LaunchPermissionBoundary]: () =>
     AJV_COMPILER.compile(launchEc2InstancePolicySchema),
@@ -72,7 +72,7 @@ export const GuardRailsBlockedEdgesFunctions = {
   SCP2BlockingFN: (edge: IAMEdge) => {
     return (
       edge.data?.target_node.data.entity === IAMNodeEntity.Resource &&
-      edge.data?.target_node.data.resource_type === IAMNodeResourceEntity.CloudTrail
+      edge.data?.target_node.data.resource_type === IAMNodeResourceEntity.EC2Instance
     );
   },
   PB1BlockingFN: (_edge: IAMEdge) => {

@@ -1,28 +1,28 @@
 import { PopupTutorialMessage } from '@/types/tutorial-message-types';
 const POPUP_MSG1 = `
-  Congratulations on reaching Level 12, the grand finale of your AWS IAM journey! 🎉
+  You made it to Level 12, the final level! 🎉
 
-  As we wrap up, this level serves as both a celebration of your progress and a final challenge.
-  We'll explore **Service Control Policies (SCPs)**—the organizational guard rails
-  that complement what you've learned about Permission Boundaries.
+  This level introduces **Service Control Policies (SCPs)**,
+  a policy type that acts as a guardrail across an AWS Organization.
+  You'll also put together everything from the previous levels in one final challenge.
 
-  Get ready to apply everything you've mastered so far,
-  as you take on a challenge that brings together all the key concepts from our adventure.
+  Get ready to bring it all together!
 `;
 
 const POPUP_MSG2 = `
-  **Service Control Policies (SCPs)** are essential tools in AWS Organizations for centrally
-  controlling permissions across multiple AWS accounts.
+  **Service Control Policies (SCPs)** are a policy type used in AWS Organizations
+  to set guardrails/maximum permissions across multiple AWS accounts.
 
-  SCPs set the upper limit on permissions that accounts in your
-  organization can receive, regardless of what individual IAM policies allow.
+  An SCP defines the maximum permissions that accounts under it can have.
+  Even if an IAM policy explicitly allows an action, the SCP can block it.
 
-  By applying SCPs to **organizational units (OUs)** or specific accounts,
-  you ensure that no user or role can exceed the boundaries you define,
-  supporting security and compliance at scale.
+  You attach SCPs to organizational units (OUs) or individual accounts,
+  so no user or role in those accounts can exceed the boundaries you set.
 
-  Keep in mind: SCPs do not grant permissions themselves—they only
-  restrict what can be allowed by other policies.
+
+  > |color(warning)
+  > ::badge[WARNING]:: Just like **Permission Boundaries**, **Service Control Policies (SCPs)**
+  > don't grant permissions. They merely restrict what other policies are allowed to grant.
 `;
 
 const POPUP_MSG3 = `
@@ -47,8 +47,8 @@ const POPUP_MSG4 = `
   so continue building on this knowledge through hands-on practice and real-world application.
 
   Your learning doesn't have to stop here - there's a whole world of advanced IAM topics
-  waiting to be explored, including **identity federation**, **attribute-based access control**,
-  and **sophisticated access management strategies**.
+  waiting to be explored, including **identity federation**, **advanced ABAC beyond tags**
+  (like SAML attributes and session policies), and **sophisticated access management strategies**.
 
   You should feel proud of this accomplishment and confident in your ability to
   design and implement secure AWS access controls. Keep experimenting,
@@ -71,7 +71,7 @@ export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
     content: POPUP_MSG3,
   },
   {
-    title: 'Officialy an IAM Master 🎓',
+    title: 'Officially an IAM Master 🎓',
     content: POPUP_MSG4,
     go_to_next_level_button: true,
   },
