@@ -19,17 +19,15 @@ const POPUP_MSG2 = `
   This is particularly useful for controlling access
   to sensitive resources and ensuring compliance with security policies.
 
-  &nbsp;
-
   >|color(warning)
-  > Permission boundaries are **identity-based policies** that are attached
-  > to a user or role as a boundary, and they use the same syntax as identity-based policies.
+  > ::badge[WARNING]:: **Permission boundaries** are **identity-based policies** that are attached
+  > to a user or role as a boundary, and they use the same syntax as **identity-based policies**.
 `;
 
 const POPUP_MSG3 = `
-  Why use permission boundaries if we can just limit permissions directly?
+  Why use **permission boundaries** if we can just limit permissions directly?
 
-  They're essential when delegating permission management—letting others assign permissions,
+  They're essential when delegating permission management, letting others assign permissions,
   but always keeping a strict upper limit on what can be granted.
 `;
 
@@ -37,16 +35,16 @@ const POPUP_MSG4 = `
   For this part of the level, you'll be an admin who wants to delegate permission management
   to other developers on your team in order to scale and move faster. Your objectives are:
 
-  * Create a permission boundary that limits secret access to secrets tagged with
+  * Create a **Permission Boundary** that limits secret access to secrets tagged with
     the requester's own \`team\` tag, ie: \`team: \${aws:PrincipalTag/team}\`
   * Create a delegation policy that allows attaching policies only to roles
-    that already have that permission boundary attached
+    that already have that **Permission Boundary** attached
 `;
 
 const POPUP_MSG5 = `
   Congratulations! Reaching this far is a significant achievement. 🎉
 
-  Permission boundaries are a powerful tool in IAM that allow you to set
+  **Permission Boundaries** are a powerful tool in **IAM** that allow you to set
   the maximum permissions an entity can have.
   You can tell by now that everything we've learned so far can
   be used to construct complex scenarios, just like the one you just went through.

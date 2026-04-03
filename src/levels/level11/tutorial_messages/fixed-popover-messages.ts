@@ -1,8 +1,9 @@
 import { FixedPopoverMessage } from '@/types/tutorial-message-types';
 
 const FIXED_POPOVER_MSG1 = `
-  alex's permission boundary caps him to **listing SNS topics only**.
-  **Close this popover to continue.**
+  **alex**'s **permission boundary** caps him to **listing SNS topics only**.
+
+  ***Close this popover to continue.***
 `;
 
 const FIXED_POPOVER_MSG2 = `
@@ -21,15 +22,16 @@ const FIXED_POPOVER_MSG3 = `
   * You created a policy that allows attaching policies only to roles
     with that boundary.
 
-  **Click \`Next\` to see it in action.**
+  ***Click \`Next\` to see it in action.***
 `;
 
 const FIXED_POPOVER_MSG4 = `
-  Even with an admin policy attached, morgan is still constrained by the boundary.
+  Even with an admin policy attached, **morgan** is still constrained by the boundary.
 
-  And sam can only attach policies to roles that already have that permission boundary attached.
+  And **sam** can only attach policies to roles that
+  already have that **permission boundary** attached.
 
-  That's the strength of permission boundaries. 🔥
+  That's the strength of **permission boundaries**. 🔥
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [

@@ -32,7 +32,7 @@ export default `
   the permission boundary ensures they can only work with S3, DynamoDB, and Lambda services.
 
   > |color(warning)
-  > In AWS, permission boundaries aren’t a separate type of policy.
+  > ::badge[WARNING]:: In AWS, permission boundaries aren’t a separate type of policy.
   > They’re just normal IAM policies.
   > You create them the same way, the only difference is how you attach them.
   > When attached as a permission boundary,

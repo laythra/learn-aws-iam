@@ -1,4 +1,4 @@
-import { INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
+import { INITIAL_IN_LEVEL_CONNECTIONS, INITIAL_TUTORIAL_CONNECTIONS } from './initial-connections';
 import { LAYOUT_GROUPS } from './layout-groups';
 import { INITIAL_IN_LEVEL_NODES, INITIAL_TUTORIAL_NODES } from './nodes';
 import { createStateMachineSetup } from '../common-state-machine-setup';
@@ -162,6 +162,10 @@ export const stateMachine = createStateMachineSetup<
         'hide_popovers',
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },
         { type: 'append_level_objectives', params: { objectives: LEVEL_OBJECTIVES[1] } },
+        {
+          type: 'apply_initial_node_connections',
+          params: { initialConnections: INITIAL_IN_LEVEL_CONNECTIONS },
+        },
       ],
       initial: 'popup_1',
       states: {
@@ -283,7 +287,7 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         attach_nodes: {
-          onDone: 'fixed_popover_1',
+          onDone: 'fixed_popover_2',
           entry: [
             'store_checkpoint',
             'enable_edges_management_ability',
@@ -342,7 +346,7 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        fixed_popover_1: {
+        fixed_popover_2: {
           entry: [
             'store_checkpoint',
             {
@@ -404,7 +408,7 @@ export const stateMachine = createStateMachineSetup<
           ],
           on: {
             NEXT_POPOVER: {
-              target: 'fixed_popover_2',
+              target: 'fixed_popover_3',
               actions: {
                 type: 'connect_nodes',
                 params: ({ context }) => ({
@@ -415,7 +419,7 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        fixed_popover_2: {
+        fixed_popover_3: {
           entry: [
             'hide_popovers',
             {

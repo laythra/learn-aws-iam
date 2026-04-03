@@ -58,6 +58,19 @@ const OBJECTIVE1_HINT_MSG3 = `
   The missing condition key is \`iam:PermissionsBoundary\`.
 `;
 
+const OBJECTIVE1_HELP_BADGES = [
+  {
+    path: '/Statement/0/Action',
+    content: 'Allow attaching and detaching policies to roles',
+    color: 'yellow',
+  },
+  {
+    path: '/Statement/0/Condition',
+    content: 'Only allowed with permission boundary condition',
+    color: 'yellow',
+  },
+];
+
 export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
   FinishEventMap,
   ValidateFunctionsFnName
@@ -72,6 +85,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomRightHorizontal,
       initial_code: INITIAL_POLICIES.DELEGATE_ACCESS_MANAGEMENT_POLICY,
+      help_badges: OBJECTIVE1_HELP_BADGES,
       hint_messages: [
         {
           title: 'Objective',
