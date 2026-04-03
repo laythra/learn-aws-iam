@@ -7,7 +7,7 @@ const POPOVER_MSG1 = ``;
 const POPOVER_MSG2 = `
   This was a tough policy to create — nice work.
 
-  Now attach it to all three groups.
+  Now attach it to the engineering group.
 `;
 
 const POPOVER_MSG3 = `
@@ -15,7 +15,7 @@ const POPOVER_MSG3 = `
 `;
 
 const POPOVER_MSG4 = `
-  Grant the policy to the groups.
+  Grant the policy to the engineering group.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [

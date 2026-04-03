@@ -4,11 +4,12 @@ import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const Objective1Description = `
   Create a policy that lets teams launch tagged EC2 instances,
-  enforcing that every new instance carries the correct application, environment, and Name tags.
+  enforcing that every new instance carries the correct \`application\`, \`environment\`,
+  and \`Name\` tags.
 `;
 
 const Objective2Description = `
-  Attach the EC2 launch policy to the appropriate team groups.
+  Attach the EC2 launch policy to the engineering group.
 `;
 
 const Objective3Description = `
@@ -17,11 +18,11 @@ const Objective3Description = `
 `;
 
 const Objective4Description = `
-  Attach the EC2 management policy to the respective team groups.
+  Attach the EC2 management policy to the engineering group.
 `;
 
 const Objective1Hint = `
-  The policy needs two statements:
+  The policy needs three statements — the third is pre-filled for you.
 
   **1. Tag Creation Statement**
 
@@ -30,10 +31,16 @@ const Objective1Hint = `
 
   **2. Instance Launch Statement**
 
-  \`ec2:RunInstances\`, allowed only when the request carries:
+  \`ec2:RunInstances\` on \`arn:aws:ec2:*:*:instance/*\`, allowed only when the request carries:
   * \`application\` — must match the caller's own application tag
   * \`environment\` — must be one of \`dev\`, \`staging\`, or \`prod\`
   * \`Name\` — optional, but if included must be one of the allowed tag keys
+
+  **3. Supporting Resources Statement** *(pre-filled)*
+
+  \`ec2:RunInstances\` on the ancillary resources EC2 provisions at launch time:
+  subnets, network interfaces, security groups, volumes, and AMIs.
+  No tag conditions — leave it as-is.
 `;
 
 const Objective3Hint = `

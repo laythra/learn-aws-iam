@@ -94,7 +94,7 @@ export const stateMachine = createStateMachineSetup<
           ],
           on: {
             [PolicyCreationFinishEvent.ALLOW_CREATE_EC2_WITH_TAGS_POLICY_CREATED]: {
-              target: 'attach_policy1_to_groups',
+              target: 'attach_policy1_to_group',
               actions: [
                 'close_side_panel',
                 {
@@ -105,17 +105,7 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        attach_policy1_to_groups: {
-          type: 'parallel',
-          onDone: {
-            target: 'fixed_popover_1',
-            actions: [
-              {
-                type: 'finish_level_objective',
-                params: { id: LevelObjectiveID.ATTACH_POLICY1_TO_GROUPS },
-              },
-            ],
-          },
+        attach_policy1_to_group: {
           entry: [
             'close_side_panel',
             'store_checkpoint',
@@ -124,10 +114,7 @@ export const stateMachine = createStateMachineSetup<
               type: 'show_node_help_tooltip',
               params: {
                 nodeId: PolicyNodeID.TBACPolicy,
-                content: `
-                  This policy should be attached to all three groups
-                  to meet the objective requirements
-                `,
+                content: 'Attach this policy to the engineering group',
               },
             },
             {
@@ -136,35 +123,24 @@ export const stateMachine = createStateMachineSetup<
             },
             'enable_edges_management_ability',
           ],
+          initial: 'in_progress',
           states: {
-            attach_policy1_to_group1: {
-              initial: 'in_progress',
-              states: {
-                in_progress: {
-                  on: { [EdgeConnectionFinishEvent.TBAC_POLICY_ATTACHED_GROUP1]: 'completed' },
+            in_progress: {
+              on: {
+                [EdgeConnectionFinishEvent.TBAC_POLICY_ATTACHED]: {
+                  target: 'completed',
+                  actions: [
+                    {
+                      type: 'finish_level_objective',
+                      params: { id: LevelObjectiveID.ATTACH_POLICY1_TO_GROUPS },
+                    },
+                  ],
                 },
-                completed: { type: 'final' },
               },
             },
-            attach_policy1_to_group2: {
-              initial: 'in_progress',
-              states: {
-                in_progress: {
-                  on: { [EdgeConnectionFinishEvent.TBAC_POLICY_ATTACHED_GROUP2]: 'completed' },
-                },
-                completed: { type: 'final' },
-              },
-            },
-            attach_policy1_to_group3: {
-              initial: 'in_progress',
-              states: {
-                in_progress: {
-                  on: { [EdgeConnectionFinishEvent.TBAC_POLICY_ATTACHED_GROUP3]: 'completed' },
-                },
-                completed: { type: 'final' },
-              },
-            },
+            completed: { type: 'final' },
           },
+          onDone: { target: 'fixed_popover_1' },
         },
         fixed_popover_1: {
           entry: [
@@ -194,7 +170,7 @@ export const stateMachine = createStateMachineSetup<
           ],
           on: {
             [PolicyCreationFinishEvent.MANAGE_EC2_POLICY_CREATED]: {
-              target: 'attach_policy2_to_groups',
+              target: 'attach_policy2_to_group',
               actions: [
                 {
                   type: 'finish_level_objective',
@@ -208,23 +184,7 @@ export const stateMachine = createStateMachineSetup<
             },
           },
         },
-        attach_policy2_to_groups: {
-          type: 'parallel',
-          onDone: [
-            {
-              target: 'fixed_popover_2',
-              actions: [
-                {
-                  type: 'finish_level_objective',
-                  params: { id: LevelObjectiveID.ATTACH_POLICY2_TO_GROUPS },
-                },
-                {
-                  type: 'hide_node_help_tooltip',
-                  params: { nodeId: PolicyNodeID.EC2ManagePolicy },
-                },
-              ],
-            },
-          ],
+        attach_policy2_to_group: {
           entry: [
             'store_checkpoint',
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
@@ -232,7 +192,7 @@ export const stateMachine = createStateMachineSetup<
               type: 'show_node_help_tooltip',
               params: {
                 nodeId: PolicyNodeID.EC2ManagePolicy,
-                content: 'Attach this policy to the same groups as the previous one',
+                content: 'Attach this policy to the engineering group',
               },
             },
             {
@@ -240,41 +200,28 @@ export const stateMachine = createStateMachineSetup<
               params: { objectives: EDGE_CONNECTION_OBJECTIVES[1] },
             },
           ],
+          initial: 'in_progress',
           states: {
-            attach_policy2_to_group1: {
-              initial: 'in_progress',
-              states: {
-                in_progress: {
-                  on: {
-                    [EdgeConnectionFinishEvent.MANAGE_EC2_POLICY_ATTACHED_GROUP1]: 'completed',
-                  },
+            in_progress: {
+              on: {
+                [EdgeConnectionFinishEvent.MANAGE_EC2_POLICY_ATTACHED]: {
+                  target: 'completed',
+                  actions: [
+                    {
+                      type: 'finish_level_objective',
+                      params: { id: LevelObjectiveID.ATTACH_POLICY2_TO_GROUPS },
+                    },
+                    {
+                      type: 'hide_node_help_tooltip',
+                      params: { nodeId: PolicyNodeID.EC2ManagePolicy },
+                    },
+                  ],
                 },
-                completed: { type: 'final' },
               },
             },
-            attach_policy2_to_group2: {
-              initial: 'in_progress',
-              states: {
-                in_progress: {
-                  on: {
-                    [EdgeConnectionFinishEvent.MANAGE_EC2_POLICY_ATTACHED_GROUP2]: 'completed',
-                  },
-                },
-                completed: { type: 'final' },
-              },
-            },
-            attach_policy2_to_group3: {
-              initial: 'in_progress',
-              states: {
-                in_progress: {
-                  on: {
-                    [EdgeConnectionFinishEvent.MANAGE_EC2_POLICY_ATTACHED_GROUP3]: 'completed',
-                  },
-                },
-                completed: { type: 'final' },
-              },
-            },
+            completed: { type: 'final' },
           },
+          onDone: { target: 'fixed_popover_2' },
         },
         fixed_popover_2: {
           entry: [

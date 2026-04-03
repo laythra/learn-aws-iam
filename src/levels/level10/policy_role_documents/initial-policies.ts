@@ -14,6 +14,17 @@ export const INITIAL_POLICIES = {
         Resource: '*',
         Condition: '...',
       },
+      {
+        Effect: 'Allow',
+        Action: 'ec2:RunInstances',
+        Resource: [
+          'arn:aws:ec2:*:*:subnet/*',
+          'arn:aws:ec2:*:*:network-interface/*',
+          'arn:aws:ec2:*:*:security-group/*',
+          'arn:aws:ec2:*:*:volume/*',
+          'arn:aws:ec2:*::image/*',
+        ],
+      },
     ],
   },
   EC2_MANAGEMENT_POLICY: {
