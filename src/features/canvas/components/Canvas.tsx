@@ -30,7 +30,6 @@ const NODE_TYPES = {
   ou: IAMCanvasNode,
   scp: IAMCanvasNode,
   resource_policy: IAMCanvasNode,
-  user_aggregated: IAMCanvasNode,
 };
 
 const EDGE_TYPES = {

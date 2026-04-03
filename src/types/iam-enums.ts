@@ -16,7 +16,6 @@ export enum AccessLevel {
 
 export enum IAMNodeEntity {
   User = 'IAM User',
-  AggregatedUsers = 'Aggregated IAM Users',
   Group = 'IAM Group',
   Role = 'IAM Role',
   IdentityPolicy = 'Identity Policy',

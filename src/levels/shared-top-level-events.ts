@@ -205,34 +205,6 @@ export const SHARED_TOP_LEVEL_EVENTS = {
   },
 
   // =========================================================================
-  // Node Aggregation (Level 12)
-  // =========================================================================
-  [VoidEvent.AggregateUserNodes]: {
-    actions: [
-      {
-        type: 'aggregate_user_nodes' as const,
-      },
-    ],
-  },
-
-  [DataEvent.DeaggregateUserNodes]: {
-    actions: [
-      {
-        type: 'deaggregate_user_nodes' as const,
-        params: ({
-          event,
-        }: {
-          event: {
-            type: DataEvent.DeaggregateUserNodes;
-            nodeId: string;
-          };
-        }) => ({
-          nodeId: event.nodeId,
-        }),
-      },
-    ],
-  },
-  // =========================================================================
   // Popover/Popup Visibility
   // =========================================================================
   [VoidEvent.HidePopovers]: {

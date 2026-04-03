@@ -3,7 +3,6 @@ import { Edge, Node } from '@xyflow/react';
 import { AccessLevel, HandleID, IAMCodeDefinedEntity, IAMNodeEntity } from './iam-enums';
 import {
   IAMAccountNodeData,
-  IAMAggregatedUsersNodeData,
   IAMGroupNodeData,
   IAMOUNodeData,
   IAMPermissionBoundaryNodeData,
@@ -16,7 +15,6 @@ import {
 } from './iam-node-data-types';
 
 export type IAMUserNode = Node<IAMUserNodeData, 'user'>;
-export type IAMAggregatedUsersNode = Node<IAMAggregatedUsersNodeData, 'user_aggregated'>;
 // 'group' is reserved in @xyflow/react, we're using 'iam_group' instead
 export type IAMGroupNode = Node<IAMGroupNodeData, 'iam_group'>;
 export type IAMIdentityPolicyNode = Node<IAMIdentityPolicyNodeData, 'policy'>;
@@ -46,7 +44,6 @@ export type IAMNodeMap = {
   [IAMNodeEntity.SCP]: IAMSCPNode;
   [IAMNodeEntity.ResourcePolicy]: IAMResourcePolicyNode;
   [IAMNodeEntity.PermissionBoundary]: IAMPermissionBoundaryNode;
-  [IAMNodeEntity.AggregatedUsers]: IAMAggregatedUsersNode;
 };
 
 export type IAMAnyNode = IAMNodeMap[keyof IAMNodeMap];

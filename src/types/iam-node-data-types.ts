@@ -70,14 +70,6 @@ export interface IAMGuardRailsNodeData<
 
 export interface IAMUserNodeData extends IAMNodeData {
   entity: IAMNodeEntity.User;
-  aggregated?: boolean;
-}
-
-export interface IAMAggregatedUsersNodeData extends IAMNodeData {
-  entity: IAMNodeEntity.AggregatedUsers;
-  aggregated?: boolean;
-  aggregated_user_ids: string[];
-  original_edge_mappings: Record<string, string>; // Maps original user IDs to edge IDs
 }
 
 export interface IAMGroupNodeData extends IAMNodeData {
