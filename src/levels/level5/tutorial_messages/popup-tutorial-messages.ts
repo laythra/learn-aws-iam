@@ -6,9 +6,7 @@ const POPUP_MSG1 = `
   * **IAM Groups** - Entities that encapsulate multiple users that share the same permissions
   * **IAM Policies** - JSON documents that define permissions, attached to users or groups
 
-  &nbsp;
-
-  We'll now explore **IAM Roles**—temporary identities that define
+  We'll now explore **IAM Roles**: temporary identities that define
   a set of permissions for making AWS service requests.
 `;
 
@@ -17,7 +15,7 @@ Unlike **IAM Users** or **Groups**, roles aren’t permanently assigned to a spe
 Instead, they are **temporarily assumed** by trusted principals
 like **IAM Users**, **applications**, or **AWS services**.
 
-::badge[RULE]:: **An IAM Role operates using two key policies:**
+ **An IAM Role operates using two key policies:**
 
 * **Trust Policy** (embedded in the role) – Specifies **who is allowed to assume** the role.
 * **Identity-based Policy** (attached to the role) –
@@ -75,8 +73,6 @@ const POPUP_MSG4 = `
   We're back at **TimeShift Labs**, where we're integrating a new image processing system
   to generate important metadata for every image users upload.
 
-  &nbsp;
-
   ##### Here's how the flow works:
   1. The end-user uploads an image to the **S3 Bucket**: \`chat-images\`
       through our web interface, hosted on an Amazon **EC2 instance**.
@@ -84,11 +80,9 @@ const POPUP_MSG4 = `
   2. A **Lambda function** is automatically triggered by the upload event.
     It processes the image and generates metadata, which it then stores elsewhere.
 
-  &nbsp;
-
   > |color(rule)
   > ::badge[RULE]:: For service-to-service access, you don't call \`sts:AssumeRole\` yourself
-  > (like we did with IAM Users previously).
+  > (like we did with **IAM Users** previously).
   > Instead, the AWS service assumes its execution role automatically.
   > You just attach the role with the right permissions.
 `;

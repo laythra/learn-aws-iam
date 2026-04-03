@@ -20,7 +20,7 @@ const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
       },
     ],
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
-    editable: true,
+    editable: false,
   },
   {
     id: PolicyNodeID.DataScientistPolicy,
@@ -39,7 +39,7 @@ const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
       },
     ],
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
-    editable: true,
+    editable: false,
   },
   {
     id: PolicyNodeID.InternPolicy,
@@ -47,7 +47,7 @@ const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
     content: INTERNS_POLICY_DOCUMENT,
     granted_accesses: [],
     layout_group_id: CommonLayoutGroupID.BottomCenterHorizontal,
-    editable: true,
+    editable: false,
   },
 ];
 

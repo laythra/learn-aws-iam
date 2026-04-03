@@ -106,12 +106,6 @@ export const stateMachine = createStateMachineSetup<
           },
         },
         tutorial_finished: {
-          meta: {
-            highlighted_elements: [
-              ElementID.RightSidePanelToggleButton,
-              ElementID.IAMNodeContentEditButton,
-            ],
-          },
           entry: [
             {
               type: 'show_fixed_popover_message',
@@ -126,6 +120,27 @@ export const stateMachine = createStateMachineSetup<
     inside_level: {
       initial: 'fix_permission_policies',
       entry: [
+        {
+          type: 'edit_node_attributes',
+          params: {
+            nodeId: PolicyNodeID.DeveloperPolicy,
+            attributes: { editable: true },
+          },
+        },
+        {
+          type: 'edit_node_attributes',
+          params: {
+            nodeId: PolicyNodeID.DataScientistPolicy,
+            attributes: { editable: true },
+          },
+        },
+        {
+          type: 'edit_node_attributes',
+          params: {
+            nodeId: PolicyNodeID.InternPolicy,
+            attributes: { editable: true },
+          },
+        },
         {
           type: 'set_permission_policy_edit_objectives',
           params: { objectives: POLICY_EDIT_OBJECTIVES[0] },
@@ -155,6 +170,12 @@ export const stateMachine = createStateMachineSetup<
       states: {
         fix_permission_policies: {
           type: 'parallel',
+          meta: {
+            highlighted_elements: [
+              ElementID.IAMNodeContentEditButton,
+              ElementID.RightSidePanelToggleButton,
+            ],
+          },
           onDone: 'fixed_popover_1',
           states: {
             fix_developer_policy: {

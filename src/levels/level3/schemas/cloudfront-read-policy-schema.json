@@ -30,17 +30,16 @@
             "const": "Allow"
           },
           "Action": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "cloudfront:GetDistribution",
-                "cloudfront:GetDistributionConfig"
-              ]
-            },
-            "minItems": 2,
-            "maxItems": 2,
-            "uniqueItems": true
+            "oneOf": [
+              { "type": "string", "const": "cloudfront:CreateInvalidation" },
+              {
+                "type": "array",
+                "items": { "type": "string", "const": "cloudfront:CreateInvalidation" },
+                "minItems": 1,
+                "maxItems": 1,
+                "uniqueItems": true
+              }
+            ]
           },
           "Resource": {
             "oneOf": [

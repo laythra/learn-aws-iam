@@ -59,21 +59,27 @@ The company has two teams: **Frontend** and **Backend**.
 * **Frontend Team**:
   - Requires *read/write* access to specific **S3 buckets**
    for storing static assets (e.g., images).
-  - Needs read access to specific **CloudFront Distributions**
-   to view distribution configuration.
+  - Needs access to a specific **CloudFront Distribution**
+   to invalidate the cache after deploying new assets.
+
 * **Backend Team**:
   - Requires *read/write* access to specific **DynamoDB** tables.
+
+> |color(blue)
+> **What's a CloudFront Distribution?**
+> CloudFront is AWS's content delivery network (CDN). It caches your content
+> at edge locations around the world so users get fast load times regardless of where they are.
+> A distribution is the configuration that defines what gets cached and how.
+> When you deploy new assets to S3, you need to **invalidate** the distribution's cache
+> so CloudFront stops serving the old version.
 `;
 
 const POPUP_MSG_5 = `
 **Important note:** Backend developers sometimes need access
 to the same \`S3\` buckets that frontend developers use.
 
-::badge[RULE]::
 Ensure you create reusable policies
 while maintaining the **principle of least privilege**.
-
-&nbsp;
 
 > |color(blue)
 > **What is the Principle of Least Privilege?**

@@ -88,7 +88,7 @@ export interface IAMIdentityPolicyNodeData extends IAMNodeData {
   entity: IAMNodeEntity.IdentityPolicy;
   editable: boolean;
   granted_accesses: PolicyGrantedAccess[];
-  content: string;
+  content?: string;
 }
 
 export interface IAMResourcePolicyNodeData extends IAMNodeData {

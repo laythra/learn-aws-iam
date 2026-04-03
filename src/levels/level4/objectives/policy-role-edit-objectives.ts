@@ -11,15 +11,28 @@ const OBJECTIVE_CALLOUT_MSG = `
 `;
 
 const OBJECTIVE_CALLOUT_MSG2 = `
-  This policy uses the \`Condition\` key, which we haven't covered yet.
-  It restricts when a policy takes effect — in this case,
-  it denies all actions if the user isn't authenticated with MFA.
+  This policy uses a **Deny** statement targeting \`arn:aws:s3:::timeshift-*\`.
+
+  A developer added it to block intern access to the sensitive \`timeshift-backups\` bucket.
+  The intention was correct — but the wildcard \`timeshift-*\` also matches \`timeshift-assets\`,
+  overriding the Allow statement below it.
+
+  In IAM, an explicit **Deny always wins** over an Allow.
+  The fix is to remove this statement entirely — the \`timeshift-backups\` bucket
+  is already protected because interns were never granted access to it in the first place.
 `;
 
 const OBJECTIVE1_HINT_MSG1 = `
   Developers should:
   - Have *read/write* access to the \`customer-data\` **DynamoDB Table**.
   - Have *read/write* access to the \`timeshift-assets\` **S3 Bucket** objects.
+
+  The actions needed for *read/write* access to a DynamoDB table are:
+  - \`dynamodb:GetItem\`
+  - \`dynamodb:PutItem\`
+  - \`dynamodb:UpdateItem\`
+  - \`dynamodb:Scan\`
+  - \`dynamodb:Query\`
 `;
 
 const OBJECTIVE1_HINT_MSG2 = `
@@ -31,15 +44,6 @@ const OBJECTIVE1_HINT_MSG3 = `
   The second statement targeting the \`timeshift-assets\` **S3 Bucket** looks correct
   at first glance, but there's a subtle issue
   — it's targeting the bucket itself, not the objects inside it.
-`;
-
-const OBJECTIVE1_HINT_MSG4 = `
-  The actions needed for *read/write* access to a DynamoDB table are:
-  - \`dynamodb:GetItem\`
-  - \`dynamodb:PutItem\`
-  - \`dynamodb:UpdateItem\`
-  - \`dynamodb:Scan\`
-  - \`dynamodb:Query\`
 `;
 
 const OBJECTIVE2_HINT_MSG1 = `
@@ -61,20 +65,21 @@ const OBJECTIVE3_HINT_MSG1 = `
   Interns should:
   - Be able to read objects from the \`timeshift-assets\` **S3 Bucket**.
   - Be able to list the contents of the \`timeshift-assets\` **S3 Bucket**.
+
+  Each of these requires its own statement, since they target different resources.
+
+  > |color(warning)
+  > Casey and Jordan report they can't access anything at all —
+  > even though the policy appears to grant read access.
 `;
 
 const OBJECTIVE3_HINT_MSG2 = `
-  ::badge[WARNING]::
-  Something in the policy is preventing the read access statement from taking effect.
-`;
-
-const OBJECTIVE3_HINT_MSG3 = `
   \`s3:GetObject\` lets a user read an object if they know its exact key,
   but it does not let them list what's in the bucket.
   \`s3:ListBucket\` is a separate, bucket-level action — and it requires
   a different resource than \`s3:GetObject\`:
   - \`s3:GetObject\` → \`arn:aws:s3:::timeshift-assets/*\`
-  - \`s3:ListBucket\` → \`arn:aws:s3:::timeshift-assets\`
+  - \`s3:ListBucket\` → ???
 `;
 
 export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
@@ -115,10 +120,6 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
         {
           title: 'Hint #2',
           content: OBJECTIVE1_HINT_MSG3,
-        },
-        {
-          title: 'Hint #3',
-          content: OBJECTIVE1_HINT_MSG4,
         },
       ],
       finished: false,
@@ -185,12 +186,8 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
           content: OBJECTIVE_CALLOUT_MSG2,
         },
         {
-          title: 'Hint #1',
+          title: 'Hint',
           content: OBJECTIVE3_HINT_MSG2,
-        },
-        {
-          title: 'Hint #2',
-          content: OBJECTIVE3_HINT_MSG3,
         },
       ],
       finished: false,

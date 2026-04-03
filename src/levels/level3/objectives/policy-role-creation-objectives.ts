@@ -81,7 +81,8 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
         granted_accesses: [
           {
             target_node: ResourceNodeID.CloudFront,
-            access_level: AccessLevel.Read,
+            access_level: AccessLevel.Write,
+            edge_label: 'Invalidate Cache Access',
             target_handle: 'bottom',
             source_handle: 'top',
           },
