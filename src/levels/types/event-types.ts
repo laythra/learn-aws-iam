@@ -53,10 +53,6 @@ export type GenericEventData =
       edgeIds: string[];
     }
   | {
-      type: DataEvent.DeaggregateUserNodes;
-      nodeId: string;
-    }
-  | {
       type: DataEvent.EditNodeMetadata;
       nodeId: string;
       newMetadata: IAMNodeDataOverrides<IAMAnyNode['data']>;

@@ -11,8 +11,6 @@ import {
   deleteNode,
   editNodeAttributes,
   editPermissionPolicy,
-  aggregateUserNodes,
-  deaggregateUserNodes,
   editObjectiveState,
 } from './utils/actions';
 import { ElementID } from '@/config/element-ids';
@@ -655,27 +653,6 @@ export const createStateMachineSetup = <
           });
         });
       }),
-      aggregate_user_nodes: enqueueActions(({ context, enqueue }) => {
-        const updatedContext = aggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(context);
-
-        enqueue.assign({
-          nodes: updatedContext.nodes,
-          edges: updatedContext.edges,
-        });
-      }),
-      deaggregate_user_nodes: enqueueActions(
-        ({ context, enqueue }, { nodeId }: { nodeId: string }) => {
-          const updatedContext = deaggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(
-            context,
-            nodeId
-          );
-
-          enqueue.assign({
-            nodes: updatedContext.nodes,
-            edges: updatedContext.edges,
-          });
-        }
-      ),
       log_analytics_event: enqueueActions(
         (
           { enqueue, context },

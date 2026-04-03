@@ -22,7 +22,6 @@ type CanvasStoreState = {
   nodeIdWithOpenedContent?: string;
   nodeIdWithOpenedTags?: string;
   nodeIdWithOpenedARN?: string;
-  nodeIdWithOpenedUsersList?: string;
   nodeIdsWithDeletionInProgress: Set<string>;
   edgeIdsWithDeletionInProgress: Set<string>;
 };
@@ -42,7 +41,7 @@ type CanvasStoreEvents = {
   setEdges: { edges: IAMEdge[] };
   updateNodePosition: { nodeId: string; position: { x: number; y: number } };
   updateSelectedNodeId: { nodeId: string };
-  openNodePanel: { nodeId: string; panel: 'content' | 'tags' | 'arn' | 'users-list' | undefined };
+  openNodePanel: { nodeId: string; panel: 'content' | 'tags' | 'arn' | undefined };
   closeAllNodePanels: unknown;
   clearCanvas: unknown;
   toggleAccountCollapse: { accountId: string };
@@ -118,26 +117,25 @@ export const CanvasStore = createStore<CanvasStoreState, CanvasStoreEvents, neve
     ),
     updateSelectedNodeId: produce((ctx: CanvasStoreState, event: { nodeId: string }) => {
       ctx.selectedNodeId = event.nodeId;
-      ctx.nodes.forEach(node => (node.zIndex = 0));
-      ctx.nodes.find(node => node.id === event.nodeId)!.zIndex = 10000;
+      ctx.nodeIdWithOpenedContent = undefined;
+      ctx.nodeIdWithOpenedTags = undefined;
+      ctx.nodeIdWithOpenedARN = undefined;
     }),
     openNodePanel: produce(
       (
         ctx: CanvasStoreState,
-        event: { nodeId: string; panel: 'content' | 'tags' | 'arn' | 'users-list' | undefined }
+        event: { nodeId: string; panel: 'content' | 'tags' | 'arn' | undefined }
       ) => {
         ctx.selectedNodeId = event.nodeId;
         ctx.nodeIdWithOpenedContent = event.panel === 'content' ? event.nodeId : undefined;
         ctx.nodeIdWithOpenedTags = event.panel === 'tags' ? event.nodeId : undefined;
         ctx.nodeIdWithOpenedARN = event.panel === 'arn' ? event.nodeId : undefined;
-        ctx.nodeIdWithOpenedUsersList = event.panel === 'users-list' ? event.nodeId : undefined;
       }
     ),
     closeAllNodePanels: produce((ctx: CanvasStoreState) => {
       ctx.nodeIdWithOpenedContent = undefined;
       ctx.nodeIdWithOpenedTags = undefined;
       ctx.nodeIdWithOpenedARN = undefined;
-      ctx.nodeIdWithOpenedUsersList = undefined;
     }),
     clearCanvas: produce((ctx: CanvasStoreState) => {
       ctx.nodes = [];
