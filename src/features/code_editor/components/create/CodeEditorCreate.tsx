@@ -13,7 +13,7 @@ import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { ElementID } from '@/config/element-ids';
 import { findAnyValidObjective, BASE_VALIDATION_FNS } from '@/domain/iam-policy-validator';
 import { MANAGED_POLICIES } from '@/domain/managed-policies';
-import { GetLevelValidateFunctions } from '@/runtime/functions-registry';
+import { GetLevelValidateFunctions } from '@/levels/utils/functions-registry';
 import { useLevelSelector } from '@/runtime/level-runtime';
 import { useIsElementRestricted } from '@/runtime/ui/useIsElementRestricted';
 import codeEditorStateStore from '@/stores/code-editor-state-store';

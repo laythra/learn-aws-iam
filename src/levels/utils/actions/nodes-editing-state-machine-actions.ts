@@ -3,7 +3,7 @@ import { produce } from 'immer';
 import { GenericContext } from '../../types/context-types';
 import { ConnectionFilter } from '../filters/connection-filter';
 import { isJSONValid } from '@/domain/iam-policy-validator';
-import { GetLevelValidateFunctions } from '@/runtime/functions-registry';
+import { GetLevelValidateFunctions } from '@/levels/utils/functions-registry';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 import { BaseFinishEventMap, ObjectiveType } from '@/types/objective-types';
 

@@ -11,7 +11,7 @@ import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { BASE_VALIDATION_FNS, isJSONValid } from '@/domain/iam-policy-validator';
-import { GetLevelValidateFunctions } from '@/runtime/functions-registry';
+import { GetLevelValidateFunctions } from '@/levels/utils/functions-registry';
 import { useLevelSelector } from '@/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types/iam-enums';
