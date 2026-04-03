@@ -44,11 +44,6 @@ const POPUP_MSG3 = `
   * \`environment\` - Must be one of: \`dev\`, \`staging\`, or \`prod\`
   * \`Name\` - Optional but recommended; any descriptive label for the instance.
     If included, it must be one of the allowed tag keys.
-
-  **3. Supporting Resources Statement** *(pre-filled)*
-
-  Launching an instance also touches subnets, network interfaces, security groups, volumes,
-  and AMIs. This statement gives \`RunInstances\` permission to use those, no tag conditions needed.
 `;
 
 const POPUP_MSG4 = `

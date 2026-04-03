@@ -28,9 +28,7 @@ const completeInitialTutorial = async (tutorial: TutorialActions): Promise<void>
 
 const verifyInitialLevelSetup = async (nodes: NodeActions, edges: EdgeActions): Promise<void> => {
   await nodes.expectVisible(
-    GroupNodeID.PaymentsTeam,
-    GroupNodeID.AnalyticsTeam,
-    GroupNodeID.ComplianceTeam,
+    GroupNodeID.Engineering,
     UserNodeID.Sam,
     UserNodeID.Jordan,
     UserNodeID.Morgan,
@@ -39,12 +37,12 @@ const verifyInitialLevelSetup = async (nodes: NodeActions, edges: EdgeActions): 
     UserNodeID.Alex
   );
 
-  await edges.expectVisible(UserNodeID.Alex, GroupNodeID.PaymentsTeam);
-  await edges.expectVisible(UserNodeID.Sam, GroupNodeID.PaymentsTeam);
-  await edges.expectVisible(UserNodeID.Casey, GroupNodeID.AnalyticsTeam);
-  await edges.expectVisible(UserNodeID.Taylor, GroupNodeID.AnalyticsTeam);
-  await edges.expectVisible(UserNodeID.Morgan, GroupNodeID.ComplianceTeam);
-  await edges.expectVisible(UserNodeID.Jordan, GroupNodeID.ComplianceTeam);
+  await edges.expectVisible(UserNodeID.Alex, GroupNodeID.Engineering);
+  await edges.expectVisible(UserNodeID.Sam, GroupNodeID.Engineering);
+  await edges.expectVisible(UserNodeID.Casey, GroupNodeID.Engineering);
+  await edges.expectVisible(UserNodeID.Taylor, GroupNodeID.Engineering);
+  await edges.expectVisible(UserNodeID.Morgan, GroupNodeID.Engineering);
+  await edges.expectVisible(UserNodeID.Jordan, GroupNodeID.Engineering);
 };
 
 const createTBACPolicy = async (
@@ -68,15 +66,14 @@ const createTBACPolicy = async (
   );
 };
 
-const connectTBACPolicyToGroups = async (
+const connectTBACPolicyToGroup = async (
   nodes: NodeActions,
   edges: EdgeActions,
-  groups: string[]
+  progress: LevelProgressActions
 ): Promise<void> => {
-  for (const group of groups) {
-    await nodes.connectNodes(PolicyNodeID.TBACPolicy, group);
-    await edges.expectVisible(PolicyNodeID.TBACPolicy, group);
-  }
+  await nodes.connectNodes(PolicyNodeID.TBACPolicy, GroupNodeID.Engineering);
+  await edges.expectVisible(PolicyNodeID.TBACPolicy, GroupNodeID.Engineering);
+  await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
 };
 
 const verifyEC2ResourcesAndCreatePolicy = async (
@@ -106,33 +103,24 @@ const verifyEC2ResourcesAndCreatePolicy = async (
   );
 };
 
-const connectEC2PolicyToGroups = async (
+const connectEC2PolicyToGroup = async (
   nodes: NodeActions,
   edges: EdgeActions,
-  groups: string[]
+  progress: LevelProgressActions
 ): Promise<void> => {
-  const groupToResourceMapping: Record<string, { users: string[]; resource: string }> = {
-    [GroupNodeID.ComplianceTeam]: {
-      users: [UserNodeID.Morgan, UserNodeID.Jordan],
-      resource: ResourceNodeID.EC2Instance2,
-    },
-    [GroupNodeID.AnalyticsTeam]: {
-      users: [UserNodeID.Casey, UserNodeID.Taylor],
-      resource: ResourceNodeID.EC2Instance3,
-    },
-    [GroupNodeID.PaymentsTeam]: {
-      users: [UserNodeID.Alex, UserNodeID.Sam],
-      resource: ResourceNodeID.EC2Instance1,
-    },
-  };
+  await nodes.connectNodes(PolicyNodeID.EC2ManagePolicy, GroupNodeID.Engineering);
+  await edges.expectVisible(PolicyNodeID.EC2ManagePolicy, GroupNodeID.Engineering);
 
-  for (const group of groups) {
-    await nodes.connectNodes(PolicyNodeID.EC2ManagePolicy, group);
-    await edges.expectVisible(PolicyNodeID.EC2ManagePolicy, group);
+  await edges.expectMutlipleVisible([
+    [UserNodeID.Alex, ResourceNodeID.EC2Instance1],
+    [UserNodeID.Sam, ResourceNodeID.EC2Instance1],
+    [UserNodeID.Morgan, ResourceNodeID.EC2Instance2],
+    [UserNodeID.Jordan, ResourceNodeID.EC2Instance2],
+    [UserNodeID.Casey, ResourceNodeID.EC2Instance3],
+    [UserNodeID.Taylor, ResourceNodeID.EC2Instance3],
+  ]);
 
-    const mapping = groupToResourceMapping[group];
-    await edges.expectMutlipleVisible(mapping.users.map(user => [user, mapping.resource]));
-  }
+  await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 };
 
 const completeLevelFinishPopups = async (
@@ -169,8 +157,8 @@ test.describe('Stage 1 - TBAC Request Tags Introduction', () => {
   });
 });
 
-test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
-  test('Connection order: Analytics -> Payments -> Compliance', async ({
+test.describe('Stage 2 - Attach TBAC Policy to Group', () => {
+  test('Connect TBAC policy to engineering group', async ({
     edges,
     nodes,
     progress,
@@ -178,85 +166,8 @@ test.describe('Stage 2 - Attach TBAC Policy to Groups', () => {
   }) => {
     await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage2');
 
-    await test.step('Connect TBAC policy to all groups', async () => {
-      await connectTBACPolicyToGroups(nodes, edges, [
-        GroupNodeID.AnalyticsTeam,
-        GroupNodeID.PaymentsTeam,
-        GroupNodeID.ComplianceTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
-    });
-  });
-
-  test('Connection order: Compliance -> Payments -> Analytics', async ({
-    edges,
-    nodes,
-    progress,
-    goToLevelAtStage,
-  }) => {
-    await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage2');
-
-    await test.step('Connect TBAC policy to all groups', async () => {
-      await connectTBACPolicyToGroups(nodes, edges, [
-        GroupNodeID.ComplianceTeam,
-        GroupNodeID.PaymentsTeam,
-        GroupNodeID.AnalyticsTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
-    });
-  });
-
-  test('Connection order: Analytics -> Compliance -> Payments', async ({
-    edges,
-    nodes,
-    progress,
-    goToLevelAtStage,
-  }) => {
-    await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage2');
-
-    await test.step('Connect TBAC policy to all groups', async () => {
-      await connectTBACPolicyToGroups(nodes, edges, [
-        GroupNodeID.AnalyticsTeam,
-        GroupNodeID.ComplianceTeam,
-        GroupNodeID.PaymentsTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
-    });
-  });
-
-  test('Connection order: Compliance -> Analytics -> Payments', async ({
-    edges,
-    nodes,
-    progress,
-    goToLevelAtStage,
-  }) => {
-    await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage2');
-
-    await test.step('Connect TBAC policy to all groups', async () => {
-      await connectTBACPolicyToGroups(nodes, edges, [
-        GroupNodeID.ComplianceTeam,
-        GroupNodeID.AnalyticsTeam,
-        GroupNodeID.PaymentsTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
-    });
-  });
-
-  test('Connection order: Payments -> Compliance -> Analytics', async ({
-    edges,
-    nodes,
-    progress,
-    goToLevelAtStage,
-  }) => {
-    await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage2');
-
-    await test.step('Connect TBAC policy to all groups', async () => {
-      await connectTBACPolicyToGroups(nodes, edges, [
-        GroupNodeID.PaymentsTeam,
-        GroupNodeID.ComplianceTeam,
-        GroupNodeID.AnalyticsTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+    await test.step('Connect TBAC policy to engineering group', async () => {
+      await connectTBACPolicyToGroup(nodes, edges, progress);
     });
   });
 });
@@ -278,7 +189,7 @@ test.describe('Stage 3 - Create EC2 Management Policy and Final Connections', ()
 });
 
 test.describe('Stage 4 - Attach EC2 Management Policy and Complete Level', () => {
-  test('Connection order: Analytics -> Payments -> Compliance', async ({
+  test('Connect EC2 management policy and verify access', async ({
     edges,
     nodes,
     progress,
@@ -295,106 +206,8 @@ test.describe('Stage 4 - Attach EC2 Management Policy and Complete Level', () =>
       );
     });
 
-    await test.step('Connect EC2 policy to all groups and verify access', async () => {
-      await connectEC2PolicyToGroups(nodes, edges, [
-        GroupNodeID.AnalyticsTeam,
-        GroupNodeID.PaymentsTeam,
-        GroupNodeID.ComplianceTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
-    });
-
-    await test.step('Complete level tutorial', async () => {
-      await completeLevelFinishPopups(tutorial, ui);
-    });
-  });
-
-  test('Connection order: Compliance -> Payments -> Analytics', async ({
-    edges,
-    nodes,
-    progress,
-    tutorial,
-    goToLevelAtStage,
-    ui,
-  }) => {
-    await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage4');
-
-    await test.step('Verify initial popover message', async () => {
-      await tutorial.expectPopoverWithoutNextButton(
-        PolicyNodeID.EC2ManagePolicy,
-        POPOVER_TUTORIAL_MESSAGES[3].popover_title
-      );
-    });
-
-    await test.step('Connect EC2 policy to all groups and verify access', async () => {
-      await connectEC2PolicyToGroups(nodes, edges, [
-        GroupNodeID.ComplianceTeam,
-        GroupNodeID.PaymentsTeam,
-        GroupNodeID.AnalyticsTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
-    });
-
-    await test.step('Complete level tutorial', async () => {
-      await completeLevelFinishPopups(tutorial, ui);
-    });
-  });
-
-  test('Connection order: Analytics -> Compliance -> Payments', async ({
-    edges,
-    nodes,
-    progress,
-    tutorial,
-    goToLevelAtStage,
-    ui,
-  }) => {
-    await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage4');
-
-    await test.step('Verify initial popover message', async () => {
-      await tutorial.expectPopoverWithoutNextButton(
-        PolicyNodeID.EC2ManagePolicy,
-        POPOVER_TUTORIAL_MESSAGES[3].popover_title
-      );
-    });
-
-    await test.step('Connect EC2 policy to all groups and verify access', async () => {
-      await connectEC2PolicyToGroups(nodes, edges, [
-        GroupNodeID.AnalyticsTeam,
-        GroupNodeID.ComplianceTeam,
-        GroupNodeID.PaymentsTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
-    });
-
-    await test.step('Complete level tutorial', async () => {
-      await completeLevelFinishPopups(tutorial, ui);
-    });
-  });
-
-  test('Connection order: Payments -> Compliance -> Analytics', async ({
-    edges,
-    nodes,
-    progress,
-    tutorial,
-    goToLevelAtStage,
-    ui,
-  }) => {
-    await goToLevelAtStage(10, ENCODED_LEVEL_STAGES, 'stage4');
-
-    await test.step('Verify initial popover message', async () => {
-      await tutorial.expectPopoverWithoutNextButton(
-        PolicyNodeID.EC2ManagePolicy,
-        POPOVER_TUTORIAL_MESSAGES[3].popover_title
-      );
-    });
-
-    await test.step('Connect EC2 policy to all groups and verify access', async () => {
-      await connectEC2PolicyToGroups(nodes, edges, [
-        GroupNodeID.PaymentsTeam,
-        GroupNodeID.ComplianceTeam,
-        GroupNodeID.AnalyticsTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+    await test.step('Connect EC2 policy to engineering group and verify team access', async () => {
+      await connectEC2PolicyToGroup(nodes, edges, progress);
     });
 
     await test.step('Complete level tutorial', async () => {
@@ -425,13 +238,8 @@ test.describe('Stage 4 - Attach EC2 Management Policy and Complete Level', () =>
       await entities.createSpuriousPolicy();
     });
 
-    await test.step('Connect all policies', async () => {
-      await connectEC2PolicyToGroups(nodes, edges, [
-        GroupNodeID.AnalyticsTeam,
-        GroupNodeID.PaymentsTeam,
-        GroupNodeID.ComplianceTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+    await test.step('Connect EC2 policy to engineering group', async () => {
+      await connectEC2PolicyToGroup(nodes, edges, progress);
     });
 
     await test.step('Trigger warning check', async () => {
@@ -470,13 +278,8 @@ test.describe('Complete Level - End to End', () => {
       await createTBACPolicy(entities, nodes, progress, tutorial);
     });
 
-    await test.step('Complete Stage 2 - Attach TBAC policy to groups', async () => {
-      await connectTBACPolicyToGroups(nodes, edges, [
-        GroupNodeID.AnalyticsTeam,
-        GroupNodeID.PaymentsTeam,
-        GroupNodeID.ComplianceTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[0][1].id);
+    await test.step('Complete Stage 2 - Attach TBAC policy to engineering group', async () => {
+      await connectTBACPolicyToGroup(nodes, edges, progress);
     });
 
     await test.step('Complete Stage 3 - Create EC2 management policy', async () => {
@@ -485,12 +288,7 @@ test.describe('Complete Level - End to End', () => {
     });
 
     await test.step('Complete Stage 4 - Attach EC2 policy and finish', async () => {
-      await connectEC2PolicyToGroups(nodes, edges, [
-        GroupNodeID.AnalyticsTeam,
-        GroupNodeID.PaymentsTeam,
-        GroupNodeID.ComplianceTeam,
-      ]);
-      await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
+      await connectEC2PolicyToGroup(nodes, edges, progress);
       await completeLevelFinishPopups(tutorial, ui);
     });
   });

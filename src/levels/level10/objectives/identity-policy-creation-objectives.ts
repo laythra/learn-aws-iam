@@ -15,12 +15,13 @@ const OBJECTIVE1_DESCRIPTION = `
 
   **Statement 2 — Instance Launch**
   Allows launching EC2 instances only when the request carries the correct tags:
-  the caller's application, a valid environment, and optionally a Name.
+  The tags are:
 
-  **Statement 3 — Supporting Resources** *(pre-filled)*
-  When \`RunInstances\` is called, EC2 also needs access to the resources it provisions alongside
-  the instance: subnets, network interfaces, security groups, volumes, and AMIs.
-  This statement covers those. No tag conditions apply here — leave it as-is.
+  * **\`application\`**: must match the caller's application tag
+  * **\`environment\`**: must be one of \`dev\`, \`staging\`, or \`prod\`
+  * **\`Name\`**: optional; any descriptive label for the instance
+
+  **Statement 3 — Supporting Resources** *(pre-filled)* Leave this one as-is.
 `;
 
 const OBJECTIVE2_DESCRIPTION = `
