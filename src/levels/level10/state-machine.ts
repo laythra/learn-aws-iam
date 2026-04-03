@@ -132,7 +132,7 @@ export const stateMachine = createStateMachineSetup<
                   actions: [
                     {
                       type: 'finish_level_objective',
-                      params: { id: LevelObjectiveID.ATTACH_POLICY1_TO_GROUPS },
+                      params: { id: LevelObjectiveID.ATTACH_POLICY1_TO_GROUP },
                     },
                   ],
                 },

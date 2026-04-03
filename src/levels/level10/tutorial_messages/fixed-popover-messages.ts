@@ -13,7 +13,8 @@ const FIXED_POPOVER_MSG1 = `
 const FIXED_POPOVER_MSG2 = `
   There you have it! 🎉
 
-  Every user is in the same **engineering** group — yet each team can only access their own instances.
+  Every user is in the same **engineering** group,
+  yet each team can only access their own instances.
   No per-team groups, no separate policies per team.
 
   Between **request tags** for enforcing tagging rules at launch time,

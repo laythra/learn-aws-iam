@@ -60,7 +60,7 @@ export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[
     {
       type: ObjectiveType.LEVEL_OBJECTIVE,
       finished: false,
-      id: LevelObjectiveID.ATTACH_POLICY1_TO_GROUPS,
+      id: LevelObjectiveID.ATTACH_POLICY1_TO_GROUP,
       label: Objective2Description,
     },
   ],
