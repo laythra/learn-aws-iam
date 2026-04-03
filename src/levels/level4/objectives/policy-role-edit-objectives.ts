@@ -10,18 +10,6 @@ const OBJECTIVE_CALLOUT_MSG = `
   To explore the full list, check [here](https://gist.github.com/itshella-dom/b7b6fe90796570b4481cab34ef502531).
 `;
 
-const OBJECTIVE_CALLOUT_MSG2 = `
-  This policy uses a **Deny** statement targeting \`arn:aws:s3:::timeshift-*\`.
-
-  A developer added it to block intern access to the sensitive \`timeshift-backups\` bucket.
-  The intention was correct — but the wildcard \`timeshift-*\` also matches \`timeshift-assets\`,
-  overriding the Allow statement below it.
-
-  In IAM, an explicit **Deny always wins** over an Allow.
-  The fix is to remove this statement entirely — the \`timeshift-backups\` bucket
-  is already protected because interns were never granted access to it in the first place.
-`;
-
 const OBJECTIVE1_HINT_MSG1 = `
   Developers should:
   - Have *read/write* access to the \`customer-data\` **DynamoDB Table**.
@@ -74,6 +62,18 @@ const OBJECTIVE3_HINT_MSG1 = `
 `;
 
 const OBJECTIVE3_HINT_MSG2 = `
+  This policy uses a **Deny** statement targeting \`arn:aws:s3:::timeshift-*\`.
+
+  A developer added it to block intern access to the sensitive \`timeshift-backups\` bucket.
+  The intention was correct — but the wildcard \`timeshift-*\` also matches \`timeshift-assets\`,
+  overriding the Allow statement below it.
+
+  In IAM, an explicit **Deny always wins** over an Allow.
+  The fix is to remove this statement entirely — the \`timeshift-backups\` bucket
+  is already protected because interns were never granted access to it in the first place.
+`;
+
+const OBJECTIVE3_HINT_MSG3 = `
   \`s3:GetObject\` lets a user read an object if they know its exact key,
   but it does not let them list what's in the bucket.
   \`s3:ListBucket\` is a separate, bucket-level action — and it requires
@@ -182,12 +182,12 @@ export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<
           content: OBJECTIVE3_HINT_MSG1,
         },
         {
-          title: 'Condition Key',
-          content: OBJECTIVE_CALLOUT_MSG2,
+          title: 'Hint #1',
+          content: OBJECTIVE3_HINT_MSG2,
         },
         {
-          title: 'Hint',
-          content: OBJECTIVE3_HINT_MSG2,
+          title: 'Hint #2',
+          content: OBJECTIVE3_HINT_MSG3,
         },
       ],
       finished: false,
