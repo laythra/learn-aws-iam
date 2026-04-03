@@ -19,16 +19,11 @@ const FIXED_POPOVER_MSG2 = `
 `;
 
 const FIXED_POPOVER_MSG4 = `
-  You might be curious about the distinction between granting access to a user
-  via an **IAM role** versus using a traditional **IAM policy**.
+  **IAM Roles** provide temporary credentials to trusted entities,
+  while **IAM Policies** grant persistent access.
 
-  There are a few key differences that are too boring to list here, but here's a summary:
-  * **IAM Roles** provide temporary credentials to trusted entities,
-    unlike identity-based policies which grant persistent access.
-  * **IAM Roles** solve use cases not possible with policies,
-  like cross-account access, or service-to-service access
-
-  For this part of the level, we'll be using **IAM roles** to establish service-to-service access.
+  Roles are ideal for service-to-service access and cross-account scenarios.
+  We'll use them here to establish service-to-service access.
 `;
 
 const FIXED_POPOVER_MSG6 = `

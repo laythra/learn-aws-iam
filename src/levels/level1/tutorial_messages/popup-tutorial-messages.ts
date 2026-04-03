@@ -28,7 +28,7 @@ const POPUP_MSG2 = `
 
 export const POPUP_TUTORIAL_MESSAGES: PopupTutorialMessage[] = [
   {
-    title: 'Learn AWS IAM in a fun way',
+    title: 'Learn AWS IAM in a fun way 🛡️',
     content: POPUP_MSG1,
   },
   {

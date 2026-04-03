@@ -3,7 +3,7 @@ export enum PolicyNodeID {
   S3ReadPolicy = 'policy-s3-read',
   S3ReadWritePolicy = 'policy-s3-read-write',
   DynamoDBReadWritePolicy = 'policy-dynamodb-read-write',
-  CloudFrontReadPolicy = 'policy-cloudfront-read',
+  CloudFrontInvalidationPolicy = 'policy-cloudfront-invalidation',
 }
 
 export enum GroupNodeID {

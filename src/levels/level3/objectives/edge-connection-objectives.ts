@@ -27,12 +27,12 @@ export const EDGE_CONNECTION_OBJECTIVES: EdgeConnectionObjective<FinishEventMap>
       required_edges: [
         createEdge({
           rootOverrides: {
-            source: PolicyNodeID.CloudFrontReadPolicy,
+            source: PolicyNodeID.CloudFrontInvalidationPolicy,
             target: GroupNodeID.FrontendGroup,
           },
         }),
       ],
-      on_finish_event: EdgeConnectionFinishEvent.CLOUDFRONT_READ_POLICY_CONNECTED,
+      on_finish_event: EdgeConnectionFinishEvent.CLOUDFRONT_INVALIDATION_POLICY_CONNECTED,
       is_finished: false,
       established_edge_hovering_label: AccessLevel.Read,
       established_edge_source_handle: HandleID.Top,

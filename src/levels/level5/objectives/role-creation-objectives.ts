@@ -74,7 +74,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
         {
           path: '/Statement/0/Action',
           content: 'Allows the Principal to assume the role',
-          color: 'green',
+          color: 'yellow',
         },
         {
           path: '/Statement/0/Principal/AWS',

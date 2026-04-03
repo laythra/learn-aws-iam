@@ -217,6 +217,9 @@ export const stateMachine = createStateMachineSetup<
         },
         give_finance_user_s3_access: {
           type: 'parallel',
+          meta: {
+            highlighted_elements: [ElementID.IAMNodeContentEditButton],
+          },
           entry: [
             'enable_edges_management_ability',
             {
