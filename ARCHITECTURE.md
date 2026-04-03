@@ -93,7 +93,7 @@ With the machine emitting `NODES_DELETED` with IDs, none of that scaffolding exi
 
 Machines also need to be serializable so that the user's level progress can be saved at certain parts as checkpoints. For this reason, runtime-dependent logic lives outside the machine definition in `level-runtime-fns.ts`, and the machine context itself is kept function-free.
 
-At runtime, callers resolve the appropriate per-level validation and guard functions on demand via [functions-registry.ts](src/runtime/functions-registry.ts) in runtime/ (for example, `GetLevelValidateFunctions(...)`), rather than injecting functions into the machine context. See [Functions Registry](#functions-registry) for details.
+At runtime, callers resolve the appropriate per-level validation and guard functions on demand via [functions-registry.ts](src/levels/utils/functions-registry.ts) (for example, `GetLevelValidateFunctions(...)`), rather than injecting functions into the machine context. See [Functions Registry](#functions-registry) for details.
 
 ### Levels Structure
 
@@ -193,7 +193,7 @@ The event bus is intentionally minimal: no middleware, no ordering guarantees, n
 
 ### Functions registry
 
-Checkpointing requires the machine snapshot to survive JSON serialization. That rules out functions in machine context entirely. However, objectives need validator functions, and guard rails need filter functions for runtime connection checks. The workaround is [functions-registry.ts](src/runtime/functions-registry.ts): a plain object mapping each level to the functions it needs.
+Checkpointing requires the machine snapshot to survive JSON serialization. That rules out functions in machine context entirely. However, objectives need validator functions, and guard rails need filter functions for runtime connection checks. The workaround is [functions-registry.ts](src/levels/utils/functions-registry.ts): a plain object mapping each level to the functions it needs.
 
 ```typescript
 GetLevelValidateFunctions(5)['create_admin_policy'];
@@ -457,11 +457,10 @@ src/
 │   ├── common-state-machine-setup.ts
 │   ├── shared-top-level-events.ts
 │   ├── types/            # Level-specific types
-│   └── utils/            # Shared level utilities
+│   └── utils/            # Shared level utilities (actions, filters, functions-registry.ts)
 │
 ├── lib/                  # Analytics, storage, markdown plugins
 ├── runtime/              # Level lifecycle, persistence, provider
-│   └── functions-registry.ts
 ├── stores/               # @xstate/store instances
 └── types/                # TypeScript definitions
 ```
@@ -470,12 +469,12 @@ src/
 
 ![Layer dependency diagram](./assets/images/dependency-layers.png)
 
-Dependencies flow downward. Upper layers import from lower layers; lower layers never import from upper ones. The event bus is the one exception; it lets `levels/` communicate upward to `runtime/` without creating a cycle (see [Cross-layer event bus](#cross-layer-event-bus)).
+Dependencies flow downward. Upper layers import from lower layers; lower layers never import from upper ones. The event bus is the one exception to this rule; it lets `levels/` fire side effects that are handled by `runtime/` without creating a cycle (see [Cross-layer event bus](#cross-layer-event-bus)).
 
 - **`lib/`** and **`types/`** are the foundation. Generic utilities (event bus, storage, markdown processing), shared TypeScript types and enums. Nothing in the codebase is off-limits for importing from here.
 - **`domain/`** contains domain-specific logic for IAM: node and edge factories, ARN generation, policy validation schemas, graph utilities. It knows what an IAM User or Role looks like, but nothing about levels, tutorial flow, or the canvas.
 - **`levels/`** defines what each level contains and how it progresses. It uses `domain/` factories to build nodes and edges, and defines the XState machine, objectives, tutorial messages, and runtime validation functions. Twelve self-contained folders; understanding level 5 requires no knowledge of level 4 or 6.
-- **`runtime/`** is responsible for serving the correct level machine to the app. It loads machines from `levels/`, handles snapshotting and persistence, registers level-specific functions that can't live inside a serializable machine snapshot, and exposes the `LevelsProgressionProvider`.
+- **`runtime/`** is responsible for serving the correct level machine to the app. It loads machines from `levels/`, handles snapshotting and persistence, and exposes the `LevelsProgressionProvider`.
 - **`features/`** is purely about rendering. The canvas, the code editor, the IAM entity creation dialogs, and the level progress panel all live here. These components subscribe to the state machine actor and the canvas/editor stores; they do not contain level logic.
 - **`app_shell/`** and **`app/`** sit at the top. `app_shell/` assembles the navigation bar and fixed overlays. `app/` is the root: it wires up the provider hierarchy and renders the shell.
 
@@ -497,7 +496,7 @@ Node factories live in [`src/domain/nodes/`](src/domain/nodes/), with one factor
 
 ### Hooks
 
-The hooks in [src/hooks/](src/hooks/) offer the same functionality but composable within a component:
+Hooks provide shared state and logic for common patterns across the app:
 
 ```typescript
 function MyButton() {
@@ -509,7 +508,7 @@ function MyButton() {
 }
 ```
 
-Hooks provide shared state and logic for common patterns across the app, such as checking if an element is current restricted (The consuming component decides what "restricted" means, ie: hidden, disabled, etc.), or whether a tutorial popover is active for a given element.
+`useIsElementRestricted` lives in [`src/runtime/ui/`](src/runtime/ui/) and `usePopover` lives in [`src/runtime/tutorial/`](src/runtime/tutorial/) — both are runtime concerns tied to the level machine. [`src/hooks/`](src/hooks/) is reserved for hooks with no dependency on runtime or level state (currently just `useModal`).
 
 The project initially used HOC (Higher Order Components) for these patterns, but has gradually shifted towards hooks for better composability. For example, an element might be a target for restriction and for popovers at the same time, and with HOCs we would have to wrap the component twice, while with hooks we can simply call both hooks inside the component and let it decide how to use the returned values.
 
