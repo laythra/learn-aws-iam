@@ -72,11 +72,11 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
       IAMIdentityPolicyCreationObjective<FinishEventMap, ValidateFunctionsFnName>
     >,
     {
-      id: PolicyNodeID.CloudFrontReadPolicy,
+      id: PolicyNodeID.CloudFrontInvalidationPolicy,
       type: ObjectiveType.POLICY_CREATION_OBJECTIVE,
       entity: IAMNodeEntity.IdentityPolicy,
       initial_code: MANAGED_POLICIES.EmptyPermissionPolicy,
-      on_finish_event: NodeCreationFinishEvent.CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED,
+      on_finish_event: NodeCreationFinishEvent.CF_DISTRIBUTION_INVALIDATION_POLICY_CREATED,
       extra_data: {
         granted_accesses: [
           {

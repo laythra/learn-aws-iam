@@ -1,4 +1,4 @@
-import cloudfrontReadPolicySchema from './schemas/cloudfront-read-policy-schema.json';
+import cloudfrontInvalidationPolicySchema from './schemas/cloudfront-invalidation-policy-schema.json';
 import dynamoReadWritePolicySchema from './schemas/dynamo-db-read-write-policy-schema.json';
 import s3ReadPolicySchema from './schemas/s3-read-policy-schema.json';
 import s3ReadWritePolicySchema from './schemas/s3-read-write-policy-schema.json';
@@ -9,7 +9,8 @@ export const ValidateFunctions = {
   [PolicyNodeID.S3ReadPolicy]: () => AJV_COMPILER.compile(s3ReadPolicySchema),
   [PolicyNodeID.S3ReadWritePolicy]: () => AJV_COMPILER.compile(s3ReadWritePolicySchema),
   [PolicyNodeID.DynamoDBReadWritePolicy]: () => AJV_COMPILER.compile(dynamoReadWritePolicySchema),
-  [PolicyNodeID.CloudFrontReadPolicy]: () => AJV_COMPILER.compile(cloudfrontReadPolicySchema),
+  [PolicyNodeID.CloudFrontInvalidationPolicy]: () =>
+    AJV_COMPILER.compile(cloudfrontInvalidationPolicySchema),
 } as const;
 
 export type ValidateFunctionsFnName = keyof typeof ValidateFunctions;

@@ -292,18 +292,18 @@ export const stateMachine = createStateMachineSetup<
                 },
               },
             },
-            create_cloudfront_read_policy: {
+            create_cloudfront_invalidation_policy: {
               initial: 'creation_in_progress',
               states: {
                 creation_in_progress: {
                   on: {
-                    [NodeCreationFinishEvent.CLOUDFRONT_DISTRIBUTION_READ_POLICY_CREATED]:
+                    [NodeCreationFinishEvent.CF_DISTRIBUTION_INVALIDATION_POLICY_CREATED]:
                       'attachment_in_progress',
                   },
                 },
                 attachment_in_progress: {
                   on: {
-                    [EdgeConnectionFinishEvent.CLOUDFRONT_READ_POLICY_CONNECTED]: {
+                    [EdgeConnectionFinishEvent.CLOUDFRONT_INVALIDATION_POLICY_CONNECTED]: {
                       actions: [
                         {
                           type: 'finish_level_objective',
