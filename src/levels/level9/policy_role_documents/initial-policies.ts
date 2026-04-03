@@ -10,8 +10,8 @@ export const INITIAL_POLICIES = {
       },
       {
         Effect: 'Allow',
-        Action: 'rds-db:connect',
-        Resource: 'arn:aws:rds-db:us-east-1:123456789012:dbuser:db-ALPHADB123/app_user',
+        Action: 'rds-data:ExecuteStatement',
+        Resource: 'arn:aws:rds:us-east-1:123456789012:cluster:alpha-team-db',
         Condition: {},
       },
     ],
@@ -27,8 +27,8 @@ export const INITIAL_POLICIES = {
       },
       {
         Effect: 'Allow',
-        Action: 'rds-db:connect',
-        Resource: 'arn:aws:rds-db:us-east-1:123456789012:dbuser:db-BETADB123/app_user',
+        Action: 'rds-data:ExecuteStatement',
+        Resource: 'arn:aws:rds:us-east-1:123456789012:cluster:beta-team-db',
         Condition: {},
       },
     ],
@@ -44,8 +44,8 @@ export const INITIAL_POLICIES = {
       },
       {
         Effect: 'Allow',
-        Action: 'rds-db:connect',
-        Resource: 'arn:aws:rds-db:us-east-1:123456789012:dbuser:*/*',
+        Action: 'rds-data:ExecuteStatement',
+        Resource: 'arn:aws:rds:us-east-1:123456789012:cluster:*',
         Condition: {},
       },
     ],

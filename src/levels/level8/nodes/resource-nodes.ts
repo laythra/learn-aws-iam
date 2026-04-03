@@ -15,7 +15,7 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
   },
   {
     id: ResourceNodeID.SlackCrashlyticsNotifierService,
-    label: 'slack-alerting-app',
+    label: 'staging-group',
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.CodeDeploy,
     resource_type: IAMNodeResourceEntity.CodeDeploy,

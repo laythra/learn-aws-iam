@@ -12,11 +12,12 @@ const FIXED_POPOVER_MSG1 = `
 `;
 
 const FIXED_POPOVER_MSG2 = `
-  The objective of this level is to let users connect only to RDS instances
-  for the same application they work on.
+  The objective of this level is to let users retrieve their team's database secret
+  and execute statements against their team's **Aurora** cluster —
+  but only users whose **application** tag matches their team.
 
-  To achieve this, we need to match the user's **application** tag
-  with the **application** tag of the RDS instance.
+  We'll start by creating a separate policy for each team,
+  then consolidate them into a single shared policy using **policy variables**.
 `;
 
 const FIXED_POPOVER_MSG3 = `

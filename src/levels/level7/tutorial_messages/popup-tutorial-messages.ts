@@ -51,8 +51,6 @@ const POPUP_MSG3 = `
   For this stage of the level, we'll achieve the same cross-account access as before,
   but this time using a **resource-based policy** instead of a role trust policy.
 
-  &nbsp;
-
   > |color(warning)
   > ::badge[WARNING]::
   > Now that we entered the multi-account territory (again),

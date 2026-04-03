@@ -1,8 +1,4 @@
-export function generateRdsManagePolicySchema(
-  teamName: string,
-  resourceId: string,
-  secretSuffix: string
-): object {
+export function generateRdsManagePolicySchema(teamName: string, secretSuffix: string): object {
   const secretArn = `
     arn:aws:secretsmanager:us-east-1:123456789012:secret:db/${teamName}-${secretSuffix}
   `.trim();
@@ -71,12 +67,12 @@ export function generateRdsManagePolicySchema(
           Action: {
             oneOf: [
               {
-                const: 'rds-db:connect',
+                const: 'rds-data:ExecuteStatement',
               },
               {
                 type: 'array',
                 items: {
-                  const: 'rds-db:connect',
+                  const: 'rds-data:ExecuteStatement',
                 },
                 minItems: 1,
                 maxItems: 1,
@@ -85,7 +81,7 @@ export function generateRdsManagePolicySchema(
             ],
           },
           Resource: {
-            const: `arn:aws:rds-db:us-east-1:123456789012:dbuser:db-${resourceId}/app_user`,
+            const: `arn:aws:rds:us-east-1:123456789012:cluster:${teamName}-db`,
           },
           Condition: {
             $ref: '#/definitions/principalCondition',
