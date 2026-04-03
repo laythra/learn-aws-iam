@@ -5,7 +5,7 @@ import { Connection, ReactFlowInstance } from '@xyflow/react';
 import _ from 'lodash';
 
 import { useCanvasHandlers } from './useCanvasHandlers';
-import { useCanvasStoreSync } from './useCanvasSync';
+import { useCanvasStoreSync } from './useCanvasStoreSync';
 import { useCanvasViewport } from './useCanvasViewport';
 import { CanvasStore } from '../stores/canvas-store';
 import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';

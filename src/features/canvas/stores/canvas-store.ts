@@ -45,6 +45,7 @@ type CanvasStoreEvents = {
   closeAllNodePanels: unknown;
   clearCanvas: unknown;
   toggleAccountCollapse: { accountId: string };
+  popoverShown: { elementId: string };
   markEdgesForDeletion: { edgeIds: string[] };
   markNodesForDeletion: { nodeIds: string[] };
   finalizeEdgesDeletion: { edgeIds: string[] };
@@ -140,6 +141,22 @@ export const CanvasStore = createStore<CanvasStoreState, CanvasStoreEvents, neve
     clearCanvas: produce((ctx: CanvasStoreState) => {
       ctx.nodes = [];
       ctx.edges = [];
+    }),
+    popoverShown: produce((ctx: CanvasStoreState, event: { elementId: string }) => {
+      const node = ctx.nodes.find(n => n.id === event.elementId);
+      if (!node?.parentId) return;
+
+      const parentAccount = ctx.nodes.find(
+        n => n.id === node.parentId && n.data.entity === IAMNodeEntity.Account
+      );
+      if (parentAccount?.data.collapsed) {
+        parentAccount.data.collapsed = false;
+        ctx.nodes
+          .filter(n => n.parentId === parentAccount.id)
+          .forEach(n => {
+            n.hidden = false;
+          });
+      }
     }),
     toggleAccountCollapse: produce((ctx: CanvasStoreState, event: { accountId: string }) => {
       const accountNode = ctx.nodes.find(

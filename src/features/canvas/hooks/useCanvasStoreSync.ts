@@ -48,6 +48,14 @@ export function useCanvasStoreSync({
     });
   }, [levelActor, rfInstance]);
 
+  useEffect(() => {
+    const sub = levelActor.on('POPOVER_SHOWN', ({ elementId }: { elementId: string }) => {
+      CanvasStore.send({ type: 'popoverShown', elementId });
+    });
+
+    return () => sub.unsubscribe();
+  }, [levelActor]);
+
   // This useEffect sets up subscriptions to the level actor to listen for node and edge changes.
   // It acts as the synchronization layer between the state machine and the canvas store.
   // Each event is handled separately to make integrating animations easier in the future.
