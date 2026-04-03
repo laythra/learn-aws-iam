@@ -120,5 +120,45 @@ describe('CanvasStore', () => {
       expect(nodes).toHaveLength(2);
       expect(nodes.find(n => n.id === 'account-1')?.data.collapsed).toBeUndefined();
     });
+
+    describe('popoverShown', () => {
+      it('uncollapses a collapsed parent account and unhides its children', () => {
+        const account = createAccountNode({ rootOverrides: { id: 'account-1' } });
+        const child = createIdentityPolicyNode({
+          rootOverrides: { id: 'policy-1', parentId: 'account-1' },
+        });
+
+        sendSetNodes([account, child]);
+        CanvasStore.send({ type: 'toggleAccountCollapse', accountId: 'account-1' });
+        CanvasStore.send({ type: 'popoverShown', elementId: 'policy-1' });
+
+        const { nodes } = CanvasStore.getSnapshot().context;
+        expect(nodes.find(n => n.id === 'account-1')?.data.collapsed).toBe(false);
+        expect(nodes.find(n => n.id === 'policy-1')?.hidden).toBe(false);
+      });
+
+      it('does nothing if the node has no parent', () => {
+        const standalone = createIdentityPolicyNode({ rootOverrides: { id: 'policy-1' } });
+
+        sendSetNodes([standalone]);
+        CanvasStore.send({ type: 'popoverShown', elementId: 'policy-1' });
+
+        const { nodes } = CanvasStore.getSnapshot().context;
+        expect(nodes.find(n => n.id === 'policy-1')?.hidden).toBeFalsy();
+      });
+
+      it('does nothing if the parent account is not collapsed', () => {
+        const account = createAccountNode({ rootOverrides: { id: 'account-1' } });
+        const child = createIdentityPolicyNode({
+          rootOverrides: { id: 'policy-1', parentId: 'account-1' },
+        });
+
+        sendSetNodes([account, child]);
+        CanvasStore.send({ type: 'popoverShown', elementId: 'policy-1' });
+
+        const { nodes } = CanvasStore.getSnapshot().context;
+        expect(nodes.find(n => n.id === 'account-1')?.data.collapsed).toBeUndefined();
+      });
+    });
   });
 });

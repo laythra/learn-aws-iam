@@ -4,7 +4,7 @@ import { useToast } from '@chakra-ui/react';
 import { Connection } from '@xyflow/react';
 import _ from 'lodash';
 
-import { LevelActorRef } from './useCanvasSync';
+import { LevelActorRef } from './useCanvasStoreSync';
 import { getValidConnectionDirection } from '../utils/edges-creation';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 import { DataEvent } from '@/types/state-machine-event-enums';
