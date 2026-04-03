@@ -8,8 +8,6 @@ export default `
   * **Resource**: The resources to which the policy applies
   * **Condition**: Additional conditions that must be met for the policy to apply
 
-  &nbsp;
-
   ~~~js
   {
     "Version": "2012-10-17",

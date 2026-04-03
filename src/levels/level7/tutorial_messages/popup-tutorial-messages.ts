@@ -39,7 +39,7 @@ const POPUP_MSG2 = `
   > **Resource-based policies** are embedded in a single resource and cannot be reused.
   >
   > Unlike role-based cross-account access, they grant access directly - no \`sts:AssumeRole\`
-   needed.
+  > needed.
 `;
 
 const POPUP_MSG3 = `
