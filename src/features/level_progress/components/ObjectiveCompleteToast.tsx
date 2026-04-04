@@ -23,35 +23,43 @@ export const ObjectiveCompleteToast: React.FC = () => {
         id: `objective-complete-toast-${objective_id}`,
         render: ({ onClose }) => (
           <Box
-            bg='white'
-            boxShadow='sm'
-            borderRadius='md'
+            bg='green.50'
+            boxShadow='lg'
+            borderRadius='lg'
             data-element-id='objective-complete-toast'
             data-objective-id={objective_id}
-            borderLeftWidth='3px'
-            borderLeftColor='green.400'
-            overflow='hidden'
             maxW='360px'
             minW='280px'
             position='relative'
-            px={3}
-            py={3}
+            px={4}
+            py={4}
           >
             <CloseButton
               size='sm'
               position='absolute'
-              top='8px'
-              right='8px'
+              top='10px'
+              right='10px'
               onClick={onClose}
               aria-label='close'
+              color='green.800'
             />
-            <HStack spacing={2} align='start'>
-              <Icon as={CheckBadgeIcon} color='green.500' boxSize={5} mt={0.5} flexShrink={0} />
-              <Box flex={1}>
-                <Box fontWeight='600' fontSize='14px' color='gray.800' mb={1}>
+            <HStack spacing={3} align='start'>
+              <Box
+                bg='green.600'
+                borderRadius='full'
+                boxSize={8}
+                display='flex'
+                alignItems='center'
+                justifyContent='center'
+                flexShrink={0}
+              >
+                <Icon as={CheckBadgeIcon} color='white' boxSize={5} />
+              </Box>
+              <Box flex={1} pr={4}>
+                <Box fontWeight='700' fontSize='14px' color='green.900' mb={0.5}>
                   Objective Complete!
                 </Box>
-                <Box fontSize='13px' color='gray.600'>
+                <Box fontSize='13px' color='green.800'>
                   <Markdown
                     components={customMarkdownComponents}
                     rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
