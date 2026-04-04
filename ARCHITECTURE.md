@@ -1,88 +1,115 @@
 # Architecture
 
-This document walks through how Learn AWS IAM is built under the hood. It's meant for anyone who wants to understand the codebase, whether you're looking to contribute, debug something, or just curious to get a sense of how things work.
-
-The project is an interactive learning platform split into levels. Each level drops users onto a visual canvas where they wire up IAM policies, roles, users, and other AWS entities. The goal is to finish a set of objectives—usually by creating policies and connecting things correctly. There's a tutorial layer guiding users through each concept, and validation happens in real time so mistakes surface immediately.
-
-What makes this interesting architecturally is that each level runs on its own state machine. This keeps the complex tutorial flows, objective tracking, and validation logic properly encapsulated and isolated per level. The canvas (built on ReactFlow) and every component in the app, subscribes to events from the current level's state machine in order to render the appropriate interactable components such as popups, nodes, edges, and more.
+Learn AWS IAM is an interactive browser tutorial that teaches IAM concepts through 12 hands-on levels, each built around a visual entity canvas and a dedicated XState state machine.
 
 ## Contents
 
 - [Tech Stack](#tech-stack)
 - [How the Pieces Fit Together](#how-the-pieces-fit-together)
-- [State Machines: The Backbone](#state-machines-the-backbone)
+- [State Machines](#state-machines)
 - [The Canvas System](#the-canvas-system)
 - [Policy Editor](#policy-editor)
 - [Tutorial Content](#tutorial-content)
 - [Project Layout](#project-layout)
-- [Patterns Worth Knowing](#patterns-worth-knowing)
+- [Common Patterns](#common-patterns)
 - [Testing Approach](#testing-approach)
+- [Known Limitations](#known-limitations)
 - [Building and Deploying](#building-and-deploying)
-- [Why Things Are the Way They Are](#why-things-are-the-way-they-are)
-
----
 
 ## Tech Stack
 
-Here's what's running under the hood:
+**Frontend core**: React with TypeScript, bundled with Vite. The project initially used Create React App but later migrated to Vite for faster builds and better DX.
 
-**Frontend core**: React with TypeScript, bundled by Vite. Initially bootstrapped with Create React App, later migrated for faster builds and better DX.
+**State management**: XState handles orchestrating each level's flow, including tutorial content, objective tracking, and what nodes and edges currently exist in the level. `@xstate/store` is used for the more lightweight state management part of the project.
 
-**State management**: XState handles orchestating each level's flow, including tutorial content, objective tracking, and what nodes and edges currently exist in the level.
+**Canvas**: Using ReactFlow (`@xyflow/react`) to render the graph of IAM entities and the relationships between them.
 
-**Canvas**: ReactFlow (@xyflow/react) renders the graph of IAM entities. Nodes are users, policies, roles, etc. Edges are the relationships between them.
+**Code editing**: A JSON policy editor built on CodeMirror 6, with AJV validating written policies against JSON schemas in real time.
 
-**Code editing**: CodeMirror 6 powers the JSON policy editor. AJV validates policies against JSON schemas in real time.
+**UI components**: Chakra UI for the component library, Framer Motion for animations. Markdown content goes through `react-markdown` with some custom plugins for integration with Chakra's theming and providing extra extensions like badges and inline icons.
 
-**UI components**: Chakra UI for the component library, Framer Motion for animations. Markdown content goes through react-markdown with some custom plugins for badges and icons.
+**Testing**: Unit and integration tests using Vitest, and End-to-end tests with Playwright. The E2E tests cover all 12 levels, walking through the various paths users can take.
 
-**Testing**: End-to-end tests with Playwright, Unit tests with Vitest. The units tests need more coverage, the E2E tests cover all twelve levels.
-
-**Deployment**: A simple multi-stage docker image, with nginx serving the static build created by vite
-JSON schemas in real time.
-
----
+**Deployment**: A production build is assembled using a simple multi-stage Docker image, with Nginx serving the build.
 
 ## How the Pieces Fit Together
 
-The app has a few distinct layers that work together:
+The app has a few distinct layers:
 
-1. **State machines** State machines sit at the center. Each level has one. It tracks everything: which nodes exist, what edges connect them, which objectives are complete, what popup is showing, whether the user can interact with certain elements yet, etc. State machines serve as a blueprint for each level and make orchestrating the experience seamless.
+1. **State machines** sit at the center. Each level has one. It tracks everything: which nodes exist, what edges connect them, which objectives are complete, what popup is showing, whether the user can interact with certain elements yet, etc. Every action the user performs on the canvas is emitted as an event to the current level's state machine (with few exceptions, see the following point), whether it's closing a popover that's showing on the canvas or connecting two nodes together.
 
-2. **The Canvas**: Renders existing nodes and edges. The state machine is the source of truth for which entities exist on the canvas. However, the canvas relies on a separate lightweight XState store for reading and updating UI state. This store is better optimized for high-frequency interactions such as dragging nodes and hovering over edges. The state machine syncs with the canvas to define which nodes and edges to show, while supplementary UI state - such as positioning and hover state - is maintained exclusively in the canvas store.
+2. **The Canvas**: The state machine is the source of truth for which entities exist on the canvas. A separate lightweight store handles UI-level state (positions, hover, dragging) that doesn't need to go through the machine. See [The Canvas System](#the-canvas-system) for details.
 
-3. **The code editor** is where users write policies. Its state is shared via a custom hook to propagate it across multiple components. When the user submits a policy, it is validated and the result is sent to the state machine.
+3. **The code editor** is where users write policies. The state of the editor is shared across components via a custom hook. When the user submits a policy, it is validated and the result is sent to the state machine.
 
 4. **The tutorial system** controls the guided experience. Popups, popovers, and element restrictions all flow from the state machine's current state. Move to a new tutorial step, and the visible UI changes automatically.
 
-5. **Stores** handle simpler state that does not require full state machine treatment, for both convenience and performance. Canvas node positions, code editor warnings, and the currently active state machine actor live in @xstate/store instances.
+5. **Stores** handle simpler state that does not require full state machine treatment, for both convenience and performance. The canvas has a dedicated store as mentioned above, and the code editor has one managing its own state, as well as other stores used for managing app-wide operations such as level-progression.
 
-The provider hierarchy in [App.tsx](src/App.tsx) sets all this up:
+The provider hierarchy in [App.tsx](src/app/App.tsx) sets all this up:
 
 ```
 ChakraProvider
   └── ModalProvider
-        └── LevelsProgressionProvider  ← This is where the magic happens
+        └── LevelsProgressionProvider
               └── ReactFlowProvider
-                    └── MainContainer
 ```
 
 `LevelsProgressionProvider` reads the current level from the store, spins up the appropriate state machine, and makes its actor available to everything below via context.
 
----
+## State Machines
 
-## State Machines: The Backbone
+### Why state machines?
 
-Each level is defined in [src/machines/level{N}/](src/machines/) with the following structure:
+Each level follows a mostly linear flow with branches:
+first show a popup, wait for a click, reveal certain nodes, highlight a button, validate what the user creates, and handle errors if they do something wrong. State machines are a very natural fit for this. Each tutorial step maps to a state, user actions drive transitions, and guards make sure the user can’t skip ahead or reach an invalid step.
+
+Trying to implement the same flow without using state machines, ordering becomes implicit. Each effect reacts to state, state changes trigger other effects, and you end up reasoning about which effect fires first in a given render cycle rather than reading a transition table. A good example of this is the node deletion flow. The canvas needs to animate nodes out before removing them from the DOM, which means it needs to know exactly which nodes were deleted and hold onto them briefly after the machine has already moved on. With a diffing approach, you'd reconstruct that after the fact:
+
+```typescript
+const prevNodesRef = useRef(nodes);
+
+useEffect(() => {
+  const deletedIds = prevNodesRef.current
+    .map(n => n.id)
+    .filter(id => !nodes.find(n => n.id === id));
+
+  // The problem this tries to solve is that the nodes are gone from the machine context when this runs
+  // We're trying to capture nodes that were already deleted just to animate them out.
+  setDeletingNodes(prev => [
+    ...prev,
+    ...prevNodesRef.current.filter(n => deletedIds.includes(n.id)),
+  ]);
+
+  setTimeout(() => {
+    setDeletingNodes(prev => prev.filter(n => !deletedIds.includes(n.id)));
+  }, 500);
+
+  prevNodesRef.current = nodes;
+}, [nodes]);
+```
+
+With the machine emitting `NODES_DELETED` with IDs, none of that scaffolding exists. The machine knew what it deleted at the moment it decided to delete it, and it simply tells you exactly that.
+
+Machines also need to be serializable so that the user's level progress can be saved at certain parts as checkpoints. For this reason, runtime-dependent logic lives outside the machine definition in `level-runtime-fns.ts`, and the machine context itself is kept function-free.
+
+At runtime, validation and guard functions are resolved on demand via [functions-registry.ts](src/levels/utils/functions-registry.ts), rather than injecting functions into the machine context. Code inside `levels/` calls the registry directly. Code inside `features/` accesses it through the `useLevelValidateFunctions` hook in `src/runtime/useLevelValidation.ts`, which encapsulates the level number lookup — keeping features decoupled from level logic. See [Functions Registry](#functions-registry) for details.
+
+### Levels Structure
+
+Each level is defined in [src/levels/level{N}/](src/levels/) with the following structure:
 
 ```
 level5/
 ├── state-machine.ts         # The XState machine definition
 ├── initial-connections.ts   # What connections to initially show on the canvas
+├── initial-policies.ts      # Initial policy documents pre-loaded onto nodes at level start
+├── initial-roles.ts         # Initial role trust policy documents (only in levels that have roles)
 ├── level-runtime-fns.ts     # Functions used for runtime hydration, since machines must be serializable for snapshotting
 ├── nodes/                   # The various nodes to show during the lifecycle of the level
 ├── objectives/              # Objective definitions and validation
 │   ├── edge-connection-objectives.ts
+│   ├── identity-policy-creation-objectives.ts
 │   ├── level-objectives.ts
 │   ├── role-creation-objectives.ts
 │   ├── trust-policy-edit-objectives.ts
@@ -92,41 +119,38 @@ level5/
 │   ├── fixed-popover-messages.ts
 │   ├── popover-tutorial-messages.ts
 │   └── popup-tutorial-messages.ts
-└── types/                   # Level-specific TypeScript types
+└── types/                   # Level-specific TypeScript types and enums
 ```
 
-All twelve machines share a common setup via [common-state-machine-setup.ts](src/machines/common-state-machine-setup.ts).
-This factory function (~600 lines) defines shared actions, guards, and event handling logic.
+All twelve machines share a common setup via [common-state-machine-setup.ts](src/levels/common-state-machine-setup.ts).
+This factory function defines shared actions, guards, and event handling logic.
 Each individual level machine plugs in its own objectives, nodes, and tutorial flow.
 
 The machine context represents the full state of a level:
 
-- `nodes` and `edges` — what’s currently on the canvas
-- `objectives` — the active goals and their completion state
-- `show_popups`, `popup_content`, `show_popovers`, `popover_content` — tutorial and guidance state
-- `restricted_elements` — which UI elements are currently hidden.
-- and other related level state
+- `nodes` and `edges`: what’s currently on the canvas
+- `objectives`: the active goals and their completion state
+- `show_popups`, `popup_content`, `show_popovers`, `popover_content`: tutorial and guidance state
+- `restricted_elements`: which UI elements are currently hidden / greyed out so users can't interact with them.
 
-Shared top-level event handlers live in [shared-top-level-events.ts](src/machines/shared-top-level-events.ts).
+Objectives revolve around creating policies and establishing edges between nodes. Objectives concerned with policy creation must provide a JSON schema to validate the policy the user writes inside the code editor.
 
-These translate common user actions (adding nodes, deleting edges, updating policies, etc.) into the machine’s internal logic provided by the common setup.
-Each level then extends this base configuration with its own transitions and constraints.
+It's important for state machines to be fully serializable, since we need to store a snapshot of the machine during specific points in each level to maintain users' progress as checkpoints, hence runtime hydration is imperative. `level-runtime-fns.ts` in each level contains a plain object, mapping a policy node id to its runtime validation function - the function that runs when the user attempts to create that policy.
 
-### Why state machines?
-
-Each level follows a mostly linear flow with branches:
-first show a popup, wait for a click, reveal certain nodes, highlight a button, validate what the user creates, and handle errors if they do something wrong. State machines are a very natural fit for this. Each tutorial step maps to a state, user actions drive transitions, and guards make sure the user can’t skip ahead or reach an invalid step.
-
-Without machines, this logic quickly turns into a mess — scattered useEffect hooks, fragile condition checks, and subtle bugs when things happen out of order. With machines, the flow is explicit, easy to reason about, and easy to debug. You can also visualize the whole thing, which makes a huge difference when working on complex levels.
+Shared top-level event handlers live in [shared-top-level-events.ts](src/levels/shared-top-level-events.ts). These handle common user actions - adding nodes, deleting nodes, updating policies - using the shared logic from the common setup. Each level then extends this base configuration with its own transitions and constraints.
 
 ### Event emission
 
-The machines never talk to React Flow directly.
-They don’t “render” anything. Instead, they emit events that anything interested can listen to:
+In certain circumstances, state machines need to inform different parts of our app (mainly the canvas system) about changes that need to be visible to the user. Examples of these changes include deleting nodes, creating nodes, clearing the canvas and more. Some of these changes happen due to user intervention, while others simply happen automatically as the user progresses through the level. Events the machine emits include:
 
-- `NODES_ADDED`, `NODES_DELETED`, `NODES_RESET`
-- `EDGES_ADDED`, `EDGES_DELETED`, `EDGES_RESET`
-- `NODE_UPDATED`, `OBJECTIVE_COMPLETED`
+- `NODES_ADDED`
+- `NODES_DELETED`
+- `NODES_RESET`
+- `EDGES_ADDED`
+- `EDGES_DELETED`
+- `EDGES_RESET`
+- `NODE_UPDATED`
+- `OBJECTIVE_COMPLETED`
 
 The canvas layer subscribes to those events and decides how to reflect them on screen:
 
@@ -137,42 +161,59 @@ levelActor.on('NODES_DELETED', ({ nodeIds }) => {
 });
 ```
 
-This indirection becomes really important once you start caring about animations.
-When the machine says “these nodes are gone”, the canvas doesn’t immediately remove them. It waits ~300ms for the fade-out to finish, then drops them from the DOM.
+> levelActor.on is an XState built-in event subscription API
 
-The animation happens through a multi-step process:
+This indirection exists specifically because of animations. Without it, nodes deleted by the machine would vanish from the DOM immediately before any exit animation could run. The event gives the canvas a window to animate first.
+The deletion flow has three steps:
 
 1. Machine emits `NODES_DELETED` with IDs
-2. Canvas store marks those nodes as “deleting”, which triggers Framer Motion exit animations
-3. Upon animation completion, another action gets dispatched to the canvas store to actually remove the nodes from state.
+2. Canvas store marks those nodes as "deleting", triggering Framer Motion exit animations
+3. On animation completion, another action removes the nodes from the canvas store for good
 
-Without this multi-step, event-driven approach, nodes would vanish instantly when the machine state changes. Syncing the machine to the canvas would fall back to a plain useEffect, which would make proper animation handling awkward and opaque.
+Skipping the indirection and instead diffing prev/next node arrays in a useEffect would technically work, but you'd lose the IDs of what was deleted the moment the machine context updates: the diff would tell you that nodes were removed, but only against the current render snapshot, not which specific nodes the machine intended to remove.
+
+### Cross-layer event bus
+
+State machines (in `levels/`) occasionally need to trigger side effects that live inside `runtime/` - specifically, saving a level checkpoint when the machine reaches a certain state. Using a direct import would cause a cycle, as `runtime/` already imports every level's state machine (since runtime is responsible for serving the correct level the user is at), and we would rather keep dependencies flowing in one direction. Moving these actions required by the state machines into a separate directory would work; however, these actions are inherently runtime concerns that belong in the runtime directory.
+
+To solve this dependency, we use a simple, typed pub/sub bus defined in [level-event-bus.ts](src/levels/level-event-bus.ts) for communication upwards. The underlying implementation uses the generic `createEventBus` factory in [src/lib/event-bus.ts](src/lib/event-bus.ts).
+
+For the emitter side (inside `common-state-machine-setup.ts`):
+
+```typescript
+LevelEventBus.emit('store_checkpoint', { actor: self as Actor<AnyActorLogic> });
+```
+
+For the subscriber side (in `runtime/level-operations.ts`, which wires up the handlers once on module load):
+
+```typescript
+LevelEventBus.on('store_checkpoint', ({ actor }) => storeLevelCheckpoint(actor));
+```
+
+Since both modules currently import only a dependency from lib/, cyclic dependencies are avoided.
+
+The event bus is intentionally minimal: no middleware, no ordering guarantees, no async support. It is used only for fire-and-forget side effects, where the state machine does not need a response.
 
 ### Functions registry
 
-XState machines need to remain serializable — mainly so snapshots can be stored during checkpoints. That means you can’t put functions directly into machine context.
-At the same time, objectives need validator functions, and guard rails need filter functions for runtime checks, so you still need a way to associate logic with the machine.
-
-The workaround is [functions-registry.ts](src/config/functions-registry.ts): a plain object that maps each level to the functions it needs.
+Checkpointing requires the machine snapshot to survive JSON serialization. That rules out functions in machine context entirely. However, objectives need validator functions, and guard rails need filter functions for runtime connection checks. The workaround is [functions-registry.ts](src/levels/utils/functions-registry.ts): a plain object mapping each level to the functions it needs.
 
 ```typescript
-FunctionsRegistry[5].validate_functions['create_admin_policy'];
-FunctionsRegistry[5].objectives_guard_rails_blocked_edges_fns['scp_blocks_s3'];
+GetLevelValidateFunctions(5)['create_admin_policy'];
+// similar helpers exist for other function groups (applicable nodes, guard rails)
 ```
 
-The machine stores the function _name_, and runtime code looks up the actual function from the registry, hydrating the machine context on runtime as needed.
+The machine stores the function _name_, and when an action actually runs (validating a policy, checking a guard rail) it calls into the registry with the level number and the stored name to get the real function. Checkpoint restoration works transparently because the snapshot only ever contained the name, so there's nothing to re-inject: the next time the action fires, it looks up the registry the same way it would have on a fresh start.
 
----
+Code in `levels/` calls the registry directly. Code in `features/` must not — that would couple UI components to level internals. Instead, `runtime/` exposes `useLevelValidateFunctions` ([src/runtime/useLevelValidation.ts](src/runtime/useLevelValidation.ts)), a hook that resolves the current level number and returns the appropriate validators. Features call the hook; the registry remains an implementation detail of the runtime layer.
 
 ## The Canvas System
 
-The canvas is where users spend most of their time. It renders IAM entities as draggable nodes, with edges representing the relationships between them.
+The canvas renders IAM entities as draggable nodes, with edges representing the relationships between them. The state machine owns which nodes and edges exist; an @xstate/store instance owns UI-level concerns (positions, hover, selection). The machine's emitted events feed directly into the store, with no reconciliation logic needed.
 
-The level’s state machine is the source of truth for which nodes and edges exist. The canvas, however, doesn’t read directly from the machine. Instead, the machine syncs its state into a lightweight @xstate/store instance dedicated to canvas UI concerns. That store also holds purely UI-related state such as node positions, selection, hover state, and similar details.
+@xstate/store fits here rather than Zustand or plain React context because it speaks the same event language as the main machine, it's already in the dependency tree, and drag/hover interactions can update the store at full frequency without touching the machine.
 
-Keeping this state outside the main machine makes a big difference for performance. High-frequency interactions like dragging, hovering, and selecting nodes don’t have to pass through the full state machine, which keeps the interaction layer fast and responsive.
-
-In practice, the data flow looks like this:
+The data flow looks like this:
 
 ```
 State machine -> useCanvas hook -> canvas store -> ReactFlow rendering.
@@ -182,14 +223,14 @@ State machine -> useCanvas hook -> canvas store -> ReactFlow rendering.
 
 The canvas code is in [src/features/canvas/](src/features/canvas/):
 
-- `components/` — Node and edge React components
-- `hooks/useCanvas.ts` — The main hook providing the entire state of the canvas
-- `stores/canvas-store.ts` — the store that holds canvas UI state (hover, selection, etc.)
-- `utils/` — positioning math and connection validation (this will likely move elsewhere over time)
+- `components/`: node and edge components, as well as other canvas-related UI components
+- `hooks/useCanvas.ts`: the main hook providing the entire state of the canvas
+- `stores/canvas-store.ts`: the store that holds canvas UI state (hover, selection, etc.)
+- `utils/`: positioning math and connection validation (this will likely move elsewhere over time)
 
 ### Node types
 
-ReactFlow needs a map of node types to components. Ours looks like:
+ReactFlow needs a map of node types to components:
 
 ```typescript
 {
@@ -207,98 +248,113 @@ ReactFlow needs a map of node types to components. Ours looks like:
 }
 ```
 
-Most entities use `IAMCanvasNode`, which reads the entity type from node data and renders accordingly. `AccountCanvasNode` is separate because AWS accounts need special layout treatment (they contain other entities visually).
+Most entities use `IAMCanvasNode`, which reads the entity type from node data and renders accordingly. Account nodes use `AccountCanvasNode` components. Account nodes are separate because AWS accounts need special layout treatment as they contain other entities visually nested inside them.
 
 ### The canvas store
 
-This is an `@xstate/store`, not a full state machine. It holds:
+This is an `@xstate/store`, not a full state machine. It's the store that sits between the level's state machine and the canvas shown to the user, it holds:
 
-The current set of nodes and edges (synced from the level machine)
-
+- The current set of nodes and edges (synced from the level machine)
 - Which node or edge is selected or hovered
+- The position of each node on the canvas
 - Which nodes are in the middle of a delete animation
-- Node positions
-- Which node has its content / ARN / tags expanded
-- Side panel state (which tabs are open)
-
-The main reason for keeping this in a separate lightweight store is performance, as described earlier in the Canvas System section.
+- Which edges are in the middle of a delete animation
+- Which node has its content / ARN / tags panel open
+- Other open canvas panels (for example, the users list)
 
 ### useCanvas hook
 
-This hook ([useCanvas.ts](src/features/canvas/hooks/useCanvas.ts)) is the glue:
+This hook ([useCanvas.ts](src/features/canvas/hooks/useCanvas.ts)) is the glue of several sub-hooks each responsible for a different aspect of the canvas:
 
 1. Subscribes to events from the level's state machine
 2. Translates them into canvas store actions
 3. Handles connection validation when users try to draw edges
 4. Manages the animation timing for adds/deletes
 
-When a user drags a connection, `useCanvas` runs it through validation:
+When a user drags a connection, `useCanvas` runs it through validation (through the [useCanvasHandlers.ts](src/features/canvas/hooks/useCanvasHandlers.ts) hook) before sending an `ADD_EDGE` event to the machine:
 
-1. Check [valid-connections.ts](src/features/canvas/utils/valid-connections.ts) — is this entity pair even allowed?
-2. Check `edges_management_disabled` in the machine context — are connections allowed at this point in the level?
-3. Check `blocked_connections` in the machine context — is this specific connection blocked right now?
+1. Check [edges-creation.ts](src/features/canvas/utils/edges-creation.ts) utility: is this entity pair even allowed?
+2. Check `edges_management_disabled` in the machine context: are connections allowed at this point in the level?
+3. Check `blocked_connections` in the machine context: is this specific connection blocked right now?
 4. If all pass, send `ADD_EDGE` to the machine
 
 ### Layout groups
 
 When a level starts, nodes need to appear in sensible positions. Users shouldn’t have to untangle a mess before they can start learning.
-
-Each node has a layout_group_id like `'center'`, `'bottom-left'`, or `'right-vertical'`. The canvas uses this along with a few runtime factors to calculate where nodes should go:
+For this, each node has a `layout_group_id` drawn from the `CommonLayoutGroupID` enum, with values like `CenterHorizontal`, `BottomLeftVertical`, `TopCenterHorizontal`. The canvas uses this along with a few runtime factors to calculate where nodes should go:
 
 - Current viewport size
 - Side panel width (if it’s open)
 - How many other nodes are already in the same group
 - The group’s direction (horizontal or vertical) and spacing rules
 
-All of this logic lives in the canvas store’s `addNodes` action.
+This logic lives in `positionNewNodes()` in `apply-node-positions.ts`, called from the canvas store when nodes are added.
 When new nodes are introduced, they get placed automatically while existing nodes are left exactly where the user put them.
+
+Account nodes are a special case: they ignore the side panel offset since they contain other nodes visually and need stable positioning. Child nodes (nodes with a `parentId`) are grouped relative to their parent rather than the global canvas.
 
 ### Animations
 
-Framer Motion handles the visual effects:
+Animations in this project mainly revolve around nodes and edges on the canvas, handled by Framer Motion transitions. Animations happen during the following operations:
 
-- **Creation**: Nodes scale up from 0.9 and fade in. There's also a 3-second gradient pulse effect.
-- **Deletion**: Nodes blur slightly and drift upward while fading out.
-- **Edges**: New edges get a 7-second glow animation.
+- **Node creation**: Nodes scale up from 0.85 and fade in over 0.25s. There's also a 2-second gradient pulse effect that plays once on entry.
+- **Node deletion**: Nodes blur slightly and drift upward while fading out over 0.5s.
+- **Edge creation**: New edges get a 7-second glow animation.
+- **Edge deletion**: Edges fade out with a slight blur over 0.5s.
 
-The two-phase deletion is worth noting. When the machine says "delete these nodes," we first mark them in the store (triggering the fade animation) then actually remove them after the animation completes. Otherwise you'd see nodes vanish abruptly.
+> Deletion animations have two underlying phases. The machine notifies the canvas that a node or edge is deleted; the canvas marks it as deleting and starts the animation. Once the animation completes, the node or edge is removed from the canvas store.
 
----
+### Shared logic and XState's extensibility limits
+
+Sharing actions and guards across machines works fine through `createStateMachineSetup`. Sharing _event definitions_ doesn't, and this is a hard XState limitation, not a local design decision.
+
+XState's type safety inside machine definitions depends on contextual typing, the mechanism that tells an action "you're handling this specific event, here are its payload properties." When you introduce a generic like `TFinishEventMap` to share event types across machines, the events union ends up with an unresolved generic branch. TypeScript can't eliminate it at the call site, so discriminated union narrowing breaks: guards and actions stop seeing the concrete event types they're supposed to be handling.
+
+The correct XState solution would be `createStateConfig`: modular typed state nodes with their own event handlers that machines can compose. That hits the same wall for the same reason.
+
+The workaround is `SHARED_TOP_LEVEL_EVENTS`, a plain object spread into each machine's `on:` config:
+
+```typescript
+on: {
+  ...SHARED_TOP_LEVEL_EVENTS,
+}
+```
+
+It works, but it's loosely typed.
 
 ## Policy Editor
 
-Most levels boil down to "write the correct IAM policy." The editor needs to be good enough for JSON editing while showing helpful guidance and real-time validation.
+Most of the objectives in each level revolve around creating policies, which are merely JSON documents following a specific schema. Each policy creation objective must follow a specific schema in order for the user to be able to submit and finish the objective.
+
+The **Policy Editor** is the place where the user writes down the policy for the objective.
 
 ### Implementation
 
-The editor lives in [src/features/code_editor/](src/features/code_editor/). The main modal is `CodeEditor.tsx`, with separate components for creation vs. editing modes.
+The editor lives in [src/features/code_editor/](src/features/code_editor/). The code editor popup is `CodeEditor.tsx` and it supports two kinds of policy management: Creating a policy from scratch and editing a policy.
 
 CodeMirror 6 powers the actual editing. It's configured with:
 
 - JSON syntax highlighting and folding
-- Linting via a custom extension that runs AJV validation
-- A badge extension that renders help icons inline
+- Validating the written policy on each keystroke with AJV validation
+- A custom badge extension that renders help icons inline where the user might need help
 
-The editor is “uncontrolled” in React terms — CodeMirror manages its own internal state.
-That said, we still impose structure around it using a custom hook [useCodeEditor.tsx](src/features/code_editor/hooks//useCodeEditor.ts), since the editor’s state needs to be shared across multiple components.
-
-Each edit is debounced to prevent re-running the validation on each keystroke and to give the user the sense of validation taking place in the background .
+CodeMirror has the ability to manage its own internal state without intervention from React. In normal circumstances, this is sufficient. However, in our case, we still impose structure and control around it using a custom hook [useCodeEditor.ts](src/features/code_editor/hooks/useCodeEditor.ts), since the editor's state must be shared across multiple components.
 
 ### Code Editor Validation
 
 The editor validates policy JSON on two levels.
 
-First, there is basic structure and syntax checking using the shared schemas in
-[`src/schemas/`](src/schemas/):
+First, basic structure and syntax checking using shared schemas in [`src/domain/policy-schemas/`](src/domain/policy-schemas/):
 
-- `iam-policy-schema.json` — standard IAM policies
-- `iam-role-trust-policy-schema.json` — trust policies for roles
-- `iam-shared-condition-schema.json` — the `Condition` block format
+- `aws-iam-policy-schema.json`: standard IAM policy format
+- `aws-iam-role-trust-policy-schema.json`: the specific format for role trust policies
+- `aws-iam-shared-definitions-schema.json`: shared JSON Schema $definitions (Statement structure, Action, Principal, Resource, and condition operators) $ref'd by the other policy schemas
+- `aws-iam-resource-policy-schema.json` - the specific format for resource policies
 
 On top of that, individual creation objectives can attach their own validation rules.
 Those live under each level’s `schemas/` directory. For example, in level 5 the EC2 role objective validates against `ec2-role-schema.json`, which enforces that the trust policy explicitly includes `ec2.amazonaws.com` as the service principal.
 
-At runtime, each level’s `level-runtime-fns.ts` file maps node IDs to the schema they should use. AJV compiles all of those validators once at startup and reuses them for the lifetime of the level.
+At runtime, each level’s `level-runtime-fns.ts` file maps node IDs to the schema they should use. AJV compiles all of those validators once when the level loads and reuses them for the lifetime of the level.
 
 ### Tabs
 
@@ -310,7 +366,7 @@ The editor supports multiple policy types in tabs:
 - Resource Policy
 - Permission Boundary
 
-Each tab has its own content and validation. Which tabs are visible depends on the level and tutorial state—some levels hide tabs until the user reaches a certain point.
+In most levels, only a small subset of these options will be rendered. The rest is hidden through a state machine config in order not to confuse the user and keep info about things we haven't introduced the user to yet hidden.
 
 ### Help badges
 
@@ -318,217 +374,254 @@ The custom `badgeExtension` in CodeMirror renders small badge-like icons next to
 
 ![Help Badges](./assets/images/codemirror_badge_example.png)
 
----
-
 ## Tutorial Content
 
-The guided experience runs on popups (modal dialogs) and popovers (small tooltips attached to elements), as well as fixed popovers (popovers fixed to a specific part of the user's screen).
+Each level has a guided experience using three overlay types: popups (modal dialogs), popovers (attached to specific elements), and fixed popovers (anchored to a fixed part of the screen).
 
 ### Authoring
 
-Tutorial content is written as plain strings in `tutorial_messages/popups.ts` and `popovers.ts` for each level. These are rendered using `react-markdown` with a couple of custom plugins:
+Tutorial content is written as plain strings in `tutorial_messages/popup-tutorial-messages.ts`, `tutorial_messages/popover-tutorial-messages.ts`, and `tutorial_messages/fixed-popover-messages.ts` for each level. These are rendered using `react-markdown` with two custom plugins:
 
-- `rehypeChakraBadge` turns `badge[text]` into styled Chakra badges
-- `rehypeIcon` turns `:icon[IconName]:` into actual icon components
+- `rehypeChakraBadge` turns `::badge[text]::` into styled Chakra badges
+- `rehypeIcon` turns `::icon[IconName]::` into actual icon components
 
 So tutorial authors can write:
 
 ```md
-Click the :badge[Create Policy] button to add a new policy.
-Look for the :icon[AddIcon]: icon in the toolbar.
+Click the ::badge[Create Policy]:: button to add a new policy.
+Look for the ::icon[AddIcon]:: icon in the toolbar.
 ```
 
 …and have it render with proper styling and inline icons in the UI.
 
 ### Flow control
 
-The state machine drives what the user sees at any point in the tutorial. Each tutorial step is a machine state. Entering a state typically:
+The state machine drives what the user sees at any point in the tutorial. Each tutorial step is a machine state. Entering a state typically configures which overlay is visible, which UI elements are locked, and what event will advance the user to the next step.
 
-1. Sets `show_popovers: true` and populates `popover_content`
-2. Updates `restricted_elements` to lock or unlock parts of the UI
-3. Waits for a specific event (button click, policy created, etc.)
-4. Transitions to the next state
+Here's what a step that waits for the user to connect two nodes looks like:
 
-The `withTutorialGuard` decorator hides components when they appear in `restricted_elements`.
-The `withPopover` decorator attaches the appropriate popover content to components based on their element IDs.
+```typescript
+attach_policy_to_user: {
+  entry: [
+    'hide_popovers',
+    { type: 'show_fixed_popover_message', params: { message: FIXED_POPOVER_MESSAGES[2] } },
+    'enable_edges_management_ability',
+  ],
+  on: {
+    [EdgeConnectionFinishEvent.PolicyAttachedToUser]: {
+      target: 'next_step',
+      actions: ['finish_level_objective', 'hide_fixed_popovers'],
+    },
+  },
+},
+```
+
+Entry actions set everything up: hide the previous overlay, show the next one, unlock the relevant part of the UI. The transition fires on a domain event, not a generic "next" click, but a specific finish event emitted when the user completes the expected action. The outgoing actions clean up and mark the objective done.
+
+Steps that just walk the user through information use `NEXT_POPUP` or `NEXT_POPOVER` events instead, which are sent when the user clicks the continue button in the overlay.
+
+The three overlay types map to different UI treatments: popups are modal dialogs that block the canvas, popovers are attached to a specific element (via `popover_target`), and fixed popovers are anchored to a fixed position on screen and stay visible while the user interacts with the canvas.
 
 ### Element IDs
 
-There is a central `ElementId` enum that ties several parts of the system together:
+There is a central `ElementID` enum that ties several parts of the system together:
 
 - Components (via `data-element-id` attributes)
 - Tutorial popovers (via `popover_target`)
 - E2E tests (via `getByTestId`)
 - Restriction logic (via `restricted_elements`)
 
-This keeps everything in sync. When a new interactive element is introduced, it only needs an entry in the enum. From there, it can immediately be targeted by tutorials and tests, as long as the component is decorated with the appropriate popover / popup decorator.
+This keeps everything in sync. When a new interactive element is introduced, it only needs an entry in the enum. From there, it can immediately be targeted by tutorials and e2e tests.
+
+> For targeting elements with popovers, component must be explicitly wrapped in a `TutorialPopover` component and provided with the corresponding `ElementID`. And for element restriction, the component itself must read from the `useIsElementRestricted` hook and decide how to handle the restricted state (hide, disable, etc.)
 
 ## Project Layout
 
-Here's how the code is organized:
+The code is organized as follows:
 
 ```
 src/
-├── features/
-│   ├── canvas/           # Everything ReactFlow-related
-│   ├── code_editor/      # CodeMirror and policy editing
-│   └── iam_entities/     # Entity creation dialogs
+├── app/                  # App root component
+├── app_shell/            # Glue for main app layout, including side panels and top bar
+├── components/           # Shared UI, domain-agnostic components
+├── config/               # Constants, element IDs
+├── domain/               # IAM graph logic, node/edge factories, policy schemas, provides shared domain-specific logic for the app
+│   ├── nodes/            # Node factory functions per entity type
+│   └── policy-schemas/   # JSON schemas for policy validation
 │
-├── machines/
+├── features/
+│   ├── canvas/           # ReactFlow rendering, canvas store, layout
+│   ├── code_editor/      # CodeMirror, policy editing, validation
+│   ├── iam_entities/     # Entity creation dialogs
+│   └── level_progress/   # Level selection and progress UI
+│
+├── hooks/                # Custom React hooks
+├── levels/
 │   ├── level1/ through level12/  # Per-level definitions
 │   ├── common-state-machine-setup.ts
-│   └── shared-top-level-events.ts
+│   ├── shared-top-level-events.ts
+│   ├── types/            # Level-specific types
+│   └── utils/            # Shared level utilities (actions, filters, functions-registry.ts)
 │
-├── components/
-│   ├── providers/        # Context providers
-│   ├── Popover/          # Tutorial popovers
-│   ├── Popup/            # Tutorial popups
-│   ├── SidePanels/       # Objectives panel, etc.
-│   ├── Decorated/        # Pre-wrapped components
-│   └── ...
-│
-├── factories/
-│   ├── nodes/            # Node creation factories
-│   ├── edge-factory.ts
-│   └── layout-group-factory.ts
-│
-├── decorators/           # HOCs for tutorial behavior
-├── hooks/                # Custom React hooks
+├── lib/                  # Analytics, storage, markdown plugins
+├── runtime/              # Level lifecycle, persistence, provider
 ├── stores/               # @xstate/store instances
-├── types/                # TypeScript definitions
-├── schemas/              # JSON validation schemas
-├── config/               # Constants, element IDs, registry
-└── utils/                # Shared utilities
+└── types/                # TypeScript definitions
 ```
 
 ### Project Structure Philosophy
 
-The split between `features/` and `machines/` is intentional.
+![Layer dependency diagram](./assets/images/dependency_layers.png)
 
-`features/` is about rendering — React components, hooks, and UI stores.
-`machines/` is about logic — what can happen, in what order, and under what conditions.
+Dependencies flow downward. Upper layers import from lower layers; lower layers never import from upper ones. The event bus is the one exception: it lets `levels/` fire side effects handled by `runtime/` without creating a cycle (see [Cross-layer event bus](#cross-layer-event-bus)).
 
-Each level is fully self-contained inside its own `machines/level{N}/` folder.
-You can understand Level 5 without needing to look at Level 4 or Level 6.
+`features/` and `levels/` have an additional peer constraint: neither can import from the other, even though `levels/` sits above `features/` in the chain. They are isolated concerns — level logic and UI rendering — and interact only through `runtime/`, which acts as the bridge between them.
 
----
+- **`lib/`**, **`types/`**, **`hooks/`**, **`config/`**, and **`stores/`** are the foundation. Generic utilities, shared TypeScript types, React hooks with no runtime dependency, and `@xstate/store` instances for lightweight state. Nothing in the codebase is off-limits for importing from here.
+- **`domain/`** contains domain-specific logic for IAM: node and edge factories, ARN generation, policy validation schemas, graph utilities. It knows what an IAM User or Role looks like, but nothing about levels, tutorial flow, or the canvas.
+- **`levels/`** defines what each level contains and how it progresses. It uses `domain/` factories to build nodes and edges, and defines the XState machine, objectives, tutorial messages, and runtime validation functions. Twelve self-contained folders; understanding level 5 requires no knowledge of level 4 or 6.
+- **`runtime/`** is responsible for serving the correct level machine to the app. It loads machines from `levels/`, handles snapshotting and persistence, exposes the `LevelsProgressionProvider`, and provides hooks (e.g. `useLevelValidateFunctions`) that give `features/` access to level-specific logic without directly coupling them to `levels/`.
+- **`features/`** is purely about rendering. The canvas, the code editor, the IAM entity creation dialogs, and the level progress panel all live here. These components subscribe to the state machine actor and the canvas/editor stores; they do not contain level logic.
+- **`app_shell/`** and **`app/`** sit at the top. `app_shell/` assembles the navigation bar and fixed overlays. `app/` is the root: it wires up the provider hierarchy and renders the shell.
 
-## Patterns Worth Knowing
+## Common Patterns
 
-### Factory functions for nodes and edges
+### Factory functions
 
-Rather than constructing node objects inline everywhere, factories in [src/factories/](src/factories/) provide consistent defaults:
+Constructing nodes, edges, and objectives is a core pattern that happens across all levels. Rather than doing it inline and dirtying the repo with boilerplate, factory functions with consistent defaults are used across the codebase.
 
 ```typescript
-const policy = createPolicyNode({
+const policy = createIdentityPolicyNode({
   id: 'my-policy',
   label: 'AdminAccess',
-  layout_group_id: 'center',
+  layout_group_id: CommonLayoutGroupID.CenterHorizontal,
 });
 ```
 
-The factory fills in entity type, default styles, and generates IDs if needed. Same idea for edges and layout groups.
+Node factories live in [`src/domain/nodes/`](src/domain/nodes/), with one factory per entity type. Edge and layout group factories are in [`src/domain/`](src/domain/).
 
-### Decorators for cross-cutting concerns
+### Hooks
 
-Three HOCs in [src/decorators/](src/decorators/) handle tutorial behavior:
-
-- `withPopover` — Wraps a component with popover trigger logic
-- `withTutorialGuard` — Hides the component if it's currently restricted
-- `withStatemachineEvent` — Fires a machine event when clicked
-
-These stack. A button might need all three. Rather than prop-drilling tutorial state everywhere, the decorators grab what they need from context.
-
-### Hooks as an alternative
-
-The hooks in [src/hooks/](src/hooks/) offer the same functionality but composable within a component:
+Hooks provide shared state and logic for common patterns across the app:
 
 ```typescript
 function MyButton() {
-  const restricted = useIsElementRestricted(ElementId.MyButton);
-  const { isPopoverActive } = useTutorialPopover(ElementId.MyButton);
+  const [restricted] = useIsElementRestricted([ElementID.MyButton]);
+  const { isOpen } = usePopover(nodeId);
 
   if (restricted) return null;
   return <Button>...</Button>;
 }
 ```
 
-Hooks are easier to test and make the behavior of a component more explicit. For that reason, the codebase is gradually moving away from decorators toward hooks where it makes sense. Stacking decorators can also become hard to reason about over time — in some cases a single component ends up wrapped in several different decorators, effectively combining all available behaviors at once.
+`useIsElementRestricted` lives in [`src/runtime/ui/`](src/runtime/ui/) and `usePopover` lives in [`src/runtime/tutorial/`](src/runtime/tutorial/) — both are runtime concerns tied to the level machine. [`src/hooks/`](src/hooks/) is reserved for hooks with no dependency on runtime or level state (currently just `useModal`).
 
-```typescript
-  export const GuardedMenuItemWithEventAndPopover = withTutorialGuard<
-    MenuItemProps & { event: StatelessStateMachineEvent; 'data-element-id': string }
-  >(MenuItemWithEventAndPopover);
-  export const GuardedIconButtonWithStateMachineEvent = withTutorialGuard<
-    IconButtonProps & { event: StatelessStateMachineEvent; 'data-element-id': string }
-  >(WithStateMachineEventIconButton);
-  export const GuardedMenuItemWithPopover = withTutorialGuard<
-    MenuItemProps & { 'data-element-id': string }
-  >(WithPopoverMenuItem);
-}
-```
+The project initially used HOC (Higher Order Components) for these patterns, but has gradually shifted towards hooks for better composability. For example, an element might be a target for restriction and for popovers at the same time, and with HOCs we would have to wrap the component twice, while with hooks we can simply call both hooks inside the component and let it decide how to use the returned values.
 
 ### The provider stack
 
-[LevelsProgressionProvider](src/components/providers/LevelsProgressionProvider.tsx) deserves special mention. It:
+[LevelsProgressionProvider.tsx](src/runtime/LevelsProgressionProvider.tsx) is responsible for serving the current level's state machine to the app, it does so by:
 
-1. Reads the current level from the store
-2. Looks up the machine definition from a registry
-3. Checks localStorage for a checkpoint snapshot
-4. Creates (or restores) the actor
-5. Wraps children in the actor's context
+1. Subscribes to `LevelDetailsStore` for the current `levelNumber` and `restartKey` through a `useEffect` hook
+2. On either change, clears the active actor context and calls `loadCheckpoint` to check localStorage for a saved snapshot
+3. It then calls `loadLevelMachine(levelNumber, snapshot)` to load the state machine corresponding to the `levelNumber` from the registry inside `src/runtime/level-runtime` and creates an XState actor context, potentially hydrating it with the snapshot if it exists
+4. While the level machine is loading and before the actor context is ready, it renders a full-screen Chakra `<Spinner />` to block interaction and prevent the previous machine from receiving/sending events. This also plays well with the existing code splitting we have for each level's code, where loading could take longer.
 
-Changing levels means unmounting this provider and remounting with a different machine. All the subscriptions and state reset automatically.
+If either keys (`currentLevelNumber` or `restartKey`) changes, the provider re-runs the effect. `restartKey` is merely used for when the user wishes to restart the level from scratch again.
 
----
+## Known Limitations
+
+**Snapshot schema drift**: When a level's machine context shape changes, existing snapshots become invalid. [level-persistence.ts](src/runtime/level-persistence.ts) handles this by dropping the stale snapshot and restarting the level. There is no migration path: a context shape change is a breaking change for any user mid-level.
+
+**No canvas/machine reconciliation**: The machine is the source of truth for which nodes exist, but if the canvas store drifts out of sync (a missed event, a silent failure), there's no mechanism to detect or recover from it. The machine thinks a node exists; nothing is rendered. This hasn't happened in practice, but the gap is real.
+
+**Auto-layout doesn't scale**: `positionNewNodes()` inside [`src/features/canvas/utils/apply-node-positions.ts`](src/features/canvas/utils/apply-node-positions.ts) works for the node counts each level is designed around. Level complexity is intentionally bounded, so this isn't a current problem, but it's a real ceiling if levels ever grow significantly larger. Level 12 is a borderline example where the layout logic is stretched thin.
+
+**Generating Snapshots is manual**: There's no automated script for generating snapshots at the moment. If a level's machine changes, snapshots must be regenerated manually by running the level to the desired point and exporting the snapshot via the helper endpoint. This is a manual process that can be time-consuming, especially for levels with long sequences of interactions. See [Stage snapshots](#stage-snapshots) for details on how snapshots are generated.
 
 ## Testing Approach
 
+Integration tests and unit tests are implemented with Vitest, while end-to-end tests are implemented with Playwright.
+
+### Running tests
+
+```bash
+yarn test                              # Vitest - unit and integration tests
+yarn playwright test                   # Playwright - all E2E tests
+yarn playwright test tests/e2e/level5  # Playwright - single level
+```
+
+Playwright's `webServer` config in [`playwright.config.ts`](playwright.config.ts) starts the dev server automatically before the suite runs (`VITE_APP_ENV=CI yarn dev`). Locally it reuses an already-running server on port 5173 if one exists; in CI it always starts a fresh one.
+
 ### End-to-end with Playwright
 
-The E2E suite in [`tests/e2e/`](tests/e2e/) covers every level of the application.
-Each level has a dedicated spec file that walks through the full user flow.
+E2E tests in [`tests/e2e/`](tests/e2e/) cover all 12 levels. Each level has its own spec file covering all the scenarios a user could take, including wrong answers, incorrect policy structures, and alternative completion paths.
 
-Custom fixtures in
-[`test-fixtures.ts`](tests/e2e/helpers/test-fixtures.ts) provide high-level testing primitives:
+Aside from the separate test files, custom test fixtures are implemented to provide abstract, high-level testing primitives that aid in testing the Canvas UI, such as testing whether a node exists, a popup is shown and what content is inside it, etc.
 
-- `tutorial` — advance through popups and popovers
-- `nodes` — create, delete, and assert against nodes
-- `edges` — draw and validate connections
-- `setLevel` — start at a specific level
-- `goToLevelAtStage` — jump directly to a mid-level checkpoint
+The following fixtures are available (defined in [`tests/e2e/helpers/test-fixtures.ts`](tests/e2e/helpers/test-fixtures.ts)):
 
-Helper modules in the same directory (`node-actions.ts`, `edge-actions.ts`, etc.) encapsulate common operations to keep test cases concise and readable.
+- `tutorial` - provides assertions and actions related to popups, popovers, and miscellaneous tutorial-related UI such as the side panel
+- `nodes` - provides assertions and common actions related to nodes, such as asserting that a node is shown/hidden, clicking on a node's buttons, etc.
+- `edges` - same as `nodes` but for edges
+- `entities` - actions for creating IAM entities through the UI dialogs
+- `progress` - actions related to level progression (advancing, restarting)
+- `ui` - general UI actions and assertions not covered by the other fixtures
+- `goToLevel/goToLevelAtStage` - helps with initializing the app at a specific level, or at a specific stage within a level by loading the stage's snapshot file
+
+Other helper, non-fixture utilities such as [`connection-helpers`](tests/e2e/helpers/connection-helpers.ts) and [`locator-helpers`](tests/e2e/helpers/locator-helpers.ts) encapsulate common operations such as connecting nodes together and locating nodes/edges by their labels or other attributes, ultimately keeping test cases concise.
 
 ### Stage snapshots
 
-Complex levels contain many tutorial steps. Replaying the full flow in every test significantly increases execution time, particularly in CI.
+E2E tests don't only cover the linear happy path of each level, they also cover the various branches users could take in order to complete the level, this includes making mistakes such as creating incorrect policies, connecting wrong nodes together, etc. levels also might not follow a completely linear path, multiple paths might lead to completing the levels and E2E tests aim to cover as many of these paths as possible.
 
-Stage snapshots allow tests to start from intermediate checkpoints:
+To aid with this, stage snapshots are used to save the state of the level at specific points in time, such as right after finishing a specific tutorial step, or right before an important decision point where the user can take multiple paths from there.
 
-1. Play through a level to the desired state
-2. Export the machine snapshot using the debug utility
-3. Encode and store the snapshot as part of the test setup
-4. Load the snapshot in tests via `loadStage('level5-stage3')`
+This approach substantially reduces test runtime, since we won't have to replay each level from the start for every test case. It also makes tests more focused and deterministic, since they start from a known state rather than relying on a long sequence of interactions to get there.
 
-This approach substantially reduces test runtime for targeted scenarios.
+With that being said, it does introduce some maintenance overhead. If we were to change a level's state machine, the snapshots for the level would likely break and need to be regenerated.
 
-This introduces a maintenance tradeoff: if a level’s state model changes, the corresponding snapshot must be regenerated.
+Snapshots are generated using the `store_snapshot_to_disk` action, which is available in every level's state machine via the common setup. Place it as an `entry` action at the state you want to capture:
+
+```typescript
+entry: [{ type: 'store_snapshot_to_disk', params: { filename: 'stage3' } }];
+```
+
+When triggered, it POSTs the current machine snapshot to [`scripts/snapshot-server.mjs`](scripts/snapshot-server.mjs), a plain Node.js HTTP server running on port 3001. The server gzip-compresses the snapshot, base64-encodes it, and writes it to `tests/e2e/level{N}/snapshots/{filename}.txt`. It needs to be started manually in a separate terminal before playing through the level:
+
+```bash
+node scripts/snapshot-server.mjs
+```
+
+Then play through the level to the point where the action fires. Remove the action from the state machine once the snapshot has been captured. Those `.txt` files are committed to the repo and loaded by `goToLevelAtStage` at test time. If a level's machine context shape changes, its snapshots need to be regenerated.
+
+Policy solutions used in E2E tests are stored in the same compressed format under `tests/e2e/level{N}/policies/`. [`scripts/compress-policy.mjs`](scripts/compress-policy.mjs) takes a raw JSON policy file and produces the compressed output; `getTestSolution` in [`tests/e2e/helpers/test-solutions.ts`](tests/e2e/helpers/test-solutions.ts) decodes it at test time. They're stored compressed to discourage casual browsing of answers.
 
 ### Unit tests with Vitest
 
-Utility code under [`src/utils/`](src/utils/) and selected machine helpers are covered by unit tests.
-These execute quickly and cover edge cases that are difficult to express through E2E testing.
+Unit tests cover utility functions, levels' state machine logic such as connecting nodes together, creating nodes, deleting edges, etc.
+These tests are quite important since some scenarios can get convoluted, for instance: deleting an edge connecting an identity policy to a group node should also delete edges connecting users belonging to that group with the resources the policy was granting access to.
 
-### Configuration notes
+> Unit tests have the `.test.ts` suffix, they reside within the same folder as the code they test.
 
-In CI, tests run with two workers.
-Traces are captured on the first retry.
-Screenshots and videos are recorded on failure.
+### Integration tests with Vitest
 
----
+Integration tests tend to cover the common state machine actions like creating nodes, creating edges, validating policies, etc. within a context of a specific level. For instance, testing that creating a node inside a level that has a create node objective will trigger the validation function of the objective and emit the correct finish event if the created node satisfies the objective requirements.
+
+> Integration tests have the `integration.test.ts` suffix, they reside within the same folder as the code they test.
 
 ## Building and Deploying
+
+There's a Makefile in the root of the project that serves as an entry point for the most common operations. `make help` lists all available commands:
+
+```bash
+$ make help
+Targets:
+  run-dev     Run dev server in Docker
+  build-prod  Build production image
+  run-prod    Run production image locally
+  push-prod   Push image (REGISTRY required)
+```
 
 ### Development
 
@@ -536,7 +629,7 @@ Screenshots and videos are recorded on failure.
 make run-dev
 ```
 
-This builds and runs the Docker dev container with hot reload. The app appears at `localhost:5173`.
+This builds and runs a Docker container running the code in development mode. The app appears at `localhost:5173`.
 
 Vite handles bundling with:
 
@@ -547,32 +640,40 @@ Vite handles bundling with:
 ### Production build
 
 ```bash
-make docker-build
+make build-prod
 ```
+
+This builds a production Docker image containing the production-ready bundled frontend, alongside a simple nginx server serving the build
 
 The [Dockerfile](Dockerfile) has two stages:
 
-1. **Builder**: Node 22 Alpine, installs dependencies via Yarn 4, runs `yarn build`
-2. **Runtime**: Nginx Alpine, copies the built `dist/` folder, serves static files
+1. **Builder**: Node 24 Alpine image, it installs dependencies via Yarn 4, and runs `yarn build`
+2. **Runtime**: Nginx Alpine, copies the built `dist/` from the previous stage and serves it
 
-Final image is tiny, just Nginx and the compiled assets.
+The final image is small - just nginx with the bundled frontend
+
+### Code splitting
+
+When running `yarn build` to trigger a production build, multiple chunks are produced. Vendor dependencies are split via `manualChunks` in [`vite.config.mts`](vite.config.mts):
+
+- `editor`: CodeMirror packages
+- `chakra`: Chakra UI, Emotion, Framer Motion
+- `reactflow`: `@xyflow/react`
+- `xstate`: XState and its React/store packages
+- `misc`: lodash, react-markdown, immer, ajv
+
+Each level’s state machine is a separate dynamic import in [`level-runtime.ts`](src/runtime/level-runtime.ts), so Vite gives each level its own chunk. Only the machine for the current level is downloaded when the user navigates to it. `LevelsProgressionProvider` loads the machine asynchronously; while it’s fetching it renders a full-screen spinner, and the app tree only mounts once the actor is ready.
+
+The code editor is also lazily loaded via its own chunks. In [`CodeEditorLoader.tsx`](src/features/code_editor/components/CodeEditorLoader.tsx), the editor’s chunk is deferred with `React.lazy()` until the user opens the editor. A `Suspense` boundary shows a spinner until the editor fully loads.
 
 ### Scripts
 
 From `package.json`:
 
-- `yarn dev` — Start Vite dev server
-- `yarn build` — Production build to `dist/`
-- `yarn test` — Run Vitest unit tests
-- `yarn lint` / `yarn lint:fix` — ESLint
-- `yarn format` — Prettier
+- `yarn dev` - For starting the Vite dev server
+- `yarn build` - For building the app for production
+- `yarn test` - For running Vitest unit tests
+- `yarn lint` / `yarn lint:fix` - For running ESLint
+- `yarn format` - For running Prettier
 
-The Makefile wraps Docker operations:
-
-- `make run-dev` — Dev container with mounted source
-- `make run-prod` — Production container
-- `make test-e2e` — Run Playwright suite
-
----
-
-That's the architecture. Questions or clarifications welcome—open an issue or find me on the project's discussions.
+The Makefile wraps Docker operations as mentioned above.
