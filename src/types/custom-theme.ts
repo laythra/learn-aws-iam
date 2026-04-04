@@ -15,5 +15,6 @@ export interface CustomTheme extends Theme {
   };
   zIndices: Theme['zIndices'] & {
     modal: number;
+    selectedNode: number;
   };
 }

@@ -9,6 +9,7 @@ import {
 import { produce } from 'immer';
 
 import { positionNewNodes } from '../utils/apply-node-positions';
+import { theme } from '@/theme';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { NodeLayoutGroup } from '@/types/iam-layout-types';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
@@ -118,6 +119,9 @@ export const CanvasStore = createStore<CanvasStoreState, CanvasStoreEvents, neve
     ),
     updateSelectedNodeId: produce((ctx: CanvasStoreState, event: { nodeId: string }) => {
       ctx.selectedNodeId = event.nodeId;
+
+      // Bring selected node to front so it isn't hidden behind overlapping siblings
+      ctx.nodes.find(n => n.id === event.nodeId)!.zIndex = theme.zIndices.selectedNode;
       ctx.nodeIdWithOpenedContent = undefined;
       ctx.nodeIdWithOpenedTags = undefined;
       ctx.nodeIdWithOpenedARN = undefined;
