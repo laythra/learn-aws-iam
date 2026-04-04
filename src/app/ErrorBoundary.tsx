@@ -1,6 +1,7 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 
 import { analyticsActor } from '@/lib/analytics-actor';
+import { Sentry } from '@/lib/sentry';
 
 interface Props {
   children: ReactNode;
@@ -19,6 +20,10 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
+    Sentry.captureException(error, {
+      contexts: { react: { componentStack: info.componentStack } },
+    });
+
     analyticsActor.send({
       type: 'LOG_EVENT',
       name: 'UNCAUGHT_RENDER_ERROR',
