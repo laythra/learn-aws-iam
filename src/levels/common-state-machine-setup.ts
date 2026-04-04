@@ -645,6 +645,9 @@ export const createStateMachineSetup = <
         ) => blocked_connections,
       }),
       store_checkpoint: enqueueActions(({ self }) => {
+        // Deferring the checkpoing operation through queueMicrotask so this runs after
+        // XState finishes processing the current transition and commits the new state,
+        // but still within the same event loop tick
         queueMicrotask(() =>
           LevelEventBus.emit('store_checkpoint', { actor: self as Actor<AnyActorLogic> })
         );
