@@ -1,3 +1,6 @@
+-include .env
+export
+
 IMAGE ?= learn-aws-iam
 TAG ?= latest
 REGISTRY ?=
