@@ -7,8 +7,11 @@ import './index.css';
 import App from './app/App';
 import { ErrorBoundary } from './app/ErrorBoundary';
 import { initAnalytics } from './lib/analytics-actor';
+import { initSentry } from './lib/sentry';
 
 import './lib/array/array.extensions';
+
+initSentry();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
