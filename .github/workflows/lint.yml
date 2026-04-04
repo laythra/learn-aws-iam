@@ -1,12 +1,15 @@
 name: ESLint
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
 
 jobs:
   eslint-reviewdog:
-    name: runner / eslint
+    name: runner / eslint (PR review)
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     permissions:
@@ -36,3 +39,24 @@ jobs:
           reporter: github-pr-review
           eslint_flags: '.'
           fail_level: warning
+
+  eslint:
+    name: runner / eslint (main)
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.13.1
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run ESLint
+        run: yarn lint
