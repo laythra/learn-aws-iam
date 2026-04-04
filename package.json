@@ -1,5 +1,5 @@
 {
-  "name": "iam_project_that_i_hope_kicks_off",
+  "name": "learn-aws-iam",
   "version": "0.1.0",
   "type": "module",
   "private": true,
@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.14.1",
     "@fontsource/lato": "^5.2.7",
     "@heroicons/react": "^2.2.0",
+    "@sentry/react": "^10.47.0",
     "@uiw/react-codemirror": "^4.25.4",
     "@xstate/react": "^4.1.0",
     "@xstate/store": "~3.15.0",
