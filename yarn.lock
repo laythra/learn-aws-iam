@@ -1023,10 +1023,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource/lato@npm:^5.2.7":
+"@fontsource/ibm-plex-mono@npm:^5.2.7":
   version: 5.2.7
-  resolution: "@fontsource/lato@npm:5.2.7"
-  checksum: 10c0/2d3e3f8da0e5ce733377406619066222ebc8786477b33bd2131d0137c069bc0e31416ed3dfa3b2fd2f57d22029f8ecd33cc693dfa08c8b42b5d028f18bacc3d3
+  resolution: "@fontsource/ibm-plex-mono@npm:5.2.7"
+  checksum: 10c0/b104ae0f8054def5e6edca395f9c41d9a15b17ceeea522573b1ef223311bfa0d8f0fe3e2d3a56ecea59ff3e3ceee571e16d1ee942093bac97a66c3b8a72eaca3
+  languageName: node
+  linkType: hard
+
+"@fontsource/ibm-plex-sans@npm:^5.2.8":
+  version: 5.2.8
+  resolution: "@fontsource/ibm-plex-sans@npm:5.2.8"
+  checksum: 10c0/3cdb45d9dd54f9b4ec0d5912215bbc5ef5a89cea99cc28d46fa5cf6ebee457f94183f42be5994b61b6cdacec0fe67d697b6642678823dc0cc7e7b58180e86211
   languageName: node
   linkType: hard
 
@@ -4784,7 +4791,8 @@ __metadata:
     "@eslint/compat": "npm:^2.0.2"
     "@eslint/eslintrc": "npm:^3.3.3"
     "@eslint/js": "npm:^9.39.2"
-    "@fontsource/lato": "npm:^5.2.7"
+    "@fontsource/ibm-plex-mono": "npm:^5.2.7"
+    "@fontsource/ibm-plex-sans": "npm:^5.2.8"
     "@heroicons/react": "npm:^2.2.0"
     "@playwright/test": "npm:^1.58.2"
     "@testing-library/dom": "npm:^10.4.1"
