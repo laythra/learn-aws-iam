@@ -93,7 +93,7 @@ With the machine emitting `NODES_DELETED` with IDs, none of that scaffolding exi
 
 Machines also need to be serializable so that the user's level progress can be saved at certain parts as checkpoints. For this reason, runtime-dependent logic lives outside the machine definition in `level-runtime-fns.ts`, and the machine context itself is kept function-free.
 
-At runtime, callers resolve the appropriate per-level validation and guard functions on demand via [functions-registry.ts](src/levels/utils/functions-registry.ts) (for example, `GetLevelValidateFunctions(...)`), rather than injecting functions into the machine context. See [Functions Registry](#functions-registry) for details.
+At runtime, validation and guard functions are resolved on demand via [functions-registry.ts](src/levels/utils/functions-registry.ts), rather than injecting functions into the machine context. Code inside `levels/` calls the registry directly. Code inside `features/` accesses it through the `useLevelValidateFunctions` hook in `src/runtime/useLevelValidation.ts`, which encapsulates the level number lookup — keeping features decoupled from level logic. See [Functions Registry](#functions-registry) for details.
 
 ### Levels Structure
 
@@ -103,10 +103,13 @@ Each level is defined in [src/levels/level{N}/](src/levels/) with the following 
 level5/
 ├── state-machine.ts         # The XState machine definition
 ├── initial-connections.ts   # What connections to initially show on the canvas
+├── initial-policies.ts      # Initial policy documents pre-loaded onto nodes at level start
+├── initial-roles.ts         # Initial role trust policy documents (only in levels that have roles)
 ├── level-runtime-fns.ts     # Functions used for runtime hydration, since machines must be serializable for snapshotting
 ├── nodes/                   # The various nodes to show during the lifecycle of the level
 ├── objectives/              # Objective definitions and validation
 │   ├── edge-connection-objectives.ts
+│   ├── identity-policy-creation-objectives.ts
 │   ├── level-objectives.ts
 │   ├── role-creation-objectives.ts
 │   ├── trust-policy-edit-objectives.ts
@@ -197,11 +200,12 @@ Checkpointing requires the machine snapshot to survive JSON serialization. That 
 
 ```typescript
 GetLevelValidateFunctions(5)['create_admin_policy'];
-// ...similar helpers exist for other function groups (guard rails, etc.)
-// etc.
+// similar helpers exist for other function groups (applicable nodes, guard rails)
 ```
 
 The machine stores the function _name_, and when an action actually runs (validating a policy, checking a guard rail) it calls into the registry with the level number and the stored name to get the real function. Checkpoint restoration works transparently because the snapshot only ever contained the name, so there's nothing to re-inject: the next time the action fires, it looks up the registry the same way it would have on a fresh start.
+
+Code in `levels/` calls the registry directly. Code in `features/` must not — that would couple UI components to level internals. Instead, `runtime/` exposes `useLevelValidateFunctions` ([src/runtime/useLevelValidation.ts](src/runtime/useLevelValidation.ts)), a hook that resolves the current level number and returns the appropriate validators. Features call the hook; the registry remains an implementation detail of the runtime layer.
 
 ## The Canvas System
 
@@ -467,14 +471,16 @@ src/
 
 ### Project Structure Philosophy
 
-![Layer dependency diagram](./assets/images/dependency-layers.png)
+![Layer dependency diagram](./assets/images/dependency_layers.png)
 
-Dependencies flow downward. Upper layers import from lower layers; lower layers never import from upper ones. The event bus is the one exception to this rule; it lets `levels/` fire side effects that are handled by `runtime/` without creating a cycle (see [Cross-layer event bus](#cross-layer-event-bus)).
+Dependencies flow downward. Upper layers import from lower layers; lower layers never import from upper ones. The event bus is the one exception: it lets `levels/` fire side effects handled by `runtime/` without creating a cycle (see [Cross-layer event bus](#cross-layer-event-bus)).
 
-- **`lib/`** and **`types/`** are the foundation. Generic utilities (event bus, storage, markdown processing), shared TypeScript types and enums. Nothing in the codebase is off-limits for importing from here.
+`features/` and `levels/` have an additional peer constraint: neither can import from the other, even though `levels/` sits above `features/` in the chain. They are isolated concerns — level logic and UI rendering — and interact only through `runtime/`, which acts as the bridge between them.
+
+- **`lib/`**, **`types/`**, **`hooks/`**, **`config/`**, and **`stores/`** are the foundation. Generic utilities, shared TypeScript types, React hooks with no runtime dependency, and `@xstate/store` instances for lightweight state. Nothing in the codebase is off-limits for importing from here.
 - **`domain/`** contains domain-specific logic for IAM: node and edge factories, ARN generation, policy validation schemas, graph utilities. It knows what an IAM User or Role looks like, but nothing about levels, tutorial flow, or the canvas.
 - **`levels/`** defines what each level contains and how it progresses. It uses `domain/` factories to build nodes and edges, and defines the XState machine, objectives, tutorial messages, and runtime validation functions. Twelve self-contained folders; understanding level 5 requires no knowledge of level 4 or 6.
-- **`runtime/`** is responsible for serving the correct level machine to the app. It loads machines from `levels/`, handles snapshotting and persistence, and exposes the `LevelsProgressionProvider`.
+- **`runtime/`** is responsible for serving the correct level machine to the app. It loads machines from `levels/`, handles snapshotting and persistence, exposes the `LevelsProgressionProvider`, and provides hooks (e.g. `useLevelValidateFunctions`) that give `features/` access to level-specific logic without directly coupling them to `levels/`.
 - **`features/`** is purely about rendering. The canvas, the code editor, the IAM entity creation dialogs, and the level progress panel all live here. These components subscribe to the state machine actor and the canvas/editor stores; they do not contain level logic.
 - **`app_shell/`** and **`app/`** sit at the top. `app_shell/` assembles the navigation bar and fixed overlays. `app/` is the root: it wires up the provider hierarchy and renders the shell.
 
