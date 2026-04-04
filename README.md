@@ -2,9 +2,11 @@
 
 An interactive visual simulator for learning AWS IAM (Identity and Access Management). No AWS account required.
 
-![Tests](https://github.com/laythra/learnawsiam/actions/workflows/test.yml/badge.svg)
-![Lint](https://github.com/laythra/learnawsiam/actions/workflows/lint.yml/badge.svg)
-![Playwright Tests](https://github.com/laythra/learnawsiam/actions/workflows/playwright.yml/badge.svg)
+> This project is not affiliated with or endorsed by Amazon Web Services (AWS).
+
+![Tests](https://github.com/laythra/learnawsiam/actions/workflows/test.yml/badge.svg?branch=main)
+![Lint](https://github.com/laythra/learnawsiam/actions/workflows/lint.yml/badge.svg?branch=main)
+![Playwright Tests](https://github.com/laythra/learnawsiam/actions/workflows/playwright.yml/badge.svg?branch=main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ![Demo](./assets/gifs/demo_overview.gif)
@@ -36,7 +38,7 @@ Users will write real IAM policies, attach them to users, groups, roles, and oth
 
 ## Built With
 
-- **React + TypeScript** - The core framework and language for the frontend
+- **React + TypeScript** - The core UI library and language for the frontend
 - **XState** - State management for complex level logic and the IAM simulation engine
 - **ReactFlow** - Interactive graph visualization for the canvas and node-based UI
 - **CodeMirror** - Used for the integrated policy editor with real-time feedback
