@@ -1,6 +1,6 @@
 import { RoleNodeID } from '../types/node-ids';
 import { createRoleNode } from '@/domain/nodes/role-node-factory';
-import { INITIAL_POLICIES } from '@/levels/level11/policy_role_documents/initial-policies';
+import { INITIAL_POLICIES } from '@/levels/level11/initial-policies';
 import { CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import { IAMRoleNode } from '@/types/iam-node-types';

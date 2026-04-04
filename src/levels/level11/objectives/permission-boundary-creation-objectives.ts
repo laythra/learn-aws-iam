@@ -1,5 +1,5 @@
+import { INITIAL_POLICIES } from '../initial-policies';
 import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
-import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PermissionBoundaryCreationFinishEvent } from '../types/finish-event-enums';
 import { PermissionBoundaryID } from '../types/node-ids';
 import { createPermissionBoundaryCreationObjective } from '@/levels/utils/factories/permission-boundary-creation-objective-factory';

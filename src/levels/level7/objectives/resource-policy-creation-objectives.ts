@@ -1,5 +1,5 @@
+import { INITIAL_POLICIES } from '../initial-policies';
 import { ValidateFunctionsFnName } from '../level-runtime-fns';
-import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, ResourcePolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { AccountID, ResourceNodeID, ResourcePolicyNodeID } from '../types/node-ids';
 import { MANAGED_POLICIES } from '@/domain/managed-policies';

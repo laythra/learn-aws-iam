@@ -1,4 +1,4 @@
-import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
+import { INITIAL_POLICIES } from '../initial-policies';
 import { AccountID, PolicyNodeID, ResourceNodeID } from '../types/node-ids';
 import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';
 import { AccessLevel, CommonLayoutGroupID } from '@/types/iam-enums';
