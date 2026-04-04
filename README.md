@@ -3,6 +3,8 @@
 An interactive visual simulator for learning AWS IAM (Identity and Access Management). No AWS account required.
 
 > This project is not affiliated with or endorsed by Amazon Web Services (AWS).
+>
+> This project simulates AWS IAM concepts for educational purposes. It does not fully replicate AWS IAM evaluation logic and should not be used for real security decisions.
 
 ![Tests](https://github.com/laythra/learnawsiam/actions/workflows/test.yml/badge.svg?branch=main)
 ![Lint](https://github.com/laythra/learnawsiam/actions/workflows/lint.yml/badge.svg?branch=main)
