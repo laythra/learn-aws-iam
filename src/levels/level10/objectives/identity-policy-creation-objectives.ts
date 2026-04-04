@@ -7,7 +7,7 @@ import { AccessLevel, CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enu
 import { IAMIdentityPolicyCreationObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE1_DESCRIPTION = `
-  This policy needs two statements:
+  This policy needs three statements — the third one is already filled in for you.
 
   **Statement 1 — Tag Creation**
   Allows adding tags to a resource, but only during a \`RunInstances\` call.
@@ -15,7 +15,13 @@ const OBJECTIVE1_DESCRIPTION = `
 
   **Statement 2 — Instance Launch**
   Allows launching EC2 instances only when the request carries the correct tags:
-  the caller's application, a valid environment, and optionally a Name.
+  The tags are:
+
+  * **\`application\`**: must match the caller's application tag
+  * **\`environment\`**: must be one of \`dev\`, \`staging\`, or \`prod\`
+  * **\`Name\`**: optional; any descriptive label for the instance
+
+  **Statement 3 — Supporting Resources** *(pre-filled)* Leave this one as-is.
 `;
 
 const OBJECTIVE2_DESCRIPTION = `
@@ -54,9 +60,12 @@ const OBJECTIVE1_HINT_MSG3 = `
 const OBJECTIVE1_HINT_MSG4 = `
   **Statement 1** — \`ec2:CreateTags\` with \`ec2:CreateAction: "RunInstances"\`
 
-  **Statement 2** — \`ec2:RunInstances\` with:
+  **Statement 2** — \`ec2:RunInstances\` on \`arn:aws:ec2:*:*:instance/*\` with:
   - \`StringEquals\` for \`aws:RequestTag/application\` and \`aws:RequestTag/environment\`
   - \`ForAllValues:StringEquals\` for \`aws:TagKeys\`
+
+  **Statement 3** — already there. \`ec2:RunInstances\` on the supporting resources
+  (subnet, network-interface, security-group, volume, image) — no conditions needed.
 `;
 
 const OBJECTIVE2_HINT_MSG1 = `
@@ -82,6 +91,15 @@ const OBJECTIVE2_HINT_MSG3 = `
   The two actions for managing EC2 instance state are:
   - \`ec2:StopInstances\`
   - \`ec2:StartInstances\`
+`;
+
+const OBJECTIVE1_CALLOUT_MSG = `
+  The third statement is pre-filled and covers the supporting
+  resources EC2 needs when launching an instance, like ***subnets***,
+  ***network interfaces***, ***security groups***, ***volumes***, and ***AMIs***.
+
+  These don't carry the same tag enforcement as the instance itself;
+  they just need to be reachable. No need to tinker with this statement.
 `;
 
 const OBJECTIVE1_HELP_BADGES = [
@@ -128,6 +146,7 @@ export const POLICY_CREATION_OBJECTIVES: IAMIdentityPolicyCreationObjective<
       initial_code: INITIAL_POLICIES.POLICY_WITH_CONDITION,
       limit_new_lines: false,
       layout_group_id: CommonLayoutGroupID.BottomLeftHorizontal,
+      callout_message: OBJECTIVE1_CALLOUT_MSG,
       hint_messages: [
         {
           title: 'Objective',
