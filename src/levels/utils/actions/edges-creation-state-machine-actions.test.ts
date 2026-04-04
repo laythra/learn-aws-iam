@@ -20,7 +20,7 @@ import { createUserNode } from '@/domain/nodes/user-node-factory';
 import {
   GetLevelGuardRailsBlockedEdgesFns,
   GetLevelObjectivesApplicableNodesFns,
-} from '@/runtime/functions-registry';
+} from '@/levels/utils/functions-registry';
 import { AccessLevel } from '@/types/iam-enums';
 import { IAMAnyNode, IAMEdge } from '@/types/iam-node-types';
 
@@ -30,7 +30,7 @@ type ExpectedEdge = {
   data?: Partial<IAMEdge['data']>;
 };
 
-vi.mock('@/runtime/functions-registry', () => ({
+vi.mock('@/levels/utils/functions-registry', () => ({
   GetLevelObjectivesApplicableNodesFns: vi.fn(() => ({})),
   GetLevelGuardRailsBlockedEdgesFns: vi.fn(() => ({})),
   GetLevelValidateFunctionsFns: vi.fn(() => ({})),
