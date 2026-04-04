@@ -491,10 +491,10 @@ Dependencies flow downward. Upper layers import from lower layers; lower layers 
 Constructing nodes, edges, and objectives is a core pattern that happens across all levels. Rather than doing it inline and dirtying the repo with boilerplate, factory functions with consistent defaults are used across the codebase.
 
 ```typescript
-const policy = createPolicyNode({
+const policy = createIdentityPolicyNode({
   id: 'my-policy',
   label: 'AdminAccess',
-  layout_group_id: 'center',
+  layout_group_id: CommonLayoutGroupID.CenterHorizontal,
 });
 ```
 
@@ -506,7 +506,7 @@ Hooks provide shared state and logic for common patterns across the app:
 
 ```typescript
 function MyButton() {
-  const restricted = useIsElementRestricted([ElementID.MyButton]);
+  const [restricted] = useIsElementRestricted([ElementID.MyButton]);
   const { isOpen } = usePopover(nodeId);
 
   if (restricted) return null;
@@ -525,7 +525,7 @@ The project initially used HOC (Higher Order Components) for these patterns, but
 1. Subscribes to `LevelDetailsStore` for the current `levelNumber` and `restartKey` through a `useEffect` hook
 2. On either change, clears the active actor context and calls `loadCheckpoint` to check localStorage for a saved snapshot
 3. It then calls `loadLevelMachine(levelNumber, snapshot)` to load the state machine corresponding to the `levelNumber` from the registry inside `src/runtime/level-runtime` and creates an XState actor context, potentially hydrating it with the snapshot if it exists
-4. While the level machine is loading and before the actor context is ready, it renders a full-screen Chakra `<Spinner />` to block interaction and prevent the previous machine from receiving/sending events. This also plays well with potential future code splitting for machines, where loading could take longer.
+4. While the level machine is loading and before the actor context is ready, it renders a full-screen Chakra `<Spinner />` to block interaction and prevent the previous machine from receiving/sending events. This also plays well with the existing code splitting we have for each level's code, where loading could take longer.
 
 If either keys (`currentLevelNumber` or `restartKey`) changes, the provider re-runs the effect. `restartKey` is merely used for when the user wishes to restart the level from scratch again.
 
@@ -537,7 +537,7 @@ If either keys (`currentLevelNumber` or `restartKey`) changes, the provider re-r
 
 **Auto-layout doesn't scale**: `positionNewNodes()` inside [`src/features/canvas/utils/apply-node-positions.ts`](src/features/canvas/utils/apply-node-positions.ts) works for the node counts each level is designed around. Level complexity is intentionally bounded, so this isn't a current problem, but it's a real ceiling if levels ever grow significantly larger. Level 12 is a borderline example where the layout logic is stretched thin.
 
-**Generating Snapshots is manual**: There's no automated script for generating snapshots at the moment. If a level's machine changes, snapshots must be regenerated manually by running the level to the desired point and exporting the snapshot via the helper endpoint. This is a manual process that can be time-consuming, especially for levels with long sequences of interactions.
+**Generating Snapshots is manual**: There's no automated script for generating snapshots at the moment. If a level's machine changes, snapshots must be regenerated manually by running the level to the desired point and exporting the snapshot via the helper endpoint. This is a manual process that can be time-consuming, especially for levels with long sequences of interactions. See [Stage snapshots](#stage-snapshots) for details on how snapshots are generated.
 
 ## Testing Approach
 
@@ -559,11 +559,14 @@ E2E tests in [`tests/e2e/`](tests/e2e/) cover all 12 levels. Each level has its 
 
 Aside from the separate test files, custom test fixtures are implemented to provide abstract, high-level testing primitives that aid in testing the Canvas UI, such as testing whether a node exists, a popup is shown and what content is inside it, etc.
 
-The following fixtures are used across all tests
+The following fixtures are available (defined in [`tests/e2e/helpers/test-fixtures.ts`](tests/e2e/helpers/test-fixtures.ts)):
 
 - `tutorial` - provides assertions and actions related to popups, popovers, and miscellaneous tutorial-related UI such as the side panel
 - `nodes` - provides assertions and common actions related to nodes, such as asserting that a node is shown/hidden, clicking on a node's buttons, etc.
 - `edges` - same as `nodes` but for edges
+- `entities` - actions for creating IAM entities through the UI dialogs
+- `progress` - actions related to level progression (advancing, restarting)
+- `ui` - general UI actions and assertions not covered by the other fixtures
 - `goToLevel/goToLevelAtStage` - helps with initializing the app at a specific level, or at a specific stage within a level by loading the stage's snapshot file
 
 Other helper, non-fixture utilities such as [`connection-helpers`](tests/e2e/helpers/connection-helpers.ts) and [`locator-helpers`](tests/e2e/helpers/locator-helpers.ts) encapsulate common operations such as connecting nodes together and locating nodes/edges by their labels or other attributes, ultimately keeping test cases concise.
@@ -599,7 +602,7 @@ Policy solutions used in E2E tests are stored in the same compressed format unde
 Unit tests cover utility functions, levels' state machine logic such as connecting nodes together, creating nodes, deleting edges, etc.
 These tests are quite important since some scenarios can get convoluted, for instance: deleting an edge connecting an identity policy to a group node should also delete edges connecting users belonging to that group with the resources the policy was granting access to.
 
-> Unit tests have the `unit.test.ts` suffix, they reside within the same folder as the code they test.
+> Unit tests have the `.test.ts` suffix, they reside within the same folder as the code they test.
 
 ### Integration tests with Vitest
 
