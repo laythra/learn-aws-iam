@@ -11,8 +11,8 @@ import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
 import { CodeEditorObjectiveHints } from '../CodeEditorObjectiveHints';
 import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { BASE_VALIDATION_FNS, isJSONValid } from '@/domain/iam-policy-validator';
-import { GetLevelValidateFunctions } from '@/levels/utils/functions-registry';
 import { useLevelSelector } from '@/runtime/level-runtime';
+import { useLevelValidateFunctions } from '@/runtime/useLevelValidation';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMNodeEntity, IAMCodeDefinedEntity } from '@/types/iam-enums';
 import {
@@ -39,14 +39,12 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
   errors,
   warnings,
 }) => {
-  const [policyEditObjectives, nodes, levelNumber] = useLevelSelector(
-    state => [
-      state.context.policy_edit_objectives,
-      state.context.nodes,
-      state.context.level_number,
-    ],
+  const [policyEditObjectives, nodes] = useLevelSelector(
+    state => [state.context.policy_edit_objectives, state.context.nodes],
     _.isEqual
   );
+
+  const levelValidateFns = useLevelValidateFunctions();
 
   const editorView = useRef<EditorView | null>(null);
   const selectedNode = nodes.find(
@@ -63,8 +61,7 @@ export const CodeEditorEdit: React.FC<CodeEditorEditProps> = ({
   if (selectedIAMEntity === IAMNodeEntity.IdentityPolicy) {
     objectiveToValidate = policyEditObjectives.find(objective => objective.id === selectedNode?.id);
     objectiveValidationFn =
-      objectiveToValidate &&
-      GetLevelValidateFunctions(levelNumber)[objectiveToValidate?.validate_fn_name]?.(nodes);
+      objectiveToValidate && levelValidateFns[objectiveToValidate?.validate_fn_name]?.(nodes);
   } else {
     // TODO: Do we need to support role editing
     throw new Error('Role editing is not supported yet');
