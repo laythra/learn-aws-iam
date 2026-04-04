@@ -8,9 +8,7 @@ export const UserNodeID = {
 } as const;
 
 export const GroupNodeID = {
-  PaymentsTeam: 'payments-team',
-  AnalyticsTeam: 'analytics-team',
-  ComplianceTeam: 'compliance-team',
+  Engineering: 'engineering',
 } as const;
 
 export const PolicyNodeID = {

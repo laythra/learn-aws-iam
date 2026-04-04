@@ -23,6 +23,7 @@ export const PolicyNodeID = {
   Policy1: 'policy-1',
   FullAccessPolicy: 'policy-2',
   AccessDelegationPolicy: 'policy-3',
+  AssumeRolePolicy: 'policy-4',
 } as const;
 
 export const RoleNodeID = {

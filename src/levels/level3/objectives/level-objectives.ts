@@ -11,7 +11,7 @@ const OBJECTIVE_MSG2 = `
 `;
 
 const OBJECTIVE_MSG3 = `
-  **Frontend Team**: Allow Read access to CloudFront Distribution \`E1A2B3C4D5E6F7\`
+  **Frontend Team**: Allow Cache Invalidation on CloudFront Distribution \`E1A2B3C4D5E6F7\`
 `;
 
 const OBJECTIVE_MSG4 = `
@@ -27,9 +27,13 @@ const OBJECTIVE2_HINT = `
 `;
 
 const OBJECTIVE3_HINT = `
-  Reading from a CloudFront distribution requires the following permissions:
-  - \`cloudfront:GetDistribution\`
-  - \`cloudfront:GetDistributionConfig\`
+  Invalidating a CloudFront cache requires the following permission:
+  - \`cloudfront:CreateInvalidation\`
+
+  > |color(info)
+  > Cache invalidation is typically handled by CI/CD after deployment.
+  > In production, the permission is granted to a dedicated **IAM role** (or **IAM user**)
+  > used by the pipeline, not to individual users that trigger it manually.
 `;
 
 const OBJECTIVE4_HINT = `

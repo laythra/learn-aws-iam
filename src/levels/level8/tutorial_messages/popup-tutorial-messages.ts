@@ -3,8 +3,9 @@ const POPUP_MSG1 = `
   The policies you've created so far were relatively straightforward.
   In this level, you'll write more advanced IAM policies using \`Condition\`.
 
-  ::badge[RULE]:: **Conditions define when a statement applies using request context values,
-  operators, and condition keys.**
+  >|color(rule)
+  >::badge[RULE]:: **Conditions** define when a statement applies using request **context values**,
+  >**operators**, and **condition keys**. We'll explore these in depth shortly
 `;
 
 const POPUP_MSG2 = `
@@ -12,7 +13,7 @@ const POPUP_MSG2 = `
   It has three main parts:
 
   * **Condition Operator**: The operator used to evaluate
-  the condition (e.g., \`Bool\`, \`StringEquals\`, etc.)
+  the condition (e.g., \`Bool\`, \`BoolIfExists\`, \`StringEquals\`, etc.)
   * **Condition Key**: The key that the condition evaluates (e.g., \`aws:MultiFactorAuthPresent\`)
   * **Condition Value**: The value that the condition key must match for the policy to apply
 
@@ -27,7 +28,7 @@ const POPUP_MSG2 = `
         "Action": ["*"], ::badge[ALL ACTIONS]::
         "Resource": "*", ::badge[ALL AWS RESOURCES]::
         "Condition": {
-          "Bool": { ::badge[CONDITION OPERATOR]::
+          "BoolIfExists": { ::badge[CONDITION OPERATOR]::
             "aws:MultiFactorAuthPresent": "false" ::badge[CONDITION KEY AND VALUE]::
           }
         }
@@ -36,12 +37,13 @@ const POPUP_MSG2 = `
   }|fullwidth
   ~~~
 
-  &nbsp;
-
   Notice the \`Condition\` element in the statement.
-  The operator \`Bool\` checks whether a condition is either true or false.
+  The operator \`BoolIfExists\` checks whether a condition is either true or false,
+  but only if the condition key exists in the request context.
+
   In this example, the policy denies all actions on all resources
-  if **Multi-Factor Authentication (MFA)** is not enabled for the principal.
+  if **Multi-Factor Authentication (MFA)** is not enabled for the principal
+  Or if the condition key does not exist in the request context.
 `;
 
 const POPUP_MSG5 = `

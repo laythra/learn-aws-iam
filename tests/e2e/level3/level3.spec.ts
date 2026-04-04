@@ -130,7 +130,7 @@ const connectAllPoliciesToGroups = async (
   await nodes.connectNodes(PolicyNodeID.DynamoDBReadWritePolicy, GroupNodeID.BackendGroup);
   await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][2].id);
 
-  await nodes.connectNodes(PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup);
+  await nodes.connectNodes(PolicyNodeID.CloudFrontInvalidationPolicy, GroupNodeID.FrontendGroup);
   await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 };
 
@@ -141,14 +141,14 @@ const verifyFinalState = async (
 ): Promise<void> => {
   await nodes.expectMultipleVisible([
     PolicyNodeID.DynamoDBReadWritePolicy,
-    PolicyNodeID.CloudFrontReadPolicy,
+    PolicyNodeID.CloudFrontInvalidationPolicy,
     PolicyNodeID.S3ReadWritePolicy,
   ]);
 
   await edges.expectMutlipleVisible([
     [PolicyNodeID.S3ReadWritePolicy, GroupNodeID.FrontendGroup],
     [PolicyNodeID.DynamoDBReadWritePolicy, GroupNodeID.BackendGroup],
-    [PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup],
+    [PolicyNodeID.CloudFrontInvalidationPolicy, GroupNodeID.FrontendGroup],
     [UserNodeID.Alex, ResourceNodeID.PublicAssetsS3Bucket],
     [UserNodeID.Sam, ResourceNodeID.PublicAssetsS3Bucket],
     [UserNodeID.Morgan, ResourceNodeID.DynamoDBTable],
@@ -262,7 +262,10 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
         'TestPolicy3',
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy3')
       );
-      await nodes.connectNodes(PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup);
+      await nodes.connectNodes(
+        PolicyNodeID.CloudFrontInvalidationPolicy,
+        GroupNodeID.FrontendGroup
+      );
       await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 
       await entities.submitCreatePolicyPopup(
@@ -351,7 +354,10 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
         await getTestSolution(ENCODED_TEST_SOLUTIONS, 'policy4')
       );
 
-      await nodes.connectNodes(PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup);
+      await nodes.connectNodes(
+        PolicyNodeID.CloudFrontInvalidationPolicy,
+        GroupNodeID.FrontendGroup
+      );
       await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 
       await nodes.connectNodes(PolicyNodeID.DynamoDBReadWritePolicy, GroupNodeID.BackendGroup);
@@ -404,7 +410,10 @@ test.describe('Stage 3 - Creating Multiple Policies and Connections', () => {
       await nodes.connectNodes(PolicyNodeID.S3ReadWritePolicy, GroupNodeID.FrontendGroup);
       await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][0].id);
 
-      await nodes.connectNodes(PolicyNodeID.CloudFrontReadPolicy, GroupNodeID.FrontendGroup);
+      await nodes.connectNodes(
+        PolicyNodeID.CloudFrontInvalidationPolicy,
+        GroupNodeID.FrontendGroup
+      );
       await progress.expectLevelObjectiveCompleteToastAndClose(LEVEL_OBJECTIVES[1][1].id);
 
       await verifyFinalState(nodes, edges, tutorial);

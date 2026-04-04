@@ -4,13 +4,8 @@ export const INTERNS_POLICY_DOCUMENT = JSON.stringify(
     Statement: [
       {
         Effect: 'Deny',
-        Action: '*',
-        Resource: '*',
-        Condition: {
-          Bool: {
-            'aws:MultiFactorAuthPresent': 'false',
-          },
-        },
+        Action: 's3:*',
+        Resource: 'arn:aws:s3:::timeshift-*',
       },
       {
         Effect: 'Allow',

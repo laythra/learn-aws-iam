@@ -7,8 +7,6 @@ export default `
   * **Condition**: Additional conditions that must be met for the policy to apply
   * **Sid**: An optional identifier for the statement
 
-  &nbsp;
-
   ~~~js
   {
     "Version": "2012-10-17", ::badge[POLICY LANGUAGE VERSION]::

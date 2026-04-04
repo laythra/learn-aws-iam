@@ -10,8 +10,6 @@ export default `
   * **Resource**: The resources to which the policy applies
   * **Condition**: Additional conditions that must be met for the policy to apply
 
-  &nbsp;
-
   ~~~js
   {
     "Version": "2012-10-17",
@@ -35,6 +33,7 @@ export default `
   }|fullwidth
   ~~~
 
-  This SCP acts as a guardrail, preventing any IAM user or role in the account
-  from launching EC2 instances outside the allowed regions.
+  > |color(warning)
+  > ::badge[WARNING]:: Just like **Permission Boundaries**, **Service Control Policies (SCPs)**
+  > don't grant permissions. They merely restrict what other policies are allowed to grant.
 `;

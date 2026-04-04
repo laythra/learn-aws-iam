@@ -38,6 +38,8 @@ const arnStrategies: Record<string, ArnGenerator> = {
     `arn:aws:rds:${region}:${accountId}:db:${resourceName}`,
   [IAMNodeResourceEntity.CodeDeploy]: (resourceName, accountId, region = 'us-east-1') =>
     `arn:aws:codedeploy:${region}:${accountId}:application:${resourceName}`,
+  [IAMNodeResourceEntity.ElastiCache]: (resourceName, accountId, region = 'us-east-1') =>
+    `arn:aws:elasticache:${region}:${accountId}:cluster:${resourceName}`,
 };
 
 export const SupportedArnNodeTypes = Object.keys(arnStrategies);

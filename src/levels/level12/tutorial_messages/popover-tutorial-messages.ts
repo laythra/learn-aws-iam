@@ -14,18 +14,20 @@ const POPOVER_MSG1 = `
 `;
 
 const POPOVER_MSG2 = `
-  Each organizational unit can have AWS accounts which inherit the policies of the OU.
+  ::badge[RULE]:: Each organizational unit can contain AWS accounts,
+  which are subject to the SCPs attached to that OU.
 
   In this case, the OU has two accounts: **Staging Account** and **Production Account**.
-
   Take a moment to explore the accounts and their policies.
 `;
 
 const POPOVER_MSG3 = `
-  By default, every OU has a Service Control Policy (SCP) attached that allows all actions.
-  This means that any account within this OU can perform any action allowed by their IAM policies.
+  ::badge[RULE]:: By default, every OU has a Service Control Policy (SCP)
+  attached that allows all actions. This means that any account within this OU
+  can perform any action allowed by their IAM policies.
 
-  ***View its content by clicking on  the top-right icon on the node.***
+  ***View its content by clicking on  the top-right \`::icon[CodeBracketIcon]::\`
+  icon on the node.***
 `;
 
 const POPOVER_MSG4 = `

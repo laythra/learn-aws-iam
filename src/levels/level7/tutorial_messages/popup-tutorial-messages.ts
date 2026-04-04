@@ -39,7 +39,7 @@ const POPUP_MSG2 = `
   > **Resource-based policies** are embedded in a single resource and cannot be reused.
   >
   > Unlike role-based cross-account access, they grant access directly - no \`sts:AssumeRole\`
-   needed.
+  > needed.
 `;
 
 const POPUP_MSG3 = `
@@ -50,8 +50,6 @@ const POPUP_MSG3 = `
 
   For this stage of the level, we'll achieve the same cross-account access as before,
   but this time using a **resource-based policy** instead of a role trust policy.
-
-  &nbsp;
 
   > |color(warning)
   > ::badge[WARNING]::

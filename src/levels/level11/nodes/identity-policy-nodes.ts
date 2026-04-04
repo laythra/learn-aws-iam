@@ -39,8 +39,16 @@ const IN_LEVEL_POLICY_NODES: IAMNodeDataOverrides<IAMIdentityPolicyNode['data']>
       target_node: resource,
       target_handle: 'right',
       access_level: AccessLevel.Full,
+      edge_label: 'Read/Describe Access',
       source_handle: 'left',
     })),
+    editable: false,
+  },
+  {
+    id: PolicyNodeID.AssumeRolePolicy,
+    label: 'AssumeRolePolicy',
+    content: JSON.stringify(INITIAL_POLICIES.ASSUME_ROLE_POLICY, null, 2),
+    layout_group_id: CommonLayoutGroupID.TopRightHorizontal,
     editable: false,
   },
 ];

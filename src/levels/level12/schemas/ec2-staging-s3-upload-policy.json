@@ -63,14 +63,14 @@
                 "uniqueItems": true,
                 "items": {
                   "enum": [
-                    "arn:aws:s3:::staging-artifacts-bucket/*"
+                    "arn:aws:s3:::staging-artifacts/*"
                   ]
                 }
               },
               {
                 "type": "string",
                 "enum": [
-                  "arn:aws:s3:::staging-artifacts-bucket/*"
+                  "arn:aws:s3:::staging-artifacts/*"
                 ]
               }
             ]

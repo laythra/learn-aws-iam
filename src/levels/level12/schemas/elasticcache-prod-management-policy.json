@@ -40,9 +40,9 @@
             "uniqueItems": true,
             "items": {
               "enum": [
-                "elasticache:ModifyCacheCluster",
-                "elasticache:DeleteCacheCluster",
-                "elasticache:DescribeCacheClusters"
+                "elasticache:ModifyReplicationGroup",
+                "elasticache:DeleteReplicationGroup",
+                "elasticache:DescribeReplicationGroups"
               ]
             }
           },
@@ -61,12 +61,12 @@
               "StringEquals": {
                 "type": "object",
                 "properties": {
-                  "elasticache:ResourceTag/team": {
-                    "const": "${aws:PrincipalTag/team}"
+                  "aws:ResourceTag/squad": {
+                    "const": "${aws:PrincipalTag/squad}"
                   }
                 },
                 "required": [
-                  "elasticache:ResourceTag/team"
+                  "aws:ResourceTag/squad"
                 ]
               }
             }

@@ -6,19 +6,8 @@ import { IAMGroupNode } from '@/types/iam-node-types';
 
 const IN_LEVEL_GROUP_NODES: IAMNodeDataOverrides<IAMGroupNode['data']>[] = [
   {
-    id: GroupNodeID.PaymentsTeam,
-    label: 'payments-team',
-    layout_group_id: LayoutGroupID.GroupNodesLayoutGroup,
-  },
-  {
-    id: GroupNodeID.ComplianceTeam,
-    label: 'compliance-team',
-    layout_group_id: LayoutGroupID.GroupNodesLayoutGroup,
-  },
-
-  {
-    id: GroupNodeID.AnalyticsTeam,
-    label: 'analytics-team',
+    id: GroupNodeID.Engineering,
+    label: 'engineering',
     layout_group_id: LayoutGroupID.GroupNodesLayoutGroup,
   },
 ];

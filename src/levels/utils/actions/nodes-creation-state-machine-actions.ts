@@ -10,7 +10,7 @@ import { createResourcePolicyNode } from '@/domain/nodes/resource-policy-node-fa
 import { createRoleNode } from '@/domain/nodes/role-node-factory';
 import { createSCPNode } from '@/domain/nodes/scp-node-factory';
 import { createUserNode } from '@/domain/nodes/user-node-factory';
-import { GetLevelValidateFunctions } from '@/runtime/functions-registry';
+import { GetLevelValidateFunctions } from '@/levels/utils/functions-registry';
 import { IAMNodeEntity, CommonLayoutGroupID, IAMCodeDefinedEntity } from '@/types/iam-enums';
 import { IAMNodeDataOverrides } from '@/types/iam-node-data-types';
 import {

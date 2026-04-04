@@ -94,8 +94,6 @@ const completeTutorialPhase = async (tutorial: TutorialActions): Promise<void> =
   await tutorial.expectFixedPopoverAndClickNext(FIXED_POPOVER_MESSAGES[1].popover_title);
 };
 
-// ==================== Stage 2 Helper Functions ====================
-
 const createEC2RegionSCP = async (
   nodes: NodeActions,
   entities: EntityCreationActions

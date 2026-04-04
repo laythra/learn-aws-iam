@@ -13,12 +13,16 @@ const FIXED_POPOVER_MSG1 = `
 const FIXED_POPOVER_MSG2 = `
   There you have it! 🎉
 
+  Every user is in the same **engineering** group,
+  yet each team can only access their own instances.
+  No per-team groups, no separate policies per team.
+
   Between **request tags** for enforcing tagging rules at launch time,
   and **resource tags** with **policy variables** for scoping access to the right instances,
   you've seen how tagging makes IAM policies scale cleanly across teams.
 
-  The same principle applies here: access is governed by the user's \`application\` tag,
-  not which group they belong to.
+  Access is governed by the user's \`application\` tag, not the group they belong to.
+  That's ABAC in action.
 `;
 
 export const FIXED_POPOVER_MESSAGES: FixedPopoverMessage[] = [

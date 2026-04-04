@@ -3,7 +3,8 @@ import { ElementID } from '@/config/element-ids';
 import type { PopoverTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPOVER_MSG1 = `
-  Permission boundaries are merely policy documents that cap the maximum permissions
+  ::badge[RULE]:: **Permission boundaries** are merely
+  policy documents that cap the maximum permissions
   that can be granted to a user or role.
 
   **Click the \`::icon[CodeBracketIcon]::\` icon
@@ -16,25 +17,25 @@ const POPOVER_MSG2 = `
 `;
 
 const POPOVER_MSG3 = `
-  Despite granting a full S3 read policy to alex,
-  he is still unable to access the S3 bucket.
-  This is because a permission boundary is attached to him,
-  which caps his maximum permissions to listing SNS topics only.
+  Despite granting a full **S3** read policy to alex,
+  he is still unable to access the **S3** bucket.
+  This is because a **permission boundary** is attached to him,
+  which caps his maximum permissions to listing **SNS** topics only.
 `;
 
 const POPOVER_MSG4 = `
   **sam** is the senior developer (see the \`level\` tag).
-  He'll delegate secret-reading permissions to his team, enforced by a permission boundary.
+  He'll delegate secret-reading permissions to his team, enforced by a **permission boundary**.
 `;
 
 const POPOVER_MSG5 = `
-  We will need to create a permission boundary that caps what permissions can be delegated,
-  and a policy that allows sam to attach policies only to roles
-  which already have that permission boundary attached.
+  We will need to create a **permission boundary** that caps what permissions can be delegated,
+  and a policy that allows **sam** to attach policies only to roles
+  which already have that **permission boundary** attached.
 `;
 
 const POPOVER_MSG6 = `
-  This is the role which sam will use to delegate permissions to his team.
+  This is the role which **sam** will use to delegate permissions to his team.
   Feel free to inspect its trust policy.
 `;
 
@@ -45,26 +46,28 @@ const POPOVER_MSG8 = `
 
 const POPOVER_MSG9 = ``;
 const POPOVER_MSG10 = `
-  Almost done! Now, let's see what happens when sam tries
+  Almost done! Now, let's see what happens when **sam** tries
   to attach the admin policy to the role and a user assumes it.
 
-  Next, we'll see what happens from sam's POV.
+  Next, we'll see what happens from **sam**'s POV.
 `;
 
 const POPOVER_MSG11 = `
-  sam has attached the admin policy to the role.
+  **sam** has attached the admin policy to the role.
 
-  Next, we'll see what happens from morgan's POV.
+  Next, we'll see what happens from **morgan**'s POV.
 `;
 
 const POPOVER_MSG12 = `
-  morgan is a junior developer (see the \`level\` tag), and she will now attempt to assume the role.
+  **morgan** is a junior developer (see the \`level\` tag),
+  and she will now attempt to assume the role.
 
-  The principal in the role allows anyone with a \`level: junior\` tag to assume it. 😉
+  ***The principal in the role allows anyone with a \`level: junior\` tag to assume it and
+  all users have an identity-based policy allowing them to assume the role.*** 😉
 `;
 
 const POPOVER_MSG13 = `
-  morgan is allowed to assume the role.
+  **morgan** is allowed to assume the role.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [

@@ -3,12 +3,12 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { LevelObjective, ObjectiveType } from '@/types/objective-types';
 
 const Objective1Description = `
-  Allow only **Senior** users to read \`Slack Integration Secret\`
+  Allow only **Senior** users to read \`slack-integration-secret\`
   by explicitly listing their ARNs in the condition.
 `;
 
 const Objective2Description = `
-  Allow only **Senior** users to read \`Slack Integration Secret\`
+  Allow only **Senior** users to read \`slack-integration-secret\`
   by checking the principal tag \`role: senior\`.
 `;
 

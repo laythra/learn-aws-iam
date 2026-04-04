@@ -14,7 +14,7 @@ import { isNodeOfEntity } from '@/domain/node-type-guards';
 import {
   GetLevelGuardRailsBlockedEdgesFns,
   GetLevelObjectivesApplicableNodesFns,
-} from '@/runtime/functions-registry';
+} from '@/levels/utils/functions-registry';
 import { theme } from '@/theme';
 import { HandleID, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMGuardRailsNode, PartialEdge } from '@/types/iam-node-types';

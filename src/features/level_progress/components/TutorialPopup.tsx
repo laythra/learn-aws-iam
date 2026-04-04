@@ -20,7 +20,10 @@ import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
 import { CustomTheme } from '@/types/custom-theme';
 import { VoidEvent } from '@/types/state-machine-event-enums';
 
-const popupMarkdownComponents = createMarkdownComponents({ defaultFontSize: 'lg' });
+const popupMarkdownComponents = createMarkdownComponents({
+  defaultFontSize: 'lg',
+  defaultListFontSize: 'md',
+});
 
 export const TutorialPopup: React.FC = () => {
   const theme = useTheme<CustomTheme>();

@@ -14,7 +14,6 @@ export enum VoidEvent {
   IAMNodeTagsPopoverClosed = 'IAM_NODE_TAGS_POPOVER_CLOSED',
   HidePopovers = 'HIDE_POPOVERS',
   SidePanelOpened = 'SIDE_PANEL_OPENED',
-  AggregateUserNodes = 'AGGREGATE_USER_NODES',
   HideFixedPopover = 'HIDE_FIXED_POPOVERS',
   NextPopover = 'NEXT_POPOVER',
   NextPopup = 'NEXT_POPUP',
@@ -34,7 +33,6 @@ export enum DataEvent {
   DeleteEdge = 'DELETE_EDGE',
   DeleteEdges = 'DELETE_EDGES',
   DeleteNode = 'DELETE_NODE',
-  DeaggregateUserNodes = 'DEAGGREGATE_USER_NODES',
   EditNodeMetadata = 'EDIT_NODE_METADATA',
   LogAnalyticsEvent = 'LOG_ANALYTICS_EVENT',
 }

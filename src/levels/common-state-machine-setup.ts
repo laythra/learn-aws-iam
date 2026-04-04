@@ -11,8 +11,6 @@ import {
   deleteNode,
   editNodeAttributes,
   editPermissionPolicy,
-  aggregateUserNodes,
-  deaggregateUserNodes,
   editObjectiveState,
 } from './utils/actions';
 import { ElementID } from '@/config/element-ids';
@@ -109,6 +107,10 @@ export const createStateMachineSetup = <
         | {
             type: 'EDGES_UPDATED';
             edges: IAMEdge[];
+          }
+        | {
+            type: 'POPOVER_SHOWN';
+            elementId: string;
           };
     },
     guards: {
@@ -376,6 +378,7 @@ export const createStateMachineSetup = <
             popover_content: message,
             show_popovers: true,
           });
+          enqueue.emit(() => ({ type: 'POPOVER_SHOWN', elementId: message.element_id }));
         }
       ),
       show_fixed_popover_message: enqueueActions(
@@ -496,13 +499,12 @@ export const createStateMachineSetup = <
           }));
         }
       ),
-      show_popover: assign({
-        popover_content: (
-          _context_obj,
-          { popover_content }: { popover_content: PopoverTutorialMessage }
-        ) => popover_content,
-        show_popovers: true,
-      }),
+      show_popover: enqueueActions(
+        ({ enqueue }, { popover_content }: { popover_content: PopoverTutorialMessage }) => {
+          enqueue.assign({ popover_content, show_popovers: true });
+          enqueue.emit(() => ({ type: 'POPOVER_SHOWN', elementId: popover_content.element_id }));
+        }
+      ),
       toggle_side_panel: assign({
         side_panel_open: ({ context }) => !context.side_panel_open,
         dismissed_highlighted_elements: ({ context }) =>
@@ -655,27 +657,6 @@ export const createStateMachineSetup = <
           });
         });
       }),
-      aggregate_user_nodes: enqueueActions(({ context, enqueue }) => {
-        const updatedContext = aggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(context);
-
-        enqueue.assign({
-          nodes: updatedContext.nodes,
-          edges: updatedContext.edges,
-        });
-      }),
-      deaggregate_user_nodes: enqueueActions(
-        ({ context, enqueue }, { nodeId }: { nodeId: string }) => {
-          const updatedContext = deaggregateUserNodes<TLevelObjectiveID, TFinishEventMap>(
-            context,
-            nodeId
-          );
-
-          enqueue.assign({
-            nodes: updatedContext.nodes,
-            edges: updatedContext.edges,
-          });
-        }
-      ),
       log_analytics_event: enqueueActions(
         (
           { enqueue, context },

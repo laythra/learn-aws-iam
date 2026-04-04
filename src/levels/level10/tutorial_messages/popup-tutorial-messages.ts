@@ -17,16 +17,20 @@ const POPUP_MSG1 = `
 const POPUP_MSG2 = `
  For this level, you'll be the DevOps engineer at a fintech company with three teams
  (**payments**, **analytics**, **compliance**) that each manage their own EC2 instances
- across dev/staging/prod environments. Your goal is to ensure:
+ across dev/staging/prod environments.
 
-* Teams can only access and manage their own instances,
- for example, the compliance team cannot stop the payments team's instance
+ All three teams belong to a single **engineering** group — but that's not what controls access.
+ Each user carries an \`application\` tag that identifies their team,
+ and your policies will use that tag to enforce:
+
+* Teams can only access and manage their own instances —
+ the compliance team cannot stop the payments team's instance
 
 * Consistent tagging is enforced for cost tracking and compliance purposes
 `;
 
 const POPUP_MSG3 = `
-  The first policy needs two statements working together:
+  The first policy needs three statements — the third is pre-filled for you.
 
   **1. Tag Creation Statement**
 
@@ -43,7 +47,7 @@ const POPUP_MSG3 = `
 `;
 
 const POPUP_MSG4 = `
-  That was a tough level — give yourself a well-earned pat on the back! 🎉
+  That was a tough level. Give yourself a well-earned pat on the back! 🎉
 
   You've now mastered **Tag-Based Access Control (TBAC)**,
   and not only that, you've shown real skill in crafting complex IAM policies.

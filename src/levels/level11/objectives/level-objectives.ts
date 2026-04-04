@@ -7,7 +7,7 @@ const Objective1Description = `
 `;
 
 const Objective2Description = `
-  Create a permission boundary that limits access to reading secrets.
+  Create a **Permission Boundary** that limits access to reading secrets.
 `;
 
 const Objective3Description = `
@@ -15,12 +15,12 @@ const Objective3Description = `
 `;
 
 const Objective2Hint = `
-  Keep in mind: Permission Boundaries are just policy documents
-  and follow the same structure as IAM policies.
+  Keep in mind: **Permission Boundaries** are just policy documents
+  and follow the same structure as **IAM** policies.
 `;
 
 const Objective3Hint = `
-  The target role must have the permission boundary from the previous step attached to it.
+  The target role must have the **permission boundary** from the previous step attached to it.
 `;
 
 export const LEVEL_OBJECTIVES: LevelObjective<LevelObjectiveID, FinishEventMap>[][] = [

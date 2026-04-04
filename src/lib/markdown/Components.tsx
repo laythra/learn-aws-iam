@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import {
   Code,
+  Divider,
   Heading,
   ListItem,
   Text,
@@ -18,6 +19,13 @@ import * as HeroIcons from '@heroicons/react/24/solid';
 import { Components } from 'react-markdown';
 
 import { extractColorDirective, resolveMarkdownColor } from './color-directives';
+
+interface MarkdownContextValue {
+  fontSize: string;
+  compact: boolean;
+}
+
+const MarkdownContext = React.createContext<MarkdownContextValue | null>(null);
 
 interface MarkdownNode {
   properties?: {
@@ -88,12 +96,29 @@ function extractColorFromChildren(children: React.ReactNode): {
 
 export function createMarkdownComponents({
   defaultFontSize = 'md',
-}: { defaultFontSize?: string } = {}): Components {
+  defaultListFontSize = 'md',
+}: { defaultFontSize?: string; defaultListFontSize?: string } = {}): Components {
+  const defaultContext: MarkdownContextValue = {
+    fontSize: defaultFontSize,
+    compact: false,
+  };
+
+  const listContext: MarkdownContextValue = {
+    fontSize: defaultListFontSize,
+    compact: true,
+  };
+
+  const blockquoteContext: MarkdownContextValue = {
+    fontSize: 'md',
+    compact: true,
+  };
+
   return {
     p: ({ children }: JSX.IntrinsicElements['p']) => {
+      const ctx = React.useContext(MarkdownContext) ?? defaultContext;
       let fontColor = 'black';
       let fontWeight = 'normal';
-      let fontSize = defaultFontSize;
+      let fontSize = ctx.fontSize;
 
       const sizeRegex = /\|(xs|sm|md|lg|xl)$/;
       const weightRegex = /\|weight\((\d+)\)/;
@@ -125,7 +150,13 @@ export function createMarkdownComponents({
       });
 
       return (
-        <Text fontSize={fontSize} py={1} fontWeight={fontWeight} color={fontColor}>
+        <Text
+          fontSize={fontSize}
+          py={ctx.compact ? 0.5 : 1.5}
+          lineHeight={ctx.compact ? 'base' : 'tall'}
+          fontWeight={fontWeight}
+          color={fontColor}
+        >
           {processedChildren}
         </Text>
       );
@@ -145,7 +176,9 @@ export function createMarkdownComponents({
         <Code
           display={isFullWidth ? 'block' : 'inline'}
           width={isFullWidth ? '100%' : 'auto'}
-          p={isFullWidth ? 2 : 0}
+          px={0.5}
+          py={0.5}
+          fontSize={isFullWidth ? undefined : '0.85em'}
           whiteSpace='pre-wrap'
           {...props}
         >
@@ -155,7 +188,11 @@ export function createMarkdownComponents({
     },
     pre: (props: JSX.IntrinsicElements['pre']) => {
       const { children } = props;
-      return <chakra.pre>{children}</chakra.pre>;
+      return (
+        <chakra.pre bg='gray.50' borderRadius='md' p={3} my={2} overflowX='auto'>
+          {children}
+        </chakra.pre>
+      );
     },
     h1: (props: JSX.IntrinsicElements['h1']) => {
       const { children } = props;
@@ -207,11 +244,23 @@ export function createMarkdownComponents({
     },
     ul: (props: JSX.IntrinsicElements['ul']) => {
       const { children } = props;
-      return <UnorderedList py={1}>{children}</UnorderedList>;
+      return (
+        <MarkdownContext.Provider value={listContext}>
+          <UnorderedList py={1} pl={4}>
+            {children}
+          </UnorderedList>
+        </MarkdownContext.Provider>
+      );
     },
     ol: (props: JSX.IntrinsicElements['ol']) => {
       const { children } = props;
-      return <OrderedList py={1}>{children}</OrderedList>;
+      return (
+        <MarkdownContext.Provider value={listContext}>
+          <OrderedList py={1} pl={4}>
+            {children}
+          </OrderedList>
+        </MarkdownContext.Provider>
+      );
     },
     a: (props: JSX.IntrinsicElements['a']) => {
       const { children, href } = props;
@@ -253,19 +302,21 @@ export function createMarkdownComponents({
       const color = resolveBlockquoteColor(detectedColor);
 
       return (
-        <Alert
-          status='info'
-          variant='subtle'
-          borderLeftWidth='4px'
-          borderLeftColor={`${color}.500`}
-          bg={`${color}.50`}
-          color={`${color}.900`}
-          borderRadius='sm'
-          fontSize='sm'
-          my={3}
-        >
-          <AlertDescription>{cleanedChildren}</AlertDescription>
-        </Alert>
+        <MarkdownContext.Provider value={blockquoteContext}>
+          <Alert
+            status='info'
+            variant='subtle'
+            borderLeftWidth='4px'
+            borderLeftColor={`${color}.500`}
+            bg={`${color}.50`}
+            color={`${color}.900`}
+            borderRadius='sm'
+            fontSize={blockquoteContext.fontSize}
+            my={3}
+          >
+            <AlertDescription>{cleanedChildren}</AlertDescription>
+          </Alert>
+        </MarkdownContext.Provider>
       );
     },
     icon: ({ node, ...props }: { node?: MarkdownNode; [key: string]: unknown }) => {
@@ -294,11 +345,16 @@ export function createMarkdownComponents({
       );
     },
     li: ({ children }: JSX.IntrinsicElements['li']) => {
+      const ctx = React.useContext(MarkdownContext) ?? defaultContext;
+
       return (
-        <ListItem fontSize={defaultFontSize} py={0.5}>
+        <ListItem fontSize={ctx.fontSize} py={0}>
           {children}
         </ListItem>
       );
+    },
+    hr: () => {
+      return <Divider my={4} borderColor='gray.300' />;
     },
   } as Components;
 }
