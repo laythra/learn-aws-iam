@@ -5,7 +5,7 @@ import { createMockContext } from '@/__test-helpers__/context';
 import { USER_GROUP_CREATION_OBJECTIVES } from '@/levels/level1/objectives/user-group-creation-objectives';
 import { UserNodeID } from '@/levels/level1/types/node-ids';
 import { ValidateFunctions } from '@/levels/level3/level-runtime-fns';
-import { POLICY_CREATION_OBJECTIVES } from '@/levels/level3/objectives/policy-role-creation-objectives';
+import { POLICY_CREATION_OBJECTIVES } from '@/levels/level3/objectives/identity-policy-creation-objectives';
 import { PolicyNodeID } from '@/levels/level3/types/node-ids';
 import { IAMNodeEntity } from '@/types/iam-enums';
 

@@ -1,4 +1,4 @@
-import { INITIAL_TRUST_POLICIES } from '../policy_role_documents/initial-roles';
+import { INITIAL_TRUST_POLICIES } from '../initial-roles';
 import {
   EC2_ROLE_ALERT_MESSAGE,
   LAMBDA_ROLE_ALERT_MESSAGE,

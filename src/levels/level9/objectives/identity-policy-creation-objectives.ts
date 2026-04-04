@@ -1,5 +1,5 @@
+import { INITIAL_POLICIES } from '../initial-policies';
 import { ObjectivesApplicableNodesFnName } from '../level-runtime-fns';
-import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap, PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-ids';
 import { createPolicyCreationObjective } from '@/levels/utils/factories/identity-policy-creation-objective-factory';

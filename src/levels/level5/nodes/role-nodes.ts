@@ -1,4 +1,4 @@
-import { INITIAL_TRUST_POLICIES } from '../policy_role_documents/initial-roles';
+import { INITIAL_TRUST_POLICIES } from '../initial-roles';
 import { RoleNodeID } from '../types/node-ids';
 import { createRoleNode } from '@/domain/nodes/role-node-factory';
 import { CommonLayoutGroupID, IAMNodeImage } from '@/types/iam-enums';

@@ -1,5 +1,5 @@
+import { INITIAL_POLICIES } from '../initial-policies';
 import { ValidateFunctionsFnName } from '../level-runtime-fns';
-import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { FinishEventMap } from '../types/finish-event-enums';
 import { PolicyCreationFinishEvent } from '../types/finish-event-enums';
 import { PolicyNodeID } from '../types/node-ids';

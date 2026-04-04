@@ -1,5 +1,5 @@
+import { INITIAL_POLICIES } from '../initial-policies';
 import { GuardRailsBlockedEdgesFnName } from '../level-runtime-fns';
-import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
 import { PermissionBoundaryID } from '../types/node-ids';
 import { createPermissionBoundaryNode } from '@/domain/nodes/permission-boundary-node-factory';
 import { CommonLayoutGroupID } from '@/types/iam-enums';

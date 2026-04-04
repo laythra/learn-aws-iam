@@ -1,4 +1,4 @@
-import { INITIAL_POLICIES } from '../policy_role_documents/initial-policies';
+import { INITIAL_POLICIES } from '../initial-policies';
 import { PolicyNodeID, ResourceNodeID } from '../types/node-ids';
 import { MANAGED_POLICIES } from '@/domain/managed-policies';
 import { createIdentityPolicyNode } from '@/domain/nodes/identity-policy-node-factory';
