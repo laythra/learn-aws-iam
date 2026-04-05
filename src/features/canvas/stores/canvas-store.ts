@@ -118,6 +118,11 @@ export const CanvasStore = createStore<CanvasStoreState, CanvasStoreEvents, neve
       }
     ),
     updateSelectedNodeId: produce((ctx: CanvasStoreState, event: { nodeId: string }) => {
+      if (ctx.selectedNodeId) {
+        const prevNode = ctx.nodes.find(n => n.id === ctx.selectedNodeId);
+        if (prevNode) prevNode.zIndex = undefined;
+      }
+
       ctx.selectedNodeId = event.nodeId;
 
       // Bring selected node to front so it isn't hidden behind overlapping siblings
