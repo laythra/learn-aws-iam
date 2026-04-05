@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 
-import { Box, Text, Tooltip, useTheme } from '@chakra-ui/react';
+import { Box, Text, Tooltip } from '@chakra-ui/react';
 import { ArrowDownLeftIcon, ArrowUpRightIcon } from '@heroicons/react/24/solid';
 import { Handle, Position, useUpdateNodeInternals } from '@xyflow/react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { useLevelSelector } from '@/runtime/level-runtime';
 import { TutorialPopover } from '@/runtime/tutorial/TutorialPopover';
-import { CustomTheme } from '@/types/custom-theme';
 import { HandleID } from '@/types/iam-enums';
 import { IAMAccountNode } from '@/types/iam-node-types';
 
@@ -26,8 +25,6 @@ export const AccountCanvasNode: React.FC<IAMCanvasNodeProps> = ({
 }) => {
   const updateNodeInternals = useUpdateNodeInternals();
   const withPopoverElementId = useLevelSelector(state => state.context.popover_content?.element_id);
-  const isSelected = withPopoverElementId === id;
-  const theme = useTheme<CustomTheme>();
 
   const toggleCollapse = (): void => {
     CanvasStore.send({
@@ -60,7 +57,6 @@ export const AccountCanvasNode: React.FC<IAMCanvasNodeProps> = ({
         width={`${finalWidth}px`}
         data-element-id={id}
         position='relative'
-        zIndex={isSelected ? theme.zIndices.tooltip : theme.zIndices.base}
       >
         {collapsed ? (
           <>

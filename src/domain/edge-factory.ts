@@ -37,7 +37,6 @@ export const createEdge = ({
     ...EDGE_TEMPLATE,
     ...rootOverrides,
     id: getEdgeName(rootOverrides.source, rootOverrides.target),
-    zIndex: dataOverrides?.source_node?.parentId ? 10 : 0,
     data: {
       ...EDGE_TEMPLATE.data,
       ...dataOverrides,

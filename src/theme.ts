@@ -18,7 +18,7 @@ export const theme: CustomTheme = extendTheme({
   },
   zIndices: {
     modal: 9000,
-    selectedNode: 10,
+    selectedNode: 4000,
   },
   components: {
     Tooltip: {
