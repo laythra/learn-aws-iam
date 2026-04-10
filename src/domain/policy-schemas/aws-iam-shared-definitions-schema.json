@@ -15,8 +15,13 @@
       "type": "string",
       "pattern": "^arn:aws:iam::\\d{12}:(?:root|user|group|role)"
     },
+    "action-string": {
+      "type": "string",
+      "pattern": "^(\\*|[a-zA-Z0-9\\-*]+:[a-zA-Z0-9\\-*]+)$"
+    },
     "string-array": {
       "type": "array",
+      "minItems": 1,
       "items": {
         "type": "string"
       }
@@ -140,7 +145,14 @@
           "$ref": "#/definitions/wildcard"
         },
         {
-          "$ref": "#/definitions/string-or-string-array"
+          "$ref": "#/definitions/action-string"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/action-string"
+          }
         }
       ]
     },
@@ -191,6 +203,7 @@
         },
         {
           "type": "array",
+          "minItems": 1,
           "items": {
             "$ref": "#/definitions/aws-arn"
           }

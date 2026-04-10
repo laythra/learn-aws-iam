@@ -89,12 +89,21 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     levelValidateFns?.[obj.id](nodes)
   );
 
+  // When multiple objectives are unfinished, validating against all of them simultaneously
+  // produces misleading errors (the user only needs to satisfy one). Fall back to the base
+  // schema so the inline linter only catches structural issues; objective-specific feedback
+  // is handled by the warning banner via findAnyValidObjective.
+  const effectiveValidateFns =
+    validateFns.length > 1 || _.isEmpty(validateFns)
+      ? [BASE_VALIDATION_FNS[selectedIAMEntity]]
+      : validateFns;
+
   const { onCreateEditor, extensions, validateNodeLabel, getContent } = useCodeEditor({
     nodeId,
     editorView,
     getWarnings,
     initialContent,
-    validateFns: _.isEmpty(validateFns) ? [BASE_VALIDATION_FNS[selectedIAMEntity]] : validateFns,
+    validateFns: effectiveValidateFns,
     helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
   });
 
