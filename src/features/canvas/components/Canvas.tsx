@@ -2,19 +2,12 @@ import React from 'react';
 
 import { useTheme } from '@chakra-ui/react';
 import { Box } from '@chakra-ui/react';
-import {
-  ReactFlow,
-  Background,
-  BackgroundVariant,
-  ConnectionMode,
-  useReactFlow,
-  Controls,
-} from '@xyflow/react';
+import { ReactFlow, Background, BackgroundVariant, ConnectionMode, Controls } from '@xyflow/react';
 
 import { AccountCanvasNode } from './AccountCanvasNode';
 import IAMCanvasEdge from './IAMCanvasEdge';
 import IAMCanvasNode from './IAMCanvasNode';
-import { ResetZoomButton } from './ResetZoomButton';
+import { ResetCanvasButton } from './ResetCanvasButton';
 import { useCanvas } from '../hooks/useCanvas';
 import { CanvasStore } from '../stores/canvas-store';
 import { CustomTheme } from '@/types/custom-theme';
@@ -38,10 +31,15 @@ const EDGE_TYPES = {
 
 const Canvas: React.FC = () => {
   const theme = useTheme<CustomTheme>();
-  const { nodesState, edgesState, onConnect, onEdgeDelete, onNodeDelete, setRfInstance } =
-    useCanvas();
-
-  const { setViewport } = useReactFlow();
+  const {
+    nodesState,
+    edgesState,
+    onConnect,
+    onEdgeDelete,
+    onNodeDelete,
+    setRfInstance,
+    resetCanvas,
+  } = useCanvas();
 
   const nodeTypes = React.useMemo(() => NODE_TYPES, []);
   const edgeTypes = React.useMemo(() => EDGE_TYPES, []);
@@ -55,9 +53,6 @@ const Canvas: React.FC = () => {
           }
 
           CanvasStore.send({ type: 'changeNodesState', changes });
-          if (!changes.some(change => change.type === 'add')) return;
-
-          setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 300 });
         }}
         onEdgesChange={changes => {
           if (changes.some(change => change.type === 'remove')) {
@@ -65,9 +60,6 @@ const Canvas: React.FC = () => {
           }
 
           CanvasStore.send({ type: 'changeEdgesState', changes });
-          if (!changes.some(change => change.type === 'add')) return;
-
-          setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 300 });
         }}
         onInit={rfi => setRfInstance(rfi)}
         nodes={nodesState}
@@ -87,8 +79,13 @@ const Canvas: React.FC = () => {
         defaultViewport={{ x: 0, y: 0, zoom: 1 }}
       >
         <Background color='#ccc' variant={BackgroundVariant.Dots} size={2} gap={14} />
-        <Controls position='bottom-right' showZoom={false} showInteractive={false}>
-          <ResetZoomButton />
+        <Controls
+          position='bottom-right'
+          showZoom={false}
+          showInteractive={false}
+          showFitView={false}
+        >
+          <ResetCanvasButton onReset={resetCanvas} />
         </Controls>
       </ReactFlow>
     </Box>

@@ -180,7 +180,7 @@ export const IdentityCreationPopup: React.FC = () => {
               !_.isEmpty(formState[iamIdentityEntity]['error'])
             }
           >
-            submit
+            Submit
           </Button>
           <Button variant='ghost' onClick={closeIdentityCreator}>
             Cancel

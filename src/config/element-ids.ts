@@ -24,6 +24,7 @@ export enum ElementID {
   RightSidePanelToggleButton = 'right-side-panel-toggle-button',
   TutorialPopoverCloseButton = 'tutorial-popover-close-button',
   ResetZoomButton = 'reset-zoom-button',
+  ResetCanvasButton = 'reset-canvas-button',
   AccountSelectionDropdown = 'account-select-dropdown',
   CreateGroupTab = 'create-group-tab',
   CreateUserTab = 'create-user-tab',
