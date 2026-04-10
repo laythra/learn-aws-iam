@@ -16,6 +16,7 @@ interface UseCanvasStoreSyncOptions {
   layoutGroups: NodeLayoutGroup[];
   sidePanelWidth: number;
   adjustCanvasZoom: (nodes: IAMAnyNode[]) => void;
+  calculateCanvasZoom: (referenceNodes: IAMAnyNode[]) => number;
 }
 
 export function useCanvasStoreSync({
@@ -24,6 +25,7 @@ export function useCanvasStoreSync({
   layoutGroups,
   sidePanelWidth,
   adjustCanvasZoom,
+  calculateCanvasZoom,
 }: UseCanvasStoreSyncOptions): void {
   // This useEffect initializes the canvas store with nodes and edges from the state machine when the React Flow instance becomes available.
   // We need this initialization because event-driven updates alone aren't sufficient, as events may fire before this hook is set up, causing us to miss them.
@@ -85,12 +87,19 @@ export function useCanvasStoreSync({
     const nodesAddedSub = levelActor.on(
       'NODES_ADDED',
       ({ nodes: newNodes }: { nodes: IAMAnyNode[] }) => {
+        const existingNodes = CanvasStore.getSnapshot().context.nodes;
+        const allNodes = [...existingNodes, ...newNodes];
+        const zoom = calculateCanvasZoom(allNodes);
+        const resetViewport = { x: 0, y: 0, zoom };
+
+        rfInstance.setViewport(resetViewport, { duration: 0 });
+
         CanvasStore.send({
           type: 'addNodes',
           nodes: newNodes,
           layoutGroups,
           sidePanelWidth,
-          reactFlowViewport: rfInstance.getViewport(),
+          reactFlowViewport: resetViewport,
         });
       }
     );

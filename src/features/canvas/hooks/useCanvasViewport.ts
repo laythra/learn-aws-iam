@@ -19,6 +19,7 @@ interface UseCanvasViewportReturn {
   sidePanelWidth: number;
   regularNodeBreakpointId: NodeSizingBreakpointID;
   adjustCanvasZoom: (newNodes: IAMAnyNode[]) => void;
+  calculateCanvasZoom: (referenceNodes: IAMAnyNode[]) => number;
 }
 
 export function useCanvasViewport({
@@ -41,6 +42,7 @@ export function useCanvasViewport({
       const accountNodesWidth = _.sumBy(referenceNodes, node =>
         node.data.entity === IAMNodeEntity.Account ? node.width! + 20 : 0
       );
+
       return Math.min(
         containsAccountNodes(referenceNodes) ? (windowWidth / accountNodesWidth) * 0.9 : 1,
         1
@@ -83,5 +85,6 @@ export function useCanvasViewport({
     sidePanelWidth,
     regularNodeBreakpointId: regularNodeMetrics.breakpointId,
     adjustCanvasZoom,
+    calculateCanvasZoom,
   };
 }

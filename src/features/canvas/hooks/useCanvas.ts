@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSelector } from '@xstate/store-react';
 import { Connection, ReactFlowInstance } from '@xyflow/react';
@@ -21,6 +21,7 @@ interface UseCanvasReturn {
   onNodeDelete: (targetNodes: IAMAnyNode[]) => void;
   sidePanelWidth: number;
   disabledEdgesCreation: boolean;
+  resetCanvas: () => void;
 }
 
 /**
@@ -52,11 +53,12 @@ export function useCanvas(): UseCanvasReturn {
 
   const levelActor = useLevelActor();
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<IAMAnyNode, IAMEdge>>();
-  const { sidePanelWidth, regularNodeBreakpointId, adjustCanvasZoom } = useCanvasViewport({
-    rfInstance,
-    nodes,
-    sidePanelOpened: sidePanelOpened ?? false,
-  });
+  const { sidePanelWidth, regularNodeBreakpointId, adjustCanvasZoom, calculateCanvasZoom } =
+    useCanvasViewport({
+      rfInstance,
+      nodes,
+      sidePanelOpened: sidePanelOpened ?? false,
+    });
   const previousBreakpointId = useRef<string>();
 
   useCanvasStoreSync({
@@ -65,6 +67,7 @@ export function useCanvas(): UseCanvasReturn {
     layoutGroups,
     sidePanelWidth,
     adjustCanvasZoom,
+    calculateCanvasZoom,
   });
 
   const { onConnect, onEdgeDelete, onNodeDelete } = useCanvasHandlers({
@@ -73,6 +76,28 @@ export function useCanvas(): UseCanvasReturn {
     edgesManagementDisabled,
     levelActor,
   });
+
+  const resetCanvas = useCallback(() => {
+    if (!rfInstance) return;
+
+    const snapshot = levelActor.getSnapshot();
+    const zoom = calculateCanvasZoom(snapshot.context.nodes);
+
+    CanvasStore.send({
+      type: 'setNodes',
+      nodes: snapshot.context.nodes,
+      layoutGroups,
+      sidePanelWidth,
+      reactFlowViewport: { x: 0, y: 0, zoom },
+    });
+
+    CanvasStore.send({
+      type: 'setEdges',
+      edges: snapshot.context.edges,
+    });
+
+    rfInstance.setViewport({ x: 0, y: 0, zoom }, { duration: 300 });
+  }, [rfInstance, levelActor, layoutGroups, sidePanelWidth, calculateCanvasZoom]);
 
   useEffect(() => {
     if (!rfInstance) return;
@@ -105,5 +130,6 @@ export function useCanvas(): UseCanvasReturn {
     onNodeDelete,
     sidePanelWidth,
     disabledEdgesCreation: edgesManagementDisabled ?? false,
+    resetCanvas,
   };
 }
