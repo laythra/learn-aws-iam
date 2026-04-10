@@ -32,6 +32,7 @@ export type GenericEventData =
       doc_string: string;
       label: string;
       account_id?: string;
+      resource_node_id?: string;
       node_entity: IAMCodeDefinedEntity;
     }
   | {

@@ -47,6 +47,11 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     _.isEqual
   );
 
+  const selectedResourceNodeId = useSelector(
+    codeEditorStateStore,
+    state => state.context.selectedResourceNodeId
+  );
+
   const [
     isPolicyTabRestricted,
     isRoleTabRestricted,
@@ -62,8 +67,10 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   ]);
 
   const multiAccount = nodes.some(node => node.data.entity === IAMNodeEntity.Account);
+  const resourceNodes = nodes.filter(node => node.data.entity === IAMNodeEntity.Resource);
   const editorView = useRef<EditorView | null>(null);
   const showMultiAccountDropdown = multiAccount && selectedIAMEntity !== IAMNodeEntity.SCP;
+  const showResourceNodeDropdown = selectedIAMEntity === IAMNodeEntity.ResourcePolicy;
   const unfinishedCreationObjectives = policyCreationObjectives.filter(
     objective => !objective.finished && objective.entity === selectedIAMEntity
   );
@@ -147,7 +154,22 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       });
     }
 
-    validateNodeLabel(label[nodeId] ?? '');
+    if (resourceNodes.length > 0) {
+      codeEditorStateStore.send({
+        type: 'setSelectedResourceNode',
+        selectedResourceNodeId: resourceNodes[0].id,
+      });
+    }
+
+    if (selectedIAMEntity === IAMNodeEntity.ResourcePolicy) {
+      codeEditorStateStore.send({
+        type: 'setNodeLabelError',
+        error: undefined,
+        isValidating: false,
+      });
+    } else {
+      validateNodeLabel(label[nodeId] ?? '');
+    }
   }, [nodeId]);
 
   return (
@@ -181,23 +203,49 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
         </Select>
       )}
 
-      <FormControl isInvalid={labelError !== undefined}>
-        <FormLabel fontWeight='semibold'>{selectedIAMEntity} Name</FormLabel>
-        <Input
-          placeholder='Any descriptive name you prefer...'
-          onChange={newName => {
-            codeEditorStateStore.send({
-              type: 'setNodeLabel',
-              label: newName.target.value,
-              nodeId,
-            });
+      {showResourceNodeDropdown && resourceNodes.length > 0 && (
+        <FormControl mb={4}>
+          <FormLabel fontWeight='semibold'>Resource</FormLabel>
+          <Select
+            size='md'
+            variant='filled'
+            width='60%'
+            value={selectedResourceNodeId ?? ''}
+            onChange={e => {
+              codeEditorStateStore.send({
+                type: 'setSelectedResourceNode',
+                selectedResourceNodeId: e.target.value,
+              });
+            }}
+          >
+            {resourceNodes.map(resourceNode => (
+              <option key={resourceNode.id} value={resourceNode.id}>
+                {resourceNode.data.label}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+      )}
 
-            validateNodeLabel(newName.target.value);
-          }}
-          value={label[nodeId] ?? ''}
-        />
-        <FormErrorMessage>{labelError}</FormErrorMessage>
-      </FormControl>
+      {!showResourceNodeDropdown && (
+        <FormControl isInvalid={labelError !== undefined}>
+          <FormLabel fontWeight='semibold'>{selectedIAMEntity} Name</FormLabel>
+          <Input
+            placeholder='Any descriptive name you prefer...'
+            onChange={newName => {
+              codeEditorStateStore.send({
+                type: 'setNodeLabel',
+                label: newName.target.value,
+                nodeId,
+              });
+
+              validateNodeLabel(newName.target.value);
+            }}
+            value={label[nodeId] ?? ''}
+          />
+          <FormErrorMessage>{labelError}</FormErrorMessage>
+        </FormControl>
+      )}
 
       <FormControl>
         <FormLabel fontWeight='semibold' mt={4}>

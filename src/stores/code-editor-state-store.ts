@@ -18,6 +18,7 @@ type CodeEditorEvents = {
   selectPolicy: { policyId: string };
   deselectPolicy: { policyId: string };
   setSelectedAccount: { selectedAccountId: string };
+  setSelectedResourceNode: { selectedResourceNodeId: string };
   showHelpPopup: { type: string; entity: IAMCodeDefinedEntity };
   hideHelpPopup: { type: string };
   setNodeLabel: { label: string; nodeId: string };
@@ -41,6 +42,7 @@ export type CodeEditorState = {
   isCodeEditorInitialized: boolean;
   selectedPolicies: string[];
   selectedAccountId?: string;
+  selectedResourceNodeId?: string;
   helpPopupInfo: {
     isOpen: boolean;
     entity: IAMCodeDefinedEntity;
@@ -61,6 +63,7 @@ export default createStore<CodeEditorState, CodeEditorEvents, never>({
     isCodeEditorInitialized: false,
     selectedPolicies: [],
     selectedAccountId: undefined,
+    selectedResourceNodeId: undefined,
     helpPopupInfo: { isOpen: false, entity: IAMNodeEntity.IdentityPolicy },
     labelError: undefined,
     isOpen: false,
@@ -114,6 +117,7 @@ export default createStore<CodeEditorState, CodeEditorEvents, never>({
       context.label = {};
       context.labelError = undefined;
       context.isOpen = false;
+      context.selectedResourceNodeId = undefined;
     }),
     selectPolicy: produce((context: CodeEditorState, event: { policyId: string }) => {
       context.selectedPolicies.push(event.policyId);
@@ -127,6 +131,11 @@ export default createStore<CodeEditorState, CodeEditorEvents, never>({
       (context: CodeEditorState, event: { selectedAccountId: string }) => {
         context.isValidating = true;
         context.selectedAccountId = event.selectedAccountId;
+      }
+    ),
+    setSelectedResourceNode: produce(
+      (context: CodeEditorState, event: { selectedResourceNodeId: string }) => {
+        context.selectedResourceNodeId = event.selectedResourceNodeId;
       }
     ),
     showHelpPopup: produce((context: CodeEditorState, event: { entity: IAMCodeDefinedEntity }) => {

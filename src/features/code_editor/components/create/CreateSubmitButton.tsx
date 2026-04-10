@@ -2,7 +2,7 @@ import { Button } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store-react';
 import _ from 'lodash';
 
-import { useLevelActor } from '@/runtime/level-runtime';
+import { useLevelActor, useLevelSelector } from '@/runtime/level-runtime';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity, IAMNodeEntity } from '@/types/iam-enums';
 import { DataEvent } from '@/types/state-machine-event-enums';
@@ -23,7 +23,11 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
     _.isEqual
   );
 
-  const isButtonDisabled = !_.isEmpty(codeErrors[nodeId]) || labelError !== undefined;
+  const nodes = useLevelSelector(state => state.context.nodes, _.isEqual);
+
+  const isButtonDisabled =
+    !_.isEmpty(codeErrors[nodeId]) ||
+    (selectedIAMEntity !== IAMNodeEntity.ResourcePolicy && labelError !== undefined);
 
   const submit = (): void => {
     const codeEditorStateContext = codeEditorStateStore.getSnapshot().context;
@@ -33,13 +37,21 @@ export const CreateSubmitButton: React.FC<CreateSubmitButtonProps> = ({
 
     const accountId = codeEditorStateContext.selectedAccountId;
     const label = codeEditorStateContext.label;
+    const resourceNodeId = codeEditorStateContext.selectedResourceNodeId;
+
+    const resolvedLabel =
+      selectedIAMEntity === IAMNodeEntity.ResourcePolicy
+        ? (nodes.find(n => n.id === resourceNodeId)?.data.label ?? 'Resource') + ' Policy'
+        : label[nodeId];
 
     levelActor.send({
       type: DataEvent.AddIAMNode,
       doc_string: content,
       account_id: selectedIAMEntity === IAMNodeEntity.SCP ? undefined : accountId,
-      label: label[nodeId],
+      label: resolvedLabel,
       node_entity: selectedIAMEntity,
+      resource_node_id:
+        selectedIAMEntity === IAMNodeEntity.ResourcePolicy ? resourceNodeId : undefined,
     });
 
     codeEditorStateStore.send({ type: 'deinitializeCodeEditor', nodeId });
