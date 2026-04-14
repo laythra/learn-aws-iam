@@ -1,3 +1,5 @@
+import { EditorState } from '@codemirror/state';
+import type { EditorView } from '@codemirror/view';
 import type { ValidateFunction } from 'ajv';
 import { describe, it, expect, vi } from 'vitest';
 
@@ -7,6 +9,7 @@ import {
   getObjectiveValidationFunction,
   BASE_VALIDATION_FNS,
   AJV_COMPILER,
+  collectValidationDiagnostics,
 } from './iam-policy-validator';
 import { IAMNodeEntity } from '@/types/iam-enums';
 import { ObjectiveType } from '@/types/objective-types';
@@ -187,5 +190,417 @@ describe('findAnyValidObjective', () => {
     const objectives = [makeObjective({ id: 'obj-custom' })];
     const result = findAnyValidObjective(objectives, validateFunctions, [], INVALID_POLICY);
     expect(result?.id).toBe('obj-custom');
+  });
+});
+
+function makeView(text: string): EditorView {
+  const state = EditorState.create({ doc: text });
+  return { state } as unknown as EditorView;
+}
+
+function messages(diagnostics: ReturnType<typeof collectValidationDiagnostics>): string[] {
+  return diagnostics.map(d => d.message);
+}
+
+describe('collectValidationDiagnostics — identity policy (base validator)', () => {
+  const validateFn = BASE_VALIDATION_FNS[IAMNodeEntity.IdentityPolicy];
+
+  it('returns no diagnostics for a fully valid policy', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [{ Effect: 'Allow', Action: 's3:GetObject', Resource: '*' }],
+        },
+        null,
+        2
+      )
+    );
+    expect(collectValidationDiagnostics(view, validateFn)).toHaveLength(0);
+  });
+
+  it('accepts Resource as a single string ARN', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Action: 's3:GetObject',
+              Resource: 'arn:aws:s3:::public-images/*',
+            },
+          ],
+        },
+        null,
+        2
+      )
+    );
+    expect(collectValidationDiagnostics(view, validateFn)).toHaveLength(0);
+  });
+
+  it('accepts Resource as an array of ARNs', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Action: ['s3:GetObject', 's3:PutObject'],
+              Resource: ['arn:aws:s3:::bucket/*', 'arn:aws:s3:::other-bucket/*'],
+            },
+          ],
+        },
+        null,
+        2
+      )
+    );
+    expect(collectValidationDiagnostics(view, validateFn)).toHaveLength(0);
+  });
+
+  it('reports an invalid Sid pattern with a clear message', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Sid: 'hahaha%$#',
+              Effect: 'Allow',
+              Action: 's3:GetObject',
+              Resource: '*',
+            },
+          ],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(collectValidationDiagnostics(view, validateFn));
+    expect(msgs.length).toBeGreaterThanOrEqual(1);
+    expect(msgs.some(m => /Sid/.test(m) && /letters and numbers/.test(m))).toBe(true);
+  });
+
+  it('reports an invalid Effect value', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [{ Effect: 'ALLOW', Action: 's3:GetObject', Resource: '*' }],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(collectValidationDiagnostics(view, validateFn));
+    expect(msgs.some(m => m.includes('Allow') && m.includes('Deny'))).toBe(true);
+  });
+
+  it('reports an unknown property on a statement', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Action: 's3:GetObject',
+              Resource: '*',
+              Typo: 'oops',
+            },
+          ],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(collectValidationDiagnostics(view, validateFn));
+    expect(msgs.some(m => m.includes('Typo'))).toBe(true);
+  });
+
+  it('reports a missing required field (Effect)', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [{ Action: 's3:GetObject', Resource: '*' }],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(collectValidationDiagnostics(view, validateFn));
+    expect(msgs.some(m => m.includes('Effect'))).toBe(true);
+  });
+
+  it('includes the faulty field name in the diagnostic path', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [{ Effect: 'Allow', Action: 's3:GetObject', Resource: 'not-an-arn' }],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(collectValidationDiagnostics(view, validateFn));
+    // The diagnostic path should mention the field that failed (Resource)
+    expect(msgs.some(m => m.includes('Resource'))).toBe(true);
+  });
+
+  it('returns a syntax error diagnostic for malformed JSON', () => {
+    const view = makeView('{ "Version": "2012-10-17", ');
+    const diags = collectValidationDiagnostics(view, validateFn);
+    expect(diags).toHaveLength(1);
+    expect(diags[0].message).toMatch(/Syntax Error/);
+    expect(diags[0].severity).toBe('error');
+  });
+
+  it('does not duplicate diagnostics for the same path', () => {
+    // Resource with a completely invalid type triggers multiple AJV sub-errors
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [{ Effect: 'Allow', Action: 's3:GetObject', Resource: 123 }],
+        },
+        null,
+        2
+      )
+    );
+    const diags = collectValidationDiagnostics(view, validateFn);
+    const resourceDiags = diags.filter(d => d.message.includes('Resource'));
+    expect(resourceDiags.length).toBeLessThanOrEqual(1);
+  });
+
+  it('reports invalid string Resource as an ARN error, not "expected array"', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [
+            { Effect: 'Allow', Action: 's3:GetObject', Resource: 'INSERT BUCKET ARN HERE' },
+          ],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = collectValidationDiagnostics(view, validateFn).map(d => d.message);
+    expect(msgs.some(m => m.includes('expected array'))).toBe(false);
+    expect(msgs.some(m => m.includes('valid ARN'))).toBe(true);
+  });
+});
+
+describe('collectValidationDiagnostics — trust policy (base validator)', () => {
+  const validateFn = BASE_VALIDATION_FNS[IAMNodeEntity.Role];
+
+  it('returns no diagnostics for a valid trust policy', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Principal: { Service: 'lambda.amazonaws.com' },
+              Action: 'sts:AssumeRole',
+            },
+          ],
+        },
+        null,
+        2
+      )
+    );
+    expect(collectValidationDiagnostics(view, validateFn)).toHaveLength(0);
+  });
+
+  it('reports an invalid Service principal format', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Principal: { Service: 'not-a-service' },
+              Action: 'sts:AssumeRole',
+            },
+          ],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(collectValidationDiagnostics(view, validateFn));
+    expect(msgs.some(m => m.includes('Service'))).toBe(true);
+  });
+});
+
+describe('collectValidationDiagnostics — custom objective validator', () => {
+  it('shows structural messages (pattern) even on custom validators', () => {
+    const customFn = AJV_COMPILER.compile({
+      type: 'object',
+      properties: {
+        Version: { type: 'string', enum: ['2012-10-17'] },
+        Statement: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              Sid: { type: 'string', pattern: '^[a-zA-Z0-9]*$' },
+              Effect: { type: 'string', enum: ['Allow', 'Deny'] },
+              Action: { type: 'string' },
+              Resource: { type: 'string' },
+            },
+            required: ['Effect', 'Action', 'Resource'],
+          },
+        },
+      },
+      required: ['Version', 'Statement'],
+    });
+
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Sid: 'bad sid!!',
+              Effect: 'Allow',
+              Action: 's3:GetObject',
+              Resource: '*',
+            },
+          ],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(collectValidationDiagnostics(view, customFn));
+    expect(msgs.some(m => m.includes('letters and numbers'))).toBe(true);
+  });
+
+  it('does not show "expected object" for Statement when field-level errors exist', () => {
+    // The policy schema has a oneOf on Statement where branch 0 is a $ref to the Statement
+    // object definition. With Statement:[{...}] (an array), branch 0 fires type:object at
+    // /Statement — but that should be suppressed in favour of the concrete field errors.
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [{ Effect: 'Allow', Action: [], Resource: [] }],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(
+      collectValidationDiagnostics(view, BASE_VALIDATION_FNS[IAMNodeEntity.IdentityPolicy])
+    );
+    expect(msgs.every(m => !m.includes('expected object'))).toBe(true);
+    expect(msgs.some(m => m.includes('must contain at least'))).toBe(true);
+  });
+
+  it('reports invalid action string as a field-level error, not a parent oneOf error', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [{ Effect: 'Allow', Action: ['haha'], Resource: '*' }],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(
+      collectValidationDiagnostics(view, BASE_VALIDATION_FNS[IAMNodeEntity.IdentityPolicy])
+    );
+    expect(msgs.some(m => m.includes('not a valid IAM action'))).toBe(true);
+    expect(msgs.every(m => !m.includes("doesn't match any of the allowed formats"))).toBe(true);
+  });
+
+  it('reports empty Resource array as a field-level minItems error,\
+     not a parent oneOf error', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [{ Effect: 'Allow', Action: 's3:GetObject', Resource: [] }],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(
+      collectValidationDiagnostics(view, BASE_VALIDATION_FNS[IAMNodeEntity.IdentityPolicy])
+    );
+    expect(msgs.some(m => m.includes('must contain at least'))).toBe(true);
+    expect(msgs.every(m => !m.includes("doesn't match any of the allowed formats"))).toBe(true);
+  });
+
+  it('reports both invalid action and empty resource when both are wrong', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [{ Effect: 'Allow', Action: ['haha'], Resource: [] }],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(
+      collectValidationDiagnostics(view, BASE_VALIDATION_FNS[IAMNodeEntity.IdentityPolicy])
+    );
+    expect(msgs.some(m => m.includes('not a valid IAM action'))).toBe(true);
+    expect(msgs.some(m => m.includes('must contain at least'))).toBe(true);
+    expect(msgs.every(m => !m.includes("doesn't match any of the allowed formats"))).toBe(true);
+  });
+
+  it('does not show "expected array" for a wrong-type\
+     Resource on an inline oneOf objective schema', () => {
+    const objectiveFn = AJV_COMPILER.compile({
+      type: 'object',
+      properties: {
+        Version: { type: 'string', const: '2012-10-17' },
+        Statement: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              Effect: { type: 'string', const: 'Allow' },
+              Action: { type: 'array', items: { type: 'string', const: 's3:GetObject' } },
+              Resource: {
+                oneOf: [
+                  { type: 'array', minItems: 1, items: { const: 'arn:aws:s3:::public-images/*' } },
+                  { type: 'string', const: 'arn:aws:s3:::public-images/*' },
+                ],
+              },
+            },
+            required: ['Effect', 'Action', 'Resource'],
+          },
+        },
+      },
+      required: ['Version', 'Statement'],
+    });
+
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [
+            { Effect: 'Allow', Action: ['s3:GetObject'], Resource: 'INSERT BUCKET ARN HERE' },
+          ],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(collectValidationDiagnostics(view, objectiveFn));
+    expect(msgs.every(m => !m.includes('expected array'))).toBe(true);
+    expect(msgs.some(m => m.includes("objective's requirements"))).toBe(true);
   });
 });
