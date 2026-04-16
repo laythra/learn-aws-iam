@@ -4,7 +4,6 @@
  *
  */
 export enum VoidEvent {
-  IAMNodeContentOpened = 'IAM_NODE_CONTENT_OPENED',
   IAMNodeContentClosed = 'IAM_NODE_CONTENT_CLOSED',
   IAMNodeARNOpened = 'IAM_NODE_ARN_OPENED',
   CreateIAMIdentityTabChanged = 'CREATE_IAM_IDENTITY_TAB_CHANGED',
@@ -26,6 +25,7 @@ export enum VoidEvent {
 //  * Can be used from any component to trigger a state machine transition.
 //  */
 export enum DataEvent {
+  IAMNodeContentOpened = 'IAM_NODE_CONTENT_OPENED',
   AddIAMUserGroupNode = 'ADD_IAM_USER_GROUP_NODE',
   AddIAMNode = 'ADD_IAM_POLICY_NODE',
   EditIAMIdentityPolicyNode = 'EDIT_IAM_IDENTITY_POLICY_NODE',

@@ -96,10 +96,7 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     levelValidateFns?.[obj.id](nodes)
   );
 
-  // When multiple objectives are unfinished, validating against all of them simultaneously
-  // produces misleading errors (the user only needs to satisfy one). Fall back to the base
-  // schema so the inline linter only catches structural issues; objective-specific feedback
-  // is handled by the warning banner via findAnyValidObjective.
+  // Fall back to base validation when multiple objectives exist or no custom validations are available
   const effectiveValidateFns =
     validateFns.length > 1 || _.isEmpty(validateFns)
       ? [BASE_VALIDATION_FNS[selectedIAMEntity]]

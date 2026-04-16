@@ -1,26 +1,19 @@
-import { useCallback, useMemo } from 'react';
-
+import type { GenericEventData } from '@/levels/types/event-types';
 import { useLevelActor } from '@/runtime/level-runtime';
-import { VoidEvent } from '@/types/state-machine-event-enums';
+import { DataEvent, VoidEvent } from '@/types/state-machine-event-enums';
+
+type DataEventPayload = Extract<GenericEventData, { type: DataEvent }>;
 
 export interface UseStateMachineEventResult {
   emitEvent: (event: VoidEvent) => void;
+  emitDataEvent: (event: DataEventPayload) => void;
 }
 
 export const useStateMachineEvent = (): UseStateMachineEventResult => {
   const machineActor = useLevelActor();
 
-  const emitEvent = useCallback(
-    (event: VoidEvent) => {
-      machineActor.send({ type: event });
-    },
-    [machineActor]
-  );
-
-  return useMemo(
-    () => ({
-      emitEvent,
-    }),
-    [emitEvent]
-  );
+  return {
+    emitEvent: (event: VoidEvent) => machineActor.send({ type: event }),
+    emitDataEvent: (event: DataEventPayload) => machineActor.send(event),
+  };
 };

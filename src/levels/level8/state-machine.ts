@@ -12,7 +12,7 @@ import { FinishEventMap, PolicyEditFinishEvent } from './types/finish-event-enum
 import { PolicyNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
-import { VoidEvent } from '@/types/state-machine-event-enums';
+import { DataEvent, VoidEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -98,7 +98,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [VoidEvent.IAMNodeContentOpened]: 'edit_policy',
+            [DataEvent.IAMNodeContentOpened]: {
+              guard: ({ context, event }) => event.node_id === context.popover_content?.element_id,
+              target: 'edit_policy',
+            },
           },
         },
         edit_policy: {
@@ -169,7 +172,10 @@ export const stateMachine = createStateMachineSetup<
             { type: 'show_popover_message', params: { message: POPOVER_TUTORIAL_MESSAGES[3] } },
           ],
           on: {
-            [VoidEvent.IAMNodeContentOpened]: 'edit_policy_again',
+            [DataEvent.IAMNodeContentOpened]: {
+              guard: ({ context, event }) => event.node_id === context.popover_content?.element_id,
+              target: 'edit_policy_again',
+            },
           },
         },
         edit_policy_again: {

@@ -20,7 +20,7 @@ import {
 } from './types/finish-event-enums';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
-import { VoidEvent } from '@/types/state-machine-event-enums';
+import { DataEvent, VoidEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -96,7 +96,10 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [VoidEvent.IAMNodeContentOpened]: 'fixed_popover_1',
+            [DataEvent.IAMNodeContentOpened]: {
+              guard: ({ context, event }) => event.node_id === context.popover_content?.element_id,
+              target: 'fixed_popover_1',
+            },
           },
         },
         fixed_popover_1: {
