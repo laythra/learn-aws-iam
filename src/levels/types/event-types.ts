@@ -62,4 +62,8 @@ export type GenericEventData =
       type: DataEvent.LogAnalyticsEvent;
       name: string;
       payload: Record<string, unknown>;
+    }
+  | {
+      type: DataEvent.IAMNodeContentOpened;
+      node_id: string;
     };

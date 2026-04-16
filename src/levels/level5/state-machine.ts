@@ -21,7 +21,7 @@ import {
 import { PolicyNodeID, ResourceNodeID, RoleNodeID, UserNodeID } from './types/node-ids';
 import { LevelObjectiveID } from './types/objective-enums';
 import { ElementID } from '@/config/element-ids';
-import { VoidEvent } from '@/types/state-machine-event-enums';
+import { DataEvent, VoidEvent } from '@/types/state-machine-event-enums';
 
 export const stateMachine = createStateMachineSetup<
   LevelObjectiveID,
@@ -107,7 +107,8 @@ export const stateMachine = createStateMachineSetup<
             },
           ],
           on: {
-            [VoidEvent.IAMNodeContentOpened]: {
+            [DataEvent.IAMNodeContentOpened]: {
+              guard: ({ context, event }) => event.node_id === context.popover_content?.element_id,
               actions: 'hide_popovers',
               target: 'fixed_popover_1',
             },

@@ -26,7 +26,7 @@ import { useAnimatedRedDot } from '@/runtime/ui/useAnimatedRedDot';
 import { useStateMachineEvent } from '@/runtime/useStateMachineEvent';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
-import { VoidEvent } from '@/types/state-machine-event-enums';
+import { DataEvent, VoidEvent } from '@/types/state-machine-event-enums';
 
 interface NodePolicyButtonProps {
   nodeId: string;
@@ -48,9 +48,17 @@ const NodePolicyButton: React.FC<NodePolicyButtonProps> = ({
   placement = 'end-end',
 }) => {
   const popoverContentRef = useRef<HTMLDivElement>(null);
+  const wasContentOpenRef = useRef(false);
   const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedContent);
-  const { emitEvent } = useStateMachineEvent();
+  const { emitEvent, emitDataEvent } = useStateMachineEvent();
   const isContentOpen = openedNodeId === nodeId;
+
+  useEffect(() => {
+    if (wasContentOpenRef.current && !isContentOpen) {
+      emitEvent(VoidEvent.IAMNodeContentClosed);
+    }
+    wasContentOpenRef.current = isContentOpen;
+  }, [isContentOpen]);
 
   const toggleNodeContentPopover = (): void => {
     CanvasStore.send({
@@ -100,7 +108,7 @@ const NodePolicyButton: React.FC<NodePolicyButtonProps> = ({
           width='16px'
           minWidth='auto'
           onClick={() => {
-            emitEvent(VoidEvent.IAMNodeContentOpened);
+            emitDataEvent({ type: DataEvent.IAMNodeContentOpened, node_id: nodeId });
             toggleNodeContentPopover();
           }}
           _hover={{ bg: 'gray.200', opacity: 1 }}
@@ -122,7 +130,6 @@ const NodePolicyButton: React.FC<NodePolicyButtonProps> = ({
         </PopoverHeader>
         <PopoverCloseButton
           onClick={() => {
-            emitEvent(VoidEvent.IAMNodeContentClosed);
             CanvasStore.send({ type: 'closeAllNodePanels' });
           }}
           aria-label='close'

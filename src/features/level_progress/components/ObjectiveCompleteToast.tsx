@@ -23,9 +23,10 @@ export const ObjectiveCompleteToast: React.FC = () => {
         id: `objective-complete-toast-${objective_id}`,
         render: ({ onClose }) => (
           <Box
-            bg='green.50'
-            boxShadow='lg'
-            borderRadius='lg'
+            bg='cyan.50'
+            boxShadow='xl'
+            borderLeft='4px solid'
+            borderLeftColor='green.600'
             data-element-id='objective-complete-toast'
             data-objective-id={objective_id}
             maxW='360px'
