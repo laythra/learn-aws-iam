@@ -455,9 +455,11 @@ export const createStateMachineSetup = <
             label,
             accountId,
             policyNodeType,
+            resourceNodeId,
           }: {
             docString: string;
             accountId?: string;
+            resourceNodeId?: string;
             label: string;
             policyNodeType: IAMCodeDefinedEntity;
           }
@@ -467,7 +469,8 @@ export const createStateMachineSetup = <
             docString,
             label,
             policyNodeType,
-            accountId
+            accountId,
+            resourceNodeId
           );
 
           const { updatedContext, edgesToCreate, createdNode } = createPolicyResult;

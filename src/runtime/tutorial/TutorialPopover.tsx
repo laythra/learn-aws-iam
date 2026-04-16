@@ -87,8 +87,8 @@ export const TutorialPopover: React.FC<TutorialPopoverProps> = ({
         </PopoverHeader>
         {showCloseButton && (
           <PopoverCloseButton
-            onClick={close}
             data-element-id={ElementID.TutorialPopoverCloseButton}
+            onClick={close}
           />
         )}
         {description && (

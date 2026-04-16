@@ -57,7 +57,8 @@ function createNodeFromObjective<
   label: string,
   entityType: E,
   targetValidObjective?: BaseCreationObjective<TFinishEventMap>,
-  accountId?: string
+  accountId?: string,
+  resourceNodeId?: string
 ): NodeFor<E> {
   const createNodeFn = nodesCreationMap[entityType];
   return createNodeFn({
@@ -72,6 +73,7 @@ function createNodeFromObjective<
       editable: false,
       parent_id: targetValidObjective?.created_node_parent_id ?? accountId,
       node_tooltip: targetValidObjective?.node_tooltip,
+      ...(resourceNodeId !== undefined ? { resource_node_id: resourceNodeId } : {}),
       ...targetValidObjective?.extra_data,
     } as NodeDataFor<E>,
     rootOverrides: {
@@ -90,7 +92,8 @@ export function createIAMNode<
   docString: string,
   label: string,
   nodeEntity: TNode['data']['entity'],
-  accountId?: string
+  accountId?: string,
+  resourceNodeId?: string
 ): {
   updatedContext: GenericContext<TLevelObjectiveID, TFinishEventMap>;
   edgesToCreate: { from: string; to: string }[];
@@ -112,7 +115,8 @@ export function createIAMNode<
     label,
     nodeEntity,
     targetValidObjective,
-    accountId
+    accountId,
+    resourceNodeId
   );
 
   const updatedContext = produce(context, draftContext => {

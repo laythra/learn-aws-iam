@@ -62,12 +62,14 @@ export const SHARED_TOP_LEVEL_EVENTS = {
             label: string;
             node_entity: IAMCodeDefinedEntity;
             account_id?: string;
+            resource_node_id?: string;
           };
         }) => ({
           docString: event.doc_string,
           label: event.label,
           policyNodeType: event.node_entity,
           accountId: event.account_id,
+          resourceNodeId: event.resource_node_id,
         }),
       },
     ],
