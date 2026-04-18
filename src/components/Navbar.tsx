@@ -29,7 +29,9 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
       <Text fontSize='xl' fontWeight='bold' color='black' isTruncated>
         Learn AWS IAM
       </Text>
-      {children}
+      <Box minW={0} flexShrink={1}>
+        {children}
+      </Box>
     </Flex>
   );
 };
