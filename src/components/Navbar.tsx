@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
 
 import { CustomTheme } from '@/types/custom-theme';
