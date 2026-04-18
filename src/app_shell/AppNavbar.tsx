@@ -1,4 +1,4 @@
-import { HStack } from '@chakra-ui/react';
+import { Box, HStack } from '@chakra-ui/react';
 import _ from 'lodash';
 
 import { NavbarControls } from './navbar/NavbarControls';
@@ -17,8 +17,10 @@ export const AppNavbar: React.FC = () => {
   return (
     <NavbarPopoverProvider>
       <Navbar>
-        <HStack spacing={4}>
-          <NavbarLevelInfo levelNumber={levelNumber} levelTitle={levelTitle} />
+        <HStack spacing={{ base: 2, md: 4 }}>
+          <Box display={{ base: 'none', md: 'flex' }}>
+            <NavbarLevelInfo levelNumber={levelNumber} levelTitle={levelTitle} />
+          </Box>
           <NavbarControls />
           <NavbarSidePanelToggle />
         </HStack>
