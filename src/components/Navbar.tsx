@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { useTheme } from '@chakra-ui/react';
 
 import { CustomTheme } from '@/types/custom-theme';
@@ -29,7 +29,9 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
       <Text fontSize='xl' fontWeight='bold' color='black' isTruncated>
         Learn AWS IAM
       </Text>
-      {children}
+      <Box minW={0} flexShrink={1}>
+        {children}
+      </Box>
     </Flex>
   );
 };
