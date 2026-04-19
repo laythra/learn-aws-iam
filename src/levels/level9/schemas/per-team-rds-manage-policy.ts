@@ -15,27 +15,9 @@ export function generateRdsManagePolicySchema(teamName: string, secretSuffix: st
         type: 'array',
         minItems: 2,
         maxItems: 2,
-        items: {
-          oneOf: [
-            {
-              $ref: '#/definitions/connectStatement',
-            },
-            {
-              $ref: '#/definitions/secretStatement',
-            },
-          ],
-        },
-        allOf: [
-          {
-            contains: {
-              $ref: '#/definitions/connectStatement',
-            },
-          },
-          {
-            contains: {
-              $ref: '#/definitions/secretStatement',
-            },
-          },
+        items: [
+          { $ref: '#/definitions/secretStatement' },
+          { $ref: '#/definitions/connectStatement' },
         ],
       },
     },

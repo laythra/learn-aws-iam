@@ -13,26 +13,12 @@
       "type": "array",
       "minItems": 2,
       "maxItems": 2,
-      "items": {
-        "oneOf": [
-          {
-            "$ref": "#/definitions/secretsStatement"
-          },
-          {
-            "$ref": "#/definitions/connectStatement"
-          }
-        ]
-      },
-      "allOf": [
+      "items": [
         {
-          "contains": {
-            "$ref": "#/definitions/secretsStatement"
-          }
+          "$ref": "#/definitions/secretsStatement"
         },
         {
-          "contains": {
-            "$ref": "#/definitions/connectStatement"
-          }
+          "$ref": "#/definitions/connectStatement"
         }
       ]
     }
@@ -78,7 +64,10 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
+            "enum": [
+              "secretsmanager:GetSecretValue",
+              "secretsmanager:DescribeSecret"
+            ]
           },
           "minItems": 2,
           "maxItems": 2,

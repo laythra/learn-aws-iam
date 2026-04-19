@@ -26,7 +26,11 @@ interface ValidationConfig {
   creationObjective?: string;
 }
 
-const SPECIFIC_KEYWORDS = new Set([
+// Keywords that, when found inside a oneOf/anyOf sub-branch, point to the specific rule
+// the user violated in the branch that best matches their data (e.g. wrong action format,
+// too many array items). `const` is excluded since the wildcard "*" branch always emits a
+// const failure for any non-"*" value, making it noise.
+const FIELD_CONSTRAINT_KEYWORDS = new Set([
   'pattern',
   'minItems',
   'maxItems',
@@ -35,10 +39,13 @@ const SPECIFIC_KEYWORDS = new Set([
   'format',
 ]);
 
-const STRUCTURAL_KEYWORDS = new Set([
+// Keywords that produce a detailed human-readable message rather than the generic fallback.
+// Used only in buildDiagnosticMessage.
+const DETAILED_MESSAGE_KEYWORDS = new Set([
   'required',
   'additionalProperties',
   'type',
+  'const',
   'pattern',
   'minItems',
   'maxItems',
@@ -129,6 +136,16 @@ function buildBaseValidatorMessage(
   }
 }
 
+// Condition errors leak answers, so we suppress the details and show a generic message instead.
+function suppressConditionDetails(instancePath: string): string | null {
+  const segments = instancePath.split('/').filter(Boolean);
+  const condIdx = segments.indexOf('Condition');
+  if (condIdx === -1) return null;
+
+  const condPath = '/' + segments.slice(0, condIdx + 1).join('/');
+  return `${formatPath(condPath)}: doesn't satisfy the objective's requirements`;
+}
+
 function buildDiagnosticMessage(
   instancePath: string,
   keyword: string,
@@ -136,12 +153,16 @@ function buildDiagnosticMessage(
   message: string | undefined,
   isBaseValidator: boolean
 ): string {
-  if (isBaseValidator || STRUCTURAL_KEYWORDS.has(keyword)) {
+  if (!isBaseValidator) {
+    const suppressed = suppressConditionDetails(instancePath);
+    if (suppressed) return suppressed;
+  }
+
+  if (isBaseValidator || DETAILED_MESSAGE_KEYWORDS.has(keyword)) {
     return buildBaseValidatorMessage(instancePath, keyword, params, message);
   }
 
-  const path = formatPath(instancePath);
-  return `${path}: value doesn't satisfy the objective's requirements`;
+  return `${formatPath(instancePath)}: value doesn't satisfy the objective's requirements`;
 }
 
 export const AJV_COMPILER = new Ajv({
@@ -183,86 +204,73 @@ function validatePolicyDocument(
     const parsedDoc = JSON.parse(doc);
     validateFunction(parsedDoc);
     const errorsDetected = validateFunction.errors && validateFunction.errors.length > 0;
+    if (!errorsDetected) return diagnostics;
 
-    if (errorsDetected) {
-      // AJV with allErrors:true emits errors from every branch of anyOf/oneOf simultaneously.
-      // We assign each error a priority and keep only the best one per field path.
-      //
-      // Priority levels:
-      //   4 — specific keyword inside a branch (e.g. minItems from the array branch of Resource)
-      //   3 — specific keyword at top-level, usually $ref-resolved (e.g. pattern for aws-arn)
-      //   2 — structural keyword at top-level (e.g. required, type, const)
-      //   1 — structural keyword inside a branch (type from the "wrong" branch — noise)
-      //   0 — oneOf/anyOf parent (vague fallback, suppressed when a child error exists)
-      //  -1 — unknown keyword (skipped)
-      //
-      // Note: `const` is intentionally NOT treated as specific, the wildcard `"*"` branch
-      // always emits a `const` failure for any non-"*" value, which is noise.
+    // AJV reports errors from every oneOf/anyOf branch simultaneously (allErrors:true).
+    // We score each error and keep only the best one per instancePath.
+    //
+    //   4 — field constraint inside a branch (e.g. minItems from the array branch of Resource)
+    //   3 — field constraint at top level
+    //   2 — structural keyword at top level (required, type, const, …)
+    //   0 — oneOf/anyOf parent — suppressed when any child error exists
+    //  -1 — skip (structural keyword inside a branch is noise from the wrong branch)
+    const branchSubError = /(oneOf|anyOf)\/\d+\//;
+    const errorPriority = (error: ErrorObject): number => {
+      if (error.keyword === 'oneOf' || error.keyword === 'anyOf') return 0;
+      const isSub = branchSubError.test(error.schemaPath);
+      if (FIELD_CONSTRAINT_KEYWORDS.has(error.keyword)) return isSub ? 4 : 3;
+      if (DETAILED_MESSAGE_KEYWORDS.has(error.keyword)) return isSub ? -1 : 2;
+      return -1;
+    };
 
-      const branchSubError = /(oneOf|anyOf)\/\d+\//;
-      const errorPriority = (error: ErrorObject): number => {
-        if (error.keyword === 'oneOf' || error.keyword === 'anyOf') return 0;
+    // Keep the highest-priority error per instancePath.
+    const bestByPath = new Map<string, ErrorObject>();
+    for (const error of validateFunction.errors ?? []) {
+      const p = errorPriority(error);
+      if (p < 0) continue;
 
-        const isSub = branchSubError.test(error.schemaPath);
-        if (SPECIFIC_KEYWORDS.has(error.keyword)) return isSub ? 4 : 3;
-        if (STRUCTURAL_KEYWORDS.has(error.keyword) || error.keyword === 'const') {
-          // Sub-branch type/const errors are always noise from the "wrong" branch
-          // (e.g. "expected array" when you gave a string, "value is not allowed here"
-          // from the wildcard branch). Skip them, the parent oneOf or a $ref-resolved
-          // specific error will provide a better message.
-          if (isSub) return -1;
-          return 2;
-        }
-        return -1;
-      };
-
-      // Keep the highest-priority error per instancePath.
-      const bestByPath = new Map<string, ErrorObject>();
-      for (const error of validateFunction.errors ?? []) {
-        const p = errorPriority(error);
-        if (p < 0) continue;
-
-        const existing = bestByPath.get(error.instancePath);
-        if (!existing || p > errorPriority(existing)) {
-          bestByPath.set(error.instancePath, error);
-        }
+      const existing = bestByPath.get(error.instancePath);
+      if (!existing || p > errorPriority(existing)) {
+        bestByPath.set(error.instancePath, error);
       }
-
-      // Suppress vague parent errors when concrete child errors already exist:
-      // - oneOf/anyOf parents are always suppressed when any child error exists
-      // - type/const at top-level (priority 2) are suppressed when a specific (≥3) child
-      //   exists, e.g. "Statement: expected object" or "Action: value is not allowed here"
-      //   from $ref-resolved wrong branches winning over concrete field errors.
-      bestByPath.forEach((error, path) => {
-        const isVague = error.keyword === 'oneOf' || error.keyword === 'anyOf';
-        const isTopLevelNoise = error.keyword === 'type' || error.keyword === 'const';
-
-        if (!isVague && !isTopLevelNoise) return;
-        const childEntries = [...bestByPath.entries()].filter(
-          ([k]) => k !== path && k.startsWith(path + '/')
-        );
-        const hasAnyChild = childEntries.length > 0;
-        const hasSpecificChild = childEntries.some(([, e]) => errorPriority(e) >= 3);
-        if (isVague && hasAnyChild) bestByPath.delete(path);
-        else if (isTopLevelNoise && hasSpecificChild) bestByPath.delete(path);
-      });
-
-      bestByPath.forEach(error => {
-        const { from, to } = resolvePathToRange(doc, error.instancePath);
-        diagnostics['logical'].push({
-          from,
-          to,
-          severity: 'error',
-          message: buildDiagnosticMessage(
-            error.instancePath,
-            error.keyword ?? '',
-            (error.params ?? {}) as Record<string, unknown>,
-            error.message,
-            isBaseValidator
-          ),
-        });
-      });
     }
+
+    // Suppress vague parent errors when concrete child errors already exist:
+    // - oneOf/anyOf parents are always suppressed when any child error exists
+    // - type/const at top-level (priority 2) are suppressed when a specific (≥3) child
+    //   exists
+    bestByPath.forEach((error, path) => {
+      const isVague = error.keyword === 'oneOf' || error.keyword === 'anyOf';
+      const isTopLevelNoise = error.keyword === 'type' || error.keyword === 'const';
+
+      if (!isVague && !isTopLevelNoise) return;
+
+      const childEntries = [...bestByPath.entries()].filter(
+        ([k]) => k !== path && k.startsWith(path + '/')
+      );
+      const hasAnyChild = childEntries.length > 0;
+      const hasSpecificChild = childEntries.some(([, e]) => errorPriority(e) >= 3);
+
+      const shouldSuppress = (isVague && hasAnyChild) || (isTopLevelNoise && hasSpecificChild);
+
+      if (shouldSuppress) bestByPath.delete(path);
+    });
+
+    bestByPath.forEach(error => {
+      const { from, to } = resolvePathToRange(doc, error.instancePath);
+      diagnostics['logical'].push({
+        from,
+        to,
+        severity: 'error',
+        message: buildDiagnosticMessage(
+          error.instancePath,
+          error.keyword ?? '',
+          (error.params ?? {}) as Record<string, unknown>,
+          error.message,
+          isBaseValidator
+        ),
+      });
+    });
   } catch (e) {
     if (e instanceof SyntaxError) {
       const line = e.message.match(/line (\d+)/)?.[1];

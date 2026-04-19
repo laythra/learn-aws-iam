@@ -14,26 +14,12 @@
       "type": "array",
       "minItems": 2,
       "maxItems": 2,
-      "items": {
-        "oneOf": [
-          {
-            "$ref": "#/definitions/createTagsStatement"
-          },
-          {
-            "$ref": "#/definitions/createRDSStatement"
-          }
-        ]
-      },
-      "allOf": [
+      "items": [
         {
-          "contains": {
-            "$ref": "#/definitions/createTagsStatement"
-          }
+          "$ref": "#/definitions/createTagsStatement"
         },
         {
-          "contains": {
-            "$ref": "#/definitions/createRDSStatement"
-          }
+          "$ref": "#/definitions/createRDSStatement"
         }
       ]
     }
