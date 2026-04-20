@@ -10,26 +10,12 @@
       "type": "array",
       "minItems": 2,
       "maxItems": 2,
-      "items": {
-        "oneOf": [
-          {
-            "$ref": "#/definitions/getObjectStmt"
-          },
-          {
-            "$ref": "#/definitions/listBucketStmt"
-          }
-        ]
-      },
-      "allOf": [
+      "items": [
         {
-          "contains": {
-            "$ref": "#/definitions/getObjectStmt"
-          }
+          "$ref": "#/definitions/getObjectStmt"
         },
         {
-          "contains": {
-            "$ref": "#/definitions/listBucketStmt"
-          }
+          "$ref": "#/definitions/listBucketStmt"
         }
       ]
     }

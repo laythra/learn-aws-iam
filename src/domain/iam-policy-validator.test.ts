@@ -560,6 +560,52 @@ describe('collectValidationDiagnostics — custom objective validator', () => {
     expect(msgs.every(m => !m.includes("doesn't match any of the allowed formats"))).toBe(true);
   });
 
+  it('suppresses the if parent error when child errors exist', () => {
+    // Schema with an if/then: when Effect is Allow, Resource must be a specific value.
+    // AJV emits an `if` keyword error at /Statement/0 alongside the concrete child error.
+    // The `if` error should be suppressed because child errors already exist.
+    const ifThenFn = AJV_COMPILER.compile({
+      type: 'object',
+      required: ['Version', 'Statement'],
+      properties: {
+        Version: { type: 'string' },
+        Statement: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['Effect', 'Action', 'Resource'],
+            properties: {
+              Effect: { type: 'string' },
+              Action: { type: 'string' },
+              Resource: { type: 'string' },
+            },
+            if: { properties: { Effect: { const: 'Allow' } } },
+            then: { properties: { Resource: { const: 'arn:aws:s3:::specific-bucket/*' } } },
+          },
+        },
+      },
+    });
+
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [
+            { Effect: 'Allow', Action: 's3:GetObject', Resource: 'arn:aws:s3:::wrong/*' },
+          ],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(collectValidationDiagnostics(view, ifThenFn));
+    // The `if` parent error at /Statement/0 should be deleted — no vague Statement-level message
+    // without a field qualifier (e.g. "Statement[1]: value doesn't satisfy..." with no → separator)
+    expect(msgs.every(m => !/^Statement\[1\]:(?! missing)/.test(m))).toBe(true);
+    // Concrete field-level error for Resource should remain
+    expect(msgs.some(m => m.includes('Resource'))).toBe(true);
+  });
+
   it('does not show "expected array" for a wrong-type\
      Resource on an inline oneOf objective schema', () => {
     const objectiveFn = AJV_COMPILER.compile({
@@ -602,5 +648,88 @@ describe('collectValidationDiagnostics — custom objective validator', () => {
     const msgs = messages(collectValidationDiagnostics(view, objectiveFn));
     expect(msgs.every(m => !m.includes('expected array'))).toBe(true);
     expect(msgs.some(m => m.includes("objective's requirements"))).toBe(true);
+  });
+});
+
+// Schema used for Condition suppression tests — requires a specific Condition block.
+const conditionObjectiveFn = AJV_COMPILER.compile({
+  type: 'object',
+  required: ['Version', 'Statement'],
+  properties: {
+    Version: { type: 'string' },
+    Statement: {
+      type: 'array',
+      items: {
+        type: 'object',
+        required: ['Effect', 'Action', 'Resource', 'Condition'],
+        properties: {
+          Effect: { type: 'string' },
+          Action: { type: 'string' },
+          Resource: { type: 'string' },
+          Condition: {
+            type: 'object',
+            required: ['StringEquals'],
+            properties: {
+              StringEquals: {
+                type: 'object',
+                required: ['aws:RequestedRegion'],
+                properties: {
+                  'aws:RequestedRegion': { type: 'string', const: 'us-east-1' },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+});
+
+describe('collectValidationDiagnostics — Condition suppression (objective validator)', () => {
+  it('collapses errors inside Condition into a single vague message', () => {
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Action: 's3:GetObject',
+              Resource: '*',
+              Condition: { StringEquals: { 'aws:RequestedRegion': 'eu-west-1' } }, // wrong value
+            },
+          ],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(collectValidationDiagnostics(view, conditionObjectiveFn));
+    // Every message should be the vague Condition message — no internal path details exposed
+    expect(msgs.every(m => m.includes("objective's requirements"))).toBe(true);
+    expect(
+      msgs.every(m => {
+        return !m.includes('StringEquals') && !m.includes('RequestedRegion');
+      })
+    ).toBe(true);
+  });
+
+  it('reports a missing required Condition as a structural error, not suppressed', () => {
+    // The `required` error is reported at /Statement/0 (not inside /Condition),
+    // so suppressConditionDetails should leave it alone.
+    const view = makeView(
+      JSON.stringify(
+        {
+          Version: '2012-10-17',
+          Statement: [{ Effect: 'Allow', Action: 's3:GetObject', Resource: '*' }],
+        },
+        null,
+        2
+      )
+    );
+    const msgs = messages(collectValidationDiagnostics(view, conditionObjectiveFn));
+    expect(msgs.some(m => m.includes('missing required field') && m.includes('Condition'))).toBe(
+      true
+    );
   });
 });

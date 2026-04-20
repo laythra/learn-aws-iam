@@ -10,26 +10,12 @@
       "type": "array",
       "minItems": 2,
       "maxItems": 2,
-      "items": {
-        "oneOf": [
-          {
-            "$ref": "#/definitions/dynamoStmt"
-          },
-          {
-            "$ref": "#/definitions/s3Stmt"
-          }
-        ]
-      },
-      "allOf": [
+      "items": [
         {
-          "contains": {
-            "$ref": "#/definitions/dynamoStmt"
-          }
+          "$ref": "#/definitions/dynamoStmt"
         },
         {
-          "contains": {
-            "$ref": "#/definitions/s3Stmt"
-          }
+          "$ref": "#/definitions/s3Stmt"
         }
       ]
     }

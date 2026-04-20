@@ -10,26 +10,12 @@
       "type": "array",
       "minItems": 2,
       "maxItems": 2,
-      "items": {
-        "oneOf": [
-          {
-            "$ref": "#/definitions/dynamoStatement"
-          },
-          {
-            "$ref": "#/definitions/s3Statement"
-          }
-        ]
-      },
-      "allOf": [
+      "items": [
         {
-          "contains": {
-            "$ref": "#/definitions/dynamoStatement"
-          }
+          "$ref": "#/definitions/dynamoStatement"
         },
         {
-          "contains": {
-            "$ref": "#/definitions/s3Statement"
-          }
+          "$ref": "#/definitions/s3Statement"
         }
       ]
     }
