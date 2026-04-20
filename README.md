@@ -34,8 +34,8 @@ Users will write real IAM policies, attach them to users, groups, roles, and oth
 | Levels | Topic                                                                                |
 | ------ | ------------------------------------------------------------------------------------ |
 | 1–4    | Introduction to IAM basics, users, groups, and identity policies                     |
-| 5–6    | Using IAM roles, cross-account access, and resource-based policies                   |
-| 7–10   | Writing complex policies with tag-based access control through the use of conditions |
+| 5–7    | Using IAM roles, cross-account access, and resource-based policies                   |
+| 8–10   | Writing complex policies with tag-based access control through the use of conditions |
 | 11–12  | Utilizing IAM guardrails, e.g., SCP and permission boundaries                        |
 
 ## Built With
