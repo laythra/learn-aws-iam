@@ -34,6 +34,7 @@ const FIELD_CONSTRAINT_KEYWORDS = new Set([
   'pattern',
   'minItems',
   'maxItems',
+  'uniqueItems',
   'enum',
   'minLength',
   'format',

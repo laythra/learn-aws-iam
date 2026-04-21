@@ -5,6 +5,7 @@ import { Diagnostic } from '@codemirror/lint';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useSelector } from '@xstate/store-react';
 import _ from 'lodash';
+import Markdown from 'react-markdown';
 
 import { useCodeEditor } from '../../hooks/useCodeEditor';
 import { CodeEditorObjectiveCallout } from '../CodeEditorObjectiveCallout';
@@ -13,6 +14,9 @@ import { CodeEditorProgressStatus } from '../CodeEditorProgressMessage';
 import { ElementID } from '@/config/element-ids';
 import { findAnyValidObjective, BASE_VALIDATION_FNS } from '@/domain/iam-policy-validator';
 import { MANAGED_POLICIES } from '@/domain/managed-policies';
+import { rehypeChakraBadge } from '@/lib/markdown/chakra-markdown';
+import { customMarkdownComponents } from '@/lib/markdown/Components';
+import { rehypeIcon } from '@/lib/markdown/icons-markdown';
 import { useLevelSelector } from '@/runtime/level-runtime';
 import { useIsElementRestricted } from '@/runtime/ui/useIsElementRestricted';
 import { useLevelValidateFunctions } from '@/runtime/useLevelValidation';
@@ -27,6 +31,11 @@ interface CodeEditorCreateProps {
 }
 
 const NO_MATCHING_POLICY_WARNING = 'This policy does not achieve any of the objectives.';
+const MULTIPLE_OBJECTIVES_WARNING = `
+  > |color(warning) ::badge[WARNING]:: There are **multiple policies** to create for this level.
+  > The validator shows requirements for next chronological one,
+  > feel free to start with whichever you prefer.
+`;
 
 export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
   nodeId,
@@ -92,22 +101,17 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
     return anyValidPolicy ? [] : [NO_MATCHING_POLICY_WARNING];
   };
 
-  const validateFns = unfinishedCreationObjectives.filterMap(obj =>
-    levelValidateFns?.[obj.id](nodes)
-  );
-
-  // Fall back to base validation when multiple objectives exist or no custom validations are available
-  const effectiveValidateFns =
-    validateFns.length > 1 || _.isEmpty(validateFns)
-      ? [BASE_VALIDATION_FNS[selectedIAMEntity]]
-      : validateFns;
+  const validateFns = (() => {
+    const fns = unfinishedCreationObjectives.filterMap(obj => levelValidateFns?.[obj.id]?.(nodes));
+    return fns.length > 0 ? fns : [BASE_VALIDATION_FNS[selectedIAMEntity]];
+  })();
 
   const { onCreateEditor, extensions, validateNodeLabel, getContent } = useCodeEditor({
     nodeId,
     editorView,
     getWarnings,
     initialContent,
-    validateFns: effectiveValidateFns,
+    validateFns,
     helpBadges: objectiveToTargetInEditor?.help_badges ?? [],
   });
 
@@ -268,6 +272,14 @@ export const CodeEditorCreate: React.FC<CodeEditorCreateProps> = ({
       )}
       {_.isEmpty(errors) && _.isEmpty(warnings) && (
         <CodeEditorProgressStatus message='You got it right!' level='success' />
+      )}
+      {unfinishedCreationObjectives.length > 1 && (
+        <Markdown
+          components={customMarkdownComponents}
+          rehypePlugins={[rehypeChakraBadge, rehypeIcon]}
+        >
+          {MULTIPLE_OBJECTIVES_WARNING}
+        </Markdown>
       )}
       {objectiveToTargetInEditor?.callout_message && (
         <CodeEditorObjectiveCallout calloutMessage={objectiveToTargetInEditor.callout_message} />
