@@ -73,6 +73,8 @@ const POPUP_MSG4 = `
   We're back at **TimeShift Labs**, where we're integrating a new image processing system
   to generate important metadata for every image users upload.
 
+  &nbsp;
+
   ##### Here's how the flow works:
   1. The end-user uploads an image to the **S3 Bucket**: \`chat-images\`
       through our web interface, hosted on an Amazon **EC2 instance**.

@@ -17,8 +17,6 @@ const POPUP_MSG2 = `
   * **Condition Key**: The key that the condition evaluates (e.g., \`aws:MultiFactorAuthPresent\`)
   * **Condition Value**: The value that the condition key must match for the policy to apply
 
-  &nbsp;
-
   ~~~js
   {
     "Version": "2012-10-17", ::badge[POLICY LANGUAGE VERSION]::
