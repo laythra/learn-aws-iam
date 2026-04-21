@@ -16,6 +16,7 @@ import { useSelector } from '@xstate/store-react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { ElementID } from '@/config/element-ids';
+import { useEmitOnNodePanelClose } from '@/runtime/useEmitOnNodePanelClose';
 import { useStateMachineEvent } from '@/runtime/useStateMachineEvent';
 import { VoidEvent } from '@/types/state-machine-event-enums';
 
@@ -23,6 +24,7 @@ interface ARNIconButtonProps extends ChakraProps {
   nodeId: string;
   arn: string;
   onOpenEvent: VoidEvent;
+  onCloseEvent: VoidEvent;
   onCopyEvent: VoidEvent;
   placement?: PlacementWithLogical;
 }
@@ -31,6 +33,7 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
   nodeId,
   arn,
   onOpenEvent,
+  onCloseEvent,
   onCopyEvent,
   placement = 'end-end',
   ...styleProps
@@ -50,6 +53,8 @@ const ARNIconButton: React.FC<ARNIconButtonProps> = ({
   const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedARN);
   const { emitEvent } = useStateMachineEvent();
   const isARNOpen = openedNodeId === nodeId;
+
+  useEmitOnNodePanelClose(isARNOpen, onCloseEvent);
 
   const toggleNodeARNPopover = (): void => {
     CanvasStore.send({

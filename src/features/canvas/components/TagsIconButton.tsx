@@ -21,12 +21,14 @@ import { useSelector } from '@xstate/store-react';
 
 import { CanvasStore } from '../stores/canvas-store';
 import { ElementID } from '@/config/element-ids';
+import { useEmitOnNodePanelClose } from '@/runtime/useEmitOnNodePanelClose';
 import { useStateMachineEvent } from '@/runtime/useStateMachineEvent';
 import { VoidEvent } from '@/types/state-machine-event-enums';
 
 interface TagsIconButtonProps extends ChakraProps {
   nodeId: string;
   onOpenEvent: VoidEvent;
+  onCloseEvent: VoidEvent;
   tags: Array<[string, string]>;
   placement?: PlacementWithLogical;
 }
@@ -34,6 +36,7 @@ interface TagsIconButtonProps extends ChakraProps {
 const TagsIconButton: React.FC<TagsIconButtonProps> = ({
   nodeId,
   onOpenEvent,
+  onCloseEvent,
   tags,
   placement = 'end-end',
   ...styleProps
@@ -41,6 +44,8 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
   const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedTags);
   const { emitEvent } = useStateMachineEvent();
   const areTagsOpen = openedNodeId === nodeId;
+
+  useEmitOnNodePanelClose(areTagsOpen, onCloseEvent);
 
   const toggleNodeTagsPopover = (): void => {
     CanvasStore.send({
@@ -80,10 +85,7 @@ const TagsIconButton: React.FC<TagsIconButtonProps> = ({
       <PopoverContent width='auto' data-element-id={`${nodeId}-tags`}>
         <PopoverHeader fontWeight='bold' fontSize='md'>
           <PopoverCloseButton
-            onClick={() => {
-              emitEvent(VoidEvent.IAMNodeTagsPopoverClosed);
-              CanvasStore.send({ type: 'closeAllNodePanels' });
-            }}
+            onClick={() => CanvasStore.send({ type: 'closeAllNodePanels' })}
             aria-label='close'
           />
           Tags

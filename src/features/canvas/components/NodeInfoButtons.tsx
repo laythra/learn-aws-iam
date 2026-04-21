@@ -33,6 +33,7 @@ const NodeInfoButtons: React.FC<NodeInfoButtonsProps> = ({
         tags={tags}
         nodeId={nodeId}
         onOpenEvent={VoidEvent.IAMNodeTagsOpened}
+        onCloseEvent={VoidEvent.IAMNodeTagsPopoverClosed}
       />
     )}
     {content && (
@@ -49,8 +50,9 @@ const NodeInfoButtons: React.FC<NodeInfoButtonsProps> = ({
       <ARNIconButton
         nodeId={nodeId}
         arn={arn}
-        onCopyEvent={VoidEvent.IAMNodeARNCopied}
         onOpenEvent={VoidEvent.IAMNodeARNOpened}
+        onCloseEvent={VoidEvent.IAMNodeARNClosed}
+        onCopyEvent={VoidEvent.IAMNodeARNCopied}
         placement='top-end'
       />
     )}

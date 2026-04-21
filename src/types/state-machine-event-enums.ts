@@ -6,6 +6,7 @@
 export enum VoidEvent {
   IAMNodeContentClosed = 'IAM_NODE_CONTENT_CLOSED',
   IAMNodeARNOpened = 'IAM_NODE_ARN_OPENED',
+  IAMNodeARNClosed = 'IAM_NODE_ARN_CLOSED',
   CreateIAMIdentityTabChanged = 'CREATE_IAM_IDENTITY_TAB_CHANGED',
   CreateIAMIdentityPopupOpened = 'CREATE_IAM_IDENTITY_POPUP_OPENED',
   IAMNodeARNCopied = 'IAM_NODE_ARN_COPIED',

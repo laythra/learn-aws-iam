@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { memo } from 'react';
+import { memo, useEffect, useRef } from 'react';
 
 import {
   Popover,
@@ -23,6 +22,7 @@ import { CanvasStore } from '../stores/canvas-store';
 import AnimatedRedDot from '@/components/AnimatedRedDot';
 import { ElementID } from '@/config/element-ids';
 import { useAnimatedRedDot } from '@/runtime/ui/useAnimatedRedDot';
+import { useEmitOnNodePanelClose } from '@/runtime/useEmitOnNodePanelClose';
 import { useStateMachineEvent } from '@/runtime/useStateMachineEvent';
 import codeEditorStateStore from '@/stores/code-editor-state-store';
 import { IAMCodeDefinedEntity } from '@/types/iam-enums';
@@ -48,17 +48,11 @@ const NodePolicyButton: React.FC<NodePolicyButtonProps> = ({
   placement = 'end-end',
 }) => {
   const popoverContentRef = useRef<HTMLDivElement>(null);
-  const wasContentOpenRef = useRef(false);
   const openedNodeId = useSelector(CanvasStore, state => state.context.nodeIdWithOpenedContent);
-  const { emitEvent, emitDataEvent } = useStateMachineEvent();
+  const { emitDataEvent } = useStateMachineEvent();
   const isContentOpen = openedNodeId === nodeId;
 
-  useEffect(() => {
-    if (wasContentOpenRef.current && !isContentOpen) {
-      emitEvent(VoidEvent.IAMNodeContentClosed);
-    }
-    wasContentOpenRef.current = isContentOpen;
-  }, [isContentOpen]);
+  useEmitOnNodePanelClose(isContentOpen, VoidEvent.IAMNodeContentClosed);
 
   const toggleNodeContentPopover = (): void => {
     CanvasStore.send({
