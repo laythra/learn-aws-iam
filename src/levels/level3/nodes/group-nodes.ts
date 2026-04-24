@@ -9,13 +9,11 @@ const GROUP_NODES: IAMNodeDataOverrides<IAMGroupNode['data']>[] = [
     id: GroupNodeID.FrontendGroup,
     label: 'frontend-team',
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
-    layout_direction: 'vertical',
   },
   {
     id: GroupNodeID.BackendGroup,
     label: 'backend-team',
     layout_group_id: CommonLayoutGroupID.CenterHorizontal,
-    layout_direction: 'vertical',
   },
 ];
 

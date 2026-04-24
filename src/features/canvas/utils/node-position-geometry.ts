@@ -3,7 +3,6 @@ import { XYPosition, Viewport } from '@xyflow/react';
 import { getCurrentRegularNodeMetrics } from '@/domain/node-metrics';
 import { theme } from '@/theme';
 import {
-  LayoutDirection,
   NodeLayoutGroup,
   ValidInitialPosition,
   VALID_INITIAL_POSITIONS,
@@ -11,80 +10,6 @@ import {
 import { IAMAnyNode } from '@/types/iam-node-types';
 
 export const BETWEEN_NODES_SPACING = 20;
-
-// Should we memoize this?
-const calculateNodePositions = (
-  originX: number,
-  originY: number,
-  verticalSpacing: number,
-  horizontalSpacing: number,
-  nodeWidth: number,
-  nodeHeight: number,
-  parentHeight: number,
-  parentWidth: number,
-  nodeIndex: number,
-  numNodes: number,
-  layoutDirection: LayoutDirection = 'vertical'
-): Record<ValidInitialPosition, { x: number; y: number }> => {
-  const isHorizontal = layoutDirection === 'horizontal';
-  const isVertical = !isHorizontal;
-
-  const totalHorizontalSpace = nodeWidth + (numNodes - 1) * horizontalSpacing;
-  const totalVerticalSpace = nodeHeight + (numNodes - 1) * verticalSpacing;
-
-  const xOffset = isHorizontal ? nodeIndex * horizontalSpacing : 0;
-  const yOffset = isVertical ? nodeIndex * verticalSpacing : 0;
-
-  const centerStartX = isVertical ? originX - nodeWidth / 2 : originX - totalHorizontalSpace / 2;
-  const centerStartY = isHorizontal ? originY - nodeHeight / 2 : originY - totalVerticalSpace / 2;
-
-  // Subtracting 10 so that the node isn't touching the bottom-right corner of the parent
-  const rightEdge = parentWidth - nodeWidth - 10;
-  const bottomEdge = parentHeight - nodeHeight - 10;
-
-  // Initializing with 10 so that the node isn't touching the top-left corner of the parent
-  const leftEdge = 10;
-  const topEdge = 10;
-
-  return {
-    center: {
-      x: centerStartX + xOffset,
-      y: centerStartY + yOffset,
-    },
-    'top-left': {
-      x: leftEdge + xOffset,
-      y: topEdge + yOffset,
-    },
-    'top-right': {
-      x: rightEdge - xOffset,
-      y: topEdge + yOffset,
-    },
-    'top-center': {
-      x: centerStartX + xOffset,
-      y: topEdge + yOffset,
-    },
-    'bottom-center': {
-      x: centerStartX + xOffset,
-      y: bottomEdge - yOffset,
-    },
-    'left-center': {
-      x: leftEdge + xOffset,
-      y: centerStartY + yOffset,
-    },
-    'right-center': {
-      x: rightEdge - xOffset,
-      y: centerStartY + yOffset,
-    },
-    'bottom-right': {
-      x: rightEdge - xOffset,
-      y: bottomEdge - yOffset,
-    },
-    'bottom-left': {
-      x: leftEdge + xOffset,
-      y: bottomEdge - yOffset,
-    },
-  };
-};
 
 /**
  * When a node has no parent, we calculate its center relative to the canvas.
@@ -162,7 +87,8 @@ export function getNodeInitialPosition(
   parentNode?: IAMAnyNode // Pass the parent node if it exists
 ): XYPosition {
   const regularNodeMetrics = getCurrentRegularNodeMetrics();
-  const initial_position = layoutGroup?.position || node.data.initial_position;
+
+  const initial_position = layoutGroup?.position;
   const verticalSpacing = layoutGroup?.vertical_spacing
     ? layoutGroup.vertical_spacing * regularNodeMetrics.offsetScale
     : regularNodeMetrics.verticalSpacing;
@@ -190,19 +116,46 @@ export function getNodeInitialPosition(
     ? parentNode.height!
     : (windowHeight - theme.sizes.navbarHeightInPixels) / viewport.zoom; // Convert to flow space
 
-  const nodePosition = calculateNodePositions(
-    center.x,
-    center.y,
-    verticalSpacing,
-    horizontalSpacing,
-    nodeWidth!,
-    nodeHeight!,
-    parentHeight,
-    parentWidth,
-    nodeIndex,
-    numNodes,
-    layoutGroup.layout_direction
-  )[initial_position];
+  const isHorizontal = layoutGroup.layout_direction === 'horizontal';
+  const isVertical = !isHorizontal;
 
-  return adjustPositionForMargin(nodePosition, layoutGroup, regularNodeMetrics.offsetScale);
+  const xOffset = isHorizontal ? nodeIndex * horizontalSpacing : 0;
+  const yOffset = isVertical ? nodeIndex * verticalSpacing : 0;
+
+  // Last node has no spacing after it, so subtract it from the numNodes that gets multiplied by the spacing
+  // (since the spacing includes the node height/width) and compensate by adding the node's height/width without the
+  // the additional spacing itself
+  const totalHorizontalWidth = (numNodes - 1) * horizontalSpacing + nodeWidth!;
+  const totalVerticalHeight = (numNodes - 1) * verticalSpacing + nodeHeight!;
+
+  const centerStartX = isVertical ? center.x - nodeWidth! / 2 : center.x - totalHorizontalWidth / 2;
+  const centerStartY = isHorizontal
+    ? center.y - nodeHeight! / 2
+    : center.y - totalVerticalHeight / 2;
+
+  // Subtracting 10 so that the node isn't touching the bottom-right corner of the parent
+  const rightEdge = parentWidth - nodeWidth! - 10;
+  const bottomEdge = parentHeight - nodeHeight! - 10;
+
+  // Initializing with 10 so that the node isn't touching the top-left corner of the parent
+  const leftEdge = 10;
+  const topEdge = 10;
+
+  const nodePositions: Record<ValidInitialPosition, XYPosition> = {
+    center: { x: centerStartX + xOffset, y: centerStartY + yOffset },
+    'top-left': { x: leftEdge + xOffset, y: topEdge + yOffset },
+    'top-right': { x: rightEdge - xOffset, y: topEdge + yOffset },
+    'top-center': { x: centerStartX + xOffset, y: topEdge + yOffset },
+    'bottom-center': { x: centerStartX + xOffset, y: bottomEdge - yOffset },
+    'left-center': { x: leftEdge + xOffset, y: centerStartY + yOffset },
+    'right-center': { x: rightEdge - xOffset, y: centerStartY + yOffset },
+    'bottom-right': { x: rightEdge - xOffset, y: bottomEdge - yOffset },
+    'bottom-left': { x: leftEdge + xOffset, y: bottomEdge - yOffset },
+  };
+
+  return adjustPositionForMargin(
+    nodePositions[initial_position],
+    layoutGroup,
+    regularNodeMetrics.offsetScale
+  );
 }

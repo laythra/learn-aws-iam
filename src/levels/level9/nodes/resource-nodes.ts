@@ -12,7 +12,7 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,
-    layout_direction: 'horizontal',
+
     tags: [['application', 'alpha-team']],
   },
   {
@@ -21,7 +21,7 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Database,
     resource_type: IAMNodeResourceEntity.RDS,
-    layout_direction: 'horizontal',
+
     tags: [['application', 'alpha-team']],
   },
 
@@ -31,7 +31,7 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,
-    layout_direction: 'horizontal',
+
     tags: [['application', 'beta-team']],
   },
   {
@@ -40,7 +40,7 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Database,
     resource_type: IAMNodeResourceEntity.RDS,
-    layout_direction: 'horizontal',
+
     tags: [['application', 'beta-team']],
   },
 ];

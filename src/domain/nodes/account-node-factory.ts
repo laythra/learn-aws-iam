@@ -11,5 +11,4 @@ export const createAccountNode = createNodeFactory<IAMAccountNode['data'], IAMNo
   height: 300,
   width: 800,
   defaultHandles: [{ id: HandleID.Top, type: 'source', position: Position.Top }],
-  initial_position: 'bottom-center',
 });

@@ -14,7 +14,6 @@ interface BaseFactoryConfig<T, E extends IAMNodeEntity> {
   height?: number;
   deletable?: boolean;
   draggable?: boolean;
-  initial_position?: string;
   additionalData?: Partial<T>;
 }
 
@@ -35,7 +34,6 @@ type RootOverrides = Partial<Omit<IAMAnyNode, 'data'>>;
  * @param config.height - Height of the node (default: responsive regular node height)
  * @param config.deletable - Whether the node can be deleted (default: false)
  * @param config.draggable - Whether the node can be dragged (default: true)
- * @param config.initial_position - Initial position of the node (default: 'center')
  * @param config.additionalData - Additional data to merge with the node's data (default: {})
  *
  * @returns A factory function that creates IAM nodes with optional overrides
@@ -71,7 +69,6 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
     height,
     deletable = false,
     draggable = true,
-    initial_position = 'center',
     additionalData = {},
   } = config;
 
@@ -99,10 +96,6 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
         handles: defaultHandles,
         entity,
         image,
-        initial_position,
-        layout_direction: 'horizontal',
-        vertical_spacing: resolvedHeight + 20, // 20 so nodes don't completely overlap on each other
-        horizontal_spacing: resolvedWidth + 20, // 20 so nodes don't completely overlap on each other
         ...additionalData,
       } as T,
     };

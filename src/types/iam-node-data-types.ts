@@ -1,7 +1,6 @@
 import { HandleProps } from '@xyflow/react';
 
 import { IAMNodeEntity, IAMNodeImage, IAMNodeResourceEntity } from './iam-enums';
-import { ValidInitialPosition } from './iam-layout-types';
 import { PolicyGrantedAccess } from './iam-policy-types';
 
 /**
@@ -20,10 +19,6 @@ export interface IAMNodeData extends Record<string, unknown> {
   handles: HandleProps[];
   image: IAMNodeImage;
   /**
-   * Defines the initial position of the node relative to the canvas viewport
-   */
-  initial_position?: ValidInitialPosition;
-  /**
    * Defines the account for which the node belongs to
    * mainly used for multi-account scenarios
    */
@@ -33,14 +28,6 @@ export interface IAMNodeData extends Record<string, unknown> {
    * Defines whether the node is required for the user to complete the level
    */
   unnecessary_node: boolean;
-
-  /**
-   * Defines the amount of space between its adjacent vertical nodes
-   */
-  vertical_spacing: number;
-
-  horizontal_spacing: number;
-  layout_direction: 'horizontal' | 'vertical';
 
   /**
    * Defines the layout group to which the node belongs
