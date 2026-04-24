@@ -63,7 +63,7 @@ export const ROLE_CREATION_OBJECTIVES: IAMRoleCreationObjective<FinishEventMap>[
       entity: IAMNodeEntity.Role,
       initial_code: INITIAL_TRUST_POLICIES.TUTORIAL_ROLE_TRUST_POLICY2,
       on_finish_event: RoleCreationFinishEvent.TUTORIAL_ROLE_CREATED,
-      layout_group_id: CommonLayoutGroupID.RightCenterVertical,
+      layout_group_id: CommonLayoutGroupID.RightCenterHorizontal,
       callout_message: CALLOUT_MSG1,
       help_badges: [
         {

@@ -228,7 +228,7 @@ test.describe('Stage 1 - IAM Roles Tutorial Introduction', () => {
       await verifyInitialLevelSetup(nodes, edges);
       await completeTrustPolicyExplanation(tutorial, nodes);
 
-      await nodes.connectNodes(PolicyNodeID.BillingPolicy, UserNodeID.FinanceUser);
+      await nodes.connectNodes(PolicyNodeID.S3ReadPolicy, UserNodeID.FinanceUser);
 
       await attachFinanceUserToAuditorRole(tutorial, nodes, edges, progress);
       await createS3ReadAccessRole(tutorial, nodes, entities, progress);
@@ -241,7 +241,7 @@ test.describe('Stage 1 - IAM Roles Tutorial Introduction', () => {
     });
 
     await test.step('Remove unnecessary edges and nodes to complete level', async () => {
-      await edges.deleteEdge(PolicyNodeID.BillingPolicy, UserNodeID.FinanceUser);
+      await edges.deleteEdge(PolicyNodeID.S3ReadPolicy, UserNodeID.FinanceUser);
       await ui.expectUnnecessaryEdgesNodesWarning(false);
     });
   });
