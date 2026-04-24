@@ -56,7 +56,6 @@ export function useCanvasHandlers({
         !params.target ||
         edgesManagementDisabled
       ) {
-        showInvalidConnectionToast();
         return;
       }
 
@@ -64,8 +63,12 @@ export function useCanvasHandlers({
       // This would simplify internal state machine events where full node data may not be readily available.
       const sourceNode = _.find<IAMAnyNode>(nodes, { id: params.source });
       const targetNode = _.find<IAMAnyNode>(nodes, { id: params.target });
+      const isExistingConnection = _.some(
+        levelActor.getSnapshot().context.edges,
+        edge => edge.source === params.source && edge.target === params.target
+      );
 
-      if (!sourceNode || !targetNode) {
+      if (!sourceNode || !targetNode || isExistingConnection) {
         return;
       }
 
