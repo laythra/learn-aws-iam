@@ -101,8 +101,6 @@ export function createNodeFactory<T extends IAMNodeMap[E]['data'], E extends IAM
         image,
         initial_position,
         layout_direction: 'horizontal',
-        vertical_spacing: resolvedHeight + 20, // 20 so nodes don't completely overlap on each other
-        horizontal_spacing: resolvedWidth + 20, // 20 so nodes don't completely overlap on each other
         ...additionalData,
       } as T,
     };

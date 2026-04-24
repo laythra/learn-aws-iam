@@ -7,6 +7,16 @@ import { IAMNodeEntity } from '@/types/iam-enums';
 import { NodeLayoutGroup } from '@/types/iam-layout-types';
 import { IAMAnyNode } from '@/types/iam-node-types';
 
+const nodeGroupKey = (node: IAMAnyNode): string => {
+  const isAccountNode = node.data.entity === IAMNodeEntity.Account;
+  const hasParent = !!node.parentId;
+
+  if (hasParent) return `child-${node.parentId}-${node.data.layout_group_id}`;
+  if (isAccountNode) return `account-${node.data.layout_group_id}`;
+
+  return node.data.layout_group_id;
+};
+
 /**
  * A helper function that takes in new nodes and applies initial positions to them based on the current layout groups,
  * side panel width, and react flow viewport.
@@ -28,46 +38,25 @@ export function positionNewNodes(
   const applyResponsiveNodeDimensions = (node: IAMAnyNode): IAMAnyNode => {
     if (node.data.entity === IAMNodeEntity.Account) return node;
 
-    const data = {
-      ...node.data,
-      horizontal_spacing: regularNodeMetrics.horizontalSpacing,
-      vertical_spacing: regularNodeMetrics.verticalSpacing,
-    } as typeof node.data;
-
     return {
       ...node,
       width: regularNodeMetrics.nodeWidth,
       height: regularNodeMetrics.nodeHeight,
-      data,
     } as IAMAnyNode;
   };
 
   const resizedExistingNodes = existingNodes.map(applyResponsiveNodeDimensions);
   const resizedNewNodes = newNodes.map(applyResponsiveNodeDimensions);
 
-  const layoutGroupsById = _.keyBy(layoutGroups, 'id');
-
   const allNodes = [...resizedExistingNodes, ...resizedNewNodes];
+
+  const layoutGroupsById = _.keyBy(layoutGroups, 'id');
   const allNodesById = _.keyBy(allNodes, 'id');
 
-  const nodeGroups = _.groupBy(allNodes, node => {
-    const isAccountNode = node.data.entity === IAMNodeEntity.Account;
-    const hasParent = !!node.parentId;
-
-    if (hasParent) return `child-${node.parentId}-${node.data.layout_group_id}`;
-    if (isAccountNode) return `account-${node.data.layout_group_id}`;
-
-    return node.data.layout_group_id;
-  });
+  const nodeGroups = _.groupBy(allNodes, nodeGroupKey);
 
   return resizedNewNodes.map(node => {
-    let groupKey = node.data.layout_group_id;
-    const isAccountNode = node.data.entity === IAMNodeEntity.Account;
-    const hasParent = !!node.parentId;
-
-    if (hasParent) groupKey = `child-${node.parentId}-${node.data.layout_group_id}`;
-    if (isAccountNode) groupKey = `account-${node.data.layout_group_id}`;
-
+    const groupKey = nodeGroupKey(node);
     const group = nodeGroups[groupKey];
 
     const layoutGroup = layoutGroupsById[node.data.layout_group_id];
@@ -75,7 +64,6 @@ export function positionNewNodes(
 
     // Only count visible nodes when placing
     const visibleGroup = group.filter(n => !n.hidden);
-
     const indexInGroup = visibleGroup.findIndex(n => n.id === node.id);
 
     const position = getNodeInitialPosition(
