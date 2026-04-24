@@ -105,8 +105,13 @@ export class NodeActions {
   async deleteNode(nodeId: string): Promise<void> {
     const node = findNode(this.page, nodeId);
     await expect(node).toBeVisible();
+    const box = await node.boundingBox();
 
-    await node.click();
+    // Clicking near the top-right corner of the node to selec it
+    // In some scenarios, the node is covered with another node
+    // and clicking the center of the node would click the covering node instead,
+    // top-right is chosen because it's less likely to be covered since most nodes expand towards the bottom and right
+    await node.click({ position: { x: box!.width - 5, y: 5 } });
     await this.page.keyboard.press('Backspace');
   }
 

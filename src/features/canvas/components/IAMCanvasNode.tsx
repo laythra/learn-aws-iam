@@ -87,7 +87,27 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id, width, height }
       <TutorialPopover elementId={id}>
         <Box data-element-id={id} position='relative'>
           {handles.map(handle => (
-            <Handle key={handle.id} {...handle} />
+            <Handle
+              key={handle.id}
+              {...handle}
+              style={{
+                width: 6,
+                height: 6,
+                background: 'black',
+                border: '1px solid white',
+              }}
+            >
+              {/* an invisible box to provide a bigger area for pointer events */}
+              <Box
+                position='absolute'
+                top='50%'
+                left='50%'
+                transform='translate(-50%, -50%)'
+                w='30px'
+                h='30px'
+                borderRadius='full'
+              />
+            </Handle>
           ))}
           <MotionBox
             position='absolute'
