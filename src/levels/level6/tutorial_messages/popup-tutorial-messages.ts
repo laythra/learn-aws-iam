@@ -29,7 +29,8 @@ const POPUP_MSG3 = `
   * In the **Trusted Account**, the user's **identity policy** must allow \`sts:AssumeRole\`
     on that specific role ARN.
 
-  >::badge[WARNING]::  **If either side is missing, role assumption fails**
+  > |color(warning)
+  > ::badge[WARNING]:: **If either side is missing, role assumption fails**
 `;
 
 const POPUP_MSG4 = `

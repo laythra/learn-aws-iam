@@ -45,9 +45,10 @@ Policies — whether **AWS Managed** or **Customer Managed** — have the same s
 }|fullwidth
 ~~~
 
->|color(warning) ::badge[WARNING]:: **Deny** takes precedence over **Allow**.
-If a user has one policy that allows an action but another policy that denies it,
-the action will be denied
+> |color(warning)
+> ::badge[WARNING]:: **Deny** takes precedence over **Allow**.
+> If a user has one policy that allows an action but another policy that denies it,
+> the action will be denied
 `;
 
 const POPUP_MSG_4 = `

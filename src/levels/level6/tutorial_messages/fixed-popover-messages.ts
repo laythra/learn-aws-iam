@@ -4,7 +4,7 @@ const FIXED_POPOVER_MSG1 = `
   Complete the objectives in the right-side panel to establish cross-account access.
 
   Recommended sequence:
-  1. Create an **IAM Role** with a trust policy that allows \`alex\` to use it.
+  1. Create an **IAM Role** with a **trust policy** that allows \`alex\` to use it.
   2. Create and attach a **DynamoDB read policy** to that role.
   3. Create an **IAM Policy** in the **Trusted Account**
   that allows \`alex\` to assume the role.

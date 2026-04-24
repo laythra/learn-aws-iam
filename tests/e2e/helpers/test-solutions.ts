@@ -7,7 +7,7 @@ export const getTestSolution = async <K extends string>(
   try {
     const compressed = Buffer.from(await testSolutions[objectiveNumber](), 'base64');
     return gunzipSync(new Uint8Array(compressed)).toString('utf-8');
-  } catch (error) {
+  } catch {
     throw new Error(`Failed to decode test solution for step: ${objectiveNumber}`);
   }
 };

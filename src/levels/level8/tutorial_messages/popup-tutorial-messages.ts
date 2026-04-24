@@ -3,9 +3,9 @@ const POPUP_MSG1 = `
   The policies you've created so far were relatively straightforward.
   In this level, you'll write more advanced IAM policies using \`Condition\`.
 
-  >|color(rule)
-  >::badge[RULE]:: **Conditions** define when a statement applies using request **context values**,
-  >**operators**, and **condition keys**. We'll explore these in depth shortly
+  > |color(rule)
+  > ::badge[RULE]:: **Conditions** define when a statement applies using request **context values**,
+  > **operators**, and **condition keys**. We'll explore these in depth shortly
 `;
 
 const POPUP_MSG2 = `
@@ -41,7 +41,7 @@ const POPUP_MSG2 = `
 
   In this example, the policy denies all actions on all resources
   if **Multi-Factor Authentication (MFA)** is not enabled for the principal
-  Or if the condition key does not exist in the request context.
+  or if the condition key does not exist in the request context.
 `;
 
 const POPUP_MSG5 = `

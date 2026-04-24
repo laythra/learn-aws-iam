@@ -14,7 +14,7 @@ const Objective2Description = `
 `;
 
 const Objective3Description = `
-  Attach that identity-based policy to the **IAM user** \`alex\`
+  Attach that **identity-based policy** to the **IAM user** \`alex\`
   in the *Trusted Account*.
 `;
 

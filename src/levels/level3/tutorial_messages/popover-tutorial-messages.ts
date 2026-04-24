@@ -14,7 +14,7 @@ const POPOVER_MSG3 = `
 `;
 
 const POPOVER_MSG4 = `
-  You've created your first Customer Managed Policy!
+  You've created your first **Customer Managed Policy**!
   The warm-up phase is over — click ***NEXT*** to proceed to the next part of the level.
 `;
 

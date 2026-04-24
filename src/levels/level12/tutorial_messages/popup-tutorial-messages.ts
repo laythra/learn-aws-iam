@@ -19,7 +19,6 @@ const POPUP_MSG2 = `
   You attach SCPs to organizational units (OUs) or individual accounts,
   so no user or role in those accounts can exceed the boundaries you set.
 
-
   > |color(warning)
   > ::badge[WARNING]:: Just like **Permission Boundaries**, **Service Control Policies (SCPs)**
   > don't grant permissions. They merely restrict what other policies are allowed to grant.
@@ -28,7 +27,8 @@ const POPUP_MSG2 = `
 const POPUP_MSG3 = `
   Everything we've learned so far will be put to the test in this ultimate challenge.
   You'll need to design and implement a comprehensive IAM strategy that incorporates
-  users, groups, roles, policies, permission boundaries, and SCPs to meet complex requirements.
+  **users**, **groups**, **roles**, **policies**, **permission boundaries**,
+  and **SCPs** to meet complex requirements.
 
   The right side panel contains all the information you'll need to succeed,
   including objectives, hints, and resources.
@@ -37,8 +37,9 @@ const POPUP_MSG3 = `
 `;
 
 const POPUP_MSG4 = `
-  Congratulations! You've now mastered AWS IAM, conquering users, groups, roles, policies,
-  permission boundaries, and many more!
+  Congratulations! You've now mastered AWS IAM, conquering **users**,
+  **groups**, **roles**, **identity policies**,
+  **permission boundaries**, and many more!
 
   **You've successfully completed Level 12 and the full AWS IAM learning journey!** 🎉
 
