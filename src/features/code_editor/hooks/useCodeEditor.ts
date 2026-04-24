@@ -57,19 +57,17 @@ export function useCodeEditor({
   const setCodeErrorsAndWarnings = (): void => {
     if (!editorView.current) return;
 
-    const lintingErrors = validateFns.flatMap(validateFn =>
-      collectValidationDiagnostics(editorView.current!, validateFn!)
+    const diagnosticsPerFn = validateFns.map(fn =>
+      collectValidationDiagnostics(editorView.current!, fn)
     );
 
-    const allErrors = _.uniqBy(lintingErrors, 'from');
-    const hasErrors = validateFns.every(
-      validateFn => collectValidationDiagnostics(editorView.current!, validateFn!).length > 0
-    );
+    const hasErrors = diagnosticsPerFn.every(d => d.length > 0);
+    const visibleErrors = diagnosticsPerFn[0] ?? [];
 
     codeEditorStateStore.send({
       type: 'setCodeErrorsAndWarnings',
       warnings: getWarnings(),
-      errors: hasErrors ? allErrors : [],
+      errors: hasErrors ? visibleErrors : [],
       nodeId,
     });
   };
@@ -135,9 +133,12 @@ export function useCodeEditor({
 
   const extensions = [
     json(),
-    linter(view =>
-      validateFns.flatMap(validateFn => collectValidationDiagnostics(view, validateFn!))
-    ),
+    linter(view => {
+      const diagnosticsPerFn = validateFns.map(fn => collectValidationDiagnostics(view, fn));
+
+      if (diagnosticsPerFn.some(d => d.length === 0)) return [];
+      return diagnosticsPerFn[0] ?? [];
+    }),
     badgeExtension,
   ];
 
