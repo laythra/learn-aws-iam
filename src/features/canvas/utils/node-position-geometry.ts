@@ -88,13 +88,7 @@ export function getNodeInitialPosition(
 ): XYPosition {
   const regularNodeMetrics = getCurrentRegularNodeMetrics();
 
-  /**
-   * Position priority: layoutGroup.position is always preferred.
-   * node.data.initial_position serves as a fallback for cases where the node's
-   * layout_group_id has no matching entry in the active layout groups array
-   * (e.g. a stale node or a mismatched ID), preventing a silent {x:0, y:0} placement.
-   */
-  const initial_position = layoutGroup?.position || node.data.initial_position;
+  const initial_position = layoutGroup?.position;
   const verticalSpacing = layoutGroup?.vertical_spacing
     ? layoutGroup.vertical_spacing * regularNodeMetrics.offsetScale
     : regularNodeMetrics.verticalSpacing;

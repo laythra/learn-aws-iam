@@ -20,15 +20,12 @@ describe('createNodeFactory', () => {
     width: 300,
     height: 100,
     draggable: false,
-    initial_position: 'top-left',
     additionalData: { customField: 'customValue' },
   };
 
   const baseExpectedData = {
     entity: IAMNodeEntity.User,
     image: 'custom-image.png',
-    initial_position: 'top-left',
-    layout_direction: 'horizontal',
   };
 
   const factory = createNodeFactory(baseConfig);

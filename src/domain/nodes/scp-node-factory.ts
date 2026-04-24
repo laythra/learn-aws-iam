@@ -14,10 +14,8 @@ export const createSCPNode = createNodeFactory<IAMSCPNode['data'], IAMNodeEntity
     { id: HandleID.Bottom, type: 'source', position: Position.Bottom },
     { id: HandleID.Left, type: 'source', position: Position.Left },
   ],
-  initial_position: 'bottom-center',
   additionalData: {
     granted_accesses: [],
-    initial_position: 'center',
     editable: false,
     id: 'policy-1',
     content: '',

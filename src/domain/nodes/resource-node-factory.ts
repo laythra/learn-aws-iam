@@ -17,5 +17,4 @@ export const createResourceNode = createNodeFactory<
     { id: HandleID.Bottom, type: 'source', position: Position.Bottom },
     { id: HandleID.Left, type: 'source', position: Position.Left },
   ],
-  initial_position: 'bottom-center',
 });
