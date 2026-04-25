@@ -2,9 +2,7 @@
 
 An interactive visual simulator for learning AWS IAM (Identity and Access Management). No AWS account required.
 
-> This project is not affiliated with or endorsed by Amazon Web Services (AWS).
->
-> This project simulates AWS IAM concepts for educational purposes. It does not fully replicate AWS IAM evaluation logic and should not be used for real security decisions.
+**[learnawsiam.com — try it live, no setup required](https://learnawsiam.com)**
 
 ![Tests](https://github.com/laythra/learnawsiam/actions/workflows/test.yml/badge.svg?branch=main)
 ![Lint](https://github.com/laythra/learnawsiam/actions/workflows/lint.yml/badge.svg?branch=main)
@@ -12,8 +10,6 @@ An interactive visual simulator for learning AWS IAM (Identity and Access Manage
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ![Demo](./assets/gifs/demo_overview.gif)
-
-**[Try it live — no setup required](https://learnawsiam.com)**
 
 ## What This Is
 
@@ -23,11 +19,11 @@ Users will write real IAM policies, attach them to users, groups, roles, and oth
 
 ## Features
 
-- **12 progressive levels** - Covering basic scenarios to the more advanced ones revolving around multi-account access and real-world complex scenarios
-- **Visual canvas** - You will learn with an interactive visual canvas, where everything is presented as nodes and edges
-- **Integrated policy editor with continuous feedback loop** - You write real JSON policies and see real-time feedback on what you write
-- **Guided tutorials** - Each level walks you through the concepts before you solve it
-- **Runs entirely in the browser** — all IAM simulation logic is client-side. No AWS credentials or infrastructure required. The only backend is a small stats tracker
+- **12 progressive levels**: From basic IAM concepts to multi-account access and complex real-world scenarios
+- **Visual canvas**: Everything is represented as nodes and edges on an interactive canvas
+- **Integrated policy editor**: Write real JSON policies and see real-time feedback as you type
+- **Guided tutorials**: Each level walks you through the concepts before you solve it
+- **Runs entirely in the browser**: all IAM simulation logic is client-side. No AWS credentials or infrastructure required. The only backend is a small stats tracker
 
 ## Topics Covered
 
@@ -55,8 +51,8 @@ The site at **[learnawsiam.com](https://learnawsiam.com)** serves the same stati
 **Prerequisites:** Docker
 
 ```bash
-git clone git@github.com:laythra/learnawsiam.git
-cd learnawsiam
+git clone git@github.com:laythra/learn-aws-iam.git
+cd learn-aws-iam
 make run-dev
 ```
 
@@ -65,3 +61,9 @@ make run-dev
 Contributions are welcome. If you're interested in contributing in any form (bug fixes, docs, new levels), please open an issue or fork the repo and submit a pull request. For major changes (like adding a new level or changing the core mechanics), please open an issue first to discuss what you would like to change.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for an overview of the codebase before diving in.
+
+---
+
+> This project is not affiliated with or endorsed by Amazon Web Services (AWS).
+>
+> This project simulates AWS IAM concepts for educational purposes. It does not fully replicate AWS IAM evaluation logic and should not be used for real security decisions.
