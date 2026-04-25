@@ -7,13 +7,13 @@ import { CommonLayoutGroupID, IAMNodeEntity } from '@/types/iam-enums';
 import { IAMPermissionBoundaryCreationObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE_CALLOUT_MSG = `
-  In AWS, permission boundaries aren’t a separate type of policy.
+  In AWS, **permission boundaries** aren’t a separate type of policy.
   They’re just normal IAM policies.
   You create them the same way, the only difference is how you attach them.
-  When attached as a permission boundary,
+  When attached as a **permission boundary**,
   they act as a maximum permissions limit instead of granting permissions.
 
-  For the sake of simplicity, permission boundaries in this simulation are created separately
+  For the sake of simplicity, **permission boundaries** in this simulation are created separately
   in order to make attaching them to roles and users more intuitive.
 `;
 
@@ -25,8 +25,8 @@ const ACTIONS_HINT_MSG = `
 `;
 
 const OBJECTIVE_MSG = `
-  This objective requires creating a permission boundary which caps the permissions to:
-  * Reading Secrets' Values
+  This objective requires creating a **permission boundary** which caps the permissions to:
+  * Reading Secrets Values
   * Retrieving Secrets Metadata
 
   only if the secrets are tagged with the same \`team\` tag the user making the request has
@@ -49,7 +49,7 @@ const CONDITIONS1_HINT_MSG = `
 `;
 
 const CONDITIONS2_HINT_MSG = `
-  For this specific permission boundary, the conditions will look something like this:
+  For this specific **permission boundary**, the conditions will look something like this:
 
   ~~~js
   "Condition": {

@@ -36,7 +36,7 @@ const POPOVER_MSG5 = `
 
 const POPOVER_MSG6 = `
   This is the role which **sam** will use to delegate permissions to his team.
-  Feel free to inspect its trust policy.
+  Feel free to inspect its **trust policy**.
 `;
 
 const POPOVER_MSG7 = ``;
@@ -63,7 +63,7 @@ const POPOVER_MSG12 = `
   and she will now attempt to assume the role.
 
   ***The principal in the role allows anyone with a \`level: junior\` tag to assume it and
-  all users have an identity-based policy allowing them to assume the role.*** 😉
+  all users have an **identity-based policy** allowing them to assume the role.*** 😉
 `;
 
 const POPOVER_MSG13 = `

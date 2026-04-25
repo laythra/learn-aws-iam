@@ -193,7 +193,7 @@ export const stateMachine = createStateMachineSetup<
         {
           type: 'set_restricted_element_ids',
           params: {
-            element_ids: [ElementID.CreateUserGroupMenuItem],
+            element_ids: [ElementID.CreateUserGroupMenuItem, ElementID.CodeEditorResourcePolicyTab],
           },
         },
         { type: 'assign_nodes', params: { nodes: INITIAL_IN_LEVEL_NODES } },

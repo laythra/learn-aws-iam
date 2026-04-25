@@ -9,7 +9,6 @@ const OBJECTIVE_CALLOUT_MSG = `
   We'll focus on the most commonly used ones here.
   To explore the full list, check [here](https://gist.github.com/itshella-dom/b7b6fe90796570b4481cab34ef502531).
 
-
   **IMPORTANT:** In practice, the order of statements in an IAM policy doesn't matter,
   AWS evaluates them all.
   In this editor, **keep statements in their original order** so that validation works correctly.

@@ -10,7 +10,7 @@ const POPUP_MSG1 = `
 `;
 
 const POPUP_MSG2 = `
-  Permission boundaries are a powerful tool in IAM that allow you to set the maximum permissions
+  **Permission boundaries** are a powerful tool in IAM that allow you to set the maximum permissions
   an IAM entity (like a user or role) can have, regardless of the policies attached to it.
 
   They act as a filter, ensuring that even if an entity has permissions granted by other policies,
@@ -19,7 +19,7 @@ const POPUP_MSG2 = `
   This is particularly useful for controlling access
   to sensitive resources and ensuring compliance with security policies.
 
-  >|color(warning)
+  > |color(warning)
   > ::badge[WARNING]:: **Permission boundaries** are **identity-based policies** that are attached
   > to a user or role as a boundary, and they use the same syntax as **identity-based policies**.
 `;

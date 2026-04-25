@@ -35,12 +35,12 @@ const POPOVER_MSG4 = `
 `;
 
 const POPOVER_MSG5 = `
-  We need to attach this Permission Boundary somewhere to enforce its restrictions.
+  We need to attach this **Permission Boundary** somewhere to enforce its restrictions.
 `;
 
 const POPOVER_MSG6 = `
   alex can now safely delegate permissions: he can attach any policies to the ec2-launch-role,
-  while the permission boundary ensures the role can only perform allowed actions.
+  while the **permission boundary** ensures the role can only perform allowed actions.
 `;
 
 export const POPOVER_TUTORIAL_MESSAGES: PopoverTutorialMessage[] = [

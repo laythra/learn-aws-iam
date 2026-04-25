@@ -5,7 +5,7 @@ import { IAMNodeEntity } from '@/types/iam-enums';
 import { IAMPolicyEditObjective, ObjectiveType } from '@/types/objective-types';
 
 const OBJECTIVE1_HINT_MSG1 = `
-  This Identity-based Policy is missing the ARN of the new role that you created
+  This **Identity-based Policy** is missing the ARN of the new role that you created
 `;
 
 export const POLICY_EDIT_OBJECTIVES: IAMPolicyEditObjective<

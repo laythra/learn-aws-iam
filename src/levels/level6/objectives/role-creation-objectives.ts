@@ -6,7 +6,7 @@ import { CommonLayoutGroupID } from '@/types/iam-enums';
 import { IAMRoleCreationObjective } from '@/types/objective-types';
 
 export const CALLOUT_MESSAGE1 = `
-  The \`Principal\` element in a trust policy defines
+  The \`Principal\` element in a **trust policy** defines
   which entity is allowed to assume the role.
 
   * \`{ "AWS": "<user_arn>" }\` defines an **IAM user principal**.

@@ -22,11 +22,11 @@ const POPOVER_MSG4 = `
 `;
 
 const POPOVER_MSG5 = `
-  Create an identity-based policy for \`alex\`
+  Create an **identity-based policy** for \`alex\`
 `;
 
 const POPOVER_MSG6 = `
-  Great. Now attach this identity-based policy to the IAM user \`alex\`.
+  Great. Now attach this **identity-based policy** to the **IAM user** \`alex\`.
 `;
 
 const POPOVER_MSG7 = `
@@ -36,7 +36,7 @@ const POPOVER_MSG7 = `
 `;
 
 const POPOVER_MSG8 = `
-  Create the resource-based policy on \`incident-response-artifacts\`
+  Create the **resource-based policy** on \`incident-response-artifacts\`
   and set \`alex\` as the allowed principal.
 `;
 

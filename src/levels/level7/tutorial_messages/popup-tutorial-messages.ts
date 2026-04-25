@@ -46,10 +46,10 @@ const POPUP_MSG3 = `
   A **resource-based policy** is essentially a permissions policy
   with an added **Principal** field.
   The **Principal** field defines who is allowed access to the resource
-  and follows the same principal formats used in trust policies.
+  and follows the same principal formats used in **trust policies**.
 
   For this stage of the level, we'll achieve the same cross-account access as before,
-  but this time using a **resource-based policy** instead of a role trust policy.
+  but this time using a **resource-based policy** instead of a role **trust policy**.
 
   > |color(warning)
   > ::badge[WARNING]::

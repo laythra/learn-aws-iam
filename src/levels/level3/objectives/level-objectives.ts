@@ -3,7 +3,7 @@ import { LevelObjectiveID } from '../types/objective-enums';
 import { ObjectiveType, type LevelObjective } from '@/types/objective-types';
 
 const OBJECTIVE_MSG1 = `
-  Create your first customer managed policy
+  Create your first **customer managed policy**
 `;
 
 const OBJECTIVE_MSG2 = `

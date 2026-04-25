@@ -23,9 +23,9 @@ like **IAM Users**, **applications**, or **AWS services**.
 
 > |color(warning)
 > ::badge[WARNING]::
- In order for **IAM Users** to assume a role, not only must the role's trust policy allow it,
- but the user must also have an appropriate identity-based
- policy that allows them to call \`sts:AssumeRole\` on that role.
+ In order for **IAM Users** to assume a role, not only must the role's **trust policy** allow it,
+ but the user must also have an appropriate **identity-based policy**
+ that allows them to call \`sts:AssumeRole\` on that role.
 `;
 
 const POPUP_MSG3 = `
@@ -34,15 +34,15 @@ Every **IAM Role** has a **Trust Policy** that defines **who can assume it**.
 A **Trust Policy** looks similar to other IAM policies,
 but it introduces the **\`Principal\`** element.
 
-Here’s a quick breakdown of a Trust Policy statement:
+Here's a quick breakdown of a **Trust Policy** statement:
 
 - **Principal** – The trusted entity that can assume the role
   (for example: an IAM user, role, AWS account, or AWS service).
 - **Effect** – Typically \`Allow\`, stating that the principal **can assume** the role.
 - **Action** – Usually \`sts:AssumeRole\`.
 
-So the intent is reversed from identity-based policies:
-instead of "what can I do?", a Trust Policy answers
+So the intent is reversed from **identity-based policies**:
+instead of "what can I do?", a **Trust Policy** answers
 "**who can become this role?**"
 
 ~~~js
@@ -65,13 +65,15 @@ instead of "what can I do?", a Trust Policy answers
 > In this level and the ones that follow, when we say "role" in the context
 > of who can assume it, we are specifically referring to the role's **Trust Policy**.
 >
-> In AWS, a role and its trust policy are technically separate concepts.
+> In AWS, a role and its **trust policy** are technically separate concepts.
 > For simplicity, we use "role" to refer to both.
 `;
 
 const POPUP_MSG4 = `
   We're back at **TimeShift Labs**, where we're integrating a new image processing system
   to generate important metadata for every image users upload.
+
+  &nbsp;
 
   ##### Here's how the flow works:
   1. The end-user uploads an image to the **S3 Bucket**: \`chat-images\`

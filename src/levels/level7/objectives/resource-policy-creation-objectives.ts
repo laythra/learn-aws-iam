@@ -16,7 +16,7 @@ const OBJECTIVE1_CALLOUT_MSG = `
 `;
 
 const OBJECTIVE_DESCRIPTION = `
-  Create a resource-based policy that grants the user \`alex\`
+  Create a **resource-based policy** that grants the user \`alex\`
   read/write access to the S3 bucket \`incident-response-artifacts\`
 `;
 
@@ -30,7 +30,8 @@ const OBJECTIVE1_HINT_MSG2 = `
 `;
 
 const OBJECTIVE2_HINT_MSG3 = `
-  This resource-policy is quite similar to the identity-based policy you created earlier,
+  This **resource-based policy** is quite similar to the
+  **identity-based policy** you created earlier,
   but it needs a \`Principal\` field to specify who is granted access to the resource.
 `;
 
