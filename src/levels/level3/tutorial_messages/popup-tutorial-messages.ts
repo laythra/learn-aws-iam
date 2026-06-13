@@ -1,3 +1,4 @@
+import { CASE_SENSITIVITY_NOTE } from '@/config/policy-notes';
 import { PopupTutorialMessage } from '@/types/tutorial-message-types';
 
 const POPUP_MSG_1 = `
@@ -49,7 +50,7 @@ Policies — whether **AWS Managed** or **Customer Managed** — have the same s
 > ::badge[WARNING]:: **Deny** takes precedence over **Allow**.
 > If a user has one policy that allows an action but another policy that denies it,
 > the action will be denied
-`;
+${CASE_SENSITIVITY_NOTE}`;
 
 const POPUP_MSG_4 = `
 You're a DevOps engineer responsible for managing **IAM policies**
