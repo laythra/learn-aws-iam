@@ -1,4 +1,4 @@
-import { useEffect, memo, useState } from 'react';
+import { useEffect, memo, useMemo, useState } from 'react';
 
 import { Box, VStack } from '@chakra-ui/react';
 import { useSelector } from '@xstate/store-react';
@@ -50,9 +50,13 @@ const IAMCanvasNode: React.FC<IAMCanvasNodeProps> = ({ data, id, width, height }
   const regularNodeMetrics = getCurrentRegularNodeMetrics();
   const { entity, label, handles, image, content, tags, node_tooltip } = data;
   const resourceType = entity === IAMNodeEntity.Resource && data.resource_type;
-  const arn = SupportedArnNodeTypes.includes(resourceType || entity)
-    ? generateArn(resourceType || entity, label, data.account_id)
-    : undefined;
+  const arn = useMemo(
+    () =>
+      SupportedArnNodeTypes.includes(resourceType || entity)
+        ? generateArn(resourceType || entity, label, data.account_id)
+        : undefined,
+    [entity, resourceType, label, data.account_id]
+  );
 
   const isSelected = selectedNodeId === id;
 

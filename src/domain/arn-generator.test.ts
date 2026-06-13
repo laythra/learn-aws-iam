@@ -74,9 +74,15 @@ describe('generateArn', () => {
     expect(arn).toBe('arn:aws:rds:us-east-1:111122223333:db:mydb');
   });
 
-  it('generates Secret ARN with random suffix', () => {
+  it('generates Secret ARN with a deterministic suffix derived from the name', () => {
     const arn = generateArn(IAMNodeResourceEntity.Secret, 'api-key', '111122223333');
-    expect(arn).toMatch(/^arn:aws:secretsmanager:111122223333:secret:api-key-[a-z0-9]{6}$/);
+    expect(arn).toBe('arn:aws:secretsmanager:111122223333:secret:api-key-eapghz');
+  });
+
+  it('generates the same Secret ARN for the same name on every call', () => {
+    const first = generateArn(IAMNodeResourceEntity.Secret, 'api-key', '111122223333');
+    const second = generateArn(IAMNodeResourceEntity.Secret, 'api-key', '111122223333');
+    expect(first).toBe(second);
   });
 
   it('uses default accountId when not provided', () => {
