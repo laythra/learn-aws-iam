@@ -13,7 +13,7 @@
     },
     "aws-principal-arn": {
       "type": "string",
-      "pattern": "^arn:aws:iam::\\d{12}:(?:root|user|group|role)"
+      "pattern": "^arn:aws:iam::\\d{12}:(?:root|(?:user|role)/.+)$"
     },
     "action-string": {
       "type": "string",
