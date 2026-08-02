@@ -8,9 +8,76 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Web site created using Vite" />
+    <meta
+      name="description"
+      content="Learn AWS IAM by actually using it. A free interactive simulator with 12 progressive levels covering policies, roles, cross-account access, SCPs, and permission boundaries. Runs entirely in your browser, no AWS account needed."
+    />
     <link rel="apple-touch-icon" href="/iam_icon.png" />
-    <title>Learn AWS IAM</title>
+    <title>Learn AWS IAM Interactively — Free Browser-Based IAM Simulator</title>
+    <link rel="canonical" href="https://learnawsiam.com/" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Learn AWS IAM Interactively — Free Browser-Based IAM Simulator"
+    />
+    <meta
+      property="og:description"
+      content="Learn AWS IAM by actually using it. A free interactive simulator with 12 progressive levels covering policies, roles, cross-account access, SCPs, and permission boundaries. Runs entirely in your browser, no AWS account needed."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://learnawsiam.com/" />
+    <meta property="og:site_name" content="Learn AWS IAM" />
+    <meta property="og:image" content="https://learnawsiam.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The Learn AWS IAM simulator: a visual canvas of IAM users, groups, and policies connected by permission edges"
+    />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Learn AWS IAM Interactively — Free Browser-Based IAM Simulator"
+    />
+    <meta
+      name="twitter:description"
+      content="Learn AWS IAM by actually using it. A free interactive simulator with 12 progressive levels covering policies, roles, cross-account access, SCPs, and permission boundaries. Runs entirely in your browser, no AWS account needed."
+    />
+    <meta name="twitter:image" content="https://learnawsiam.com/og-image.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": ["WebApplication", "LearningResource"],
+        "name": "Learn AWS IAM",
+        "url": "https://learnawsiam.com/",
+        "description": "A free interactive simulator for learning AWS IAM through 12 progressive levels. Build IAM users, groups, roles, and resources on a visual canvas and write real JSON policies validated in real time. Runs entirely in your browser, no AWS account needed.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Any (web browser)",
+        "isAccessibleForFree": true,
+        "educationalLevel": "Beginner to Advanced",
+        "learningResourceType": "Interactive simulation",
+        "teaches": [
+          "AWS IAM",
+          "IAM policies",
+          "IAM roles",
+          "IAM users and groups",
+          "Cross-account access",
+          "Service control policies (SCPs)",
+          "Permission boundaries",
+          "Resource-based policies",
+          "IAM policy evaluation logic"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PHB3HHHGEV"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -22,6 +89,16 @@
     </script>
   </head>
   <body>
+    <noscript>
+      <p>
+        Learn AWS IAM is a free, interactive simulator for learning AWS Identity and Access
+        Management directly in your browser. Across 12 progressive levels you build IAM users,
+        groups, roles, and resources on a visual canvas and write real JSON policies that are
+        validated as you type, covering identity and resource policies, cross-account access,
+        service control policies (SCPs), and permission boundaries. No AWS account is required, but
+        JavaScript must be enabled to run the simulator.
+      </p>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
   </body>
