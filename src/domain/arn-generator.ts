@@ -39,8 +39,10 @@ const arnStrategies: Record<string, ArnGenerator> = {
     `arn:aws:cloudfront::${accountId}:distribution/${resourceName}`,
   [IAMNodeResourceEntity.Billing]: (resourceName, accountId) =>
     `arn:aws:budgets::${accountId}:budget/${resourceName}`,
-  [IAMNodeResourceEntity.Secret]: (resourceName, accountId) =>
-    `arn:aws:secretsmanager:${accountId}:secret:${resourceName}-${generateSuffix(resourceName, 6)}`,
+  [IAMNodeResourceEntity.Secret]: (resourceName, accountId, region = 'us-east-1') => {
+    const suffix = generateSuffix(resourceName, 6);
+    return `arn:aws:secretsmanager:${region}:${accountId}:secret:${resourceName}-${suffix}`;
+  },
   [IAMNodeResourceEntity.RDS]: (resourceName, accountId, region = 'us-east-1') =>
     `arn:aws:rds:${region}:${accountId}:db:${resourceName}`,
   [IAMNodeResourceEntity.CodeDeploy]: (resourceName, accountId, region = 'us-east-1') =>

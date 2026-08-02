@@ -76,7 +76,12 @@ describe('generateArn', () => {
 
   it('generates Secret ARN with a deterministic suffix derived from the name', () => {
     const arn = generateArn(IAMNodeResourceEntity.Secret, 'api-key', '111122223333');
-    expect(arn).toBe('arn:aws:secretsmanager:111122223333:secret:api-key-eapghz');
+    expect(arn).toBe('arn:aws:secretsmanager:us-east-1:111122223333:secret:api-key-eapghz');
+  });
+
+  it('generates Secret ARN with custom region', () => {
+    const arn = generateArn(IAMNodeResourceEntity.Secret, 'api-key', '111122223333', 'eu-west-1');
+    expect(arn).toBe('arn:aws:secretsmanager:eu-west-1:111122223333:secret:api-key-eapghz');
   });
 
   it('generates the same Secret ARN for the same name on every call', () => {
