@@ -18,17 +18,9 @@
     "Statement": {
       "minItems": 1,
       "type": "array",
-      "oneOf": [
-        {
-          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Statement"
-        },
-        {
-          "type": "array",
-          "items": {
-            "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Statement"
-          }
-        }
-      ]
+      "items": {
+        "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Statement"
+      }
     }
   }
 }
