@@ -2,10 +2,17 @@ import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
 
 type ArnGenerator = (resourceName: string, accountId: string, region?: string) => string;
 
-function generateSuffix(length: number): string {
-  return Math.random()
-    .toString(36)
-    .slice(2, 2 + length);
+// Derives a stable suffix from the resource name so a given name always maps to the same
+// ARN. AWS appends a random suffix to Secret ARNs; we mimic the shape deterministically
+// (an actual random value would change identity every call and break memoization/copy).
+function generateSuffix(seed: string, length: number): string {
+  // djb2 hash, then base36 so the suffix stays within [a-z0-9].
+  let hash = 5381;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 33) ^ seed.charCodeAt(i);
+  }
+
+  return (hash >>> 0).toString(36).padStart(length, '0').slice(0, length);
 }
 
 const arnStrategies: Record<string, ArnGenerator> = {
@@ -33,7 +40,7 @@ const arnStrategies: Record<string, ArnGenerator> = {
   [IAMNodeResourceEntity.Billing]: (resourceName, accountId) =>
     `arn:aws:budgets::${accountId}:budget/${resourceName}`,
   [IAMNodeResourceEntity.Secret]: (resourceName, accountId) =>
-    `arn:aws:secretsmanager:${accountId}:secret:${resourceName}-${generateSuffix(6)}`,
+    `arn:aws:secretsmanager:${accountId}:secret:${resourceName}-${generateSuffix(resourceName, 6)}`,
   [IAMNodeResourceEntity.RDS]: (resourceName, accountId, region = 'us-east-1') =>
     `arn:aws:rds:${region}:${accountId}:db:${resourceName}`,
   [IAMNodeResourceEntity.CodeDeploy]: (resourceName, accountId, region = 'us-east-1') =>
