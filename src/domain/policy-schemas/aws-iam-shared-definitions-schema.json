@@ -13,7 +13,7 @@
     },
     "aws-principal-arn": {
       "type": "string",
-      "pattern": "^arn:aws:iam::\\d{12}:(?:root|user|group|role)"
+      "pattern": "^arn:aws:iam::\\d{12}:(?:root|(?:user|role)/.+)$"
     },
     "action-string": {
       "type": "string",
@@ -212,6 +212,7 @@
     },
     "Condition": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "Null": {
           "type": "object",
@@ -223,6 +224,318 @@
               false
             ]
           }
+        },
+        "StringEquals": {
+          "$ref": "#/definitions/StringEquals"
+        },
+        "StringNotEquals": {
+          "$ref": "#/definitions/StringNotEquals"
+        },
+        "StringEqualsIgnoreCase": {
+          "$ref": "#/definitions/StringEqualsIgnoreCase"
+        },
+        "StringNotEqualsIgnoreCase": {
+          "$ref": "#/definitions/StringNotEqualsIgnoreCase"
+        },
+        "StringLike": {
+          "$ref": "#/definitions/StringLike"
+        },
+        "StringNotLike": {
+          "$ref": "#/definitions/StringNotLike"
+        },
+        "NumericEquals": {
+          "$ref": "#/definitions/NumericEquals"
+        },
+        "NumericNotEquals": {
+          "$ref": "#/definitions/NumericNotEquals"
+        },
+        "NumericLessThan": {
+          "$ref": "#/definitions/NumericLessThan"
+        },
+        "NumericLessThanEquals": {
+          "$ref": "#/definitions/NumericLessThanEquals"
+        },
+        "NumericGreaterThan": {
+          "$ref": "#/definitions/NumericGreaterThan"
+        },
+        "NumericGreaterThanEquals": {
+          "$ref": "#/definitions/NumericGreaterThanEquals"
+        },
+        "DateEquals": {
+          "$ref": "#/definitions/DateEquals"
+        },
+        "DateNotEquals": {
+          "$ref": "#/definitions/DateNotEquals"
+        },
+        "DateLessThan": {
+          "$ref": "#/definitions/DateLessThan"
+        },
+        "DateLessThanEquals": {
+          "$ref": "#/definitions/DateLessThanEquals"
+        },
+        "DateGreaterThan": {
+          "$ref": "#/definitions/DateGreaterThan"
+        },
+        "DateGreaterThanEquals": {
+          "$ref": "#/definitions/DateGreaterThanEquals"
+        },
+        "Bool": {
+          "$ref": "#/definitions/Bool"
+        },
+        "BinaryEquals": {
+          "$ref": "#/definitions/BinaryEquals"
+        },
+        "IpAddress": {
+          "$ref": "#/definitions/IpAddress"
+        },
+        "NotIpAddress": {
+          "$ref": "#/definitions/NotIpAddress"
+        },
+        "ArnEquals": {
+          "$ref": "#/definitions/ArnEquals"
+        },
+        "ArnNotEquals": {
+          "$ref": "#/definitions/ArnNotEquals"
+        },
+        "ArnLike": {
+          "$ref": "#/definitions/ArnLike"
+        },
+        "ArnNotLike": {
+          "$ref": "#/definitions/ArnNotLike"
+        },
+        "StringEqualsIfExists": {
+          "$ref": "#/definitions/StringEqualsIfExists"
+        },
+        "StringNotEqualsIfExists": {
+          "$ref": "#/definitions/StringNotEqualsIfExists"
+        },
+        "StringEqualsIgnoreCaseIfExists": {
+          "$ref": "#/definitions/StringEqualsIgnoreCaseIfExists"
+        },
+        "StringNotEqualsIgnoreCaseIfExists": {
+          "$ref": "#/definitions/StringNotEqualsIgnoreCaseIfExists"
+        },
+        "StringLikeIfExists": {
+          "$ref": "#/definitions/StringLikeIfExists"
+        },
+        "StringNotLikeIfExists": {
+          "$ref": "#/definitions/StringNotLikeIfExists"
+        },
+        "NumericEqualsIfExists": {
+          "$ref": "#/definitions/NumericEqualsIfExists"
+        },
+        "NumericNotEqualsIfExists": {
+          "$ref": "#/definitions/NumericNotEqualsIfExists"
+        },
+        "NumericLessThanIfExists": {
+          "$ref": "#/definitions/NumericLessThanIfExists"
+        },
+        "NumericLessThanEqualsIfExists": {
+          "$ref": "#/definitions/NumericLessThanEqualsIfExists"
+        },
+        "NumericGreaterThanIfExists": {
+          "$ref": "#/definitions/NumericGreaterThanIfExists"
+        },
+        "NumericGreaterThanEqualsIfExists": {
+          "$ref": "#/definitions/NumericGreaterThanEqualsIfExists"
+        },
+        "DateEqualsIfExists": {
+          "$ref": "#/definitions/DateEqualsIfExists"
+        },
+        "DateNotEqualsIfExists": {
+          "$ref": "#/definitions/DateNotEqualsIfExists"
+        },
+        "DateLessThanIfExists": {
+          "$ref": "#/definitions/DateLessThanIfExists"
+        },
+        "DateLessThanEqualsIfExists": {
+          "$ref": "#/definitions/DateLessThanEqualsIfExists"
+        },
+        "DateGreaterThanIfExists": {
+          "$ref": "#/definitions/DateGreaterThanIfExists"
+        },
+        "DateGreaterThanEqualsIfExists": {
+          "$ref": "#/definitions/DateGreaterThanEqualsIfExists"
+        },
+        "BoolIfExists": {
+          "$ref": "#/definitions/BoolIfExists"
+        },
+        "BinaryEqualsIfExists": {
+          "$ref": "#/definitions/BinaryEqualsIfExists"
+        },
+        "IpAddressIfExists": {
+          "$ref": "#/definitions/IpAddressIfExists"
+        },
+        "NotIpAddressIfExists": {
+          "$ref": "#/definitions/NotIpAddressIfExists"
+        },
+        "ArnEqualsIfExists": {
+          "$ref": "#/definitions/ArnEqualsIfExists"
+        },
+        "ArnNotEqualsIfExists": {
+          "$ref": "#/definitions/ArnNotEqualsIfExists"
+        },
+        "ArnLikeIfExists": {
+          "$ref": "#/definitions/ArnLikeIfExists"
+        },
+        "ArnNotLikeIfExists": {
+          "$ref": "#/definitions/ArnNotLikeIfExists"
+        },
+        "ForAllValues:StringEquals": {
+          "$ref": "#/definitions/ForAllValues:StringEquals"
+        },
+        "ForAllValues:StringNotEquals": {
+          "$ref": "#/definitions/ForAllValues:StringNotEquals"
+        },
+        "ForAllValues:StringEqualsIgnoreCase": {
+          "$ref": "#/definitions/ForAllValues:StringEqualsIgnoreCase"
+        },
+        "ForAllValues:StringNotEqualsIgnoreCase": {
+          "$ref": "#/definitions/ForAllValues:StringNotEqualsIgnoreCase"
+        },
+        "ForAllValues:StringLike": {
+          "$ref": "#/definitions/ForAllValues:StringLike"
+        },
+        "ForAllValues:StringNotLike": {
+          "$ref": "#/definitions/ForAllValues:StringNotLike"
+        },
+        "ForAllValues:NumericEquals": {
+          "$ref": "#/definitions/ForAllValues:NumericEquals"
+        },
+        "ForAllValues:NumericNotEquals": {
+          "$ref": "#/definitions/ForAllValues:NumericNotEquals"
+        },
+        "ForAllValues:NumericLessThan": {
+          "$ref": "#/definitions/ForAllValues:NumericLessThan"
+        },
+        "ForAllValues:NumericLessThanEquals": {
+          "$ref": "#/definitions/ForAllValues:NumericLessThanEquals"
+        },
+        "ForAllValues:NumericGreaterThan": {
+          "$ref": "#/definitions/ForAllValues:NumericGreaterThan"
+        },
+        "ForAllValues:NumericGreaterThanEquals": {
+          "$ref": "#/definitions/ForAllValues:NumericGreaterThanEquals"
+        },
+        "ForAllValues:DateEquals": {
+          "$ref": "#/definitions/ForAllValues:DateEquals"
+        },
+        "ForAllValues:DateNotEquals": {
+          "$ref": "#/definitions/ForAllValues:DateNotEquals"
+        },
+        "ForAllValues:DateLessThan": {
+          "$ref": "#/definitions/ForAllValues:DateLessThan"
+        },
+        "ForAllValues:DateLessThanEquals": {
+          "$ref": "#/definitions/ForAllValues:DateLessThanEquals"
+        },
+        "ForAllValues:DateGreaterThan": {
+          "$ref": "#/definitions/ForAllValues:DateGreaterThan"
+        },
+        "ForAllValues:DateGreaterThanEquals": {
+          "$ref": "#/definitions/ForAllValues:DateGreaterThanEquals"
+        },
+        "ForAllValues:Bool": {
+          "$ref": "#/definitions/ForAllValues:Bool"
+        },
+        "ForAllValues:BinaryEquals": {
+          "$ref": "#/definitions/ForAllValues:BinaryEquals"
+        },
+        "ForAllValues:IpAddress": {
+          "$ref": "#/definitions/ForAllValues:IpAddress"
+        },
+        "ForAllValues:NotIpAddress": {
+          "$ref": "#/definitions/ForAllValues:NotIpAddress"
+        },
+        "ForAllValues:ArnEquals": {
+          "$ref": "#/definitions/ForAllValues:ArnEquals"
+        },
+        "ForAllValues:ArnNotEquals": {
+          "$ref": "#/definitions/ForAllValues:ArnNotEquals"
+        },
+        "ForAllValues:ArnLike": {
+          "$ref": "#/definitions/ForAllValues:ArnLike"
+        },
+        "ForAllValues:ArnNotLike": {
+          "$ref": "#/definitions/ForAllValues:ArnNotLike"
+        },
+        "ForAnyValues:StringEquals": {
+          "$ref": "#/definitions/ForAnyValues:StringEquals"
+        },
+        "ForAnyValues:StringNotEquals": {
+          "$ref": "#/definitions/ForAnyValues:StringNotEquals"
+        },
+        "ForAnyValues:StringEqualsIgnoreCase": {
+          "$ref": "#/definitions/ForAnyValues:StringEqualsIgnoreCase"
+        },
+        "ForAnyValues:StringNotEqualsIgnoreCase": {
+          "$ref": "#/definitions/ForAnyValues:StringNotEqualsIgnoreCase"
+        },
+        "ForAnyValues:StringLike": {
+          "$ref": "#/definitions/ForAnyValues:StringLike"
+        },
+        "ForAnyValues:StringNotLike": {
+          "$ref": "#/definitions/ForAnyValues:StringNotLike"
+        },
+        "ForAnyValues:NumericEquals": {
+          "$ref": "#/definitions/ForAnyValues:NumericEquals"
+        },
+        "ForAnyValues:NumericNotEquals": {
+          "$ref": "#/definitions/ForAnyValues:NumericNotEquals"
+        },
+        "ForAnyValues:NumericLessThan": {
+          "$ref": "#/definitions/ForAnyValues:NumericLessThan"
+        },
+        "ForAnyValues:NumericLessThanEquals": {
+          "$ref": "#/definitions/ForAnyValues:NumericLessThanEquals"
+        },
+        "ForAnyValues:NumericGreaterThan": {
+          "$ref": "#/definitions/ForAnyValues:NumericGreaterThan"
+        },
+        "ForAnyValues:NumericGreaterThanEquals": {
+          "$ref": "#/definitions/ForAnyValues:NumericGreaterThanEquals"
+        },
+        "ForAnyValues:DateEquals": {
+          "$ref": "#/definitions/ForAnyValues:DateEquals"
+        },
+        "ForAnyValues:DateNotEquals": {
+          "$ref": "#/definitions/ForAnyValues:DateNotEquals"
+        },
+        "ForAnyValues:DateLessThan": {
+          "$ref": "#/definitions/ForAnyValues:DateLessThan"
+        },
+        "ForAnyValues:DateLessThanEquals": {
+          "$ref": "#/definitions/ForAnyValues:DateLessThanEquals"
+        },
+        "ForAnyValues:DateGreaterThan": {
+          "$ref": "#/definitions/ForAnyValues:DateGreaterThan"
+        },
+        "ForAnyValues:DateGreaterThanEquals": {
+          "$ref": "#/definitions/ForAnyValues:DateGreaterThanEquals"
+        },
+        "ForAnyValues:Bool": {
+          "$ref": "#/definitions/ForAnyValues:Bool"
+        },
+        "ForAnyValues:BinaryEquals": {
+          "$ref": "#/definitions/ForAnyValues:BinaryEquals"
+        },
+        "ForAnyValues:IpAddress": {
+          "$ref": "#/definitions/ForAnyValues:IpAddress"
+        },
+        "ForAnyValues:NotIpAddress": {
+          "$ref": "#/definitions/ForAnyValues:NotIpAddress"
+        },
+        "ForAnyValues:ArnEquals": {
+          "$ref": "#/definitions/ForAnyValues:ArnEquals"
+        },
+        "ForAnyValues:ArnNotEquals": {
+          "$ref": "#/definitions/ForAnyValues:ArnNotEquals"
+        },
+        "ForAnyValues:ArnLike": {
+          "$ref": "#/definitions/ForAnyValues:ArnLike"
+        },
+        "ForAnyValues:ArnNotLike": {
+          "$ref": "#/definitions/ForAnyValues:ArnNotLike"
         }
       }
     },
