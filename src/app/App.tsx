@@ -33,7 +33,7 @@ const App: React.FC = () => {
             <AppOverlays />
             <ObjectiveCompleteToast />
             <TutorialPopup />
-            <GithubCorner url='https://github.com/laythra/learnawsiam' />
+            <GithubCorner url='https://github.com/laythra/learn-aws-iam' />
             <CodeEditorLoader />
             <UnnecessaryEdgesNodesWarning />
             <Flex direction='row' h='100vh' w='100vw'>
