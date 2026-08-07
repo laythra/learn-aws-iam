@@ -7,7 +7,7 @@ import { loadLevelStage } from './test-solutions';
 import { UIActions } from './ui-actions';
 import { NodeActions } from '../helpers/node-actions';
 import { TutorialActions } from '../helpers/tutorial-actions';
-import { LEVEL_VERSIONS } from '@/levels/level-versions';
+import { LEVEL_REGISTRY } from '@/levels/level-registry';
 
 type TestFixtures = {
   tutorial: TutorialActions;
@@ -74,7 +74,10 @@ export const test = base.extend<TestFixtures>({
       await goToLevel(levelNumber);
       const snapshot = await loadLevelStage(levelStages, stageName);
       const versioned = snapshot
-        ? JSON.stringify({ version: LEVEL_VERSIONS[levelNumber], snapshot: JSON.parse(snapshot) })
+        ? JSON.stringify({
+            version: LEVEL_REGISTRY[levelNumber].checkpoint_version,
+            snapshot: JSON.parse(snapshot),
+          })
         : undefined;
       await page.addInitScript(
         ([snapshotData, level]) => {

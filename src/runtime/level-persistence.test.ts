@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clearCheckpoint, loadCheckpoint, saveCheckpoint } from './level-persistence';
-import { LEVEL_VERSIONS } from '@/levels/level-versions';
+import { LEVEL_REGISTRY } from '@/levels/level-registry';
 
 const LEVEL = 1;
-const CURRENT_VERSION = LEVEL_VERSIONS[LEVEL];
+const CURRENT_VERSION = LEVEL_REGISTRY[LEVEL].checkpoint_version;
 const STORAGE_KEY = `level${LEVEL}StateCheckpoint`;
 
 const MOCK_SNAPSHOT = { status: 'active', value: 'playing', context: { score: 42 } };

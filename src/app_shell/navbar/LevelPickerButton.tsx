@@ -17,7 +17,7 @@ import _ from 'lodash';
 
 import { useNavbarPopover } from '@/app_shell/navbar/useNavbarPopover';
 import { NavbarPopoverButton } from '@/components/NavbarPopoverButton';
-import { TOTAL_LEVELS } from '@/config/consts';
+import { TOTAL_LEVELS } from '@/runtime/level-operations';
 import { pickLevel } from '@/runtime/level-operations';
 import { LevelDetailsStore } from '@/runtime/level-store';
 
