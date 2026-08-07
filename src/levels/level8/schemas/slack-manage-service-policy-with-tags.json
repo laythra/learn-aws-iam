@@ -48,7 +48,7 @@
           "uniqueItems": true
         },
         "Resource": {
-          "const": "arn:aws:secretsmanager:us-east-1:123456789012:secret:slack-integration-secret"
+          "const": "arn:aws:secretsmanager:us-east-1:123456789012:secret:slack-integration-secret-1uq08u"
         },
         "Condition": {
           "type": "object",

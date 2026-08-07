@@ -1,3 +1,4 @@
+import { ALPHA_TEAM_SECRET_NAME, BETA_TEAM_SECRET_NAME } from '../constants';
 import { ResourceNodeID } from '../types/node-ids';
 import { createResourceNode } from '@/domain/nodes/resource-node-factory';
 import { CommonLayoutGroupID, IAMNodeImage, IAMNodeResourceEntity } from '@/types/iam-enums';
@@ -8,7 +9,7 @@ const TUTORIAL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
 const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] = [
   {
     id: ResourceNodeID.TeamAlphaSecret,
-    label: 'db/alpha-team',
+    label: ALPHA_TEAM_SECRET_NAME,
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,
@@ -27,7 +28,7 @@ const IN_LEVEL_RESOURCE_NODES: IAMNodeDataOverrides<IAMResourceNode['data']>[] =
 
   {
     id: ResourceNodeID.TeamBetaSecret,
-    label: 'db/beta-team',
+    label: BETA_TEAM_SECRET_NAME,
     layout_group_id: CommonLayoutGroupID.TopCenterHorizontal,
     image: IAMNodeImage.Secret,
     resource_type: IAMNodeResourceEntity.Secret,

@@ -1,3 +1,5 @@
+import { SLACK_INTEGRATION_SECRET_ARN } from './constants';
+
 export const INITIAL_POLICIES = {
   CODEDEPLOY: {
     Version: '2012-10-17',
@@ -40,7 +42,7 @@ export const INITIAL_POLICIES = {
       {
         Effect: 'Allow',
         Action: ['secretsmanager:GetSecretValue', 'secretsmanager:DescribeSecret'],
-        Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:slack-integration-secret',
+        Resource: SLACK_INTEGRATION_SECRET_ARN,
       },
     ],
   },
