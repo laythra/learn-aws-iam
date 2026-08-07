@@ -16,11 +16,18 @@
       "type": "string"
     },
     "Statement": {
-      "minItems": 1,
-      "type": "array",
-      "items": {
-        "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Statement"
-      }
+      "oneOf": [
+        {
+          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Statement"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Statement"
+          }
+        }
+      ]
     }
   }
 }

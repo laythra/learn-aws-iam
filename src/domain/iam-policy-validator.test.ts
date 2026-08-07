@@ -769,6 +769,34 @@ describe('Condition operator rejection', () => {
     const policy = policyWithCondition({ Null: { 'aws:TokenIssueTime': true } });
     expect(isJSONValid(policy, validateFn)).toBe(true);
   });
+
+  it('accepts the singular ForAnyValue:StringEquals qualifier', () => {
+    const policy = policyWithCondition({
+      'ForAnyValue:StringEquals': { 'aws:PrincipalTag/team': ['devs', 'ops'] },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('rejects the plural ForAnyValues:StringEquals misspelling', () => {
+    const policy = policyWithCondition({
+      'ForAnyValues:StringEquals': { 'aws:PrincipalTag/team': ['devs', 'ops'] },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(false);
+  });
+
+  it('accepts the plural ForAllValues:StringEquals qualifier', () => {
+    const policy = policyWithCondition({
+      'ForAllValues:StringEquals': { 'aws:TagKeys': ['env', 'team'] },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('accepts a qualified IfExists variant (ForAllValues:StringLikeIfExists)', () => {
+    const policy = policyWithCondition({
+      'ForAllValues:StringLikeIfExists': { 'aws:TagKeys': ['env*'] },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
 });
 
 describe('Principal ARN pattern', () => {
@@ -816,11 +844,11 @@ describe('Statement shape', () => {
 
   // The array-of-statements valid case is already pinned by
   // 'returns true for a valid identity policy' in the isJSONValid block above.
-  it('rejects a single statement object not wrapped in an array', () => {
+  it('accepts a single statement object not wrapped in an array', () => {
     const policy = JSON.stringify({
       Version: '2012-10-17',
       Statement: { Effect: 'Allow', Action: 's3:GetObject', Resource: '*' },
     });
-    expect(isJSONValid(policy, validateFn)).toBe(false);
+    expect(isJSONValid(policy, validateFn)).toBe(true);
   });
 });
