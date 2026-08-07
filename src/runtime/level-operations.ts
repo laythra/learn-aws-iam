@@ -3,8 +3,11 @@ import { Actor, AnyActorLogic } from 'xstate';
 import * as analytics from './level-analytics';
 import * as persistence from './level-persistence';
 import { LevelDetailsStore } from './level-store';
-import { TOTAL_LEVELS } from '@/config/consts';
 import { LevelEventBus } from '@/levels/level-event-bus';
+import { TOTAL_LEVELS } from '@/levels/level-registry';
+
+// Re-exported for app_shell/ and features/, which cannot import from levels/ directly
+export { TOTAL_LEVELS } from '@/levels/level-registry';
 
 function startLevel(levelNumber: number): void {
   persistence.setCurrentLevel(levelNumber);

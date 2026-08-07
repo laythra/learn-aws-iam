@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
-import { TOTAL_LEVELS } from '@/config/consts';
+import { TOTAL_LEVELS } from '@/runtime/level-operations';
 import { advanceToNextLevel } from '@/runtime/level-operations';
 import { LevelDetailsStore } from '@/runtime/level-store';
 
