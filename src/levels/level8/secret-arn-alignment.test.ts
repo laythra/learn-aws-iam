@@ -6,8 +6,6 @@ import { INITIAL_IN_LEVEL_RESOURCE_NODES } from './nodes/resource-nodes';
 import { generateSlackManageServiceSchema } from './schemas/slack-manage-service-policy';
 import { IAMNodeResourceEntity } from '@/types/iam-enums';
 
-// Collects every "const" value in a schema that looks like a Secrets Manager ARN, regardless
-// of where it sits in the schema tree.
 function collectSecretArnConsts(value: unknown): string[] {
   if (Array.isArray(value)) return value.flatMap(collectSecretArnConsts);
   if (typeof value !== 'object' || value === null) return [];
@@ -19,10 +17,6 @@ function collectSecretArnConsts(value: unknown): string[] {
   );
 }
 
-// The canvas shows the Secret node's ARN derived from its label (deterministic suffix). The
-// answer schemas inject that same ARN from SLACK_INTEGRATION_SECRET_ARN, so drift is
-// structurally impossible; these tests still fail loudly if the label or the starter policy
-// stops matching that single source of truth (issue #364's bug class).
 describe('level 8 secret ARN alignment', () => {
   it('labels the secret node with the name the ARN constant derives from', () => {
     const secretLabels = INITIAL_IN_LEVEL_RESOURCE_NODES.filter(

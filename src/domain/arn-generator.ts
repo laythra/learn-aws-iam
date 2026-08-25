@@ -2,11 +2,7 @@ import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
 
 type ArnGenerator = (resourceName: string, accountId: string, region?: string) => string;
 
-// Derives a stable suffix from the resource name so a given name always maps to the same
-// ARN. AWS appends a random suffix to Secret ARNs; we mimic the shape deterministically
-// (an actual random value would change identity every call and break memoization/copy).
 function generateSuffix(seed: string, length: number): string {
-  // djb2 hash, then base36 so the suffix stays within [a-z0-9].
   let hash = 5381;
   for (let i = 0; i < seed.length; i++) {
     hash = (hash * 33) ^ seed.charCodeAt(i);

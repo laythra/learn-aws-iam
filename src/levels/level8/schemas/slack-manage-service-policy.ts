@@ -2,8 +2,6 @@ interface SlackManageServiceSchemaOptions {
   withTags: boolean;
 }
 
-// "No tags" objective: access is scoped to two specific senior users named by ARN, accepted
-// through either StringEquals or ArnEquals on aws:PrincipalArn.
 const principalArnValueDefinition = {
   type: 'object',
   required: ['aws:PrincipalArn'],
@@ -40,7 +38,6 @@ const noTagsCondition = {
   ],
 };
 
-// "With tags" objective: access is scoped by the caller's role tag instead of explicit ARNs.
 const withTagsCondition = {
   type: 'object',
   required: ['StringEquals'],
@@ -55,9 +52,6 @@ const withTagsCondition = {
   additionalProperties: false,
 };
 
-// Builds the level 8 answer-key schema with the Secret's ARN injected from the caller, so the
-// expected ARN always tracks the single source of truth (SLACK_INTEGRATION_SECRET_ARN) rather
-// than a hardcoded suffix that could drift from the generator (issue #364's bug class).
 export function generateSlackManageServiceSchema(
   secretArn: string,
   { withTags }: SlackManageServiceSchemaOptions
