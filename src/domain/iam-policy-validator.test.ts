@@ -797,6 +797,20 @@ describe('Condition operator rejection', () => {
     });
     expect(isJSONValid(policy, validateFn)).toBe(true);
   });
+
+  it('accepts a scalar value for a set-qualified operator', () => {
+    const policy = policyWithCondition({
+      'ForAnyValue:StringEquals': { 'aws:TagKeys': 'team' },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('accepts a numeric value for a set-qualified operator', () => {
+    const policy = policyWithCondition({
+      'ForAllValues:NumericLessThan': { 's3:max-keys': 10 },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
 });
 
 describe('Principal ARN pattern', () => {
@@ -850,5 +864,41 @@ describe('Statement shape', () => {
       Statement: { Effect: 'Allow', Action: 's3:GetObject', Resource: '*' },
     });
     expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('accepts a single resource-policy statement object with a Principal', () => {
+    const resourceFn = BASE_VALIDATION_FNS[IAMNodeEntity.ResourcePolicy];
+    const policy = JSON.stringify({
+      Version: '2012-10-17',
+      Statement: {
+        Effect: 'Allow',
+        Principal: { AWS: 'arn:aws:iam::123456789012:root' },
+        Action: 's3:GetObject',
+        Resource: '*',
+      },
+    });
+    expect(isJSONValid(policy, resourceFn)).toBe(true);
+  });
+
+  it('rejects a single resource-policy statement object missing its Principal', () => {
+    const resourceFn = BASE_VALIDATION_FNS[IAMNodeEntity.ResourcePolicy];
+    const policy = JSON.stringify({
+      Version: '2012-10-17',
+      Statement: { Effect: 'Allow', Action: 's3:GetObject', Resource: '*' },
+    });
+    expect(isJSONValid(policy, resourceFn)).toBe(false);
+  });
+
+  it('accepts a single trust-policy statement object not wrapped in an array', () => {
+    const roleFn = BASE_VALIDATION_FNS[IAMNodeEntity.Role];
+    const policy = JSON.stringify({
+      Version: '2012-10-17',
+      Statement: {
+        Effect: 'Allow',
+        Principal: { Service: 'lambda.amazonaws.com' },
+        Action: 'sts:AssumeRole',
+      },
+    });
+    expect(isJSONValid(policy, roleFn)).toBe(true);
   });
 });
