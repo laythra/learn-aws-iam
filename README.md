@@ -4,9 +4,9 @@ An interactive visual simulator for learning AWS IAM (Identity and Access Manage
 
 **[learnawsiam.com — try it live, no setup required](https://learnawsiam.com)**
 
-![Tests](https://github.com/laythra/learnawsiam/actions/workflows/test.yml/badge.svg?branch=main)
-![Lint](https://github.com/laythra/learnawsiam/actions/workflows/lint.yml/badge.svg?branch=main)
-![Playwright Tests](https://github.com/laythra/learnawsiam/actions/workflows/playwright.yml/badge.svg?branch=main)
+![Tests](https://github.com/laythra/learn-aws-iam/actions/workflows/test.yml/badge.svg?branch=main)
+![Lint](https://github.com/laythra/learn-aws-iam/actions/workflows/lint.yml/badge.svg?branch=main)
+![Playwright Tests](https://github.com/laythra/learn-aws-iam/actions/workflows/playwright.yml/badge.svg?branch=main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ![Demo](./assets/gifs/demo_overview.gif)
