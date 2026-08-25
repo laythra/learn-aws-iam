@@ -18,21 +18,33 @@
       "type": "string"
     },
     "Statement": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "allOf": [
-          {
-            "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Statement"
-          },
-          {
-            "type": "object",
-            "required": [
-              "Principal"
-            ]
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Statement"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Statement"
           }
-        ]
-      }
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "Statement": {
+      "allOf": [
+        {
+          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Statement"
+        },
+        {
+          "type": "object",
+          "required": [
+            "Principal"
+          ]
+        }
+      ]
     }
   }
 }

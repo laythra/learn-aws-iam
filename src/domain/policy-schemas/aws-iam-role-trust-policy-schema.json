@@ -16,36 +16,48 @@
       "description": "The version of the IAM policy language."
     },
     "Statement": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": [
-          "Effect",
-          "Principal",
-          "Action"
-        ],
-        "additionalProperties": false,
-        "properties": {
-          "Effect": {
-            "type": "string",
-            "enum": [
-              "Allow",
-              "Deny"
-            ]
-          },
-          "Principal": {
-            "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Principal"
-          },
-          "Action": {
-            "type": "string",
-            "enum": [
-              "sts:AssumeRole"
-            ]
-          },
-          "Condition": {
-            "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Condition"
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Statement"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Statement"
           }
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "Statement": {
+      "type": "object",
+      "required": [
+        "Effect",
+        "Principal",
+        "Action"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "Effect": {
+          "type": "string",
+          "enum": [
+            "Allow",
+            "Deny"
+          ]
+        },
+        "Principal": {
+          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Principal"
+        },
+        "Action": {
+          "type": "string",
+          "enum": [
+            "sts:AssumeRole"
+          ]
+        },
+        "Condition": {
+          "$ref": "aws-iam-shared-definitions-schema.json#/definitions/Condition"
         }
       }
     }

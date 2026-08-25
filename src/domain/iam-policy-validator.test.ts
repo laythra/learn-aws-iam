@@ -733,3 +733,172 @@ describe('collectValidationDiagnostics — Condition suppression (objective vali
     );
   });
 });
+
+describe('Condition operator rejection', () => {
+  const validateFn = BASE_VALIDATION_FNS[IAMNodeEntity.IdentityPolicy];
+
+  const policyWithCondition = (condition: Record<string, unknown>): string =>
+    JSON.stringify({
+      Version: '2012-10-17',
+      Statement: [{ Effect: 'Allow', Action: 's3:GetObject', Resource: '*', Condition: condition }],
+    });
+
+  it('rejects a misspelled condition operator (StringEqual)', () => {
+    const policy = policyWithCondition({ StringEqual: { 'aws:RequestedRegion': 'us-east-1' } });
+    expect(isJSONValid(policy, validateFn)).toBe(false);
+  });
+
+  it('rejects an invented condition operator (TagEquals)', () => {
+    const policy = policyWithCondition({ TagEquals: { 'aws:PrincipalTag/team': 'devs' } });
+    expect(isJSONValid(policy, validateFn)).toBe(false);
+  });
+
+  it('accepts the real StringEquals operator', () => {
+    const policy = policyWithCondition({ StringEquals: { 'aws:RequestedRegion': 'us-east-1' } });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('accepts an IfExists variant (StringEqualsIfExists)', () => {
+    const policy = policyWithCondition({
+      StringEqualsIfExists: { 'aws:RequestedRegion': 'us-east-1' },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('still accepts the Null operator', () => {
+    const policy = policyWithCondition({ Null: { 'aws:TokenIssueTime': true } });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('accepts the singular ForAnyValue:StringEquals qualifier', () => {
+    const policy = policyWithCondition({
+      'ForAnyValue:StringEquals': { 'aws:PrincipalTag/team': ['devs', 'ops'] },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('rejects the plural ForAnyValues:StringEquals misspelling', () => {
+    const policy = policyWithCondition({
+      'ForAnyValues:StringEquals': { 'aws:PrincipalTag/team': ['devs', 'ops'] },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(false);
+  });
+
+  it('accepts the plural ForAllValues:StringEquals qualifier', () => {
+    const policy = policyWithCondition({
+      'ForAllValues:StringEquals': { 'aws:TagKeys': ['env', 'team'] },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('accepts a qualified IfExists variant (ForAllValues:StringLikeIfExists)', () => {
+    const policy = policyWithCondition({
+      'ForAllValues:StringLikeIfExists': { 'aws:TagKeys': ['env*'] },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('accepts a scalar value for a set-qualified operator', () => {
+    const policy = policyWithCondition({
+      'ForAnyValue:StringEquals': { 'aws:TagKeys': 'team' },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('accepts a numeric value for a set-qualified operator', () => {
+    const policy = policyWithCondition({
+      'ForAllValues:NumericLessThan': { 's3:max-keys': 10 },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+});
+
+describe('Principal ARN pattern', () => {
+  const validateFn = BASE_VALIDATION_FNS[IAMNodeEntity.Role];
+
+  const trustPolicyWithAWSPrincipal = (arn: string): string =>
+    JSON.stringify({
+      Version: '2012-10-17',
+      Statement: [{ Effect: 'Allow', Principal: { AWS: arn }, Action: 'sts:AssumeRole' }],
+    });
+
+  it('rejects an IAM group ARN as a principal', () => {
+    const policy = trustPolicyWithAWSPrincipal('arn:aws:iam::123456789012:group/Developers');
+    expect(isJSONValid(policy, validateFn)).toBe(false);
+  });
+
+  it('accepts a user ARN as a principal', () => {
+    const policy = trustPolicyWithAWSPrincipal('arn:aws:iam::123456789012:user/alice');
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('accepts a role ARN as a principal', () => {
+    const policy = trustPolicyWithAWSPrincipal('arn:aws:iam::123456789012:role/Admin');
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('accepts the account root ARN as a principal', () => {
+    const policy = trustPolicyWithAWSPrincipal('arn:aws:iam::123456789012:root');
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('rejects a user ARN with trailing garbage instead of a slash', () => {
+    const policy = trustPolicyWithAWSPrincipal('arn:aws:iam::123456789012:userxyz');
+    expect(isJSONValid(policy, validateFn)).toBe(false);
+  });
+
+  it('rejects a bare role ARN with no name segment', () => {
+    const policy = trustPolicyWithAWSPrincipal('arn:aws:iam::123456789012:role');
+    expect(isJSONValid(policy, validateFn)).toBe(false);
+  });
+});
+
+describe('Statement shape', () => {
+  const validateFn = BASE_VALIDATION_FNS[IAMNodeEntity.IdentityPolicy];
+
+  // The array-of-statements valid case is already pinned by
+  // 'returns true for a valid identity policy' in the isJSONValid block above.
+  it('accepts a single statement object not wrapped in an array', () => {
+    const policy = JSON.stringify({
+      Version: '2012-10-17',
+      Statement: { Effect: 'Allow', Action: 's3:GetObject', Resource: '*' },
+    });
+    expect(isJSONValid(policy, validateFn)).toBe(true);
+  });
+
+  it('accepts a single resource-policy statement object with a Principal', () => {
+    const resourceFn = BASE_VALIDATION_FNS[IAMNodeEntity.ResourcePolicy];
+    const policy = JSON.stringify({
+      Version: '2012-10-17',
+      Statement: {
+        Effect: 'Allow',
+        Principal: { AWS: 'arn:aws:iam::123456789012:root' },
+        Action: 's3:GetObject',
+        Resource: '*',
+      },
+    });
+    expect(isJSONValid(policy, resourceFn)).toBe(true);
+  });
+
+  it('rejects a single resource-policy statement object missing its Principal', () => {
+    const resourceFn = BASE_VALIDATION_FNS[IAMNodeEntity.ResourcePolicy];
+    const policy = JSON.stringify({
+      Version: '2012-10-17',
+      Statement: { Effect: 'Allow', Action: 's3:GetObject', Resource: '*' },
+    });
+    expect(isJSONValid(policy, resourceFn)).toBe(false);
+  });
+
+  it('accepts a single trust-policy statement object not wrapped in an array', () => {
+    const roleFn = BASE_VALIDATION_FNS[IAMNodeEntity.Role];
+    const policy = JSON.stringify({
+      Version: '2012-10-17',
+      Statement: {
+        Effect: 'Allow',
+        Principal: { Service: 'lambda.amazonaws.com' },
+        Action: 'sts:AssumeRole',
+      },
+    });
+    expect(isJSONValid(policy, roleFn)).toBe(true);
+  });
+});
