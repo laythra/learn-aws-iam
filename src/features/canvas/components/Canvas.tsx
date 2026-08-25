@@ -69,6 +69,7 @@ const Canvas: React.FC = () => {
         onEdgesDelete={onEdgeDelete}
         onNodesDelete={onNodeDelete}
         nodeTypes={nodeTypes}
+        connectionRadius={40}
         edgeTypes={edgeTypes}
         zoomOnDoubleClick={false}
         snapToGrid
