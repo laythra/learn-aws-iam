@@ -121,7 +121,7 @@ export const LEVEL_REGISTRY: Record<number, LevelDefinition> = {
       })),
   },
   8: {
-    checkpoint_version: 1,
+    checkpoint_version: 2,
     load_state_machine: () => import('@/levels/level8/state-machine').then(cast),
     load_runtime_fns: () =>
       import('@/levels/level8/level-runtime-fns').then(m => ({
@@ -130,7 +130,7 @@ export const LEVEL_REGISTRY: Record<number, LevelDefinition> = {
       })),
   },
   9: {
-    checkpoint_version: 1,
+    checkpoint_version: 2,
     load_state_machine: () => import('@/levels/level9/state-machine').then(cast),
     load_runtime_fns: () =>
       import('@/levels/level9/level-runtime-fns').then(m => ({
