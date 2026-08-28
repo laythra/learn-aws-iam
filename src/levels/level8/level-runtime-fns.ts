@@ -1,5 +1,5 @@
-import slackServicePolicyNoTags from './schemas/slack-manage-service-policy-no-tags.json';
-import slackServicePolicyWithTags from './schemas/slack-manage-service-policy-with-tags.json';
+import { SLACK_INTEGRATION_SECRET_ARN } from './constants';
+import { generateSlackManageServiceSchema } from './schemas/slack-manage-service-policy';
 import { IAMNodeFilter } from '../utils/filters/iam-node-filter';
 import { AJV_COMPILER } from '@/domain/iam-policy-validator';
 import { IAMAnyNode } from '@/types/iam-node-types';
@@ -10,8 +10,14 @@ export const ObjectivesApplicableNodesFns = {
 };
 
 export const ValidateFunctions = {
-  slackManagePolicyValidateFn1: () => AJV_COMPILER.compile(slackServicePolicyNoTags),
-  slackManagePolicyValidateFn2: () => AJV_COMPILER.compile(slackServicePolicyWithTags),
+  slackManagePolicyValidateFn1: () =>
+    AJV_COMPILER.compile(
+      generateSlackManageServiceSchema(SLACK_INTEGRATION_SECRET_ARN, { withTags: false })
+    ),
+  slackManagePolicyValidateFn2: () =>
+    AJV_COMPILER.compile(
+      generateSlackManageServiceSchema(SLACK_INTEGRATION_SECRET_ARN, { withTags: true })
+    ),
 };
 
 export type ValidateFunctionsFnName = keyof typeof ValidateFunctions;

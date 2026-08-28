@@ -1,8 +1,4 @@
-export function generateRdsManagePolicySchema(teamName: string, secretSuffix: string): object {
-  const secretArn = `
-    arn:aws:secretsmanager:us-east-1:123456789012:secret:db/${teamName}-${secretSuffix}
-  `.trim();
-
+export function generateRdsManagePolicySchema(teamName: string, secretArn: string): object {
   return {
     $schema: 'http://json-schema.org/draft-07/schema#',
     type: 'object',

@@ -2,10 +2,13 @@ import { IAMNodeEntity, IAMNodeResourceEntity } from '@/types/iam-enums';
 
 type ArnGenerator = (resourceName: string, accountId: string, region?: string) => string;
 
-function generateSuffix(length: number): string {
-  return Math.random()
-    .toString(36)
-    .slice(2, 2 + length);
+function generateSuffix(seed: string, length: number): string {
+  let hash = 5381;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 33) ^ seed.charCodeAt(i);
+  }
+
+  return (hash >>> 0).toString(36).padStart(length, '0').slice(0, length);
 }
 
 const arnStrategies: Record<string, ArnGenerator> = {
@@ -32,8 +35,10 @@ const arnStrategies: Record<string, ArnGenerator> = {
     `arn:aws:cloudfront::${accountId}:distribution/${resourceName}`,
   [IAMNodeResourceEntity.Billing]: (resourceName, accountId) =>
     `arn:aws:budgets::${accountId}:budget/${resourceName}`,
-  [IAMNodeResourceEntity.Secret]: (resourceName, accountId) =>
-    `arn:aws:secretsmanager:${accountId}:secret:${resourceName}-${generateSuffix(6)}`,
+  [IAMNodeResourceEntity.Secret]: (resourceName, accountId, region = 'us-east-1') => {
+    const suffix = generateSuffix(resourceName, 6);
+    return `arn:aws:secretsmanager:${region}:${accountId}:secret:${resourceName}-${suffix}`;
+  },
   [IAMNodeResourceEntity.RDS]: (resourceName, accountId, region = 'us-east-1') =>
     `arn:aws:rds:${region}:${accountId}:db:${resourceName}`,
   [IAMNodeResourceEntity.CodeDeploy]: (resourceName, accountId, region = 'us-east-1') =>

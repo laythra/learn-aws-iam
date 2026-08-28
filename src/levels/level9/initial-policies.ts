@@ -1,3 +1,5 @@
+import { ALPHA_TEAM_SECRET_ARN, BETA_TEAM_SECRET_ARN } from './constants';
+
 export const INITIAL_POLICIES = {
   ALPHA_TEAM_RDS_POLICY: {
     Version: '2012-10-17',
@@ -5,7 +7,7 @@ export const INITIAL_POLICIES = {
       {
         Effect: 'Allow',
         Action: 'INSERT_ACTION_HERE',
-        Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:db/alpha-team-AbCdEf',
+        Resource: ALPHA_TEAM_SECRET_ARN,
         Condition: {},
       },
       {
@@ -22,7 +24,7 @@ export const INITIAL_POLICIES = {
       {
         Effect: 'Allow',
         Action: 'INSERT_ACTION_HERE',
-        Resource: 'arn:aws:secretsmanager:us-east-1:123456789012:secret:db/beta-team-GhIjKl',
+        Resource: BETA_TEAM_SECRET_ARN,
         Condition: {},
       },
       {

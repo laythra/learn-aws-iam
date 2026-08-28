@@ -1,3 +1,4 @@
+import { ALPHA_TEAM_SECRET_ARN, BETA_TEAM_SECRET_ARN } from './constants';
 import { generateRdsManagePolicySchema } from './schemas/per-team-rds-manage-policy';
 import rdsSharedManagePolicySchema from './schemas/rds-shared-manage-policy.json';
 import { PolicyNodeID } from './types/node-ids';
@@ -23,11 +24,11 @@ export const ObjectivesApplicableNodesFns = {
 
 export const ValidateFunctions = {
   [PolicyNodeID.RDSManagePolicy1]: () => {
-    const schema = generateRdsManagePolicySchema('alpha-team', 'AbCdEf');
+    const schema = generateRdsManagePolicySchema('alpha-team', ALPHA_TEAM_SECRET_ARN);
     return AJV_COMPILER.compile(schema);
   },
   [PolicyNodeID.RDSManagePolicy2]: () => {
-    const schema = generateRdsManagePolicySchema('beta-team', 'GhIjKl');
+    const schema = generateRdsManagePolicySchema('beta-team', BETA_TEAM_SECRET_ARN);
     return AJV_COMPILER.compile(schema);
   },
   [PolicyNodeID.RDSSharedPolicy]: () => AJV_COMPILER.compile(rdsSharedManagePolicySchema),
